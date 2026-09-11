@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap");
+
+:root {
+  --background: 41 33% 95%;
+  --foreground: 212 37% 14%;
+  --border: 37 19% 82%;
+  --input: 37 19% 82%;
+  --ring: 182 60% 35%;
+  --card: 40 33% 98%;
+  --card-foreground: 212 37% 14%;
+  --primary: 182 62% 31%;
+  --primary-foreground: 40 33% 98%;
+  --secondary: 214 28% 91%;
+  --secondary-foreground: 212 37% 18%;
+  --muted: 37 23% 89%;
+  --muted-foreground: 211 13% 42%;
+  --accent: 10 67% 55%;
+  --accent-foreground: 40 33% 98%;
+  --app-font-sans: "DM Sans", sans-serif;
+  --app-font-serif: "Instrument Serif", Georgia, serif;
+  --app-font-mono: "DM Mono", monospace;
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+  --radius: 0.85rem;
+}
+
+.dark {
+  --background: 212 37% 10%;
+  --foreground: 40 33% 94%;
+  --border: 212 25% 25%;
+  --input: 212 25% 25%;
+  --card: 212 30% 14%;
+  --card-foreground: 40 33% 94%;
+  --primary: 174 58% 54%;
+  --primary-foreground: 212 37% 10%;
+  --secondary: 212 25% 23%;
+  --secondary-foreground: 40 33% 94%;
+  --muted: 212 25% 21%;
+  --muted-foreground: 211 15% 70%;
+  --accent: 10 73% 62%;
+  --accent-foreground: 212 37% 10%;
+  --ring: 174 58% 54%;
+}
+
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.animate-rise { animation: rise .55s ease both; }
+.delay-2 { animation-delay: .16s; }
+.ticker-track { animation: ticker 28s linear infinite; }
+.eyebrow { font-family: var(--app-font-mono); font-size: .68rem; letter-spacing: .11em; text-transform: uppercase; }
+.display { font-family: var(--app-font-serif); }
+.story-hover { transition: transform .22s ease, background-color .22s ease, color .22s ease; }
+.story-hover:hover { transform: translateY(-3px); }
+button, a { -webkit-tap-highlight-color: transparent; }

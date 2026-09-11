@@ -1,1 +1,2 @@
 - [AMP preview routing](amp-preview-routing.md) — nested static HTML needs a preview-safe route alongside the production public file.
+- [Global AI News atlas direction](global-ai-news-atlas-direction.md) — use a dark intelligence-atlas mental model while preserving signal-first editorial and India Watch principles.
