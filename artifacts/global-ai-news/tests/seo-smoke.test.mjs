@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
-import { createReadStream, unlinkSync } from 'node:fs';
+import { createReadStream, unlinkSync, writeFileSync } from 'node:fs';
 import { execFile, execFileSync, spawn } from 'node:child_process';
 import { promisify } from 'node:util';
 import path from 'node:path';
@@ -112,6 +112,38 @@ function assertVisualPreviewAsset(filePath, route) {
   assert.match(background, /244,241,234/, `${route}: preview card is missing the warm-ivory background`);
   assert.match(accent, new RegExp(previewAccentRgb(route)), `${route}: preview card accent rule is missing`);
   assert.ok(Number(mean) < 0.93, `${route}: preview card title treatment is blank or unreadable`);
+}
+
+function previewSourceTitle(filePath, route) {
+  const title = execFileSync('identify', ['-format', '%[comment]', filePath], { encoding: 'utf8' }).trim();
+  assert.ok(title, `${route}: preview card is missing its source-title marker`);
+  return title;
+}
+
+async function waitForDevelopmentPreviewTitle(title, route) {
+  const filePath = path.join(os.tmpdir(), `gan-refresh-preview-${process.pid}.png`);
+  const deadline = Date.now() + 20_000;
+  try {
+    while (Date.now() < deadline) {
+      try {
+        const response = await fetch(`${devBaseUrl}/social/articles/ai-models-antibiotic-discovery.png?refresh=${encodeURIComponent(title)}`);
+        if (response.ok) {
+          writeFileSync(filePath, Buffer.from(await response.arrayBuffer()));
+          if (previewSourceTitle(filePath, route) === title) return;
+        }
+      } catch {
+        // Vite briefly closes the port while restarting after the content edit.
+      }
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
+    assert.fail(`${route}: development preview did not refresh to "${title}" within 20 seconds`);
+  } finally {
+    try {
+      unlinkSync(filePath);
+    } catch {
+      // The temporary preview may not exist if the dev server was unavailable.
+    }
+  }
 }
 
 function sitemapRoutes(xml) {
@@ -594,5 +626,27 @@ test('visual preview contract rejects an empty article card with a route-specifi
     );
   } finally {
     unlinkSync(emptyPath);
+  }
+});
+
+test('development preview cards refresh when an editor changes a story title', async () => {
+  const route = '/article/ai-models-antibiotic-discovery';
+  const contentPath = path.join(root, 'src', 'content.ts');
+  const originalContent = await readFile(contentPath, 'utf8');
+  const storyMarker = "slug: 'ai-models-antibiotic-discovery'";
+  const storyStart = originalContent.indexOf(storyMarker);
+  assert.notEqual(storyStart, -1, `${route}: fixture story is missing from content.ts`);
+  const titleStart = originalContent.indexOf("title: '", storyStart);
+  const titleEnd = originalContent.indexOf("',", titleStart + 8);
+  assert.ok(titleStart > storyStart && titleEnd > titleStart, `${route}: fixture story title is missing from content.ts`);
+
+  const editedTitle = 'Smoke refresh reaches the shared preview card';
+  const editedContent = `${originalContent.slice(0, titleStart + 8)}${editedTitle}${originalContent.slice(titleEnd)}`;
+  writeFileSync(contentPath, editedContent);
+  try {
+    await waitForDevelopmentPreviewTitle(`${editedTitle} — Global AI News`, route);
+  } finally {
+    writeFileSync(contentPath, originalContent);
+    await waitForDevelopmentPreviewTitle('AI models are accelerating the hunt for new antibiotics — Global AI News', route);
   }
 });

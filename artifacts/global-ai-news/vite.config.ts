@@ -205,20 +205,22 @@ function validatePreviewAsset(outputPath: string, route: string, svg: string, ti
   }
 }
 
-function writeSocialPreviewAssets(outputDir: string) {
+function writeSocialPreviewAssets(
+  outputDir: string,
+  sourceStories: readonly typeof stories = stories,
+) {
   const outputSocialDir = path.join(outputDir, 'social', 'articles');
   mkdirSync(outputSocialDir, { recursive: true });
-  for (const story of stories) {
-    const metadata = getSeoMetadata(`/article/${story.slug}`);
-    if (!metadata.imagePath) continue;
-    const outputPath = path.join(outputDir, metadata.imagePath.replace(/^\/+/, ''));
+  for (const story of sourceStories) {
     const route = `/article/${story.slug}`;
-    const svg = previewSvg(metadata.title, story.category, story.slug);
-    execFileSync('magick', ['svg:-', outputPath], {
+    const title = `${story.title} — Global AI News`;
+    const outputPath = path.join(outputDir, 'social', 'articles', `${story.slug}.png`);
+    const svg = previewSvg(title, story.category, story.slug);
+    execFileSync('magick', ['svg:-', '-set', 'comment', title, outputPath], {
       input: svg,
       stdio: ['pipe', 'ignore', 'inherit'],
     });
-    validatePreviewAsset(outputPath, route, svg, metadata.title);
+    validatePreviewAsset(outputPath, route, svg, title);
   }
 }
 
@@ -354,9 +356,10 @@ function socialPreviewAssetsPlugin() {
         next();
       });
     },
-    handleHotUpdate({ file }: { file: string }) {
+    async handleHotUpdate({ file, server }: { file: string; server: ViteDevServer }) {
       if (file === path.join(projectRoot, 'src', 'content.ts')) {
-        writeSocialPreviewAssets(path.join(projectRoot, 'public'));
+        const refreshedContent = await server.ssrLoadModule('/src/content.ts');
+        writeSocialPreviewAssets(path.join(projectRoot, 'public'), refreshedContent.stories);
       }
     },
   };
