@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Global AI News"
+description = "A premium global AI and technology news platform with editorial storytelling, SEO-ready article experiences, responsive ad placements, newsletter growth, and an analytics-focused publishing workspace."
+version = "1.0.0"
+id = "artifacts/global-ai-news"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19819
+
+[services.development]
+run = "pnpm --filter @workspace/global-ai-news run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/global-ai-news", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/global-ai-news/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19819"
+BASE_PATH = "/"
