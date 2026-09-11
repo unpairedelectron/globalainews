@@ -50,6 +50,7 @@ router.get("/newsroom/content", (_req, res): void => {
 });
 
 router.get("/newsroom/metadata", (_req, res): void => {
+  res.setHeader("Cache-Control", "no-store");
   res.json(GetNewsroomMetadataResponse.parse(getSeoMetadataManifest()));
 });
 

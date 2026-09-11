@@ -223,25 +223,120 @@ function writeSocialPreviewAssets(outputDir: string) {
 }
 
 const socialPreviewPathPattern = /^\/social\/articles\/[^/]+\.png(?:\?.*)?$/;
-async function loadBuildMetadataManifest(): Promise<void> {
+const metadataManifestMaxAgeMs = 15 * 60 * 1000;
+
+function buildOutputDir(projectRoot: string): string {
+  return path.resolve(
+    projectRoot,
+    process.env.PUBLICATION_OUTPUT_DIR ?? 'dist/public',
+  );
+}
+
+async function loadBuildMetadataManifest(projectRoot: string): Promise<void> {
   const manifestUrl = process.env.NEWSROOM_METADATA_URL;
   if (!manifestUrl) {
-    setSeoMetadataManifest(undefined);
-    return;
+    throw new Error(
+      'NEWSROOM_METADATA_URL is required for production publication builds. ' +
+        'Set it to the current /api/newsroom/metadata endpoint.',
+    );
   }
 
-  const response = await fetch(manifestUrl);
+  let parsedManifestUrl: URL;
+  try {
+    parsedManifestUrl = new URL(manifestUrl);
+  } catch {
+    throw new Error(
+      `NEWSROOM_METADATA_URL is not a valid URL: "${manifestUrl}".`,
+    );
+  }
+  if (!['http:', 'https:'].includes(parsedManifestUrl.protocol)) {
+    throw new Error(
+      `NEWSROOM_METADATA_URL must use http or https: "${manifestUrl}".`,
+    );
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(parsedManifestUrl);
+  } catch (error) {
+    throw new Error(
+      `Could not fetch newsroom metadata manifest from ${manifestUrl}: ${String(error)}`,
+    );
+  }
   if (!response.ok) {
     throw new Error(
       `Newsroom metadata manifest returned HTTP ${response.status} from ${manifestUrl}`,
     );
   }
-  const manifest = (await response.json()) as SeoMetadataManifest;
+
+  let manifest: SeoMetadataManifest;
+  try {
+    manifest = (await response.json()) as SeoMetadataManifest;
+  } catch (error) {
+    throw new Error(
+      `Newsroom metadata manifest from ${manifestUrl} was not valid JSON: ${String(error)}`,
+    );
+  }
+  if (!manifest || typeof manifest !== 'object') {
+    throw new Error(
+      `Newsroom metadata manifest from ${manifestUrl} has an invalid shape.`,
+    );
+  }
+
+  const generatedAt = Date.parse(manifest.generatedAt);
+  if (!Number.isFinite(generatedAt)) {
+    throw new Error(
+      `Newsroom metadata manifest from ${manifestUrl} has an invalid generatedAt timestamp.`,
+    );
+  }
+  const manifestAge = Date.now() - generatedAt;
+  if (manifestAge > metadataManifestMaxAgeMs) {
+    throw new Error(
+      `Newsroom metadata manifest from ${manifestUrl} is stale: ` +
+        `generated ${Math.round(manifestAge / 60_000)} minutes ago; ` +
+        `maximum age is ${metadataManifestMaxAgeMs / 60_000} minutes.`,
+    );
+  }
+  if (manifestAge < -metadataManifestMaxAgeMs) {
+    throw new Error(
+      `Newsroom metadata manifest from ${manifestUrl} has a generatedAt timestamp too far in the future.`,
+    );
+  }
   if (
     manifest.source !== 'maintained-editorial-source' ||
-    !Array.isArray(manifest.routes)
+    !Array.isArray(manifest.routes) ||
+    manifest.routes.length === 0
   ) {
-    throw new Error('Newsroom metadata manifest has an invalid shape.');
+    throw new Error(
+      `Newsroom metadata manifest from ${manifestUrl} has an invalid shape.`,
+    );
+  }
+
+  const routeMetadata = new Map<string, SeoMetadataManifest['routes'][number]>();
+  for (const metadata of manifest.routes) {
+    if (
+      !metadata ||
+      typeof metadata.path !== 'string' ||
+      !metadata.path.startsWith('/') ||
+      typeof metadata.title !== 'string' ||
+      metadata.title.trim().length === 0 ||
+      typeof metadata.description !== 'string' ||
+      metadata.description.trim().length === 0 ||
+      routeMetadata.has(metadata.path)
+    ) {
+      throw new Error(
+        `Newsroom metadata manifest from ${manifestUrl} has an invalid or duplicate route entry.`,
+      );
+    }
+    routeMetadata.set(metadata.path, metadata);
+  }
+
+  for (const route of routePathsFromPublishingFiles(projectRoot)) {
+    if (!routeMetadata.has(route)) {
+      throw new Error(
+        `Newsroom metadata manifest from ${manifestUrl} is missing published route "${route}".`,
+      );
+    }
   }
   setSeoMetadataManifest(manifest);
 }
@@ -347,8 +442,8 @@ function routeMetadataPlugin() {
     name: 'global-ai-news-route-metadata',
     apply: 'build' as const,
     async closeBundle() {
-      const outputDir = path.join(projectRoot, 'dist', 'public');
-      await loadBuildMetadataManifest();
+      const outputDir = buildOutputDir(projectRoot);
+      await loadBuildMetadataManifest(projectRoot);
       const baseHtml = readFileSync(path.join(outputDir, 'index.html'), 'utf8');
       writeSocialPreviewAssets(outputDir);
       writeAmpArticleDocument(outputDir);
@@ -398,7 +493,7 @@ export default defineConfig({
   },
   root: path.resolve(import.meta.dirname),
   build: {
-    outDir: path.resolve(import.meta.dirname, 'dist/public'),
+    outDir: buildOutputDir(path.resolve(import.meta.dirname)),
     emptyOutDir: true,
   },
   server: {

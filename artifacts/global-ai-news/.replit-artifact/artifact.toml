@@ -15,7 +15,7 @@ localPort = 19819
 run = "pnpm --filter @workspace/global-ai-news run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/global-ai-news", "run", "build" ]
+build = [ "pnpm", "--filter", "@workspace/global-ai-news", "run", "build:release" ]
 serve = "static"
 publicDir = "artifacts/global-ai-news/dist/public"
 
