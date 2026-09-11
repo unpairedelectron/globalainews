@@ -23,3 +23,6 @@ export * from './newsroomContentSignalsItem';
 export * from './newsroomContentSourcesItem';
 export * from './newsroomContentStoriesItem';
 export * from './newsroomContentTimelineEventsItem';
+export * from './newsroomMetadata';
+export * from './newsroomMetadataSource';
+export * from './seoMetadata';

@@ -16,7 +16,6 @@ export const HealthCheckResponse = zod.object({
   "status": zod.string()
 })
 
-
 /**
  * Returns the maintained editorial content used by the public publication.
  * @summary Get the current newsroom content snapshot
@@ -36,6 +35,25 @@ export const GetNewsroomContentResponse = zod.object({
   "indiaIndex": zod.array(zod.record(zod.string(), zod.unknown())),
   "essays": zod.array(zod.record(zod.string(), zod.unknown())),
   "askGlobalAnswers": zod.array(zod.record(zod.string(), zod.unknown()))
+})
+
+
+/**
+ * Returns the build-safe title and description manifest generated from the same maintained source as newsroom content.
+ * @summary Get metadata for published newsroom routes
+ */
+export const GetNewsroomMetadataResponse = zod.object({
+  "source": zod.enum(['maintained-editorial-source']),
+  "generatedAt": zod.coerce.date(),
+  "routes": zod.array(zod.object({
+  "title": zod.string(),
+  "description": zod.string(),
+  "path": zod.string(),
+  "article": zod.boolean().optional(),
+  "ampPath": zod.string().optional(),
+  "imagePath": zod.string().optional(),
+  "imageAlt": zod.string().optional()
+}))
 })
 
 

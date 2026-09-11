@@ -1,5 +1,8 @@
 import { Router, type IRouter } from "express";
-import { GetNewsroomContentResponse } from "@workspace/api-zod";
+import {
+  GetNewsroomContentResponse,
+  GetNewsroomMetadataResponse,
+} from "@workspace/api-zod";
 import {
   askGlobalAnswers,
   authors,
@@ -13,6 +16,7 @@ import {
   stories,
   timelineEvents,
 } from "../../../global-ai-news/src/content";
+import { getSeoMetadataManifest } from "../../../global-ai-news/src/seo-metadata";
 
 const router: IRouter = Router();
 
@@ -43,6 +47,10 @@ router.get("/newsroom/content", (_req, res): void => {
   });
 
   res.json(snapshot);
+});
+
+router.get("/newsroom/metadata", (_req, res): void => {
+  res.json(GetNewsroomMetadataResponse.parse(getSeoMetadataManifest()));
 });
 
 export default router;

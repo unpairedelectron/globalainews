@@ -73,3 +73,26 @@ export interface NewsroomContent {
   essays: NewsroomContentEssaysItem[];
   askGlobalAnswers: NewsroomContentAskGlobalAnswersItem[];
 }
+
+export type NewsroomMetadataSource = typeof NewsroomMetadataSource[keyof typeof NewsroomMetadataSource];
+
+
+export const NewsroomMetadataSource = {
+  'maintained-editorial-source': 'maintained-editorial-source',
+} as const;
+
+export interface SeoMetadata {
+  title: string;
+  description: string;
+  path: string;
+  article?: boolean;
+  ampPath?: string;
+  imagePath?: string;
+  imageAlt?: string;
+}
+
+export interface NewsroomMetadata {
+  source: NewsroomMetadataSource;
+  generatedAt: string;
+  routes: SeoMetadata[];
+}

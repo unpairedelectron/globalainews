@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
-import { execFile } from 'node:child_process';
+import { execFile, spawn } from 'node:child_process';
 import { promisify } from 'node:util';
 import path from 'node:path';
 import os from 'node:os';
@@ -14,13 +14,14 @@ const distDir = path.join(root, 'dist', 'public');
 const publicDir = path.join(root, 'public');
 const site = 'https://www.globalainews.in';
 const siteOrigin = new URL(site).origin;
-const apiOrigin = process.env.SMOKE_API_ORIGIN ?? 'http://127.0.0.1:8080';
+let apiOrigin = process.env.SMOKE_API_ORIGIN ?? 'http://127.0.0.1:19820';
 const chromium = process.env.CHROMIUM_BIN || '/repl/tools/bin/chromium';
 const port = 0;
 const intentional404Routes = new Set();
 const ampPath = '/amp/article/ai-models-antibiotic-discovery/';
 
 let server;
+let apiProcess;
 let baseUrl;
 
 const mimeTypes = {
@@ -251,6 +252,30 @@ async function renderRoute(route, width, height) {
   }
 }
 
+async function startApiServer() {
+  if (process.env.SMOKE_API_ORIGIN) return;
+
+  apiProcess = spawn('pnpm', ['--filter', '@workspace/api-server', 'run', 'dev'], {
+    cwd: path.resolve(root, '..', '..'),
+    env: { ...process.env, PORT: '19820' },
+    stdio: ['ignore', 'ignore', 'pipe'],
+  });
+  apiOrigin = 'http://127.0.0.1:19820';
+
+  const deadline = Date.now() + 60_000;
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(`${apiOrigin}/api/healthz`);
+      if (response.ok) return;
+    } catch {
+      // The API build may still be starting.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+
+  throw new Error('The smoke test API server did not become ready within 60 seconds.');
+}
+
 function assertSeoDocument(document, route, { article = false } = {}) {
   const title = htmlText(tagContent(document, 'title'));
   const description = metaContent(document, 'name', 'description');
@@ -316,13 +341,22 @@ function assertInitialSeoDocument(document, route, { article = false } = {}) {
   }
 }
 
+function assertMetadataMatchesManifest(document, route, manifest) {
+  const expected = manifest.routes.find((metadata) => metadata.path === route);
+  assert.ok(expected, `${route}: API metadata manifest is missing this route`);
+  assert.equal(htmlText(tagContent(document, 'title')), expected.title, `${route}: initial title drifted from the API metadata manifest`);
+  assert.equal(metaContent(document, 'name', 'description'), expected.description, `${route}: initial description drifted from the API metadata manifest`);
+}
+
 before(async () => {
   await stat(path.join(distDir, 'index.html'));
+  await startApiServer();
   await startStaticServer();
 });
 
 after(async () => {
   await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+  if (apiProcess) apiProcess.kill('SIGTERM');
 });
 
 test('public routes, metadata, structured data, links, images, AMP, RSS, and responsive pages pass', async () => {
@@ -332,6 +366,12 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   ]);
   assert.equal(sitemapResponse.status, 200, 'sitemap.xml is not reachable');
   assert.equal(feedResponse.status, 200, 'feed.xml is not reachable');
+
+  const { response: metadataResponse, body: metadataBody } = await fetchText('/api/newsroom/metadata');
+  assert.equal(metadataResponse.status, 200, 'newsroom metadata manifest is not reachable');
+  const metadataManifest = JSON.parse(metadataBody);
+  assert.equal(metadataManifest.source, 'maintained-editorial-source', 'newsroom metadata manifest has an unexpected source');
+  assert.ok(Array.isArray(metadataManifest.routes), 'newsroom metadata manifest is missing routes');
 
   const routes = sitemapRoutes(sitemap);
   assert.ok(routes.length >= 15, 'sitemap unexpectedly contains too few public routes');
@@ -355,6 +395,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     assert.equal(response.status, 200, `${route}: direct request failed`);
     assert.match(body, /<div id="root"><\/div>/, `${route}: direct request did not receive the SPA shell`);
     assertInitialSeoDocument(body, route, { article: route.startsWith('/article/') });
+    assertMetadataMatchesManifest(body, route, metadataManifest);
     if (route.startsWith('/article/')) {
       const imagePath = new URL(metaContent(body, 'property', 'og:image')).pathname;
       const { response: imageResponse, body: imageBody } = await fetchText(imagePath);
@@ -371,6 +412,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     const document = await renderRoute(route, 1440, 900);
     if (route !== ampPath) {
       assertSeoDocument(document, route, { article: route.startsWith('/article/') });
+      assertMetadataMatchesManifest(document, route, metadataManifest);
     }
     await assertRenderedPageIntegrity(document, route, allowedRoutes, responseCache);
     const title = htmlText(tagContent(document, 'title'));

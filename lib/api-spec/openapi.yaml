@@ -47,6 +47,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/metadata:
+    get:
+      operationId: getNewsroomMetadata
+      tags: [newsroom]
+      summary: Get metadata for published newsroom routes
+      description: Returns the build-safe title and description manifest generated from the same maintained source as newsroom content.
+      responses:
+        "200":
+          description: Current newsroom metadata manifest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsroomMetadata"
+        "503":
+          description: Metadata source unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /newsletter/subscriptions:
     post:
       operationId: subscribeNewsletter
@@ -195,4 +214,42 @@ components:
         - indiaIndex
         - essays
         - askGlobalAnswers
+    NewsroomMetadata:
+      type: object
+      properties:
+        source:
+          type: string
+          enum: [maintained-editorial-source]
+        generatedAt:
+          type: string
+          format: date-time
+        routes:
+          type: array
+          items:
+            $ref: "#/components/schemas/SeoMetadata"
+      required:
+        - source
+        - generatedAt
+        - routes
+    SeoMetadata:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        path:
+          type: string
+        article:
+          type: boolean
+        ampPath:
+          type: string
+        imagePath:
+          type: string
+        imageAlt:
+          type: string
+      required:
+        - title
+        - description
+        - path
 

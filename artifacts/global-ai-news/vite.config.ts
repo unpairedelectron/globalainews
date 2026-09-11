@@ -7,7 +7,12 @@ import { defineConfig } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 import { stories } from './src/content';
-import { getSeoMetadata, getStructuredData } from './src/seo-metadata';
+import {
+  getSeoMetadata,
+  getStructuredData,
+  setSeoMetadataManifest,
+  type SeoMetadataManifest,
+} from './src/seo-metadata';
 
 const rawPort = process.env.PORT;
 
@@ -94,10 +99,33 @@ function writeSocialPreviewAssets(outputDir: string) {
     if (!metadata.imagePath) continue;
     const outputPath = path.join(outputDir, metadata.imagePath.replace(/^\/+/, ''));
     execFileSync('magick', ['svg:-', outputPath], {
-      input: previewSvg(story.title, story.category, story.slug),
+      input: previewSvg(metadata.title, story.category, story.slug),
       stdio: ['pipe', 'ignore', 'inherit'],
     });
   }
+}
+
+async function loadBuildMetadataManifest(): Promise<void> {
+  const manifestUrl = process.env.NEWSROOM_METADATA_URL;
+  if (!manifestUrl) {
+    setSeoMetadataManifest(undefined);
+    return;
+  }
+
+  const response = await fetch(manifestUrl);
+  if (!response.ok) {
+    throw new Error(
+      `Newsroom metadata manifest returned HTTP ${response.status} from ${manifestUrl}`,
+    );
+  }
+  const manifest = (await response.json()) as SeoMetadataManifest;
+  if (
+    manifest.source !== 'maintained-editorial-source' ||
+    !Array.isArray(manifest.routes)
+  ) {
+    throw new Error('Newsroom metadata manifest has an invalid shape.');
+  }
+  setSeoMetadataManifest(manifest);
 }
 
 function socialPreviewAssetsPlugin() {
@@ -170,8 +198,9 @@ function routeMetadataPlugin() {
   return {
     name: 'global-ai-news-route-metadata',
     apply: 'build' as const,
-    closeBundle() {
+    async closeBundle() {
       const outputDir = path.join(projectRoot, 'dist', 'public');
+      await loadBuildMetadataManifest();
       const baseHtml = readFileSync(path.join(outputDir, 'index.html'), 'utf8');
       writeSocialPreviewAssets(outputDir);
       for (const route of routePathsFromPublishingFiles(projectRoot)) {

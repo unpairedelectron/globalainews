@@ -1,4 +1,4 @@
-import { authors, findEntity, findStory, findTimeline } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, stories, timelineEvents } from './content';
 
 export const SITE_URL = 'https://www.globalainews.in';
 
@@ -10,6 +10,12 @@ export interface SeoMetadata {
   ampPath?: string;
   imagePath?: string;
   imageAlt?: string;
+}
+
+export interface SeoMetadataManifest {
+  source: 'maintained-editorial-source';
+  generatedAt: string;
+  routes: SeoMetadata[];
 }
 
 const staticMetadata: Record<string, SeoMetadata> = {
@@ -80,14 +86,23 @@ const staticMetadata: Record<string, SeoMetadata> = {
   },
 };
 
+let activeManifest: SeoMetadataManifest | undefined;
+
 function cleanRoute(route: string): string {
   if (!route || route === '/') return '/';
   const withoutQuery = route.split(/[?#]/, 1)[0];
   return withoutQuery.length > 1 ? withoutQuery.replace(/\/+$/, '') : '/';
 }
 
+export function setSeoMetadataManifest(manifest: SeoMetadataManifest | undefined): void {
+  activeManifest = manifest;
+}
+
 export function getSeoMetadata(route: string): SeoMetadata {
   const cleanPath = cleanRoute(route);
+  const manifestMetadata = activeManifest?.routes.find((metadata) => metadata.path === cleanPath);
+  if (manifestMetadata) return manifestMetadata;
+
   const staticPage = staticMetadata[cleanPath];
   if (staticPage) return staticPage;
 
@@ -142,6 +157,23 @@ export function getSeoMetadata(route: string): SeoMetadata {
     title: 'Global AI News — Intelligence for the AI economy',
     description: 'Stories, signals and context for understanding the AI industry.',
     path: cleanPath,
+  };
+}
+
+export function getSeoMetadataManifest(): SeoMetadataManifest {
+  const dynamicPaths = [
+    ...stories.map((story) => `/article/${story.slug}`),
+    ...timelineEvents.map((event) => `/timeline/${event.slug}`),
+    ...entities.map((entity) => `/${entity.kind}/${entity.slug}`),
+    ...authors.map((author) => `/person/${author.slug}`),
+  ];
+  const routes = [...new Set([...Object.keys(staticMetadata), ...dynamicPaths])]
+    .map((path) => getSeoMetadata(path));
+
+  return {
+    source: 'maintained-editorial-source',
+    generatedAt: new Date().toISOString(),
+    routes,
   };
 }
 

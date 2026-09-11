@@ -24,7 +24,8 @@ import type {
   HealthStatus,
   NewsletterSubscription,
   NewsletterSubscriptionInput,
-  NewsroomContent
+  NewsroomContent,
+  NewsroomMetadata
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -86,7 +87,6 @@ export const getHealthCheckQueryKey = () => {
     `/api/healthz`
     ] as const;
     }
-
 
 export const getHealthCheckQueryOptions = <TData = Awaited<ReturnType<typeof healthCheck>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof healthCheck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
@@ -210,6 +210,84 @@ export function useGetNewsroomContent<TData = Awaited<ReturnType<typeof getNewsr
 
 
 
+export const getGetNewsroomMetadataUrl = () => {
+
+
+
+
+  return `/api/newsroom/metadata`
+}
+
+/**
+ * Returns the build-safe title and description manifest generated from the same maintained source as newsroom content.
+ * @summary Get metadata for published newsroom routes
+ */
+export const getNewsroomMetadata = async ( options?: Parameters<typeof customFetch>[1]): Promise<NewsroomMetadata> => {
+
+  return customFetch<NewsroomMetadata>(getGetNewsroomMetadataUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetNewsroomMetadataQueryKey = () => {
+    return [
+    `/api/newsroom/metadata`
+    ] as const;
+    }
+
+
+export const getGetNewsroomMetadataQueryOptions = <TData = Awaited<ReturnType<typeof getNewsroomMetadata>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomMetadata>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNewsroomMetadataQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNewsroomMetadata>>> = ({ signal }) => getNewsroomMetadata({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNewsroomMetadata>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNewsroomMetadataQueryResult = NonNullable<Awaited<ReturnType<typeof getNewsroomMetadata>>>
+export type GetNewsroomMetadataQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Get metadata for published newsroom routes
+ */
+
+export function useGetNewsroomMetadata<TData = Awaited<ReturnType<typeof getNewsroomMetadata>>, TError = ErrorType<ErrorResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomMetadata>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetNewsroomMetadataQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getSubscribeNewsletterUrl = () => {
 
 
@@ -295,5 +373,5 @@ export const useSubscribeNewsletter = <TError = ErrorType<ErrorResponse>,
         SubscribeNewsletterMutationVariables,
         TContext
       > => {
-      return useMutation(getSubscribeNewsletterMutationOptions(options));
-    }
+       return useMutation(getSubscribeNewsletterMutationOptions(options));
+     }
