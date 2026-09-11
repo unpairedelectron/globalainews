@@ -70,7 +70,14 @@ export function SeoHead({ title, description, path, article = false }: { title: 
       if (!amp) document.head.appendChild(ampTag);
     } else if (amp) amp.remove();
     const ld = ensure('script[data-global-ai-ld]', () => { const el = document.createElement('script'); el.type = 'application/ld+json'; el.dataset.globalAiLd = 'true'; return el; });
-    ld.textContent = getStructuredData({ title: resolvedTitle, description: resolvedDescription, path: resolvedPath, article: resolvedArticle });
+    ld.textContent = getStructuredData({
+      title: resolvedTitle,
+      description: resolvedDescription,
+      path: resolvedPath,
+      article: resolvedArticle,
+      imagePath: routeMetadata?.imagePath,
+      imageAlt: routeMetadata?.imageAlt,
+    });
   }, [resolvedArticle, resolvedDescription, resolvedPath, resolvedTitle]);
   return null;
 }

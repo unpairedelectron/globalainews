@@ -47,3 +47,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Generated editorial preview cards
+/artifacts/global-ai-news/public/social/articles/*.png

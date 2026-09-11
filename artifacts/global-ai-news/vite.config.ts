@@ -100,6 +100,21 @@ function writeSocialPreviewAssets(outputDir: string) {
   }
 }
 
+function socialPreviewAssetsPlugin() {
+  const projectRoot = path.resolve(import.meta.dirname);
+  return {
+    name: 'global-ai-news-social-preview-assets',
+    configureServer() {
+      writeSocialPreviewAssets(path.join(projectRoot, 'public'));
+    },
+    handleHotUpdate({ file }: { file: string }) {
+      if (file === path.join(projectRoot, 'src', 'content.ts')) {
+        writeSocialPreviewAssets(path.join(projectRoot, 'public'));
+      }
+    },
+  };
+}
+
 function routePathsFromPublishingFiles(projectRoot: string): string[] {
   const sitemap = readFileSync(path.join(projectRoot, 'public', 'sitemap.xml'), 'utf8');
   const feed = readFileSync(path.join(projectRoot, 'public', 'feed.xml'), 'utf8');
@@ -174,6 +189,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
+    socialPreviewAssetsPlugin(),
     routeMetadataPlugin(),
     ...(process.env.NODE_ENV !== 'production' &&
     process.env.REPL_ID !== undefined
