@@ -21,6 +21,9 @@
   --color-muted-foreground: hsl(var(--muted-foreground));
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-danger: hsl(var(--danger));
   --font-sans: var(--app-font-sans);
   --font-serif: var(--app-font-serif);
   --font-mono: var(--app-font-mono);
@@ -28,48 +31,54 @@
 }
 
 :root {
-  --background: 212 37% 7%;
-  --foreground: 40 33% 94%;
-  --border: 212 25% 25%;
-  --input: 212 25% 25%;
-  --ring: 174 58% 54%;
-  --card: 212 30% 14%;
-  --card-foreground: 40 33% 94%;
-  --primary: 174 58% 54%;
-  --primary-foreground: 212 37% 10%;
-  --secondary: 212 25% 17%;
-  --secondary-foreground: 40 33% 94%;
-  --muted: 212 25% 21%;
-  --muted-foreground: 211 15% 70%;
-  --accent: 30 85% 68%;
-  --accent-foreground: 212 37% 10%;
-  --destructive: 2 72% 49%;
-  --destructive-foreground: 40 33% 98%;
-  --sidebar: 212 37% 14%;
-  --sidebar-foreground: 40 33% 96%;
-  --sidebar-border: 212 25% 24%;
+  --background: 45 25% 96%;
+  --foreground: 204 21% 8%;
+  --border: 48 7% 78%;
+  --input: 48 7% 78%;
+  --ring: 218 79% 46%;
+  --card: 0 0% 100%;
+  --card-foreground: 204 21% 8%;
+  --primary: 218 79% 46%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 214 24% 92%;
+  --secondary-foreground: 215 27% 15%;
+  --muted: 48 8% 91%;
+  --muted-foreground: 200 5% 36%;
+  --accent: 43 76% 60%;
+  --accent-foreground: 204 21% 8%;
+  --destructive: 4 47% 43%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 155 45% 29%;
+  --warning: 28 64% 38%;
+  --danger: 4 47% 43%;
+  --sidebar: 45 25% 96%;
+  --sidebar-foreground: 204 21% 8%;
+  --sidebar-border: 48 7% 78%;
   --app-font-sans: 'DM Sans', sans-serif;
   --app-font-serif: 'Instrument Serif', Georgia, serif;
   --app-font-mono: 'DM Mono', monospace;
-  --radius: 0.85rem;
+  --radius: 0.15rem;
 }
 
 .dark {
-  --background: 212 37% 10%;
-  --foreground: 40 33% 94%;
-  --border: 212 25% 25%;
-  --input: 212 25% 25%;
-  --card: 212 30% 14%;
-  --card-foreground: 40 33% 94%;
-  --primary: 174 58% 54%;
-  --primary-foreground: 212 37% 10%;
-  --secondary: 212 25% 23%;
-  --secondary-foreground: 40 33% 94%;
-  --muted: 212 25% 21%;
-  --muted-foreground: 211 15% 70%;
-  --accent: 10 73% 62%;
-  --accent-foreground: 212 37% 10%;
-  --ring: 174 58% 54%;
+  --background: 204 21% 8%;
+  --foreground: 45 25% 96%;
+  --border: 200 8% 31%;
+  --input: 200 8% 31%;
+  --card: 204 18% 12%;
+  --card-foreground: 45 25% 96%;
+  --primary: 218 100% 74%;
+  --primary-foreground: 204 21% 8%;
+  --secondary: 210 16% 19%;
+  --secondary-foreground: 45 25% 96%;
+  --muted: 202 12% 19%;
+  --muted-foreground: 201 10% 72%;
+  --accent: 43 72% 62%;
+  --accent-foreground: 204 21% 8%;
+  --success: 155 40% 62%;
+  --warning: 28 70% 62%;
+  --danger: 4 65% 66%;
+  --ring: 218 100% 74%;
 }
 
 @layer base {
@@ -93,9 +102,8 @@
 .noise::after { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .035; z-index: 50; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E"); }
 .story-hover { transition: transform .22s ease, background-color .22s ease, color .22s ease; }
 .story-hover:hover { transform: translateY(-3px); }
-.grid-rule { background-image: linear-gradient(to right, transparent 0, transparent calc(100% - 1px), hsl(var(--foreground) / .08) calc(100% - 1px)); background-size: 25% 100%; }
-.atlas-grid { background-image: linear-gradient(rgba(112,225,208,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(112,225,208,.09) 1px, transparent 1px), radial-gradient(circle at 50% 43%, rgba(112,225,208,.12), transparent 42%); background-size: 44px 44px, 44px 44px, 100% 100%; }
-@keyframes atlas-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(112,225,208,.4); } 50% { box-shadow: 0 0 0 10px rgba(112,225,208,0); } }
+.grid-rule { background-size: 25% 100%; }
+@keyframes atlas-pulse { 0%,100% { box-shadow: 0 0 0 0 hsl(var(--primary) / .35); } 50% { box-shadow: 0 0 0 10px hsl(var(--primary) / 0); } }
 .atlas-pulse { animation: atlas-pulse 1.8s ease-in-out infinite; }
 button, a { -webkit-tap-highlight-color: transparent; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }

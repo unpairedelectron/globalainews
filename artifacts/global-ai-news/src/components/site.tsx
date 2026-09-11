@@ -1,0 +1,99 @@
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import { ArrowUpRight, Bookmark, BookmarkCheck, Menu, Search, Share2, X } from 'lucide-react';
+import { Link, useLocation } from 'wouter';
+import { authors, findEntity, findStory, timelineEvents } from '@/content';
+
+export const SITE = 'https://www.globalainews.in';
+
+export function SeoHead({ title, description, path, article = false }: { title: string; description: string; path: string; article?: boolean }) {
+  useEffect(() => {
+    document.title = title;
+    const canonical = `${SITE}${path}`;
+    const ensure = (selector: string, create: () => HTMLElement) => {
+      const found = document.head.querySelector(selector) as HTMLElement | null;
+      const element = found ?? create();
+      if (!found) document.head.appendChild(element);
+      return element;
+    };
+    const descriptionTag = ensure('meta[name="description"]', () => { const el = document.createElement('meta'); el.name = 'description'; return el; }) as HTMLMetaElement;
+    descriptionTag.content = description;
+    const canonicalTag = ensure('link[rel="canonical"]', () => { const el = document.createElement('link'); el.rel = 'canonical'; return el; });
+    canonicalTag.setAttribute('href', canonical);
+    [['og:title', title], ['og:description', description], ['og:url', canonical], ['og:type', article ? 'article' : 'website'], ['twitter:title', title], ['twitter:description', description]].forEach(([property, content]) => {
+      const tag = ensure(`meta[property="${property}"]`, () => { const el = document.createElement('meta'); el.setAttribute('property', property); return el; });
+      tag.setAttribute('content', content);
+    });
+    const twitter = ensure('meta[name="twitter:card"]', () => { const el = document.createElement('meta'); el.name = 'twitter:card'; return el; }) as HTMLMetaElement;
+    twitter.content = 'summary_large_image';
+    const amp = document.head.querySelector('link[rel="amphtml"]');
+    if (article) {
+      const ampTag = (amp as HTMLLinkElement | null) ?? document.createElement('link');
+      ampTag.rel = 'amphtml';
+      ampTag.href = `${SITE}/amp/article/ai-models-antibiotic-discovery/`;
+      if (!amp) document.head.appendChild(ampTag);
+    } else if (amp) amp.remove();
+    const ld = ensure('script[data-global-ai-ld]', () => { const el = document.createElement('script'); el.type = 'application/ld+json'; el.dataset.globalAiLd = 'true'; return el; });
+    ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': [
+      article ? { '@type': 'NewsArticle', headline: title, description, url: canonical, author: { '@type': 'Organization', name: 'Global AI News' }, publisher: { '@type': 'Organization', name: 'Global AI News' }, datePublished: '2026-09-11' } : { '@type': 'WebSite', name: 'Global AI News', url: SITE, potentialAction: { '@type': 'SearchAction', target: `${SITE}/brief?q={search_term_string}` } },
+      { '@type': 'Organization', name: 'Global AI News', url: SITE },
+      { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE }, { '@type': 'ListItem', position: 2, name: title, item: canonical }] },
+    ] });
+  }, [article, description, path, title]);
+  return null;
+}
+
+const nav = [['Brief', '/brief'], ['Signals', '/signals'], ['Research', '/research'], ['Industry', '/industry'], ['Models', '/models'], ['Policy', '/policy'], ['India', '/india'], ['Essays', '/essays']];
+
+export function Header() {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [, setLocation] = useLocation();
+  const submit = (event: FormEvent) => { event.preventDefault(); if (query.trim()) setLocation(`/brief?q=${encodeURIComponent(query.trim())}`); };
+  return <header className="sticky top-0 z-40 border-b border-foreground/15 bg-background/95 backdrop-blur-sm">
+    <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-5 py-4 md:px-10">
+      <Link href="/" data-testid="link-logo" className="shrink-0 text-[1.05rem] font-semibold tracking-[-.07em]">GLOBAL <span className="text-primary">AI</span> NEWS</Link>
+      <nav aria-label="Main navigation" className="hidden items-center gap-5 xl:flex">{nav.map(([label, href]) => <Link data-testid={`link-nav-${label.toLowerCase()}`} key={href} href={href} className="eyebrow text-muted-foreground transition-colors hover:text-primary">{label}</Link>)}</nav>
+      <div className="flex items-center gap-3"><span className="hidden font-mono text-[10px] uppercase tracking-widest text-muted-foreground lg:inline">11 Sep 2026 · Edition 254</span><button type="button" data-testid="button-search-toggle" aria-label={open ? 'Close search' : 'Open search'} onClick={() => setOpen(!open)} className="grid h-8 w-8 place-items-center border border-foreground/20 hover:border-primary hover:text-primary">{open ? <X size={15} /> : <Search size={15} />}</button><Link href="/brief#newsletter" data-testid="link-join-brief" className="hidden bg-primary px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-primary-foreground sm:block">Join the brief</Link><button type="button" data-testid="button-mobile-menu" className="xl:hidden" onClick={() => setOpen(!open)} aria-label="Open navigation">{open ? <X size={18} /> : <Menu size={18} />}</button></div>
+    </div>
+    {open && <div className="border-t border-foreground/15 bg-card px-5 py-4 md:px-10"><form onSubmit={submit} className="mx-auto flex max-w-[1440px] items-center gap-3"><Search size={15} className="text-primary" /><input data-testid="input-site-search" autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search stories, entities and timelines" className="min-w-0 flex-1 bg-transparent py-2 font-mono text-xs outline-none" /><button data-testid="button-site-search" className="border border-primary px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-primary">Search</button></form><nav className="mx-auto mt-4 grid max-w-[1440px] grid-cols-2 gap-x-4 gap-y-3 xl:hidden">{nav.map(([label, href]) => <Link data-testid={`link-mobile-${label.toLowerCase()}`} key={href} href={href} onClick={() => setOpen(false)} className="border-t border-foreground/15 pt-2 text-sm">{label}</Link>)}</nav></div>}
+    <div className="overflow-hidden border-t border-foreground/10 bg-foreground py-2 text-background"><div className="ticker-track flex min-w-max gap-14 px-5 font-mono text-[10px] uppercase tracking-widest"><span><b className="text-accent">Signal</b> Model race moves from benchmarks to workflow reliability</span><span><b className="text-accent">India</b> Public compute is becoming a competitive layer</span><span><b className="text-accent">Policy</b> Provenance enters procurement</span><span><b className="text-accent">Signal</b> Model race moves from benchmarks to workflow reliability</span></div></div>
+  </header>;
+}
+
+export function Footer() {
+  return <footer className="mt-24 border-t border-foreground/15"><div className="mx-auto grid max-w-[1440px] gap-10 px-5 py-14 md:grid-cols-[1.7fr_1fr_1fr_1fr] md:px-10"><div><p className="text-lg font-semibold tracking-[-.07em]">GLOBAL <span className="text-primary">AI</span> NEWS</p><p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">Intelligence for the AI economy. Stories, signals and context for people who need to understand what changed.</p></div><div><p className="eyebrow text-primary">Explore</p><div className="mt-4 grid gap-3 text-sm">{nav.slice(0, 4).map(([label, href]) => <Link data-testid={`link-footer-${label.toLowerCase()}`} key={href} href={href} className="hover:text-primary">{label}</Link>)}</div></div><div><p className="eyebrow text-primary">Institution</p><div className="mt-4 grid gap-3 text-sm"><Link href="/insights">Publisher workspace</Link><Link href="/ask">Ask Global</Link><Link href="/topic/ai">AI topic</Link><Link href="/topic/india">India topic</Link></div></div><div><p className="eyebrow text-primary">Edition</p><p className="mt-4 font-serif text-3xl">№254</p><p className="mt-1 text-xs text-muted-foreground">Published from everywhere.</p></div></div><div className="mx-auto flex max-w-[1440px] justify-between border-t border-foreground/15 px-5 py-5 text-[11px] text-muted-foreground md:px-10"><span>© 2026 Global AI News</span><span>Independent newsroom · No noise by design</span></div></footer>;
+}
+
+export function Newsletter({ compact = false }: { compact?: boolean }) {
+  const [email, setEmail] = useState('');
+  const [done, setDone] = useState(false);
+  return <section id="newsletter" className={`border-y border-primary bg-primary text-primary-foreground ${compact ? 'p-6' : 'p-8 md:p-12'}`}><div className="max-w-2xl"><p className="eyebrow text-primary-foreground/70">The Daily Brief · 07:30 UTC</p><h2 className={`display mt-3 leading-[.92] ${compact ? 'text-4xl' : 'text-5xl md:text-7xl'}`}>Know what<br />changed.</h2><p className="mt-5 max-w-md text-sm leading-6 text-primary-foreground/80">One considered email for the people who need to understand the AI industry before the day starts.</p>{done ? <p data-testid="status-newsletter-success" className="mt-7 border border-primary-foreground/35 px-4 py-3 text-sm">You’re on the list. See you in the morning.</p> : <form onSubmit={(event) => { event.preventDefault(); if (email.includes('@')) setDone(true); }} className="mt-7 flex max-w-md flex-col gap-2 sm:flex-row"><input data-testid="input-newsletter-email" type="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@company.com" className="min-w-0 flex-1 border border-primary-foreground/40 bg-transparent px-4 py-3 text-sm outline-none placeholder:text-primary-foreground/60 focus:border-primary-foreground" /><button data-testid="button-newsletter-submit" className="bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground">Get the brief</button></form>}</div></section>;
+}
+
+export function SectionLabel({ children, aside }: { children: ReactNode; aside?: ReactNode }) { return <div className="mb-5 flex items-center justify-between border-b border-foreground/15 pb-3"><p className="eyebrow text-primary">{children}</p>{aside && <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{aside}</span>}</div>; }
+
+export function EditorialImage({ treatment = 'editorial-abstract', caption, large = false }: { treatment?: string; caption?: string; large?: boolean }) {
+  return <figure className={`overflow-hidden border border-foreground/15 bg-[#172d3a] text-[#f6f4ef] ${large ? 'min-h-[300px] md:min-h-[540px]' : 'min-h-[180px]'}`}><div className="relative h-full min-h-[inherit] overflow-hidden p-6 md:p-10"><div className="absolute right-10 top-10 h-28 w-28 rounded-full border border-[#7c9bb1]/50" /><div className="absolute right-20 top-20 h-16 w-16 rounded-full border border-[#e6b84b]/70" /><div className="absolute bottom-12 left-12 h-px w-3/4 bg-[#8ab2ce]/60" /><div className="absolute bottom-20 left-20 h-px w-1/2 rotate-[-14deg] bg-[#e6b84b]/70" /><div className="relative flex h-full min-h-[inherit] flex-col justify-between"><span className="eyebrow text-[#c9d7df]">{treatment.replace('-', ' ')} / field note</span><div><p className="max-w-sm font-serif text-4xl leading-[.9] md:text-6xl">{treatment === 'data-graphic' ? 'The map follows the constraint.' : 'A new map of the invisible.'}</p><p className="mt-4 max-w-xs text-xs leading-5 text-[#c9d7df]">Editorial visual system · 11.09.26</p></div></div></div>{caption && <figcaption className="border-t border-[#6e8796] px-6 py-3 text-xs text-[#cad5da]">{caption}</figcaption>}</figure>;
+}
+
+export function StoryRow({ slug, rank, compact = false }: { slug: string; rank?: number; compact?: boolean }) {
+  const story = findStory(slug);
+  const [saved, setSaved] = useState(false);
+  if (!story) return null;
+  return <article data-testid={`card-story-${slug}`} className={`group border-t border-foreground/15 py-5 ${compact ? '' : 'md:py-7'}`}><div className="grid grid-cols-[auto_1fr_auto] gap-4"><span className="font-serif text-3xl leading-none text-primary/70">{rank ? `0${rank}` : '—'}</span><div><div className="flex flex-wrap items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span className="h-1 w-1 rounded-full bg-accent" /><span className="text-xs text-muted-foreground">{story.readTime}</span></div><Link data-testid={`link-story-${slug}`} href={`/article/${story.slug}`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] transition-colors group-hover:text-primary md:text-3xl">{story.title}</Link><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p><p className="mt-4 text-xs text-muted-foreground">By {authors.find((author) => author.slug === story.author)?.name ?? story.author} · {story.date}</p></div><button data-testid={`button-bookmark-${slug}`} type="button" aria-label={saved ? 'Remove bookmark' : 'Bookmark story'} onClick={() => setSaved(!saved)} className="self-start p-1 text-muted-foreground hover:text-primary">{saved ? <BookmarkCheck size={17} /> : <Bookmark size={17} />}</button></div></article>;
+}
+
+export function EvidencePanel({ storySlug }: { storySlug: string }) {
+  const story = findStory(storySlug);
+  if (!story) return null;
+  const evidence = story.evidenceSummary;
+  return <section className="border-y border-foreground/15 py-6"><SectionLabel>Evidence</SectionLabel><div className="grid gap-5 text-sm sm:grid-cols-3"><div><p className="eyebrow text-muted-foreground">Primary sources</p><p className="mt-2 text-2xl font-semibold">{evidence.primarySources}</p></div><div><p className="eyebrow text-muted-foreground">Independent confirmations</p><p className="mt-2 text-2xl font-semibold">{evidence.independentConfirmations}</p></div><div><p className="eyebrow text-muted-foreground">Editorial confidence</p><p className="mt-2 text-2xl font-semibold text-success">{evidence.confidence}</p></div></div><p className="mt-5 max-w-xl text-sm leading-6 text-muted-foreground">{evidence.note}</p></section>;
+}
+
+export function EntityLinks({ slugs }: { slugs: string[] }) {
+  return <div className="flex flex-wrap gap-x-5 gap-y-3">{slugs.map((slug) => { const entity = findEntity(slug); return entity ? <Link data-testid={`link-entity-${slug}`} key={slug} href={`/${entity.kind}/${entity.slug}`} className="border-b border-primary/40 pb-1 text-sm hover:text-primary">{entity.name} <ArrowUpRight size={12} className="inline" /></Link> : null; })}</div>;
+}
+
+export function TimelineList({ slugs }: { slugs: string[] }) {
+  return <div className="grid gap-0">{slugs.map((slug) => { const event = timelineEvents.find((item) => item.slug === slug); return event ? <Link data-testid={`link-timeline-${slug}`} href={`/timeline/${slug}`} key={slug} className="grid grid-cols-[110px_1fr] gap-4 border-t border-foreground/15 py-4 text-sm hover:text-primary"><span className="font-mono text-[10px] text-muted-foreground">{event.date}</span><span><b className="font-medium">{event.title}</b><span className="mt-1 block text-xs leading-5 text-muted-foreground">{event.description}</span></span></Link> : null; })}</div>;
+}

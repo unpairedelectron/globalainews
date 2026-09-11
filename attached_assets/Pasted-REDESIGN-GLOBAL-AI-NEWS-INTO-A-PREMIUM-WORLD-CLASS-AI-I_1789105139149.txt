@@ -1,0 +1,289 @@
+REDESIGN GLOBAL AI NEWS INTO A PREMIUM, WORLD-CLASS AI INTELLIGENCE PUBLICATION.
+
+Reference:
+https://global-ai-media.replit.app/
+
+Existing product:
+https://globalainews.in/
+
+Do NOT create another generic AI-news SaaS template.
+
+The current implementation has the visual characteristics of an AI-generated website: excessive gradients, rounded cards, generic dashboard patterns, weak editorial hierarchy, and insufficient brand authority.
+
+The new design must feel like a serious global media institution.
+
+CORE POSITIONING
+
+GLOBAL AI NEWS
+Intelligence for the AI economy.
+
+The product is not simply an AI news aggregator.
+
+It is an intelligence platform that transforms AI news into:
+- stories
+- signals
+- context
+- evidence
+- timelines
+- company intelligence
+- model intelligence
+- industry intelligence
+- policy intelligence
+
+DESIGN DIRECTION
+
+Use:
+- premium editorial design
+- strong typography
+- warm white / ivory backgrounds
+- near-black typography
+- one restrained electric blue accent
+- editorial serif for major headlines
+- modern grotesk for UI and metadata
+- generous whitespace
+- thin rules
+- asymmetrical editorial grids
+- subtle motion
+- high-quality image treatment
+- restrained data visualization
+- excellent hierarchy
+
+Avoid:
+- purple/blue gradients
+- glowing blobs
+- glassmorphism
+- excessive rounded cards
+- excessive pills
+- generic AI illustrations
+- futuristic decorative graphics
+- dashboard aesthetics
+- excessive icons
+- unnecessary animations
+- visual clutter
+
+The site must feel expensive, intelligent, calm and authoritative.
+
+HOMEPAGE
+
+Create the following hierarchy:
+
+1. GLOBAL AI NEWS masthead
+2. Primary navigation:
+Brief / Signals / Research / Industry / Models / Policy / India / Essays
+3. Date + edition indicator
+4. Large editorial statement:
+"The AI industry is moving fast. We make sense of it."
+5. Lead story
+6. Today's Signals
+7. Top stories
+8. What Changed Today timeline
+9. AI Industry Map
+10. India AI Index
+11. Deep Reads / Essays
+12. Daily Brief newsletter CTA
+13. Institutional footer
+
+Do NOT make the homepage a grid of equal-sized cards.
+
+Create clear editorial hierarchy with one dominant story and secondary stories.
+
+ARTICLE DESIGN
+
+Every article should contain:
+
+- category
+- headline
+- dek
+- timestamp
+- author/editor
+- hero image
+- THE BOTTOM LINE
+- WHY THIS MATTERS
+- KEY TAKEAWAYS
+- main article
+- WHAT CHANGES
+- data/metrics where relevant
+- SOURCES
+- evidence quality
+- related entities
+- related stories
+- timeline
+- next stories
+
+Replace ugly/internal-looking verification labels with a polished editorial evidence system.
+
+Example:
+
+EVIDENCE
+Primary sources: 3
+Independent confirmations: 5
+Editorial confidence: HIGH
+
+Never expose internal QA implementation details to users.
+
+ENTITY SYSTEM
+
+Create reusable entity pages for:
+
+- companies
+- AI labs
+- models
+- people
+- technologies
+- policies
+
+Each profile should contain:
+overview
+latest developments
+timeline
+related organizations
+key metrics
+signals
+recent stories
+
+SIGNALS
+
+Create a dedicated Signals product.
+
+Examples:
+Model race
+AI infrastructure
+Capital
+Regulation
+Open source
+Enterprise adoption
+
+Display directional changes visually but minimally.
+
+AI INDUSTRY MAP
+
+Create a structured ecosystem view:
+
+Frontier Labs
+Infrastructure
+Models
+Agents
+Applications
+Capital
+Policy
+
+INDIA AI INDEX
+
+Turn India into a major differentiated product.
+
+Sections:
+startups
+funding
+talent
+research
+policy
+infrastructure
+companies
+government initiatives
+
+ASK GLOBAL
+
+Create a future-ready intelligence interface, not a generic chatbot.
+
+Users should be able to ask:
+"What changed in OpenAI this week?"
+"Why is NVIDIA moving?"
+"What are the biggest open-source model developments?"
+"What changed in India's AI policy?"
+"Compare Anthropic vs OpenAI."
+
+Answers should cite relevant Global AI News articles, sources, timelines and entities.
+
+MOBILE
+
+Prioritize mobile reading.
+
+Daily Brief must be readable in approximately 3 minutes.
+
+Use large editorial headlines, strong hierarchy and minimal chrome.
+
+PERFORMANCE
+
+- excellent Core Web Vitals
+- fast image loading
+- responsive layout
+- semantic HTML
+- accessibility
+- keyboard navigation
+- SEO-friendly structure
+- structured metadata
+- Open Graph
+- RSS
+- sitemap
+- canonical URLs
+- article schema
+- organization schema
+
+SEO
+
+Build SEO around:
+AI news
+AI companies
+AI models
+AI research
+AI policy
+AI funding
+AI startups
+AI infrastructure
+company profiles
+model profiles
+industry timelines
+
+CONTENT ARCHITECTURE
+
+Do not treat every piece of content as a flat article.
+
+Build relationships between:
+stories
+companies
+people
+models
+topics
+events
+sources
+timelines
+
+The long-term product should support a knowledge graph.
+
+TRUST
+
+Clearly distinguish:
+reported facts
+analysis
+opinion
+AI-assisted synthesis
+
+AI can assist research and summarization but must never be positioned as the journalist.
+
+BRAND FEEL
+
+Imagine:
+premium global journalism
+technology intelligence
+institutional credibility
+modern product design
+
+The result should look credible enough to sit beside Bloomberg, Semafor, Financial Times, The Economist and leading technology publications — while developing its own distinct identity.
+
+MOST IMPORTANT REQUIREMENT:
+
+Do not merely restyle the existing page.
+
+Rebuild the information hierarchy and editorial experience.
+
+The homepage must immediately communicate:
+
+"THIS IS WHERE I GO TO UNDERSTAND THE AI INDUSTRY."
+
+Preserve the existing backend/data where practical, but redesign the presentation layer comprehensively.
+
+Before coding, inspect the existing implementation and create a design-system layer so the entire product shares the same visual language.
+
+Do not leave placeholder sections or unfinished components.
+
+Everything must feel production-ready.

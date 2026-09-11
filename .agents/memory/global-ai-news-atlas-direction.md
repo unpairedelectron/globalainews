@@ -1,10 +1,10 @@
 ---
-name: Global AI News atlas direction
-description: The publication's new visual north star and the editorial principles it must preserve.
+name: Global AI News institutional direction
+description: The current visual and editorial north star for the publication.
 ---
 
-Global AI News now uses a dark, high-contrast intelligence-atlas direction rather than a parchment-led editorial template. The homepage should feel like a living map of labs, capital, policy, infrastructure, and India-linked signals.
+Global AI News now follows a warm-ivory institutional intelligence direction: near-black typography, restrained electric blue, serif editorial headlines, grotesk/mono metadata, generous whitespace, thin rules, asymmetrical grids, evidence panels, timelines, signals, entities, and India intelligence.
 
-**Why:** The previous Swiss/editorial treatment was too close to the user's other publications, so a visual reset needed a different mental model, not only different colors.
+**Why:** The attached redesign brief superseded the earlier dark atlas experiment and explicitly asked for a calm, authoritative media institution rather than a dashboard-like or futuristic AI-news template.
 
-**How to apply:** Keep the signal-first Daily Brief, “why it matters” framing, India Watch bridge, clear ad labeling, and readable article experience while using asymmetric composition, topology/map language, luminous teal and warm signal accents, mono metadata, and responsive command-center behavior.
+**How to apply:** Keep the signal-first Daily Brief, “why it matters” framing, India AI Index, clear ad labeling, and readable article experience while treating stories as connected intelligence objects: stories, entities, sources, evidence, timelines, signals, and industry relationships.

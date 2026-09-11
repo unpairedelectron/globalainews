@@ -1,23 +1,5 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle } from 'lucide-react';
+import { Link } from 'wouter';
 
 export default function NotFound() {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">
-              404 Page Not Found
-            </h1>
-          </div>
-
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  return <main className="mx-auto flex min-h-[100dvh] max-w-[900px] flex-col justify-center px-5 py-16"><p className="eyebrow text-primary">404 · Signal lost</p><h1 className="mt-6 max-w-2xl font-serif text-7xl leading-[.84] md:text-[9rem]">This page<br /><em className="text-primary">moved on.</em></h1><p className="mt-7 max-w-md text-lg leading-7 text-muted-foreground">The URL is not part of the current record. Return to the newsroom and follow the signal.</p><Link href="/" className="mt-8 inline-block w-fit bg-foreground px-4 py-3 text-sm text-background">Return to Global AI News</Link></main>;
 }
