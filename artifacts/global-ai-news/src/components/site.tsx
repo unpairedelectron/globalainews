@@ -32,6 +32,34 @@ export function SeoHead({ title, description, path, article = false }: { title: 
       const tag = ensure(`meta[property="${property}"]`, () => { const el = document.createElement('meta'); el.setAttribute('property', property); return el; });
       tag.setAttribute('content', content);
     });
+    const imageMetadata: Array<['property' | 'name', string, string]> = routeMetadata?.imagePath
+      ? [
+          ['property', 'og:image', `${SITE}${routeMetadata.imagePath}`],
+          ['property', 'og:image:alt', routeMetadata.imageAlt ?? resolvedTitle],
+          ['property', 'og:image:type', 'image/png'],
+          ['name', 'twitter:image', `${SITE}${routeMetadata.imagePath}`],
+          ['name', 'twitter:image:alt', routeMetadata.imageAlt ?? resolvedTitle],
+        ]
+      : [];
+    const upsertMeta = (attribute: 'property' | 'name', key: string, content: string) => {
+      const tag = ensure(`meta[${attribute}="${key}"]`, () => {
+        const el = document.createElement('meta');
+        el.setAttribute(attribute, key);
+        return el;
+      });
+      tag.setAttribute('content', content);
+    };
+    ['og:image', 'og:image:alt', 'og:image:type'].forEach((property) => {
+      if (!imageMetadata.some(([attribute, key]) => attribute === 'property' && key === property)) {
+        document.head.querySelector(`meta[property="${property}"]`)?.remove();
+      }
+    });
+    ['twitter:image', 'twitter:image:alt'].forEach((name) => {
+      if (!imageMetadata.some(([attribute, key]) => attribute === 'name' && key === name)) {
+        document.head.querySelector(`meta[name="${name}"]`)?.remove();
+      }
+    });
+    imageMetadata.forEach(([attribute, key, content]) => upsertMeta(attribute, key, content));
     const twitter = ensure('meta[name="twitter:card"]', () => { const el = document.createElement('meta'); el.name = 'twitter:card'; return el; }) as HTMLMetaElement;
     twitter.content = 'summary_large_image';
     const amp = document.head.querySelector('link[rel="amphtml"]');

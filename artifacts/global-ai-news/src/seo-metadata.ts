@@ -8,6 +8,8 @@ export interface SeoMetadata {
   path: string;
   article?: boolean;
   ampPath?: string;
+  imagePath?: string;
+  imageAlt?: string;
 }
 
 const staticMetadata: Record<string, SeoMetadata> = {
@@ -98,6 +100,8 @@ export function getSeoMetadata(route: string): SeoMetadata {
       path: `/article/${story.slug}`,
       article: true,
       ampPath: '/amp/article/ai-models-antibiotic-discovery/',
+      imagePath: `/social/articles/${story.slug}.png`,
+      imageAlt: `${story.title} — Global AI News editorial preview`,
     };
   }
 
@@ -152,6 +156,7 @@ export function getStructuredData(metadata: SeoMetadata): string {
             headline: metadata.title,
             description: metadata.description,
             url: canonical,
+            ...(metadata.imagePath ? { image: `${SITE_URL}${metadata.imagePath}` } : {}),
             author: { '@type': 'Organization', name: 'Global AI News' },
             publisher: { '@type': 'Organization', name: 'Global AI News' },
             datePublished: '2026-09-11',

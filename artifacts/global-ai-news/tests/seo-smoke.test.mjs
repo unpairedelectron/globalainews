@@ -24,6 +24,7 @@ const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
   '.svg': 'image/svg+xml',
   '.xml': 'application/xml; charset=utf-8',
 };
@@ -69,6 +70,21 @@ function linkHref(document, relation) {
 function routeFromUrl(value) {
   const pathname = new URL(value).pathname;
   return pathname === '/' ? '/' : pathname.replace(/\/$/, '');
+}
+
+function assertSocialPreviewMetadata(document, route) {
+  const image = metaContent(document, 'property', 'og:image');
+  const twitterImage = metaContent(document, 'name', 'twitter:image');
+  const imageAlt = metaContent(document, 'property', 'og:image:alt');
+  const twitterImageAlt = metaContent(document, 'name', 'twitter:image:alt');
+  const imageType = metaContent(document, 'property', 'og:image:type');
+  assert.ok(image, `${route}: article is missing og:image`);
+  assert.ok(image.startsWith(`${site}/social/articles/`) && image.endsWith('.png'), `${route}: og:image is not a stable article PNG`);
+  assert.equal(new URL(image).origin, site, `${route}: og:image is not an absolute site URL`);
+  assert.equal(twitterImage, image, `${route}: twitter:image does not match og:image`);
+  assert.ok(imageAlt.length >= 20, `${route}: og:image:alt is missing or too short`);
+  assert.equal(twitterImageAlt, imageAlt, `${route}: twitter:image:alt does not match og:image:alt`);
+  assert.equal(imageType, 'image/png', `${route}: og:image:type is incorrect`);
 }
 
 function sitemapRoutes(xml) {
@@ -188,8 +204,12 @@ function assertSeoDocument(document, route, { article = false } = {}) {
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === 'BreadcrumbList'), `${route}: breadcrumb JSON-LD is missing`);
 
   if (article) {
+    assertSocialPreviewMetadata(document, route);
+    const articleData = structuredData['@graph'].find((entry) => entry['@type'] === 'NewsArticle');
+    assert.equal(articleData.image, metaContent(document, 'property', 'og:image'), `${route}: JSON-LD image does not match social preview`);
     assert.equal(linkHref(document, 'amphtml'), `${site}/amp/article/ai-models-antibiotic-discovery/`, `${route}: AMP relationship is missing`);
   } else {
+    assert.equal(metaContent(document, 'property', 'og:image'), '', `${route}: non-article page unexpectedly exposes og:image`);
     assert.equal(linkHref(document, 'amphtml'), '', `${route}: non-article page unexpectedly exposes AMP`);
   }
 }
@@ -216,8 +236,10 @@ function assertInitialSeoDocument(document, route, { article = false } = {}) {
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === 'BreadcrumbList'), `${route}: initial breadcrumb JSON-LD is missing`);
 
   if (article) {
+    assertSocialPreviewMetadata(document, route);
     assert.equal(linkHref(document, 'amphtml'), `${site}/amp/article/ai-models-antibiotic-discovery/`, `${route}: initial AMP relationship is missing`);
   } else {
+    assert.equal(metaContent(document, 'property', 'og:image'), '', `${route}: non-article initial HTML unexpectedly exposes og:image`);
     assert.equal(linkHref(document, 'amphtml'), '', `${route}: non-article initial HTML unexpectedly exposes AMP`);
   }
 }
@@ -261,6 +283,13 @@ test('public routes, metadata, structured data, AMP, RSS, and responsive pages p
     assert.equal(response.status, 200, `${route}: direct request failed`);
     assert.match(body, /<div id="root"><\/div>/, `${route}: direct request did not receive the SPA shell`);
     assertInitialSeoDocument(body, route, { article: route.startsWith('/article/') });
+    if (route.startsWith('/article/')) {
+      const imagePath = new URL(metaContent(body, 'property', 'og:image')).pathname;
+      const { response: imageResponse, body: imageBody } = await fetchText(imagePath);
+      assert.equal(imageResponse.status, 200, `${route}: social preview image is not reachable`);
+      assert.match(imageResponse.headers.get('content-type') ?? '', /^image\/png\b/, `${route}: social preview image is not a PNG`);
+      assert.ok(imageBody.length > 1000, `${route}: social preview image is unexpectedly small`);
+    }
   }
 
   const titles = new Map();
