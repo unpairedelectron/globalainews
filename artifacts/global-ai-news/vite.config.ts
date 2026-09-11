@@ -3,7 +3,7 @@ import { execFileSync } from 'child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vite';
+import { defineConfig, type ViteDevServer } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 import { stories } from './src/content';
@@ -143,6 +143,7 @@ function writeSocialPreviewAssets(outputDir: string) {
   }
 }
 
+const socialPreviewPathPattern = /^\/social\/articles\/[^/]+\.png(?:\?.*)?$/;
 async function loadBuildMetadataManifest(): Promise<void> {
   const manifestUrl = process.env.NEWSROOM_METADATA_URL;
   if (!manifestUrl) {
@@ -170,8 +171,14 @@ function socialPreviewAssetsPlugin() {
   const projectRoot = path.resolve(import.meta.dirname);
   return {
     name: 'global-ai-news-social-preview-assets',
-    configureServer() {
+    configureServer(server: ViteDevServer) {
       writeSocialPreviewAssets(path.join(projectRoot, 'public'));
+      server.middlewares.use((request, response, next) => {
+        if (isSocialPreviewPath(request.url)) {
+          response.setHeader('Cache-Control', 'no-cache');
+        }
+        next();
+      });
     },
     handleHotUpdate({ file }: { file: string }) {
       if (file === path.join(projectRoot, 'src', 'content.ts')) {
@@ -304,3 +311,10 @@ export default defineConfig({
     allowedHosts: true,
   },
 });
+
+function isSocialPreviewPath(url: string | undefined): boolean {
+  if (!url) return false;
+  return socialPreviewPathPattern.test(
+    new URL(url, 'http://127.0.0.1').pathname,
+  );
+}

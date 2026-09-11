@@ -17,12 +17,16 @@ const siteOrigin = new URL(site).origin;
 let apiOrigin = process.env.SMOKE_API_ORIGIN ?? 'http://127.0.0.1:19820';
 const chromium = process.env.CHROMIUM_BIN || '/repl/tools/bin/chromium';
 const port = 0;
+const devPort = 19821;
+const socialPreviewCacheControl = 'public, max-age=86400, must-revalidate';
 const intentional404Routes = new Set();
 const ampPath = '/amp/article/ai-models-antibiotic-discovery/';
 
 let server;
 let apiProcess;
+let devProcess;
 let baseUrl;
+let devBaseUrl;
 
 const mimeTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -193,6 +197,13 @@ async function serveFile(response, filePath) {
   const extension = path.extname(filePath).toLowerCase();
   response.statusCode = 200;
   response.setHeader('Content-Type', mimeTypes[extension] ?? 'application/octet-stream');
+  const socialDirectory = path.join(distDir, 'social', 'articles');
+  if (
+    extension === '.png' &&
+    filePath.startsWith(`${socialDirectory}${path.sep}`)
+  ) {
+    response.setHeader('Cache-Control', socialPreviewCacheControl);
+  }
   createReadStream(filePath).pipe(response);
 }
 
@@ -238,6 +249,48 @@ async function startStaticServer() {
 
   await new Promise((resolve) => server.listen(port, '127.0.0.1', resolve));
   baseUrl = `http://127.0.0.1:${server.address().port}`;
+}
+
+async function startDevServer() {
+  devProcess = spawn(
+    'pnpm',
+    ['exec', 'vite', '--config', 'vite.config.ts', '--host', '127.0.0.1', '--port', String(devPort)],
+    {
+      cwd: root,
+      env: {
+        ...process.env,
+        BASE_PATH: '/',
+        NODE_ENV: 'development',
+        PORT: String(devPort),
+      },
+      stdio: ['ignore', 'ignore', 'pipe'],
+    },
+  );
+
+  let stderr = '';
+  devProcess.stderr?.on('data', (chunk) => {
+    stderr += chunk.toString();
+  });
+
+  const deadline = Date.now() + 60_000;
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:${devPort}/social/articles/ai-models-antibiotic-discovery.png`,
+      );
+      if (response.ok) {
+        devBaseUrl = `http://127.0.0.1:${devPort}`;
+        return;
+      }
+    } catch {
+      // The Vite dev server may still be starting.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+
+  throw new Error(
+    `The Vite dev server did not become ready within 60 seconds.${stderr ? `\n${stderr}` : ''}`,
+  );
 }
 
 async function fetchText(route) {
@@ -371,6 +424,7 @@ before(async () => {
   await stat(path.join(distDir, 'index.html'));
   await startApiServer();
   await startStaticServer();
+  await startDevServer();
 });
 
 after(async () => {
@@ -389,6 +443,7 @@ after(async () => {
       }
     });
   }
+  if (devProcess) devProcess.kill('SIGTERM');
 });
 
 test('public routes, metadata, structured data, links, images, AMP, RSS, and responsive pages pass', async () => {
@@ -401,6 +456,11 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
 
   const { response: metadataResponse, body: metadataBody } = await fetchText('/api/newsroom/metadata');
   assert.equal(metadataResponse.status, 200, 'newsroom metadata manifest is not reachable');
+  assert.doesNotMatch(
+    metadataResponse.headers.get('cache-control') ?? '',
+    /public|immutable|max-age=[1-9]/i,
+    'newsroom metadata must not receive a long-lived public cache policy',
+  );
   const metadataManifest = JSON.parse(metadataBody);
   assert.equal(metadataManifest.source, 'maintained-editorial-source', 'newsroom metadata manifest has an unexpected source');
   assert.ok(Array.isArray(metadataManifest.routes), 'newsroom metadata manifest is missing routes');
@@ -428,15 +488,35 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     assert.match(body, /<div id="root"><\/div>/, `${route}: direct request did not receive the SPA shell`);
     assertInitialSeoDocument(body, route, { article: route.startsWith('/article/') });
     assertMetadataMatchesManifest(body, route, metadataManifest);
+    assert.doesNotMatch(
+      response.headers.get('cache-control') ?? '',
+      /public|immutable|max-age=[1-9]/i,
+      `${route}: route HTML must not receive a long-lived public cache policy`,
+    );
     if (route.startsWith('/article/')) {
       const imagePath = new URL(metaContent(body, 'property', 'og:image')).pathname;
       const { response: imageResponse, body: imageBody } = await fetchText(imagePath);
       assert.equal(imageResponse.status, 200, `${route}: social preview image is not reachable`);
       assert.match(imageResponse.headers.get('content-type') ?? '', /^image\/png\b/, `${route}: social preview image is not a PNG`);
+      assert.equal(
+        imageResponse.headers.get('cache-control'),
+        socialPreviewCacheControl,
+        `${route}: social preview image is missing its production cache policy`,
+      );
       assert.ok(imageBody.length > 1000, `${route}: social preview image is unexpectedly small`);
       assertVisualPreviewAsset(path.join(distDir, imagePath.replace(/^\/+/, '')), route);
     }
   }
+
+  const devImageResponse = await fetch(
+    `${devBaseUrl}/social/articles/ai-models-antibiotic-discovery.png`,
+  );
+  assert.equal(devImageResponse.status, 200, 'development social preview image is not reachable');
+  assert.equal(
+    devImageResponse.headers.get('cache-control'),
+    'no-cache',
+    'development social preview images must remain uncached',
+  );
 
   const titles = new Map();
   const allowedRoutes = new Set(routes);

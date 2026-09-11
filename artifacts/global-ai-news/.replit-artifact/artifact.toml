@@ -26,3 +26,8 @@ to = "/index.html"
 [services.env]
 PORT = "19819"
 BASE_PATH = "/"
+
+[[services.production.responseHeaders]]
+path = "/social/articles/*"
+name = "Cache-Control"
+value = "public, max-age=86400, must-revalidate"
