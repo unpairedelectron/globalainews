@@ -13,8 +13,12 @@ const root = path.resolve(import.meta.dirname, '..');
 const distDir = path.join(root, 'dist', 'public');
 const publicDir = path.join(root, 'public');
 const site = 'https://www.globalainews.in';
+const siteOrigin = new URL(site).origin;
+const apiOrigin = process.env.SMOKE_API_ORIGIN ?? 'http://127.0.0.1:8080';
 const chromium = process.env.CHROMIUM_BIN || '/repl/tools/bin/chromium';
 const port = 0;
+const intentional404Routes = new Set();
+const ampPath = '/amp/article/ai-models-antibiotic-discovery/';
 
 let server;
 let baseUrl;
@@ -91,6 +95,67 @@ function sitemapRoutes(xml) {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => routeFromUrl(match[1]));
 }
 
+function openingTags(document, tagName) {
+  return [...document.matchAll(new RegExp(`<${tagName}\\b[^>]*>`, 'gi'))].map((match) => match[0]);
+}
+
+function attributeValue(tag, attribute) {
+  return htmlText(tag.match(new RegExp(`\\b${attribute}\\s*=\\s*["']([^"']*)["']`, 'i'))?.[1] ?? '');
+}
+
+function sameSiteRoute(href) {
+  const value = htmlText(href).trim();
+  if (!value || value.startsWith('#') || /^(?:mailto|tel|javascript|data):/i.test(value)) return null;
+  let url;
+  try {
+    url = new URL(value, `${site}/`);
+  } catch {
+    return null;
+  }
+  return url.origin === siteOrigin ? routeFromUrl(url.href) : null;
+}
+
+function assertMeaningfulDescription(description, message) {
+  assert.ok(description, `${message}: description is missing`);
+  assert.doesNotMatch(description, /^(?:image|photo|picture|graphic|icon|placeholder)$/i, `${message}: description is generic`);
+}
+
+async function assertRenderedPageIntegrity(document, route, allowedRoutes, responseCache) {
+  for (const anchor of openingTags(document, 'a')) {
+    const href = attributeValue(anchor, 'href');
+    const targetRoute = sameSiteRoute(href);
+    if (!targetRoute) continue;
+
+    assert.ok(
+      allowedRoutes.has(targetRoute) || intentional404Routes.has(targetRoute),
+      `${route}: internal link "${href}" points to ${targetRoute}, which is not in sitemap.xml or the intentional 404 set`,
+    );
+
+    if (intentional404Routes.has(targetRoute)) continue;
+    if (!responseCache.has(targetRoute)) responseCache.set(targetRoute, fetchText(targetRoute));
+    let target;
+    try {
+      target = await responseCache.get(targetRoute);
+    } catch (error) {
+      assert.fail(`${route}: internal link "${href}" could not be fetched (${error.message})`);
+    }
+    assert.equal(target.response.status, 200, `${route}: internal link "${href}" returned HTTP ${target.response.status}`);
+    assert.match(target.body, /<div id="root"><\/div>/, `${route}: internal link "${href}" did not return the SPA shell`);
+  }
+
+  for (const image of openingTags(document, 'img')) {
+    const source = attributeValue(image, 'src') || '<inline image>';
+    assertMeaningfulDescription(attributeValue(image, 'alt'), `${route}: image "${source}"`);
+    assert.ok(attributeValue(image, 'width'), `${route}: image "${source}" is missing an explicit width`);
+    assert.ok(attributeValue(image, 'height'), `${route}: image "${source}" is missing an explicit height`);
+  }
+
+  const roleImages = [...document.matchAll(/<[a-z][^>]*\brole=["']img["'][^>]*>/gi)].map((match) => match[0]);
+  for (const image of roleImages) {
+    assertMeaningfulDescription(attributeValue(image, 'aria-label'), `${route}: labelled visual`);
+  }
+}
+
 function feedItems(xml) {
   return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((match) => {
     const item = match[1];
@@ -116,10 +181,17 @@ async function startStaticServer() {
   server = createServer(async (request, response) => {
     try {
       const requestPath = decodeURIComponent(new URL(request.url ?? '/', 'http://127.0.0.1').pathname);
-      if (requestPath === '/api/newsroom/content') {
-        response.statusCode = 503;
-        response.setHeader('Content-Type', 'application/json; charset=utf-8');
-        response.end(JSON.stringify({ error: 'Smoke server does not provide newsroom data' }));
+      if (requestPath.startsWith('/api/')) {
+        try {
+          const apiResponse = await fetch(`${apiOrigin}${requestPath}`);
+          response.statusCode = apiResponse.status;
+          const contentType = apiResponse.headers.get('content-type');
+          if (contentType) response.setHeader('Content-Type', contentType);
+          response.end(await apiResponse.text());
+        } catch (error) {
+          response.statusCode = 502;
+          response.end(`API proxy failed: ${error.message}`);
+        }
         return;
       }
       const candidate = path.resolve(distDir, `.${requestPath}`);
@@ -253,7 +325,7 @@ after(async () => {
   await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
 });
 
-test('public routes, metadata, structured data, AMP, RSS, and responsive pages pass', async () => {
+test('public routes, metadata, structured data, links, images, AMP, RSS, and responsive pages pass', async () => {
   const [{ response: sitemapResponse, body: sitemap }, { response: feedResponse, body: feed }] = await Promise.all([
     fetchText('/sitemap.xml'),
     fetchText('/feed.xml'),
@@ -293,9 +365,14 @@ test('public routes, metadata, structured data, AMP, RSS, and responsive pages p
   }
 
   const titles = new Map();
-  for (const route of new Set(staticRoutes)) {
+  const allowedRoutes = new Set(routes);
+  const responseCache = new Map();
+  for (const route of new Set([...staticRoutes, ampPath])) {
     const document = await renderRoute(route, 1440, 900);
-    assertSeoDocument(document, route, { article: route.startsWith('/article/') });
+    if (route !== ampPath) {
+      assertSeoDocument(document, route, { article: route.startsWith('/article/') });
+    }
+    await assertRenderedPageIntegrity(document, route, allowedRoutes, responseCache);
     const title = htmlText(tagContent(document, 'title'));
     titles.set(route, title);
   }
@@ -317,7 +394,6 @@ test('public routes, metadata, structured data, AMP, RSS, and responsive pages p
     assert.match(document, /<body[\s\S]*<main\b/, `${route}: mobile render did not produce page content`);
   }
 
-  const ampPath = '/amp/article/ai-models-antibiotic-discovery/';
   const { response: ampResponse, body: ampDocument } = await fetchText(ampPath);
   assert.equal(ampResponse.status, 200, 'AMP document is not reachable');
   assert.match(ampDocument, /<html[^>]*\bamp\b/i, 'AMP document is missing the amp attribute');
