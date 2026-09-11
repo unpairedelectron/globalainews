@@ -13,6 +13,12 @@ import {
   setSeoMetadataManifest,
   type SeoMetadataManifest,
 } from './src/seo-metadata';
+import {
+  layoutPreviewTitle,
+  socialPreviewHeight,
+  socialPreviewTitleMaxWidth,
+  socialPreviewWidth,
+} from './src/social-preview';
 
 const rawPort = process.env.PORT;
 
@@ -130,32 +136,15 @@ function escapeSvg(value: string): string {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;');
 }
-
-function wrapPreviewTitle(title: string, maxCharacters = 34): string[] {
-  const words = title.split(/\s+/);
-  const lines: string[] = [];
-  let current = '';
-  for (const word of words) {
-    const candidate = current ? `${current} ${word}` : word;
-    if (current && candidate.length > maxCharacters) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = candidate;
-    }
-  }
-  if (current) lines.push(current);
-  return lines.slice(0, 3);
-}
-
 function previewSvg(title: string, category: string, slug: string): string {
-  const lines = wrapPreviewTitle(title);
+  const route = `/article/${slug}`;
+  const layout = layoutPreviewTitle(title, route);
   const hash = [...slug].reduce((total, character) => total + character.charCodeAt(0), 0);
   const accent = ['#006cff', '#b2472d', '#55704f', '#8b5e34'][hash % 4];
-  const titleMarkup = lines
-    .map((line, index) => `<text x="80" y="${268 + index * 66}" fill="#101820" font-family="Georgia, 'Times New Roman', serif" font-size="54" font-weight="700">${escapeSvg(line)}</text>`)
+  const titleMarkup = layout.lines
+    .map((line, index) => `<text x="80" y="${268 + index * layout.lineHeight}" fill="#101820" font-family="Georgia, 'Times New Roman', serif" font-size="${layout.fontSize}" font-weight="700">${escapeSvg(line)}</text>`)
     .join('');
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${socialPreviewWidth}" height="${socialPreviewHeight}" viewBox="0 0 ${socialPreviewWidth} ${socialPreviewHeight}" role="img" aria-labelledby="title desc">
   <title id="title">${escapeSvg(title)}</title>
   <desc id="desc">Global AI News editorial preview for ${escapeSvg(title)}</desc>
   <rect width="1200" height="630" fill="#f4f1ea"/>
@@ -180,7 +169,15 @@ function hexToRgb(hex: string): string {
 }
 
 function validatePreviewAsset(outputPath: string, route: string, svg: string, title: string) {
-  if (!svg.includes(`<title id="title">${escapeSvg(title)}</title>`) || !svg.includes('font-size="54"')) {
+  const layout = layoutPreviewTitle(title, route);
+  const renderedTitle = layout.lines.join(' ');
+  if (renderedTitle !== title.trim().replace(/\s+/g, ' ')) {
+    throw new Error(`${route}: preview card headline was truncated before publishing.`);
+  }
+  if (layout.lines.some((line) => line.length > layout.maxCharacters)) {
+    throw new Error(`${route}: preview card headline line exceeds its wrapping limit.`);
+  }
+  if (!svg.includes(`<title id="title">${escapeSvg(title)}</title>`)) {
     throw new Error(`${route}: preview card title treatment is missing from the generated artwork.`);
   }
 
@@ -190,8 +187,8 @@ function validatePreviewAsset(outputPath: string, route: string, svg: string, ti
     { encoding: 'utf8' },
   ).trim().split(/\s+/);
   const [dimensions, background, accent, mean] = pixels;
-  if (dimensions !== '1200x630') {
-    throw new Error(`${route}: preview card dimensions are ${dimensions || 'unknown'}, expected 1200x630.`);
+  if (dimensions !== `${socialPreviewWidth}x${socialPreviewHeight}`) {
+    throw new Error(`${route}: preview card dimensions are ${dimensions || 'unknown'}, expected ${socialPreviewWidth}x${socialPreviewHeight}.`);
   }
   if (!background.includes('244,241,234')) {
     throw new Error(`${route}: preview card is missing the warm-ivory background.`);
@@ -199,6 +196,9 @@ function validatePreviewAsset(outputPath: string, route: string, svg: string, ti
   const expectedAccent = hexToRgb(previewAccent(route.split('/').pop() ?? route));
   if (!accent.includes(expectedAccent)) {
     throw new Error(`${route}: preview card accent rule is missing.`);
+  }
+  if (layout.lines.some((line) => line.length * layout.fontSize * 0.56 > socialPreviewTitleMaxWidth)) {
+    throw new Error(`${route}: preview card headline overflows its readable title area.`);
   }
   if (Number(mean) >= 0.93) {
     throw new Error(`${route}: preview card title treatment is blank or unreadable.`);

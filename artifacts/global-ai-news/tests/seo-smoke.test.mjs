@@ -650,3 +650,32 @@ test('development preview cards refresh when an editor changes a story title', a
     await waitForDevelopmentPreviewTitle('AI models are accelerating the hunt for new antibiotics — Global AI News', route);
   }
 });
+
+test('long article headlines scale without dropping words, while impossible titles fail by route', () => {
+  const route = '/article/long-headline-preview';
+  const longTitle = 'A remarkably long newsroom headline about how artificial intelligence infrastructure is reshaping regional energy markets and enterprise deployment decisions — Global AI News';
+  const tsx = path.join(root, 'node_modules', '.bin', 'tsx');
+  const modulePath = path.join(root, 'src', 'social-preview.ts');
+  const runLayout = (title) => execFileSync(
+    tsx,
+    [
+      '-e',
+      `import { layoutPreviewTitle } from ${JSON.stringify(modulePath)}; console.log(JSON.stringify(layoutPreviewTitle(${JSON.stringify(title)}, ${JSON.stringify(route)})));`,
+    ],
+    { encoding: 'utf8' },
+  ).trim();
+
+  const layout = JSON.parse(runLayout(longTitle));
+  assert.equal(layout.lines.join(' '), longTitle, `${route}: long headline lost words during wrapping`);
+  assert.ok(layout.lines.length > 3, `${route}: long headline did not wrap beyond the legacy three-line limit`);
+  assert.ok(layout.fontSize < 54, `${route}: long headline did not scale down predictably`);
+
+  const standardLayout = JSON.parse(runLayout('AI models are accelerating the hunt for new antibiotics — Global AI News'));
+  assert.equal(standardLayout.fontSize, 54, `${route}: short or medium headline lost the current editorial hierarchy`);
+
+  const impossibleTitle = `${'A '.repeat(220)}Global AI News`;
+  assert.throws(
+    () => runLayout(impossibleTitle),
+    new RegExp(`${route}: preview title does not fit the available card area without clipping`),
+  );
+});
