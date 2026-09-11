@@ -91,6 +91,41 @@ function previewSvg(title: string, category: string, slug: string): string {
 </svg>`;
 }
 
+function previewAccent(slug: string): string {
+  const hash = [...slug].reduce((total, character) => total + character.charCodeAt(0), 0);
+  return ['#006cff', '#b2472d', '#55704f', '#8b5e34'][hash % 4];
+}
+
+function hexToRgb(hex: string): string {
+  return `${Number.parseInt(hex.slice(1, 3), 16)},${Number.parseInt(hex.slice(3, 5), 16)},${Number.parseInt(hex.slice(5, 7), 16)}`;
+}
+
+function validatePreviewAsset(outputPath: string, route: string, svg: string, title: string) {
+  if (!svg.includes(`<title id="title">${escapeSvg(title)}</title>`) || !svg.includes('font-size="54"')) {
+    throw new Error(`${route}: preview card title treatment is missing from the generated artwork.`);
+  }
+
+  const pixels = execFileSync(
+    'magick',
+    [outputPath, '-format', '%wx%h %[pixel:p{0,0}] %[pixel:p{100,520}] %[fx:mean]', 'info:'],
+    { encoding: 'utf8' },
+  ).trim().split(/\s+/);
+  const [dimensions, background, accent, mean] = pixels;
+  if (dimensions !== '1200x630') {
+    throw new Error(`${route}: preview card dimensions are ${dimensions || 'unknown'}, expected 1200x630.`);
+  }
+  if (!background.includes('244,241,234')) {
+    throw new Error(`${route}: preview card is missing the warm-ivory background.`);
+  }
+  const expectedAccent = hexToRgb(previewAccent(route.split('/').pop() ?? route));
+  if (!accent.includes(expectedAccent)) {
+    throw new Error(`${route}: preview card accent rule is missing.`);
+  }
+  if (Number(mean) >= 0.93) {
+    throw new Error(`${route}: preview card title treatment is blank or unreadable.`);
+  }
+}
+
 function writeSocialPreviewAssets(outputDir: string) {
   const outputSocialDir = path.join(outputDir, 'social', 'articles');
   mkdirSync(outputSocialDir, { recursive: true });
@@ -98,10 +133,13 @@ function writeSocialPreviewAssets(outputDir: string) {
     const metadata = getSeoMetadata(`/article/${story.slug}`);
     if (!metadata.imagePath) continue;
     const outputPath = path.join(outputDir, metadata.imagePath.replace(/^\/+/, ''));
+    const route = `/article/${story.slug}`;
+    const svg = previewSvg(metadata.title, story.category, story.slug);
     execFileSync('magick', ['svg:-', outputPath], {
-      input: previewSvg(metadata.title, story.category, story.slug),
+      input: svg,
       stdio: ['pipe', 'ignore', 'inherit'],
     });
+    validatePreviewAsset(outputPath, route, svg, metadata.title);
   }
 }
 

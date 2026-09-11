@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
-import { createReadStream } from 'node:fs';
-import { execFile, spawn } from 'node:child_process';
+import { createReadStream, unlinkSync } from 'node:fs';
+import { execFile, execFileSync, spawn } from 'node:child_process';
 import { promisify } from 'node:util';
 import path from 'node:path';
 import os from 'node:os';
@@ -90,6 +90,24 @@ function assertSocialPreviewMetadata(document, route) {
   assert.ok(imageAlt.length >= 20, `${route}: og:image:alt is missing or too short`);
   assert.equal(twitterImageAlt, imageAlt, `${route}: twitter:image:alt does not match og:image:alt`);
   assert.equal(imageType, 'image/png', `${route}: og:image:type is incorrect`);
+}
+
+function previewAccentRgb(route) {
+  const slug = route.split('/').pop() ?? route;
+  const hash = [...slug].reduce((total, character) => total + character.charCodeAt(0), 0);
+  return ['0,108,255', '178,71,45', '85,112,79', '139,94,52'][hash % 4];
+}
+
+function assertVisualPreviewAsset(filePath, route) {
+  const [dimensions, background, accent, mean] = execFileSync(
+    'magick',
+    [filePath, '-format', '%wx%h %[pixel:p{0,0}] %[pixel:p{100,520}] %[fx:mean]', 'info:'],
+    { encoding: 'utf8' },
+  ).trim().split(/\s+/);
+  assert.equal(dimensions, '1200x630', `${route}: preview card dimensions are ${dimensions || 'unknown'}, expected 1200x630`);
+  assert.match(background, /244,241,234/, `${route}: preview card is missing the warm-ivory background`);
+  assert.match(accent, new RegExp(previewAccentRgb(route)), `${route}: preview card accent rule is missing`);
+  assert.ok(Number(mean) < 0.93, `${route}: preview card title treatment is blank or unreadable`);
 }
 
 function sitemapRoutes(xml) {
@@ -259,6 +277,7 @@ async function startApiServer() {
     cwd: path.resolve(root, '..', '..'),
     env: { ...process.env, PORT: '19820' },
     stdio: ['ignore', 'ignore', 'pipe'],
+    detached: true,
   });
   apiOrigin = 'http://127.0.0.1:19820';
 
@@ -356,7 +375,20 @@ before(async () => {
 
 after(async () => {
   await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
-  if (apiProcess) apiProcess.kill('SIGTERM');
+  if (apiProcess?.pid) {
+    try {
+      process.kill(-apiProcess.pid, 'SIGTERM');
+    } catch {
+      apiProcess.kill('SIGTERM');
+    }
+    await new Promise((resolve) => {
+      if (apiProcess.killed || apiProcess.exitCode !== null) {
+        resolve();
+      } else {
+        apiProcess.once('exit', resolve);
+      }
+    });
+  }
 });
 
 test('public routes, metadata, structured data, links, images, AMP, RSS, and responsive pages pass', async () => {
@@ -402,6 +434,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       assert.equal(imageResponse.status, 200, `${route}: social preview image is not reachable`);
       assert.match(imageResponse.headers.get('content-type') ?? '', /^image\/png\b/, `${route}: social preview image is not a PNG`);
       assert.ok(imageBody.length > 1000, `${route}: social preview image is unexpectedly small`);
+      assertVisualPreviewAsset(path.join(distDir, imagePath.replace(/^\/+/, '')), route);
     }
   }
 
@@ -448,4 +481,18 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.ok(Buffer.byteLength(ampDocument) < 75_000, 'AMP document exceeds the 75 KB document limit');
 
   console.log(`Smoke checked ${new Set(staticRoutes).size} public routes at desktop, ${mobileRoutes.length} at mobile, plus AMP and RSS.`);
+});
+
+test('visual preview contract rejects an empty article card with a route-specific error', () => {
+  const route = '/article/empty-preview-card';
+  const emptyPath = path.join(os.tmpdir(), `gan-empty-preview-${process.pid}.png`);
+  try {
+    execFileSync('magick', ['-size', '1200x630', 'xc:#f4f1ea', emptyPath]);
+    assert.throws(
+      () => assertVisualPreviewAsset(emptyPath, route),
+      new RegExp(`${route}: preview card accent rule is missing`),
+    );
+  } finally {
+    unlinkSync(emptyPath);
+  }
 });
