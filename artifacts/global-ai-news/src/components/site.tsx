@@ -2,6 +2,8 @@ import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ArrowUpRight, Bookmark, BookmarkCheck, Menu, Search, Share2, X } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { authors, findEntity, findStory, timelineEvents } from '@/content';
+import { useNewsroomSnapshot } from '@/newsroom';
+import { useSubscribeNewsletter } from '@workspace/api-client-react';
 
 export const SITE = 'https://www.globalainews.in';
 
@@ -66,8 +68,9 @@ export function Footer() {
 
 export function Newsletter({ compact = false }: { compact?: boolean }) {
   const [email, setEmail] = useState('');
-  const [done, setDone] = useState(false);
-  return <section id="newsletter" className={`border-y border-primary bg-primary text-primary-foreground ${compact ? 'p-6' : 'p-8 md:p-12'}`}><div className="max-w-2xl"><p className="eyebrow text-primary-foreground/70">The Daily Brief · 07:30 UTC</p><h2 className={`display mt-3 leading-[.92] ${compact ? 'text-4xl' : 'text-5xl md:text-7xl'}`}>Know what<br />changed.</h2><p className="mt-5 max-w-md text-sm leading-6 text-primary-foreground/80">One considered email for the people who need to understand the AI industry before the day starts.</p>{done ? <p data-testid="status-newsletter-success" className="mt-7 border border-primary-foreground/35 px-4 py-3 text-sm">You’re on the list. See you in the morning.</p> : <form onSubmit={(event) => { event.preventDefault(); if (email.includes('@')) setDone(true); }} className="mt-7 flex max-w-md flex-col gap-2 sm:flex-row"><input data-testid="input-newsletter-email" type="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@company.com" className="min-w-0 flex-1 border border-primary-foreground/40 bg-transparent px-4 py-3 text-sm outline-none placeholder:text-primary-foreground/60 focus:border-primary-foreground" /><button data-testid="button-newsletter-submit" className="bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground">Get the brief</button></form>}</div></section>;
+  const [message, setMessage] = useState<string | null>(null);
+  const subscribe = useSubscribeNewsletter();
+  return <section id="newsletter" className={`border-y border-primary bg-primary text-primary-foreground ${compact ? 'p-6' : 'p-8 md:p-12'}`}><div className="max-w-2xl"><p className="eyebrow text-primary-foreground/70">The Daily Brief · 07:30 UTC</p><h2 className={`display mt-3 leading-[.92] ${compact ? 'text-4xl' : 'text-5xl md:text-7xl'}`}>Know what<br />changed.</h2><p className="mt-5 max-w-md text-sm leading-6 text-primary-foreground/80">One considered email for the people who need to understand the AI industry before the day starts.</p>{message ? <p data-testid="status-newsletter-success" className="mt-7 border border-primary-foreground/35 px-4 py-3 text-sm">{message}</p> : <form onSubmit={(event) => { event.preventDefault(); subscribe.mutate({ data: { email } }, { onSuccess: (result) => { setMessage(result.message); }, onError: () => setMessage('We could not save that subscription. Please try again.') }); }} className="mt-7 flex max-w-md flex-col gap-2 sm:flex-row"><input data-testid="input-newsletter-email" type="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@company.com" className="min-w-0 flex-1 border border-primary-foreground/40 bg-transparent px-4 py-3 text-sm outline-none placeholder:text-primary-foreground/60 focus:border-primary-foreground" /><button data-testid="button-newsletter-submit" disabled={subscribe.isPending} className="bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground disabled:opacity-60">{subscribe.isPending ? 'Joining…' : 'Get the brief'}</button></form>}{subscribe.isError && !message && <p data-testid="status-newsletter-error" className="mt-3 text-sm text-primary-foreground/80">We could not save that subscription. Please try again.</p>}</div></section>;
 }
 
 export function SectionLabel({ children, aside }: { children: ReactNode; aside?: ReactNode }) { return <div className="mb-5 flex items-center justify-between border-b border-foreground/15 pb-3"><p className="eyebrow text-primary">{children}</p>{aside && <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{aside}</span>}</div>; }
@@ -77,6 +80,7 @@ export function EditorialImage({ treatment = 'editorial-abstract', caption, larg
 }
 
 export function StoryRow({ slug, rank, compact = false }: { slug: string; rank?: number; compact?: boolean }) {
+  useNewsroomSnapshot();
   const story = findStory(slug);
   const [saved, setSaved] = useState(false);
   if (!story) return null;

@@ -1,2 +1,3 @@
 - [AMP preview routing](amp-preview-routing.md) — nested static HTML needs a preview-safe route alongside the production public file.
 - [Global AI News institutional direction](global-ai-news-atlas-direction.md) — use warm ivory, restrained blue, and connected intelligence surfaces for the publication.
+- [Newsroom delivery boundary](newsroom-delivery-boundary.md) — public pages consume the maintained API snapshot; newsletter delivery uses a configured provider with a durable queue fallback.

@@ -1,6 +1,6 @@
 /**
- * The local editorial layer. Records deliberately use stable slugs so they can
- * be replaced by an API later without changing the shape consumed by the UI.
+ * The editorial content model. The API serves these maintained records and the
+ * client hydrates them at runtime so every public page uses the same snapshot.
  */
 
 export type StoryCategory =
@@ -146,7 +146,7 @@ export interface AskGlobalAnswer {
   asOf: string;
 }
 
-export const authors: Author[] = [
+export let authors: Author[] = [
   { slug: 'mira-patel', name: 'Mira Patel', role: 'Science & systems editor', bio: 'Mira covers the point where machine intelligence meets physical science, medicine and the laboratory.', location: 'London', initials: 'MP' },
   { slug: 'jonas-rhee', name: 'Jonas Rhee', role: 'Policy correspondent', bio: 'Jonas reports on standards, provenance and the policy infrastructure of the AI economy.', location: 'Brussels', initials: 'JR' },
   { slug: 'ananya-rao', name: 'Ananya Rao', role: 'India editor', bio: 'Ananya writes about Indian technology, public digital infrastructure and the companies building for its next billion users.', location: 'Bengaluru', initials: 'AR' },
@@ -155,7 +155,7 @@ export const authors: Author[] = [
   { slug: 'david-okafor', name: 'David Okafor', role: 'Infrastructure editor', bio: 'David covers energy, chips, data centres and the physical geography behind computation.', location: 'Lagos', initials: 'DO' },
 ];
 
-export const sources: Source[] = [
+export let sources: Source[] = [
   { slug: 'nature-antibiotic-study', name: 'A generative deep learning approach to antibiotic discovery', publisher: 'Nature Chemical Biology', kind: 'primary', url: 'https://www.nature.com/', accessed: '2026-09-10' },
   { slug: 'uspto-ai-inventorship', name: 'Guidance on AI-assisted inventions', publisher: 'United States Patent and Trademark Office', kind: 'primary', url: 'https://www.uspto.gov/', accessed: '2026-09-09' },
   { slug: 'indiaai-mission', name: 'IndiaAI Mission', publisher: 'Ministry of Electronics and Information Technology', kind: 'primary', url: 'https://indiaai.gov.in/', accessed: '2026-09-08' },
@@ -174,7 +174,7 @@ export const evidenceSummaries: Record<string, EvidenceSummary> = {
   infrastructure: { primarySources: 4, independentConfirmations: 5, confidence: 'HIGH', note: 'Grid data, permitting records and operator announcements show regional concentration.' },
 };
 
-export const entities: Entity[] = [
+export let entities: Entity[] = [
   { slug: 'openai', name: 'OpenAI', kind: 'company', strapline: 'Frontier models, products and the race to deploy them.', overview: 'OpenAI develops general-purpose models and consumer and enterprise products. Its scale makes each release a market and infrastructure event.', headquarters: 'San Francisco', founded: '2015', relatedOrganizations: ['microsoft', 'gpt-5'], keyMetrics: [{ label: 'Flagship model', value: 'GPT-5', context: 'General-purpose multimodal model' }, { label: 'Strategic partner', value: 'Microsoft', context: 'Cloud and commercial partnership' }], latestDevelopments: ['Expanded agent tooling for enterprise workflows', 'Moved more inference capacity into dedicated facilities'], timeline: ['openai-agent-platform', 'gpt-5-release'], signals: ['frontier-model-race'], recentStories: ['small-models', 'founders'] },
   { slug: 'anthropic', name: 'Anthropic', kind: 'company', strapline: 'Safety-led frontier model company behind Claude.', overview: 'Anthropic builds reliable language models and tools for high-context work, with a research emphasis on interpretability and model behaviour.', headquarters: 'San Francisco', founded: '2021', relatedOrganizations: ['amazon', 'claude-4'], keyMetrics: [{ label: 'Flagship model', value: 'Claude 4', context: 'Reasoning and coding family' }, { label: 'Cloud partner', value: 'Amazon Web Services', context: 'Long-term compute and distribution' }], latestDevelopments: ['Claude gained stronger computer-use capabilities', 'Enterprise contracts shifted toward multi-model procurement'], timeline: ['claude-4-release'], signals: ['frontier-model-race', 'enterprise-adoption'], recentStories: ['small-models', 'founders'] },
   { slug: 'microsoft', name: 'Microsoft', kind: 'company', strapline: 'Cloud distribution and enterprise AI infrastructure.', overview: 'Microsoft connects frontier-model partnerships to Azure capacity, developer tools and the productivity software where AI is becoming operational.', headquarters: 'Redmond', relatedOrganizations: ['openai', 'azure'], keyMetrics: [{ label: 'Cloud', value: 'Azure', context: 'Global AI compute and platform' }], latestDevelopments: ['Azure added regional inference capacity', 'Copilot usage moved from pilots into departmental budgets'], timeline: ['azure-inference-expansion'], signals: ['compute-geography', 'enterprise-adoption'], recentStories: ['infrastructure'] },
@@ -187,7 +187,7 @@ export const entities: Entity[] = [
   { slug: 'content-credentials', name: 'Content credentials', kind: 'technology', strapline: 'Signed provenance for digital media.', overview: 'Content credentials attach verifiable creation and editing history to an asset, giving publishers and platforms a durable alternative to an uncheckable watermark.', relatedOrganizations: [], keyMetrics: [{ label: 'Primary use', value: 'Provenance', context: 'Record how an asset was created and changed' }], latestDevelopments: ['Public-sector buyers began including provenance requirements in media procurement'], timeline: ['watermarking-code'], signals: ['provenance-rules'], recentStories: ['watermarking'] },
 ];
 
-export const timelineEvents: TimelineEvent[] = [
+export let timelineEvents: TimelineEvent[] = [
   { slug: 'antibiotic-candidates', date: '2026-01-18', title: 'AI-proposed antibiotic candidates enter testing', description: 'A research team reports molecules generated outside public antibiotic databases and advances them to laboratory testing.', entities: ['antibiotic-discovery', 'google-deepmind'], story: 'antibiotic' },
   { slug: 'openai-agent-platform', date: '2026-08-21', title: 'OpenAI opens a longer-running agent platform', description: 'Developers receive tools for agents that can plan, call software and return evidence alongside an answer.', entities: ['openai'], story: 'founders' },
   { slug: 'gpt-5-release', date: '2026-08-28', title: 'GPT-5 release raises the cost of being “model agnostic”', description: 'The release shifts enterprise evaluation toward tool use, reliability and total workflow cost.', entities: ['openai', 'gpt-5'], story: 'small-models' },
@@ -227,7 +227,7 @@ const storyBodies: Record<string, BodySection[]> = {
   ],
 };
 
-export const stories: Story[] = [
+export let stories: Story[] = [
   { slug: 'ai-models-antibiotic-discovery', category: 'Breakthroughs', title: 'AI models are accelerating the hunt for new antibiotics', dek: 'A new generation of models is moving beyond prediction — and into the wet lab.', body: storyBodies.antibiotic, date: '2026-09-11', readTime: '7 min read', author: 'mira-patel', evidence: 'High confidence · 3 primary sources · 5 independent confirmations', evidenceSummary: evidenceSummaries.antibiotic, classification: 'reported', entities: ['antibiotic-discovery', 'google-deepmind'], timeline: ['antibiotic-candidates', 'gemini-science-release'], relatedStories: ['small-models', 'founders'], imageTreatment: { type: 'editorial-abstract', alt: 'Abstract map of molecular structures and laboratory notes', palette: 'deep teal, chalk white, antibiotic amber', caption: 'The interface between a model’s search and the laboratory is becoming more precise.' }, topic: 'AI', sources: ['nature-antibiotic-study', 'stanford-ai-index-2026'], bottomLine: 'AI is making the search space for antibiotic candidates more legible, not removing the need for experiments.', whyItMatters: 'The same model-to-reality feedback loop could reshape materials, manufacturing and drug discovery.', keyTakeaways: ['Novel candidates still require synthesis and testing.', 'The useful breakthrough is the feedback loop, not a single prediction.', 'Scientific judgement remains central to deciding what to test.'], whatChanges: 'Research teams can screen broader chemical spaces before committing scarce wet-lab time.' },
   { slug: 'quiet-race-watermark-everything-ai-makes', category: 'Signals', title: 'The quiet race to watermark everything AI makes', dek: 'Standards are taking shape while the internet learns to ask: who made this?', body: storyBodies.watermarking, date: '2026-09-10', readTime: '5 min read', author: 'jonas-rhee', evidence: 'Medium confidence · 2 primary sources · 4 independent confirmations', evidenceSummary: evidenceSummaries.watermarking, classification: 'analysis', entities: ['content-credentials'], timeline: ['watermarking-code'], relatedStories: ['india-stack'], imageTreatment: { type: 'data-graphic', alt: 'Layered provenance marks across a digital image', palette: 'warm white, cobalt, graphite', caption: 'Provenance is becoming an infrastructure question.' }, topic: 'Policy', sources: ['eu-ai-act-code', 'uspto-ai-inventorship'], bottomLine: 'The emerging standard is provenance that can be checked, rather than a magic mark that cannot be removed.', whyItMatters: 'Trust in generated media will depend on institutions making origin legible at scale.', keyTakeaways: ['Watermarks alone are easy to strip.', 'Signed content credentials can preserve an asset history.', 'Public procurement may drive adoption before consumer platforms do.'], whatChanges: 'Creators and platforms will increasingly be asked to disclose how an asset was made.' },
   { slug: 'indias-public-ai-stack', category: 'India Watch', title: 'India’s public AI stack is being built in the open', dek: 'From language data to compute, a sovereign layer is becoming visible.', body: storyBodies['india-stack'], date: '2026-09-09', readTime: '6 min read', author: 'ananya-rao', evidence: 'High confidence · 4 primary sources · 3 independent confirmations', evidenceSummary: evidenceSummaries['india-stack'], classification: 'reported', entities: ['indiaai-mission', 'sarvam-ai'], timeline: ['indiaai-compute-tender', 'sarvam-public-model'], relatedStories: ['small-models', 'infrastructure'], imageTreatment: { type: 'field-photograph', alt: 'Bengaluru technology district at dusk', palette: 'saffron, indigo, concrete grey', caption: 'India is treating shared infrastructure as a competitive advantage.' }, topic: 'India', sources: ['indiaai-mission', 'stanford-ai-index-2026'], bottomLine: 'India is building a shared layer for language, compute and public-interest deployment.', whyItMatters: 'A public substrate could lower the cost of building products for hundreds of millions of users.', keyTakeaways: ['Compute access is moving beyond the largest companies.', 'Indic-language data is a strategic asset.', 'Procurement will determine whether infrastructure becomes useful.'], whatChanges: 'Startups can spend more effort on products and less on recreating basic AI infrastructure.' },
@@ -236,7 +236,7 @@ export const stories: Story[] = [
   { slug: 'new-geography-of-compute', category: 'Infrastructure', title: 'The new geography of compute is surprisingly regional', dek: 'Power, permits and proximity are redrawing the map of intelligence.', body: storyBodies.infrastructure, date: '2026-09-06', readTime: '9 min read', author: 'david-okafor', evidence: 'High confidence · 4 primary sources · 5 independent confirmations', evidenceSummary: evidenceSummaries.infrastructure, classification: 'analysis', entities: ['microsoft'], timeline: ['azure-inference-expansion'], relatedStories: ['indias-public-ai-stack', 'small-models'], imageTreatment: { type: 'data-graphic', alt: 'Map showing regional compute corridors and energy connections', palette: 'night blue, grid green, signal orange', caption: 'The infrastructure map follows power, fibre and permission.' }, topic: 'Technology', sources: ['iea-data-centres', 'stanford-ai-index-2026'], bottomLine: 'The AI cloud is becoming a network of regional corridors shaped by physical constraints.', whyItMatters: 'Energy and permitting will influence who can offer fast, affordable intelligence.', keyTakeaways: ['Inference is moving closer to users.', 'Training remains more concentrated than deployment.', 'Power availability is now a strategic differentiator.'], whatChanges: 'AI infrastructure planning will look increasingly like energy and telecom planning.' },
 ];
 
-export const signals: Signal[] = [
+export let signals: Signal[] = [
   { slug: 'frontier-model-race', label: 'Model race', topic: 'Models', direction: 'up', impact: 'high', change: '+18%', summary: 'Tool use and long-horizon reliability, rather than raw benchmark scores, are driving the latest frontier releases.', entities: ['openai', 'anthropic', 'gpt-5', 'claude-4'], stories: ['small-models', 'founders'], updated: '2026-09-11' },
   { slug: 'compute-geography', label: 'AI infrastructure', topic: 'Infrastructure', direction: 'up', impact: 'high', change: '+12%', summary: 'New inference capacity is following power, fibre and regional customer demand.', entities: ['microsoft'], stories: ['infrastructure'], updated: '2026-09-11' },
   { slug: 'capital-efficiency', label: 'Capital', topic: 'Capital', direction: 'steady', impact: 'medium', change: '0.4x', summary: 'Investors are rewarding evidence of repeatable usage and gross margin, not model novelty alone.', entities: ['openai', 'anthropic'], stories: ['founders'], updated: '2026-09-10' },
@@ -247,7 +247,7 @@ export const signals: Signal[] = [
   { slug: 'ai-in-science', label: 'AI in science', topic: 'Research', direction: 'up', impact: 'high', change: '+11%', summary: 'Models are increasingly valuable when paired with experimental feedback.', entities: ['antibiotic-discovery', 'google-deepmind'], stories: ['ai-models-antibiotic-discovery'], updated: '2026-09-11' },
 ];
 
-export const industryMap: IndustryMapNode[] = [
+export let industryMap: IndustryMapNode[] = [
   { slug: 'frontier-labs', name: 'Frontier labs', layer: 'Frontier Labs', description: 'General-purpose model research and deployment.', entities: ['openai', 'anthropic', 'google-deepmind'], pressure: 'Compute and dependable post-training', x: 18, y: 18 },
   { slug: 'cloud-infrastructure', name: 'Cloud infrastructure', layer: 'Infrastructure', description: 'Accelerators, data centres, power and network.', entities: ['microsoft'], pressure: 'Grid access and regional demand', x: 48, y: 16 },
   { slug: 'open-models', name: 'Open models', layer: 'Models', description: 'Portable models that can run close to data.', entities: ['gpt-5', 'claude-4', 'sarvam-ai'], pressure: 'Evaluation and distribution', x: 77, y: 24 },
@@ -257,7 +257,7 @@ export const industryMap: IndustryMapNode[] = [
   { slug: 'policy-provenance', name: 'Policy', layer: 'Policy', description: 'Rules governing safety, origin and access.', entities: ['indiaai-mission'], pressure: 'Interoperability and enforcement', x: 14, y: 82 },
 ];
 
-export const indiaIndex: IndiaIndexMetric[] = [
+export let indiaIndex: IndiaIndexMetric[] = [
   { slug: 'compute-allocation', label: 'Public compute allocation', value: '10,000+ GPUs', change: '+35% q/q', context: 'Capacity made available through the IndiaAI programme and partner clouds.', source: 'indiaai-mission' },
   { slug: 'venture-funding', label: 'AI venture funding', value: '$1.1B', change: '+18% y/y', context: 'Disclosed funding for Indian AI startups in the current index period.', source: 'stanford-ai-index-2026' },
   { slug: 'indic-language-coverage', label: 'Indic language coverage', value: '22 languages', change: '+6 this year', context: 'Languages represented in public speech and text dataset initiatives.', source: 'indiaai-mission' },
@@ -266,18 +266,45 @@ export const indiaIndex: IndiaIndexMetric[] = [
   { slug: 'data-centre-capacity', label: 'Data-centre capacity', value: '1.2GW', change: '+16% y/y', context: 'Operational and announced capacity relevant to AI workloads.', source: 'iea-data-centres' },
 ];
 
-export const essays: Essay[] = [
+export let essays: Essay[] = [
   { slug: 'intelligence-without-theatre', title: 'Intelligence without the theatre', dek: 'What changes when we measure AI by the systems it makes possible rather than the demos it produces.', author: 'lena-hoff', date: '2026-09-05', readTime: '12 min read', themes: ['systems', 'enterprise', 'trust'], body: [{ heading: 'The demo is not the product', paragraphs: ['The AI economy is learning to separate an impressive answer from a dependable capability. That distinction is quiet, operational and increasingly valuable.'] }, { heading: 'A new editorial subject', paragraphs: ['The institutions around models — labs, clouds, buyers and regulators — now deserve as much attention as the models themselves.'] }] },
   { slug: 'india-builds-in-public', title: 'India builds in public', dek: 'A public AI layer can be both infrastructure policy and industrial strategy.', author: 'ananya-rao', date: '2026-08-29', readTime: '10 min read', themes: ['India', 'policy', 'infrastructure'], body: [{ heading: 'The shared substrate', paragraphs: ['India’s most consequential AI bet may be the layer no single startup owns: language data, compute access and public demand.'] }, { heading: 'The test is use', paragraphs: ['A public stack matters only when it helps a health worker, teacher or small company do something previously out of reach.'] }] },
 ];
 
-export const askGlobalAnswers: AskGlobalAnswer[] = [
+export let askGlobalAnswers: AskGlobalAnswer[] = [
   { slug: 'what-changed-openai-this-week', question: 'What changed in OpenAI this week?', answer: 'OpenAI’s important shift was operational: its agent platform moved from a product demo toward a tool with permissions, evidence and longer-running tasks. That raises the bar for reliability and makes the surrounding workflow more important than a single benchmark.', citedStories: ['founders', 'small-models'], citedSources: ['stanford-ai-index-2026'], citedTimeline: ['openai-agent-platform', 'gpt-5-release'], citedEntities: ['openai', 'gpt-5'], asOf: '2026-09-11' },
   { slug: 'why-is-nvidia-moving', question: 'Why is NVIDIA moving?', answer: 'The market is pricing a broader infrastructure cycle: more inference is being deployed regionally, while frontier training remains accelerator-intensive. The opportunity is large, but power, supply and customer concentration remain the constraints to watch.', citedStories: ['infrastructure'], citedSources: ['iea-data-centres'], citedTimeline: ['azure-inference-expansion'], citedEntities: ['microsoft'], asOf: '2026-09-11' },
   { slug: 'biggest-open-source-model-developments', question: 'What are the biggest open-source model developments?', answer: 'The centre of gravity is moving toward compact models that can run close to sensitive data. Their advantage is not that they beat every frontier benchmark; it is that teams can adapt, audit and operate them at predictable cost.', citedStories: ['small-models', 'indias-public-ai-stack'], citedSources: ['mistral-model-card'], citedTimeline: ['sarvam-public-model'], citedEntities: ['sarvam-ai', 'gpt-5'], asOf: '2026-09-11' },
   { slug: 'what-changed-india-ai-policy', question: 'What changed in India’s AI policy?', answer: 'IndiaAI moved from a mission statement toward allocation: public compute access, common language datasets and procurement pathways are becoming tangible. The next question is whether access reaches researchers and smaller companies beyond the largest cloud partners.', citedStories: ['indias-public-ai-stack'], citedSources: ['indiaai-mission'], citedTimeline: ['indiaai-compute-tender'], citedEntities: ['indiaai-mission', 'sarvam-ai'], asOf: '2026-09-11' },
   { slug: 'compare-anthropic-openai', question: 'Compare Anthropic vs OpenAI.', answer: 'OpenAI is pushing a broad product and agent ecosystem, while Anthropic has made controllability and long-context work central to Claude. Both increasingly compete on dependable tool use, distribution and enterprise trust rather than model chat quality alone.', citedStories: ['small-models', 'founders'], citedSources: ['stanford-ai-index-2026'], citedTimeline: ['gpt-5-release', 'claude-4-release'], citedEntities: ['openai', 'anthropic', 'gpt-5', 'claude-4'], asOf: '2026-09-11' },
 ];
+
+export interface NewsroomContentSnapshot {
+  authors: Author[];
+  sources: Source[];
+  evidenceSummaries: Record<string, EvidenceSummary>;
+  entities: Entity[];
+  timelineEvents: TimelineEvent[];
+  stories: Story[];
+  signals: Signal[];
+  industryMap: IndustryMapNode[];
+  indiaIndex: IndiaIndexMetric[];
+  essays: Essay[];
+  askGlobalAnswers: AskGlobalAnswer[];
+}
+
+export function hydrateContent(snapshot: NewsroomContentSnapshot): void {
+  authors = snapshot.authors;
+  sources = snapshot.sources;
+  entities = snapshot.entities;
+  timelineEvents = snapshot.timelineEvents;
+  stories = snapshot.stories;
+  signals = snapshot.signals;
+  industryMap = snapshot.industryMap;
+  indiaIndex = snapshot.indiaIndex;
+  essays = snapshot.essays;
+  askGlobalAnswers = snapshot.askGlobalAnswers;
+}
 
 const storyAliases: Record<string, string> = {
   antibiotic: 'ai-models-antibiotic-discovery',

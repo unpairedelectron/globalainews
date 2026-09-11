@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: newsroom
+    description: Public newsroom content
+  - name: newsletter
+    description: Newsletter subscriptions
 paths:
   /healthz:
     get:
@@ -24,6 +28,55 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /newsroom/content:
+    get:
+      operationId: getNewsroomContent
+      tags: [newsroom]
+      summary: Get the current newsroom content snapshot
+      description: Returns the maintained editorial content used by the public publication.
+      responses:
+        "200":
+          description: Current newsroom content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsroomContent"
+        "503":
+          description: Content source unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsletter/subscriptions:
+    post:
+      operationId: subscribeNewsletter
+      tags: [newsletter]
+      summary: Subscribe an email address to the Daily Brief
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsletterSubscriptionInput"
+      responses:
+        "200":
+          description: Subscription accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterSubscription"
+        "400":
+          description: Invalid email address
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Subscription could not be persisted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +86,113 @@ components:
           type: string
       required:
         - status
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    NewsletterSubscriptionInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 3
+          maxLength: 320
+      required:
+        - email
+    NewsletterSubscription:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [subscribed, queued]
+        provider:
+          type: string
+        message:
+          type: string
+      required:
+        - status
+        - provider
+        - message
+    NewsroomContent:
+      type: object
+      properties:
+        generatedAt:
+          type: string
+          format: date-time
+        source:
+          type: string
+        stale:
+          type: boolean
+        authors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        sources:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        evidenceSummaries:
+          type: object
+          additionalProperties: true
+        entities:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        timelineEvents:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        stories:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        signals:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        industryMap:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        indiaIndex:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        essays:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        askGlobalAnswers:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required:
+        - generatedAt
+        - source
+        - stale
+        - authors
+        - sources
+        - evidenceSummaries
+        - entities
+        - timelineEvents
+        - stories
+        - signals
+        - industryMap
+        - indiaIndex
+        - essays
+        - askGlobalAnswers
 
