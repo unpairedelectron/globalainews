@@ -1,0 +1,1 @@
+- [AMP preview routing](amp-preview-routing.md) — nested static HTML needs a preview-safe route alongside the production public file.
