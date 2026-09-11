@@ -550,15 +550,35 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   }
 
   const { response: ampResponse, body: ampDocument } = await fetchText(ampPath);
+  const newsroomResponse = await fetch(`${apiOrigin}/api/newsroom/content`);
+  assert.equal(newsroomResponse.status, 200, 'newsroom content is not reachable for AMP alignment');
+  const newsroomSnapshot = await newsroomResponse.json();
+  const ampStory = newsroomSnapshot.stories.find((story) => story.slug === 'ai-models-antibiotic-discovery');
+  assert.ok(ampStory, 'AMP source story is missing from the newsroom snapshot');
   assert.equal(ampResponse.status, 200, 'AMP document is not reachable');
   assert.match(ampDocument, /<html[^>]*\bamp\b/i, 'AMP document is missing the amp attribute');
   assert.equal(linkHref(ampDocument, 'canonical'), `${site}/article/ai-models-antibiotic-discovery`, 'AMP canonical is incorrect');
-  assert.ok(tagContent(ampDocument, 'title'), 'AMP document is missing a title');
-  assert.ok(metaContent(ampDocument, 'name', 'description'), 'AMP document is missing a description');
+  assert.equal(tagContent(ampDocument, 'title'), ampStory.title, 'AMP title drifted from the newsroom snapshot');
+  assert.equal(metaContent(ampDocument, 'name', 'description'), ampStory.dek, 'AMP description drifted from the newsroom snapshot');
+  assert.equal(tagContent(ampDocument, 'h1'), ampStory.title, 'AMP visible headline drifted from the newsroom snapshot');
+  assert.ok(ampDocument.includes(ampStory.bottomLine), 'AMP visible bottom line drifted from the newsroom snapshot');
+  for (const section of ampStory.body) {
+    assert.ok(ampDocument.includes(section.heading), `AMP is missing the edited section heading "${section.heading}"`);
+    assert.ok(ampDocument.includes(section.paragraphs[0]), `AMP is missing the edited copy for "${section.heading}"`);
+  }
   assert.match(ampDocument, /<script[^>]+src="https:\/\/cdn\.ampproject\.org\/v0\.js"/i, 'AMP runtime is missing');
   assert.match(ampDocument, /<style amp-custom>/i, 'AMP custom CSS is missing');
   assert.ok(!/<script(?![^>]+cdn\.ampproject\.org\/v0\.js)/i.test(ampDocument), 'AMP document contains a non-runtime script');
   assert.ok(Buffer.byteLength(ampDocument) < 75_000, 'AMP document exceeds the 75 KB document limit');
+
+  const { response: devAmpResponse, body: devAmpDocument } = await fetch(`${devBaseUrl}${ampPath}`).then(async (response) => ({
+    response,
+    body: await response.text(),
+  }));
+  assert.equal(devAmpResponse.status, 200, 'development AMP document is not reachable');
+  assert.equal(tagContent(devAmpDocument, 'title'), ampStory.title, 'development AMP title drifted from the newsroom snapshot');
+  assert.equal(metaContent(devAmpDocument, 'name', 'description'), ampStory.dek, 'development AMP description drifted from the newsroom snapshot');
+  assert.equal(tagContent(devAmpDocument, 'h1'), ampStory.title, 'development AMP headline drifted from the newsroom snapshot');
 
   console.log(`Smoke checked ${new Set(staticRoutes).size} public routes at desktop, ${mobileRoutes.length} at mobile, plus AMP and RSS.`);
 });

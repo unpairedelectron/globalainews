@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type ViteDevServer } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
-import { stories } from './src/content';
+import { authors, findStory, stories } from './src/content';
 import {
   getSeoMetadata,
   getStructuredData,
@@ -29,6 +29,7 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 const basePath = process.env.BASE_PATH;
+const ampArticlePath = '/amp/article/ai-models-antibiotic-discovery/';
 
 if (!basePath) {
   throw new Error(
@@ -42,6 +43,84 @@ function escapeHtml(value: string): string {
     .replaceAll('"', '&quot;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;');
+}
+
+function formatPublishedDate(date: string): string {
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(`${date}T00:00:00Z`));
+}
+
+function renderAmpArticleDocument() {
+  const story = findStory('ai-models-antibiotic-discovery');
+  if (!story) throw new Error('AMP article source story is missing: ai-models-antibiotic-discovery');
+  const metadata = getSeoMetadata(`/article/${story.slug}`);
+  const author = authors.find((candidate) => candidate.slug === story.author);
+  const sections = story.body.map((section) => `
+        <section>
+          <h2>${escapeHtml(section.heading)}</h2>
+          ${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('\n          ')}
+          ${section.pullQuote ? `<blockquote>${escapeHtml(section.pullQuote)}</blockquote>` : ''}
+        </section>`).join('\n');
+
+  return `<!doctype html>
+<html amp lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+    <link rel="canonical" href="${escapeHtml(`https://www.globalainews.in${metadata.path}`)}" />
+    <title>${escapeHtml(story.title)}</title>
+    <meta name="description" content="${escapeHtml(story.dek)}" />
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <style amp-boilerplate>
+      body { visibility: hidden }
+    </style>
+    <noscript><style amp-boilerplate>body { visibility: visible }</style></noscript>
+    <style amp-custom>
+      :root { --ink: #132632; --paper: #f4f1ea; --teal: #1f8584; --coral: #dc654f; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, sans-serif; }
+      header, main, footer { max-width: 760px; margin: auto; padding: 24px; }
+      header { border-bottom: 1px solid rgba(19,38,50,.2); }
+      .brand { color: var(--teal); font-size: 12px; letter-spacing: .18em; font-weight: 700; }
+      .kicker { color: var(--coral); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; margin-top: 52px; }
+      h1 { font-family: Georgia, serif; font-size: clamp(42px, 9vw, 76px); font-weight: 400; line-height: .94; margin: 16px 0; }
+      .dek { font-size: 20px; line-height: 1.5; color: rgba(19,38,50,.7); }
+      .byline { border-block: 1px solid rgba(19,38,50,.2); padding: 16px 0; margin: 24px 0 40px; font-size: 13px; }
+      .hero { background: #193b3e; color: white; padding: 42px 24px; border-radius: 16px; font-family: Georgia, serif; font-size: 34px; }
+      article { font-family: Georgia, serif; font-size: 20px; line-height: 1.7; }
+      article h2 { font-size: 34px; line-height: 1; font-weight: 400; margin-top: 52px; }
+      blockquote { border-left: 3px solid var(--coral); padding-left: 20px; margin: 36px 0; font-size: 25px; }
+      .ad { border: 1px dashed rgba(19,38,50,.35); padding: 24px; margin: 42px 0; text-align: center; font: 11px Arial, sans-serif; letter-spacing: .15em; }
+      footer { border-top: 1px solid rgba(19,38,50,.2); color: rgba(19,38,50,.65); font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <header><div class="brand">GLOBAL AI NEWS</div></header>
+    <main>
+      <div class="kicker">${escapeHtml(story.category)} · ${escapeHtml(story.readTime)}</div>
+      <h1>${escapeHtml(story.title)}</h1>
+      <p class="dek">${escapeHtml(story.dek)}</p>
+      <div class="byline"><strong>${escapeHtml(author?.name ?? story.author)}</strong> · ${escapeHtml(author?.role ?? 'Global AI News editor')} · ${formatPublishedDate(story.date)}</div>
+      <div class="hero">${escapeHtml(story.imageTreatment.caption)}</div>
+      <article>
+        <p><strong>${escapeHtml(story.bottomLine)}</strong></p>
+        ${sections}
+        <div class="ad">NATIVE AD · CLEARLY LABELED INVENTORY</div>
+      </article>
+    </main>
+    <footer>Independent newsroom · No noise by design · <a href="https://www.globalainews.in/">Return to Global AI News</a></footer>
+  </body>
+</html>`;
+}
+
+function writeAmpArticleDocument(outputDir: string) {
+  const outputPath = path.join(outputDir, ampArticlePath.replace(/^\/+/, ''), 'index.html');
+  mkdirSync(path.dirname(outputPath), { recursive: true });
+  writeFileSync(outputPath, renderAmpArticleDocument());
 }
 
 function escapeSvg(value: string): string {
@@ -188,6 +267,30 @@ function socialPreviewAssetsPlugin() {
   };
 }
 
+function ampArticlePlugin() {
+  const projectRoot = path.resolve(import.meta.dirname);
+  return {
+    name: 'global-ai-news-amp-article',
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use((request, response, next) => {
+        const requestPath = new URL(request.url ?? '/', 'http://127.0.0.1').pathname;
+        if (requestPath !== ampArticlePath) {
+          next();
+          return;
+        }
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/html; charset=utf-8');
+        response.end(renderAmpArticleDocument());
+      });
+    },
+    handleHotUpdate({ file }: { file: string }) {
+      if (file === path.join(projectRoot, 'src', 'content.ts')) {
+        writeAmpArticleDocument(path.join(projectRoot, 'public'));
+      }
+    },
+  };
+}
+
 function routePathsFromPublishingFiles(projectRoot: string): string[] {
   const sitemap = readFileSync(path.join(projectRoot, 'public', 'sitemap.xml'), 'utf8');
   const feed = readFileSync(path.join(projectRoot, 'public', 'feed.xml'), 'utf8');
@@ -248,6 +351,7 @@ function routeMetadataPlugin() {
       await loadBuildMetadataManifest();
       const baseHtml = readFileSync(path.join(outputDir, 'index.html'), 'utf8');
       writeSocialPreviewAssets(outputDir);
+      writeAmpArticleDocument(outputDir);
       for (const route of routePathsFromPublishingFiles(projectRoot)) {
         const routeDirectory = route === '/' ? outputDir : path.join(outputDir, route.replace(/^\/|\/$/g, ''));
         mkdirSync(routeDirectory, { recursive: true });
@@ -264,6 +368,7 @@ export default defineConfig({
     tailwindcss(),
     runtimeErrorOverlay(),
     socialPreviewAssetsPlugin(),
+    ampArticlePlugin(),
     routeMetadataPlugin(),
     ...(process.env.NODE_ENV !== 'production' &&
     process.env.REPL_ID !== undefined
