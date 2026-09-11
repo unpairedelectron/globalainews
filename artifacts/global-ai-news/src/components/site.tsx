@@ -4,13 +4,20 @@ import { Link, useLocation } from 'wouter';
 import { authors, findEntity, findStory, timelineEvents } from '@/content';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { useSubscribeNewsletter } from '@workspace/api-client-react';
+import { getSeoMetadata, getStructuredData, SITE_URL } from '@/seo-metadata';
 
-export const SITE = 'https://www.globalainews.in';
+export const SITE = SITE_URL;
 
 export function SeoHead({ title, description, path, article = false }: { title: string; description: string; path: string; article?: boolean }) {
+  const routeMetadata = path.startsWith('/amp/') ? undefined : getSeoMetadata(path);
+  const resolvedTitle = routeMetadata?.title ?? title;
+  const resolvedDescription = routeMetadata?.description ?? description;
+  const resolvedPath = routeMetadata?.path ?? path;
+  const resolvedArticle = article || Boolean(routeMetadata?.article);
+
   useEffect(() => {
-    document.title = title;
-    const canonical = `${SITE}${path}`;
+    document.title = resolvedTitle;
+    const canonical = `${SITE}${resolvedPath}`;
     const ensure = (selector: string, create: () => HTMLElement) => {
       const found = document.head.querySelector(selector) as HTMLElement | null;
       const element = found ?? create();
@@ -18,29 +25,25 @@ export function SeoHead({ title, description, path, article = false }: { title: 
       return element;
     };
     const descriptionTag = ensure('meta[name="description"]', () => { const el = document.createElement('meta'); el.name = 'description'; return el; }) as HTMLMetaElement;
-    descriptionTag.content = description;
+    descriptionTag.content = resolvedDescription;
     const canonicalTag = ensure('link[rel="canonical"]', () => { const el = document.createElement('link'); el.rel = 'canonical'; return el; });
     canonicalTag.setAttribute('href', canonical);
-    [['og:title', title], ['og:description', description], ['og:url', canonical], ['og:type', article ? 'article' : 'website'], ['twitter:title', title], ['twitter:description', description]].forEach(([property, content]) => {
+    [['og:title', resolvedTitle], ['og:description', resolvedDescription], ['og:url', canonical], ['og:type', resolvedArticle ? 'article' : 'website'], ['twitter:title', resolvedTitle], ['twitter:description', resolvedDescription]].forEach(([property, content]) => {
       const tag = ensure(`meta[property="${property}"]`, () => { const el = document.createElement('meta'); el.setAttribute('property', property); return el; });
       tag.setAttribute('content', content);
     });
     const twitter = ensure('meta[name="twitter:card"]', () => { const el = document.createElement('meta'); el.name = 'twitter:card'; return el; }) as HTMLMetaElement;
     twitter.content = 'summary_large_image';
     const amp = document.head.querySelector('link[rel="amphtml"]');
-    if (article) {
+    if (resolvedArticle) {
       const ampTag = (amp as HTMLLinkElement | null) ?? document.createElement('link');
       ampTag.rel = 'amphtml';
       ampTag.href = `${SITE}/amp/article/ai-models-antibiotic-discovery/`;
       if (!amp) document.head.appendChild(ampTag);
     } else if (amp) amp.remove();
     const ld = ensure('script[data-global-ai-ld]', () => { const el = document.createElement('script'); el.type = 'application/ld+json'; el.dataset.globalAiLd = 'true'; return el; });
-    ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': [
-      article ? { '@type': 'NewsArticle', headline: title, description, url: canonical, author: { '@type': 'Organization', name: 'Global AI News' }, publisher: { '@type': 'Organization', name: 'Global AI News' }, datePublished: '2026-09-11' } : { '@type': 'WebSite', name: 'Global AI News', url: SITE, potentialAction: { '@type': 'SearchAction', target: `${SITE}/brief?q={search_term_string}` } },
-      { '@type': 'Organization', name: 'Global AI News', url: SITE },
-      { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE }, { '@type': 'ListItem', position: 2, name: title, item: canonical }] },
-    ] });
-  }, [article, description, path, title]);
+    ld.textContent = getStructuredData({ title: resolvedTitle, description: resolvedDescription, path: resolvedPath, article: resolvedArticle });
+  }, [resolvedArticle, resolvedDescription, resolvedPath, resolvedTitle]);
   return null;
 }
 

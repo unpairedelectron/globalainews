@@ -100,6 +100,12 @@ async function startStaticServer() {
   server = createServer(async (request, response) => {
     try {
       const requestPath = decodeURIComponent(new URL(request.url ?? '/', 'http://127.0.0.1').pathname);
+      if (requestPath === '/api/newsroom/content') {
+        response.statusCode = 503;
+        response.setHeader('Content-Type', 'application/json; charset=utf-8');
+        response.end(JSON.stringify({ error: 'Smoke server does not provide newsroom data' }));
+        return;
+      }
       const candidate = path.resolve(distDir, `.${requestPath}`);
       const insideDist = candidate === distDir || candidate.startsWith(`${distDir}${path.sep}`);
       if (!insideDist) {
@@ -188,6 +194,34 @@ function assertSeoDocument(document, route, { article = false } = {}) {
   }
 }
 
+function assertInitialSeoDocument(document, route, { article = false } = {}) {
+  const title = htmlText(tagContent(document, 'title'));
+  const description = metaContent(document, 'name', 'description');
+  const canonical = linkHref(document, 'canonical');
+  const expectedCanonical = `${site}${route === '/' ? '/' : route}`;
+
+  assert.ok(title.length >= 20, `${route}: initial title is missing or too short`);
+  assert.ok(description.length >= 20, `${route}: initial description is missing or too short`);
+  assert.equal(canonical, expectedCanonical, `${route}: initial canonical does not match the requested route`);
+  assert.equal(metaContent(document, 'property', 'og:title'), title, `${route}: initial og:title mismatch`);
+  assert.equal(metaContent(document, 'property', 'og:description'), description, `${route}: initial og:description mismatch`);
+  assert.equal(metaContent(document, 'property', 'og:url'), canonical, `${route}: initial og:url mismatch`);
+  assert.equal(metaContent(document, 'name', 'twitter:card'), 'summary_large_image', `${route}: initial Twitter card missing`);
+
+  const structuredDataText = tagContent(document, 'script', '[^>]*data-global-ai-ld');
+  assert.ok(structuredDataText, `${route}: initial JSON-LD is missing`);
+  const structuredData = JSON.parse(structuredDataText);
+  assert.equal(structuredData['@context'], 'https://schema.org', `${route}: initial JSON-LD context is invalid`);
+  assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === (article ? 'NewsArticle' : 'WebSite')), `${route}: initial primary JSON-LD type is missing`);
+  assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === 'BreadcrumbList'), `${route}: initial breadcrumb JSON-LD is missing`);
+
+  if (article) {
+    assert.equal(linkHref(document, 'amphtml'), `${site}/amp/article/ai-models-antibiotic-discovery/`, `${route}: initial AMP relationship is missing`);
+  } else {
+    assert.equal(linkHref(document, 'amphtml'), '', `${route}: non-article initial HTML unexpectedly exposes AMP`);
+  }
+}
+
 before(async () => {
   await stat(path.join(distDir, 'index.html'));
   await startStaticServer();
@@ -226,6 +260,7 @@ test('public routes, metadata, structured data, AMP, RSS, and responsive pages p
     const { response, body } = await fetchText(route);
     assert.equal(response.status, 200, `${route}: direct request failed`);
     assert.match(body, /<div id="root"><\/div>/, `${route}: direct request did not receive the SPA shell`);
+    assertInitialSeoDocument(body, route, { article: route.startsWith('/article/') });
   }
 
   const titles = new Map();
