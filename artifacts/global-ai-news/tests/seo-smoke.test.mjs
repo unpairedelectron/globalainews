@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
-import { createReadStream, unlinkSync, writeFileSync } from 'node:fs';
-import { execFile, execFileSync, spawn } from 'node:child_process';
+import { copyFileSync, createReadStream, existsSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
+import { execFile, execFileSync, spawn, spawnSync } from 'node:child_process';
 import { promisify } from 'node:util';
 import path from 'node:path';
 import os from 'node:os';
@@ -29,6 +29,11 @@ const intentional404Routes = new Set(['/sign-in', '/sign-up']);
 const ampPath = '/amp/article/ai-models-antibiotic-discovery/';
 const tsx = path.join(root, 'node_modules', '.bin', 'tsx');
 const smokeEditorId = 'mobile-history-smoke-editor';
+const screenshotDir = path.join(root, 'screenshots');
+const screenshotFailureDir = path.join(screenshotDir, 'failures');
+const visualBaselineFuzz = '2%';
+const visualBaselineMaxDiffPixels = 28_800;
+const updateVisualBaselines = process.env.UPDATE_VISUAL_BASELINES === '1';
 
 let server;
 let apiProcess;
@@ -816,6 +821,62 @@ function contrastRatio(first, second) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
+function visualBaselinePath(name, theme) {
+  return path.join(screenshotDir, `${name}-${theme}.png`);
+}
+
+function visualFailurePath(name, theme) {
+  return path.join(screenshotFailureDir, `${name}-${theme}.png`);
+}
+
+function compareVisualBaseline({ actualPath, baselinePath, route, theme }) {
+  const [dimensions] = execFileSync(
+    'magick',
+    [actualPath, '-format', '%wx%h', 'info:'],
+    { encoding: 'utf8' },
+  ).trim().split(/\s+/);
+  assert.equal(dimensions, '1440x1000', `${route}: ${theme} screenshot has unstable dimensions (${dimensions || 'unknown'}).`);
+
+  if (updateVisualBaselines) {
+    copyFileSync(actualPath, baselinePath);
+    console.log(`Updated visual baseline for ${route} (${theme}): ${baselinePath}`);
+    return;
+  }
+
+  assert.ok(
+    existsSync(baselinePath),
+    `${route}: ${theme} visual baseline is missing at ${baselinePath}. Run UPDATE_VISUAL_BASELINES=1 pnpm run test:visual to create it.`,
+  );
+
+  const comparison = spawnSync(
+    'magick',
+    [
+      'compare',
+      '-metric',
+      'AE',
+      '-fuzz',
+      visualBaselineFuzz,
+      baselinePath,
+      actualPath,
+      'null:',
+    ],
+    { encoding: 'utf8' },
+  );
+  const comparisonOutput = `${comparison.stdout ?? ''}${comparison.stderr ?? ''}`;
+
+  const differingPixels = Number.parseInt(comparisonOutput.trim().split(/\s+/)[0] ?? '', 10);
+  assert.ok(
+    Number.isFinite(differingPixels),
+    `${route}: ${theme} visual comparison did not return a pixel count. Output: ${comparisonOutput.trim() || 'none'}`,
+  );
+  assert.ok(
+    differingPixels <= visualBaselineMaxDiffPixels,
+    `${route}: ${theme} visual baseline differs by ${differingPixels} pixels; ` +
+      `allowed ${visualBaselineMaxDiffPixels} pixels after ${visualBaselineFuzz} fuzz. ` +
+      `Captured artifact: ${actualPath}`,
+  );
+}
+
 async function checkThemeRegression() {
   const debugPort = await findFreePort();
   const userDataDir = `${os.tmpdir()}/gan-theme-regression-${process.pid}`;
@@ -856,11 +917,11 @@ async function checkThemeRegression() {
     await cdp.send('Page.enable');
 
     const routes = [
-      '/',
-      '/article/ai-models-antibiotic-discovery',
-      '/industry',
-      '/brief',
-      '/insights?smoke-editor=1',
+      { route: '/', name: 'homepage' },
+      { route: '/article/ai-models-antibiotic-discovery', name: 'article-ai-models-antibiotic-discovery' },
+      { route: '/industry', name: 'industry-map' },
+      { route: '/brief', name: 'brief' },
+      { route: '/insights?smoke-editor=1', name: 'newsroom' },
     ];
     const snapshots = new Map();
 
@@ -872,7 +933,7 @@ async function checkThemeRegression() {
     );
 
     for (const theme of ['light', 'dark']) {
-      for (const route of routes) {
+      for (const { route, name } of routes) {
         cdp.events.length = 0;
         await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', '${theme}')`);
         await cdp.send('Page.navigate', { url: `${baseUrl}${route}` });
@@ -880,6 +941,11 @@ async function checkThemeRegression() {
           cdp,
           `document.readyState === 'complete' && !!document.querySelector('[data-testid="button-theme-toggle"]') && !!document.querySelector('main')`,
           `${route}: ${theme} mode did not render its main content and theme toggle.`,
+        );
+        await waitForBrowserCondition(
+          cdp,
+          `!document.fonts || document.fonts.status === 'loaded'`,
+          `${route}: ${theme} web fonts did not finish loading before the visual capture.`,
         );
         await new Promise((resolve) => setTimeout(resolve, 150));
 
@@ -925,6 +991,7 @@ async function checkThemeRegression() {
           os.tmpdir(),
           `gan-theme-regression-${process.pid}-${theme}-${route.replace(/[^a-z0-9]/gi, '-')}.png`,
         );
+        const baselinePath = visualBaselinePath(name, theme);
         try {
           writeFileSync(screenshotPath, Buffer.from(screenshot.data, 'base64'));
           const [dimensions, mean] = execFileSync(
@@ -934,6 +1001,13 @@ async function checkThemeRegression() {
           ).trim().split(/\s+/);
           assert.equal(dimensions, '1440x1000', `${route}: ${theme} screenshot has unstable dimensions (${dimensions}).`);
           assert.ok(Number(mean) > 0.02 && Number(mean) < 0.98, `${route}: ${theme} screenshot appears blank or overexposed.`);
+          compareVisualBaseline({ actualPath: screenshotPath, baselinePath, route, theme });
+        } catch (error) {
+          mkdirSync(screenshotFailureDir, { recursive: true });
+          const retainedFailurePath = visualFailurePath(name, theme);
+          copyFileSync(screenshotPath, retainedFailurePath);
+          const message = error instanceof Error ? error.message : String(error);
+          assert.fail(`${route}: ${theme} visual review failed. Captured artifact: ${retainedFailurePath}. ${message}`);
         } finally {
           unlinkSync(screenshotPath);
         }
@@ -953,7 +1027,7 @@ async function checkThemeRegression() {
       }
     }
 
-    for (const route of routes) {
+    for (const { route } of routes) {
       const light = snapshots.get(`${route}::light`);
       const dark = snapshots.get(`${route}::dark`);
       assert.notEqual(light.bodyBackground, dark.bodyBackground, `${route}: light and dark body backgrounds are indistinguishable.`);
@@ -1202,7 +1276,10 @@ async function checkThemeRegression() {
       `document.documentElement.dataset.theme === 'dark' && localStorage.getItem('global-ai-news-theme') === 'dark' && document.querySelector('[data-testid="button-theme-toggle"]')?.getAttribute('aria-pressed') === 'true'`,
       'Clicking the theme toggle did not persist and apply dark mode.',
     );
-    console.log(`Theme regression checked ${routes.length} public routes plus ${authRoutes.length} Clerk routes in light and dark mode with contrast, focus, screenshots, and browser-error assertions.`);
+    console.log(
+      `Theme regression checked ${routes.length} public routes plus ${authRoutes.length} Clerk routes ` +
+      `in light and dark mode with contrast, focus, retained baselines, screenshots, and browser-error assertions.`,
+    );
   } finally {
     cdp?.close();
     browserProcess.kill('SIGTERM');
