@@ -963,6 +963,122 @@ async function checkThemeRegression() {
       }
     }
 
+    const authRoutes = ['/sign-in', '/sign-up'];
+    for (const theme of ['light', 'dark']) {
+      for (const route of authRoutes) {
+        cdp.events.length = 0;
+        await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', '${theme}')`);
+        await cdp.send('Page.navigate', { url: `${baseUrl}${route}` });
+        await waitForBrowserCondition(
+          cdp,
+          `document.readyState === 'complete' && !!document.querySelector('input:not([type="hidden"])') && !!document.querySelector('button')`,
+          `${route}: ${theme} mode did not render the Clerk form controls.`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, 250));
+
+        const authState = await evaluateBrowser(cdp, `(() => {
+          const root = getComputedStyle(document.documentElement);
+          const body = getComputedStyle(document.body);
+          const input = document.querySelector('input:not([type="hidden"])');
+          const isVisible = (element) => {
+            const rect = element.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+          };
+          const submit = [...document.querySelectorAll('button.cl-formButtonPrimary')].find(isVisible)
+            ?? [...document.querySelectorAll('button[type="submit"]')].find(isVisible)
+            ?? [...document.querySelectorAll('button')].find(isVisible);
+          const visibleBackground = (element) => {
+            let current = element;
+            while (current) {
+              const background = getComputedStyle(current).backgroundColor;
+              const translucent = background === 'transparent'
+                || background.startsWith('rgba(')
+                || background.startsWith('hsla(')
+                || background.includes('/');
+              if (!translucent) return background;
+              current = current.parentElement;
+            }
+            return body.backgroundColor;
+          };
+          const inputRect = input?.getBoundingClientRect();
+          const submitRect = submit?.getBoundingClientRect();
+          const inputStyle = input ? getComputedStyle(input) : null;
+          const submitStyle = submit ? getComputedStyle(submit) : null;
+          return {
+            theme: document.documentElement.dataset.theme,
+            rootBackground: root.getPropertyValue('--background').trim(),
+            bodyBackground: body.backgroundColor,
+            bodyColor: body.color,
+            inputBackground: input ? visibleBackground(input) : null,
+            inputColor: inputStyle?.color ?? null,
+            inputVisible: Boolean(inputRect && inputRect.width > 0 && inputRect.height > 0),
+            submitBackground: submit ? visibleBackground(submit) : null,
+            submitColor: submitStyle?.color ?? null,
+            submitVisible: Boolean(submitRect && submitRect.width > 0 && submitRect.height > 0),
+            documentWidth: document.documentElement.scrollWidth,
+            viewportWidth: window.innerWidth,
+          };
+        })()`);
+
+        await evaluateBrowser(cdp, 'document.activeElement?.blur()');
+        for (let tab = 0; tab < 8; tab += 1) {
+          await cdp.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab' });
+          await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab' });
+          if (await evaluateBrowser(cdp, `document.activeElement?.matches('input:not([type="hidden"])')`)) break;
+        }
+        const focusState = await evaluateBrowser(cdp, `(() => {
+          const input = document.querySelector('input:not([type="hidden"])');
+          const baseStyle = input ? getComputedStyle(input) : null;
+          const focusedStyle = input && document.activeElement === input ? getComputedStyle(input) : null;
+          return {
+            focusVisible: Boolean(input && input.matches(':focus-visible')),
+            hasFocusIndicator: Boolean(
+              focusedStyle
+              && (
+                (focusedStyle.outlineStyle !== 'none' && focusedStyle.outlineWidth !== '0px')
+                || focusedStyle.boxShadow !== 'none'
+                || focusedStyle.borderColor !== baseStyle?.borderColor
+              ),
+            ),
+          };
+        })()`);
+        Object.assign(authState, focusState);
+
+        assert.equal(authState.theme, theme, `${route}: persisted ${theme} mode was not applied on the Clerk route.`);
+        assert.equal(
+          authState.rootBackground,
+          theme === 'dark' ? '204 21% 8%' : '45 30% 95%',
+          `${route}: ${theme} mode activated the wrong background token.`,
+        );
+        assert.equal(authState.inputVisible, true, `${route}: ${theme} mode email/input control is not visible: ${JSON.stringify(authState)}`);
+        assert.equal(authState.submitVisible, true, `${route}: ${theme} mode primary form button is not visible: ${JSON.stringify(authState)}`);
+        assert.ok(
+          contrastRatio(authState.inputBackground, authState.inputColor) >= 4.5,
+          `${route}: ${theme} mode input contrast is too low.`,
+        );
+        assert.ok(
+          contrastRatio(authState.submitBackground, authState.submitColor) >= 4.5,
+          `${route}: ${theme} mode primary button contrast is too low.`,
+        );
+        assert.equal(authState.focusVisible, true, `${route}: ${theme} mode input did not receive keyboard-visible focus.`);
+        assert.equal(authState.hasFocusIndicator, true, `${route}: ${theme} mode input has no visible focus treatment.`);
+        assert.ok(
+          authState.documentWidth <= authState.viewportWidth,
+          `${route}: ${theme} mode introduces horizontal overflow (${authState.documentWidth}px > ${authState.viewportWidth}px).`,
+        );
+
+        const browserErrors = cdp.events
+          .filter((event) => (
+            (event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
+            || event.method === 'Runtime.exceptionThrown'
+          ))
+          .map((event) => event.method === 'Runtime.exceptionThrown'
+            ? event.params.exceptionDetails?.text ?? 'Unhandled browser exception'
+            : event.params.args?.map((argument) => argument.value ?? argument.description ?? '').join(' ') ?? 'Browser console error');
+        assert.deepEqual(browserErrors, [], `${route}: ${theme} mode emitted browser errors: ${browserErrors.join(' | ')}`);
+      }
+    }
+
     await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', 'light'); location.href = '${baseUrl}/'`);
     await waitForBrowserCondition(
       cdp,
@@ -975,7 +1091,7 @@ async function checkThemeRegression() {
       `document.documentElement.dataset.theme === 'dark' && localStorage.getItem('global-ai-news-theme') === 'dark' && document.querySelector('[data-testid="button-theme-toggle"]')?.getAttribute('aria-pressed') === 'true'`,
       'Clicking the theme toggle did not persist and apply dark mode.',
     );
-    console.log(`Theme regression checked ${routes.length} routes in light and dark mode with contrast, screenshots, and browser-error assertions.`);
+    console.log(`Theme regression checked ${routes.length} public routes plus ${authRoutes.length} Clerk routes in light and dark mode with contrast, focus, screenshots, and browser-error assertions.`);
   } finally {
     cdp?.close();
     browserProcess.kill('SIGTERM');
