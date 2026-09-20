@@ -557,12 +557,86 @@ async function checkMobileEditorHistory() {
       deviceScaleFactor: 1,
       mobile: true,
     });
+     await cdp.send('Network.enable');
+     await cdp.send('Network.setBlockedURLs', {
+       urls: ['*://*/*newsroom/releases/history*'],
+     });
     await cdp.send('Page.navigate', { url: `${baseUrl}/insights?smoke-editor=1` });
     await waitForBrowserCondition(
       cdp,
       `document.readyState === 'complete' && !!document.querySelector('[data-testid="select-release-history-release"]')`,
       'The signed-in publisher workspace did not render release history on mobile.',
     );
+     await waitForBrowserCondition(
+       cdp,
+       `!!document.querySelector('[data-testid="release-history-error"]')`,
+       'A failed release history request did not show the mobile outage state.',
+     );
+
+     await cdp.send('DOM.enable');
+     const errorDocumentNode = await cdp.send('DOM.getDocument', { depth: -1 });
+     const errorNode = await cdp.send('DOM.querySelector', {
+       nodeId: errorDocumentNode.root.nodeId,
+       selector: '[data-testid="release-history-error"]',
+     });
+     const retryNode = await cdp.send('DOM.querySelector', {
+       nodeId: errorDocumentNode.root.nodeId,
+       selector: '[data-testid="button-retry-release-history"]',
+     });
+     assert.ok(errorNode.nodeId, 'The mobile release history outage message could not be located in the DOM.');
+     assert.ok(retryNode.nodeId, 'The mobile release history retry action could not be located in the DOM.');
+     await cdp.send('DOM.scrollIntoViewIfNeeded', { nodeId: errorNode.nodeId });
+     const errorLayout = await evaluateBrowser(cdp, `(() => {
+       const error = document.querySelector('[data-testid="release-history-error"]');
+       const message = document.querySelector('[data-testid="release-history-error-message"]');
+       const retry = document.querySelector('[data-testid="button-retry-release-history"]');
+       const rect = (element) => element?.getBoundingClientRect();
+       const isVisible = (elementRect) => Boolean(
+         elementRect
+         && elementRect.width > 0
+         && elementRect.left >= 0
+         && elementRect.right <= window.innerWidth
+         && elementRect.top >= 0
+         && elementRect.bottom <= window.innerHeight,
+       );
+       return {
+         documentWidth: document.documentElement.scrollWidth,
+         errorVisible: isVisible(rect(error)),
+         messageVisible: isVisible(rect(message)),
+         retryVisible: isVisible(rect(retry)),
+         message: message?.textContent?.trim() ?? '',
+         retry: retry?.textContent?.trim() ?? '',
+       };
+     })()`);
+     assert.ok(errorLayout.documentWidth <= 402, `The mobile release history outage state introduces horizontal overflow (${errorLayout.documentWidth}px).`);
+     assert.equal(errorLayout.errorVisible, true, `The mobile release history outage message is not visible: ${JSON.stringify(errorLayout)}`);
+     assert.equal(errorLayout.messageVisible, true, `The mobile release history outage explanation is not readable: ${JSON.stringify(errorLayout)}`);
+     assert.equal(errorLayout.retryVisible, true, `The mobile release history retry action is not visible: ${JSON.stringify(errorLayout)}`);
+     assert.match(errorLayout.message, /temporarily unavailable/i, 'The mobile release history outage explanation is missing.');
+     assert.equal(errorLayout.retry, 'Try again', 'The mobile release history retry action has the wrong label.');
+
+     await cdp.send('Network.setBlockedURLs', { urls: [] });
+     await evaluateBrowser(cdp, `(() => {
+       const retry = document.querySelector('[data-testid="button-retry-release-history"]');
+       if (!retry) throw new Error('Release history retry action is missing.');
+       retry.click();
+       return true;
+     })()`);
+     await waitForBrowserCondition(
+       cdp,
+       `(() => {
+         const error = document.querySelector('[data-testid="release-history-error"]');
+         const loading = [...document.querySelectorAll('p')].some((element) => element.textContent?.includes('Loading release history'));
+         const settledEmpty = document.body.innerText.includes('No release changes have been recorded yet.');
+         const settledWithEntries = document.querySelectorAll('article[data-testid^="release-history-"]').length > 0;
+         return !error && !loading && (settledEmpty || settledWithEntries);
+       })()`,
+       'Retrying after the release history API recovered did not return to the history view.',
+     );
+     assert.ok(
+       await evaluateBrowser(cdp, `Boolean(document.querySelector('[data-testid="release-history"]'))`),
+       'The recovered release history view is missing on mobile.',
+     );
 
     const initialLayout = await evaluateBrowser(cdp, `(() => {
       const selectors = [
@@ -645,7 +719,6 @@ async function checkMobileEditorHistory() {
       emptyState?.setAttribute('data-testid', 'mobile-history-empty-state');
       return Boolean(emptyState);
     })()`);
-    await cdp.send('DOM.enable');
     const documentNode = await cdp.send('DOM.getDocument', { depth: -1 });
     const emptyStateNode = await cdp.send('DOM.querySelector', {
       nodeId: documentNode.root.nodeId,
