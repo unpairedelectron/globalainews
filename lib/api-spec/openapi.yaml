@@ -66,6 +66,137 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/releases:
+    get:
+      operationId: getNewsroomReleases
+      tags: [newsroom]
+      summary: Get the editor-managed release queue
+      description: Returns scheduled, published, and canceled prepared articles in editorial order.
+      responses:
+        "200":
+          description: Editorial release queue
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorialReleaseQueue"
+        "500":
+          description: Release queue unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: createNewsroomRelease
+      tags: [newsroom]
+      summary: Add a prepared article to the release queue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditorialReleaseInput"
+      responses:
+        "201":
+          description: Release created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorialRelease"
+        "400":
+          description: Invalid release
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Release slug already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/releases/reorder:
+    post:
+      operationId: reorderNewsroomReleases
+      tags: [newsroom]
+      summary: Reorder active prepared articles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditorialReleaseReorderInput"
+      responses:
+        "200":
+          description: Reordered release queue
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorialReleaseQueue"
+        "400":
+          description: Invalid release order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/releases/{slug}:
+    patch:
+      operationId: updateNewsroomRelease
+      tags: [newsroom]
+      summary: Edit or reschedule a prepared article
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditorialReleaseUpdate"
+      responses:
+        "200":
+          description: Release updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorialRelease"
+        "400":
+          description: Invalid release update
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Release not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: cancelNewsroomRelease
+      tags: [newsroom]
+      summary: Cancel a prepared article
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Canceled release
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorialRelease"
+        "404":
+          description: Release not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /newsletter/subscriptions:
     post:
       operationId: subscribeNewsletter
@@ -199,6 +330,10 @@ components:
           items:
             type: object
             additionalProperties: true
+        schedule:
+          type: array
+          items:
+            $ref: "#/components/schemas/EditorialScheduleItem"
       required:
         - generatedAt
         - source
@@ -214,6 +349,133 @@ components:
         - indiaIndex
         - essays
         - askGlobalAnswers
+        - schedule
+    EditorialStory:
+      type: object
+      additionalProperties: true
+    EditorialReleaseStatus:
+      type: string
+      enum: [scheduled, published, canceled]
+    EditorialCadence:
+      type: string
+      enum: [daily, weekly]
+    EditorialScheduleItem:
+      type: object
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        dek:
+          type: string
+        publishAt:
+          type: string
+          format: date-time
+        cadence:
+          $ref: "#/components/schemas/EditorialCadence"
+        status:
+          $ref: "#/components/schemas/EditorialReleaseStatus"
+        position:
+          type: integer
+        story:
+          $ref: "#/components/schemas/EditorialStory"
+      required: [slug, title, dek, publishAt, cadence, status, position]
+    EditorialRelease:
+      type: object
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        dek:
+          type: string
+        publishAt:
+          type: string
+          format: date-time
+        cadence:
+          $ref: "#/components/schemas/EditorialCadence"
+        status:
+          $ref: "#/components/schemas/EditorialReleaseStatus"
+        position:
+          type: integer
+        story:
+          $ref: "#/components/schemas/EditorialStory"
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, slug, title, dek, publishAt, cadence, status, position, story, updatedAt]
+    EditorialReleaseInput:
+      type: object
+      properties:
+        slug:
+          type: string
+          minLength: 2
+          maxLength: 120
+          pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        title:
+          type: string
+          minLength: 1
+          maxLength: 240
+        dek:
+          type: string
+          minLength: 1
+          maxLength: 500
+        publishAt:
+          type: string
+          format: date-time
+        cadence:
+          $ref: "#/components/schemas/EditorialCadence"
+        category:
+          type: string
+          minLength: 1
+        author:
+          type: string
+          minLength: 1
+        body:
+          type: string
+          minLength: 1
+      required: [slug, title, dek, publishAt, cadence, category, author, body]
+    EditorialReleaseUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 240
+        dek:
+          type: string
+          minLength: 1
+          maxLength: 500
+        publishAt:
+          type: string
+          format: date-time
+        cadence:
+          $ref: "#/components/schemas/EditorialCadence"
+        category:
+          type: string
+          minLength: 1
+        author:
+          type: string
+          minLength: 1
+        body:
+          type: string
+          minLength: 1
+      minProperties: 1
+    EditorialReleaseReorderInput:
+      type: object
+      properties:
+        slugs:
+          type: array
+          minItems: 1
+          items:
+            type: string
+      required: [slugs]
+    EditorialReleaseQueue:
+      type: array
+      items:
+        $ref: "#/components/schemas/EditorialRelease"
     NewsroomMetadata:
       type: object
       properties:

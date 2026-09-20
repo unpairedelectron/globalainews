@@ -1,19 +1,31 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import { ArrowUpRight, Search, Share2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpRight, Pencil, Plus, RefreshCw, Search, Share2, X } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from 'wouter';
-import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, getEditorialSchedule, indiaIndex, industryMap, signals, sources, stories, timelineEvents, type Story } from '@/content';
+import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, indiaIndex, industryMap, signals, sources, stories, timelineEvents, type Story } from '@/content';
 import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryRow, TimelineList } from '@/components/site';
 import { BRAND_COLORS } from '@/brand';
 import { EditorialSealGlyph } from '@/components/brand-mark';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { layoutPreviewTitle, socialPreviewAccent, socialPreviewFooterY, socialPreviewHeight, socialPreviewTitleStartY, socialPreviewTitleX, socialPreviewWidth } from '@/social-preview';
+import {
+  getGetNewsroomReleasesQueryKey,
+  useCancelNewsroomRelease,
+  useCreateNewsroomRelease,
+  useGetNewsroomReleases,
+  useReorderNewsroomReleases,
+  useUpdateNewsroomRelease,
+  type EditorialRelease,
+  type EditorialReleaseInput,
+  type EditorialReleaseUpdate,
+} from '@workspace/api-client-react';
 
 const container = 'mx-auto max-w-[1440px] px-5 md:px-10';
 
 function Shell({ children }: { children: ReactNode }) { return <><Header />{children}<Footer /></>; }
 function storyHref(slug: string) { return `/article/${findStory(slug)?.slug ?? slug}`; }
-function formatScheduleDate(publishAt: string): string {
-  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(publishAt));
+function formatScheduleTime(publishAt: string): string {
+  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' }).format(new Date(publishAt)).replace(',', '') + ' UTC';
 }
 
 export function HomePage() {
@@ -140,15 +152,203 @@ function SocialPreviewCard({ story }: { story: Story }) {
   </div>;
 }
 
+type ReleaseFormValue = {
+  slug: string;
+  title: string;
+  dek: string;
+  publishAt: string;
+  cadence: 'daily' | 'weekly';
+  category: string;
+  author: string;
+  body: string;
+};
+
+function releaseBody(release: EditorialRelease): string {
+  const story = release.story as Record<string, unknown>;
+  if (typeof story.body === 'string') return story.body;
+  if (!Array.isArray(story.body)) return '';
+  return story.body
+    .flatMap((section) => {
+      if (!section || typeof section !== 'object') return [];
+      const paragraphs = (section as { paragraphs?: unknown }).paragraphs;
+      return Array.isArray(paragraphs) ? paragraphs.filter((paragraph): paragraph is string => typeof paragraph === 'string') : [];
+    })
+    .join('\n\n');
+}
+
+function releaseToForm(release: EditorialRelease): ReleaseFormValue {
+  return {
+    slug: release.slug,
+    title: release.title,
+    dek: release.dek,
+    publishAt: toDateTimeInput(release.publishAt),
+    cadence: release.cadence,
+    category: typeof release.story.category === 'string' ? release.story.category : 'Field Notes',
+    author: typeof release.story.author === 'string' ? release.story.author : authors[0]?.slug ?? '',
+    body: releaseBody(release),
+  };
+}
+
+function toDateTimeInput(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const pad = (part: number) => String(part).padStart(2, '0');
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}T${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
+}
+
+function toPublishAt(value: string): string {
+  return value ? `${value}:00Z` : '';
+}
+
+function defaultReleaseForm(story?: Story): ReleaseFormValue {
+  const next = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  next.setUTCHours(7, 30, 0, 0);
+  return {
+    slug: '',
+    title: '',
+    dek: '',
+    publishAt: toDateTimeInput(next.toISOString()),
+    cadence: 'daily',
+    category: story?.category ?? 'Field Notes',
+    author: story?.author ?? authors[0]?.slug ?? '',
+    body: story?.body.flatMap((section) => section.paragraphs).join('\n\n') ?? '',
+  };
+}
+
+function releaseError(error: unknown): string {
+  if (error && typeof error === 'object' && 'error' in error) return String((error as { error: unknown }).error);
+  if (error instanceof Error) return error.message;
+  return 'The release could not be saved. Check the fields and try again.';
+}
+
+function ReleaseEditor({
+  initialValue,
+  editing,
+  categories,
+  onCancel,
+  onSubmit,
+  saving,
+}: {
+  initialValue: ReleaseFormValue;
+  editing: boolean;
+  categories: string[];
+  onCancel: () => void;
+  onSubmit: (value: ReleaseFormValue) => void;
+  saving: boolean;
+}) {
+  const [value, setValue] = useState(initialValue);
+  const update = (field: keyof ReleaseFormValue, next: string) => setValue((current) => ({ ...current, [field]: next }));
+  return <form data-testid={editing ? 'form-edit-release' : 'form-create-release'} onSubmit={(event) => { event.preventDefault(); onSubmit(value); }} className="border border-primary/30 bg-[#f1eee6] p-5 md:p-7">
+    <div className="flex items-start justify-between gap-5 border-b border-foreground/15 pb-5">
+      <div><p className="eyebrow text-primary">{editing ? 'Edit prepared article' : 'New prepared article'}</p><h3 className="mt-2 font-serif text-3xl leading-none">{editing ? 'Keep the handoff precise.' : 'Prepare the next edition.'}</h3></div>
+      <button data-testid="button-close-release-editor" type="button" onClick={onCancel} aria-label="Close release editor" className="border border-foreground/20 p-2 hover:border-primary hover:text-primary"><X size={16} /></button>
+    </div>
+    <div className="mt-6 grid gap-5 md:grid-cols-2">
+      <label className="md:col-span-2"><span className="eyebrow text-muted-foreground">Headline</span><input data-testid="input-release-title" required maxLength={240} value={value.title} onChange={(event) => update('title', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 font-serif text-2xl outline-none focus:border-primary" /></label>
+      {!editing && <label><span className="eyebrow text-muted-foreground">Slug</span><input data-testid="input-release-slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" minLength={2} maxLength={120} value={value.slug} onChange={(event) => update('slug', event.target.value.toLowerCase())} placeholder="a-clear-editorial-slug" className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary" /></label>}
+      <label className={editing ? 'md:col-span-2' : ''}><span className="eyebrow text-muted-foreground">Standfirst</span><input data-testid="input-release-dek" required maxLength={500} value={value.dek} onChange={(event) => update('dek', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary" /></label>
+      <label><span className="eyebrow text-muted-foreground">Release time · UTC</span><input data-testid="input-release-publish-at" required type="datetime-local" value={value.publishAt} onChange={(event) => update('publishAt', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary" /></label>
+      <label><span className="eyebrow text-muted-foreground">Cadence</span><select data-testid="select-release-cadence" value={value.cadence} onChange={(event) => update('cadence', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary"><option value="daily">Daily edition</option><option value="weekly">Weekly edition</option></select></label>
+      <label><span className="eyebrow text-muted-foreground">Desk</span><select data-testid="select-release-category" required value={value.category} onChange={(event) => update('category', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary">{categories.map((category) => <option value={category} key={category}>{category}</option>)}</select></label>
+      <label><span className="eyebrow text-muted-foreground">Author</span><select data-testid="select-release-author" required value={value.author} onChange={(event) => update('author', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary">{authors.map((author) => <option value={author.slug} key={author.slug}>{author.name}</option>)}</select></label>
+      <label className="md:col-span-2"><span className="eyebrow text-muted-foreground">Working copy</span><textarea data-testid="textarea-release-body" required minLength={1} value={value.body} onChange={(event) => update('body', event.target.value)} rows={7} className="mt-2 w-full resize-y border border-foreground/20 bg-background p-3 text-sm leading-6 outline-none focus:border-primary" /></label>
+    </div>
+    <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-foreground/15 pt-5"><p className="max-w-md text-xs leading-5 text-muted-foreground">The article will enter the durable release queue and remain editable until it publishes.</p><div className="flex gap-2"><button data-testid="button-cancel-release-editor" type="button" onClick={onCancel} className="border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest hover:border-primary">Discard</button><button data-testid="button-save-release" type="submit" disabled={saving} className="inline-flex items-center gap-2 bg-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-background disabled:cursor-wait disabled:opacity-50">{saving ? 'Saving…' : editing ? 'Save changes' : 'Add to queue'}</button></div></div>
+  </form>;
+}
+
 export function InsightsPage() {
   const { stories: newsroomStories } = useNewsroomSnapshot();
   const [previewSlug, setPreviewSlug] = useState(newsroomStories[0]?.slug ?? '');
   const previewStory = newsroomStories.find((story) => story.slug === previewSlug) ?? newsroomStories[0];
-  const schedule = getEditorialSchedule();
+  const releasesQuery = useGetNewsroomReleases({ query: { queryKey: getGetNewsroomReleasesQueryKey(), staleTime: 0, refetchOnMount: true, retry: 1 } });
+  const createRelease = useCreateNewsroomRelease();
+  const updateRelease = useUpdateNewsroomRelease();
+  const cancelRelease = useCancelNewsroomRelease();
+  const reorderReleases = useReorderNewsroomReleases();
+  const queryClient = useQueryClient();
+  const [editor, setEditor] = useState<{ release?: EditorialRelease; value: ReleaseFormValue } | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const queue = releasesQuery.data ?? [];
+  const orderedQueue = [...queue].sort((a, b) => a.position - b.position);
+  const scheduled = orderedQueue.filter((release) => release.status === 'scheduled');
+  const categories = Array.from(new Set(newsroomStories.map((story) => story.category)));
+  const syncQueue = (next: EditorialRelease[]) => {
+    const sorted = [...next].sort((a, b) => a.position - b.position);
+    queryClient.setQueryData(getGetNewsroomReleasesQueryKey(), sorted);
+    void releasesQuery.refetch();
+  };
+  const openCreate = () => {
+    setActionError(null);
+    setEditor({ value: defaultReleaseForm(newsroomStories[0]) });
+  };
+  const openEdit = (release: EditorialRelease) => {
+    setActionError(null);
+    setEditor({ release, value: releaseToForm(release) });
+  };
+  const saveRelease = async (value: ReleaseFormValue) => {
+    setActionError(null);
+    setBusy(editor?.release ? `save-${editor.release.slug}` : 'create');
+    try {
+      if (editor?.release) {
+        const data: EditorialReleaseUpdate = { title: value.title, dek: value.dek, publishAt: toPublishAt(value.publishAt), cadence: value.cadence, category: value.category, author: value.author, body: value.body };
+        const updated = await updateRelease.mutateAsync({ slug: editor.release.slug, data });
+        syncQueue(queue.map((release) => release.slug === updated.slug ? updated : release));
+      } else {
+        const data: EditorialReleaseInput = { slug: value.slug, title: value.title, dek: value.dek, publishAt: toPublishAt(value.publishAt), cadence: value.cadence, category: value.category, author: value.author, body: value.body };
+        const created = await createRelease.mutateAsync({ data });
+        syncQueue([...queue, created]);
+      }
+      setEditor(null);
+    } catch (error) {
+      setActionError(releaseError(error));
+    } finally {
+      setBusy(null);
+    }
+  };
+  const cancelPrepared = async (release: EditorialRelease) => {
+    if (!window.confirm(`Cancel “${release.title}”? This removes it from the prepared queue.`)) return;
+    setActionError(null);
+    setBusy(`cancel-${release.slug}`);
+    try {
+      const canceled = await cancelRelease.mutateAsync({ slug: release.slug });
+      syncQueue(queue.map((item) => item.slug === canceled.slug ? canceled : item));
+    } catch (error) {
+      setActionError(releaseError(error));
+    } finally {
+      setBusy(null);
+    }
+  };
+  const moveRelease = async (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= scheduled.length) return;
+    const slugs = scheduled.map((release) => release.slug);
+    [slugs[index], slugs[target]] = [slugs[target], slugs[index]];
+    setActionError(null);
+    setBusy('reorder');
+    try {
+      const reordered = await reorderReleases.mutateAsync({ data: { slugs } });
+      syncQueue(reordered);
+    } catch (error) {
+      setActionError(releaseError(error));
+    } finally {
+      setBusy(null);
+    }
+  };
   return <Shell><SeoHead title="Publisher workspace — Global AI News" description="Internal editorial intelligence workspace." path="/insights" /><main className={container}>
     <section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Internal editorial surface</p><h1 className="mt-6 max-w-5xl font-serif text-7xl leading-[.84] md:text-[9rem]">The room<br /><em className="text-primary">is reading.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A calm view of audience attention, the publishing calendar and the questions worth following next.</p></section>
     <section className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 sm:grid-cols-2 lg:grid-cols-4">{[['42,806', 'Daily brief subscribers', '+8.4%'], ['18,492', 'Readers right now', '+12.1%'], ['63%', 'Returning readers', '+4.6%'], ['7m 42s', 'Average depth', '+0:38']].map(([value, label, delta]) => <div data-testid={`metric-${label.toLowerCase().replace(/\s/g, '-')}`} key={label} className="bg-background p-6"><p className="eyebrow text-muted-foreground">{label}</p><p className="mt-7 font-serif text-4xl">{value}</p><p className="mt-2 text-xs text-primary">{delta} today</p></div>)}</section>
-    <section data-testid="editorial-queue" className="border-b border-foreground/20 py-14"><SectionLabel>Automatic publishing queue</SectionLabel><div className="grid gap-px border border-foreground/15 bg-foreground/15 md:grid-cols-3">{schedule.map((item) => <article data-testid={`editorial-queue-${item.slug}`} key={item.slug} className="bg-background p-6"><div className="flex items-center justify-between gap-4"><p className={`eyebrow ${item.status === 'published' ? 'text-primary' : 'text-muted-foreground'}`}>{item.status}</p><span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{item.cadence}</span></div><h2 className="mt-7 font-serif text-2xl leading-[.95]">{item.title}</h2><p className="mt-5 text-xs text-muted-foreground">Release {formatScheduleDate(item.publishAt)} · 07:30 UTC</p></article>)}</div><p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground">Prepared stories move into the live newsroom automatically at their scheduled time. The API recalculates the queue on every request, and the public app refreshes the snapshot every five minutes.</p></section>
+    <section data-testid="editorial-queue" className="border-b border-foreground/20 py-14">
+      <div className="flex flex-wrap items-end justify-between gap-5"><div><SectionLabel>Durable release desk</SectionLabel><h2 className="mt-3 max-w-xl font-serif text-5xl leading-[.9]">Prepare the next edition.</h2><p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground">Create, sequence and reschedule prepared articles without changing the publication build.</p></div><div className="flex gap-2"><button data-testid="button-refresh-releases" type="button" onClick={() => void releasesQuery.refetch()} className="inline-flex items-center gap-2 border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary"><RefreshCw size={13} />Refresh</button><button data-testid="button-new-release" type="button" onClick={openCreate} className="inline-flex items-center gap-2 bg-foreground px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-background"><Plus size={14} />New release</button></div></div>
+      {editor && <div className="mt-8"><ReleaseEditor key={editor.release?.slug ?? 'new-release'} initialValue={editor.value} editing={Boolean(editor.release)} categories={Array.from(new Set([...categories, editor.value.category]))} onCancel={() => setEditor(null)} onSubmit={saveRelease} saving={busy === 'create' || Boolean(editor.release && busy === `save-${editor.release.slug}`)} /></div>}
+      {actionError && <div role="alert" className="mt-5 flex items-center justify-between gap-4 border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm"><span>{actionError}</span><button type="button" onClick={() => setActionError(null)} aria-label="Dismiss release error"><X size={15} /></button></div>}
+      {releasesQuery.isLoading && <div className="mt-8 grid gap-px border border-foreground/15 bg-foreground/15 md:grid-cols-3">{[1, 2, 3].map((item) => <div key={item} className="h-48 animate-pulse bg-background/70 p-6"><div className="h-3 w-20 bg-foreground/10" /><div className="mt-8 h-8 w-4/5 bg-foreground/10" /><div className="mt-8 h-3 w-2/5 bg-foreground/10" /></div>)}</div>}
+      {releasesQuery.isError && <div className="mt-8 border border-destructive/35 p-6"><p className="eyebrow text-destructive">Release queue unavailable</p><p className="mt-3 text-sm text-muted-foreground">The editor-managed queue could not be read.</p><button type="button" onClick={() => void releasesQuery.refetch()} className="mt-5 border border-primary px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-primary">Try again</button></div>}
+      {!releasesQuery.isLoading && !releasesQuery.isError && orderedQueue.length === 0 && <div className="mt-8 border border-dashed border-foreground/25 p-8"><p className="eyebrow text-primary">No prepared releases</p><p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">The queue is clear. Add a prepared article to give the next edition a durable place in the publishing calendar.</p><button type="button" onClick={openCreate} className="mt-6 inline-flex items-center gap-2 border-b border-primary pb-2 text-sm text-primary"><Plus size={14} />Prepare an article</button></div>}
+      {orderedQueue.length > 0 && <div className="mt-8 grid gap-px border border-foreground/15 bg-foreground/15 md:grid-cols-2 xl:grid-cols-3">{orderedQueue.map((release) => { const activeIndex = scheduled.findIndex((item) => item.slug === release.slug); const isScheduled = release.status === 'scheduled'; return <article data-testid={`editorial-queue-${release.slug}`} key={release.slug} className="bg-background p-6"><div className="flex items-center justify-between gap-4"><p className={`eyebrow ${release.status === 'published' ? 'text-primary' : release.status === 'canceled' ? 'text-destructive' : 'text-muted-foreground'}`}>{release.status}</p><span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{release.cadence}</span></div><h3 className="mt-7 font-serif text-2xl leading-[.95]">{release.title}</h3><p className="mt-4 text-sm leading-5 text-muted-foreground">{release.dek}</p><p className="mt-5 border-t border-foreground/15 pt-4 text-xs text-muted-foreground">Release {formatScheduleTime(release.publishAt)}</p>{isScheduled && <div className="mt-5 flex flex-wrap items-center gap-2"><button data-testid={`button-move-release-up-${release.slug}`} type="button" disabled={activeIndex <= 0 || busy === 'reorder'} onClick={() => void moveRelease(activeIndex, -1)} className="inline-flex items-center gap-1 border border-foreground/20 px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest hover:border-primary disabled:opacity-30"><ArrowUp size={12} />Earlier</button><button data-testid={`button-move-release-down-${release.slug}`} type="button" disabled={activeIndex < 0 || activeIndex === scheduled.length - 1 || busy === 'reorder'} onClick={() => void moveRelease(activeIndex, 1)} className="inline-flex items-center gap-1 border border-foreground/20 px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest hover:border-primary disabled:opacity-30"><ArrowDown size={12} />Later</button><button data-testid={`button-edit-release-${release.slug}`} type="button" onClick={() => openEdit(release)} className="inline-flex items-center gap-1 border border-foreground/20 px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary"><Pencil size={12} />Edit</button><button data-testid={`button-cancel-release-${release.slug}`} type="button" disabled={busy === `cancel-${release.slug}`} onClick={() => void cancelPrepared(release)} className="border-b border-destructive/50 px-1 py-1.5 font-mono text-[10px] uppercase tracking-widest text-destructive hover:border-destructive disabled:opacity-40">Cancel</button></div>}</article>; })}</div>}
+      <p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground">Prepared stories move into the live newsroom automatically at their scheduled time. Published and canceled records stay visible as an editorial trail.</p>
+    </section>
     <section className="border-b border-foreground/20 py-14"><div className="grid gap-10 md:grid-cols-[.65fr_1.35fr] md:items-start"><div><SectionLabel>Share card preview</SectionLabel><h2 className="mt-3 max-w-md font-serif text-5xl leading-[.9]">See the headline before it travels.</h2><p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">This 1200 × 630 treatment is the same layout used for published social cards. Select a story to inspect the fallback size and exact line breaks.</p>{previewStory && <label className="mt-7 block max-w-sm"><span className="eyebrow text-muted-foreground">Article</span><select data-testid="select-social-preview-story" value={previewStory.slug} onChange={(event) => setPreviewSlug(event.target.value)} className="mt-2 w-full border border-foreground/20 bg-background px-3 py-3 text-sm">{newsroomStories.map((story) => <option value={story.slug} key={story.slug}>{story.title}</option>)}</select></label>}</div><div>{previewStory ? <SocialPreviewCard story={previewStory} /> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">No published stories are available for preview.</p>}</div></div></section>
     <section className="grid gap-12 py-14 md:grid-cols-[1.1fr_.9fr]"><div><SectionLabel>Publishing calendar</SectionLabel>{['The model race after the benchmark era', 'India builds in public', 'The cost of intelligence', 'Proof, not demos'].map((title, index) => <div key={title} className="flex items-start justify-between border-t border-foreground/15 py-5"><div><p className="eyebrow text-primary">0{index + 1} · planned</p><p className="mt-2 font-serif text-2xl">{title}</p></div><span className="font-mono text-xs text-muted-foreground">{['OCT', 'NOV', 'DEC', 'JAN'][index]}</span></div>)}</div><div><SectionLabel>Live stories</SectionLabel>{newsroomStories.slice(0, 4).map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} compact />)}</div></section>
     </main></Shell>;

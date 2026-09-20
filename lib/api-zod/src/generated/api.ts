@@ -16,6 +16,7 @@ export const HealthCheckResponse = zod.object({
   "status": zod.string()
 })
 
+
 /**
  * Returns the maintained editorial content used by the public publication.
  * @summary Get the current newsroom content snapshot
@@ -34,7 +35,17 @@ export const GetNewsroomContentResponse = zod.object({
   "industryMap": zod.array(zod.record(zod.string(), zod.unknown())),
   "indiaIndex": zod.array(zod.record(zod.string(), zod.unknown())),
   "essays": zod.array(zod.record(zod.string(), zod.unknown())),
-  "askGlobalAnswers": zod.array(zod.record(zod.string(), zod.unknown()))
+  "askGlobalAnswers": zod.array(zod.record(zod.string(), zod.unknown())),
+  "schedule": zod.array(zod.object({
+  "slug": zod.string(),
+  "title": zod.string(),
+  "dek": zod.string(),
+  "publishAt": zod.coerce.date(),
+  "cadence": zod.enum(['daily', 'weekly']),
+  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "position": zod.number().int(),
+  "story": zod.record(zod.string(), zod.unknown()).optional()
+}))
 })
 
 
@@ -58,6 +69,153 @@ export const GetNewsroomMetadataResponse = zod.object({
 
 
 /**
+ * Returns scheduled, published, and canceled prepared articles in editorial order.
+ * @summary Get the editor-managed release queue
+ */
+export const GetNewsroomReleasesResponseItem = zod.object({
+  "id": zod.number().int(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "dek": zod.string(),
+  "publishAt": zod.coerce.date(),
+  "cadence": zod.enum(['daily', 'weekly']),
+  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "position": zod.number().int(),
+  "story": zod.record(zod.string(), zod.unknown()),
+  "updatedAt": zod.coerce.date()
+})
+export const GetNewsroomReleasesResponse = zod.array(GetNewsroomReleasesResponseItem)
+
+
+/**
+ * @summary Add a prepared article to the release queue
+ */
+export const createNewsroomReleaseBodySlugMin = 2;
+export const createNewsroomReleaseBodySlugMax = 120;
+
+
+export const createNewsroomReleaseBodySlugRegExp = new RegExp('^[a-z0-9]+(?:-[a-z0-9]+)*$');
+export const createNewsroomReleaseBodyTitleMax = 240;
+
+export const createNewsroomReleaseBodyDekMax = 500;
+
+
+
+
+
+
+export const CreateNewsroomReleaseBody = zod.object({
+  "slug": zod.string().min(createNewsroomReleaseBodySlugMin).max(createNewsroomReleaseBodySlugMax).regex(createNewsroomReleaseBodySlugRegExp),
+  "title": zod.string().min(1).max(createNewsroomReleaseBodyTitleMax),
+  "dek": zod.string().min(1).max(createNewsroomReleaseBodyDekMax),
+  "publishAt": zod.coerce.date(),
+  "cadence": zod.enum(['daily', 'weekly']),
+  "category": zod.string().min(1),
+  "author": zod.string().min(1),
+  "body": zod.string().min(1)
+})
+
+export const CreateNewsroomReleaseResponse = zod.object({
+  "id": zod.number().int(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "dek": zod.string(),
+  "publishAt": zod.coerce.date(),
+  "cadence": zod.enum(['daily', 'weekly']),
+  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "position": zod.number().int(),
+  "story": zod.record(zod.string(), zod.unknown()),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Reorder active prepared articles
+ */
+
+
+
+export const ReorderNewsroomReleasesBody = zod.object({
+  "slugs": zod.array(zod.string()).min(1)
+})
+
+export const ReorderNewsroomReleasesResponseItem = zod.object({
+  "id": zod.number().int(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "dek": zod.string(),
+  "publishAt": zod.coerce.date(),
+  "cadence": zod.enum(['daily', 'weekly']),
+  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "position": zod.number().int(),
+  "story": zod.record(zod.string(), zod.unknown()),
+  "updatedAt": zod.coerce.date()
+})
+export const ReorderNewsroomReleasesResponse = zod.array(ReorderNewsroomReleasesResponseItem)
+
+
+/**
+ * @summary Edit or reschedule a prepared article
+ */
+export const UpdateNewsroomReleaseParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const updateNewsroomReleaseBodyTitleMax = 240;
+
+export const updateNewsroomReleaseBodyDekMax = 500;
+
+
+
+
+
+
+export const UpdateNewsroomReleaseBody = zod.object({
+  "title": zod.string().min(1).max(updateNewsroomReleaseBodyTitleMax).optional(),
+  "dek": zod.string().min(1).max(updateNewsroomReleaseBodyDekMax).optional(),
+  "publishAt": zod.coerce.date().optional(),
+  "cadence": zod.enum(['daily', 'weekly']).optional(),
+  "category": zod.string().min(1).optional(),
+  "author": zod.string().min(1).optional(),
+  "body": zod.string().min(1).optional()
+})
+
+export const UpdateNewsroomReleaseResponse = zod.object({
+  "id": zod.number().int(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "dek": zod.string(),
+  "publishAt": zod.coerce.date(),
+  "cadence": zod.enum(['daily', 'weekly']),
+  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "position": zod.number().int(),
+  "story": zod.record(zod.string(), zod.unknown()),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Cancel a prepared article
+ */
+export const CancelNewsroomReleaseParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const CancelNewsroomReleaseResponse = zod.object({
+  "id": zod.number().int(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "dek": zod.string(),
+  "publishAt": zod.coerce.date(),
+  "cadence": zod.enum(['daily', 'weekly']),
+  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "position": zod.number().int(),
+  "story": zod.record(zod.string(), zod.unknown()),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
  * @summary Subscribe an email address to the Daily Brief
  */
 export const subscribeNewsletterBodyEmailMin = 3;
@@ -74,3 +232,5 @@ export const SubscribeNewsletterResponse = zod.object({
   "provider": zod.string(),
   "message": zod.string()
 })
+
+

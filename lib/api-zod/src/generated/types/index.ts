@@ -6,6 +6,15 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './editorialCadence';
+export * from './editorialRelease';
+export * from './editorialReleaseInput';
+export * from './editorialReleaseQueue';
+export * from './editorialReleaseReorderInput';
+export * from './editorialReleaseStatus';
+export * from './editorialReleaseUpdate';
+export * from './editorialScheduleItem';
+export * from './editorialStory';
 export * from './errorResponse';
 export * from './healthStatus';
 export * from './newsletterSubscription';

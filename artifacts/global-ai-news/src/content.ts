@@ -103,9 +103,12 @@ export interface ScheduledStory extends Story {
 export interface EditorialScheduleItem {
   slug: string;
   title: string;
+  dek: string;
   publishAt: string;
   cadence: EditorialCadence;
-  status: 'scheduled' | 'published';
+  status: 'scheduled' | 'published' | 'canceled';
+  position: number;
+  story?: Story;
 }
 export interface Signal {
   slug: string;
@@ -335,9 +338,9 @@ export const scheduledStories: ScheduledStory[] = [
   },
 ];
 
-export function getPublishedStories(now = new Date()): Story[] {
+export function getPublishedStories(now = new Date(), schedule = scheduledStories): Story[] {
   const publishedSlugs = new Set(stories.map((story) => story.slug));
-  const newlyPublished = scheduledStories.filter(
+  const newlyPublished = schedule.filter(
     (story) => !publishedSlugs.has(story.slug) && Date.parse(story.publishAt) <= now.getTime(),
   );
   return [...stories, ...newlyPublished].sort((left, right) => {
@@ -346,13 +349,16 @@ export function getPublishedStories(now = new Date()): Story[] {
   });
 }
 
-export function getEditorialSchedule(now = new Date()): EditorialScheduleItem[] {
-  return scheduledStories.map((story) => ({
+export function getEditorialSchedule(now = new Date(), schedule = scheduledStories): EditorialScheduleItem[] {
+  return schedule.map((story, position) => ({
     slug: story.slug,
     title: story.title,
+    dek: story.dek,
     publishAt: story.publishAt,
     cadence: story.cadence,
     status: Date.parse(story.publishAt) <= now.getTime() ? 'published' : 'scheduled',
+    position,
+    story,
   }));
 }
 
@@ -412,6 +418,7 @@ export interface NewsroomContentSnapshot {
   indiaIndex: IndiaIndexMetric[];
   essays: Essay[];
   askGlobalAnswers: AskGlobalAnswer[];
+  schedule: EditorialScheduleItem[];
 }
 
 export function hydrateContent(snapshot: NewsroomContentSnapshot): void {

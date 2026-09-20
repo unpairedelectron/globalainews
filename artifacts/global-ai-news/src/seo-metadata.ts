@@ -1,4 +1,4 @@
-import { authors, entities, findEntity, findStory, findTimeline, getPublishedStories, stories, timelineEvents } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, getPublishedStories, stories, timelineEvents, type Story } from './content';
 
 export const SITE_URL = 'https://www.globalainews.in';
 
@@ -98,7 +98,7 @@ export function setSeoMetadataManifest(manifest: SeoMetadataManifest | undefined
   activeManifest = manifest;
 }
 
-export function getSeoMetadata(route: string): SeoMetadata {
+export function getSeoMetadata(route: string, publishedStories = getPublishedStories()): SeoMetadata {
   const cleanPath = cleanRoute(route);
   const manifestMetadata = activeManifest?.routes.find((metadata) => metadata.path === cleanPath);
   if (manifestMetadata) return manifestMetadata;
@@ -108,7 +108,7 @@ export function getSeoMetadata(route: string): SeoMetadata {
 
   const articleMatch = cleanPath.match(/^\/article\/([^/]+)$/);
   if (articleMatch) {
-    const story = getPublishedStories().find((candidate) => candidate.slug === articleMatch[1]) ?? findStory('ai-models-antibiotic-discovery')!;
+    const story = publishedStories.find((candidate) => candidate.slug === articleMatch[1]) ?? findStory('ai-models-antibiotic-discovery')!;
     return {
       title: `${story.title} — Global AI News`,
       description: story.dek,
@@ -160,15 +160,15 @@ export function getSeoMetadata(route: string): SeoMetadata {
   };
 }
 
-export function getSeoMetadataManifest(): SeoMetadataManifest {
+export function getSeoMetadataManifest(publishedStories: Story[] = getPublishedStories()): SeoMetadataManifest {
   const dynamicPaths = [
-    ...getPublishedStories().map((story) => `/article/${story.slug}`),
+    ...publishedStories.map((story) => `/article/${story.slug}`),
     ...timelineEvents.map((event) => `/timeline/${event.slug}`),
     ...entities.map((entity) => `/${entity.kind}/${entity.slug}`),
     ...authors.map((author) => `/person/${author.slug}`),
   ];
   const routes = [...new Set([...Object.keys(staticMetadata), ...dynamicPaths])]
-    .map((path) => getSeoMetadata(path));
+    .map((path) => getSeoMetadata(path, publishedStories));
 
   return {
     source: 'maintained-editorial-source',

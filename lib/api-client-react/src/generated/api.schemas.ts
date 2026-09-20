@@ -57,6 +57,36 @@ export type NewsroomContentEssaysItem = { [key: string]: unknown };
 
 export type NewsroomContentAskGlobalAnswersItem = { [key: string]: unknown };
 
+export type EditorialCadence = typeof EditorialCadence[keyof typeof EditorialCadence];
+
+
+export const EditorialCadence = {
+  daily: 'daily',
+  weekly: 'weekly',
+} as const;
+
+export type EditorialReleaseStatus = typeof EditorialReleaseStatus[keyof typeof EditorialReleaseStatus];
+
+
+export const EditorialReleaseStatus = {
+  scheduled: 'scheduled',
+  published: 'published',
+  canceled: 'canceled',
+} as const;
+
+export interface EditorialStory { [key: string]: unknown }
+
+export interface EditorialScheduleItem {
+  slug: string;
+  title: string;
+  dek: string;
+  publishAt: string;
+  cadence: EditorialCadence;
+  status: EditorialReleaseStatus;
+  position: number;
+  story?: EditorialStory;
+}
+
 export interface NewsroomContent {
   generatedAt: string;
   source: string;
@@ -72,7 +102,76 @@ export interface NewsroomContent {
   indiaIndex: NewsroomContentIndiaIndexItem[];
   essays: NewsroomContentEssaysItem[];
   askGlobalAnswers: NewsroomContentAskGlobalAnswersItem[];
+  schedule: EditorialScheduleItem[];
 }
+
+export interface EditorialRelease {
+  id: number;
+  slug: string;
+  title: string;
+  dek: string;
+  publishAt: string;
+  cadence: EditorialCadence;
+  status: EditorialReleaseStatus;
+  position: number;
+  story: EditorialStory;
+  updatedAt: string;
+}
+
+export interface EditorialReleaseInput {
+  /**
+     * @minLength 2
+     * @maxLength 120
+     * @pattern ^[a-z0-9]+(?:-[a-z0-9]+)*$
+     */
+  slug: string;
+  /**
+     * @minLength 1
+     * @maxLength 240
+     */
+  title: string;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  dek: string;
+  publishAt: string;
+  cadence: EditorialCadence;
+  /** @minLength 1 */
+  category: string;
+  /** @minLength 1 */
+  author: string;
+  /** @minLength 1 */
+  body: string;
+}
+
+export interface EditorialReleaseUpdate {
+  /**
+     * @minLength 1
+     * @maxLength 240
+     */
+  title?: string;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  dek?: string;
+  publishAt?: string;
+  cadence?: EditorialCadence;
+  /** @minLength 1 */
+  category?: string;
+  /** @minLength 1 */
+  author?: string;
+  /** @minLength 1 */
+  body?: string;
+}
+
+export interface EditorialReleaseReorderInput {
+  /** @minItems 1 */
+  slugs: string[];
+}
+
+export type EditorialReleaseQueue = EditorialRelease[];
 
 export type NewsroomMetadataSource = typeof NewsroomMetadataSource[keyof typeof NewsroomMetadataSource];
 
@@ -96,3 +195,4 @@ export interface NewsroomMetadata {
   generatedAt: string;
   routes: SeoMetadata[];
 }
+

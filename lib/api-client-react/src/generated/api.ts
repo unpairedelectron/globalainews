@@ -20,6 +20,11 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  EditorialRelease,
+  EditorialReleaseInput,
+  EditorialReleaseQueue,
+  EditorialReleaseReorderInput,
+  EditorialReleaseUpdate,
   ErrorResponse,
   HealthStatus,
   NewsletterSubscription,
@@ -87,6 +92,7 @@ export const getHealthCheckQueryKey = () => {
     `/api/healthz`
     ] as const;
     }
+
 
 export const getHealthCheckQueryOptions = <TData = Awaited<ReturnType<typeof healthCheck>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof healthCheck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
@@ -288,6 +294,423 @@ export function useGetNewsroomMetadata<TData = Awaited<ReturnType<typeof getNews
 
 
 
+export const getGetNewsroomReleasesUrl = () => {
+
+
+
+
+  return `/api/newsroom/releases`
+}
+
+/**
+ * Returns scheduled, published, and canceled prepared articles in editorial order.
+ * @summary Get the editor-managed release queue
+ */
+export const getNewsroomReleases = async ( options?: Parameters<typeof customFetch>[1]): Promise<EditorialReleaseQueue> => {
+
+  return customFetch<EditorialReleaseQueue>(getGetNewsroomReleasesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetNewsroomReleasesQueryKey = () => {
+    return [
+    `/api/newsroom/releases`
+    ] as const;
+    }
+
+
+export const getGetNewsroomReleasesQueryOptions = <TData = Awaited<ReturnType<typeof getNewsroomReleases>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomReleases>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNewsroomReleasesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNewsroomReleases>>> = ({ signal }) => getNewsroomReleases({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNewsroomReleases>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNewsroomReleasesQueryResult = NonNullable<Awaited<ReturnType<typeof getNewsroomReleases>>>
+export type GetNewsroomReleasesQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Get the editor-managed release queue
+ */
+
+export function useGetNewsroomReleases<TData = Awaited<ReturnType<typeof getNewsroomReleases>>, TError = ErrorType<ErrorResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomReleases>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetNewsroomReleasesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateNewsroomReleaseUrl = () => {
+
+
+
+
+  return `/api/newsroom/releases`
+}
+
+/**
+ * @summary Add a prepared article to the release queue
+ */
+export const createNewsroomRelease = async (editorialReleaseInput: EditorialReleaseInput, options?: Parameters<typeof customFetch>[1]): Promise<EditorialRelease> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<EditorialRelease>(getCreateNewsroomReleaseUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(editorialReleaseInput)
+  }
+);}
+
+
+
+
+
+export const getCreateNewsroomReleaseMutationKey = () => ['createNewsroomRelease'] as const;
+
+export const getCreateNewsroomReleaseMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNewsroomRelease>>, TError,CreateNewsroomReleaseMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createNewsroomRelease>>, TError,CreateNewsroomReleaseMutationVariables, TContext> => {
+
+const mutationKey = getCreateNewsroomReleaseMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createNewsroomRelease>>, CreateNewsroomReleaseMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  createNewsroomRelease(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateNewsroomReleaseMutationResult = NonNullable<Awaited<ReturnType<typeof createNewsroomRelease>>>
+    export type CreateNewsroomReleaseMutationBody = BodyType<EditorialReleaseInput>
+    export type CreateNewsroomReleaseMutationError = ErrorType<ErrorResponse>
+    export type CreateNewsroomReleaseMutationVariables = {data: BodyType<EditorialReleaseInput>}
+
+    /**
+ * @summary Add a prepared article to the release queue
+ */
+export const useCreateNewsroomRelease = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNewsroomRelease>>, TError,CreateNewsroomReleaseMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createNewsroomRelease>>,
+        TError,
+        CreateNewsroomReleaseMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateNewsroomReleaseMutationOptions(options));
+    }
+
+export const getReorderNewsroomReleasesUrl = () => {
+
+
+
+
+  return `/api/newsroom/releases/reorder`
+}
+
+/**
+ * @summary Reorder active prepared articles
+ */
+export const reorderNewsroomReleases = async (editorialReleaseReorderInput: EditorialReleaseReorderInput, options?: Parameters<typeof customFetch>[1]): Promise<EditorialReleaseQueue> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<EditorialReleaseQueue>(getReorderNewsroomReleasesUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(editorialReleaseReorderInput)
+  }
+);}
+
+
+
+
+
+export const getReorderNewsroomReleasesMutationKey = () => ['reorderNewsroomReleases'] as const;
+
+export const getReorderNewsroomReleasesMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reorderNewsroomReleases>>, TError,ReorderNewsroomReleasesMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reorderNewsroomReleases>>, TError,ReorderNewsroomReleasesMutationVariables, TContext> => {
+
+const mutationKey = getReorderNewsroomReleasesMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reorderNewsroomReleases>>, ReorderNewsroomReleasesMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  reorderNewsroomReleases(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReorderNewsroomReleasesMutationResult = NonNullable<Awaited<ReturnType<typeof reorderNewsroomReleases>>>
+    export type ReorderNewsroomReleasesMutationBody = BodyType<EditorialReleaseReorderInput>
+    export type ReorderNewsroomReleasesMutationError = ErrorType<ErrorResponse>
+    export type ReorderNewsroomReleasesMutationVariables = {data: BodyType<EditorialReleaseReorderInput>}
+
+    /**
+ * @summary Reorder active prepared articles
+ */
+export const useReorderNewsroomReleases = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reorderNewsroomReleases>>, TError,ReorderNewsroomReleasesMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reorderNewsroomReleases>>,
+        TError,
+        ReorderNewsroomReleasesMutationVariables,
+        TContext
+      > => {
+      return useMutation(getReorderNewsroomReleasesMutationOptions(options));
+    }
+
+export const getUpdateNewsroomReleaseUrl = (slug: string,) => {
+
+
+
+
+  return `/api/newsroom/releases/${slug}`
+}
+
+/**
+ * @summary Edit or reschedule a prepared article
+ */
+export const updateNewsroomRelease = async (slug: string,
+    editorialReleaseUpdate: EditorialReleaseUpdate, options?: Parameters<typeof customFetch>[1]): Promise<EditorialRelease> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<EditorialRelease>(getUpdateNewsroomReleaseUrl(slug),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(editorialReleaseUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateNewsroomReleaseMutationKey = () => ['updateNewsroomRelease'] as const;
+
+export const getUpdateNewsroomReleaseMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNewsroomRelease>>, TError,UpdateNewsroomReleaseMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateNewsroomRelease>>, TError,UpdateNewsroomReleaseMutationVariables, TContext> => {
+
+const mutationKey = getUpdateNewsroomReleaseMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateNewsroomRelease>>, UpdateNewsroomReleaseMutationVariables> = (props) => {
+          const {slug,data} = props ?? {};
+
+          return  updateNewsroomRelease(slug,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateNewsroomReleaseMutationResult = NonNullable<Awaited<ReturnType<typeof updateNewsroomRelease>>>
+    export type UpdateNewsroomReleaseMutationBody = BodyType<EditorialReleaseUpdate>
+    export type UpdateNewsroomReleaseMutationError = ErrorType<ErrorResponse>
+    export type UpdateNewsroomReleaseMutationVariables = {slug: string;data: BodyType<EditorialReleaseUpdate>}
+
+    /**
+ * @summary Edit or reschedule a prepared article
+ */
+export const useUpdateNewsroomRelease = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNewsroomRelease>>, TError,UpdateNewsroomReleaseMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateNewsroomRelease>>,
+        TError,
+        UpdateNewsroomReleaseMutationVariables,
+        TContext
+      > => {
+      return useMutation(getUpdateNewsroomReleaseMutationOptions(options));
+    }
+
+export const getCancelNewsroomReleaseUrl = (slug: string,) => {
+
+
+
+
+  return `/api/newsroom/releases/${slug}`
+}
+
+/**
+ * @summary Cancel a prepared article
+ */
+export const cancelNewsroomRelease = async (slug: string, options?: Parameters<typeof customFetch>[1]): Promise<EditorialRelease> => {
+
+  return customFetch<EditorialRelease>(getCancelNewsroomReleaseUrl(slug),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getCancelNewsroomReleaseMutationKey = () => ['cancelNewsroomRelease'] as const;
+
+export const getCancelNewsroomReleaseMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelNewsroomRelease>>, TError,CancelNewsroomReleaseMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof cancelNewsroomRelease>>, TError,CancelNewsroomReleaseMutationVariables, TContext> => {
+
+const mutationKey = getCancelNewsroomReleaseMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof cancelNewsroomRelease>>, CancelNewsroomReleaseMutationVariables> = (props) => {
+          const {slug} = props ?? {};
+
+          return  cancelNewsroomRelease(slug,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CancelNewsroomReleaseMutationResult = NonNullable<Awaited<ReturnType<typeof cancelNewsroomRelease>>>
+
+    export type CancelNewsroomReleaseMutationError = ErrorType<ErrorResponse>
+    export type CancelNewsroomReleaseMutationVariables = {slug: string}
+
+    /**
+ * @summary Cancel a prepared article
+ */
+export const useCancelNewsroomRelease = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelNewsroomRelease>>, TError,CancelNewsroomReleaseMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof cancelNewsroomRelease>>,
+        TError,
+        CancelNewsroomReleaseMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCancelNewsroomReleaseMutationOptions(options));
+    }
+
 export const getSubscribeNewsletterUrl = () => {
 
 
@@ -373,5 +796,6 @@ export const useSubscribeNewsletter = <TError = ErrorType<ErrorResponse>,
         SubscribeNewsletterMutationVariables,
         TContext
       > => {
-       return useMutation(getSubscribeNewsletterMutationOptions(options));
-     }
+      return useMutation(getSubscribeNewsletterMutationOptions(options));
+    }
+
