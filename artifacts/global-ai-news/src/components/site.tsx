@@ -5,6 +5,7 @@ import { authors, findEntity, findStory, timelineEvents } from '@/content';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { useSubscribeNewsletter } from '@workspace/api-client-react';
 import { getSeoMetadata, getStructuredData, SITE_URL } from '@/seo-metadata';
+import { GlobalAiNewsLockup } from '@/components/brand-mark';
 
 export const SITE = SITE_URL;
 
@@ -91,7 +92,9 @@ export function Header() {
   const submit = (event: FormEvent) => { event.preventDefault(); if (query.trim()) setLocation(`/brief?q=${encodeURIComponent(query.trim())}`); };
   return <header className="sticky top-0 z-40 border-b border-foreground/15 bg-background/95 backdrop-blur-sm">
     <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-5 py-4 md:px-10">
-      <Link href="/" data-testid="link-logo" className="shrink-0 text-[1.05rem] font-semibold tracking-[-.07em]">GLOBAL <span className="text-primary">AI</span> NEWS</Link>
+      <Link href="/" data-testid="link-logo" aria-label="Global AI News home" className="shrink-0">
+        <GlobalAiNewsLockup sealSize={30} />
+      </Link>
       <nav aria-label="Main navigation" className="hidden items-center gap-5 xl:flex">{nav.map(([label, href]) => <Link data-testid={`link-nav-${label.toLowerCase()}`} key={href} href={href} className="eyebrow text-muted-foreground transition-colors hover:text-primary">{label}</Link>)}</nav>
       <div className="flex items-center gap-3"><span className="hidden font-mono text-[10px] uppercase tracking-widest text-muted-foreground lg:inline">11 Sep 2026 · Edition 254</span><button type="button" data-testid="button-search-toggle" aria-label={open ? 'Close search' : 'Open search'} onClick={() => setOpen(!open)} className="grid h-8 w-8 place-items-center border border-foreground/20 hover:border-primary hover:text-primary">{open ? <X size={15} /> : <Search size={15} />}</button><Link href="/brief#newsletter" data-testid="link-join-brief" className="hidden bg-primary px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-primary-foreground sm:block">Join the brief</Link><button type="button" data-testid="button-mobile-menu" className="xl:hidden" onClick={() => setOpen(!open)} aria-label="Open navigation">{open ? <X size={18} /> : <Menu size={18} />}</button></div>
     </div>
@@ -101,7 +104,7 @@ export function Header() {
 }
 
 export function Footer() {
-  return <footer className="mt-24 border-t border-foreground/15"><div className="mx-auto grid max-w-[1440px] gap-10 px-5 py-14 md:grid-cols-[1.7fr_1fr_1fr_1fr] md:px-10"><div><p className="text-lg font-semibold tracking-[-.07em]">GLOBAL <span className="text-primary">AI</span> NEWS</p><p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">Intelligence for the AI economy. Stories, signals and context for people who need to understand what changed.</p></div><div><p className="eyebrow text-primary">Explore</p><div className="mt-4 grid gap-3 text-sm">{nav.slice(0, 4).map(([label, href]) => <Link data-testid={`link-footer-${label.toLowerCase()}`} key={href} href={href} className="hover:text-primary">{label}</Link>)}</div></div><div><p className="eyebrow text-primary">Institution</p><div className="mt-4 grid gap-3 text-sm"><Link href="/insights">Publisher workspace</Link><Link href="/ask">Ask Global</Link><Link href="/topic/ai">AI topic</Link><Link href="/topic/india">India topic</Link></div></div><div><p className="eyebrow text-primary">Edition</p><p className="mt-4 font-serif text-3xl">№254</p><p className="mt-1 text-xs text-muted-foreground">Published from everywhere.</p></div></div><div className="mx-auto flex max-w-[1440px] justify-between border-t border-foreground/15 px-5 py-5 text-[11px] text-muted-foreground md:px-10"><span>© 2026 Global AI News</span><span>Independent newsroom · No noise by design</span></div></footer>;
+  return <footer className="mt-24 border-t border-foreground/15"><div className="mx-auto grid max-w-[1440px] gap-10 px-5 py-14 md:grid-cols-[1.7fr_1fr_1fr_1fr] md:px-10"><div><GlobalAiNewsLockup sealSize={38} /><p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">Intelligence for the AI economy. Stories, signals and context for people who need to understand what changed.</p></div><div><p className="eyebrow text-primary">Explore</p><div className="mt-4 grid gap-3 text-sm">{nav.slice(0, 4).map(([label, href]) => <Link data-testid={`link-footer-${label.toLowerCase()}`} key={href} href={href} className="hover:text-primary">{label}</Link>)}</div></div><div><p className="eyebrow text-primary">Institution</p><div className="mt-4 grid gap-3 text-sm"><Link href="/insights">Publisher workspace</Link><Link href="/ask">Ask Global</Link><Link href="/topic/ai">AI topic</Link><Link href="/topic/india">India topic</Link></div></div><div><p className="eyebrow text-primary">Edition</p><p className="mt-4 font-serif text-3xl">№254</p><p className="mt-1 text-xs text-muted-foreground">Published from everywhere.</p></div></div><div className="mx-auto flex max-w-[1440px] justify-between border-t border-foreground/15 px-5 py-5 text-[11px] text-muted-foreground md:px-10"><span>© 2026 Global AI News</span><span>Independent newsroom · No noise by design</span></div></footer>;
 }
 
 export function Newsletter({ compact = false }: { compact?: boolean }) {

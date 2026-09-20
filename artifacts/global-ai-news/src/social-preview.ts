@@ -1,3 +1,5 @@
+import { BRAND_COLORS, editorialSealSvgMarkup } from './brand';
+
 export const socialPreviewWidth = 1200;
 export const socialPreviewHeight = 630;
 export const socialPreviewTitleMaxWidth = 1040;
@@ -102,6 +104,7 @@ export function renderSocialPreviewSvg(title: string, category: string, slug: st
   const route = `/article/${slug}`;
   const layout = layoutPreviewTitle(title, route);
   const accent = previewAccent(slug);
+  const logoMarkup = editorialSealSvgMarkup({ x: 80, y: 48, size: 44 });
   const titleMarkup = layout.lines
     .map((line, index) => `<text x="${previewTitleX}" y="${previewTitleBaselineY + index * layout.lineHeight}" fill="${previewTitleColor}" font-family="Georgia, 'Times New Roman', serif" font-size="${layout.fontSize}" font-weight="700">${escapeSvg(line)}</text>`)
     .join('');
@@ -113,7 +116,8 @@ export function renderSocialPreviewSvg(title: string, category: string, slug: st
   <circle cx="1000" cy="150" r="122" fill="none" stroke="${accent}" stroke-opacity=".42" stroke-width="2"/>
   <path d="M80 520H1120" stroke="${accent}" stroke-width="3"/>
   <path d="M80 532H420" stroke="${previewTitleColor}" stroke-opacity=".24"/>
-  <text x="80" y="92" fill="${accent}" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="3">GLOBAL AI NEWS</text>
+  ${logoMarkup}
+  <text x="142" y="80" fill="${BRAND_COLORS.ink}" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="2.5">GLOBAL <tspan fill="${BRAND_COLORS.blue}">AI</tspan> NEWS</text>
   <text x="80" y="142" fill="#56616b" font-family="Arial, Helvetica, sans-serif" font-size="20" letter-spacing="1.5">${escapeSvg(category.toUpperCase())} / FIELD NOTE</text>
   ${titleMarkup}
   <text x="80" y="578" fill="#56616b" font-family="Arial, Helvetica, sans-serif" font-size="18">globalainews.in</text>

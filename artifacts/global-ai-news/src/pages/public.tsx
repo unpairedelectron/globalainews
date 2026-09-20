@@ -3,6 +3,8 @@ import { ArrowUpRight, Search, Share2 } from 'lucide-react';
 import { Link, useLocation, useParams } from 'wouter';
 import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, indiaIndex, industryMap, signals, sources, stories, timelineEvents, type Story } from '@/content';
 import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryRow, TimelineList } from '@/components/site';
+import { BRAND_COLORS } from '@/brand';
+import { EditorialSealGlyph } from '@/components/brand-mark';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { layoutPreviewTitle, socialPreviewAccent, socialPreviewFooterY, socialPreviewHeight, socialPreviewTitleStartY, socialPreviewTitleX, socialPreviewWidth } from '@/social-preview';
 
@@ -112,7 +114,8 @@ function SocialPreviewCard({ story }: { story: Story }) {
         <circle cx="1000" cy="150" r="122" fill="none" stroke={accent} strokeOpacity=".42" strokeWidth="2" />
         <path d="M80 520H1120" stroke={accent} strokeWidth="3" />
         <path d="M80 532H420" stroke="#101820" strokeOpacity=".24" />
-        <text x={socialPreviewTitleX} y="92" fill={accent} fontFamily="Arial, Helvetica, sans-serif" fontSize="22" fontWeight="700" letterSpacing="3">GLOBAL AI NEWS</text>
+        <EditorialSealGlyph x={80} y={48} size={44} />
+        <text x={142} y="80" fill={BRAND_COLORS.ink} fontFamily="Arial, Helvetica, sans-serif" fontSize="22" fontWeight="700" letterSpacing="2.5">GLOBAL <tspan fill={BRAND_COLORS.blue}>AI</tspan> NEWS</text>
         <text x={socialPreviewTitleX} y="142" fill="#56616b" fontFamily="Arial, Helvetica, sans-serif" fontSize="20" letterSpacing="1.5">{story.category.toUpperCase()} / FIELD NOTE</text>
         {layout.lines.map((line, index) => <text key={line} x={socialPreviewTitleX} y={socialPreviewTitleStartY + index * layout.lineHeight} fill="#101820" fontFamily="Georgia, 'Times New Roman', serif" fontSize={layout.fontSize} fontWeight="700">{line}</text>)}
         <text x={socialPreviewTitleX} y={socialPreviewFooterY} fill="#56616b" fontFamily="Arial, Helvetica, sans-serif" fontSize="18">globalainews.in</text>
