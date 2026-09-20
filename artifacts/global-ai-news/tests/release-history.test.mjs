@@ -198,13 +198,18 @@ async function assertPublisherFilterContract() {
   );
   assert.match(
     publisherSource,
-    /data-testid="select-release-history-release"[\s\S]*historyReleaseSlug[\s\S]*setHistoryReleaseSlug/,
-    'publisher workspace is missing the release history selector binding',
+    /data-testid="select-release-history-release"[\s\S]*value=\{historyReleaseSlug\}[\s\S]*updateHistoryFilter\('releaseSlug', event\.target\.value\)/,
+    'publisher workspace is missing the URL-backed release selector binding',
   );
   assert.match(
     publisherSource,
-    /data-testid="select-release-history-action"[\s\S]*historyAction[\s\S]*setHistoryAction/,
-    'publisher workspace is missing the change type selector binding',
+    /data-testid="select-release-history-action"[\s\S]*value=\{historyAction\}[\s\S]*updateHistoryFilter\('action', event\.target\.value\)/,
+    'publisher workspace is missing the URL-backed change type selector binding',
+  );
+  assert.match(
+    publisherSource,
+    /data-testid="input-release-history-actor"[\s\S]*value=\{historyActor\}[\s\S]*updateHistoryFilter\('actor', event\.target\.value\)/,
+    'publisher workspace is missing the URL-backed actor filter binding',
   );
   assert.match(
     publisherSource,
@@ -218,7 +223,22 @@ async function assertPublisherFilterContract() {
   );
   assert.match(
     publisherSource,
-    /No matching release change was found\. Try a different release or change type\./,
+    /new URLSearchParams\(location\.split\('\?'\)\[1\] \?\? ''\)/,
+    'publisher workspace is not hydrating history filters from the URL',
+  );
+  assert.match(
+    publisherSource,
+    /setLocation\(`\$\{location\.split\('\?'\)\[0\] \|\| '\/insights'\}\$\{query \? `\?\$\{query\}` : ''\}`, \{ replace: true \}\)/,
+    'publisher workspace is not replacing the URL when history filters change',
+  );
+  assert.match(
+    publisherSource,
+    /onClick=\{clearHistoryFilters\}/,
+    'publisher workspace is missing URL-backed history filter clearing',
+  );
+  assert.match(
+    publisherSource,
+    /No matching release change was found\. Try a different release, change type, or actor\./,
     'publisher workspace is missing the filtered-empty explanation',
   );
 }
