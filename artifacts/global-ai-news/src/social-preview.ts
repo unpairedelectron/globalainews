@@ -1,6 +1,9 @@
 export const socialPreviewWidth = 1200;
 export const socialPreviewHeight = 630;
 export const socialPreviewTitleMaxWidth = 1040;
+export const socialPreviewTitleX = 80;
+export const socialPreviewTitleStartY = 268;
+export const socialPreviewFooterY = 578;
 
 interface PreviewTitleStyle {
   maxCharacters: number;
@@ -23,6 +26,11 @@ const previewTitleStyles: PreviewTitleStyle[] = [
   { maxCharacters: 54, fontSize: 34, lineHeight: 42, maxLines: 6 },
   { maxCharacters: 61, fontSize: 30, lineHeight: 38, maxLines: 7 },
 ];
+
+export function socialPreviewAccent(slug: string): string {
+  const hash = [...slug].reduce((total, character) => total + character.charCodeAt(0), 0);
+  return ['#006cff', '#b2472d', '#55704f', '#8b5e34'][hash % 4];
+}
 
 export function wrapPreviewTitle(title: string, maxCharacters: number, route = 'preview card'): string[] {
   const words = title.trim().split(/\s+/).filter(Boolean);

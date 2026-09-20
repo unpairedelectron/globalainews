@@ -1,8 +1,10 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { ArrowUpRight, Search, Share2 } from 'lucide-react';
 import { Link, useLocation, useParams } from 'wouter';
-import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, indiaIndex, industryMap, signals, sources, stories, timelineEvents } from '@/content';
+import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, indiaIndex, industryMap, signals, sources, stories, timelineEvents, type Story } from '@/content';
 import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryRow, TimelineList } from '@/components/site';
+import { useNewsroomSnapshot } from '@/newsroom';
+import { layoutPreviewTitle, socialPreviewAccent, socialPreviewFooterY, socialPreviewHeight, socialPreviewTitleStartY, socialPreviewTitleX, socialPreviewWidth } from '@/social-preview';
 
 const container = 'mx-auto max-w-[1440px] px-5 md:px-10';
 
@@ -91,8 +93,52 @@ export function TimelinePage() {
   return <Shell><SeoHead title={`${event.title} — Global AI News`} description={event.description} path={`/timeline/${slug}`} /><main className={`${container} max-w-[1180px]`}><section className="border-b border-foreground/20 py-16 md:py-24"><p className="eyebrow text-primary">Timeline event · {event.date}</p><h1 className="mt-6 max-w-5xl font-serif text-7xl leading-[.84] md:text-[8rem]">{event.title}</h1><p className="mt-8 max-w-2xl text-xl leading-8 text-muted-foreground">{event.description}</p></section><section className="grid gap-12 py-12 md:grid-cols-[1fr_300px]"><div><SectionLabel>Connected record</SectionLabel><p className="text-lg leading-8">This event sits inside a living chronology of the people, companies, models and policy decisions shaping the industry.</p>{event.story && <div className="mt-10"><SectionLabel>Read the story</SectionLabel><StoryRow slug={event.story} /></div>}</div><aside><SectionLabel>Entities</SectionLabel><EntityLinks slugs={event.entities} /></aside></section></main></Shell>;
 }
 
+function SocialPreviewCard({ story }: { story: Story }) {
+  const title = `${story.title} — Global AI News`;
+  const route = `/article/${story.slug}`;
+  const layout = layoutPreviewTitle(title, route);
+  const accent = socialPreviewAccent(story.slug);
+  const titleId = `social-preview-title-${story.slug}`;
+  const descriptionId = `social-preview-description-${story.slug}`;
+  const isScaled = layout.fontSize < 54;
+
+  return <div data-testid="social-preview-card" className="border border-foreground/15 bg-[#f4f1ea]">
+    <div className="aspect-[1200/630] w-full">
+      <svg className="block h-full w-full" viewBox={`0 0 ${socialPreviewWidth} ${socialPreviewHeight}`} role="img" aria-label={`Global AI News social preview for ${title}`} aria-labelledby={`${titleId} ${descriptionId}`}>
+        <title id={titleId}>{title}</title>
+        <desc id={descriptionId}>Global AI News editorial preview for {title}</desc>
+        <rect width={socialPreviewWidth} height={socialPreviewHeight} fill="#f4f1ea" />
+        <circle cx="1000" cy="150" r="184" fill="none" stroke={accent} strokeWidth="2" />
+        <circle cx="1000" cy="150" r="122" fill="none" stroke={accent} strokeOpacity=".42" strokeWidth="2" />
+        <path d="M80 520H1120" stroke={accent} strokeWidth="3" />
+        <path d="M80 532H420" stroke="#101820" strokeOpacity=".24" />
+        <text x={socialPreviewTitleX} y="92" fill={accent} fontFamily="Arial, Helvetica, sans-serif" fontSize="22" fontWeight="700" letterSpacing="3">GLOBAL AI NEWS</text>
+        <text x={socialPreviewTitleX} y="142" fill="#56616b" fontFamily="Arial, Helvetica, sans-serif" fontSize="20" letterSpacing="1.5">{story.category.toUpperCase()} / FIELD NOTE</text>
+        {layout.lines.map((line, index) => <text key={line} x={socialPreviewTitleX} y={socialPreviewTitleStartY + index * layout.lineHeight} fill="#101820" fontFamily="Georgia, 'Times New Roman', serif" fontSize={layout.fontSize} fontWeight="700">{line}</text>)}
+        <text x={socialPreviewTitleX} y={socialPreviewFooterY} fill="#56616b" fontFamily="Arial, Helvetica, sans-serif" fontSize="18">globalainews.in</text>
+      </svg>
+    </div>
+    <div className="grid gap-5 border-t border-foreground/15 bg-background px-5 py-4 text-xs sm:grid-cols-[auto_1fr]">
+      <div>
+        <p className="eyebrow text-muted-foreground">Card format</p>
+        <p data-testid="social-preview-dimensions" className="mt-2 font-mono text-primary">1200 × 630 PNG</p>
+      </div>
+      <div>
+        <p className="eyebrow text-muted-foreground">Headline treatment</p>
+        <p data-testid="social-preview-scale-status" className="mt-2 font-mono text-primary">{isScaled ? `Scaled to ${layout.fontSize}px` : 'Default 54px'} · {layout.lines.length} lines</p>
+        <div data-testid="social-preview-line-breaks" className="mt-3 flex flex-wrap gap-2" aria-label="Headline line breaks">
+          {layout.lines.map((line, index) => <span data-testid={`social-preview-line-${index + 1}`} key={`${index}-${line}`} className="border border-foreground/15 bg-[#f4f1ea] px-2 py-1 font-mono text-[10px]">{line}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>;
+}
+
 export function InsightsPage() {
-  return <Shell><SeoHead title="Publisher workspace — Global AI News" description="Internal editorial intelligence workspace." path="/insights" /><main className={container}><section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Internal editorial surface</p><h1 className="mt-6 max-w-5xl font-serif text-7xl leading-[.84] md:text-[9rem]">The room<br /><em className="text-primary">is reading.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A calm view of audience attention, the publishing calendar and the questions worth following next.</p></section><section className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 sm:grid-cols-2 lg:grid-cols-4">{[['42,806', 'Daily brief subscribers', '+8.4%'], ['18,492', 'Readers right now', '+12.1%'], ['63%', 'Returning readers', '+4.6%'], ['7m 42s', 'Average depth', '+0:38']].map(([value, label, delta]) => <div data-testid={`metric-${label.toLowerCase().replace(/\s/g, '-')}`} key={label} className="bg-background p-6"><p className="eyebrow text-muted-foreground">{label}</p><p className="mt-7 font-serif text-4xl">{value}</p><p className="mt-2 text-xs text-primary">{delta} today</p></div>)}</section><section className="grid gap-12 py-14 md:grid-cols-[1.1fr_.9fr]"><div><SectionLabel>Publishing calendar</SectionLabel>{['The model race after the benchmark era', 'India builds in public', 'The cost of intelligence', 'Proof, not demos'].map((title, index) => <div key={title} className="flex items-start justify-between border-t border-foreground/15 py-5"><div><p className="eyebrow text-primary">0{index + 1} · planned</p><p className="mt-2 font-serif text-2xl">{title}</p></div><span className="font-mono text-xs text-muted-foreground">{['OCT', 'NOV', 'DEC', 'JAN'][index]}</span></div>)}</div><div><SectionLabel>Live stories</SectionLabel>{stories.slice(0, 4).map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} compact />)}</div></section></main></Shell>;
+  const { stories: newsroomStories } = useNewsroomSnapshot();
+  const [previewSlug, setPreviewSlug] = useState(newsroomStories[0]?.slug ?? '');
+  const previewStory = newsroomStories.find((story) => story.slug === previewSlug) ?? newsroomStories[0];
+  return <Shell><SeoHead title="Publisher workspace — Global AI News" description="Internal editorial intelligence workspace." path="/insights" /><main className={container}><section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Internal editorial surface</p><h1 className="mt-6 max-w-5xl font-serif text-7xl leading-[.84] md:text-[9rem]">The room<br /><em className="text-primary">is reading.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A calm view of audience attention, the publishing calendar and the questions worth following next.</p></section><section className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 sm:grid-cols-2 lg:grid-cols-4">{[['42,806', 'Daily brief subscribers', '+8.4%'], ['18,492', 'Readers right now', '+12.1%'], ['63%', 'Returning readers', '+4.6%'], ['7m 42s', 'Average depth', '+0:38']].map(([value, label, delta]) => <div data-testid={`metric-${label.toLowerCase().replace(/\s/g, '-')}`} key={label} className="bg-background p-6"><p className="eyebrow text-muted-foreground">{label}</p><p className="mt-7 font-serif text-4xl">{value}</p><p className="mt-2 text-xs text-primary">{delta} today</p></div>)}</section><section className="border-b border-foreground/20 py-14"><div className="grid gap-10 md:grid-cols-[.65fr_1.35fr] md:items-start"><div><SectionLabel>Share card preview</SectionLabel><h2 className="mt-3 max-w-md font-serif text-5xl leading-[.9]">See the headline before it travels.</h2><p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">This 1200 × 630 treatment is the same layout used for published social cards. Select a story to inspect the fallback size and exact line breaks.</p>{previewStory && <label className="mt-7 block max-w-sm"><span className="eyebrow text-muted-foreground">Article</span><select data-testid="select-social-preview-story" value={previewStory.slug} onChange={(event) => setPreviewSlug(event.target.value)} className="mt-2 w-full border border-foreground/20 bg-background px-3 py-3 text-sm">{newsroomStories.map((story) => <option value={story.slug} key={story.slug}>{story.title}</option>)}</select></label>}</div><div>{previewStory ? <SocialPreviewCard story={previewStory} /> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">No published stories are available for preview.</p>}</div></div></section><section className="grid gap-12 py-14 md:grid-cols-[1.1fr_.9fr]"><div><SectionLabel>Publishing calendar</SectionLabel>{['The model race after the benchmark era', 'India builds in public', 'The cost of intelligence', 'Proof, not demos'].map((title, index) => <div key={title} className="flex items-start justify-between border-t border-foreground/15 py-5"><div><p className="eyebrow text-primary">0{index + 1} · planned</p><p className="mt-2 font-serif text-2xl">{title}</p></div><span className="font-mono text-xs text-muted-foreground">{['OCT', 'NOV', 'DEC', 'JAN'][index]}</span></div>)}</div><div><SectionLabel>Live stories</SectionLabel>{newsroomStories.slice(0, 4).map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} compact />)}</div></section></main></Shell>;
 }
 
 export function TopicPage({ kind }: { kind: 'ai' | 'india' }) {

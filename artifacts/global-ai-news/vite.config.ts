@@ -15,8 +15,12 @@ import {
 } from './src/seo-metadata';
 import {
   layoutPreviewTitle,
+  socialPreviewAccent,
+  socialPreviewFooterY,
   socialPreviewHeight,
   socialPreviewTitleMaxWidth,
+  socialPreviewTitleStartY,
+  socialPreviewTitleX,
   socialPreviewWidth,
 } from './src/social-preview';
 
@@ -139,10 +143,9 @@ function escapeSvg(value: string): string {
 function previewSvg(title: string, category: string, slug: string): string {
   const route = `/article/${slug}`;
   const layout = layoutPreviewTitle(title, route);
-  const hash = [...slug].reduce((total, character) => total + character.charCodeAt(0), 0);
-  const accent = ['#006cff', '#b2472d', '#55704f', '#8b5e34'][hash % 4];
+  const accent = socialPreviewAccent(slug);
   const titleMarkup = layout.lines
-    .map((line, index) => `<text x="80" y="${268 + index * layout.lineHeight}" fill="#101820" font-family="Georgia, 'Times New Roman', serif" font-size="${layout.fontSize}" font-weight="700">${escapeSvg(line)}</text>`)
+    .map((line, index) => `<text x="${socialPreviewTitleX}" y="${socialPreviewTitleStartY + index * layout.lineHeight}" fill="#101820" font-family="Georgia, 'Times New Roman', serif" font-size="${layout.fontSize}" font-weight="700">${escapeSvg(line)}</text>`)
     .join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${socialPreviewWidth}" height="${socialPreviewHeight}" viewBox="0 0 ${socialPreviewWidth} ${socialPreviewHeight}" role="img" aria-labelledby="title desc">
   <title id="title">${escapeSvg(title)}</title>
@@ -155,13 +158,12 @@ function previewSvg(title: string, category: string, slug: string): string {
   <text x="80" y="92" fill="${accent}" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="3">GLOBAL AI NEWS</text>
   <text x="80" y="142" fill="#56616b" font-family="Arial, Helvetica, sans-serif" font-size="20" letter-spacing="1.5">${escapeSvg(category.toUpperCase())} / FIELD NOTE</text>
   ${titleMarkup}
-  <text x="80" y="578" fill="#56616b" font-family="Arial, Helvetica, sans-serif" font-size="18">globalainews.in</text>
+  <text x="${socialPreviewTitleX}" y="${socialPreviewFooterY}" fill="#56616b" font-family="Arial, Helvetica, sans-serif" font-size="18">globalainews.in</text>
 </svg>`;
 }
 
 function previewAccent(slug: string): string {
-  const hash = [...slug].reduce((total, character) => total + character.charCodeAt(0), 0);
-  return ['#006cff', '#b2472d', '#55704f', '#8b5e34'][hash % 4];
+  return socialPreviewAccent(slug);
 }
 
 function hexToRgb(hex: string): string {

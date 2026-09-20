@@ -560,6 +560,13 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       assertMetadataMatchesManifest(document, route, metadataManifest);
     }
     await assertRenderedPageIntegrity(document, route, allowedRoutes, responseCache);
+    if (route === '/insights') {
+      assert.match(document, /data-testid="social-preview-card"/, 'Insights is missing the social preview card');
+      assert.match(document, /data-testid="social-preview-dimensions"[^>]*>1200 × 630 PNG/, 'Insights is missing the 1200 × 630 card dimensions');
+      assert.match(document, /data-testid="social-preview-scale-status"/, 'Insights is missing the headline scale status');
+      assert.match(document, /data-testid="social-preview-line-1"/, 'Insights is missing the rendered headline line breaks');
+      assert.match(document, /data-testid="select-social-preview-story"/, 'Insights is missing the article selector');
+    }
     const title = htmlText(tagContent(document, 'title'));
     titles.set(route, title);
   }
