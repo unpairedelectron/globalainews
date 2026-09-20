@@ -19,8 +19,15 @@ const chromium = process.env.CHROMIUM_BIN || '/repl/tools/bin/chromium';
 const port = 0;
 const devPort = 19821;
 const socialPreviewCacheControl = 'public, max-age=86400, must-revalidate';
+const previewTitleColor = '#101820';
+const previewTitleContrastLumaMax = 0.3;
+const previewTitleMaskFuzz = '12%';
+const previewTitleX = 80;
+const previewTitleBaselineY = 268;
+const previewTitleWidth = 1040;
 const intentional404Routes = new Set();
 const ampPath = '/amp/article/ai-models-antibiotic-discovery/';
+const tsx = path.join(root, 'node_modules', '.bin', 'tsx');
 
 let server;
 let apiProcess;
@@ -102,7 +109,98 @@ function previewAccentRgb(route) {
   return ['0,108,255', '178,71,45', '85,112,79', '139,94,52'][hash % 4];
 }
 
-function assertVisualPreviewAsset(filePath, route) {
+function previewTitlePixelRegion(layout) {
+  return {
+    x: previewTitleX,
+    y: previewTitleBaselineY - layout.fontSize,
+    width: previewTitleWidth,
+    height: (layout.lines.length - 1) * layout.lineHeight + layout.fontSize + 16,
+  };
+}
+
+function previewLayout(title, route) {
+  return JSON.parse(execFileSync(
+    tsx,
+    [
+      '-e',
+      `import { layoutPreviewTitle } from ${JSON.stringify(path.join(root, 'src', 'social-preview.ts'))}; console.log(JSON.stringify(layoutPreviewTitle(${JSON.stringify(title)}, ${JSON.stringify(route)})));`,
+    ],
+    { encoding: 'utf8' },
+  ).trim());
+}
+
+function renderPreviewSvg(title, category, slug) {
+  return execFileSync(
+    tsx,
+    [
+      '-e',
+      `import { renderSocialPreviewSvg } from ${JSON.stringify(path.join(root, 'src', 'social-preview.ts'))}; process.stdout.write(renderSocialPreviewSvg(${JSON.stringify(title)}, ${JSON.stringify(category)}, ${JSON.stringify(slug)}));`,
+    ],
+    { encoding: 'utf8', maxBuffer: 2 * 1024 * 1024 },
+  );
+}
+
+function assertHeadlinePixels(filePath, route, title) {
+  const layout = previewLayout(title, route);
+  const region = previewTitlePixelRegion(layout);
+  const regionGeometry = `${region.width}x${region.height}+${region.x}+${region.y}`;
+  const contrastLuma = Number(execFileSync(
+    'magick',
+    [
+      filePath,
+      '-crop',
+      `720x${region.height}+${region.x}+${region.y}`,
+      '+repage',
+      '-colorspace',
+      'gray',
+      '-format',
+      '%[fx:minima]',
+      'info:',
+    ],
+    { encoding: 'utf8' },
+  ).trim());
+  assert.ok(
+    Number.isFinite(contrastLuma) && contrastLuma <= previewTitleContrastLumaMax,
+    `${route}: preview card headline contrast is too low in the rendered headline region (minimum luma ${Number.isFinite(contrastLuma) ? contrastLuma.toFixed(3) : 'unknown'}, maximum ${previewTitleContrastLumaMax.toFixed(2)})`,
+  );
+
+  const inkBounds = execFileSync(
+    'magick',
+    [
+      filePath,
+      '-crop',
+      regionGeometry,
+      '+repage',
+      '-fuzz',
+      previewTitleMaskFuzz,
+      '-fill',
+      'black',
+      '-opaque',
+      previewTitleColor,
+      '-fill',
+      'white',
+      '+opaque',
+      'black',
+      '-trim',
+      '-format',
+      '%@',
+      'info:',
+    ],
+    { encoding: 'utf8' },
+  ).trim();
+  const inkBoundsMatch = inkBounds.match(/^(\d+)x(\d+)\+(-?\d+)\+(-?\d+)$/);
+  assert.ok(
+    inkBoundsMatch,
+    `${route}: preview card headline pixels are missing from the rendered headline region`,
+  );
+  const [, inkWidth, inkHeight, inkX, inkY] = inkBoundsMatch;
+  assert.ok(
+    Number(inkX) + Number(inkWidth) < region.width && Number(inkY) + Number(inkHeight) < region.height,
+    `${route}: preview card headline pixels are clipped at the rendered headline region edge (bounds ${inkBounds}, region ${regionGeometry})`,
+  );
+}
+
+function assertVisualPreviewAsset(filePath, route, title) {
   const [dimensions, background, accent, mean] = execFileSync(
     'magick',
     [filePath, '-format', '%wx%h %[pixel:p{0,0}] %[pixel:p{100,520}] %[fx:mean]', 'info:'],
@@ -112,6 +210,7 @@ function assertVisualPreviewAsset(filePath, route) {
   assert.match(background, /244,241,234/, `${route}: preview card is missing the warm-ivory background`);
   assert.match(accent, new RegExp(previewAccentRgb(route)), `${route}: preview card accent rule is missing`);
   assert.ok(Number(mean) < 0.93, `${route}: preview card title treatment is blank or unreadable`);
+  if (title) assertHeadlinePixels(filePath, route, title);
 }
 
 function previewSourceTitle(filePath, route) {
@@ -540,7 +639,8 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
         `${route}: social preview image is missing its production cache policy`,
       );
       assert.ok(imageBody.length > 1000, `${route}: social preview image is unexpectedly small`);
-      assertVisualPreviewAsset(path.join(distDir, imagePath.replace(/^\/+/, '')), route);
+      const previewPath = path.join(distDir, imagePath.replace(/^\/+/, ''));
+      assertVisualPreviewAsset(previewPath, route, previewSourceTitle(previewPath, route));
     }
   }
 
@@ -665,16 +765,7 @@ test('development preview cards refresh when an editor changes a story title', a
 test('long article headlines scale without dropping words, while impossible titles fail by route', () => {
   const route = '/article/long-headline-preview';
   const longTitle = 'A remarkably long newsroom headline about how artificial intelligence infrastructure is reshaping regional energy markets and enterprise deployment decisions — Global AI News';
-  const tsx = path.join(root, 'node_modules', '.bin', 'tsx');
-  const modulePath = path.join(root, 'src', 'social-preview.ts');
-  const runLayout = (title) => execFileSync(
-    tsx,
-    [
-      '-e',
-      `import { layoutPreviewTitle } from ${JSON.stringify(modulePath)}; console.log(JSON.stringify(layoutPreviewTitle(${JSON.stringify(title)}, ${JSON.stringify(route)})));`,
-    ],
-    { encoding: 'utf8' },
-  ).trim();
+  const runLayout = (title) => JSON.stringify(previewLayout(title, route));
 
   const layout = JSON.parse(runLayout(longTitle));
   assert.equal(layout.lines.join(' '), longTitle, `${route}: long headline lost words during wrapping`);
@@ -686,7 +777,35 @@ test('long article headlines scale without dropping words, while impossible titl
 
   const impossibleTitle = `${'A '.repeat(220)}Global AI News`;
   assert.throws(
-    () => runLayout(impossibleTitle),
+    () => previewLayout(impossibleTitle, route),
     new RegExp(`${route}: preview title does not fit the available card area without clipping`),
   );
+});
+
+test('headline pixels stay readable and inside the card at every supported title size', () => {
+  const fixtureCounts = new Map([
+    [54, 7],
+    [46, 13],
+    [40, 17],
+    [34, 21],
+    [30, 31],
+  ]);
+  for (const [fontSize, wordCount] of fixtureCounts) {
+    const route = `/article/preview-title-size-${fontSize}`;
+    const slug = `preview-title-size-${fontSize}`;
+    const title = Array(wordCount).fill('Editorial').join(' ');
+    const layout = previewLayout(title, route);
+    assert.equal(layout.fontSize, fontSize, `${route}: fixture did not select the supported ${fontSize}px title size`);
+    const outputPath = path.join(os.tmpdir(), `gan-preview-size-${process.pid}-${fontSize}.png`);
+    try {
+      execFileSync(
+        'magick',
+        ['svg:-', '-set', 'comment', title, outputPath],
+        { input: renderPreviewSvg(title, 'Field Notes', slug), stdio: ['pipe', 'ignore', 'inherit'] },
+      );
+      assertVisualPreviewAsset(outputPath, route, title);
+    } finally {
+      unlinkSync(outputPath);
+    }
+  }
 });

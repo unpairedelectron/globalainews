@@ -15,15 +15,16 @@ import {
 } from './src/seo-metadata';
 import {
   layoutPreviewTitle,
+  previewTitleColor,
+  previewTitleContrastLumaMax,
+  previewTitleMaskFuzz,
+  previewTitlePixelRegion,
+  renderSocialPreviewSvg,
   socialPreviewAccent,
-  socialPreviewFooterY,
   socialPreviewHeight,
   socialPreviewTitleMaxWidth,
-  socialPreviewTitleStartY,
-  socialPreviewTitleX,
   socialPreviewWidth,
 } from './src/social-preview';
-
 const rawPort = process.env.PORT;
 
 if (!rawPort) {
@@ -54,7 +55,6 @@ function escapeHtml(value: string): string {
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;');
 }
-
 function formatPublishedDate(date: string): string {
   return new Intl.DateTimeFormat('en-GB', {
     day: 'numeric',
@@ -132,7 +132,6 @@ function writeAmpArticleDocument(outputDir: string) {
   mkdirSync(path.dirname(outputPath), { recursive: true });
   writeFileSync(outputPath, renderAmpArticleDocument());
 }
-
 function escapeSvg(value: string): string {
   return value
     .replaceAll('&', '&amp;')
@@ -140,28 +139,6 @@ function escapeSvg(value: string): string {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;');
 }
-function previewSvg(title: string, category: string, slug: string): string {
-  const route = `/article/${slug}`;
-  const layout = layoutPreviewTitle(title, route);
-  const accent = socialPreviewAccent(slug);
-  const titleMarkup = layout.lines
-    .map((line, index) => `<text x="${socialPreviewTitleX}" y="${socialPreviewTitleStartY + index * layout.lineHeight}" fill="#101820" font-family="Georgia, 'Times New Roman', serif" font-size="${layout.fontSize}" font-weight="700">${escapeSvg(line)}</text>`)
-    .join('');
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${socialPreviewWidth}" height="${socialPreviewHeight}" viewBox="0 0 ${socialPreviewWidth} ${socialPreviewHeight}" role="img" aria-labelledby="title desc">
-  <title id="title">${escapeSvg(title)}</title>
-  <desc id="desc">Global AI News editorial preview for ${escapeSvg(title)}</desc>
-  <rect width="1200" height="630" fill="#f4f1ea"/>
-  <circle cx="1000" cy="150" r="184" fill="none" stroke="${accent}" stroke-width="2"/>
-  <circle cx="1000" cy="150" r="122" fill="none" stroke="${accent}" stroke-opacity=".42" stroke-width="2"/>
-  <path d="M80 520H1120" stroke="${accent}" stroke-width="3"/>
-  <path d="M80 532H420" stroke="#101820" stroke-opacity=".24"/>
-  <text x="80" y="92" fill="${accent}" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="3">GLOBAL AI NEWS</text>
-  <text x="80" y="142" fill="#56616b" font-family="Arial, Helvetica, sans-serif" font-size="20" letter-spacing="1.5">${escapeSvg(category.toUpperCase())} / FIELD NOTE</text>
-  ${titleMarkup}
-  <text x="${socialPreviewTitleX}" y="${socialPreviewFooterY}" fill="#56616b" font-family="Arial, Helvetica, sans-serif" font-size="18">globalainews.in</text>
-</svg>`;
-}
-
 function previewAccent(slug: string): string {
   return socialPreviewAccent(slug);
 }
@@ -205,6 +182,69 @@ function validatePreviewAsset(outputPath: string, route: string, svg: string, ti
   if (Number(mean) >= 0.93) {
     throw new Error(`${route}: preview card title treatment is blank or unreadable.`);
   }
+
+  const region = previewTitlePixelRegion(layout);
+  const regionGeometry = `${region.width}x${region.height}+${region.x}+${region.y}`;
+  const contrastLuma = Number(
+    execFileSync(
+      'magick',
+      [
+        outputPath,
+        '-crop',
+        `720x${region.height}+${region.x}+${region.y}`,
+        '+repage',
+        '-colorspace',
+        'gray',
+        '-format',
+        '%[fx:minima]',
+        'info:',
+      ],
+      { encoding: 'utf8' },
+    ).trim(),
+  );
+  if (!Number.isFinite(contrastLuma) || contrastLuma > previewTitleContrastLumaMax) {
+    throw new Error(
+      `${route}: preview card headline contrast is too low in the rendered headline region ` +
+        `(minimum luma ${Number.isFinite(contrastLuma) ? contrastLuma.toFixed(3) : 'unknown'}, ` +
+        `maximum ${previewTitleContrastLumaMax.toFixed(2)}).`,
+    );
+  }
+
+  const inkBounds = execFileSync(
+    'magick',
+    [
+      outputPath,
+      '-crop',
+      regionGeometry,
+      '+repage',
+      '-fuzz',
+      previewTitleMaskFuzz,
+      '-fill',
+      'black',
+      '-opaque',
+      previewTitleColor,
+      '-fill',
+      'white',
+      '+opaque',
+      'black',
+      '-trim',
+      '-format',
+      '%@',
+      'info:',
+    ],
+    { encoding: 'utf8' },
+  ).trim();
+  const inkBoundsMatch = inkBounds.match(/^(\d+)x(\d+)\+(-?\d+)\+(-?\d+)$/);
+  if (!inkBoundsMatch) {
+    throw new Error(`${route}: preview card headline pixels are missing from the rendered headline region.`);
+  }
+  const [, inkWidth, inkHeight, inkX, inkY] = inkBoundsMatch;
+  if (Number(inkX) + Number(inkWidth) >= region.width || Number(inkY) + Number(inkHeight) >= region.height) {
+    throw new Error(
+      `${route}: preview card headline pixels are clipped at the rendered headline region edge ` +
+        `(bounds ${inkBounds}, region ${regionGeometry}).`,
+    );
+  }
 }
 
 function writeSocialPreviewAssets(
@@ -217,7 +257,7 @@ function writeSocialPreviewAssets(
     const route = `/article/${story.slug}`;
     const title = `${story.title} — Global AI News`;
     const outputPath = path.join(outputDir, 'social', 'articles', `${story.slug}.png`);
-    const svg = previewSvg(title, story.category, story.slug);
+    const svg = renderSocialPreviewSvg(title, story.category, story.slug);
     execFileSync('magick', ['svg:-', '-set', 'comment', title, outputPath], {
       input: svg,
       stdio: ['pipe', 'ignore', 'inherit'],
