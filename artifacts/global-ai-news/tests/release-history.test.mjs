@@ -238,7 +238,7 @@ async function assertPublisherFilterContract() {
   );
   assert.match(
     publisherSource,
-    /No matching release change was found\. Try a different release, change type, or actor\./,
+    /No matching release change was found for .*Clear a filter or try different values\./,
     'publisher workspace is missing the filtered-empty explanation',
   );
 }

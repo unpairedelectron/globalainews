@@ -688,6 +688,18 @@ async function checkMobileEditorHistory() {
       'Selecting the release history filter did not update the URL on mobile.',
     );
     await evaluateBrowser(cdp, `(() => {
+      const action = document.querySelector('[data-testid="select-release-history-action"]');
+      if (!action) throw new Error('Release history change type filter is missing.');
+      action.value = 'edited';
+      action.dispatchEvent(new Event('change', { bubbles: true }));
+      return true;
+    })()`);
+    await waitForBrowserCondition(
+      cdp,
+      `new URLSearchParams(window.location.search).get('action') === 'edited'`,
+      'Selecting the release history change type did not update the URL on mobile.',
+    );
+    await evaluateBrowser(cdp, `(() => {
       const actor = document.querySelector('[data-testid="input-release-history-actor"]');
       if (!actor) throw new Error('Release history actor filter is missing.');
       actor.focus();
@@ -703,9 +715,10 @@ async function checkMobileEditorHistory() {
     let historyState;
     while (Date.now() < emptyDeadline) {
       historyState = await evaluateBrowser(cdp, `(() => ({
-        empty: document.body.innerText.includes('No matching release change was found.'),
+        empty: document.body.innerText.includes('No matching release change was found for'),
         url: window.location.href,
         release: document.querySelector('[data-testid="select-release-history-release"]')?.value ?? null,
+        action: document.querySelector('[data-testid="select-release-history-action"]')?.value ?? null,
         actor: document.querySelector('[data-testid="input-release-history-actor"]')?.value ?? null,
         loading: [...document.querySelectorAll('p')].some((element) => element.textContent?.includes('Loading release history')),
         error: [...document.querySelectorAll('p')].some((element) => element.textContent?.includes('History unavailable')),
@@ -719,9 +732,34 @@ async function checkMobileEditorHistory() {
       true,
       `Selecting a release history filter did not show the filtered-empty explanation on mobile: ${JSON.stringify(historyState)}`,
     );
+    const emptyMessage = await evaluateBrowser(cdp, `document.querySelector('[data-testid="release-history"]')?.innerText ?? ''`);
+    assert.match(emptyMessage, /release “Queue-level changes”/);
+    assert.match(emptyMessage, /change type “edited”/);
+    assert.match(emptyMessage, /actor “mobile-history-smoke-no-match”/);
+    assert.match(emptyMessage, /Clear a filter or try different values\./);
 
     await evaluateBrowser(cdp, `(() => {
-      const emptyState = [...document.querySelectorAll('p')].find((element) => element.textContent?.includes('No matching release change was found.'));
+      const actor = document.querySelector('[data-testid="input-release-history-actor"]');
+      if (!actor) throw new Error('Release history actor filter is missing.');
+      const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+      setValue?.call(actor, 'mobile-history-smoke-changed');
+      actor.dispatchEvent(new Event('input', { bubbles: true }));
+      actor.dispatchEvent(new Event('change', { bubbles: true }));
+      return true;
+    })()`);
+    await waitForBrowserCondition(
+      cdp,
+      `new URLSearchParams(window.location.search).get('actor') === 'mobile-history-smoke-changed'`,
+      'Changing the release history actor filter did not update the URL on mobile.',
+    );
+    await waitForBrowserCondition(
+      cdp,
+      `document.querySelector('[data-testid="release-history"]')?.innerText.includes('actor “mobile-history-smoke-changed”')`,
+      'Changing the release history actor filter did not update the filtered-empty explanation on mobile.',
+    );
+
+    await evaluateBrowser(cdp, `(() => {
+      const emptyState = [...document.querySelectorAll('p')].find((element) => element.textContent?.includes('No matching release change was found for'));
       emptyState?.setAttribute('data-testid', 'mobile-history-empty-state');
       return Boolean(emptyState);
     })()`);
@@ -733,7 +771,7 @@ async function checkMobileEditorHistory() {
     assert.ok(emptyStateNode.nodeId, 'The filtered-empty release history message could not be located in the mobile DOM.');
     await cdp.send('DOM.scrollIntoViewIfNeeded', { nodeId: emptyStateNode.nodeId });
     const emptyStateLayout = await evaluateBrowser(cdp, `(() => {
-      const emptyState = [...document.querySelectorAll('p')].find((element) => element.textContent?.includes('No matching release change was found.'));
+      const emptyState = [...document.querySelectorAll('p')].find((element) => element.textContent?.includes('No matching release change was found for'));
       const rect = emptyState?.getBoundingClientRect();
       return {
         documentWidth: document.documentElement.scrollWidth,
