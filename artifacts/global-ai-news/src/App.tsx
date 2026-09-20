@@ -1,4 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
+import { ClerkProvider, SignIn, SignUp } from '@clerk/react';
+import { publishableKeyFromHost } from '@clerk/react/internal';
+import { shadcn } from '@clerk/themes';
 import { Toaster } from '@/components/ui/toaster';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { NewsroomProvider } from '@/newsroom';
@@ -22,10 +26,80 @@ import {
 } from '@/pages/public';
 
 const queryClient = new QueryClient();
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const clerkPubKey = publishableKeyFromHost(
+  window.location.hostname,
+  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
+);
+const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
+
+if (!clerkPubKey) {
+  throw new Error('Missing VITE_CLERK_PUBLISHABLE_KEY.');
+}
+
+const clerkAppearance = {
+  theme: shadcn,
+  cssLayerName: 'clerk',
+  options: {
+    logoPlacement: 'inside' as const,
+    logoLinkUrl: basePath || '/',
+    logoImageUrl: `${window.location.origin}${basePath}/logo.svg`,
+  },
+  variables: {
+    colorPrimary: '#2055bd',
+    colorForeground: '#131820',
+    colorMutedForeground: '#5b6570',
+    colorDanger: '#a8483b',
+    colorBackground: '#f6f1e7',
+    colorInput: '#ffffff',
+    colorInputForeground: '#131820',
+    colorNeutral: '#d0c9bd',
+    fontFamily: 'DM Sans, sans-serif',
+    borderRadius: '0.15rem',
+  },
+  elements: {
+    rootBox: 'w-full flex justify-center',
+    cardBox: 'bg-[#f6f1e7] rounded-none w-[440px] max-w-full overflow-hidden border border-[#d0c9bd]',
+    card: '!shadow-none !border-0 !bg-transparent !rounded-none',
+    footer: '!shadow-none !border-0 !bg-transparent !rounded-none',
+    headerTitle: 'font-serif text-[#131820]',
+    headerSubtitle: 'text-[#5b6570]',
+    socialButtonsBlockButtonText: 'text-[#131820]',
+    formFieldLabel: 'text-[#131820]',
+    footerActionLink: 'text-[#2055bd]',
+    footerActionText: 'text-[#5b6570]',
+    dividerText: 'text-[#5b6570]',
+    formButtonPrimary: 'bg-[#2055bd] text-white hover:bg-[#18479f]',
+    formFieldInput: 'bg-white text-[#131820] border-[#d0c9bd]',
+    footerAction: 'text-[#5b6570]',
+    dividerLine: 'bg-[#d0c9bd]',
+    alertText: 'text-[#a8483b]',
+    alert: 'border-[#a8483b]/40 bg-[#a8483b]/5',
+    main: 'bg-transparent',
+  },
+};
+
+function SignInPage() {
+  return (
+    <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4">
+      <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
+    </div>
+  );
+}
+
+function SignUpPage() {
+  return (
+    <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4">
+      <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
+    </div>
+  );
+}
 
 function AppRoutes() {
   const [location] = useLocation();
   return <ErrorBoundary resetKey={location}><Switch>
+    <Route path="/sign-in/*?" component={SignInPage} />
+    <Route path="/sign-up/*?" component={SignUpPage} />
     <Route path="/" component={HomePage} />
     <Route path="/brief" component={BriefPage} />
     <Route path="/signals" component={SignalsPage} />
@@ -53,8 +127,37 @@ function AppRoutes() {
   </Switch></ErrorBoundary>;
 }
 
+function ClerkProviderWithRoutes({ children }: { children: ReactNode }) {
+  const [, setLocation] = useLocation();
+  return <ClerkProvider
+    publishableKey={clerkPubKey}
+    proxyUrl={clerkProxyUrl}
+    appearance={clerkAppearance}
+    signInUrl={`${basePath}/sign-in`}
+    signUpUrl={`${basePath}/sign-up`}
+    localization={{
+      signIn: {
+        start: {
+          title: 'Global AI News editor sign-in',
+          subtitle: 'Sign in to manage the release desk.',
+        },
+      },
+      signUp: {
+        start: {
+          title: 'Create editor access',
+          subtitle: 'Set up an account for the Global AI News release desk.',
+        },
+      },
+    }}
+    routerPush={(to) => setLocation(to.startsWith(basePath) ? to.slice(basePath.length) || '/' : to)}
+    routerReplace={(to) => setLocation(to.startsWith(basePath) ? to.slice(basePath.length) || '/' : to, { replace: true })}
+  >
+    {children}
+  </ClerkProvider>;
+}
+
 function App() {
-  return <QueryClientProvider client={queryClient}><NewsroomProvider><Router base={import.meta.env.BASE_URL.replace(/\/$/, '')}><AppRoutes /></Router><Toaster /></NewsroomProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><Router base={basePath}><ClerkProviderWithRoutes><NewsroomProvider><AppRoutes /></NewsroomProvider><Toaster /></ClerkProviderWithRoutes></Router></QueryClientProvider>;
 }
 
 export default App;

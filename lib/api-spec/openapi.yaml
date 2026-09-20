@@ -89,6 +89,8 @@ paths:
       operationId: createNewsroomRelease
       tags: [newsroom]
       summary: Add a prepared article to the release queue
+      security:
+        - clerkSession: []
       requestBody:
         required: true
         content:
@@ -102,6 +104,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditorialRelease"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "400":
           description: Invalid release
           content:
@@ -119,6 +127,8 @@ paths:
       operationId: reorderNewsroomReleases
       tags: [newsroom]
       summary: Reorder active prepared articles
+      security:
+        - clerkSession: []
       requestBody:
         required: true
         content:
@@ -126,6 +136,12 @@ paths:
             schema:
               $ref: "#/components/schemas/EditorialReleaseReorderInput"
       responses:
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "200":
           description: Reordered release queue
           content:
@@ -143,6 +159,8 @@ paths:
       operationId: updateNewsroomRelease
       tags: [newsroom]
       summary: Edit or reschedule a prepared article
+      security:
+        - clerkSession: []
       parameters:
         - name: slug
           in: path
@@ -156,6 +174,12 @@ paths:
             schema:
               $ref: "#/components/schemas/EditorialReleaseUpdate"
       responses:
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "200":
           description: Release updated
           content:
@@ -178,6 +202,8 @@ paths:
       operationId: cancelNewsroomRelease
       tags: [newsroom]
       summary: Cancel a prepared article
+      security:
+        - clerkSession: []
       parameters:
         - name: slug
           in: path
@@ -185,6 +211,12 @@ paths:
           schema:
             type: string
       responses:
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "200":
           description: Canceled release
           content:
@@ -228,6 +260,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 components:
+  securitySchemes:
+    clerkSession:
+      type: apiKey
+      in: cookie
+      name: __session
+      description: Clerk browser session cookie for an authenticated editor.
   schemas:
     HealthStatus:
       type: object

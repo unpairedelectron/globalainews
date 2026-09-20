@@ -25,7 +25,7 @@ const previewTitleMaskFuzz = '12%';
 const previewTitleX = 80;
 const previewTitleBaselineY = 268;
 const previewTitleWidth = 1040;
-const intentional404Routes = new Set();
+const intentional404Routes = new Set(['/sign-in', '/sign-up']);
 const ampPath = '/amp/article/ai-models-antibiotic-discovery/';
 const tsx = path.join(root, 'node_modules', '.bin', 'tsx');
 

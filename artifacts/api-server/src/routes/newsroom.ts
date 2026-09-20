@@ -1,5 +1,6 @@
 import { asc, eq } from "drizzle-orm";
 import { Router, type IRouter } from "express";
+import { requireEditorAuth } from "../middlewares/requireEditorAuth";
 import { db, editorialReleasesTable } from "@workspace/db";
 import {
   CancelNewsroomReleaseResponse,
@@ -229,7 +230,7 @@ router.get("/newsroom/releases", async (req, res): Promise<void> => {
   }
 });
 
-router.post("/newsroom/releases", async (req, res): Promise<void> => {
+router.post("/newsroom/releases", requireEditorAuth, async (req, res): Promise<void> => {
   const parsed = CreateNewsroomReleaseBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -262,7 +263,7 @@ router.post("/newsroom/releases", async (req, res): Promise<void> => {
   }
 });
 
-router.post("/newsroom/releases/reorder", async (req, res): Promise<void> => {
+router.post("/newsroom/releases/reorder", requireEditorAuth, async (req, res): Promise<void> => {
   const parsed = ReorderNewsroomReleasesBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -299,7 +300,7 @@ router.post("/newsroom/releases/reorder", async (req, res): Promise<void> => {
   }
 });
 
-router.patch("/newsroom/releases/:slug", async (req, res): Promise<void> => {
+router.patch("/newsroom/releases/:slug", requireEditorAuth, async (req, res): Promise<void> => {
   const params = UpdateNewsroomReleaseParams.safeParse(req.params);
   const parsed = UpdateNewsroomReleaseBody.safeParse(req.body);
   if (!params.success) {
@@ -343,7 +344,7 @@ router.patch("/newsroom/releases/:slug", async (req, res): Promise<void> => {
   }
 });
 
-router.delete("/newsroom/releases/:slug", async (req, res): Promise<void> => {
+router.delete("/newsroom/releases/:slug", requireEditorAuth, async (req, res): Promise<void> => {
   const params = UpdateNewsroomReleaseParams.safeParse(req.params);
   if (!params.success) {
     res.status(400).json({ error: params.error.message });

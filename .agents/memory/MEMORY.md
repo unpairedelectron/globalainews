@@ -5,3 +5,4 @@
 - [Social preview pixel contract](social-preview-pixel-contract.md) — build and smoke raster checks should share the renderer’s title region and use sufficiently inked fixtures for every size tier.
 - [Unused UI providers](unused-ui-providers.md) — mount shared UI providers only when the current app has active consumers; unused Radix providers can surface upstream sourcemap warnings.
 - [Editorial publishing queue](editorial-publishing-queue.md) — release prepared stories by publish time at the API boundary; client polling makes publication restart-safe.
+- [Editorial Clerk transport](editorial-clerk-transport.md) — browser editor mutations use Clerk session cookies plus the production proxy; do not add bearer-token handling to web calls.
