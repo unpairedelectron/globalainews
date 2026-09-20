@@ -69,52 +69,52 @@
   --text-9xl--line-height: 1;
 }
 
-/* LIGHT MODE - Default theme with placeholder values */
+/* Warm editorial intelligence palette */
 :root {
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
+  --button-outline: rgba(19, 24, 32, .12);
+  --badge-outline: rgba(19, 24, 32, .06);
   --opaque-button-border-intensity: -8;
 
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
+  --elevate-1: rgba(19, 24, 32, .03);
+  --elevate-2: rgba(19, 24, 32, .08);
 
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
-  --chart-1: 12 76% 61%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 37% 24%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
-  --sidebar: 0 0% 98%;
-  --sidebar-foreground: 240 5.3% 26.1%;
-  --sidebar-primary: 240 5.9% 10%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 240 4.8% 95.9%;
-  --sidebar-accent-foreground: 240 5.9% 10%;
-  --sidebar-border: 220 13% 91%;
-  --sidebar-ring: 240 5.9% 10%;
+  --background: 42 38% 95%;
+  --foreground: 214 28% 10%;
+  --card: 41 42% 98%;
+  --card-foreground: 214 28% 10%;
+  --popover: 41 42% 98%;
+  --popover-foreground: 214 28% 10%;
+  --primary: 218 73% 43%;
+  --primary-foreground: 42 38% 95%;
+  --secondary: 39 24% 89%;
+  --secondary-foreground: 214 28% 10%;
+  --muted: 39 22% 91%;
+  --muted-foreground: 213 11% 42%;
+  --accent: 28 49% 50%;
+  --accent-foreground: 42 38% 95%;
+  --destructive: 4 54% 43%;
+  --destructive-foreground: 42 38% 95%;
+  --border: 38 20% 78%;
+  --input: 38 20% 78%;
+  --ring: 218 73% 43%;
+  --chart-1: 218 73% 43%;
+  --chart-2: 28 49% 50%;
+  --chart-3: 160 28% 36%;
+  --chart-4: 214 28% 10%;
+  --chart-5: 39 24% 68%;
+  --sidebar: 39 27% 92%;
+  --sidebar-foreground: 214 28% 10%;
+  --sidebar-primary: 218 73% 43%;
+  --sidebar-primary-foreground: 42 38% 95%;
+  --sidebar-accent: 38 22% 86%;
+  --sidebar-accent-foreground: 214 28% 10%;
+  --sidebar-border: 38 20% 78%;
+  --sidebar-ring: 218 73% 43%;
 
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: Menlo, monospace;
-  --radius: .5rem;
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --radius: .15rem;
   --spacing: 0.25rem;
 }
 
@@ -182,4 +182,29 @@
     color: hsl(var(--muted-foreground));
     pointer-events: none;
   }
+}
+
+.gan-preview {
+  min-height: 100%;
+  color: #131820;
+  background: #f6f1e7;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.gan-preview * { box-sizing: border-box; }
+.gan-ink { color: #131820; }
+.gan-blue { color: #2055bd; }
+.gan-copper { color: #ae6c47; }
+.gan-mono { font-family: 'IBM Plex Mono', monospace; }
+.gan-serif { font-family: 'Source Serif 4', Georgia, serif; }
+.gan-rule { border-color: rgba(19, 24, 32, .18); }
+.gan-noise { position: relative; isolation: isolate; }
+.gan-noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  opacity: .04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='.45'/%3E%3C/svg%3E");
 }
