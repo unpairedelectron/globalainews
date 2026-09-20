@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { execFile, spawn } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
 import path from 'node:path';
 import { once } from 'node:events';
@@ -95,6 +96,17 @@ async function requestJson(route, options = {}) {
   return body;
 }
 
+async function requestJsonAllowingError(route, options = {}) {
+  const response = await fetch(`${apiOrigin}${route}`, {
+    ...options,
+    headers: {
+      ...(options.body ? { 'content-type': 'application/json' } : {}),
+      ...(options.headers ?? {}),
+    },
+  });
+  return { response, body: await response.json() };
+}
+
 async function cleanupFixture() {
   const cleanupScript = `
     import { eq } from "drizzle-orm";
@@ -142,6 +154,75 @@ async function assertPersistedHistory(expectedId, startedAt) {
   return entry;
 }
 
+async function assertHistoryFilters() {
+  const createdHistory = await requestJson(
+    `/api/newsroom/releases/history?releaseSlug=${encodeURIComponent(slug)}&action=created`,
+  );
+  assert.equal(createdHistory.length, 1, 'release and action filters should isolate the created entry');
+  assert.equal(createdHistory[0].releaseSlug, slug);
+  assert.equal(createdHistory[0].action, 'created');
+
+  const editedHistory = await requestJson(
+    `/api/newsroom/releases/history?releaseSlug=${encodeURIComponent(slug)}&action=edited`,
+  );
+  assert.equal(editedHistory.length, 1, 'combined release and action filters should isolate the edited entry');
+  assert.equal(editedHistory[0].releaseSlug, slug);
+  assert.equal(editedHistory[0].action, 'edited');
+
+  const releaseHistory = await requestJson(
+    `/api/newsroom/releases/history?releaseSlug=${encodeURIComponent(slug)}`,
+  );
+  assert.ok(releaseHistory.length >= 2, 'release filter should return all matching change types');
+  assert.ok(releaseHistory.every((entry) => entry.releaseSlug === slug), 'release filter returned another release');
+
+  const actionHistory = await requestJson('/api/newsroom/releases/history?action=created');
+  assert.ok(actionHistory.length >= 1, 'action filter should return created entries');
+  assert.ok(actionHistory.every((entry) => entry.action === 'created'), 'action filter returned another change type');
+
+  const unmatchedHistory = await requestJson(
+    '/api/newsroom/releases/history?releaseSlug=missing-release-history-fixture',
+  );
+  assert.deepEqual(unmatchedHistory, [], 'an unmatched release filter should return an empty list');
+
+  const invalidAction = await requestJsonAllowingError(
+    '/api/newsroom/releases/history?action=not-a-real-action',
+  );
+  assert.equal(invalidAction.response.status, 400);
+  assert.deepEqual(invalidAction.body, { error: 'Unknown release history action.' });
+}
+
+async function assertPublisherFilterContract() {
+  const publisherSource = await readFile(
+    path.join(root, 'artifacts', 'global-ai-news', 'src', 'pages', 'public.tsx'),
+    'utf8',
+  );
+  assert.match(
+    publisherSource,
+    /data-testid="select-release-history-release"[\s\S]*historyReleaseSlug[\s\S]*setHistoryReleaseSlug/,
+    'publisher workspace is missing the release history selector binding',
+  );
+  assert.match(
+    publisherSource,
+    /data-testid="select-release-history-action"[\s\S]*historyAction[\s\S]*setHistoryAction/,
+    'publisher workspace is missing the change type selector binding',
+  );
+  assert.match(
+    publisherSource,
+    /getGetNewsroomReleaseHistoryQueryKey\(historyFilters\)/,
+    'publisher workspace is not keying history requests by both filters',
+  );
+  assert.match(
+    publisherSource,
+    /useGetNewsroomReleaseHistory\(historyFilters,\s*\{\s*query:/,
+    'publisher workspace is not passing both filters to the history request',
+  );
+  assert.match(
+    publisherSource,
+    /No matching release change was found\. Try a different release or change type\./,
+    'publisher workspace is missing the filtered-empty explanation',
+  );
+}
+
 try {
   if (!process.env.DATABASE_URL) {
     throw new Error('DATABASE_URL is required for the release history persistence check.');
@@ -174,6 +255,14 @@ try {
   const initialEntry = initialHistory.find((entry) => entry.releaseSlug === slug);
   assert.ok(initialEntry, 'the created release history entry was not returned before restart');
   const beforeRestart = await assertPersistedHistory(initialEntry.id, startedAt);
+
+  await requestJson(`/api/newsroom/releases/${slug}`, {
+    method: 'PATCH',
+    headers: testEditorHeader,
+    body: JSON.stringify({ title: 'Edited restart-safe newsroom history fixture' }),
+  });
+  await assertHistoryFilters();
+  await assertPublisherFilterContract();
 
   await stopApi();
   await startApi();
