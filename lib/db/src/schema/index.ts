@@ -1,5 +1,6 @@
 import { pgTable, serial, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 export * from "./editorial-releases";
+export * from "./editorial-release-history";
 
 export const newsletterSubscribersTable = pgTable(
   "newsletter_subscribers",

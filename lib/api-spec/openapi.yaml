@@ -122,6 +122,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/releases/history:
+    get:
+      operationId: getNewsroomReleaseHistory
+      tags: [newsroom]
+      summary: Get recent release change history
+      description: Returns the latest durable audit entries for editor-managed release changes.
+      responses:
+        "200":
+          description: Recent release history
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorialReleaseHistory"
+        "500":
+          description: Release history unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /newsroom/releases/reorder:
     post:
       operationId: reorderNewsroomReleases
@@ -514,6 +533,35 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/EditorialRelease"
+    EditorialReleaseHistoryAction:
+      type: string
+      enum: [created, edited, rescheduled, reordered, canceled]
+    EditorialReleaseHistoryEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        releaseId:
+          type: integer
+          nullable: true
+        releaseSlug:
+          type: string
+        releaseTitle:
+          type: string
+        actor:
+          type: string
+        action:
+          $ref: "#/components/schemas/EditorialReleaseHistoryAction"
+        summary:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, releaseSlug, releaseTitle, actor, action, summary, createdAt]
+    EditorialReleaseHistory:
+      type: array
+      items:
+        $ref: "#/components/schemas/EditorialReleaseHistoryEntry"
     NewsroomMetadata:
       type: object
       properties:
@@ -552,4 +600,3 @@ components:
         - title
         - description
         - path
-

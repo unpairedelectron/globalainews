@@ -8,6 +8,9 @@
 
 export * from './editorialCadence';
 export * from './editorialRelease';
+export * from './editorialReleaseHistory';
+export * from './editorialReleaseHistoryAction';
+export * from './editorialReleaseHistoryEntry';
 export * from './editorialReleaseInput';
 export * from './editorialReleaseQueue';
 export * from './editorialReleaseReorderInput';

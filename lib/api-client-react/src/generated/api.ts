@@ -21,6 +21,7 @@ import type {
 
 import type {
   EditorialRelease,
+  EditorialReleaseHistory,
   EditorialReleaseInput,
   EditorialReleaseQueue,
   EditorialReleaseReorderInput,
@@ -459,6 +460,84 @@ export const useCreateNewsroomRelease = <TError = ErrorType<ErrorResponse>,
       > => {
       return useMutation(getCreateNewsroomReleaseMutationOptions(options));
     }
+
+export const getGetNewsroomReleaseHistoryUrl = () => {
+
+
+
+
+  return `/api/newsroom/releases/history`
+}
+
+/**
+ * Returns the latest durable audit entries for editor-managed release changes.
+ * @summary Get recent release change history
+ */
+export const getNewsroomReleaseHistory = async ( options?: Parameters<typeof customFetch>[1]): Promise<EditorialReleaseHistory> => {
+
+  return customFetch<EditorialReleaseHistory>(getGetNewsroomReleaseHistoryUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetNewsroomReleaseHistoryQueryKey = () => {
+    return [
+    `/api/newsroom/releases/history`
+    ] as const;
+    }
+
+
+export const getGetNewsroomReleaseHistoryQueryOptions = <TData = Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNewsroomReleaseHistoryQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>> = ({ signal }) => getNewsroomReleaseHistory({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNewsroomReleaseHistoryQueryResult = NonNullable<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>>
+export type GetNewsroomReleaseHistoryQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Get recent release change history
+ */
+
+export function useGetNewsroomReleaseHistory<TData = Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError = ErrorType<ErrorResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetNewsroomReleaseHistoryQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getReorderNewsroomReleasesUrl = () => {
 

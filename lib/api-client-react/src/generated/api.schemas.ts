@@ -173,6 +173,30 @@ export interface EditorialReleaseReorderInput {
 
 export type EditorialReleaseQueue = EditorialRelease[];
 
+export type EditorialReleaseHistoryAction = typeof EditorialReleaseHistoryAction[keyof typeof EditorialReleaseHistoryAction];
+
+
+export const EditorialReleaseHistoryAction = {
+  created: 'created',
+  edited: 'edited',
+  rescheduled: 'rescheduled',
+  reordered: 'reordered',
+  canceled: 'canceled',
+} as const;
+
+export interface EditorialReleaseHistoryEntry {
+  id: number;
+  releaseId?: number | null;
+  releaseSlug: string;
+  releaseTitle: string;
+  actor: string;
+  action: EditorialReleaseHistoryAction;
+  summary: string;
+  createdAt: string;
+}
+
+export type EditorialReleaseHistory = EditorialReleaseHistoryEntry[];
+
 export type NewsroomMetadataSource = typeof NewsroomMetadataSource[keyof typeof NewsroomMetadataSource];
 
 

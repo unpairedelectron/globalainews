@@ -130,6 +130,23 @@ export const CreateNewsroomReleaseResponse = zod.object({
 
 
 /**
+ * Returns the latest durable audit entries for editor-managed release changes.
+ * @summary Get recent release change history
+ */
+export const GetNewsroomReleaseHistoryResponseItem = zod.object({
+  "id": zod.number().int(),
+  "releaseId": zod.number().int().nullish(),
+  "releaseSlug": zod.string(),
+  "releaseTitle": zod.string(),
+  "actor": zod.string(),
+  "action": zod.enum(['created', 'edited', 'rescheduled', 'reordered', 'canceled']),
+  "summary": zod.string(),
+  "createdAt": zod.coerce.date()
+})
+export const GetNewsroomReleaseHistoryResponse = zod.array(GetNewsroomReleaseHistoryResponseItem)
+
+
+/**
  * @summary Reorder active prepared articles
  */
 

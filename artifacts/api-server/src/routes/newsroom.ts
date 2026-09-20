@@ -1,12 +1,13 @@
-import { asc, eq } from "drizzle-orm";
-import { Router, type IRouter } from "express";
+import { asc, desc, eq } from "drizzle-orm";
+import { Router, type IRouter, type Request } from "express";
 import { requireEditorAuth } from "../middlewares/requireEditorAuth";
-import { db, editorialReleasesTable } from "@workspace/db";
+import { db, editorialReleaseHistoryTable, editorialReleasesTable } from "@workspace/db";
 import {
   CancelNewsroomReleaseResponse,
   CreateNewsroomReleaseBody,
   CreateNewsroomReleaseResponse,
   GetNewsroomContentResponse,
+  GetNewsroomReleaseHistoryResponse,
   GetNewsroomMetadataResponse,
   GetNewsroomReleasesResponse,
   ReorderNewsroomReleasesBody,
@@ -40,6 +41,7 @@ import { getSeoMetadataManifest } from "../../../global-ai-news/src/seo-metadata
 const router: IRouter = Router();
 
 type ReleaseRow = typeof editorialReleasesTable.$inferSelect;
+type ReleaseHistoryInsert = typeof editorialReleaseHistoryTable.$inferInsert;
 type ReleaseInput = {
   slug: string;
   title: string;
@@ -56,6 +58,22 @@ let seedPromise: Promise<void> | undefined;
 
 function dateOnly(date: Date): string {
   return date.toISOString().slice(0, 10);
+}
+
+function actorFromRequest(req: Request): string {
+  const actor = req.res?.locals?.editorUserId;
+  return typeof actor === "string" && actor.trim().length > 0 ? actor.trim().slice(0, 120) : "Editorial desk";
+}
+
+function historyEntry(
+  req: Request,
+  entry: Omit<ReleaseHistoryInsert, "actor">,
+): ReleaseHistoryInsert {
+  return { ...entry, actor: actorFromRequest(req) };
+}
+
+function formatReleaseDate(date: Date): string {
+  return date.toISOString().replace(".000Z", "Z");
 }
 
 function storyFromInput(
@@ -230,6 +248,34 @@ router.get("/newsroom/releases", async (req, res): Promise<void> => {
   }
 });
 
+router.get("/newsroom/releases/history", async (req, res): Promise<void> => {
+  try {
+    const history = await db
+      .select()
+      .from(editorialReleaseHistoryTable)
+      .orderBy(desc(editorialReleaseHistoryTable.createdAt), desc(editorialReleaseHistoryTable.id))
+      .limit(50);
+    res.setHeader("Cache-Control", "no-store");
+    res.json(
+      GetNewsroomReleaseHistoryResponse.parse(
+        history.map((entry) => ({
+          id: entry.id,
+          releaseId: entry.releaseId,
+          releaseSlug: entry.releaseSlug,
+          releaseTitle: entry.releaseTitle,
+          actor: entry.actor,
+          action: entry.action,
+          summary: entry.summary,
+          createdAt: entry.createdAt,
+        })),
+      ),
+    );
+  } catch (error) {
+    req.log.error({ err: error }, "Release history read failed");
+    res.status(500).json({ error: "Release history unavailable." });
+  }
+});
+
 router.post("/newsroom/releases", requireEditorAuth, async (req, res): Promise<void> => {
   const parsed = CreateNewsroomReleaseBody.safeParse(req.body);
   if (!parsed.success) {
@@ -244,18 +290,30 @@ router.post("/newsroom/releases", requireEditorAuth, async (req, res): Promise<v
       return;
     }
     const story = storyFromInput(parsed.data as ReleaseInput);
-    const [created] = await db
-      .insert(editorialReleasesTable)
-      .values({
-        slug: story.slug,
-        title: story.title,
-        publishAt: new Date(story.publishAt),
-        cadence: story.cadence,
-        status: "scheduled",
-        position: rows.length,
-        story: story as unknown as Record<string, unknown>,
-      })
-      .returning();
+    const created = await db.transaction(async (tx) => {
+      const [release] = await tx
+        .insert(editorialReleasesTable)
+        .values({
+          slug: story.slug,
+          title: story.title,
+          publishAt: new Date(story.publishAt),
+          cadence: story.cadence,
+          status: "scheduled",
+          position: rows.length,
+          story: story as unknown as Record<string, unknown>,
+        })
+        .returning();
+      await tx.insert(editorialReleaseHistoryTable).values(
+        historyEntry(req, {
+          releaseId: release.id,
+          releaseSlug: release.slug,
+          releaseTitle: release.title,
+          action: "created",
+          summary: `Added “${release.title}” to the release queue for ${formatReleaseDate(release.publishAt)}.`,
+        }),
+      );
+      return release;
+    });
     res.status(201).json(CreateNewsroomReleaseResponse.parse(toReleaseResponse(created)));
   } catch (error: unknown) {
     req.log.error({ err: error }, "Release creation failed");
@@ -284,14 +342,27 @@ router.post("/newsroom/releases/reorder", requireEditorAuth, async (req, res): P
       return;
     }
     const positions = activeRows.map((row) => row.position).sort((left, right) => left - right);
-    await Promise.all(
-      requestedSlugs.map((slug, index) =>
-        db
-          .update(editorialReleasesTable)
-          .set({ position: positions[index] ?? index, updatedAt: new Date() })
-          .where(eq(editorialReleasesTable.slug, slug)),
-      ),
-    );
+    const titleBySlug = new Map(activeRows.map((row) => [row.slug, row.title]));
+    const orderSummary = requestedSlugs.map((slug) => titleBySlug.get(slug) ?? slug).join(" → ");
+    await db.transaction(async (tx) => {
+      await Promise.all(
+        requestedSlugs.map((slug, index) =>
+          tx
+            .update(editorialReleasesTable)
+            .set({ position: positions[index] ?? index, updatedAt: new Date() })
+            .where(eq(editorialReleasesTable.slug, slug)),
+        ),
+      );
+      await tx.insert(editorialReleaseHistoryTable).values(
+        historyEntry(req, {
+          releaseId: null,
+          releaseSlug: "queue",
+          releaseTitle: "Release queue",
+          action: "reordered",
+          summary: `Reordered the prepared queue: ${orderSummary}.`,
+        }),
+      );
+    });
     const updated = (await getReleaseRows()).map((row) => toReleaseResponse(row));
     res.json(ReorderNewsroomReleasesResponse.parse(updated));
   } catch (error) {
@@ -326,17 +397,56 @@ router.patch("/newsroom/releases/:slug", requireEditorAuth, async (req, res): Pr
     const currentStory = toScheduledStory(existing);
     const story = storyFromInput({ ...parsed.data, slug: existing.slug } as ReleaseUpdate, currentStory);
     const nextStory = { ...currentStory, ...story, slug: existing.slug };
-    const [updated] = await db
-      .update(editorialReleasesTable)
-      .set({
-        title: nextStory.title,
-        publishAt: new Date(nextStory.publishAt),
-        cadence: nextStory.cadence,
-        story: nextStory as unknown as Record<string, unknown>,
-        updatedAt: new Date(),
-      })
-      .where(eq(editorialReleasesTable.slug, existing.slug))
-      .returning();
+    const nextPublishAt = new Date(nextStory.publishAt);
+    const changedFields = [
+      existing.title !== nextStory.title ? "title" : null,
+      (existing.story as Partial<ScheduledStory>).dek !== nextStory.dek ? "dek" : null,
+      existing.cadence !== nextStory.cadence ? "cadence" : null,
+      (existing.story as Partial<ScheduledStory>).category !== nextStory.category ? "desk" : null,
+      (existing.story as Partial<ScheduledStory>).author !== nextStory.author ? "author" : null,
+      JSON.stringify((existing.story as Partial<ScheduledStory>).body) !== JSON.stringify(nextStory.body) ? "working copy" : null,
+    ].filter((field): field is string => Boolean(field));
+    const wasRescheduled = existing.publishAt.getTime() !== nextPublishAt.getTime();
+    const updated = await db.transaction(async (tx) => {
+      const [release] = await tx
+        .update(editorialReleasesTable)
+        .set({
+          title: nextStory.title,
+          publishAt: nextPublishAt,
+          cadence: nextStory.cadence,
+          story: nextStory as unknown as Record<string, unknown>,
+          updatedAt: new Date(),
+        })
+        .where(eq(editorialReleasesTable.slug, existing.slug))
+        .returning();
+      const history = [];
+      if (changedFields.length > 0) {
+        history.push(
+          historyEntry(req, {
+            releaseId: release.id,
+            releaseSlug: release.slug,
+            releaseTitle: release.title,
+            action: "edited",
+            summary: `Updated ${changedFields.join(", ")} on “${release.title}”.`,
+          }),
+        );
+      }
+      if (wasRescheduled) {
+        history.push(
+          historyEntry(req, {
+            releaseId: release.id,
+            releaseSlug: release.slug,
+            releaseTitle: release.title,
+            action: "rescheduled",
+            summary: `Moved “${release.title}” from ${formatReleaseDate(existing.publishAt)} to ${formatReleaseDate(nextPublishAt)}.`,
+          }),
+        );
+      }
+      if (history.length > 0) {
+        await tx.insert(editorialReleaseHistoryTable).values(history);
+      }
+      return release;
+    });
     res.json(UpdateNewsroomReleaseResponse.parse(toReleaseResponse(updated)));
   } catch (error) {
     req.log.error({ err: error }, "Release update failed");
@@ -351,11 +461,25 @@ router.delete("/newsroom/releases/:slug", requireEditorAuth, async (req, res): P
     return;
   }
   try {
-    const [updated] = await db
-      .update(editorialReleasesTable)
-      .set({ status: "canceled", updatedAt: new Date() })
-      .where(eq(editorialReleasesTable.slug, params.data.slug))
-      .returning();
+    const updated = await db.transaction(async (tx) => {
+      const [release] = await tx
+        .update(editorialReleasesTable)
+        .set({ status: "canceled", updatedAt: new Date() })
+        .where(eq(editorialReleasesTable.slug, params.data.slug))
+        .returning();
+      if (release) {
+        await tx.insert(editorialReleaseHistoryTable).values(
+          historyEntry(req, {
+            releaseId: release.id,
+            releaseSlug: release.slug,
+            releaseTitle: release.title,
+            action: "canceled",
+            summary: `Canceled “${release.title}” from the release queue.`,
+          }),
+        );
+      }
+      return release;
+    });
     if (!updated) {
       res.status(404).json({ error: "Release not found." });
       return;
