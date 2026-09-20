@@ -11,6 +11,7 @@ import {
   evidenceSummaries,
   indiaIndex,
   industryMap,
+  getPublishedStories,
   signals,
   sources,
   stories,
@@ -21,7 +22,8 @@ import { getSeoMetadataManifest } from "../../../global-ai-news/src/seo-metadata
 const router: IRouter = Router();
 
 router.get("/newsroom/content", (_req, res): void => {
-  const latestPublishedAt = stories.reduce(
+  const publishedStories = getPublishedStories();
+  const latestPublishedAt = publishedStories.reduce(
     (latest, story) => (story.date > latest ? story.date : latest),
     "",
   );
@@ -38,7 +40,7 @@ router.get("/newsroom/content", (_req, res): void => {
     evidenceSummaries,
     entities,
     timelineEvents,
-    stories,
+    stories: publishedStories,
     signals,
     industryMap,
     indiaIndex,

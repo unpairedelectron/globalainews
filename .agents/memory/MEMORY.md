@@ -4,3 +4,4 @@
 - [Newsroom metadata source](newsroom-metadata-source.md) — initial HTML and hydrated SEO should consume the API-backed metadata manifest for the same published route records.
 - [Social preview pixel contract](social-preview-pixel-contract.md) — build and smoke raster checks should share the renderer’s title region and use sufficiently inked fixtures for every size tier.
 - [Unused UI providers](unused-ui-providers.md) — mount shared UI providers only when the current app has active consumers; unused Radix providers can surface upstream sourcemap warnings.
+- [Editorial publishing queue](editorial-publishing-queue.md) — release prepared stories by publish time at the API boundary; client polling makes publication restart-safe.

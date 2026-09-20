@@ -1,4 +1,4 @@
-import { authors, entities, findEntity, findStory, findTimeline, stories, timelineEvents } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, getPublishedStories, stories, timelineEvents } from './content';
 
 export const SITE_URL = 'https://www.globalainews.in';
 
@@ -108,7 +108,7 @@ export function getSeoMetadata(route: string): SeoMetadata {
 
   const articleMatch = cleanPath.match(/^\/article\/([^/]+)$/);
   if (articleMatch) {
-    const story = findStory(articleMatch[1]) ?? findStory('ai-models-antibiotic-discovery')!;
+    const story = getPublishedStories().find((candidate) => candidate.slug === articleMatch[1]) ?? findStory('ai-models-antibiotic-discovery')!;
     return {
       title: `${story.title} — Global AI News`,
       description: story.dek,
@@ -162,7 +162,7 @@ export function getSeoMetadata(route: string): SeoMetadata {
 
 export function getSeoMetadataManifest(): SeoMetadataManifest {
   const dynamicPaths = [
-    ...stories.map((story) => `/article/${story.slug}`),
+    ...getPublishedStories().map((story) => `/article/${story.slug}`),
     ...timelineEvents.map((event) => `/timeline/${event.slug}`),
     ...entities.map((entity) => `/${entity.kind}/${entity.slug}`),
     ...authors.map((author) => `/person/${author.slug}`),

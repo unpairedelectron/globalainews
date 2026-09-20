@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type ViteDevServer } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
-import { authors, findStory, stories } from './src/content';
+import { authors, findStory, getPublishedStories, stories } from './src/content';
 import {
   getSeoMetadata,
   getStructuredData,
@@ -249,7 +249,7 @@ function validatePreviewAsset(outputPath: string, route: string, svg: string, ti
 
 function writeSocialPreviewAssets(
   outputDir: string,
-  sourceStories: readonly typeof stories = stories,
+  sourceStories: readonly typeof stories = getPublishedStories(),
 ) {
   const outputSocialDir = path.join(outputDir, 'social', 'articles');
   mkdirSync(outputSocialDir, { recursive: true });

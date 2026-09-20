@@ -95,6 +95,18 @@ export interface Story {
   keyTakeaways: string[];
   whatChanges: string;
 }
+export type EditorialCadence = 'daily' | 'weekly';
+export interface ScheduledStory extends Story {
+  publishAt: string;
+  cadence: EditorialCadence;
+}
+export interface EditorialScheduleItem {
+  slug: string;
+  title: string;
+  publishAt: string;
+  cadence: EditorialCadence;
+  status: 'scheduled' | 'published';
+}
 export interface Signal {
   slug: string;
   label: string;
@@ -236,6 +248,114 @@ export let stories: Story[] = [
   { slug: 'new-geography-of-compute', category: 'Infrastructure', title: 'The new geography of compute is surprisingly regional', dek: 'Power, permits and proximity are redrawing the map of intelligence.', body: storyBodies.infrastructure, date: '2026-09-06', readTime: '9 min read', author: 'david-okafor', evidence: 'High confidence · 4 primary sources · 5 independent confirmations', evidenceSummary: evidenceSummaries.infrastructure, classification: 'analysis', entities: ['microsoft'], timeline: ['azure-inference-expansion'], relatedStories: ['indias-public-ai-stack', 'small-models'], imageTreatment: { type: 'data-graphic', alt: 'Map showing regional compute corridors and energy connections', palette: 'night blue, grid green, signal orange', caption: 'The infrastructure map follows power, fibre and permission.' }, topic: 'Technology', sources: ['iea-data-centres', 'stanford-ai-index-2026'], bottomLine: 'The AI cloud is becoming a network of regional corridors shaped by physical constraints.', whyItMatters: 'Energy and permitting will influence who can offer fast, affordable intelligence.', keyTakeaways: ['Inference is moving closer to users.', 'Training remains more concentrated than deployment.', 'Power availability is now a strategic differentiator.'], whatChanges: 'AI infrastructure planning will look increasingly like energy and telecom planning.' },
 ];
 
+export const scheduledStories: ScheduledStory[] = [
+  {
+    slug: 'reliability-is-the-new-ai-moat',
+    category: 'Field Notes',
+    title: 'Reliability is becoming the new AI moat',
+    dek: 'The next advantage will belong to systems that recover well, not demos that impress once.',
+    body: [
+      { heading: 'The operating layer wins', paragraphs: ['As models become easier to access, the durable difference moves into permissions, evaluation, observability and the handoffs that keep work moving when a model is uncertain.'] },
+      { heading: 'Recovery is a product feature', paragraphs: ['A dependable system makes its limits visible, routes exceptions to people and learns from failure. That is less dramatic than a launch, but more valuable over a year of real use.'] },
+    ],
+    date: '2026-09-21',
+    publishAt: '2026-09-21T07:30:00Z',
+    cadence: 'daily',
+    readTime: '6 min read',
+    author: 'lena-hoff',
+    evidence: 'Medium confidence · 2 primary sources · 5 independent confirmations',
+    evidenceSummary: { primarySources: 2, independentConfirmations: 5, confidence: 'MEDIUM', note: 'The operating pattern appears across enterprise deployments, but public reporting remains uneven.' },
+    classification: 'analysis',
+    entities: ['openai', 'anthropic'],
+    timeline: ['openai-agent-platform'],
+    relatedStories: ['small-models-serious-workflows', 'founders-first-million-model-calls'],
+    imageTreatment: { type: 'editorial-abstract', alt: 'Layered system paths converging on a reliable handoff', palette: 'cobalt, graphite, warm paper', caption: 'The advantage is shifting from model novelty to dependable operation.' },
+    topic: 'AI',
+    sources: ['stanford-ai-index-2026'],
+    bottomLine: 'The AI systems that matter will be the ones that make uncertainty manageable inside a real workflow.',
+    whyItMatters: 'When model access is broadly available, operational discipline becomes the part competitors cannot copy overnight.',
+    keyTakeaways: ['Recovery paths matter as much as first-pass accuracy.', 'Evaluation must follow the whole workflow.', 'Human escalation is part of the product design.'],
+    whatChanges: 'Teams will budget for observability, permissions and exception handling before they scale model usage.',
+  },
+  {
+    slug: 'public-compute-needs-public-metrics',
+    category: 'India Watch',
+    title: 'Public compute needs public metrics',
+    dek: 'India’s shared AI infrastructure will be judged by who can use it, not only by how much capacity it announces.',
+    body: [
+      { heading: 'Capacity is only the first measure', paragraphs: ['A public compute programme becomes useful when researchers, startups and public-interest teams can discover it, qualify for access and ship something with it.'] },
+      { heading: 'The access layer matters', paragraphs: ['Transparent allocation, language coverage and evidence of downstream use will tell a clearer story than a headline GPU count.'] },
+    ],
+    date: '2026-09-23',
+    publishAt: '2026-09-23T07:30:00Z',
+    cadence: 'daily',
+    readTime: '7 min read',
+    author: 'ananya-rao',
+    evidence: 'Medium confidence · 3 primary sources · 3 independent confirmations',
+    evidenceSummary: { primarySources: 3, independentConfirmations: 3, confidence: 'MEDIUM', note: 'Programme commitments are visible; consistent public reporting on usage is still developing.' },
+    classification: 'reported',
+    entities: ['indiaai-mission', 'sarvam-ai'],
+    timeline: ['indiaai-compute-tender'],
+    relatedStories: ['indias-public-ai-stack', 'new-geography-of-compute'],
+    imageTreatment: { type: 'data-graphic', alt: 'Public compute allocation paths connecting researchers and builders', palette: 'indigo, saffron, paper white', caption: 'Infrastructure becomes public value only when access is legible.' },
+    topic: 'India',
+    sources: ['indiaai-mission', 'stanford-ai-index-2026'],
+    bottomLine: 'The strongest public AI metric is not capacity announced but useful work completed by people who could not previously afford the compute.',
+    whyItMatters: 'Transparent access can turn national AI infrastructure into a broad industrial platform rather than a narrow procurement programme.',
+    keyTakeaways: ['Access rules shape who benefits from public compute.', 'Language coverage is a practical measure of inclusion.', 'Usage evidence should sit beside capacity announcements.'],
+    whatChanges: 'Public AI programmes will increasingly publish allocation, usage and outcome metrics together.',
+  },
+  {
+    slug: 'weekly-deep-dive-cost-of-intelligence',
+    category: 'Infrastructure',
+    title: 'The cost of intelligence is becoming a design constraint',
+    dek: 'Every AI product now has to decide where capability is worth the energy, latency and margin it consumes.',
+    body: [
+      { heading: 'The price is not just per token', paragraphs: ['The real cost of an AI feature includes retrieval, evaluation, latency, monitoring, storage and the human work required when an answer is wrong.'] },
+      { heading: 'Design for the constraint', paragraphs: ['The best teams route simple work to small models, reserve frontier capability for high-value decisions and make the tradeoff visible to the people building the product.'] },
+    ],
+    date: '2026-09-28',
+    publishAt: '2026-09-28T07:30:00Z',
+    cadence: 'weekly',
+    readTime: '10 min read',
+    author: 'david-okafor',
+    evidence: 'High confidence · 3 primary sources · 4 independent confirmations',
+    evidenceSummary: { primarySources: 3, independentConfirmations: 4, confidence: 'HIGH', note: 'Infrastructure demand, deployment economics and regional capacity point to the same design constraint.' },
+    classification: 'synthesis',
+    entities: ['microsoft', 'gpt-5'],
+    timeline: ['azure-inference-expansion', 'gpt-5-release'],
+    relatedStories: ['new-geography-of-compute', 'small-models-serious-workflows'],
+    imageTreatment: { type: 'data-graphic', alt: 'A system map balancing model capability, energy and latency', palette: 'night blue, signal green, copper', caption: 'Capability is only useful when its operating cost fits the job.' },
+    topic: 'Technology',
+    sources: ['iea-data-centres', 'stanford-ai-index-2026'],
+    bottomLine: 'The next generation of AI products will be designed around an explicit budget for intelligence.',
+    whyItMatters: 'Energy, latency and margin will determine which model capabilities become ordinary parts of software.',
+    keyTakeaways: ['Token price is only one part of the cost.', 'Routing is a product decision.', 'Regional infrastructure changes what is feasible.'],
+    whatChanges: 'Product teams will treat model selection as an operating-budget decision, not a one-time engineering choice.',
+  },
+];
+
+export function getPublishedStories(now = new Date()): Story[] {
+  const publishedSlugs = new Set(stories.map((story) => story.slug));
+  const newlyPublished = scheduledStories.filter(
+    (story) => !publishedSlugs.has(story.slug) && Date.parse(story.publishAt) <= now.getTime(),
+  );
+  return [...stories, ...newlyPublished].sort((left, right) => {
+    if (left.date !== right.date) return right.date.localeCompare(left.date);
+    return left.slug.localeCompare(right.slug);
+  });
+}
+
+export function getEditorialSchedule(now = new Date()): EditorialScheduleItem[] {
+  return scheduledStories.map((story) => ({
+    slug: story.slug,
+    title: story.title,
+    publishAt: story.publishAt,
+    cadence: story.cadence,
+    status: Date.parse(story.publishAt) <= now.getTime() ? 'published' : 'scheduled',
+  }));
+}
+
 export let signals: Signal[] = [
   { slug: 'frontier-model-race', label: 'Model race', topic: 'Models', direction: 'up', impact: 'high', change: '+18%', summary: 'Tool use and long-horizon reliability, rather than raw benchmark scores, are driving the latest frontier releases.', entities: ['openai', 'anthropic', 'gpt-5', 'claude-4'], stories: ['small-models', 'founders'], updated: '2026-09-11' },
   { slug: 'compute-geography', label: 'AI infrastructure', topic: 'Infrastructure', direction: 'up', impact: 'high', change: '+12%', summary: 'New inference capacity is following power, fibre and regional customer demand.', entities: ['microsoft'], stories: ['infrastructure'], updated: '2026-09-11' },
@@ -269,6 +389,7 @@ export let indiaIndex: IndiaIndexMetric[] = [
 export let essays: Essay[] = [
   { slug: 'intelligence-without-theatre', title: 'Intelligence without the theatre', dek: 'What changes when we measure AI by the systems it makes possible rather than the demos it produces.', author: 'lena-hoff', date: '2026-09-05', readTime: '12 min read', themes: ['systems', 'enterprise', 'trust'], body: [{ heading: 'The demo is not the product', paragraphs: ['The AI economy is learning to separate an impressive answer from a dependable capability. That distinction is quiet, operational and increasingly valuable.'] }, { heading: 'A new editorial subject', paragraphs: ['The institutions around models — labs, clouds, buyers and regulators — now deserve as much attention as the models themselves.'] }] },
   { slug: 'india-builds-in-public', title: 'India builds in public', dek: 'A public AI layer can be both infrastructure policy and industrial strategy.', author: 'ananya-rao', date: '2026-08-29', readTime: '10 min read', themes: ['India', 'policy', 'infrastructure'], body: [{ heading: 'The shared substrate', paragraphs: ['India’s most consequential AI bet may be the layer no single startup owns: language data, compute access and public demand.'] }, { heading: 'The test is use', paragraphs: ['A public stack matters only when it helps a health worker, teacher or small company do something previously out of reach.'] }] },
+  { slug: 'the-cost-of-intelligence', title: 'The cost of intelligence', dek: 'Every AI product is also an argument about energy, latency, margin and what deserves to be automated.', author: 'david-okafor', date: '2026-08-22', readTime: '11 min read', themes: ['infrastructure', 'economics', 'design'], body: [{ heading: 'Capability has a carrying cost', paragraphs: ['The most capable model is not automatically the right model. A useful system has to fit the speed, budget and consequence of the work around it.'] }, { heading: 'The design question', paragraphs: ['Choosing where to spend intelligence is becoming part of product design. Small models, local inference and careful routing can make ambition affordable.'] }] },
 ];
 
 export let askGlobalAnswers: AskGlobalAnswer[] = [
