@@ -135,7 +135,6 @@ function ClerkProviderWithRoutes({ children }: { children: ReactNode }) {
   const [, setLocation] = useLocation();
   const { theme } = useTheme();
   return <ClerkProvider
-    key={theme}
     publishableKey={clerkPubKey}
     proxyUrl={clerkProxyUrl}
     appearance={getClerkAppearance(theme)}

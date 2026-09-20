@@ -1,0 +1,30 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "zSuTJRBDGlDuQIiaX26Z9"
+uri = "file://screenshots/global-ai-news-light-mode.jpg"
+type = "image"
+title = "Global AI News — light mode"
+description = "Desktop homepage preview showing the warm ivory editorial theme and accessible theme toggle."
+logical_id = "0343496b-032f-4612-ae3d-df7c057eb248"
+content_hash = "sha256:24cd3b3b5c258037c3a8d622afc8f9b099704bb33dce4ffa6b4bb82d166478d5"
+size = 108567
+mtime_ms = 1789928987650
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/0343496b-032f-4612-ae3d-df7c057eb248/297a375a-48f3-4134-84f6-7956a124c61c"
+storage_version_token = "1789929354724004"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "RS5TpvlBYBvLx6w5kaF4a"
+uri = "file://screenshots/global-ai-news-dark-mode.jpg"
+type = "image"
+title = "Global AI News — dark mode"
+description = "Desktop homepage preview showing the dark editorial theme, lifted blue accents, and persisted dark state."
+logical_id = "885d8b9c-47af-433b-ad44-c94f758a772d"
+content_hash = "sha256:de78308927493bd5d7dcde2d5e9347568f3689b3d29cfc1818ed093de0d1f73e"
+size = 140384
+mtime_ms = 1789929061431
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/885d8b9c-47af-433b-ad44-c94f758a772d/572c10a4-d8b7-445d-9471-de31cf92f386"
+storage_version_token = "1789929356094818"
+content_type = "image/jpeg"
