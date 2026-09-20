@@ -479,7 +479,7 @@ async function startApiServer() {
   throw new Error('The smoke test API server did not become ready within 60 seconds.');
 }
 
-function assertSeoDocument(document, route, { article = false } = {}) {
+function assertSeoDocument(document, route, { article = false, stories = [], authors = [] } = {}) {
   const title = htmlText(tagContent(document, 'title'));
   const description = metaContent(document, 'name', 'description');
   const canonical = linkHref(document, 'canonical');
@@ -506,10 +506,16 @@ function assertSeoDocument(document, route, { article = false } = {}) {
   if (article) {
     assertSocialPreviewMetadata(document, route);
     const articleData = structuredData['@graph'].find((entry) => entry['@type'] === 'NewsArticle');
+    const slug = route.split('/')[2];
+    const expectedStory = stories.find((story) => story.slug === slug);
+    const expectedAuthor = expectedStory && authors.find((author) => author.slug === expectedStory.author);
     assert.equal(articleData.image, metaContent(document, 'property', 'og:image'), `${route}: JSON-LD image does not match social preview`);
     assert.equal(articleData.author['@type'], 'Person', `${route}: JSON-LD author should identify the maintained story author`);
-    assert.equal(articleData.author.name, 'Mira Patel', `${route}: JSON-LD author drifted from the maintained story record`);
-    assert.equal(articleData.datePublished, '2026-09-11', `${route}: JSON-LD publication date drifted from the maintained story record`);
+    assert.ok(expectedStory && expectedAuthor, `${route}: maintained story record is missing for JSON-LD verification`);
+    assert.equal(articleData.author.name, expectedAuthor.name, `${route}: JSON-LD author drifted from the maintained story record`);
+    assert.equal(articleData.author.url, `${site}/person/${expectedAuthor.slug}`, `${route}: JSON-LD author URL drifted from the maintained story record`);
+    assert.equal(articleData.datePublished, expectedStory.date, `${route}: JSON-LD publication date drifted from the maintained story record`);
+    assert.equal(articleData.articleSection, expectedStory.category, `${route}: JSON-LD article section drifted from the maintained story record`);
     assert.equal(articleData.mainEntityOfPage['@id'], `${site}${route}`, `${route}: JSON-LD main entity does not match the canonical article URL`);
     assert.equal(linkHref(document, 'amphtml'), `${site}/amp/article/ai-models-antibiotic-discovery/`, `${route}: AMP relationship is missing`);
   } else {
@@ -599,6 +605,9 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   const metadataManifest = JSON.parse(metadataBody);
   assert.equal(metadataManifest.source, 'maintained-editorial-source', 'newsroom metadata manifest has an unexpected source');
   assert.ok(Array.isArray(metadataManifest.routes), 'newsroom metadata manifest is missing routes');
+  const { response: contentResponse, body: contentBody } = await fetchText('/api/newsroom/content');
+  assert.equal(contentResponse.status, 200, 'newsroom content snapshot is not reachable');
+  const newsroomContent = JSON.parse(contentBody);
 
   const routes = sitemapRoutes(sitemap);
   assert.ok(routes.length >= 15, 'sitemap unexpectedly contains too few public routes');
@@ -660,7 +669,11 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   for (const route of new Set([...staticRoutes, ampPath])) {
     const document = await renderRoute(route, 1440, 900);
     if (route !== ampPath) {
-      assertSeoDocument(document, route, { article: route.startsWith('/article/') });
+      assertSeoDocument(document, route, {
+        article: route.startsWith('/article/'),
+        stories: newsroomContent.stories,
+        authors: newsroomContent.authors,
+      });
       assertMetadataMatchesManifest(document, route, metadataManifest);
     }
     await assertRenderedPageIntegrity(document, route, allowedRoutes, responseCache);
@@ -688,7 +701,11 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   ];
   for (const route of mobileRoutes) {
     const document = await renderRoute(route, 402, 874);
-    assertSeoDocument(document, route, { article: route.startsWith('/article/') });
+    assertSeoDocument(document, route, {
+      article: route.startsWith('/article/'),
+      stories: newsroomContent.stories,
+      authors: newsroomContent.authors,
+    });
     assert.match(document, /<body[\s\S]*<main\b/, `${route}: mobile render did not produce page content`);
   }
 
