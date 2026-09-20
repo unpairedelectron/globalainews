@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ClerkProvider, SignIn, SignUp } from '@clerk/react';
 import { publishableKeyFromHost } from '@clerk/react/internal';
 import { shadcn } from '@clerk/themes';
@@ -84,9 +84,52 @@ function getClerkAppearance(theme: Theme) {
 }
 
 function SignInPage() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [validationError, setValidationError] = useState('');
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const handleSubmitClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element) || !target.closest('button.cl-formButtonPrimary')) return;
+
+      const fields = [...root.querySelectorAll<HTMLInputElement>('input:not([type="hidden"])')];
+      const identifier = fields[0];
+      const password = fields.find((field) => field.type === 'password');
+      if (identifier?.value.trim() && password?.value.trim()) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      setValidationError('Enter your email address and password to continue.');
+    };
+
+    const clearValidation = (event: Event) => {
+      if (event.target instanceof HTMLInputElement) setValidationError('');
+    };
+
+    root.addEventListener('click', handleSubmitClick, true);
+    root.addEventListener('input', clearValidation, true);
+    return () => {
+      root.removeEventListener('click', handleSubmitClick, true);
+      root.removeEventListener('input', clearValidation, true);
+    };
+  }, []);
+
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4">
+    <div ref={rootRef} className="flex min-h-[100dvh] items-center justify-center bg-background px-4">
       <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
+      {validationError && (
+        <p
+          id="global-ai-news-sign-in-validation"
+          role="alert"
+          aria-live="assertive"
+          className="absolute bottom-6 left-1/2 w-[min(440px,calc(100%-2rem))] -translate-x-1/2 border border-destructive bg-destructive px-4 py-3 text-center text-sm text-destructive-foreground"
+        >
+          {validationError}
+        </p>
+      )}
     </div>
   );
 }

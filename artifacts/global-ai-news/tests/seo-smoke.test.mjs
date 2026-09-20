@@ -1067,6 +1067,117 @@ async function checkThemeRegression() {
           `${route}: ${theme} mode introduces horizontal overflow (${authState.documentWidth}px > ${authState.viewportWidth}px).`,
         );
 
+        await evaluateBrowser(cdp, `(() => {
+          const fields = [...document.querySelectorAll('input:not([type="hidden"])')];
+          for (const field of fields) {
+            const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+            setter?.call(field, '');
+            field.dispatchEvent(new Event('input', { bubbles: true }));
+            field.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+          fields[0]?.focus();
+          return fields.length;
+        })()`);
+        if (route === '/sign-up') {
+          await cdp.send('Input.insertText', { text: 'editor@example.com' });
+          await cdp.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab' });
+          await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab' });
+          await cdp.send('Input.insertText', { text: 'x' });
+          for (let tab = 0; tab < 2; tab += 1) {
+            await cdp.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab' });
+            await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab' });
+          }
+          await cdp.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter' });
+          await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter' });
+        } else {
+          const primaryButton = await evaluateBrowser(cdp, `(() => {
+            const button = [...document.querySelectorAll('button.cl-formButtonPrimary')]
+              .find((element) => {
+                const rect = element.getBoundingClientRect();
+                return rect.width > 0 && rect.height > 0;
+              });
+            if (!button) return null;
+            const rect = button.getBoundingClientRect();
+            return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+          })()`);
+          assert.ok(primaryButton, `${route}: ${theme} mode primary button disappeared before validation.`);
+          await cdp.send('Input.dispatchMouseEvent', {
+            type: 'mousePressed',
+            x: primaryButton.x,
+            y: primaryButton.y,
+            button: 'left',
+            clickCount: 1,
+          });
+          await cdp.send('Input.dispatchMouseEvent', {
+            type: 'mouseReleased',
+            x: primaryButton.x,
+            y: primaryButton.y,
+            button: 'left',
+            clickCount: 1,
+          });
+        }
+        await waitForBrowserCondition(
+          cdp,
+          route === '/sign-up'
+            ? `!!document.querySelector('input[aria-invalid="true"]') && !!document.querySelector('.cl-formFieldErrorText')`
+            : `([...document.querySelectorAll('.cl-alert, [role="alert"], [aria-live]')].some((element) => (element.textContent ?? '').trim().length > 0))`,
+          `${route}: ${theme} mode did not render Clerk validation feedback after the safe auth-form submit.`,
+        );
+
+        const validationState = await evaluateBrowser(cdp, `(() => {
+          const invalidInput = document.querySelector('input[aria-invalid="true"]');
+          const isVisible = (element) => {
+            const rect = element.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+          };
+          const error = [...document.querySelectorAll('.cl-formFieldErrorText')]
+            .find((element) => (element.textContent ?? '').trim().length > 0 && isVisible(element))
+            ?? [...document.querySelectorAll('.cl-alert, [role="alert"], [aria-live]')]
+              .find((element) => (element.textContent ?? '').trim().length > 0 && isVisible(element));
+          const body = getComputedStyle(document.body);
+          const visibleBackground = (element) => {
+            let current = element;
+            while (current) {
+              const background = getComputedStyle(current).backgroundColor;
+              const translucent = background === 'transparent'
+                || background.startsWith('rgba(')
+                || background.startsWith('hsla(')
+                || background.includes('/');
+              if (!translucent) return background;
+              current = current.parentElement;
+            }
+            return body.backgroundColor;
+          };
+          const liveMessages = [...document.querySelectorAll('[aria-live], [role="alert"]')]
+            .map((element) => element.textContent?.trim() ?? '')
+            .filter(Boolean);
+          const style = error ? getComputedStyle(error) : null;
+          const rect = error?.getBoundingClientRect();
+          return {
+            invalidField: invalidInput?.getAttribute('aria-describedby') ?? null,
+            errorText: error?.textContent?.trim() ?? '',
+            errorVisible: Boolean(rect && rect.width > 0 && rect.height > 0),
+            errorColor: style?.color ?? null,
+            errorBackground: error ? visibleBackground(error) : null,
+            liveMessages,
+          };
+        })()`);
+        if (route === '/sign-up') {
+          assert.ok(validationState.invalidField, `${route}: ${theme} mode validation did not mark a field invalid.`);
+          assert.match(validationState.errorText, /password/i, `${route}: ${theme} mode validation message is missing password guidance.`);
+        } else {
+          assert.ok(validationState.errorText, `${route}: ${theme} mode rejected sign-in without an error message.`);
+        }
+        assert.equal(validationState.errorVisible, true, `${route}: ${theme} mode validation message is not visible.`);
+        assert.ok(
+          contrastRatio(validationState.errorBackground, validationState.errorColor) >= 4.5,
+          `${route}: ${theme} mode validation message contrast is too low.`,
+        );
+        assert.ok(
+          validationState.liveMessages.some((message) => /password/i.test(message)),
+          `${route}: ${theme} mode validation message was not announced through a live region.`,
+        );
+
         const browserErrors = cdp.events
           .filter((event) => (
             (event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
