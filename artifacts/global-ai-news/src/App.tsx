@@ -6,6 +6,7 @@ import { shadcn } from '@clerk/themes';
 import { Toaster } from '@/components/ui/toaster';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { NewsroomProvider } from '@/newsroom';
+import { ThemeProvider, useTheme, type Theme } from '@/theme';
 import { Router, Route, Switch, useLocation } from 'wouter';
 import NotFound from '@/pages/not-found';
 import {
@@ -37,7 +38,9 @@ if (!clerkPubKey) {
   throw new Error('Missing VITE_CLERK_PUBLISHABLE_KEY.');
 }
 
-const clerkAppearance = {
+function getClerkAppearance(theme: Theme) {
+  const dark = theme === 'dark';
+  return {
   theme: shadcn,
   cssLayerName: 'clerk',
   options: {
@@ -46,38 +49,39 @@ const clerkAppearance = {
     logoImageUrl: `${window.location.origin}${basePath}/logo.svg`,
   },
   variables: {
-    colorPrimary: '#2055bd',
-    colorForeground: '#131820',
-    colorMutedForeground: '#5b6570',
-    colorDanger: '#a8483b',
-    colorBackground: '#f6f1e7',
-    colorInput: '#ffffff',
-    colorInputForeground: '#131820',
-    colorNeutral: '#d0c9bd',
+    colorPrimary: dark ? '#79a6ff' : '#1557d6',
+    colorForeground: dark ? '#f1efe9' : '#11161a',
+    colorMutedForeground: dark ? '#b3bbc0' : '#5b6064',
+    colorDanger: dark ? '#ee8d87' : '#a23d38',
+    colorBackground: dark ? '#11161a' : '#f6f4ef',
+    colorInput: dark ? '#1a2126' : '#ffffff',
+    colorInputForeground: dark ? '#f1efe9' : '#11161a',
+    colorNeutral: dark ? '#485058' : '#c8c6bf',
     fontFamily: 'DM Sans, sans-serif',
     borderRadius: '0.15rem',
   },
   elements: {
     rootBox: 'w-full flex justify-center',
-    cardBox: 'bg-[#f6f1e7] rounded-none w-[440px] max-w-full overflow-hidden border border-[#d0c9bd]',
+    cardBox: 'bg-card rounded-none w-[440px] max-w-full overflow-hidden border border-border',
     card: '!shadow-none !border-0 !bg-transparent !rounded-none',
     footer: '!shadow-none !border-0 !bg-transparent !rounded-none',
-    headerTitle: 'font-serif text-[#131820]',
-    headerSubtitle: 'text-[#5b6570]',
-    socialButtonsBlockButtonText: 'text-[#131820]',
-    formFieldLabel: 'text-[#131820]',
-    footerActionLink: 'text-[#2055bd]',
-    footerActionText: 'text-[#5b6570]',
-    dividerText: 'text-[#5b6570]',
-    formButtonPrimary: 'bg-[#2055bd] text-white hover:bg-[#18479f]',
-    formFieldInput: 'bg-white text-[#131820] border-[#d0c9bd]',
-    footerAction: 'text-[#5b6570]',
-    dividerLine: 'bg-[#d0c9bd]',
-    alertText: 'text-[#a8483b]',
-    alert: 'border-[#a8483b]/40 bg-[#a8483b]/5',
+    headerTitle: 'font-serif text-foreground',
+    headerSubtitle: 'text-muted-foreground',
+    socialButtonsBlockButtonText: 'text-foreground',
+    formFieldLabel: 'text-foreground',
+    footerActionLink: 'text-primary',
+    footerActionText: 'text-muted-foreground',
+    dividerText: 'text-muted-foreground',
+    formButtonPrimary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+    formFieldInput: 'bg-background text-foreground border-border',
+    footerAction: 'text-muted-foreground',
+    dividerLine: 'bg-border',
+    alertText: 'text-destructive',
+    alert: 'border-destructive/40 bg-destructive/10',
     main: 'bg-transparent',
   },
-};
+  };
+}
 
 function SignInPage() {
   return (
@@ -129,10 +133,12 @@ function AppRoutes() {
 
 function ClerkProviderWithRoutes({ children }: { children: ReactNode }) {
   const [, setLocation] = useLocation();
+  const { theme } = useTheme();
   return <ClerkProvider
+    key={theme}
     publishableKey={clerkPubKey}
     proxyUrl={clerkProxyUrl}
-    appearance={clerkAppearance}
+    appearance={getClerkAppearance(theme)}
     signInUrl={`${basePath}/sign-in`}
     signUpUrl={`${basePath}/sign-up`}
     localization={{
@@ -156,8 +162,8 @@ function ClerkProviderWithRoutes({ children }: { children: ReactNode }) {
   </ClerkProvider>;
 }
 
-function App() {
-  return <QueryClientProvider client={queryClient}><Router base={basePath}><ClerkProviderWithRoutes><NewsroomProvider><AppRoutes /></NewsroomProvider><Toaster /></ClerkProviderWithRoutes></Router></QueryClientProvider>;
+function App({ initialTheme }: { initialTheme: Theme }) {
+  return <QueryClientProvider client={queryClient}><ThemeProvider initialTheme={initialTheme}><Router base={basePath}><ClerkProviderWithRoutes><NewsroomProvider><AppRoutes /></NewsroomProvider><Toaster /></ClerkProviderWithRoutes></Router></ThemeProvider></QueryClientProvider>;
 }
 
 export default App;
