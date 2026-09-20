@@ -473,6 +473,7 @@ async function findFreePort() {
 async function connectToChromium(url) {
   const socket = new WebSocket(url);
   const pending = new Map();
+  const events = [];
   let nextId = 0;
   await new Promise((resolve, reject) => {
     socket.addEventListener('open', resolve, { once: true });
@@ -480,6 +481,10 @@ async function connectToChromium(url) {
   });
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data);
+    if (!message.id) {
+      events.push(message);
+      return;
+    }
     const request = pending.get(message.id);
     if (!request) return;
     pending.delete(message.id);
@@ -497,6 +502,7 @@ async function connectToChromium(url) {
     close() {
       socket.close();
     },
+    events,
   };
 }
 
@@ -741,6 +747,197 @@ async function checkMobileEditorHistory() {
       true,
       `The filtered-empty release history explanation is not readable within the mobile viewport: ${JSON.stringify(emptyStateLayout)}`,
     );
+  } finally {
+    cdp?.close();
+    browserProcess.kill('SIGTERM');
+  }
+}
+
+function parseCssRgb(value) {
+  const match = value.match(/rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+  if (!match) return null;
+  return match.slice(1, 4).map(Number);
+}
+
+function relativeLuminance(rgb) {
+  if (!rgb) return null;
+  const channels = rgb.map((channel) => {
+    const normalized = channel / 255;
+    return normalized <= 0.03928
+      ? normalized / 12.92
+      : ((normalized + 0.055) / 1.055) ** 2.4;
+  });
+  return (0.2126 * channels[0]) + (0.7152 * channels[1]) + (0.0722 * channels[2]);
+}
+
+function contrastRatio(first, second) {
+  const firstLuma = relativeLuminance(parseCssRgb(first));
+  const secondLuma = relativeLuminance(parseCssRgb(second));
+  if (firstLuma === null || secondLuma === null) return null;
+  const [lighter, darker] = [firstLuma, secondLuma].sort((a, b) => b - a);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+async function checkThemeRegression() {
+  const debugPort = await findFreePort();
+  const userDataDir = `${os.tmpdir()}/gan-theme-regression-${process.pid}`;
+  const browserProcess = spawn(chromium, [
+    '--headless',
+    '--no-sandbox',
+    '--disable-gpu',
+    '--disable-dev-shm-usage',
+    '--disable-extensions',
+    '--no-first-run',
+    `--user-data-dir=${userDataDir}`,
+    `--remote-debugging-port=${debugPort}`,
+    'about:blank',
+  ], { stdio: ['ignore', 'ignore', 'ignore'] });
+  let cdp;
+  try {
+    const debugDeadline = Date.now() + 10_000;
+    let target;
+    while (Date.now() < debugDeadline) {
+      try {
+        const targets = await fetch(`http://127.0.0.1:${debugPort}/json/list`).then((response) => response.json());
+        target = targets.find((item) => item.type === 'page');
+        if (target?.webSocketDebuggerUrl) break;
+      } catch {
+        // Chromium may still be starting its debugging endpoint.
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    assert.ok(target?.webSocketDebuggerUrl, 'Chromium did not expose a debuggable page for theme regression checks.');
+    cdp = await connectToChromium(target.webSocketDebuggerUrl);
+    await cdp.send('Emulation.setDeviceMetricsOverride', {
+      width: 1440,
+      height: 1000,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    await cdp.send('Runtime.enable');
+    await cdp.send('Page.enable');
+
+    const routes = [
+      '/',
+      '/article/ai-models-antibiotic-discovery',
+      '/industry',
+      '/brief',
+      '/insights?smoke-editor=1',
+    ];
+    const snapshots = new Map();
+
+    await cdp.send('Page.navigate', { url: `${baseUrl}/` });
+    await waitForBrowserCondition(
+      cdp,
+      `document.readyState === 'complete' && !!document.querySelector('[data-testid="button-theme-toggle"]')`,
+      'The homepage did not render the theme toggle.',
+    );
+
+    for (const theme of ['light', 'dark']) {
+      for (const route of routes) {
+        cdp.events.length = 0;
+        await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', '${theme}')`);
+        await cdp.send('Page.navigate', { url: `${baseUrl}${route}` });
+        await waitForBrowserCondition(
+          cdp,
+          `document.readyState === 'complete' && !!document.querySelector('[data-testid="button-theme-toggle"]') && !!document.querySelector('main')`,
+          `${route}: ${theme} mode did not render its main content and theme toggle.`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, 150));
+
+        const visualState = await evaluateBrowser(cdp, `(() => {
+          const root = getComputedStyle(document.documentElement);
+          const body = getComputedStyle(document.body);
+          const toggle = document.querySelector('[data-testid="button-theme-toggle"]');
+          const surface = document.querySelector('[class~="bg-surface-muted"]');
+          return {
+            theme: document.documentElement.dataset.theme,
+            rootBackground: root.getPropertyValue('--background').trim(),
+            bodyBackground: body.backgroundColor,
+            bodyColor: body.color,
+            surfaceBackground: surface ? getComputedStyle(surface).backgroundColor : null,
+            togglePressed: toggle?.getAttribute('aria-pressed'),
+            documentWidth: document.documentElement.scrollWidth,
+            viewportWidth: window.innerWidth,
+          };
+        })()`);
+
+        assert.equal(visualState.theme, theme, `${route}: persisted ${theme} mode was not applied to the document root.`);
+        assert.equal(
+          visualState.rootBackground,
+          theme === 'dark' ? '204 21% 8%' : '45 30% 95%',
+          `${route}: ${theme} mode activated the wrong background token.`,
+        );
+        assert.equal(visualState.togglePressed, String(theme === 'dark'), `${route}: theme toggle state is wrong in ${theme} mode.`);
+        assert.ok(
+          visualState.documentWidth <= visualState.viewportWidth,
+          `${route}: ${theme} mode introduces horizontal overflow (${visualState.documentWidth}px > ${visualState.viewportWidth}px).`,
+        );
+        const bodyContrast = contrastRatio(visualState.bodyBackground, visualState.bodyColor);
+        assert.ok(
+          bodyContrast !== null && bodyContrast >= 4.5,
+          `${route}: ${theme} mode body text contrast is too low (${bodyContrast?.toFixed(2) ?? 'unknown'}:1).`,
+        );
+
+        const screenshot = await cdp.send('Page.captureScreenshot', {
+          format: 'png',
+          fromSurface: true,
+        });
+        const screenshotPath = path.join(
+          os.tmpdir(),
+          `gan-theme-regression-${process.pid}-${theme}-${route.replace(/[^a-z0-9]/gi, '-')}.png`,
+        );
+        try {
+          writeFileSync(screenshotPath, Buffer.from(screenshot.data, 'base64'));
+          const [dimensions, mean] = execFileSync(
+            'magick',
+            [screenshotPath, '-format', '%wx%h %[fx:mean]', 'info:'],
+            { encoding: 'utf8' },
+          ).trim().split(/\s+/);
+          assert.equal(dimensions, '1440x1000', `${route}: ${theme} screenshot has unstable dimensions (${dimensions}).`);
+          assert.ok(Number(mean) > 0.02 && Number(mean) < 0.98, `${route}: ${theme} screenshot appears blank or overexposed.`);
+        } finally {
+          unlinkSync(screenshotPath);
+        }
+
+        const browserErrors = cdp.events
+          .filter((event) => (
+            (event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
+            || event.method === 'Runtime.exceptionThrown'
+          ))
+          .map((event) => event.method === 'Runtime.exceptionThrown'
+            ? event.params.exceptionDetails?.text ?? 'Unhandled browser exception'
+            : event.params.args?.map((argument) => argument.value ?? argument.description ?? '').join(' ') ?? 'Browser console error');
+        assert.deepEqual(browserErrors, [], `${route}: ${theme} mode emitted browser errors: ${browserErrors.join(' | ')}`);
+
+        const key = `${route}::${theme}`;
+        snapshots.set(key, visualState);
+      }
+    }
+
+    for (const route of routes) {
+      const light = snapshots.get(`${route}::light`);
+      const dark = snapshots.get(`${route}::dark`);
+      assert.notEqual(light.bodyBackground, dark.bodyBackground, `${route}: light and dark body backgrounds are indistinguishable.`);
+      assert.notEqual(light.bodyColor, dark.bodyColor, `${route}: light and dark body text colors are indistinguishable.`);
+      if (light.surfaceBackground && dark.surfaceBackground) {
+        assert.notEqual(light.surfaceBackground, dark.surfaceBackground, `${route}: themed surface background did not change between modes.`);
+      }
+    }
+
+    await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', 'light'); location.href = '${baseUrl}/'`);
+    await waitForBrowserCondition(
+      cdp,
+      `document.documentElement.dataset.theme === 'light' && document.querySelector('[data-testid="button-theme-toggle"]')?.getAttribute('aria-pressed') === 'false'`,
+      'The persisted light theme did not restore after a full navigation.',
+    );
+    await evaluateBrowser(cdp, `document.querySelector('[data-testid="button-theme-toggle"]').click()`);
+    await waitForBrowserCondition(
+      cdp,
+      `document.documentElement.dataset.theme === 'dark' && localStorage.getItem('global-ai-news-theme') === 'dark' && document.querySelector('[data-testid="button-theme-toggle"]')?.getAttribute('aria-pressed') === 'true'`,
+      'Clicking the theme toggle did not persist and apply dark mode.',
+    );
+    console.log(`Theme regression checked ${routes.length} routes in light and dark mode with contrast, screenshots, and browser-error assertions.`);
   } finally {
     cdp?.close();
     browserProcess.kill('SIGTERM');
@@ -1043,6 +1240,10 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
 
 test('signed-in release history filters remain usable at a mobile viewport', { concurrency: false }, async () => {
   await checkMobileEditorHistory();
+});
+
+test('light and dark themes stay readable across key public and newsroom routes', { concurrency: false }, async () => {
+  await checkThemeRegression();
 });
 
 test('visual preview contract rejects an empty article card with a route-specific error', () => {
