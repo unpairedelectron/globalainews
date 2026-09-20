@@ -133,9 +133,13 @@ export const CreateNewsroomReleaseResponse = zod.object({
  * Returns the latest durable audit entries for editor-managed release changes.
  * @summary Get recent release change history
  */
+
+
+
 export const GetNewsroomReleaseHistoryQueryParams = zod.object({
   "releaseSlug": zod.coerce.string().optional().describe('Return history for one release slug. Use queue for queue-level changes.'),
-  "action": zod.enum(['created', 'edited', 'rescheduled', 'reordered', 'canceled']).optional().describe('Return history for one change type.')
+  "action": zod.enum(['created', 'edited', 'rescheduled', 'reordered', 'canceled']).optional().describe('Return history for one change type.'),
+  "actor": zod.coerce.string().min(1).optional().describe('Return history for one editor identity.')
 })
 
 export const GetNewsroomReleaseHistoryResponseItem = zod.object({

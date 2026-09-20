@@ -259,6 +259,10 @@ router.get("/newsroom/releases/history", async (req, res): Promise<void> => {
       typeof req.query.action === "string" && req.query.action.trim().length > 0
         ? req.query.action.trim()
         : undefined;
+    const actor =
+      typeof req.query.actor === "string" && req.query.actor.trim().length > 0
+        ? req.query.actor.trim()
+        : undefined;
     const action = requestedAction as EditorialReleaseHistoryAction | undefined;
     if (action && !Object.values(EditorialReleaseHistoryAction).includes(action)) {
       res.status(400).json({ error: "Unknown release history action." });
@@ -267,6 +271,7 @@ router.get("/newsroom/releases/history", async (req, res): Promise<void> => {
     const filters = [
       releaseSlug ? eq(editorialReleaseHistoryTable.releaseSlug, releaseSlug) : undefined,
       action ? eq(editorialReleaseHistoryTable.action, action) : undefined,
+      actor ? eq(editorialReleaseHistoryTable.actor, actor) : undefined,
     ].filter((filter): filter is NonNullable<typeof filter> => Boolean(filter));
     const history = await db
       .select()

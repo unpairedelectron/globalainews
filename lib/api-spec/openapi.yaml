@@ -141,6 +141,13 @@ paths:
           description: Return history for one change type.
           schema:
             $ref: "#/components/schemas/EditorialReleaseHistoryAction"
+        - name: actor
+          in: query
+          required: false
+          description: Return history for one editor identity.
+          schema:
+            type: string
+            minLength: 1
       responses:
         "200":
           description: Recent release history

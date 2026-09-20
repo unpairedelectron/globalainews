@@ -16,4 +16,9 @@ releaseSlug?: string;
  * Return history for one change type.
  */
 action?: EditorialReleaseHistoryAction;
+/**
+ * Return history for one editor identity.
+ * @minLength 1
+ */
+actor?: string;
 };
