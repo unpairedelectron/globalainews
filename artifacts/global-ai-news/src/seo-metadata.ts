@@ -179,6 +179,9 @@ export function getSeoMetadataManifest(): SeoMetadataManifest {
 
 export function getStructuredData(metadata: SeoMetadata): string {
   const canonical = `${SITE_URL}${metadata.path}`;
+  const articleSlug = metadata.path.match(/^\/article\/([^/]+)$/)?.[1];
+  const articleStory = articleSlug ? findStory(articleSlug) : undefined;
+  const articleAuthor = articleStory ? authors.find((author) => author.slug === articleStory.author) : undefined;
   return JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
@@ -189,9 +192,16 @@ export function getStructuredData(metadata: SeoMetadata): string {
             description: metadata.description,
             url: canonical,
             ...(metadata.imagePath ? { image: `${SITE_URL}${metadata.imagePath}` } : {}),
-            author: { '@type': 'Organization', name: 'Global AI News' },
+            ...(articleStory ? { articleSection: articleStory.category, datePublished: articleStory.date } : {}),
+            author: articleAuthor
+              ? {
+                  '@type': 'Person',
+                  name: articleAuthor.name,
+                  url: `${SITE_URL}/person/${articleAuthor.slug}`,
+                }
+              : { '@type': 'Organization', name: 'Global AI News' },
             publisher: { '@type': 'Organization', name: 'Global AI News' },
-            datePublished: '2026-09-11',
+            mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
           }
         : {
             '@type': 'WebSite',

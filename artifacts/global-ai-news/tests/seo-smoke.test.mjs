@@ -408,6 +408,10 @@ function assertSeoDocument(document, route, { article = false } = {}) {
     assertSocialPreviewMetadata(document, route);
     const articleData = structuredData['@graph'].find((entry) => entry['@type'] === 'NewsArticle');
     assert.equal(articleData.image, metaContent(document, 'property', 'og:image'), `${route}: JSON-LD image does not match social preview`);
+    assert.equal(articleData.author['@type'], 'Person', `${route}: JSON-LD author should identify the maintained story author`);
+    assert.equal(articleData.author.name, 'Mira Patel', `${route}: JSON-LD author drifted from the maintained story record`);
+    assert.equal(articleData.datePublished, '2026-09-11', `${route}: JSON-LD publication date drifted from the maintained story record`);
+    assert.equal(articleData.mainEntityOfPage['@id'], `${site}${route}`, `${route}: JSON-LD main entity does not match the canonical article URL`);
     assert.equal(linkHref(document, 'amphtml'), `${site}/amp/article/ai-models-antibiotic-discovery/`, `${route}: AMP relationship is missing`);
   } else {
     assert.equal(metaContent(document, 'property', 'og:image'), '', `${route}: non-article page unexpectedly exposes og:image`);
