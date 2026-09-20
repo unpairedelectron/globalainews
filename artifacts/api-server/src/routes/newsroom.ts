@@ -1,4 +1,4 @@
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { Router, type IRouter, type Request } from "express";
 import { requireEditorAuth } from "../middlewares/requireEditorAuth";
 import { db, editorialReleaseHistoryTable, editorialReleasesTable } from "@workspace/db";
@@ -8,6 +8,7 @@ import {
   CreateNewsroomReleaseResponse,
   GetNewsroomContentResponse,
   GetNewsroomReleaseHistoryResponse,
+  EditorialReleaseHistoryAction,
   GetNewsroomMetadataResponse,
   GetNewsroomReleasesResponse,
   ReorderNewsroomReleasesBody,
@@ -250,9 +251,27 @@ router.get("/newsroom/releases", async (req, res): Promise<void> => {
 
 router.get("/newsroom/releases/history", async (req, res): Promise<void> => {
   try {
+    const releaseSlug =
+      typeof req.query.releaseSlug === "string" && req.query.releaseSlug.trim().length > 0
+        ? req.query.releaseSlug.trim()
+        : undefined;
+    const requestedAction =
+      typeof req.query.action === "string" && req.query.action.trim().length > 0
+        ? req.query.action.trim()
+        : undefined;
+    const action = requestedAction as EditorialReleaseHistoryAction | undefined;
+    if (action && !Object.values(EditorialReleaseHistoryAction).includes(action)) {
+      res.status(400).json({ error: "Unknown release history action." });
+      return;
+    }
+    const filters = [
+      releaseSlug ? eq(editorialReleaseHistoryTable.releaseSlug, releaseSlug) : undefined,
+      action ? eq(editorialReleaseHistoryTable.action, action) : undefined,
+    ].filter((filter): filter is NonNullable<typeof filter> => Boolean(filter));
     const history = await db
       .select()
       .from(editorialReleaseHistoryTable)
+      .where(filters.length > 0 ? and(...filters) : undefined)
       .orderBy(desc(editorialReleaseHistoryTable.createdAt), desc(editorialReleaseHistoryTable.id))
       .limit(50);
     res.setHeader("Cache-Control", "no-store");

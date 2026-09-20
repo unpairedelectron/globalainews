@@ -27,6 +27,7 @@ import type {
   EditorialReleaseReorderInput,
   EditorialReleaseUpdate,
   ErrorResponse,
+  GetNewsroomReleaseHistoryParams,
   HealthStatus,
   NewsletterSubscription,
   NewsletterSubscriptionInput,
@@ -461,21 +462,28 @@ export const useCreateNewsroomRelease = <TError = ErrorType<ErrorResponse>,
       return useMutation(getCreateNewsroomReleaseMutationOptions(options));
     }
 
-export const getGetNewsroomReleaseHistoryUrl = () => {
+export const getGetNewsroomReleaseHistoryUrl = (params?: GetNewsroomReleaseHistoryParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/newsroom/releases/history`
+  return stringifiedParams.length > 0 ? `/api/newsroom/releases/history?${stringifiedParams}` : `/api/newsroom/releases/history`
 }
 
 /**
  * Returns the latest durable audit entries for editor-managed release changes.
  * @summary Get recent release change history
  */
-export const getNewsroomReleaseHistory = async ( options?: Parameters<typeof customFetch>[1]): Promise<EditorialReleaseHistory> => {
+export const getNewsroomReleaseHistory = async (params?: GetNewsroomReleaseHistoryParams, options?: Parameters<typeof customFetch>[1]): Promise<EditorialReleaseHistory> => {
 
-  return customFetch<EditorialReleaseHistory>(getGetNewsroomReleaseHistoryUrl(),
+  return customFetch<EditorialReleaseHistory>(getGetNewsroomReleaseHistoryUrl(params),
   {
     ...options,
     method: 'GET'
@@ -488,23 +496,23 @@ export const getNewsroomReleaseHistory = async ( options?: Parameters<typeof cus
 
 
 
-export const getGetNewsroomReleaseHistoryQueryKey = () => {
+export const getGetNewsroomReleaseHistoryQueryKey = (params?: GetNewsroomReleaseHistoryParams,) => {
     return [
-    `/api/newsroom/releases/history`
+    `/api/newsroom/releases/history`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetNewsroomReleaseHistoryQueryOptions = <TData = Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetNewsroomReleaseHistoryQueryOptions = <TData = Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError = ErrorType<ErrorResponse>>(params?: GetNewsroomReleaseHistoryParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetNewsroomReleaseHistoryQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetNewsroomReleaseHistoryQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>> = ({ signal }) => getNewsroomReleaseHistory({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>> = ({ signal }) => getNewsroomReleaseHistory(params, { signal, ...requestOptions });
 
 
 
@@ -522,11 +530,11 @@ export type GetNewsroomReleaseHistoryQueryError = ErrorType<ErrorResponse>
  */
 
 export function useGetNewsroomReleaseHistory<TData = Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError = ErrorType<ErrorResponse>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ params?: GetNewsroomReleaseHistoryParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomReleaseHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetNewsroomReleaseHistoryQueryOptions(options)
+  const queryOptions = getGetNewsroomReleaseHistoryQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

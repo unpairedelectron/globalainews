@@ -128,6 +128,19 @@ paths:
       tags: [newsroom]
       summary: Get recent release change history
       description: Returns the latest durable audit entries for editor-managed release changes.
+      parameters:
+        - name: releaseSlug
+          in: query
+          required: false
+          description: Return history for one release slug. Use queue for queue-level changes.
+          schema:
+            type: string
+        - name: action
+          in: query
+          required: false
+          description: Return history for one change type.
+          schema:
+            $ref: "#/components/schemas/EditorialReleaseHistoryAction"
       responses:
         "200":
           description: Recent release history

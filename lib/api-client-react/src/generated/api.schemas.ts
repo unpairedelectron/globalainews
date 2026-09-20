@@ -220,3 +220,14 @@ export interface NewsroomMetadata {
   routes: SeoMetadata[];
 }
 
+export type GetNewsroomReleaseHistoryParams = {
+/**
+ * Return history for one release slug. Use queue for queue-level changes.
+ */
+releaseSlug?: string;
+/**
+ * Return history for one change type.
+ */
+action?: EditorialReleaseHistoryAction;
+};
+

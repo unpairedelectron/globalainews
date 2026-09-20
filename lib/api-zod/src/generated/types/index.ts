@@ -19,6 +19,7 @@ export * from './editorialReleaseUpdate';
 export * from './editorialScheduleItem';
 export * from './editorialStory';
 export * from './errorResponse';
+export * from './getNewsroomReleaseHistoryParams';
 export * from './healthStatus';
 export * from './newsletterSubscription';
 export * from './newsletterSubscriptionInput';
