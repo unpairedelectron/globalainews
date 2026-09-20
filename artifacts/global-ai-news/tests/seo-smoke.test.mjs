@@ -28,6 +28,7 @@ const previewTitleWidth = 1040;
 const intentional404Routes = new Set(['/sign-in', '/sign-up']);
 const ampPath = '/amp/article/ai-models-antibiotic-discovery/';
 const tsx = path.join(root, 'node_modules', '.bin', 'tsx');
+const smokeEditorId = 'mobile-history-smoke-editor';
 
 let server;
 let apiProcess;
@@ -341,10 +342,13 @@ async function serveFile(response, filePath) {
 async function startStaticServer() {
   server = createServer(async (request, response) => {
     try {
-      const requestPath = decodeURIComponent(new URL(request.url ?? '/', 'http://127.0.0.1').pathname);
+      const parsedUrl = new URL(request.url ?? '/', 'http://127.0.0.1');
+      const requestPath = decodeURIComponent(parsedUrl.pathname);
       if (requestPath.startsWith('/api/')) {
         try {
-          const apiResponse = await fetch(`${apiOrigin}${requestPath}`);
+          const apiResponse = await fetch(`${apiOrigin}${requestPath}${parsedUrl.search}`, {
+            headers: { 'x-newsroom-test-editor': smokeEditorId },
+          });
           response.statusCode = apiResponse.status;
           const contentType = apiResponse.headers.get('content-type');
           if (contentType) response.setHeader('Content-Type', contentType);
@@ -385,7 +389,7 @@ async function startStaticServer() {
 async function startDevServer() {
   devProcess = spawn(
     'pnpm',
-    ['exec', 'vite', '--config', 'vite.config.ts', '--host', '127.0.0.1', '--port', String(devPort)],
+    ['exec', 'vite', '--config', 'vite.config.ts', '--mode', 'test', '--host', '127.0.0.1', '--port', String(devPort)],
     {
       cwd: root,
       env: {
@@ -454,12 +458,233 @@ async function renderRoute(route, width, height) {
   }
 }
 
+async function findFreePort() {
+  const probe = createServer();
+  await new Promise((resolve, reject) => {
+    probe.once('error', reject);
+    probe.listen(0, '127.0.0.1', resolve);
+  });
+  const address = probe.address();
+  await new Promise((resolve, reject) => probe.close((error) => (error ? reject(error) : resolve())));
+  if (!address || typeof address === 'string') throw new Error('Could not determine a free browser debugging port.');
+  return address.port;
+}
+
+async function connectToChromium(url) {
+  const socket = new WebSocket(url);
+  const pending = new Map();
+  let nextId = 0;
+  await new Promise((resolve, reject) => {
+    socket.addEventListener('open', resolve, { once: true });
+    socket.addEventListener('error', reject, { once: true });
+  });
+  socket.addEventListener('message', (event) => {
+    const message = JSON.parse(event.data);
+    const request = pending.get(message.id);
+    if (!request) return;
+    pending.delete(message.id);
+    if (message.error) request.reject(new Error(message.error.message));
+    else request.resolve(message.result);
+  });
+  return {
+    send(method, params = {}) {
+      const id = ++nextId;
+      return new Promise((resolve, reject) => {
+        pending.set(id, { resolve, reject });
+        socket.send(JSON.stringify({ id, method, params }));
+      });
+    },
+    close() {
+      socket.close();
+    },
+  };
+}
+
+async function evaluateBrowser(cdp, expression) {
+  const result = await cdp.send('Runtime.evaluate', {
+    expression,
+    awaitPromise: true,
+    returnByValue: true,
+  });
+  if (result.exceptionDetails) {
+    throw new Error(result.exceptionDetails.text || 'Chromium evaluation failed.');
+  }
+  return result.result?.value;
+}
+
+async function waitForBrowserCondition(cdp, expression, message) {
+  const deadline = Date.now() + 20_000;
+  while (Date.now() < deadline) {
+    if (await evaluateBrowser(cdp, expression)) return;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  assert.fail(message);
+}
+
+async function checkMobileEditorHistory() {
+  const debugPort = await findFreePort();
+  const userDataDir = `${os.tmpdir()}/gan-mobile-history-${process.pid}`;
+  const browserProcess = spawn(chromium, [
+    '--headless',
+    '--no-sandbox',
+    '--disable-gpu',
+    '--disable-dev-shm-usage',
+    '--disable-extensions',
+    '--no-first-run',
+    `--user-data-dir=${userDataDir}`,
+    `--remote-debugging-port=${debugPort}`,
+    'about:blank',
+  ], { stdio: ['ignore', 'ignore', 'ignore'] });
+  let cdp;
+  try {
+    const debugDeadline = Date.now() + 10_000;
+    let target;
+    while (Date.now() < debugDeadline) {
+      try {
+        const targets = await fetch(`http://127.0.0.1:${debugPort}/json/list`).then((response) => response.json());
+        target = targets.find((item) => item.type === 'page');
+        if (target?.webSocketDebuggerUrl) break;
+      } catch {
+        // Chromium may still be starting its debugging endpoint.
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    assert.ok(target?.webSocketDebuggerUrl, 'Chromium did not expose a debuggable page for the mobile editor check.');
+    cdp = await connectToChromium(target.webSocketDebuggerUrl);
+    await cdp.send('Emulation.setDeviceMetricsOverride', {
+      width: 402,
+      height: 874,
+      deviceScaleFactor: 1,
+      mobile: true,
+    });
+    await cdp.send('Page.navigate', { url: `${baseUrl}/insights?smoke-editor=1` });
+    await waitForBrowserCondition(
+      cdp,
+      `document.readyState === 'complete' && !!document.querySelector('[data-testid="select-release-history-release"]')`,
+      'The signed-in publisher workspace did not render release history on mobile.',
+    );
+
+    const initialLayout = await evaluateBrowser(cdp, `(() => {
+      const selectors = [
+        ['[data-testid="select-release-history-release"]', 'Release'],
+        ['[data-testid="select-release-history-action"]', 'Change type'],
+      ];
+      const viewport = window.innerWidth;
+      return {
+        documentWidth: document.documentElement.scrollWidth,
+        controls: selectors.map(([selector, label]) => {
+          const element = document.querySelector(selector);
+          const rect = element?.getBoundingClientRect();
+          return {
+            label,
+            visible: Boolean(rect && rect.width > 0 && rect.left >= 0 && rect.right <= viewport),
+            width: rect?.width ?? 0,
+            right: rect?.right ?? 0,
+            labelText: element?.parentElement?.querySelector('span')?.textContent?.trim() ?? '',
+          };
+        }),
+      };
+    })()`);
+    assert.ok(initialLayout.documentWidth <= 402, `Mobile release history overflows horizontally (${initialLayout.documentWidth}px).`);
+    assert.deepEqual(
+      initialLayout.controls.map((control) => ({ label: control.label, visible: control.visible, labelText: control.labelText })),
+      [
+        { label: 'Release', visible: true, labelText: 'Release' },
+        { label: 'Change type', visible: true, labelText: 'Change type' },
+      ],
+      'Mobile release history controls are not both visible with their labels.',
+    );
+
+    await evaluateBrowser(cdp, `(() => {
+      const release = document.querySelector('[data-testid="select-release-history-release"]');
+      if (!release) throw new Error('Release history release filter is missing.');
+      release.value = 'queue';
+      release.dispatchEvent(new Event('change', { bubbles: true }));
+      return true;
+    })()`);
+    await waitForBrowserCondition(
+      cdp,
+      `new URLSearchParams(window.location.search).get('releaseSlug') === 'queue'`,
+      'Selecting the release history filter did not update the URL on mobile.',
+    );
+    await evaluateBrowser(cdp, `(() => {
+      const actor = document.querySelector('[data-testid="input-release-history-actor"]');
+      if (!actor) throw new Error('Release history actor filter is missing.');
+      actor.focus();
+      return true;
+    })()`);
+    await cdp.send('Input.insertText', { text: 'mobile-history-smoke-no-match' });
+    await waitForBrowserCondition(
+      cdp,
+      `new URLSearchParams(window.location.search).get('actor') === 'mobile-history-smoke-no-match'`,
+      'Entering an actor filter did not update the URL on mobile.',
+    );
+    const emptyDeadline = Date.now() + 20_000;
+    let historyState;
+    while (Date.now() < emptyDeadline) {
+      historyState = await evaluateBrowser(cdp, `(() => ({
+        empty: document.body.innerText.includes('No matching release change was found.'),
+        url: window.location.href,
+        release: document.querySelector('[data-testid="select-release-history-release"]')?.value ?? null,
+        actor: document.querySelector('[data-testid="input-release-history-actor"]')?.value ?? null,
+        loading: [...document.querySelectorAll('p')].some((element) => element.textContent?.includes('Loading release history')),
+        error: [...document.querySelectorAll('p')].some((element) => element.textContent?.includes('History unavailable')),
+        historyParagraphs: [...document.querySelectorAll('p')].filter((element) => element.closest('[data-testid="release-history"]') || element.textContent?.includes('release change')).map((element) => element.textContent?.trim()),
+      }))()`);
+      if (historyState.empty) break;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    assert.equal(
+      historyState?.empty,
+      true,
+      `Selecting a release history filter did not show the filtered-empty explanation on mobile: ${JSON.stringify(historyState)}`,
+    );
+
+    await evaluateBrowser(cdp, `(() => {
+      const emptyState = [...document.querySelectorAll('p')].find((element) => element.textContent?.includes('No matching release change was found.'));
+      emptyState?.setAttribute('data-testid', 'mobile-history-empty-state');
+      return Boolean(emptyState);
+    })()`);
+    await cdp.send('DOM.enable');
+    const documentNode = await cdp.send('DOM.getDocument', { depth: -1 });
+    const emptyStateNode = await cdp.send('DOM.querySelector', {
+      nodeId: documentNode.root.nodeId,
+      selector: '[data-testid="mobile-history-empty-state"]',
+    });
+    assert.ok(emptyStateNode.nodeId, 'The filtered-empty release history message could not be located in the mobile DOM.');
+    await cdp.send('DOM.scrollIntoViewIfNeeded', { nodeId: emptyStateNode.nodeId });
+    const emptyStateLayout = await evaluateBrowser(cdp, `(() => {
+      const emptyState = [...document.querySelectorAll('p')].find((element) => element.textContent?.includes('No matching release change was found.'));
+      const rect = emptyState?.getBoundingClientRect();
+      return {
+        documentWidth: document.documentElement.scrollWidth,
+        viewportHeight: window.innerHeight,
+        visible: Boolean(rect && rect.top >= 0 && rect.bottom <= window.innerHeight && rect.width > 0 && rect.right <= window.innerWidth),
+      };
+    })()`);
+    assert.ok(emptyStateLayout.documentWidth <= 402, 'The filtered-empty release history state introduces mobile horizontal overflow.');
+    assert.equal(
+      emptyStateLayout.visible,
+      true,
+      `The filtered-empty release history explanation is not readable within the mobile viewport: ${JSON.stringify(emptyStateLayout)}`,
+    );
+  } finally {
+    cdp?.close();
+    browserProcess.kill('SIGTERM');
+  }
+}
+
 async function startApiServer() {
   if (process.env.SMOKE_API_ORIGIN) return;
 
   apiProcess = spawn('pnpm', ['--filter', '@workspace/api-server', 'run', 'dev'], {
     cwd: path.resolve(root, '..', '..'),
-    env: { ...process.env, PORT: '19820' },
+    env: {
+      ...process.env,
+      NODE_ENV: 'test',
+      NEWSROOM_TEST_EDITOR_ID: smokeEditorId,
+      PORT: '19820',
+    },
     stdio: ['ignore', 'ignore', 'pipe'],
     detached: true,
   });
@@ -741,6 +966,10 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.equal(tagContent(devAmpDocument, 'h1'), ampStory.title, 'development AMP headline drifted from the newsroom snapshot');
 
   console.log(`Smoke checked ${new Set(staticRoutes).size} public routes at desktop, ${mobileRoutes.length} at mobile, plus AMP and RSS.`);
+});
+
+test('signed-in release history filters remain usable at a mobile viewport', { concurrency: false }, async () => {
+  await checkMobileEditorHistory();
 });
 
 test('visual preview contract rejects an empty article card with a route-specific error', () => {

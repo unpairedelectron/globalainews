@@ -7,3 +7,4 @@
 - [Editorial publishing queue](editorial-publishing-queue.md) — release prepared stories by publish time at the API boundary; client polling makes publication restart-safe.
 - [Editorial Clerk transport](editorial-clerk-transport.md) — browser editor mutations use Clerk session cookies plus the production proxy; do not add bearer-token handling to web calls.
 - [Editorial release history](editorial-release-history.md) — audit changes durably; authenticated Clerk identity is the actor source for editor mutations.
+- [Mobile browser smoke scrolling](mobile-browser-smoke.md) — use CDP DOM scrolling for viewport assertions when headless mobile emulation ignores script and wheel scrolling.
