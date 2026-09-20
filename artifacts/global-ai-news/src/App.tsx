@@ -1,5 +1,4 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/toaster';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { NewsroomProvider } from '@/newsroom';
@@ -55,7 +54,7 @@ function AppRoutes() {
 }
 
 function App() {
-  return <QueryClientProvider client={queryClient}><TooltipProvider><NewsroomProvider><Router base={import.meta.env.BASE_URL.replace(/\/$/, '')}><AppRoutes /></Router><Toaster /></NewsroomProvider></TooltipProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><NewsroomProvider><Router base={import.meta.env.BASE_URL.replace(/\/$/, '')}><AppRoutes /></Router><Toaster /></NewsroomProvider></QueryClientProvider>;
 }
 
 export default App;
