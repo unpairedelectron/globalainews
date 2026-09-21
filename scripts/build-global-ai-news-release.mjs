@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const workspaceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const metadataServerPath = path.join(workspaceRoot, 'scripts', 'release-metadata-server.mjs');
 
 function findFreePort() {
   return new Promise((resolve, reject) => {
@@ -58,27 +59,25 @@ async function waitForMetadata(url, processHandle) {
   throw new Error(`Newsroom metadata API did not become ready: ${lastError}.`);
 }
 
-const apiPort = await findFreePort();
-const metadataUrl = `http://127.0.0.1:${apiPort}/api/newsroom/metadata`;
-run('pnpm', ['--filter', '@workspace/api-server', 'run', 'build']);
-
-const apiProcess = spawn(
-  process.execPath,
-  ['--enable-source-maps', 'artifacts/api-server/dist/index.mjs'],
+const metadataPort = await findFreePort();
+const metadataUrl = `http://127.0.0.1:${metadataPort}/api/newsroom/metadata`;
+const metadataProcess = spawn(
+  'pnpm',
+  ['--filter', '@workspace/scripts', 'exec', 'tsx', metadataServerPath],
   {
     cwd: workspaceRoot,
     detached: true,
     env: {
       ...process.env,
       NODE_ENV: 'production',
-      PORT: String(apiPort),
+      PORT: String(metadataPort),
     },
     stdio: ['ignore', 'inherit', 'inherit'],
   },
 );
 
 try {
-  await waitForMetadata(metadataUrl, apiProcess);
+  await waitForMetadata(metadataUrl, metadataProcess);
   run(
     'pnpm',
     ['--filter', '@workspace/global-ai-news', 'run', 'build'],
@@ -93,5 +92,5 @@ try {
     },
   );
 } finally {
-  terminate(apiProcess);
+  terminate(metadataProcess);
 }
