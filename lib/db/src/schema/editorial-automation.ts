@@ -1,5 +1,13 @@
 import { integer, jsonb, pgTable, serial, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 
+export type EditorialAutomationRunDetail = {
+  draftModel?: string;
+  verificationModel?: string;
+  draft?: unknown;
+  verification?: unknown;
+  [key: string]: unknown;
+};
+
 export const editorialSourceItemsTable = pgTable(
   "editorial_source_items",
   {
@@ -30,7 +38,7 @@ export const editorialAutomationRunsTable = pgTable(
     candidates: integer("candidates").notNull().default(0),
     published: integer("published").notNull().default(0),
     rejected: integer("rejected").notNull().default(0),
-    detail: jsonb("detail").$type<Record<string, unknown>>().notNull().default({}),
+    detail: jsonb("detail").$type<EditorialAutomationRunDetail>().notNull().default({}),
     startedAt: timestamp("started_at", { withTimezone: true }).defaultNow().notNull(),
     finishedAt: timestamp("finished_at", { withTimezone: true }),
   },

@@ -14,6 +14,13 @@ import {
   type Story,
   type StoryCategory,
 } from "../../../global-ai-news/src/content";
+import {
+  deterministicGate,
+  normalizeDraft,
+  normalizeVerification,
+  type DraftPayload,
+  type VerificationPayload,
+} from "./automation-contract";
 
 const DAILY_UTC_HOUR = 7;
 const DAILY_UTC_MINUTE = 30;
@@ -22,6 +29,11 @@ const SOURCE_LOOKBACK_MS = 14 * 24 * 60 * 60 * 1000;
 const DRAFT_MODEL = process.env.EDITORIAL_DRAFT_MODEL ?? "gpt-5-mini";
 const VERIFICATION_MODEL = process.env.EDITORIAL_VERIFICATION_MODEL ?? "gpt-5.6-terra";
 
+export const editorialModelConfiguration = Object.freeze({
+  draftModel: DRAFT_MODEL,
+  verificationModel: VERIFICATION_MODEL,
+});
+
 const openSourceFeeds = [
   { publisher: "OpenAI", feedUrl: "https://openai.com/news/rss.xml" },
   { publisher: "Google AI", feedUrl: "https://blog.google/technology/ai/rss/" },
@@ -29,16 +41,6 @@ const openSourceFeeds = [
   { publisher: "Anthropic", feedUrl: "https://www.anthropic.com/news/rss.xml" },
   { publisher: "arXiv AI", feedUrl: "https://export.arxiv.org/rss/cs.AI" },
 ] as const;
-
-const categories: StoryCategory[] = [
-  "Breakthroughs",
-  "Signals",
-  "India Watch",
-  "The Edge",
-  "Field Notes",
-  "Infrastructure",
-  "Policy",
-];
 
 type FeedItem = {
   publisher: string;
@@ -50,27 +52,8 @@ type FeedItem = {
 
 type EditorialSourceItem = typeof editorialSourceItemsTable.$inferSelect;
 
-type DraftPayload = {
-  title: string;
-  dek: string;
-  category: StoryCategory;
-  topic: string;
-  classification: "reported" | "analysis" | "synthesis";
-  bottomLine: string;
-  whyItMatters: string;
-  keyTakeaways: string[];
-  whatChanges: string;
-  body: Array<{ heading: string; paragraphs: string[] }>;
-  sourceUrls: string[];
-};
-
-type VerificationPayload = {
-  pass: boolean;
-  score: number;
-  unsupportedClaims: string[];
-  slopFlags: string[];
-  notes: string;
-};
+export { deterministicGate, normalizeDraft, normalizeVerification } from "./automation-contract";
+export type { DraftPayload, VerificationPayload } from "./automation-contract";
 
 type AutomationResult = {
   status: "completed" | "skipped" | "failed";
@@ -212,57 +195,6 @@ function parseJson<T>(value: string): T {
   return JSON.parse(normalized) as T;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
-}
-
-function stringList(value: unknown, stringifyObjects = false): string[] {
-  return Array.isArray(value)
-    ? value
-        .map((item) => {
-          if (typeof item === "string") return item.trim();
-          return stringifyObjects && isRecord(item) ? JSON.stringify(item) : "";
-        })
-        .filter(Boolean)
-    : [];
-}
-
-function normalizeDraft(value: unknown): DraftPayload {
-  const raw = isRecord(value) ? value : {};
-  const body = Array.isArray(raw.body)
-    ? raw.body
-        .filter(isRecord)
-        .map((section) => ({
-          heading: typeof section.heading === "string" ? section.heading : "",
-          paragraphs: stringList(section.paragraphs),
-        }))
-    : [];
-  return {
-    title: typeof raw.title === "string" ? raw.title : "",
-    dek: typeof raw.dek === "string" ? raw.dek : "",
-    category: raw.category as StoryCategory,
-    topic: typeof raw.topic === "string" ? raw.topic : "",
-    classification: raw.classification as DraftPayload["classification"],
-    bottomLine: typeof raw.bottomLine === "string" ? raw.bottomLine : "",
-    whyItMatters: typeof raw.whyItMatters === "string" ? raw.whyItMatters : "",
-    keyTakeaways: stringList(raw.keyTakeaways),
-    whatChanges: typeof raw.whatChanges === "string" ? raw.whatChanges : "",
-    body,
-    sourceUrls: stringList(raw.sourceUrls),
-  };
-}
-
-function normalizeVerification(value: unknown): VerificationPayload {
-  const raw = isRecord(value) ? value : {};
-  return {
-    pass: raw.pass === true,
-    score: typeof raw.score === "number" && Number.isFinite(raw.score) ? raw.score : 0,
-    unsupportedClaims: stringList(raw.unsupportedClaims, true),
-    slopFlags: stringList(raw.slopFlags, true),
-    notes: typeof raw.notes === "string" ? raw.notes : "",
-  };
-}
-
 async function askEditorialModel<T>(model: string, system: string, input: unknown): Promise<T> {
   const response = await openai.chat.completions.create({
     model,
@@ -349,30 +281,6 @@ Return JSON only with the same fields as the draft. Keep only claims supported b
       })),
     },
   ));
-}
-
-function deterministicGate(draft: DraftPayload, verification: VerificationPayload, items: EditorialSourceItem[]): string[] {
-  const errors: string[] = [];
-  const sourcePublishers = new Set(
-    draft.sourceUrls
-      .map((url) => items.find((item) => item.url === url)?.publisher)
-      .filter((publisher): publisher is string => Boolean(publisher)),
-  );
-  if (draft.title.length < 30 || draft.title.length > 100) errors.push("headline_length");
-  if (draft.dek.length < 40 || draft.dek.length > 280) errors.push("dek_length");
-  if (!categories.includes(draft.category)) errors.push("invalid_category");
-  if (!["reported", "analysis", "synthesis"].includes(draft.classification)) errors.push("invalid_classification");
-  if (draft.keyTakeaways.length !== 3) errors.push("takeaway_count");
-  const paragraphCount = draft.body.reduce((count, section) => count + section.paragraphs.length, 0);
-  if (draft.body.length < 2 || draft.body.length > 4 || draft.body.some((section) => section.paragraphs.length < 1) || paragraphCount < 4) {
-    errors.push("body_structure");
-  }
-  if (draft.sourceUrls.length < 1 || sourcePublishers.size < 1) errors.push("missing_source");
-  if (draft.sourceUrls.some((url) => !items.some((item) => item.url === url))) errors.push("unknown_source");
-  if (!verification.pass || verification.score < 0.82) errors.push("fact_check_failed");
-  if (verification.unsupportedClaims.length > 0) errors.push("unsupported_claims");
-  if (verification.slopFlags.length > 0) errors.push("slop_detected");
-  return errors;
 }
 
 function slugify(value: string): string {
@@ -516,7 +424,11 @@ async function runCadence(cadence: EditorialCadence, runKey: string, trigger: st
       .filter((item, index, all) => all.findIndex((candidate) => candidate.url === item.url) === index)
       .slice(0, 10);
     if (selected.length < 2 || new Set(selected.map((item) => item.publisher)).size < 2) {
-      const detail = { reason: "insufficient_open_source_evidence", feeds: openSourceFeeds.map((source) => source.publisher) };
+      const detail = {
+        ...editorialModelConfiguration,
+        reason: "insufficient_open_source_evidence",
+        feeds: openSourceFeeds.map((source) => source.publisher),
+      };
       await db.update(editorialAutomationRunsTable).set({ status: "skipped", candidates: selected.length, rejected: 1, detail, finishedAt: new Date() }).where(eq(editorialAutomationRunsTable.id, run.id));
       log("run_skipped", { runId: run.id, ...detail });
       return { status: "skipped", cadence, runKey, published: 0, rejected: 1, candidates: selected.length, detail };
@@ -534,7 +446,7 @@ async function runCadence(cadence: EditorialCadence, runKey: string, trigger: st
       log("draft_revised", { runId: run.id, errors, verification });
     }
     if (errors.length > 0) {
-      const detail = { reason: "quality_gate_rejected", errors, verification };
+      const detail = { ...editorialModelConfiguration, reason: "quality_gate_rejected", errors, draft, verification };
       await db.update(editorialAutomationRunsTable).set({ status: "completed", candidates: 1, rejected: 1, detail, finishedAt: new Date() }).where(eq(editorialAutomationRunsTable.id, run.id));
       log("draft_rejected", { runId: run.id, ...detail });
       return { status: "completed", cadence, runKey, published: 0, rejected: 1, candidates: 1, detail };
@@ -548,7 +460,7 @@ async function runCadence(cadence: EditorialCadence, runKey: string, trigger: st
       .where(eq(editorialReleasesTable.slug, story.slug))
       .limit(1);
     if (duplicate || stories.some((item) => item.slug === story.slug)) {
-      const detail = { reason: "duplicate_slug", slug: story.slug };
+      const detail = { ...editorialModelConfiguration, reason: "duplicate_slug", slug: story.slug, draft, verification };
       await db.update(editorialAutomationRunsTable).set({ status: "completed", candidates: 1, rejected: 1, detail, finishedAt: new Date() }).where(eq(editorialAutomationRunsTable.id, run.id));
       log("draft_rejected", { runId: run.id, ...detail });
       return { status: "completed", cadence, runKey, published: 0, rejected: 1, candidates: 1, detail };
@@ -568,12 +480,20 @@ async function runCadence(cadence: EditorialCadence, runKey: string, trigger: st
       position: (maxPosition ?? -1) + 1,
       story: story as unknown as Record<string, unknown>,
     });
-    const detail = { title: story.title, slug: story.slug, publishAt: publishAt.toISOString(), sources: story.sources, verification };
+    const detail = {
+      ...editorialModelConfiguration,
+      title: story.title,
+      slug: story.slug,
+      publishAt: publishAt.toISOString(),
+      sources: story.sources,
+      draft,
+      verification,
+    };
     await db.update(editorialAutomationRunsTable).set({ status: "completed", candidates: 1, published: 1, detail, finishedAt: new Date() }).where(eq(editorialAutomationRunsTable.id, run.id));
     log("article_scheduled", { runId: run.id, ...detail });
     return { status: "completed", cadence, runKey, published: 1, rejected: 0, candidates: 1, detail };
   } catch (error) {
-    const detail = { error: String(error) };
+    const detail = { ...editorialModelConfiguration, error: String(error) };
     await db.update(editorialAutomationRunsTable).set({ status: "failed", detail, finishedAt: new Date() }).where(eq(editorialAutomationRunsTable.id, run.id));
     log("run_failed", { runId: run.id, ...detail });
     return { status: "failed", cadence, runKey, published: 0, rejected: 0, candidates: 0, detail };
@@ -608,8 +528,7 @@ export async function getAutomationStatus(): Promise<Record<string, unknown>> {
     enabled: process.env.NODE_ENV === "production" || process.env.EDITORIAL_AUTOMATION_ENABLED === "true",
     intervalMinutes: AUTOMATION_INTERVAL_MS / 60_000,
     dailySlotUtc: `${String(DAILY_UTC_HOUR).padStart(2, "0")}:${String(DAILY_UTC_MINUTE).padStart(2, "0")}`,
-    draftModel: DRAFT_MODEL,
-    verificationModel: VERIFICATION_MODEL,
+    ...editorialModelConfiguration,
     openSourceFeeds: openSourceFeeds.map((source) => source.publisher),
     latestRun: latest ?? null,
   };
