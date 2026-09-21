@@ -11,3 +11,4 @@
 - [Mobile browser smoke scrolling](mobile-browser-smoke.md) — use CDP DOM scrolling for viewport assertions when headless mobile emulation ignores script and wheel scrolling.
 - [Clerk theme browser checks](clerk-theme-regression.md) — auth routes need the smoke API proxy, keyboard-driven focus, and composited translucent surface colors.
 - [Autonomous editorial gates](autonomous-editorial-gates.md) — source selection must stay coherent before AI drafting; unrelated citations are a hard rejection, not a confidence downgrade.
+- [Newsroom analytics boundary](newsroom-analytics-boundary.md) — use Replit’s injected analytics for pageviews and safe events; never add a second tracker or send visitor data.
