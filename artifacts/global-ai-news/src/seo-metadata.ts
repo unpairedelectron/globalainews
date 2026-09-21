@@ -109,13 +109,16 @@ export function getSeoMetadata(route: string, publishedStories = getPublishedSto
   const articleMatch = cleanPath.match(/^\/article\/([^/]+)$/);
   if (articleMatch) {
     const story = publishedStories.find((candidate) => candidate.slug === articleMatch[1]) ?? findStory('ai-models-antibiotic-discovery')!;
+    const staticStory = findStory(story.slug);
     return {
       title: `${story.title} — Global AI News`,
       description: story.dek,
       path: `/article/${story.slug}`,
       article: true,
-      ampPath: '/amp/article/ai-models-antibiotic-discovery/',
-      imagePath: `/social/articles/${story.slug}.png`,
+      ...(staticStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
+      imagePath: staticStory
+        ? `/social/articles/${story.slug}.png`
+        : `/api/newsroom/social/articles/${story.slug}.svg`,
       imageAlt: `${story.title} — Global AI News editorial preview`,
     };
   }

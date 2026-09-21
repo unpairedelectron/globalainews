@@ -10,3 +10,4 @@
 - [Editorial release history](editorial-release-history.md) — audit changes durably; authenticated Clerk identity is the actor source for editor mutations.
 - [Mobile browser smoke scrolling](mobile-browser-smoke.md) — use CDP DOM scrolling for viewport assertions when headless mobile emulation ignores script and wheel scrolling.
 - [Clerk theme browser checks](clerk-theme-regression.md) — auth routes need the smoke API proxy, keyboard-driven focus, and composited translucent surface colors.
+- [Autonomous editorial gates](autonomous-editorial-gates.md) — source selection must stay coherent before AI drafting; unrelated citations are a hard rejection, not a confidence downgrade.

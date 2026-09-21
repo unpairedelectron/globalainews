@@ -1,5 +1,11 @@
 import { and, asc, desc, eq } from "drizzle-orm";
-import { Router, type IRouter, type Request } from "express";
+import {
+  Router,
+  type IRouter,
+  type NextFunction,
+  type Request,
+  type Response as ExpressResponse,
+} from "express";
 import { requireEditorAuth } from "../middlewares/requireEditorAuth";
 import { db, editorialReleaseHistoryTable, editorialReleasesTable } from "@workspace/db";
 import {
@@ -29,7 +35,7 @@ import {
   industryMap,
   scheduledStories,
   signals,
-  sources,
+  sources as maintainedSources,
   stories,
   timelineEvents,
   type EditorialCadence,
@@ -38,6 +44,12 @@ import {
   type StoryCategory,
 } from "../../../global-ai-news/src/content";
 import { getSeoMetadataManifest } from "../../../global-ai-news/src/seo-metadata";
+import { renderSocialPreviewSvg } from "../../../global-ai-news/src/social-preview";
+import {
+  getAutomationStatus,
+  getDynamicSourceRecords,
+  runEditorialAutomation,
+} from "../editorial/automation";
 
 const router: IRouter = Router();
 
@@ -183,9 +195,106 @@ async function getPublishedStoriesFromDatabase(): Promise<Story[]> {
   return getPublishedStories(new Date(), schedule);
 }
 
+function escapeXml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+}
+
+const staticSitemapRoutes = [
+  "/",
+  "/brief",
+  "/signals",
+  "/research",
+  "/essays",
+  "/industry",
+  "/models",
+  "/policy",
+  "/india",
+  "/ask",
+  "/insights",
+  "/topic/ai",
+  "/topic/india",
+];
+
+router.get("/newsroom/automation/status", async (_req, res): Promise<void> => {
+  try {
+    res.setHeader("Cache-Control", "no-store");
+    res.json(await getAutomationStatus());
+  } catch (error) {
+    res.status(500).json({ error: "Automation status unavailable." });
+  }
+});
+
+const automationRunAuth =
+  process.env.NODE_ENV === "production"
+    ? requireEditorAuth
+    : (_req: Request, _res: ExpressResponse, next: NextFunction) => next();
+
+router.post("/newsroom/automation/run", automationRunAuth, async (_req, res): Promise<void> => {
+  try {
+    res.status(202).json({ accepted: true, results: await runEditorialAutomation("manual") });
+  } catch (error) {
+    res.status(500).json({ error: "Automation run failed." });
+  }
+});
+
+router.get("/newsroom/sitemap.xml", async (_req, res): Promise<void> => {
+  try {
+    const publishedStories = await getPublishedStoriesFromDatabase();
+    const urls = [
+      ...staticSitemapRoutes.map((path) => ({ path, lastmod: undefined })),
+      ...publishedStories.map((story) => ({ path: `/article/${story.slug}`, lastmod: story.date })),
+    ];
+    const unique = [...new Map(urls.map((entry) => [entry.path, entry])).values()];
+    const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${unique
+      .map(
+        (entry) =>
+          `  <url><loc>https://www.globalainews.in${entry.path}</loc>${entry.lastmod ? `<lastmod>${entry.lastmod}</lastmod>` : ""}</url>`,
+      )
+      .join("\n")}\n</urlset>`;
+    res.type("application/xml").send(body);
+  } catch (error) {
+    res.status(500).type("text/plain").send("Sitemap unavailable.");
+  }
+});
+
+router.get("/newsroom/feed.xml", async (_req, res): Promise<void> => {
+  try {
+    const publishedStories = await getPublishedStoriesFromDatabase();
+    const items = publishedStories.slice(0, 30).map((story) => {
+      const url = `https://www.globalainews.in/article/${story.slug}`;
+      return `    <item><title>${escapeXml(story.title)}</title><link>${url}</link><guid>${url}</guid><pubDate>${new Date(`${story.date}T07:30:00Z`).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`;
+    });
+    const body = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Global AI News</title><link>https://www.globalainews.in/</link><description>Intelligence for the AI economy.</description><language>en-us</language>\n${items.join("\n")}\n</channel></rss>`;
+    res.type("application/rss+xml").send(body);
+  } catch (error) {
+    res.status(500).type("text/plain").send("Feed unavailable.");
+  }
+});
+
+router.get("/newsroom/social/articles/:slug.svg", async (req, res): Promise<void> => {
+  try {
+    const publishedStories = await getPublishedStoriesFromDatabase();
+    const story = publishedStories.find((candidate) => candidate.slug === req.params.slug);
+    if (!story) {
+      res.status(404).type("text/plain").send("Social preview not found.");
+      return;
+    }
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.type("image/svg+xml").send(renderSocialPreviewSvg(story.title, story.category, story.slug));
+  } catch (error) {
+    res.status(500).type("text/plain").send("Social preview unavailable.");
+  }
+});
+
 router.get("/newsroom/content", async (_req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
+    const dynamicSources = await getDynamicSourceRecords();
     const latestPublishedAt = publishedStories.reduce(
       (latest, story) => (story.date > latest ? story.date : latest),
       "",
@@ -204,7 +313,12 @@ router.get("/newsroom/content", async (_req, res): Promise<void> => {
       source: "maintained-editorial-source",
       stale,
       authors,
-      sources,
+      sources: [
+        ...maintainedSources,
+        ...dynamicSources.filter(
+          (source) => !maintainedSources.some((existing) => existing.slug === source.slug),
+        ),
+      ],
       evidenceSummaries,
       entities,
       timelineEvents,
