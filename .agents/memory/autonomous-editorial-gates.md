@@ -14,3 +14,9 @@ The cost-conscious configuration should use the less expensive model for draftin
 **Why:** Drafting is the highest-volume part of the workflow, but verification is the safety-critical step. Lower-cost output can also be structurally inconsistent even when its prose appears plausible.
 
 **How to apply:** Keep the draft and verification model settings independently configurable, and test malformed, short, overbroad, copied, and unsupported drafts through the same deterministic gate.
+
+The intended publishing cadence is one high-quality daily article plus one additional weekly article on Sunday after the UTC publishing slot.
+
+**Why:** The newsroom prioritizes editorial quality and controlled operating cost over maximum article volume.
+
+**How to apply:** Keep the weekly cadence restricted to Sunday; do not treat every day after the daily slot as weekly-due.

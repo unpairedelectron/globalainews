@@ -484,7 +484,7 @@ function dueCadences(now: Date): Array<{ cadence: EditorialCadence; runKey: stri
   const afterDailySlot = minute >= DAILY_UTC_HOUR * 60 + DAILY_UTC_MINUTE;
   const results: Array<{ cadence: EditorialCadence; runKey: string }> = [];
   if (afterDailySlot) results.push({ cadence: "daily", runKey: `daily-${now.toISOString().slice(0, 10)}` });
-  if (afterDailySlot && now.getUTCDay() >= 1) results.push({ cadence: "weekly", runKey: `weekly-${weekKey(now)}` });
+  if (afterDailySlot && now.getUTCDay() === 0) results.push({ cadence: "weekly", runKey: `weekly-${weekKey(now)}` });
   return results;
 }
 
