@@ -20,6 +20,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  EditorialAutomationRunQueue,
   EditorialRelease,
   EditorialReleaseHistory,
   EditorialReleaseInput,
@@ -284,6 +285,84 @@ export function useGetNewsroomMetadata<TData = Awaited<ReturnType<typeof getNews
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetNewsroomMetadataQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetNewsroomAutomationRunsUrl = () => {
+
+
+
+
+  return `/api/newsroom/automation/runs`
+}
+
+/**
+ * Returns sanitized editor-facing outcomes for recent autonomous drafting and verification runs.
+ * @summary Get recent autonomous editorial run audits
+ */
+export const getNewsroomAutomationRuns = async ( options?: Parameters<typeof customFetch>[1]): Promise<EditorialAutomationRunQueue> => {
+
+  return customFetch<EditorialAutomationRunQueue>(getGetNewsroomAutomationRunsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetNewsroomAutomationRunsQueryKey = () => {
+    return [
+    `/api/newsroom/automation/runs`
+    ] as const;
+    }
+
+
+export const getGetNewsroomAutomationRunsQueryOptions = <TData = Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNewsroomAutomationRunsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>> = ({ signal }) => getNewsroomAutomationRuns({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNewsroomAutomationRunsQueryResult = NonNullable<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>>
+export type GetNewsroomAutomationRunsQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Get recent autonomous editorial run audits
+ */
+
+export function useGetNewsroomAutomationRuns<TData = Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError = ErrorType<ErrorResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetNewsroomAutomationRunsQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

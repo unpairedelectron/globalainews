@@ -16,6 +16,7 @@ import {
   GetNewsroomReleaseHistoryResponse,
   EditorialReleaseHistoryAction,
   GetNewsroomMetadataResponse,
+  GetNewsroomAutomationRunsResponse,
   GetNewsroomReleasesResponse,
   ReorderNewsroomReleasesBody,
   ReorderNewsroomReleasesResponse,
@@ -47,6 +48,7 @@ import { getSeoMetadataManifest } from "../../../global-ai-news/src/seo-metadata
 import { renderSocialPreviewSvg } from "../../../global-ai-news/src/social-preview";
 import {
   getAutomationStatus,
+  getAutomationRuns,
   getDynamicSourceRecords,
   runEditorialAutomation,
 } from "../editorial/automation";
@@ -226,6 +228,16 @@ router.get("/newsroom/automation/status", async (_req, res): Promise<void> => {
     res.json(await getAutomationStatus());
   } catch (error) {
     res.status(500).json({ error: "Automation status unavailable." });
+  }
+});
+
+router.get("/newsroom/automation/runs", requireEditorAuth, async (req, res): Promise<void> => {
+  try {
+    res.setHeader("Cache-Control", "no-store");
+    res.json(GetNewsroomAutomationRunsResponse.parse(await getAutomationRuns()));
+  } catch (error) {
+    req.log.error({ err: error }, "Automation audit read failed");
+    res.status(500).json({ error: "Automation audit unavailable." });
   }
 });
 

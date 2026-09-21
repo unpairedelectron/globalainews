@@ -6,6 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './editorialAutomationRun';
+export * from './editorialAutomationRunOutcome';
+export * from './editorialAutomationRunQueue';
+export * from './editorialAutomationVerification';
 export * from './editorialCadence';
 export * from './editorialRelease';
 export * from './editorialReleaseHistory';

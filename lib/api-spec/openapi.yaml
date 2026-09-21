@@ -66,6 +66,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/automation/runs:
+    get:
+      operationId: getNewsroomAutomationRuns
+      tags: [newsroom]
+      summary: Get recent autonomous editorial run audits
+      description: Returns sanitized editor-facing outcomes for recent autonomous drafting and verification runs.
+      security:
+        - clerkSession: []
+      responses:
+        "200":
+          description: Recent autonomous editorial run audits
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorialAutomationRunQueue"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Automation audit unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /newsroom/releases:
     get:
       operationId: getNewsroomReleases
@@ -582,6 +609,98 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/EditorialReleaseHistoryEntry"
+    EditorialAutomationRunOutcome:
+      type: string
+      enum: [scheduled, completed, rejected, skipped, failed, running]
+    EditorialAutomationVerification:
+      type: object
+      properties:
+        pass:
+          type: boolean
+        score:
+          type: number
+        unsupportedClaims:
+          type: array
+          items:
+            type: string
+        slopFlags:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+      required: [pass, score, unsupportedClaims, slopFlags, notes]
+    EditorialAutomationRun:
+      type: object
+      properties:
+        id:
+          type: integer
+        runKey:
+          type: string
+        cadence:
+          $ref: "#/components/schemas/EditorialCadence"
+        trigger:
+          type: string
+        status:
+          type: string
+        outcome:
+          $ref: "#/components/schemas/EditorialAutomationRunOutcome"
+        candidates:
+          type: integer
+        published:
+          type: integer
+        rejected:
+          type: integer
+        title:
+          type: string
+          nullable: true
+        slug:
+          type: string
+          nullable: true
+        publishAt:
+          type: string
+          format: date-time
+          nullable: true
+        draftModel:
+          type: string
+        verificationModel:
+          type: string
+        qualityGateReasons:
+          type: array
+          items:
+            type: string
+        verification:
+          $ref: "#/components/schemas/EditorialAutomationVerification"
+        startedAt:
+          type: string
+          format: date-time
+        finishedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - runKey
+        - cadence
+        - trigger
+        - status
+        - outcome
+        - candidates
+        - published
+        - rejected
+        - title
+        - slug
+        - publishAt
+        - draftModel
+        - verificationModel
+        - qualityGateReasons
+        - verification
+        - startedAt
+        - finishedAt
+    EditorialAutomationRunQueue:
+      type: array
+      items:
+        $ref: "#/components/schemas/EditorialAutomationRun"
     NewsroomMetadata:
       type: object
       properties:

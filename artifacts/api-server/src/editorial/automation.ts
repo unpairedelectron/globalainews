@@ -534,6 +534,75 @@ export async function getAutomationStatus(): Promise<Record<string, unknown>> {
   };
 }
 
+function stringValue(value: unknown, maxLength = 240): string | null {
+  return typeof value === "string" && value.trim().length > 0 ? value.trim().slice(0, maxLength) : null;
+}
+
+function stringValues(value: unknown, maxItems = 12, maxLength = 500): string[] {
+  return Array.isArray(value)
+    ? value
+        .filter((item): item is string => typeof item === "string")
+        .map((item) => item.trim().slice(0, maxLength))
+        .filter(Boolean)
+        .slice(0, maxItems)
+    : [];
+}
+
+export async function getAutomationRuns(limit = 50) {
+  const rows = await db
+    .select()
+    .from(editorialAutomationRunsTable)
+    .orderBy(desc(editorialAutomationRunsTable.startedAt), desc(editorialAutomationRunsTable.id))
+    .limit(Math.min(Math.max(limit, 1), 100));
+
+  return rows.map((row) => {
+    const detail = row.detail ?? {};
+    const verification = detail.verification && typeof detail.verification === "object" && !Array.isArray(detail.verification)
+      ? detail.verification as Record<string, unknown>
+      : {};
+    const qualityGateReasons = stringValues(detail.errors);
+    const outcome =
+      row.published > 0
+        ? "scheduled"
+        : row.status === "failed"
+          ? "failed"
+          : row.status === "running"
+            ? "running"
+            : row.rejected > 0
+              ? "rejected"
+              : row.status === "skipped"
+                ? "skipped"
+                : "completed";
+
+    return {
+      id: row.id,
+      runKey: row.runKey,
+      cadence: row.cadence as EditorialCadence,
+      trigger: row.trigger,
+      status: row.status,
+      outcome,
+      candidates: row.candidates,
+      published: row.published,
+      rejected: row.rejected,
+      title: stringValue(detail.title, 240),
+      slug: stringValue(detail.slug, 120),
+      publishAt: stringValue(detail.publishAt, 40),
+      draftModel: stringValue(detail.draftModel, 120) ?? "configured draft model",
+      verificationModel: stringValue(detail.verificationModel, 120) ?? "configured verification model",
+      qualityGateReasons,
+      verification: {
+        pass: verification.pass === true,
+        score: typeof verification.score === "number" && Number.isFinite(verification.score) ? verification.score : 0,
+        unsupportedClaims: stringValues(verification.unsupportedClaims),
+        slopFlags: stringValues(verification.slopFlags),
+        notes: stringValue(verification.notes, 2000) ?? "",
+      },
+      startedAt: row.startedAt.toISOString(),
+      finishedAt: row.finishedAt?.toISOString() ?? null,
+    };
+  });
+}
+
 export function startEditorialAutomation(): void {
   const enabled = process.env.NODE_ENV === "production" || process.env.EDITORIAL_AUTOMATION_ENABLED === "true";
   if (!enabled || scheduler) return;

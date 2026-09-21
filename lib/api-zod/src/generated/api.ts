@@ -69,6 +69,39 @@ export const GetNewsroomMetadataResponse = zod.object({
 
 
 /**
+ * Returns sanitized editor-facing outcomes for recent autonomous drafting and verification runs.
+ * @summary Get recent autonomous editorial run audits
+ */
+export const GetNewsroomAutomationRunsResponseItem = zod.object({
+  "id": zod.number().int(),
+  "runKey": zod.string(),
+  "cadence": zod.enum(['daily', 'weekly']),
+  "trigger": zod.string(),
+  "status": zod.string(),
+  "outcome": zod.enum(['scheduled', 'completed', 'rejected', 'skipped', 'failed', 'running']),
+  "candidates": zod.number().int(),
+  "published": zod.number().int(),
+  "rejected": zod.number().int(),
+  "title": zod.string().nullable(),
+  "slug": zod.string().nullable(),
+  "publishAt": zod.coerce.date().nullable(),
+  "draftModel": zod.string(),
+  "verificationModel": zod.string(),
+  "qualityGateReasons": zod.array(zod.string()),
+  "verification": zod.object({
+  "pass": zod.boolean(),
+  "score": zod.number(),
+  "unsupportedClaims": zod.array(zod.string()),
+  "slopFlags": zod.array(zod.string()),
+  "notes": zod.string()
+}),
+  "startedAt": zod.coerce.date(),
+  "finishedAt": zod.coerce.date().nullable()
+})
+export const GetNewsroomAutomationRunsResponse = zod.array(GetNewsroomAutomationRunsResponseItem)
+
+
+/**
  * Returns scheduled, published, and canceled prepared articles in editorial order.
  * @summary Get the editor-managed release queue
  */

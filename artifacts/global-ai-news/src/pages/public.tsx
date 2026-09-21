@@ -11,15 +11,18 @@ import { useNewsroomSnapshot } from '@/newsroom';
 import { layoutPreviewTitle, socialPreviewAccent, socialPreviewFooterY, socialPreviewHeight, socialPreviewTitleStartY, socialPreviewTitleX, socialPreviewWidth } from '@/social-preview';
 import {
   EditorialReleaseHistoryAction,
+  getGetNewsroomAutomationRunsQueryKey,
   getGetNewsroomReleaseHistoryQueryKey,
   getGetNewsroomReleasesQueryKey,
   useCancelNewsroomRelease,
   useCreateNewsroomRelease,
+  useGetNewsroomAutomationRuns,
   useGetNewsroomReleaseHistory,
   useGetNewsroomReleases,
   useReorderNewsroomReleases,
   useUpdateNewsroomRelease,
   type EditorialRelease,
+  type EditorialAutomationRun,
   type EditorialReleaseHistoryAction as EditorialReleaseHistoryActionType,
   type EditorialReleaseInput,
   type EditorialReleaseUpdate,
@@ -277,6 +280,62 @@ function ReleaseEditor({
   </form>;
 }
 
+function AutomationAudit() {
+  const runsQuery = useGetNewsroomAutomationRuns({
+    query: {
+      queryKey: getGetNewsroomAutomationRunsQueryKey(),
+      staleTime: 0,
+      refetchOnMount: true,
+      refetchInterval: 60_000,
+      retry: 1,
+    },
+  });
+  const runs = runsQuery.data ?? [];
+
+  return <section id="automation-audit" data-testid="automation-audit" className="mt-14 border-t border-foreground/15 pt-8">
+    <div className="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <SectionLabel>Autonomous desk</SectionLabel>
+        <h3 className="mt-3 font-serif text-4xl leading-none">Why a story moved forward — or stopped.</h3>
+        <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">Recent drafting and verification runs are shown here without exposing raw provider payloads or credentials.</p>
+      </div>
+      <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Last {runs.length} runs</span>
+    </div>
+    {runsQuery.isLoading && <p className="mt-7 border border-foreground/15 p-5 text-sm text-muted-foreground">Loading autonomous run audits…</p>}
+    {runsQuery.isError && <div className="mt-7 border border-destructive/35 p-5"><p className="eyebrow text-destructive">Automation audit unavailable</p><p className="mt-3 text-sm leading-6 text-muted-foreground">The editorial run history could not be read. The publishing queue remains unchanged.</p><button type="button" onClick={() => void runsQuery.refetch()} className="mt-4 border border-primary px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-primary">Try again</button></div>}
+    {!runsQuery.isLoading && !runsQuery.isError && runs.length === 0 && <p className="mt-7 border border-dashed border-foreground/25 p-5 text-sm text-muted-foreground">No autonomous runs have been recorded yet.</p>}
+    {runs.length > 0 && <div className="mt-7 grid gap-px border border-foreground/15 bg-foreground/15">{runs.map((run: EditorialAutomationRun) => {
+      const rejected = run.outcome === 'rejected';
+      const scheduled = run.outcome === 'scheduled';
+      const statusClass = rejected || run.outcome === 'failed' ? 'text-destructive' : scheduled ? 'text-primary' : 'text-muted-foreground';
+      return <article data-testid={`automation-run-${run.id}`} key={run.id} className="bg-background p-5 md:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className={`eyebrow ${statusClass}`}>{scheduled ? 'scheduled release' : run.outcome}</p>
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{formatHistoryTime(run.startedAt)} · {run.cadence} · {run.trigger}</p>
+          </div>
+          <span className="font-mono text-[10px] text-muted-foreground">Verification {Math.round(run.verification.score * 100)}%</span>
+        </div>
+        <h4 className="mt-5 max-w-3xl font-serif text-2xl leading-tight">{run.title ?? 'Draft did not produce a publishable title'}</h4>
+        <div className="mt-5 grid gap-5 border-t border-foreground/15 pt-5 md:grid-cols-[1fr_1fr]">
+          <div>
+            <p className="eyebrow text-muted-foreground">Quality gate</p>
+            {run.qualityGateReasons.length > 0 ? <ul className="mt-3 grid gap-2 text-sm leading-6">{run.qualityGateReasons.map((reason) => <li key={reason} className="flex gap-2"><span className="text-destructive">×</span><span>{reason.replaceAll('_', ' ')}</span></li>)}</ul> : <p className="mt-3 text-sm text-muted-foreground">No quality-gate rejection reasons recorded.</p>}
+            {run.verification.unsupportedClaims.length > 0 && <div className="mt-4"><p className="eyebrow text-destructive">Unsupported claims</p><ul className="mt-2 grid gap-2 text-sm leading-6 text-muted-foreground">{run.verification.unsupportedClaims.map((claim) => <li key={claim}>• {claim}</li>)}</ul></div>}
+            {run.verification.slopFlags.length > 0 && <div className="mt-4"><p className="eyebrow text-destructive">Slop flags</p><ul className="mt-2 grid gap-2 text-sm leading-6 text-muted-foreground">{run.verification.slopFlags.map((flag) => <li key={flag}>• {flag}</li>)}</ul></div>}
+          </div>
+          <div>
+            <p className="eyebrow text-muted-foreground">Verifier notes</p>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">{run.verification.notes || 'No verifier notes were recorded.'}</p>
+            <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Draft {run.draftModel} · Verify {run.verificationModel}</p>
+            {scheduled && run.slug && <Link href={`/insights#editorial-queue-${run.slug}`} className="mt-5 inline-flex border-b border-primary pb-1 text-sm text-primary">Open scheduled release <ArrowUpRight size={14} className="ml-2" /></Link>}
+          </div>
+        </div>
+      </article>;
+    })}</div>}
+  </section>;
+}
+
 export function InsightsPage() {
   const { isSignedIn } = useAuth();
   const smokeEditorSession = window.location.hostname === '127.0.0.1'
@@ -413,8 +472,9 @@ export function InsightsPage() {
       {releasesQuery.isLoading && <div className="mt-8 grid gap-px border border-foreground/15 bg-foreground/15 md:grid-cols-3">{[1, 2, 3].map((item) => <div key={item} className="h-48 animate-pulse bg-background/70 p-6"><div className="h-3 w-20 bg-foreground/10" /><div className="mt-8 h-8 w-4/5 bg-foreground/10" /><div className="mt-8 h-3 w-2/5 bg-foreground/10" /></div>)}</div>}
       {releasesQuery.isError && <div className="mt-8 border border-destructive/35 p-6"><p className="eyebrow text-destructive">Release queue unavailable</p><p className="mt-3 text-sm text-muted-foreground">The editor-managed queue could not be read.</p><button type="button" onClick={() => void releasesQuery.refetch()} className="mt-5 border border-primary px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-primary">Try again</button></div>}
       {!releasesQuery.isLoading && !releasesQuery.isError && orderedQueue.length === 0 && <div className="mt-8 border border-dashed border-foreground/25 p-8"><p className="eyebrow text-primary">No prepared releases</p><p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">The queue is clear. Add a prepared article to give the next edition a durable place in the publishing calendar.</p><button type="button" onClick={openCreate} className="mt-6 inline-flex items-center gap-2 border-b border-primary pb-2 text-sm text-primary"><Plus size={14} />Prepare an article</button></div>}
-      {orderedQueue.length > 0 && <div className="mt-8 grid gap-px border border-foreground/15 bg-foreground/15 md:grid-cols-2 xl:grid-cols-3">{orderedQueue.map((release) => { const activeIndex = scheduled.findIndex((item) => item.slug === release.slug); const isScheduled = release.status === 'scheduled'; return <article data-testid={`editorial-queue-${release.slug}`} key={release.slug} className="bg-background p-6"><div className="flex items-center justify-between gap-4"><p className={`eyebrow ${release.status === 'published' ? 'text-primary' : release.status === 'canceled' ? 'text-destructive' : 'text-muted-foreground'}`}>{release.status}</p><span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{release.cadence}</span></div><h3 className="mt-7 font-serif text-2xl leading-[.95]">{release.title}</h3><p className="mt-4 text-sm leading-5 text-muted-foreground">{release.dek}</p><p className="mt-5 border-t border-foreground/15 pt-4 text-xs text-muted-foreground">Release {formatScheduleTime(release.publishAt)}</p>{isScheduled && <div className="mt-5 flex flex-wrap items-center gap-2"><button data-testid={`button-move-release-up-${release.slug}`} type="button" disabled={activeIndex <= 0 || busy === 'reorder'} onClick={() => void moveRelease(activeIndex, -1)} className="inline-flex items-center gap-1 border border-foreground/20 px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest hover:border-primary disabled:opacity-30"><ArrowUp size={12} />Earlier</button><button data-testid={`button-move-release-down-${release.slug}`} type="button" disabled={activeIndex < 0 || activeIndex === scheduled.length - 1 || busy === 'reorder'} onClick={() => void moveRelease(activeIndex, 1)} className="inline-flex items-center gap-1 border border-foreground/20 px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest hover:border-primary disabled:opacity-30"><ArrowDown size={12} />Later</button><button data-testid={`button-edit-release-${release.slug}`} type="button" onClick={() => openEdit(release)} className="inline-flex items-center gap-1 border border-foreground/20 px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary"><Pencil size={12} />Edit</button><button data-testid={`button-cancel-release-${release.slug}`} type="button" disabled={busy === `cancel-${release.slug}`} onClick={() => void cancelPrepared(release)} className="border-b border-destructive/50 px-1 py-1.5 font-mono text-[10px] uppercase tracking-widest text-destructive hover:border-destructive disabled:opacity-40">Cancel</button></div>}</article>; })}</div>}
+       {orderedQueue.length > 0 && <div className="mt-8 grid gap-px border border-foreground/15 bg-foreground/15 md:grid-cols-2 xl:grid-cols-3">{orderedQueue.map((release) => { const activeIndex = scheduled.findIndex((item) => item.slug === release.slug); const isScheduled = release.status === 'scheduled'; return <article id={`editorial-queue-${release.slug}`} data-testid={`editorial-queue-${release.slug}`} key={release.slug} className="bg-background p-6"><div className="flex items-center justify-between gap-4"><p className={`eyebrow ${release.status === 'published' ? 'text-primary' : release.status === 'canceled' ? 'text-destructive' : 'text-muted-foreground'}`}>{release.status}</p><span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{release.cadence}</span></div><h3 className="mt-7 font-serif text-2xl leading-[.95]">{release.title}</h3><p className="mt-4 text-sm leading-5 text-muted-foreground">{release.dek}</p><p className="mt-5 border-t border-foreground/15 pt-4 text-xs text-muted-foreground">Release {formatScheduleTime(release.publishAt)}</p>{isScheduled && <div className="mt-5 flex flex-wrap items-center gap-2"><button data-testid={`button-move-release-up-${release.slug}`} type="button" disabled={activeIndex <= 0 || busy === 'reorder'} onClick={() => void moveRelease(activeIndex, -1)} className="inline-flex items-center gap-1 border border-foreground/20 px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest hover:border-primary disabled:opacity-30"><ArrowUp size={12} />Earlier</button><button data-testid={`button-move-release-down-${release.slug}`} type="button" disabled={activeIndex < 0 || activeIndex === scheduled.length - 1 || busy === 'reorder'} onClick={() => void moveRelease(activeIndex, 1)} className="inline-flex items-center gap-1 border border-foreground/20 px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest hover:border-primary disabled:opacity-30"><ArrowDown size={12} />Later</button><button data-testid={`button-edit-release-${release.slug}`} type="button" onClick={() => openEdit(release)} className="inline-flex items-center gap-1 border border-foreground/20 px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary"><Pencil size={12} />Edit</button><button data-testid={`button-cancel-release-${release.slug}`} type="button" disabled={busy === `cancel-${release.slug}`} onClick={() => void cancelPrepared(release)} className="border-b border-destructive/50 px-1 py-1.5 font-mono text-[10px] uppercase tracking-widest text-destructive hover:border-destructive disabled:opacity-40">Cancel</button></div>}</article>; })}</div>}
       <p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground">Prepared stories move into the live newsroom automatically at their scheduled time. Published and canceled records stay visible as an editorial trail.</p>
+         <AutomationAudit />
         <div data-testid="release-history" className="mt-14 border-t border-foreground/15 pt-8"><div className="flex flex-wrap items-end justify-between gap-4"><div><SectionLabel>Release history</SectionLabel><h3 className="mt-3 font-serif text-4xl leading-none">Recent changes.</h3><p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">A durable record of who changed the queue, what changed and when.</p></div><span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Last 50 events</span></div><div className="mt-7 grid gap-3 border-y border-foreground/15 py-5 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end"><label className="block"><span className="eyebrow text-muted-foreground">Release</span><select data-testid="select-release-history-release" value={historyReleaseSlug} onChange={(event) => updateHistoryFilter('releaseSlug', event.target.value)} className="mt-2 w-full border border-foreground/20 bg-background px-3 py-3 text-sm"><option value="">All releases</option>{historyReleaseOptions.map((slug) => <option value={slug} key={slug}>{queue.find((release) => release.slug === slug)?.title ?? slug}</option>)}<option value="queue">Queue-level changes</option></select></label><label className="block"><span className="eyebrow text-muted-foreground">Change type</span><select data-testid="select-release-history-action" value={historyAction} onChange={(event) => updateHistoryFilter('action', event.target.value)} className="mt-2 w-full border border-foreground/20 bg-background px-3 py-3 text-sm"><option value="">All change types</option>{Object.values(EditorialReleaseHistoryAction).map((action) => <option value={action} key={action}>{action}</option>)}</select></label><label className="block"><span className="eyebrow text-muted-foreground">Actor</span><input data-testid="input-release-history-actor" type="search" value={historyActor} onChange={(event) => updateHistoryFilter('actor', event.target.value)} placeholder="Search editor identity" className="mt-2 w-full border border-foreground/20 bg-background px-3 py-3 text-sm" /></label>{historyFilterActive && <button data-testid="button-clear-release-history-filters" type="button" onClick={clearHistoryFilters} className="border-b border-primary px-1 py-2 font-mono text-[10px] uppercase tracking-widest text-primary">Clear filters</button>}</div>{historyQuery.isLoading && <p className="mt-7 border border-foreground/15 p-5 text-sm text-muted-foreground">Loading release history…</p>}{historyQuery.isError && <div data-testid="release-history-error" className="mt-7 border border-destructive/35 p-5"><p className="eyebrow text-destructive">History unavailable</p><p data-testid="release-history-error-message" className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">The release history service is temporarily unavailable. Try again when the API is reachable.</p><button data-testid="button-retry-release-history" type="button" onClick={() => void historyQuery.refetch()} className="mt-4 border border-primary px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-primary">Try again</button></div>}{!historyQuery.isLoading && !historyQuery.isError && (historyQuery.data?.length ?? 0) === 0 && <p className="mt-7 break-words border border-dashed border-foreground/25 p-5 text-sm text-muted-foreground">{historyEmptyMessage}</p>}{(historyQuery.data?.length ?? 0) > 0 && <div className="mt-7 divide-y divide-foreground/15 border-y border-foreground/15">{historyQuery.data?.map((entry) => <article data-testid={`release-history-${entry.id}`} key={entry.id} className="grid gap-3 py-5 md:grid-cols-[150px_1fr_auto] md:items-start"><div><p className="eyebrow text-primary">{entry.action}</p><p className="mt-2 font-mono text-[10px] text-muted-foreground">{formatHistoryTime(entry.createdAt)}</p></div><div><p className="text-sm leading-6">{entry.summary}</p><p className="mt-2 text-xs text-muted-foreground">{entry.releaseTitle}</p></div><p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground md:text-right">By {entry.actor}</p></article>)}</div>}</div>
      </section></>}
     <section className="border-b border-foreground/20 py-14"><div className="grid gap-10 md:grid-cols-[.65fr_1.35fr] md:items-start"><div><SectionLabel>Share card preview</SectionLabel><h2 className="mt-3 max-w-md font-serif text-5xl leading-[.9]">See the headline before it travels.</h2><p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">This 1200 × 630 treatment is the same layout used for published social cards. Select a story to inspect the fallback size and exact line breaks.</p>{previewStory && <label className="mt-7 block max-w-sm"><span className="eyebrow text-muted-foreground">Article</span><select data-testid="select-social-preview-story" value={previewStory.slug} onChange={(event) => setPreviewSlug(event.target.value)} className="mt-2 w-full border border-foreground/20 bg-background px-3 py-3 text-sm">{newsroomStories.map((story) => <option value={story.slug} key={story.slug}>{story.title}</option>)}</select></label>}</div><div>{previewStory ? <SocialPreviewCard story={previewStory} /> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">No published stories are available for preview.</p>}</div></div></section>

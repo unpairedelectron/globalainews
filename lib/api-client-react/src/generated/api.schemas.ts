@@ -197,6 +197,49 @@ export interface EditorialReleaseHistoryEntry {
 
 export type EditorialReleaseHistory = EditorialReleaseHistoryEntry[];
 
+export type EditorialAutomationRunOutcome = typeof EditorialAutomationRunOutcome[keyof typeof EditorialAutomationRunOutcome];
+
+
+export const EditorialAutomationRunOutcome = {
+  scheduled: 'scheduled',
+  completed: 'completed',
+  rejected: 'rejected',
+  skipped: 'skipped',
+  failed: 'failed',
+  running: 'running',
+} as const;
+
+export interface EditorialAutomationVerification {
+  pass: boolean;
+  score: number;
+  unsupportedClaims: string[];
+  slopFlags: string[];
+  notes: string;
+}
+
+export interface EditorialAutomationRun {
+  id: number;
+  runKey: string;
+  cadence: EditorialCadence;
+  trigger: string;
+  status: string;
+  outcome: EditorialAutomationRunOutcome;
+  candidates: number;
+  published: number;
+  rejected: number;
+  title: string | null;
+  slug: string | null;
+  publishAt: string | null;
+  draftModel: string;
+  verificationModel: string;
+  qualityGateReasons: string[];
+  verification: EditorialAutomationVerification;
+  startedAt: string;
+  finishedAt: string | null;
+}
+
+export type EditorialAutomationRunQueue = EditorialAutomationRun[];
+
 export type NewsroomMetadataSource = typeof NewsroomMetadataSource[keyof typeof NewsroomMetadataSource];
 
 
