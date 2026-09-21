@@ -61,19 +61,19 @@ function getClerkAppearance(theme: Theme) {
     borderRadius: '0.15rem',
   },
   elements: {
-    rootBox: 'w-full flex justify-center',
-    cardBox: 'bg-card rounded-none w-[440px] max-w-full overflow-hidden border border-border',
+    rootBox: 'w-full min-w-0 flex justify-center',
+    cardBox: 'bg-card rounded-none w-full max-w-[440px] min-w-0 overflow-x-hidden border border-border',
     card: '!shadow-none !border-0 !bg-transparent !rounded-none',
     footer: '!shadow-none !border-0 !bg-transparent !rounded-none',
     headerTitle: 'font-serif text-foreground',
-    headerSubtitle: 'text-muted-foreground',
-    socialButtonsBlockButtonText: 'text-foreground',
-    formFieldLabel: 'text-foreground',
+    headerSubtitle: 'text-muted-foreground break-words',
+    socialButtonsBlockButtonText: 'text-foreground whitespace-normal text-center',
+    formFieldLabel: 'text-foreground break-words',
     footerActionLink: 'text-primary',
     footerActionText: 'text-muted-foreground',
     dividerText: 'text-muted-foreground',
-    formButtonPrimary: 'bg-primary text-primary-foreground hover:bg-primary/90',
-    formFieldInput: 'bg-background text-foreground border-border',
+    formButtonPrimary: 'w-full min-h-11 bg-primary text-primary-foreground hover:bg-primary/90',
+    formFieldInput: 'w-full min-w-0 bg-background text-foreground border-border',
     footerAction: 'text-muted-foreground',
     dividerLine: 'bg-border',
     alertText: 'text-destructive',
@@ -118,7 +118,7 @@ function SignInPage() {
   }, []);
 
   return (
-    <div ref={rootRef} className="flex min-h-[100dvh] items-center justify-center bg-background px-4">
+    <div ref={rootRef} className="flex min-h-[100dvh] w-full min-w-0 items-center justify-center overflow-x-hidden bg-background px-4 py-8 sm:px-6">
       <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
       {validationError && (
         <p
@@ -136,7 +136,7 @@ function SignInPage() {
 
 function SignUpPage() {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4">
+    <div className="flex min-h-[100dvh] w-full min-w-0 items-center justify-center overflow-x-hidden bg-background px-4 py-8 sm:px-6">
       <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
     </div>
   );

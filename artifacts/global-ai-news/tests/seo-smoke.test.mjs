@@ -1264,6 +1264,175 @@ async function checkThemeRegression() {
       }
     }
 
+    await cdp.send('Emulation.setDeviceMetricsOverride', {
+      width: 402,
+      height: 874,
+      deviceScaleFactor: 1,
+      mobile: true,
+    });
+
+    for (const theme of ['light', 'dark']) {
+      for (const route of authRoutes) {
+        cdp.events.length = 0;
+        await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', '${theme}')`);
+        await cdp.send('Page.navigate', { url: `${baseUrl}${route}` });
+        await waitForBrowserCondition(
+          cdp,
+          `document.readyState === 'complete' && !!document.querySelector('input:not([type="hidden"])') && !!document.querySelector('button')`,
+          `${route}: ${theme} mode did not render the Clerk form controls at the mobile smoke viewport.`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, 250));
+
+        const mobileAuthState = await evaluateBrowser(cdp, `(() => {
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+          const isVisible = (element) => {
+            const rect = element?.getBoundingClientRect();
+            return Boolean(rect && rect.width > 0 && rect.height > 0);
+          };
+          const isInsideViewport = (element) => {
+            const rect = element?.getBoundingClientRect();
+            return Boolean(
+              rect
+              && rect.width > 0
+              && rect.height > 0
+              && rect.left >= 0
+              && rect.right <= viewportWidth
+              && rect.top >= 0
+              && rect.bottom <= viewportHeight,
+            );
+          };
+          const fields = [...document.querySelectorAll('input:not([type="hidden"])')];
+          const labels = fields.map((field) => {
+            const fieldContainer = field.closest('.cl-formField');
+            const label = fieldContainer?.querySelector('label')
+              ?? (field.id ? document.querySelector('label[for="' + field.id + '"]') : null);
+            return {
+              text: label?.textContent?.trim() ?? '',
+              visible: isVisible(label),
+              insideViewport: isInsideViewport(label),
+            };
+          });
+          const primaryButton = [...document.querySelectorAll('button.cl-formButtonPrimary')]
+            .find(isVisible)
+            ?? [...document.querySelectorAll('button[type="submit"]')].find(isVisible);
+          return {
+            documentWidth: document.documentElement.scrollWidth,
+            viewportWidth,
+            fields: fields.map((field) => ({
+              visible: isVisible(field),
+              insideViewport: isInsideViewport(field),
+              width: field.getBoundingClientRect().width,
+            })),
+            labels,
+            primaryButton: {
+              visible: isVisible(primaryButton),
+              insideViewport: isInsideViewport(primaryButton),
+              width: primaryButton?.getBoundingClientRect().width ?? 0,
+            },
+          };
+        })()`);
+
+        assert.ok(
+          mobileAuthState.documentWidth <= mobileAuthState.viewportWidth,
+          `${route}: ${theme} mode introduces horizontal overflow at the mobile smoke viewport (${mobileAuthState.documentWidth}px > ${mobileAuthState.viewportWidth}px).`,
+        );
+        assert.ok(
+          mobileAuthState.fields.length > 0 && mobileAuthState.fields.every((field) => field.visible && field.insideViewport && field.width >= 200),
+          `${route}: ${theme} mode has a clipped or compressed primary input at the mobile smoke viewport: ${JSON.stringify(mobileAuthState)}`,
+        );
+        assert.ok(
+          mobileAuthState.labels.length > 0
+            && mobileAuthState.labels.every((label) => label.text && label.visible && label.insideViewport),
+          `${route}: ${theme} mode has a clipped or unreadable field label at the mobile smoke viewport: ${JSON.stringify(mobileAuthState)}`,
+        );
+        assert.ok(
+          mobileAuthState.primaryButton.visible
+            && mobileAuthState.primaryButton.insideViewport
+            && mobileAuthState.primaryButton.width >= 240,
+          `${route}: ${theme} mode primary button is clipped or compressed at the mobile smoke viewport: ${JSON.stringify(mobileAuthState)}`,
+        );
+
+        await evaluateBrowser(cdp, 'document.activeElement?.blur()');
+        for (let tab = 0; tab < 8; tab += 1) {
+          await cdp.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab' });
+          await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab' });
+          if (await evaluateBrowser(cdp, `document.activeElement?.matches('input:not([type="hidden"])')`)) break;
+        }
+        const mobileFocusState = await evaluateBrowser(cdp, `(() => {
+          const input = document.querySelector('input:not([type="hidden"])');
+          const baseStyle = input ? getComputedStyle(input) : null;
+          const focusedStyle = input && document.activeElement === input ? getComputedStyle(input) : null;
+          const rect = input?.getBoundingClientRect();
+          return {
+            focusVisible: Boolean(input && input.matches(':focus-visible')),
+            hasFocusIndicator: Boolean(
+              focusedStyle
+              && (
+                (focusedStyle.outlineStyle !== 'none' && focusedStyle.outlineWidth !== '0px')
+                || focusedStyle.boxShadow !== 'none'
+                || focusedStyle.borderColor !== baseStyle?.borderColor
+              ),
+            ),
+            insideViewport: Boolean(rect && rect.left >= 0 && rect.right <= window.innerWidth),
+          };
+        })()`);
+        assert.equal(
+          mobileFocusState.focusVisible,
+          true,
+          `${route}: ${theme} mode mobile input did not receive keyboard-visible focus.`,
+        );
+        assert.equal(
+          mobileFocusState.hasFocusIndicator,
+          true,
+          `${route}: ${theme} mode mobile input has no visible focus treatment.`,
+        );
+        assert.equal(
+          mobileFocusState.insideViewport,
+          true,
+          `${route}: ${theme} mode focused mobile input is clipped horizontally.`,
+        );
+
+        const screenshot = await cdp.send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+        const screenshotPath = path.join(
+          os.tmpdir(),
+          `gan-auth-mobile-${process.pid}-${theme}-${route.replace(/[^a-z0-9]/gi, '-')}.png`,
+        );
+        try {
+          writeFileSync(screenshotPath, Buffer.from(screenshot.data, 'base64'));
+          const [dimensions, mean] = execFileSync(
+            'magick',
+            [screenshotPath, '-format', '%wx%h %[fx:mean]', 'info:'],
+            { encoding: 'utf8' },
+          ).trim().split(/\s+/);
+          assert.equal(dimensions, '402x874', `${route}: ${theme} mobile screenshot has unstable dimensions (${dimensions}).`);
+          assert.ok(Number(mean) > 0.02 && Number(mean) < 0.98, `${route}: ${theme} mobile screenshot appears blank or overexposed.`);
+        } finally {
+          unlinkSync(screenshotPath);
+        }
+
+        const browserErrors = cdp.events
+          .filter((event) => (
+            (event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
+            || event.method === 'Runtime.exceptionThrown'
+          ))
+          .map((event) => event.method === 'Runtime.exceptionThrown'
+            ? event.params.exceptionDetails?.text ?? 'Unhandled browser exception'
+            : event.params.args?.map((argument) => argument.value ?? argument.description ?? '').join(' ') ?? 'Browser console error');
+        assert.deepEqual(
+          browserErrors,
+          [],
+          `${route}: ${theme} mobile mode emitted browser errors: ${browserErrors.join(' | ')}`,
+        );
+      }
+    }
+
+    await cdp.send('Emulation.setDeviceMetricsOverride', {
+      width: 1440,
+      height: 1000,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
     await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', 'light'); location.href = '${baseUrl}/'`);
     await waitForBrowserCondition(
       cdp,
@@ -1278,7 +1447,7 @@ async function checkThemeRegression() {
     );
     console.log(
       `Theme regression checked ${routes.length} public routes plus ${authRoutes.length} Clerk routes ` +
-      `in light and dark mode with contrast, focus, retained baselines, screenshots, and browser-error assertions.`,
+      `in light and dark mode at desktop and mobile viewports with contrast, focus, retained baselines, screenshots, and browser-error assertions.`,
     );
   } finally {
     cdp?.close();

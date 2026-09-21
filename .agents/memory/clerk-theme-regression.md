@@ -14,3 +14,9 @@ Clerk's combined sign-in form does not reliably emit local field errors for empt
 **Why:** The development Clerk instance delegated sign-in validation to the auth service, making a supposedly client-only smoke interaction both nondeterministic and unsafe.
 
 **How to apply:** Exercise sign-in's empty state through the guard, mark the alert as an explicit live region, use opaque destructive tokens in both themes, and select the visible non-empty error node when Clerk renders duplicate error elements.
+
+Mobile auth checks should use a 402px viewport and treat the password field's shared action row as a valid 200px minimum while still requiring every field, label, and primary button to stay inside the viewport.
+
+**Why:** Clerk's combined sign-in layout reserves horizontal space for the password action on narrow screens; requiring the desktop field width would reject a usable responsive layout.
+
+**How to apply:** Keep the auth card and inputs explicitly shrinkable, assert document width plus control bounds in light and dark modes, and move focus with keyboard events before checking the focus indicator.
