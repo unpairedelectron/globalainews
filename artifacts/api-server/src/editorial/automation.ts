@@ -19,6 +19,8 @@ const DAILY_UTC_HOUR = 7;
 const DAILY_UTC_MINUTE = 30;
 const AUTOMATION_INTERVAL_MS = 30 * 60 * 1000;
 const SOURCE_LOOKBACK_MS = 14 * 24 * 60 * 60 * 1000;
+const DRAFT_MODEL = process.env.EDITORIAL_DRAFT_MODEL ?? "gpt-5-mini";
+const VERIFICATION_MODEL = process.env.EDITORIAL_VERIFICATION_MODEL ?? "gpt-5.6-terra";
 
 const openSourceFeeds = [
   { publisher: "OpenAI", feedUrl: "https://openai.com/news/rss.xml" },
@@ -210,9 +212,60 @@ function parseJson<T>(value: string): T {
   return JSON.parse(normalized) as T;
 }
 
-async function askEditorialModel<T>(system: string, input: unknown): Promise<T> {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function stringList(value: unknown, stringifyObjects = false): string[] {
+  return Array.isArray(value)
+    ? value
+        .map((item) => {
+          if (typeof item === "string") return item.trim();
+          return stringifyObjects && isRecord(item) ? JSON.stringify(item) : "";
+        })
+        .filter(Boolean)
+    : [];
+}
+
+function normalizeDraft(value: unknown): DraftPayload {
+  const raw = isRecord(value) ? value : {};
+  const body = Array.isArray(raw.body)
+    ? raw.body
+        .filter(isRecord)
+        .map((section) => ({
+          heading: typeof section.heading === "string" ? section.heading : "",
+          paragraphs: stringList(section.paragraphs),
+        }))
+    : [];
+  return {
+    title: typeof raw.title === "string" ? raw.title : "",
+    dek: typeof raw.dek === "string" ? raw.dek : "",
+    category: raw.category as StoryCategory,
+    topic: typeof raw.topic === "string" ? raw.topic : "",
+    classification: raw.classification as DraftPayload["classification"],
+    bottomLine: typeof raw.bottomLine === "string" ? raw.bottomLine : "",
+    whyItMatters: typeof raw.whyItMatters === "string" ? raw.whyItMatters : "",
+    keyTakeaways: stringList(raw.keyTakeaways),
+    whatChanges: typeof raw.whatChanges === "string" ? raw.whatChanges : "",
+    body,
+    sourceUrls: stringList(raw.sourceUrls),
+  };
+}
+
+function normalizeVerification(value: unknown): VerificationPayload {
+  const raw = isRecord(value) ? value : {};
+  return {
+    pass: raw.pass === true,
+    score: typeof raw.score === "number" && Number.isFinite(raw.score) ? raw.score : 0,
+    unsupportedClaims: stringList(raw.unsupportedClaims, true),
+    slopFlags: stringList(raw.slopFlags, true),
+    notes: typeof raw.notes === "string" ? raw.notes : "",
+  };
+}
+
+async function askEditorialModel<T>(model: string, system: string, input: unknown): Promise<T> {
   const response = await openai.chat.completions.create({
-    model: "gpt-5.6-terra",
+    model,
     max_completion_tokens: 8192,
     response_format: { type: "json_object" },
     messages: [
@@ -226,7 +279,8 @@ async function askEditorialModel<T>(system: string, input: unknown): Promise<T> 
 }
 
 async function createDraft(items: EditorialSourceItem[]): Promise<DraftPayload> {
-  return askEditorialModel<DraftPayload>(
+  return normalizeDraft(await askEditorialModel<unknown>(
+    DRAFT_MODEL,
     `You are the autonomous editor for Global AI News. Create one original, concise article from the supplied open-source reporting records.
 
 Rules:
@@ -248,11 +302,12 @@ Rules:
         publishedAt: item.publishedAt?.toISOString() ?? null,
       })),
     },
-  );
+  ));
 }
 
 async function verifyDraft(draft: DraftPayload, items: EditorialSourceItem[]): Promise<VerificationPayload> {
-  return askEditorialModel<VerificationPayload>(
+  return normalizeVerification(await askEditorialModel<unknown>(
+    VERIFICATION_MODEL,
     `You are the fact-checking and anti-slop desk for Global AI News. Audit the proposed article only against the supplied source records.
 
 Return JSON only with pass, score, unsupportedClaims, slopFlags, notes.
@@ -270,7 +325,7 @@ Return JSON only with pass, score, unsupportedClaims, slopFlags, notes.
         summary: item.summary,
       })),
     },
-  );
+  ));
 }
 
 async function reviseDraft(
@@ -278,7 +333,8 @@ async function reviseDraft(
   verification: VerificationPayload,
   items: EditorialSourceItem[],
 ): Promise<DraftPayload> {
-  return askEditorialModel<DraftPayload>(
+  return normalizeDraft(await askEditorialModel<unknown>(
+    DRAFT_MODEL,
     `You are revising a Global AI News draft after a strict fact-check.
 
 Return JSON only with the same fields as the draft. Keep only claims supported by the supplied records. Rewrite every source-derived sentence in your own wording; do not preserve distinctive phrases from the records. Remove any claim about what a source did not say unless the record explicitly supports that absence. Keep exactly three body sections with two paragraphs each, exactly three key takeaways, and cite only URLs that directly support the claims. Prefer two related publishers, but do not add an unrelated URL just to increase the citation count. Do not add facts, names, numbers, outcomes, or context that are not present in the records.`,
@@ -292,7 +348,7 @@ Return JSON only with the same fields as the draft. Keep only claims supported b
         summary: item.summary,
       })),
     },
-  );
+  ));
 }
 
 function deterministicGate(draft: DraftPayload, verification: VerificationPayload, items: EditorialSourceItem[]): string[] {
@@ -552,6 +608,8 @@ export async function getAutomationStatus(): Promise<Record<string, unknown>> {
     enabled: process.env.NODE_ENV === "production" || process.env.EDITORIAL_AUTOMATION_ENABLED === "true",
     intervalMinutes: AUTOMATION_INTERVAL_MS / 60_000,
     dailySlotUtc: `${String(DAILY_UTC_HOUR).padStart(2, "0")}:${String(DAILY_UTC_MINUTE).padStart(2, "0")}`,
+    draftModel: DRAFT_MODEL,
+    verificationModel: VERIFICATION_MODEL,
     openSourceFeeds: openSourceFeeds.map((source) => source.publisher),
     latestRun: latest ?? null,
   };
