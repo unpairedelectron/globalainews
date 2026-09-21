@@ -250,9 +250,11 @@ function validatePreviewAsset(outputPath: string, route: string, svg: string, ti
 function writeSocialPreviewAssets(
   outputDir: string,
   sourceStories: readonly typeof stories = getPublishedStories(),
+  metadataManifest?: SeoMetadataManifest,
 ) {
   const outputSocialDir = path.join(outputDir, 'social', 'articles');
   mkdirSync(outputSocialDir, { recursive: true });
+  const generatedSlugs = new Set<string>();
   for (const story of sourceStories) {
     const route = `/article/${story.slug}`;
     const title = `${story.title} — Global AI News`;
@@ -263,6 +265,20 @@ function writeSocialPreviewAssets(
       stdio: ['pipe', 'ignore', 'inherit'],
     });
     validatePreviewAsset(outputPath, route, svg, title);
+    generatedSlugs.add(story.slug);
+  }
+
+  for (const metadata of metadataManifest?.routes ?? []) {
+    const match = metadata.path.match(/^\/article\/([^/]+)$/);
+    if (!match || generatedSlugs.has(match[1])) continue;
+    const slug = match[1];
+    const outputPath = path.join(outputDir, 'social', 'articles', `${slug}.png`);
+    const svg = renderSocialPreviewSvg(metadata.title, 'Field Notes', slug);
+    execFileSync('magick', ['svg:-', '-set', 'comment', metadata.title, outputPath], {
+      input: svg,
+      stdio: ['pipe', 'ignore', 'inherit'],
+    });
+    validatePreviewAsset(outputPath, metadata.path, svg, metadata.title);
   }
 }
 
@@ -276,7 +292,7 @@ function buildOutputDir(projectRoot: string): string {
   );
 }
 
-async function loadBuildMetadataManifest(projectRoot: string): Promise<void> {
+async function loadBuildMetadataManifest(projectRoot: string): Promise<SeoMetadataManifest> {
   const manifestUrl = process.env.NEWSROOM_METADATA_URL;
   if (!manifestUrl) {
     throw new Error(
@@ -383,6 +399,7 @@ async function loadBuildMetadataManifest(projectRoot: string): Promise<void> {
     }
   }
   setSeoMetadataManifest(manifest);
+  return manifest;
 }
 
 function socialPreviewAssetsPlugin() {
@@ -488,9 +505,9 @@ function routeMetadataPlugin() {
     apply: 'build' as const,
     async closeBundle() {
       const outputDir = buildOutputDir(projectRoot);
-      await loadBuildMetadataManifest(projectRoot);
+      const metadataManifest = await loadBuildMetadataManifest(projectRoot);
       const baseHtml = readFileSync(path.join(outputDir, 'index.html'), 'utf8');
-      writeSocialPreviewAssets(outputDir);
+      writeSocialPreviewAssets(outputDir, getPublishedStories(), metadataManifest);
       writeAmpArticleDocument(outputDir);
       for (const route of routePathsFromPublishingFiles(projectRoot)) {
         const routeDirectory = route === '/' ? outputDir : path.join(outputDir, route.replace(/^\/|\/$/g, ''));

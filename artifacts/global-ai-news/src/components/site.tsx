@@ -65,11 +65,11 @@ export function SeoHead({ title, description, path, article = false }: { title: 
     imageMetadata.forEach(([attribute, key, content]) => upsertMeta(attribute, key, content));
     const twitter = ensure('meta[name="twitter:card"]', () => { const el = document.createElement('meta'); el.name = 'twitter:card'; return el; }) as HTMLMetaElement;
     twitter.content = 'summary_large_image';
-    const amp = document.head.querySelector('link[rel="amphtml"]');
-    if (resolvedArticle) {
+     const amp = document.head.querySelector('link[rel="amphtml"]');
+     if (resolvedArticle && routeMetadata?.ampPath) {
       const ampTag = (amp as HTMLLinkElement | null) ?? document.createElement('link');
       ampTag.rel = 'amphtml';
-      ampTag.href = `${SITE}/amp/article/ai-models-antibiotic-discovery/`;
+       ampTag.href = `${SITE}${routeMetadata.ampPath}`;
       if (!amp) document.head.appendChild(ampTag);
     } else if (amp) amp.remove();
     const ld = ensure('script[data-global-ai-ld]', () => { const el = document.createElement('script'); el.type = 'application/ld+json'; el.dataset.globalAiLd = 'true'; return el; });

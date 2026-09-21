@@ -1820,7 +1820,7 @@ async function startApiServer() {
   throw new Error('The smoke test API server did not become ready within 60 seconds.');
 }
 
-function assertSeoDocument(document, route, { article = false, stories = [], authors = [] } = {}) {
+function assertSeoDocument(document, route, { article = false, stories = [], authors = [], ampPath = '' } = {}) {
   const title = htmlText(tagContent(document, 'title'));
   const description = metaContent(document, 'name', 'description');
   const canonical = linkHref(document, 'canonical');
@@ -1858,14 +1858,20 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
     assert.equal(articleData.datePublished, expectedStory.date, `${route}: JSON-LD publication date drifted from the maintained story record`);
     assert.equal(articleData.articleSection, expectedStory.category, `${route}: JSON-LD article section drifted from the maintained story record`);
     assert.equal(articleData.mainEntityOfPage['@id'], `${site}${route}`, `${route}: JSON-LD main entity does not match the canonical article URL`);
-    assert.equal(linkHref(document, 'amphtml'), `${site}/amp/article/ai-models-antibiotic-discovery/`, `${route}: AMP relationship is missing`);
+     assert.equal(
+       linkHref(document, 'amphtml'),
+       ampPath ? `${site}${ampPath}` : '',
+       ampPath
+         ? `${route}: AMP relationship is missing`
+         : `${route}: article exposes an AMP relationship without a matching AMP document`,
+     );
   } else {
     assert.equal(metaContent(document, 'property', 'og:image'), '', `${route}: non-article page unexpectedly exposes og:image`);
     assert.equal(linkHref(document, 'amphtml'), '', `${route}: non-article page unexpectedly exposes AMP`);
   }
 }
 
-function assertInitialSeoDocument(document, route, { article = false } = {}) {
+function assertInitialSeoDocument(document, route, { article = false, ampPath = '' } = {}) {
   const title = htmlText(tagContent(document, 'title'));
   const description = metaContent(document, 'name', 'description');
   const canonical = linkHref(document, 'canonical');
@@ -1888,7 +1894,13 @@ function assertInitialSeoDocument(document, route, { article = false } = {}) {
 
   if (article) {
     assertSocialPreviewMetadata(document, route);
-    assert.equal(linkHref(document, 'amphtml'), `${site}/amp/article/ai-models-antibiotic-discovery/`, `${route}: initial AMP relationship is missing`);
+     assert.equal(
+       linkHref(document, 'amphtml'),
+       ampPath ? `${site}${ampPath}` : '',
+       ampPath
+         ? `${route}: initial AMP relationship is missing`
+         : `${route}: initial HTML exposes an AMP relationship without a matching AMP document`,
+     );
   } else {
     assert.equal(metaContent(document, 'property', 'og:image'), '', `${route}: non-article initial HTML unexpectedly exposes og:image`);
     assert.equal(linkHref(document, 'amphtml'), '', `${route}: non-article initial HTML unexpectedly exposes AMP`);
@@ -1971,7 +1983,10 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     const { response, body } = await fetchText(route);
     assert.equal(response.status, 200, `${route}: direct request failed`);
     assert.match(body, /<div id="root"><\/div>/, `${route}: direct request did not receive the SPA shell`);
-    assertInitialSeoDocument(body, route, { article: route.startsWith('/article/') });
+     assertInitialSeoDocument(body, route, {
+       article: route.startsWith('/article/'),
+       ampPath: metadataManifest.routes.find((metadata) => metadata.path === route)?.ampPath ?? '',
+     });
     assertMetadataMatchesManifest(body, route, metadataManifest);
     assert.doesNotMatch(
       response.headers.get('cache-control') ?? '',
@@ -2014,6 +2029,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
         article: route.startsWith('/article/'),
         stories: newsroomContent.stories,
         authors: newsroomContent.authors,
+       ampPath: metadataManifest.routes.find((metadata) => metadata.path === route)?.ampPath ?? '',
       });
       assertMetadataMatchesManifest(document, route, metadataManifest);
     }
@@ -2046,6 +2062,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       article: route.startsWith('/article/'),
       stories: newsroomContent.stories,
       authors: newsroomContent.authors,
+      ampPath: metadataManifest.routes.find((metadata) => metadata.path === route)?.ampPath ?? '',
     });
     assert.match(document, /<body[\s\S]*<main\b/, `${route}: mobile render did not produce page content`);
   }

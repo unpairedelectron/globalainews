@@ -87,6 +87,7 @@ const staticMetadata: Record<string, SeoMetadata> = {
 };
 
 let activeManifest: SeoMetadataManifest | undefined;
+const maintainedArticleSlugs = new Set(stories.map((story) => story.slug));
 
 function cleanRoute(route: string): string {
   if (!route || route === '/') return '/';
@@ -109,16 +110,14 @@ export function getSeoMetadata(route: string, publishedStories = getPublishedSto
   const articleMatch = cleanPath.match(/^\/article\/([^/]+)$/);
   if (articleMatch) {
     const story = publishedStories.find((candidate) => candidate.slug === articleMatch[1]) ?? findStory('ai-models-antibiotic-discovery')!;
-    const staticStory = findStory(story.slug);
+     const isMaintainedStory = maintainedArticleSlugs.has(story.slug);
     return {
       title: `${story.title} — Global AI News`,
       description: story.dek,
       path: `/article/${story.slug}`,
       article: true,
-      ...(staticStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
-      imagePath: staticStory
-        ? `/social/articles/${story.slug}.png`
-        : `/api/newsroom/social/articles/${story.slug}.svg`,
+       ...(isMaintainedStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
+      imagePath: `/social/articles/${story.slug}.png`,
       imageAlt: `${story.title} — Global AI News editorial preview`,
     };
   }
