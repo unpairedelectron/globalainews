@@ -119,7 +119,7 @@ function SignInPage() {
   }, []);
 
   return (
-    <div ref={rootRef} className="flex min-h-[100dvh] w-full min-w-0 items-center justify-center overflow-x-hidden bg-background px-4 py-8 sm:px-6">
+    <div ref={rootRef} className="flex min-h-[100dvh] w-full min-w-0 items-start justify-center overflow-x-hidden overflow-y-auto bg-background px-4 py-8 sm:items-center sm:px-6">
       {recoveryOpen ? (
         <ForgotPasswordFlow onBack={() => setRecoveryOpen(false)} />
       ) : (
@@ -148,7 +148,6 @@ function SignInPage() {
     </div>
   );
 }
-
 function ForgotPasswordFlow({ onBack }: { onBack: () => void }) {
   const { signIn, fetchStatus } = useSignIn();
   const [emailAddress, setEmailAddress] = useState('');
@@ -369,7 +368,7 @@ function ForgotPasswordFlow({ onBack }: { onBack: () => void }) {
 
 function SignUpPage() {
   return (
-    <div className="flex min-h-[100dvh] w-full min-w-0 items-center justify-center overflow-x-hidden bg-background px-4 py-8 sm:px-6">
+    <div className="flex min-h-[100dvh] w-full min-w-0 items-start justify-center overflow-x-hidden overflow-y-auto bg-background px-4 py-8 sm:items-center sm:px-6">
       <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
     </div>
   );

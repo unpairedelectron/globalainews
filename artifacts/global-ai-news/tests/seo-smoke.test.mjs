@@ -1628,6 +1628,141 @@ async function checkThemeRegression() {
     }
 
     await cdp.send('Emulation.setDeviceMetricsOverride', {
+      width: 402,
+      height: 874,
+      deviceScaleFactor: 1,
+      mobile: true,
+    });
+
+    for (const theme of ['light', 'dark']) {
+      for (const route of authRoutes) {
+        cdp.events.length = 0;
+        await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', '${theme}')`);
+        await cdp.send('Page.navigate', { url: `${baseUrl}${route}` });
+        await waitForBrowserCondition(
+          cdp,
+          `document.readyState === 'complete' && !!document.querySelector('input:not([type="hidden"])') && !!document.querySelector('button')`,
+          `${route}: ${theme} mode did not render the Clerk form controls for the enlarged-text smoke check.`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, 250));
+        await evaluateBrowser(cdp, `document.documentElement.style.fontSize = '125%'`);
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        const enlargedTextState = await evaluateBrowser(cdp, `(() => {
+          const viewportWidth = window.innerWidth;
+          const isVisible = (element) => {
+            const rect = element?.getBoundingClientRect();
+            return Boolean(rect && rect.width > 0 && rect.height > 0);
+          };
+          const fitsHorizontally = (element) => {
+            const rect = element?.getBoundingClientRect();
+            return Boolean(rect && rect.left >= 0 && rect.right <= viewportWidth);
+          };
+          const fields = [...document.querySelectorAll('input:not([type="hidden"])')];
+          const labels = fields.map((field) => {
+            const fieldContainer = field.closest('.cl-formField');
+            const label = fieldContainer?.querySelector('label')
+              ?? (field.id ? document.querySelector('label[for="' + field.id + '"]') : null);
+            return {
+              text: label?.textContent?.trim() ?? '',
+              visible: isVisible(label),
+              fitsHorizontally: fitsHorizontally(label),
+            };
+          });
+          const primaryButton = [...document.querySelectorAll('button.cl-formButtonPrimary')]
+            .find(isVisible)
+            ?? [...document.querySelectorAll('button[type="submit"]')].find(isVisible);
+          return {
+            documentWidth: document.documentElement.scrollWidth,
+            viewportWidth,
+            fields: fields.map((field) => ({
+              visible: isVisible(field),
+              fitsHorizontally: fitsHorizontally(field),
+            })),
+            labels,
+            primaryButton: {
+              visible: isVisible(primaryButton),
+              fitsHorizontally: fitsHorizontally(primaryButton),
+            },
+          };
+        })()`);
+
+        assert.ok(
+          enlargedTextState.documentWidth <= enlargedTextState.viewportWidth,
+          `${route}: ${theme} mode introduces horizontal overflow with 125% browser text sizing (${enlargedTextState.documentWidth}px > ${enlargedTextState.viewportWidth}px).`,
+        );
+        assert.ok(
+          enlargedTextState.fields.length > 0
+            && enlargedTextState.fields.every((field) => field.visible && field.fitsHorizontally),
+          `${route}: ${theme} mode has a clipped input with 125% browser text sizing: ${JSON.stringify(enlargedTextState)}`,
+        );
+        assert.ok(
+          enlargedTextState.labels.length > 0
+            && enlargedTextState.labels.every((label) => label.text && label.visible && label.fitsHorizontally),
+          `${route}: ${theme} mode has a clipped field label with 125% browser text sizing: ${JSON.stringify(enlargedTextState)}`,
+        );
+        assert.ok(
+          enlargedTextState.primaryButton.visible && enlargedTextState.primaryButton.fitsHorizontally,
+          `${route}: ${theme} mode primary button is clipped with 125% browser text sizing: ${JSON.stringify(enlargedTextState)}`,
+        );
+
+        await evaluateBrowser(cdp, 'document.activeElement?.blur()');
+        for (let tab = 0; tab < 8; tab += 1) {
+          await cdp.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab' });
+          await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab' });
+          if (await evaluateBrowser(cdp, `document.activeElement?.matches('input:not([type="hidden"])')`)) break;
+        }
+        const enlargedTextFocusState = await evaluateBrowser(cdp, `(() => {
+          const input = document.querySelector('input:not([type="hidden"])');
+          const baseStyle = input ? getComputedStyle(input) : null;
+          const focusedStyle = input && document.activeElement === input ? getComputedStyle(input) : null;
+          const rect = input?.getBoundingClientRect();
+          return {
+            focusVisible: Boolean(input && input.matches(':focus-visible')),
+            hasFocusIndicator: Boolean(
+              focusedStyle
+              && (
+                (focusedStyle.outlineStyle !== 'none' && focusedStyle.outlineWidth !== '0px')
+                || focusedStyle.boxShadow !== 'none'
+                || focusedStyle.borderColor !== baseStyle?.borderColor
+              ),
+            ),
+            fitsHorizontally: Boolean(rect && rect.left >= 0 && rect.right <= window.innerWidth),
+          };
+        })()`);
+        assert.equal(
+          enlargedTextFocusState.focusVisible,
+          true,
+          `${route}: ${theme} mode input did not receive keyboard-visible focus with 125% browser text sizing.`,
+        );
+        assert.equal(
+          enlargedTextFocusState.hasFocusIndicator,
+          true,
+          `${route}: ${theme} mode input has no visible focus treatment with 125% browser text sizing.`,
+        );
+        assert.equal(
+          enlargedTextFocusState.fitsHorizontally,
+          true,
+          `${route}: ${theme} mode focused input is clipped horizontally with 125% browser text sizing.`,
+        );
+
+        const browserErrors = cdp.events
+          .filter((event) => (
+            (event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
+            || event.method === 'Runtime.exceptionThrown'
+          ))
+          .map((event) => event.method === 'Runtime.exceptionThrown'
+            ? event.params.exceptionDetails?.text ?? 'Unhandled browser exception'
+            : event.params.args?.map((argument) => argument.value ?? argument.description ?? '').join(' ') ?? 'Browser console error');
+        assert.deepEqual(
+          browserErrors,
+          [],
+          `${route}: ${theme} enlarged-text mode emitted browser errors: ${browserErrors.join(' | ')}`,
+        );
+      }
+    }
+
+    await cdp.send('Emulation.setDeviceMetricsOverride', {
       width: 1440,
       height: 1000,
       deviceScaleFactor: 1,
