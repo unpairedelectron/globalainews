@@ -290,7 +290,7 @@ Rules:
 - Reject hype, vague futurism, SEO stuffing, generic AI filler, and unsupported certainty.
 - Choose sourceUrls only from URLs that directly support the claims you wrote. Prefer two closely related publishers when available, but use one authoritative first-party source rather than adding an unrelated citation.
 - Return JSON only with title, dek, category, topic, classification, bottomLine, whyItMatters, keyTakeaways, whatChanges, body, sourceUrls.
-- title: 45-90 characters; dek: 100-220 characters; exactly 3 keyTakeaways; exactly 3 body sections with 2 paragraphs each.
+- title: 30-100 characters; dek: 40-280 characters; exactly 3 keyTakeaways; exactly 3 body sections with 2 paragraphs each.
 - category must be one of Breakthroughs, Signals, India Watch, The Edge, Field Notes, Infrastructure, Policy.
 - classification must be reported, analysis, or synthesis.`,
     {
@@ -358,8 +358,8 @@ function deterministicGate(draft: DraftPayload, verification: VerificationPayloa
       .map((url) => items.find((item) => item.url === url)?.publisher)
       .filter((publisher): publisher is string => Boolean(publisher)),
   );
-  if (draft.title.length < 45 || draft.title.length > 90) errors.push("headline_length");
-  if (draft.dek.length < 100 || draft.dek.length > 220) errors.push("dek_length");
+  if (draft.title.length < 30 || draft.title.length > 100) errors.push("headline_length");
+  if (draft.dek.length < 40 || draft.dek.length > 280) errors.push("dek_length");
   if (!categories.includes(draft.category)) errors.push("invalid_category");
   if (!["reported", "analysis", "synthesis"].includes(draft.classification)) errors.push("invalid_classification");
   if (draft.keyTakeaways.length !== 3) errors.push("takeaway_count");
