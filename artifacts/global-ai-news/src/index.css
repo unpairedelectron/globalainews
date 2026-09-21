@@ -142,13 +142,22 @@
 .story-hover { transition: transform .22s ease, background-color .22s ease, color .22s ease; }
 .story-hover:hover { transform: translateY(-3px); }
 .grid-rule { background-size: 25% 100%; }
-.editorial-visual { background: hsl(var(--editorial-visual-bg)); color: hsl(var(--editorial-visual-fg)); }
+.editorial-page > section:not(#newsletter) { transition: background-color .25s ease, border-color .25s ease; }
+.editorial-page > section:not(#newsletter):hover { background-color: hsl(var(--surface-muted) / .18); }
+.editorial-page > section:first-child { scroll-margin-top: 7rem; }
+.editorial-visual { position: relative; background: radial-gradient(circle at 78% 20%, hsl(var(--editorial-visual-accent) / .12), transparent 24%), hsl(var(--editorial-visual-bg)); color: hsl(var(--editorial-visual-fg)); }
+.editorial-visual::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .22; background: linear-gradient(120deg, transparent 0 42%, hsl(var(--editorial-visual-accent) / .12) 42.2%, transparent 42.5% 100%); }
 .editorial-visual-ring { border-color: hsl(var(--editorial-visual-rule) / .5); }
 .editorial-visual-accent { border-color: hsl(var(--editorial-visual-accent) / .7); background-color: hsl(var(--editorial-visual-accent) / .7); }
 .editorial-visual-rule { background-color: hsl(var(--editorial-visual-rule) / .6); }
 .editorial-visual-muted { color: hsl(var(--editorial-visual-muted)); }
 .editorial-visual-caption { border-color: hsl(var(--editorial-visual-rule)); color: hsl(var(--editorial-visual-muted)); }
+.section-label { min-height: 2rem; }
 @keyframes atlas-pulse { 0%,100% { box-shadow: 0 0 0 0 hsl(var(--primary) / .35); } 50% { box-shadow: 0 0 0 10px hsl(var(--primary) / 0); } }
 .atlas-pulse { animation: atlas-pulse 1.8s ease-in-out infinite; }
 button, a { -webkit-tap-highlight-color: transparent; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+@media (max-width: 639px) {
+  .editorial-page > section:not(#newsletter):hover { background-color: transparent; }
+  .ticker-track { animation-duration: 36s; }
+}

@@ -27,7 +27,7 @@ import {
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const container = 'mx-auto max-w-[1440px] px-5 md:px-10';
+const container = 'editorial-page mx-auto max-w-[1440px] px-5 md:px-10';
 
 function Shell({ children }: { children: ReactNode }) { return <><Header />{children}<Footer /></>; }
 function storyHref(slug: string) { return `/article/${findStory(slug)?.slug ?? slug}`; }
