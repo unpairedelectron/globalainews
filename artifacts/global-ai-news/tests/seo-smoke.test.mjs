@@ -532,6 +532,178 @@ async function waitForBrowserCondition(cdp, expression, message) {
   assert.fail(message);
 }
 
+async function getAutomationRunsForSmoke() {
+  const response = await fetch(`${apiOrigin}/api/newsroom/automation/runs`, {
+    headers: { 'x-newsroom-test-editor': smokeEditorId },
+  });
+  assert.equal(response.status, 200, 'The automation audit endpoint did not respond for the smoke editor.');
+  return response.json();
+}
+
+async function getReleaseQueueForSmoke() {
+  const response = await fetch(`${apiOrigin}/api/newsroom/releases`, {
+    headers: { 'x-newsroom-test-editor': smokeEditorId },
+  });
+  assert.equal(response.status, 200, 'The release queue endpoint did not respond for the smoke editor.');
+  return response.json();
+}
+
+async function ensureScheduledAutomationRunForSmoke() {
+  let runs = await getAutomationRunsForSmoke();
+  let releases = await getReleaseQueueForSmoke();
+  let scheduledRun = runs.find(
+    (run) => run.outcome === 'scheduled'
+      && run.slug
+      && releases.some((release) => release.slug === run.slug && release.status === 'scheduled'),
+  );
+  if (scheduledRun) return { runs, scheduledRun, createdRun: false };
+
+  const response = await fetch(`${apiOrigin}/api/newsroom/automation/runs/smoke-fixture`, {
+    method: 'POST',
+    headers: { 'x-newsroom-test-editor': smokeEditorId },
+  });
+  assert.equal(response.status, 201, `The smoke test could not create an automation run fixture (${response.status}).`);
+  runs = await getAutomationRunsForSmoke();
+  releases = await getReleaseQueueForSmoke();
+  scheduledRun = runs.find(
+    (run) => run.outcome === 'scheduled'
+      && run.slug
+      && releases.some((release) => release.slug === run.slug && release.status === 'scheduled'),
+  );
+  assert.ok(
+    scheduledRun,
+    `The automation run did not produce a scheduled release: ${JSON.stringify(runs.slice(0, 3))}`,
+  );
+  return { runs, scheduledRun, createdRun: true };
+}
+
+async function checkAutomationAuditReleaseLink() {
+  const { runs, scheduledRun, createdRun } = await ensureScheduledAutomationRunForSmoke();
+  const debugPort = await findFreePort();
+  const userDataDir = `${os.tmpdir()}/gan-automation-audit-${process.pid}`;
+  const browserProcess = spawn(chromium, [
+    '--headless',
+    '--no-sandbox',
+    '--disable-gpu',
+    '--disable-dev-shm-usage',
+    '--disable-extensions',
+    '--no-first-run',
+    `--user-data-dir=${userDataDir}`,
+    `--remote-debugging-port=${debugPort}`,
+    'about:blank',
+  ], { stdio: ['ignore', 'ignore', 'ignore'] });
+  let cdp;
+  try {
+    const debugDeadline = Date.now() + 10_000;
+    let target;
+    while (Date.now() < debugDeadline) {
+      try {
+        const targets = await fetch(`http://127.0.0.1:${debugPort}/json/list`).then((response) => response.json());
+        target = targets.find((item) => item.type === 'page');
+        if (target?.webSocketDebuggerUrl) break;
+      } catch {
+        // Chromium may still be starting its debugging endpoint.
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    assert.ok(target?.webSocketDebuggerUrl, 'Chromium did not expose a debuggable page for the automation audit check.');
+    cdp = await connectToChromium(target.webSocketDebuggerUrl);
+    await cdp.send('Emulation.setDeviceMetricsOverride', {
+      width: 1280,
+      height: 1000,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    await cdp.send('Page.navigate', { url: `${baseUrl}/insights?smoke-editor=1` });
+    const runTestId = `automation-run-${scheduledRun.id}`;
+    await waitForBrowserCondition(
+      cdp,
+      `Boolean(document.querySelector('[data-testid="${runTestId}"] a'))`,
+      `The scheduled automation audit run ${scheduledRun.id} did not render its release link.`,
+    );
+
+    await evaluateBrowser(cdp, `(() => {
+      const link = document.querySelector('[data-testid="${runTestId}"] a');
+      if (!link) throw new Error('The scheduled automation audit release link is missing.');
+      link.click();
+      return true;
+    })()`);
+    await waitForBrowserCondition(
+      cdp,
+      `window.location.hash === '#editorial-queue-${scheduledRun.slug}'`,
+      `The scheduled automation audit link did not navigate to #editorial-queue-${scheduledRun.slug}.`,
+    );
+    // The smoke editor session is query-string based; restore it only for the
+    // destination render because the production link intentionally omits it.
+    await cdp.send('Page.navigate', {
+      url: `${baseUrl}/insights?smoke-editor=1#editorial-queue-${scheduledRun.slug}`,
+    });
+    await waitForBrowserCondition(
+      cdp,
+      `Boolean(document.querySelector('#editorial-queue-${scheduledRun.slug}'))`,
+      `The editor workspace did not render the release card for #editorial-queue-${scheduledRun.slug}.`,
+    );
+    const scheduledCard = await evaluateBrowser(cdp, `(() => {
+      const card = document.querySelector('#editorial-queue-${scheduledRun.slug}');
+      const rect = card?.getBoundingClientRect();
+      return {
+        testId: card?.getAttribute('data-testid') ?? null,
+        title: card?.querySelector('h3')?.textContent?.trim() ?? null,
+        visible: Boolean(rect && rect.width > 0 && rect.height > 0),
+      };
+    })()`);
+    assert.deepEqual(
+      scheduledCard,
+      {
+        testId: `editorial-queue-${scheduledRun.slug}`,
+        title: scheduledRun.title,
+        visible: true,
+      },
+      `The scheduled automation audit link did not open the matching release card: ${JSON.stringify(scheduledCard)}`,
+    );
+
+    const rejectedRuns = runs.filter((run) => run.outcome === 'rejected');
+    for (const rejectedRun of rejectedRuns) {
+      const rejectedCard = await evaluateBrowser(cdp, `(() => {
+        const card = document.querySelector('[data-testid="automation-run-${rejectedRun.id}"]');
+        return {
+          rendered: Boolean(card),
+          hasScheduledReleaseLink: Boolean(card?.querySelector('a[href*="editorial-queue-"]')),
+        };
+      })()`);
+      assert.equal(rejectedCard.rendered, true, `Rejected automation run ${rejectedRun.id} did not render in the audit list.`);
+      assert.equal(
+        rejectedCard.hasScheduledReleaseLink,
+        false,
+        `Rejected automation run ${rejectedRun.id} rendered a misleading scheduled-release link.`,
+      );
+    }
+  } finally {
+    cdp?.close();
+    browserProcess.kill('SIGTERM');
+    if (createdRun) {
+      const cleanupResponse = await fetch(`${apiOrigin}/api/newsroom/releases/${encodeURIComponent(scheduledRun.slug)}`, {
+        method: 'DELETE',
+        headers: { 'x-newsroom-test-editor': smokeEditorId },
+      });
+      assert.equal(
+        cleanupResponse.status,
+        200,
+        `The smoke test could not clean up its scheduled release fixture (${cleanupResponse.status}).`,
+      );
+      const auditCleanupResponse = await fetch(`${apiOrigin}/api/newsroom/automation/runs/smoke-fixture`, {
+        method: 'DELETE',
+        headers: { 'x-newsroom-test-editor': smokeEditorId },
+      });
+      assert.equal(
+        auditCleanupResponse.status,
+        204,
+        `The smoke test could not clean up its automation audit fixture (${auditCleanupResponse.status}).`,
+      );
+    }
+  }
+}
+
 async function checkMobileEditorHistory() {
   const debugPort = await findFreePort();
   const userDataDir = `${os.tmpdir()}/gan-mobile-history-${process.pid}`;
@@ -2103,6 +2275,10 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
 
 test('signed-in release history filters remain usable at a mobile viewport', { concurrency: false }, async () => {
   await checkMobileEditorHistory();
+});
+
+test('automation audit links open the matching scheduled release and rejected runs stay unlinked', { concurrency: false }, async () => {
+  await checkAutomationAuditReleaseLink();
 });
 
 test('light and dark themes stay readable across key public and newsroom routes', { concurrency: false }, async () => {

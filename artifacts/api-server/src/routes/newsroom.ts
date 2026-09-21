@@ -7,7 +7,12 @@ import {
   type Response as ExpressResponse,
 } from "express";
 import { requireEditorAuth } from "../middlewares/requireEditorAuth";
-import { db, editorialReleaseHistoryTable, editorialReleasesTable } from "@workspace/db";
+import {
+  db,
+  editorialAutomationRunsTable,
+  editorialReleaseHistoryTable,
+  editorialReleasesTable,
+} from "@workspace/db";
 import {
   CancelNewsroomReleaseResponse,
   CreateNewsroomReleaseBody,
@@ -253,6 +258,107 @@ router.post("/newsroom/automation/run", automationRunAuth, async (_req, res): Pr
     res.status(500).json({ error: "Automation run failed." });
   }
 });
+
+if (process.env.NODE_ENV === "test") {
+  router.post("/newsroom/automation/runs/smoke-fixture", requireEditorAuth, async (_req, res): Promise<void> => {
+    const slug = "smoke-automation-audit-release";
+    const title = "Smoke test scheduled automation release";
+    const publishAt = new Date(Date.now() + 60 * 60 * 1000);
+    const baseStory = scheduledStories[0];
+    const story = {
+      ...baseStory,
+      slug,
+      title,
+      publishAt: publishAt.toISOString(),
+      date: dateOnly(publishAt),
+    };
+    const detail = {
+      title,
+      slug,
+      publishAt: publishAt.toISOString(),
+      draftModel: "smoke fixture",
+      verificationModel: "smoke fixture",
+      verification: {
+        pass: true,
+        score: 1,
+        unsupportedClaims: [],
+        slopFlags: [],
+        notes: "Deterministic smoke fixture.",
+      },
+    };
+
+    await db.transaction(async (tx) => {
+      const [existingRelease] = await tx
+        .select()
+        .from(editorialReleasesTable)
+        .where(eq(editorialReleasesTable.slug, slug))
+        .limit(1);
+      if (existingRelease) {
+        await tx
+          .update(editorialReleasesTable)
+          .set({ title, publishAt, status: "scheduled", story, updatedAt: new Date() })
+          .where(eq(editorialReleasesTable.id, existingRelease.id));
+      } else {
+        const [{ maxPosition }] = await tx
+          .select({ maxPosition: editorialReleasesTable.position })
+          .from(editorialReleasesTable)
+          .orderBy(desc(editorialReleasesTable.position))
+          .limit(1);
+        await tx.insert(editorialReleasesTable).values({
+          slug,
+          title,
+          publishAt,
+          cadence: "daily",
+          status: "scheduled",
+          position: (maxPosition ?? -1) + 1,
+          story,
+        });
+      }
+
+      const [existingRun] = await tx
+        .select({ id: editorialAutomationRunsTable.id })
+        .from(editorialAutomationRunsTable)
+        .where(eq(editorialAutomationRunsTable.runKey, "smoke-automation-audit"))
+        .limit(1);
+      if (existingRun) {
+        await tx
+          .update(editorialAutomationRunsTable)
+          .set({
+            cadence: "daily",
+            trigger: "smoke",
+            status: "completed",
+            candidates: 1,
+            published: 1,
+            rejected: 0,
+            detail,
+            finishedAt: new Date(),
+          })
+          .where(eq(editorialAutomationRunsTable.id, existingRun.id));
+      } else {
+        await tx.insert(editorialAutomationRunsTable).values({
+          runKey: "smoke-automation-audit",
+          cadence: "daily",
+          trigger: "smoke",
+          status: "completed",
+          candidates: 1,
+          published: 1,
+          rejected: 0,
+          detail,
+          finishedAt: new Date(),
+        });
+      }
+    });
+
+    res.status(201).json({ slug, title });
+  });
+
+  router.delete("/newsroom/automation/runs/smoke-fixture", requireEditorAuth, async (_req, res): Promise<void> => {
+    await db
+      .delete(editorialAutomationRunsTable)
+      .where(eq(editorialAutomationRunsTable.runKey, "smoke-automation-audit"));
+    res.status(204).end();
+  });
+}
 
 router.get("/newsroom/sitemap.xml", async (_req, res): Promise<void> => {
   try {
