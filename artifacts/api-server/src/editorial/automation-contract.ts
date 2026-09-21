@@ -37,6 +37,36 @@ export type EditorialValidationSource = {
   publisher: string;
 };
 
+export type EditorialAutomationRunRecord = {
+  id: number;
+  runKey: string;
+  status: string;
+  published: number;
+  rejected: number;
+  detail: unknown;
+};
+
+export type EditorialReplayStatus = "scheduled" | "rejected";
+
+export type EditorialReplayChange = {
+  runId: number;
+  runKey: string;
+  previousStatus: EditorialReplayStatus;
+  replayedStatus: EditorialReplayStatus;
+  errors: string[];
+};
+
+export type EditorialReplayReport = {
+  totalRuns: number;
+  inspected: number;
+  skipped: number;
+  unchanged: number;
+  changed: number;
+  previouslyPublishable: number;
+  previouslyRejected: number;
+  changes: EditorialReplayChange[];
+};
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
@@ -149,4 +179,73 @@ export function evaluateEditorialFixture(
     draft,
     verification,
   };
+}
+
+function replayStatusForRun(run: EditorialAutomationRunRecord, detail: Record<string, unknown>): EditorialReplayStatus | null {
+  if (run.status !== "completed") return null;
+  if (run.published > 0) return "scheduled";
+  if (run.rejected > 0 && detail.reason === "quality_gate_rejected") return "rejected";
+  return null;
+}
+
+function validationSourcesFromDetail(detail: Record<string, unknown>): EditorialValidationSource[] {
+  if (!Array.isArray(detail.validationSources)) return [];
+  return detail.validationSources
+    .filter(isRecord)
+    .map((source) => ({
+      url: typeof source.url === "string" ? source.url : "",
+      publisher: typeof source.publisher === "string" ? source.publisher : "",
+    }))
+    .filter((source) => source.url.length > 0 && source.publisher.length > 0);
+}
+
+export function replaySavedEditorialRuns(
+  runs: readonly EditorialAutomationRunRecord[],
+): EditorialReplayReport {
+  const report: EditorialReplayReport = {
+    totalRuns: runs.length,
+    inspected: 0,
+    skipped: 0,
+    unchanged: 0,
+    changed: 0,
+    previouslyPublishable: 0,
+    previouslyRejected: 0,
+    changes: [],
+  };
+
+  for (const run of runs) {
+    const detail = isRecord(run.detail) ? run.detail : {};
+    const previousStatus = replayStatusForRun(run, detail);
+    if (!previousStatus) {
+      report.skipped += 1;
+      continue;
+    }
+
+    const sources = validationSourcesFromDetail(detail);
+    if (!("draft" in detail) || !("verification" in detail) || sources.length === 0) {
+      report.skipped += 1;
+      continue;
+    }
+
+    report.inspected += 1;
+    if (previousStatus === "scheduled") report.previouslyPublishable += 1;
+    else report.previouslyRejected += 1;
+
+    const replay = evaluateEditorialFixture(detail.draft, detail.verification, sources);
+    if (replay.status === previousStatus) {
+      report.unchanged += 1;
+      continue;
+    }
+
+    report.changed += 1;
+    report.changes.push({
+      runId: run.id,
+      runKey: run.runKey,
+      previousStatus,
+      replayedStatus: replay.status,
+      errors: replay.errors,
+    });
+  }
+
+  return report;
 }

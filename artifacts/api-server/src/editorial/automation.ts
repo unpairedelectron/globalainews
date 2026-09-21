@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { desc, eq, gte, lt } from "drizzle-orm";
+import { asc, desc, eq, gte, lt } from "drizzle-orm";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import {
   db,
@@ -18,6 +18,8 @@ import {
   deterministicGate,
   normalizeDraft,
   normalizeVerification,
+  replaySavedEditorialRuns,
+  type EditorialReplayReport,
   type DraftPayload,
   type VerificationPayload,
 } from "./automation-contract";
@@ -52,7 +54,13 @@ type FeedItem = {
 
 type EditorialSourceItem = typeof editorialSourceItemsTable.$inferSelect;
 
-export { deterministicGate, normalizeDraft, normalizeVerification } from "./automation-contract";
+export {
+  deterministicGate,
+  normalizeDraft,
+  normalizeVerification,
+  replaySavedEditorialRuns,
+} from "./automation-contract";
+export type { EditorialReplayReport } from "./automation-contract";
 export type { DraftPayload, VerificationPayload } from "./automation-contract";
 
 type AutomationResult = {
@@ -446,7 +454,14 @@ async function runCadence(cadence: EditorialCadence, runKey: string, trigger: st
       log("draft_revised", { runId: run.id, errors, verification });
     }
     if (errors.length > 0) {
-      const detail = { ...editorialModelConfiguration, reason: "quality_gate_rejected", errors, draft, verification };
+      const detail = {
+        ...editorialModelConfiguration,
+        reason: "quality_gate_rejected",
+        errors,
+        draft,
+        verification,
+        validationSources: selected.map((item) => ({ url: item.url, publisher: item.publisher })),
+      };
       await db.update(editorialAutomationRunsTable).set({ status: "completed", candidates: 1, rejected: 1, detail, finishedAt: new Date() }).where(eq(editorialAutomationRunsTable.id, run.id));
       log("draft_rejected", { runId: run.id, ...detail });
       return { status: "completed", cadence, runKey, published: 0, rejected: 1, candidates: 1, detail };
@@ -488,6 +503,7 @@ async function runCadence(cadence: EditorialCadence, runKey: string, trigger: st
       sources: story.sources,
       draft,
       verification,
+      validationSources: selected.map((item) => ({ url: item.url, publisher: item.publisher })),
     };
     await db.update(editorialAutomationRunsTable).set({ status: "completed", candidates: 1, published: 1, detail, finishedAt: new Date() }).where(eq(editorialAutomationRunsTable.id, run.id));
     log("article_scheduled", { runId: run.id, ...detail });
@@ -498,6 +514,54 @@ async function runCadence(cadence: EditorialCadence, runKey: string, trigger: st
     log("run_failed", { runId: run.id, ...detail });
     return { status: "failed", cadence, runKey, published: 0, rejected: 0, candidates: 0, detail };
   }
+}
+
+export async function replayEditorialAutomationRuns(): Promise<EditorialReplayReport> {
+  const [runs, sourceRows] = await Promise.all([
+    db
+      .select({
+        id: editorialAutomationRunsTable.id,
+        runKey: editorialAutomationRunsTable.runKey,
+        status: editorialAutomationRunsTable.status,
+        published: editorialAutomationRunsTable.published,
+        rejected: editorialAutomationRunsTable.rejected,
+        detail: editorialAutomationRunsTable.detail,
+      })
+      .from(editorialAutomationRunsTable)
+      .orderBy(asc(editorialAutomationRunsTable.id)),
+    db
+      .select({
+        url: editorialSourceItemsTable.url,
+        publisher: editorialSourceItemsTable.publisher,
+      })
+      .from(editorialSourceItemsTable),
+  ]);
+  const sourcesByUrl = new Map(sourceRows.map((source) => [source.url, source]));
+  const replayRuns = runs.map((run) => {
+    const detail = run.detail && typeof run.detail === "object" && !Array.isArray(run.detail)
+      ? run.detail
+      : {};
+    if (Array.isArray(detail.validationSources)) return run;
+    const draft = detail.draft;
+    const draftRecord =
+      draft && typeof draft === "object" && !Array.isArray(draft)
+        ? (draft as Record<string, unknown>)
+        : null;
+    const sourceUrls =
+      draftRecord && Array.isArray(draftRecord.sourceUrls)
+        ? draftRecord.sourceUrls.filter((url): url is string => typeof url === "string")
+        : [];
+    return {
+      ...run,
+      detail: {
+        ...detail,
+        validationSources: sourceUrls
+          .map((url) => sourcesByUrl.get(url))
+          .filter((source): source is { url: string; publisher: string } => Boolean(source)),
+      },
+    };
+  });
+  return replaySavedEditorialRuns(replayRuns);
 }
 
 export async function runEditorialAutomation(trigger = "manual"): Promise<AutomationResult[]> {

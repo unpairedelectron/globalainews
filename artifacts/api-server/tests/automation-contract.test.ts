@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   evaluateEditorialFixture,
+  replaySavedEditorialRuns,
   type EditorialValidationSource,
 } from "../src/editorial/automation-contract.ts";
 
@@ -120,4 +121,89 @@ test("copied phrasing remains rejected", () => {
   assert.equal(result.status, "rejected");
   assert.equal(result.scheduledReleases, 0);
   assert.ok(result.errors.includes("slop_detected"));
+});
+
+test("replay reports a previously publishable output that the gate now rejects", () => {
+  const report = replaySavedEditorialRuns([
+    {
+      id: 101,
+      runKey: "daily-2026-09-21",
+      status: "completed",
+      published: 1,
+      rejected: 0,
+      detail: {
+        draft: passingDraft,
+        verification: { ...passingVerification, pass: false },
+        validationSources: sources,
+      },
+    },
+    {
+      id: 102,
+      runKey: "daily-2026-09-20",
+      status: "failed",
+      published: 0,
+      rejected: 0,
+      detail: {},
+    },
+  ]);
+
+  assert.equal(report.inspected, 1);
+  assert.equal(report.previouslyPublishable, 1);
+  assert.deepEqual(report.changes, [
+    {
+      runId: 101,
+      runKey: "daily-2026-09-21",
+      previousStatus: "scheduled",
+      replayedStatus: "rejected",
+      errors: ["fact_check_failed"],
+    },
+  ]);
+  assert.equal(report.changed, 1);
+});
+
+test("replay reports a previously rejected output that the gate now schedules", () => {
+  const report = replaySavedEditorialRuns([
+    {
+      id: 103,
+      runKey: "daily-2026-09-19",
+      status: "completed",
+      published: 0,
+      rejected: 1,
+      detail: {
+        reason: "quality_gate_rejected",
+        draft: passingDraft,
+        verification: passingVerification,
+        validationSources: sources,
+      },
+    },
+  ]);
+
+  assert.deepEqual(report.changes, [
+    {
+      runId: 103,
+      runKey: "daily-2026-09-19",
+      previousStatus: "rejected",
+      replayedStatus: "scheduled",
+      errors: [],
+    },
+  ]);
+  assert.equal(report.previouslyRejected, 1);
+  assert.equal(report.changed, 1);
+});
+
+test("replay skips run records without the saved model inputs", () => {
+  const report = replaySavedEditorialRuns([
+    {
+      id: 104,
+      runKey: "daily-2026-09-18",
+      status: "completed",
+      published: 1,
+      rejected: 0,
+      detail: { draft: passingDraft, verification: passingVerification },
+    },
+  ]);
+
+  assert.equal(report.inspected, 0);
+  assert.equal(report.skipped, 1);
+  assert.deepEqual(report.changes, []);
 });

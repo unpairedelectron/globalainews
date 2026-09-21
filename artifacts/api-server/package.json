@@ -8,7 +8,8 @@
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:automation": "node --experimental-strip-types --test tests/automation-contract.test.ts"
+    "test:automation": "node --experimental-strip-types --test tests/automation-contract.test.ts",
+    "replay:automation": "pnpm run build && node ./dist/editorial/replay-command.mjs"
   },
   "dependencies": {
     "@clerk/express": "^2.1.69",

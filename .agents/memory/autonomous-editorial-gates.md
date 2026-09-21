@@ -20,3 +20,9 @@ The intended publishing cadence is one high-quality daily article plus one addit
 **Why:** The newsroom prioritizes editorial quality and controlled operating cost over maximum article volume.
 
 **How to apply:** Keep the weekly cadence restricted to Sunday; do not treat every day after the daily slot as weekly-due.
+
+Replayable model outputs need their source URL and publisher evidence preserved with the draft and verification payloads; falling back to the mutable source table is only a compatibility path for older records.
+
+**Why:** A future gate must be able to reevaluate a saved output without making model calls or depending on a later source-feed snapshot.
+
+**How to apply:** Store the minimal validation source records in every accepted or quality-gate-rejected run detail, and treat historical records without them as skipped rather than inventing evidence.
