@@ -1424,6 +1424,206 @@ async function checkThemeRegression() {
           [],
           `${route}: ${theme} mobile mode emitted browser errors: ${browserErrors.join(' | ')}`,
         );
+
+        if (route === '/sign-in') {
+          const recoveryTrigger = await evaluateBrowser(cdp, `(() => {
+            const button = document.querySelector('[data-testid="button-forgot-password"]');
+            const rect = button?.getBoundingClientRect();
+            return rect && rect.width > 0 && rect.height > 0
+              ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+              : null;
+          })()`);
+          assert.ok(
+            recoveryTrigger,
+            `${route}: ${theme} mode did not expose a visible password recovery action at the mobile smoke viewport.`,
+          );
+          await cdp.send('Input.dispatchMouseEvent', {
+            type: 'mousePressed',
+            x: recoveryTrigger.x,
+            y: recoveryTrigger.y,
+            button: 'left',
+            clickCount: 1,
+          });
+          await cdp.send('Input.dispatchMouseEvent', {
+            type: 'mouseReleased',
+            x: recoveryTrigger.x,
+            y: recoveryTrigger.y,
+            button: 'left',
+            clickCount: 1,
+          });
+          await waitForBrowserCondition(
+            cdp,
+            `!!document.querySelector('[data-testid="auth-password-recovery"]') && !!document.querySelector('[data-testid="input-password-recovery-email"]')`,
+            `${route}: ${theme} mode did not open the password recovery step.`,
+          );
+
+          const recoveryState = await evaluateBrowser(cdp, `(() => {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const isVisible = (element) => {
+              const rect = element?.getBoundingClientRect();
+              return Boolean(rect && rect.width > 0 && rect.height > 0);
+            };
+            const isInsideViewport = (element) => {
+              const rect = element?.getBoundingClientRect();
+              return Boolean(
+                rect
+                && rect.width > 0
+                && rect.height > 0
+                && rect.left >= 0
+                && rect.right <= viewportWidth
+                && rect.top >= 0
+                && rect.bottom <= viewportHeight,
+              );
+            };
+            const recovery = document.querySelector('[data-testid="auth-password-recovery"]');
+            const input = document.querySelector('[data-testid="input-password-recovery-email"]');
+            const label = document.querySelector('label[for="password-recovery-email"]');
+            const primary = document.querySelector('[data-testid="button-password-recovery-submit"]');
+            const heading = document.querySelector('#password-recovery-title');
+            return {
+              documentWidth: document.documentElement.scrollWidth,
+              viewportWidth,
+              viewportHeight,
+              recoveryVisible: isVisible(recovery),
+              recoveryInsideViewport: isInsideViewport(recovery),
+              inputVisible: isVisible(input),
+              inputInsideViewport: isInsideViewport(input),
+              inputWidth: input?.getBoundingClientRect().width ?? 0,
+              labelText: label?.textContent?.trim() ?? '',
+              labelVisible: isVisible(label),
+              labelInsideViewport: isInsideViewport(label),
+              primaryVisible: isVisible(primary),
+              primaryInsideViewport: isInsideViewport(primary),
+              primaryWidth: primary?.getBoundingClientRect().width ?? 0,
+              headingVisible: isVisible(heading),
+              headingInsideViewport: isInsideViewport(heading),
+            };
+          })()`);
+
+          assert.ok(
+            recoveryState.documentWidth <= recoveryState.viewportWidth,
+            `${route}: ${theme} mode password recovery introduces horizontal overflow (${recoveryState.documentWidth}px > ${recoveryState.viewportWidth}px).`,
+          );
+          assert.ok(
+            recoveryState.recoveryVisible && recoveryState.recoveryInsideViewport,
+            `${route}: ${theme} mode password recovery card is clipped at the mobile smoke viewport: ${JSON.stringify(recoveryState)}`,
+          );
+          assert.ok(
+            recoveryState.inputVisible
+              && recoveryState.inputInsideViewport
+              && recoveryState.inputWidth >= 200,
+            `${route}: ${theme} mode password recovery input is clipped or compressed: ${JSON.stringify(recoveryState)}`,
+          );
+          assert.ok(
+            recoveryState.labelText
+              && recoveryState.labelVisible
+              && recoveryState.labelInsideViewport,
+            `${route}: ${theme} mode password recovery label is missing or clipped: ${JSON.stringify(recoveryState)}`,
+          );
+          assert.ok(
+            recoveryState.primaryVisible
+              && recoveryState.primaryInsideViewport
+              && recoveryState.primaryWidth >= 240,
+            `${route}: ${theme} mode password recovery primary action is clipped or compressed: ${JSON.stringify(recoveryState)}`,
+          );
+          assert.ok(
+            recoveryState.headingVisible && recoveryState.headingInsideViewport,
+            `${route}: ${theme} mode password recovery heading is clipped: ${JSON.stringify(recoveryState)}`,
+          );
+
+          const recoverySubmit = await evaluateBrowser(cdp, `(() => {
+            const button = document.querySelector('[data-testid="button-password-recovery-submit"]');
+            const rect = button?.getBoundingClientRect();
+            return rect ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 } : null;
+          })()`);
+          assert.ok(recoverySubmit, `${route}: ${theme} mode password recovery submit action disappeared.`);
+          await cdp.send('Input.dispatchMouseEvent', {
+            type: 'mousePressed',
+            x: recoverySubmit.x,
+            y: recoverySubmit.y,
+            button: 'left',
+            clickCount: 1,
+          });
+          await cdp.send('Input.dispatchMouseEvent', {
+            type: 'mouseReleased',
+            x: recoverySubmit.x,
+            y: recoverySubmit.y,
+            button: 'left',
+            clickCount: 1,
+          });
+          await waitForBrowserCondition(
+            cdp,
+            `!!document.querySelector('[data-testid="password-recovery-error"]')`,
+            `${route}: ${theme} mode password recovery did not render safe empty-email feedback.`,
+          );
+
+          const recoveryErrorState = await evaluateBrowser(cdp, `(() => {
+            const error = document.querySelector('[data-testid="password-recovery-error"]');
+            const body = getComputedStyle(document.body);
+            const visibleBackground = (element) => {
+              let current = element;
+              while (current) {
+                const background = getComputedStyle(current).backgroundColor;
+                const translucent = background === 'transparent'
+                  || background.startsWith('rgba(')
+                  || background.startsWith('hsla(')
+                  || background.includes('/');
+                if (!translucent) return background;
+                current = current.parentElement;
+              }
+              return body.backgroundColor;
+            };
+            const rect = error?.getBoundingClientRect();
+            const style = error ? getComputedStyle(error) : null;
+            return {
+              text: error?.textContent?.trim() ?? '',
+              visible: Boolean(rect && rect.width > 0 && rect.height > 0),
+              insideViewport: Boolean(
+                rect
+                && rect.left >= 0
+                && rect.right <= window.innerWidth
+                && rect.top >= 0
+                && rect.bottom <= window.innerHeight,
+              ),
+              color: style?.color ?? null,
+              background: error ? visibleBackground(error) : null,
+              live: error?.getAttribute('aria-live') ?? null,
+            };
+          })()`);
+          assert.match(
+            recoveryErrorState.text,
+            /email address/i,
+            `${route}: ${theme} mode password recovery feedback is missing email guidance.`,
+          );
+          assert.ok(
+            recoveryErrorState.visible && recoveryErrorState.insideViewport,
+            `${route}: ${theme} mode password recovery feedback is clipped: ${JSON.stringify(recoveryErrorState)}`,
+          );
+          assert.ok(
+            contrastRatio(recoveryErrorState.background, recoveryErrorState.color) >= 4.5,
+            `${route}: ${theme} mode password recovery feedback contrast is too low.`,
+          );
+          assert.equal(
+            recoveryErrorState.live,
+            'assertive',
+            `${route}: ${theme} mode password recovery feedback is not announced as a live region.`,
+          );
+
+          const recoveryBrowserErrors = cdp.events
+            .filter((event) => (
+              (event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
+              || event.method === 'Runtime.exceptionThrown'
+            ))
+            .map((event) => event.method === 'Runtime.exceptionThrown'
+              ? event.params.exceptionDetails?.text ?? 'Unhandled browser exception'
+              : event.params.args?.map((argument) => argument.value ?? argument.description ?? '').join(' ') ?? 'Browser console error');
+          assert.deepEqual(
+            recoveryBrowserErrors,
+            [],
+            `${route}: ${theme} mode password recovery emitted browser errors: ${recoveryBrowserErrors.join(' | ')}`,
+          );
+        }
       }
     }
 
