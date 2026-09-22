@@ -74,6 +74,19 @@ paths:
       description: Returns sanitized editor-facing outcomes for recent autonomous drafting and verification runs.
       security:
         - clerkSession: []
+      parameters:
+        - name: outcome
+          in: query
+          description: Return only runs with this outcome.
+          required: false
+          schema:
+            $ref: "#/components/schemas/EditorialAutomationRunOutcome"
+        - name: cadence
+          in: query
+          description: Return only runs with this publishing cadence.
+          required: false
+          schema:
+            $ref: "#/components/schemas/EditorialCadence"
       responses:
         "200":
           description: Recent autonomous editorial run audits
@@ -81,6 +94,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditorialAutomationRunQueue"
+        "400":
+          description: Invalid automation run filter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "401":
           description: Editor sign-in required
           content:

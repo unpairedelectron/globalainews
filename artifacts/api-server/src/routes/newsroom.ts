@@ -56,6 +56,8 @@ import {
   getAutomationRuns,
   getDynamicSourceRecords,
   runEditorialAutomation,
+  type AutomationRunFilters,
+  type AutomationRunOutcome,
 } from "../editorial/automation";
 
 const router: IRouter = Router();
@@ -238,8 +240,20 @@ router.get("/newsroom/automation/status", async (_req, res): Promise<void> => {
 
 router.get("/newsroom/automation/runs", requireEditorAuth, async (req, res): Promise<void> => {
   try {
+    const outcome = typeof req.query.outcome === "string" ? req.query.outcome : undefined;
+    const cadence = typeof req.query.cadence === "string" ? req.query.cadence : undefined;
+    const outcomes = new Set<AutomationRunOutcome>(["scheduled", "completed", "rejected", "skipped", "failed", "running"]);
+    const cadences = new Set(["daily", "weekly"]);
+    if ((outcome && !outcomes.has(outcome as AutomationRunOutcome)) || (cadence && !cadences.has(cadence))) {
+      res.status(400).json({ error: "Invalid automation run filter." });
+      return;
+    }
+    const filters: AutomationRunFilters = {
+      outcome: outcome as AutomationRunOutcome | undefined,
+      cadence: cadence as EditorialCadence | undefined,
+    };
     res.setHeader("Cache-Control", "no-store");
-    res.json(GetNewsroomAutomationRunsResponse.parse(await getAutomationRuns()));
+    res.json(GetNewsroomAutomationRunsResponse.parse(await getAutomationRuns(50, filters)));
   } catch (error) {
     req.log.error({ err: error }, "Automation audit read failed");
     res.status(500).json({ error: "Automation audit unavailable." });

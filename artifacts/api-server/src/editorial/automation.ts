@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { asc, desc, eq, gte, lt } from "drizzle-orm";
+import { asc, desc, eq, gte, gt, lt, ne, and } from "drizzle-orm";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import {
   db,
@@ -612,10 +612,49 @@ function stringValues(value: unknown, maxItems = 12, maxLength = 500): string[] 
     : [];
 }
 
-export async function getAutomationRuns(limit = 50) {
+export type AutomationRunOutcome = "scheduled" | "completed" | "rejected" | "skipped" | "failed" | "running";
+
+export type AutomationRunFilters = {
+  outcome?: AutomationRunOutcome;
+  cadence?: EditorialCadence;
+};
+
+export async function getAutomationRuns(limit = 50, filters: AutomationRunFilters = {}) {
+  const outcomeFilter = filters.outcome
+    ? {
+        scheduled: gt(editorialAutomationRunsTable.published, 0),
+        failed: and(eq(editorialAutomationRunsTable.published, 0), eq(editorialAutomationRunsTable.status, "failed")),
+        running: and(eq(editorialAutomationRunsTable.published, 0), eq(editorialAutomationRunsTable.status, "running")),
+        rejected: and(
+          eq(editorialAutomationRunsTable.published, 0),
+          gt(editorialAutomationRunsTable.rejected, 0),
+          ne(editorialAutomationRunsTable.status, "failed"),
+          ne(editorialAutomationRunsTable.status, "running"),
+        ),
+        skipped: and(
+          eq(editorialAutomationRunsTable.published, 0),
+          eq(editorialAutomationRunsTable.rejected, 0),
+          eq(editorialAutomationRunsTable.status, "skipped"),
+        ),
+        completed: and(
+          eq(editorialAutomationRunsTable.published, 0),
+          eq(editorialAutomationRunsTable.rejected, 0),
+          ne(editorialAutomationRunsTable.status, "failed"),
+          ne(editorialAutomationRunsTable.status, "running"),
+          ne(editorialAutomationRunsTable.status, "skipped"),
+        ),
+      }[filters.outcome]
+    : undefined;
   const rows = await db
     .select()
     .from(editorialAutomationRunsTable)
+    .where(
+      filters.cadence && outcomeFilter
+        ? and(eq(editorialAutomationRunsTable.cadence, filters.cadence), outcomeFilter)
+        : filters.cadence
+          ? eq(editorialAutomationRunsTable.cadence, filters.cadence)
+          : outcomeFilter,
+    )
     .orderBy(desc(editorialAutomationRunsTable.startedAt), desc(editorialAutomationRunsTable.id))
     .limit(Math.min(Math.max(limit, 1), 100));
 

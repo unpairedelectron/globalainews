@@ -263,6 +263,17 @@ export interface NewsroomMetadata {
   routes: SeoMetadata[];
 }
 
+export type GetNewsroomAutomationRunsParams = {
+/**
+ * Return only runs with this outcome.
+ */
+outcome?: EditorialAutomationRunOutcome;
+/**
+ * Return only runs with this publishing cadence.
+ */
+cadence?: EditorialCadence;
+};
+
 export type GetNewsroomReleaseHistoryParams = {
 /**
  * Return history for one release slug. Use queue for queue-level changes.

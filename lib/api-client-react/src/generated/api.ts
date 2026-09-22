@@ -28,6 +28,7 @@ import type {
   EditorialReleaseReorderInput,
   EditorialReleaseUpdate,
   ErrorResponse,
+  GetNewsroomAutomationRunsParams,
   GetNewsroomReleaseHistoryParams,
   HealthStatus,
   NewsletterSubscription,
@@ -297,21 +298,28 @@ export function useGetNewsroomMetadata<TData = Awaited<ReturnType<typeof getNews
 
 
 
-export const getGetNewsroomAutomationRunsUrl = () => {
+export const getGetNewsroomAutomationRunsUrl = (params?: GetNewsroomAutomationRunsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/newsroom/automation/runs`
+  return stringifiedParams.length > 0 ? `/api/newsroom/automation/runs?${stringifiedParams}` : `/api/newsroom/automation/runs`
 }
 
 /**
  * Returns sanitized editor-facing outcomes for recent autonomous drafting and verification runs.
  * @summary Get recent autonomous editorial run audits
  */
-export const getNewsroomAutomationRuns = async ( options?: Parameters<typeof customFetch>[1]): Promise<EditorialAutomationRunQueue> => {
+export const getNewsroomAutomationRuns = async (params?: GetNewsroomAutomationRunsParams, options?: Parameters<typeof customFetch>[1]): Promise<EditorialAutomationRunQueue> => {
 
-  return customFetch<EditorialAutomationRunQueue>(getGetNewsroomAutomationRunsUrl(),
+  return customFetch<EditorialAutomationRunQueue>(getGetNewsroomAutomationRunsUrl(params),
   {
     ...options,
     method: 'GET'
@@ -324,23 +332,23 @@ export const getNewsroomAutomationRuns = async ( options?: Parameters<typeof cus
 
 
 
-export const getGetNewsroomAutomationRunsQueryKey = () => {
+export const getGetNewsroomAutomationRunsQueryKey = (params?: GetNewsroomAutomationRunsParams,) => {
     return [
-    `/api/newsroom/automation/runs`
+    `/api/newsroom/automation/runs`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetNewsroomAutomationRunsQueryOptions = <TData = Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetNewsroomAutomationRunsQueryOptions = <TData = Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError = ErrorType<ErrorResponse>>(params?: GetNewsroomAutomationRunsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetNewsroomAutomationRunsQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetNewsroomAutomationRunsQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>> = ({ signal }) => getNewsroomAutomationRuns({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>> = ({ signal }) => getNewsroomAutomationRuns(params, { signal, ...requestOptions });
 
 
 
@@ -358,11 +366,11 @@ export type GetNewsroomAutomationRunsQueryError = ErrorType<ErrorResponse>
  */
 
 export function useGetNewsroomAutomationRuns<TData = Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError = ErrorType<ErrorResponse>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ params?: GetNewsroomAutomationRunsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomAutomationRuns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetNewsroomAutomationRunsQueryOptions(options)
+  const queryOptions = getGetNewsroomAutomationRunsQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

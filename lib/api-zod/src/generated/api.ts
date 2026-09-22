@@ -72,6 +72,11 @@ export const GetNewsroomMetadataResponse = zod.object({
  * Returns sanitized editor-facing outcomes for recent autonomous drafting and verification runs.
  * @summary Get recent autonomous editorial run audits
  */
+export const GetNewsroomAutomationRunsQueryParams = zod.object({
+  "outcome": zod.enum(['scheduled', 'completed', 'rejected', 'skipped', 'failed', 'running']).optional().describe('Return only runs with this outcome.'),
+  "cadence": zod.enum(['daily', 'weekly']).optional().describe('Return only runs with this publishing cadence.')
+})
+
 export const GetNewsroomAutomationRunsResponseItem = zod.object({
   "id": zod.number().int(),
   "runKey": zod.string(),
