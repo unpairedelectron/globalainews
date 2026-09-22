@@ -172,6 +172,7 @@ export let authors: Author[] = [
 
 export let sources: Source[] = [
   { slug: 'nature-antibiotic-study', name: 'A generative deep learning approach to antibiotic discovery', publisher: 'Nature Chemical Biology', kind: 'primary', url: 'https://www.nature.com/', accessed: '2026-09-10' },
+  { slug: 'open-a7f1c833c9a1e5c0', name: 'How a Cooperative-Override Circuit Suppresses Nash Play in Large Language Models', publisher: 'arXiv AI', kind: 'primary', url: 'https://arxiv.org/abs/2604.27167', accessed: '2026-09-21' },
   { slug: 'uspto-ai-inventorship', name: 'Guidance on AI-assisted inventions', publisher: 'United States Patent and Trademark Office', kind: 'primary', url: 'https://www.uspto.gov/', accessed: '2026-09-09' },
   { slug: 'indiaai-mission', name: 'IndiaAI Mission', publisher: 'Ministry of Electronics and Information Technology', kind: 'primary', url: 'https://indiaai.gov.in/', accessed: '2026-09-08' },
   { slug: 'stanford-ai-index-2026', name: 'AI Index Report 2026', publisher: 'Stanford Institute for Human-Centered AI', kind: 'dataset', url: 'https://aiindex.stanford.edu/', accessed: '2026-09-07' },
@@ -242,7 +243,68 @@ const storyBodies: Record<string, BodySection[]> = {
   ],
 };
 
+const maintainedStudyStory: Story = {
+  slug: 'study-finds-word-cues-can-override-game-theory-choices-in-llms',
+  category: 'The Edge',
+  title: 'Study finds word cues can override game-theory choices in LLMs',
+  dek: 'A preprint reports that several larger instruction-tuned models favored cooperation in a Prisoner’s Dilemma because of a late, label-sensitive internal circuit.',
+  body: [
+    {
+      heading: 'A late intervention in the network',
+      paragraphs: [
+        'A new arXiv preprint examines how instruction-tuned language models respond to a directly prompted Prisoner’s Dilemma. The authors report that three larger models—Llama-3-70B, Qwen2.5-32B and Qwen2.5-72B—consistently selected cooperation, while Llama-3-8B produced choices closer to the Nash action.',
+        'Using logit-lens analysis, the team found that intermediate model readouts leaned toward the Nash action through much of the network. Near the final layers, however, the models shifted sharply toward cooperation. The authors characterize this late shift as a distributed cooperative override.',
+      ],
+    },
+    {
+      heading: 'A controllable but narrow signal',
+      paragraphs: [
+        'In the 8B model, the researchers report isolating a single direction in the residual stream associated with the override. Steering that direction adjusted the decision, and clamping its contribution at one layer and position changed the choice monotonically while preserving fluent generation.',
+        'The paper links the scale of the final correction to chain-of-thought behavior across the tested model families. But its central interpretation is narrower than a claim that the systems possess a general cooperative preference: the mechanism appeared tied to the language used to present the game.',
+      ],
+    },
+    {
+      heading: 'Neutral labels changed the result',
+      paragraphs: [
+        'The reported effect persisted when player names were removed and when payoffs were rescaled. It disengaged when the action labels “Cooperate” and “Defect” were replaced with neutral terms, suggesting that the circuit was responding to learned lexical associations rather than the underlying payoff structure.',
+        'Across 48 randomized-payoff games with neutral action surfaces, the authors report that none of the models consistently locked into cooperation on dilemmas or demonstrated general equilibrium competence. As a preprint, the work has not established a universal explanation for strategic behavior in language models, but it offers a concrete mechanism for testing prompt-sensitive decision patterns.',
+      ],
+    },
+  ],
+  date: '2026-09-21',
+  readTime: '4 min read',
+  author: 'ishaan-mehta',
+  evidence: 'High confidence · 1 primary source · 0 independent confirmations',
+  evidenceSummary: {
+    primarySources: 1,
+    independentConfirmations: 0,
+    confidence: 'HIGH',
+    note: 'Autonomous desk verification score 0.98 across 1 open-source publisher.',
+  },
+  classification: 'reported',
+  entities: [],
+  timeline: [],
+  relatedStories: [],
+  imageTreatment: {
+    type: 'editorial-abstract',
+    alt: 'Abstract editorial visual for the edge reporting',
+    palette: 'warm ivory, cobalt, graphite',
+    caption: 'The signal is becoming visible in the systems around the model.',
+  },
+  topic: 'LLM interpretability and decision-making',
+  sources: ['open-a7f1c833c9a1e5c0'],
+  bottomLine: 'The study argues that apparent cooperative behavior in tested language models was driven by a controllable response to familiar game labels, not a general inability to identify Nash behavior.',
+  whyItMatters: 'If validated, the findings show why behavioral evaluations should vary labels and task surfaces: a model can appear to display a stable preference while following a narrow lexical trigger.',
+  keyTakeaways: [
+    'Llama-3-70B, Qwen2.5-32B and Qwen2.5-72B reportedly chose full cooperation under direct prompting in the named Prisoner’s Dilemma, unlike Llama-3-8B.',
+    'The researchers found a late-layer shift toward cooperation and identified a residual-stream direction in the 8B model that could be manipulated to adjust the decision.',
+    'Replacing “Cooperate” and “Defect” with neutral labels removed the reported effect, and the models did not show general equilibrium competence across randomized-payoff games.',
+  ],
+  whatChanges: 'The work points toward label-robust game-theory tests and mechanistic checks before treating prompted model behavior as evidence of broad strategic competence or preference.',
+};
+
 export let stories: Story[] = [
+  maintainedStudyStory,
   { slug: 'ai-models-antibiotic-discovery', category: 'Breakthroughs', title: 'AI models are accelerating the hunt for new antibiotics', dek: 'A new generation of models is moving beyond prediction — and into the wet lab.', body: storyBodies.antibiotic, date: '2026-09-11', readTime: '7 min read', author: 'mira-patel', evidence: 'High confidence · 3 primary sources · 5 independent confirmations', evidenceSummary: evidenceSummaries.antibiotic, classification: 'reported', entities: ['antibiotic-discovery', 'google-deepmind'], timeline: ['antibiotic-candidates', 'gemini-science-release'], relatedStories: ['small-models', 'founders'], imageTreatment: { type: 'editorial-abstract', alt: 'Abstract map of molecular structures and laboratory notes', palette: 'deep teal, chalk white, antibiotic amber', caption: 'The interface between a model’s search and the laboratory is becoming more precise.' }, topic: 'AI', sources: ['nature-antibiotic-study', 'stanford-ai-index-2026'], bottomLine: 'AI is making the search space for antibiotic candidates more legible, not removing the need for experiments.', whyItMatters: 'The same model-to-reality feedback loop could reshape materials, manufacturing and drug discovery.', keyTakeaways: ['Novel candidates still require synthesis and testing.', 'The useful breakthrough is the feedback loop, not a single prediction.', 'Scientific judgement remains central to deciding what to test.'], whatChanges: 'Research teams can screen broader chemical spaces before committing scarce wet-lab time.' },
   { slug: 'quiet-race-watermark-everything-ai-makes', category: 'Signals', title: 'The quiet race to watermark everything AI makes', dek: 'Standards are taking shape while the internet learns to ask: who made this?', body: storyBodies.watermarking, date: '2026-09-10', readTime: '5 min read', author: 'jonas-rhee', evidence: 'Medium confidence · 2 primary sources · 4 independent confirmations', evidenceSummary: evidenceSummaries.watermarking, classification: 'analysis', entities: ['content-credentials'], timeline: ['watermarking-code'], relatedStories: ['india-stack'], imageTreatment: { type: 'data-graphic', alt: 'Layered provenance marks across a digital image', palette: 'warm white, cobalt, graphite', caption: 'Provenance is becoming an infrastructure question.' }, topic: 'Policy', sources: ['eu-ai-act-code', 'uspto-ai-inventorship'], bottomLine: 'The emerging standard is provenance that can be checked, rather than a magic mark that cannot be removed.', whyItMatters: 'Trust in generated media will depend on institutions making origin legible at scale.', keyTakeaways: ['Watermarks alone are easy to strip.', 'Signed content credentials can preserve an asset history.', 'Public procurement may drive adoption before consumer platforms do.'], whatChanges: 'Creators and platforms will increasingly be asked to disclose how an asset was made.' },
   { slug: 'indias-public-ai-stack', category: 'India Watch', title: 'India’s public AI stack is being built in the open', dek: 'From language data to compute, a sovereign layer is becoming visible.', body: storyBodies['india-stack'], date: '2026-09-09', readTime: '6 min read', author: 'ananya-rao', evidence: 'High confidence · 4 primary sources · 3 independent confirmations', evidenceSummary: evidenceSummaries['india-stack'], classification: 'reported', entities: ['indiaai-mission', 'sarvam-ai'], timeline: ['indiaai-compute-tender', 'sarvam-public-model'], relatedStories: ['small-models', 'infrastructure'], imageTreatment: { type: 'field-photograph', alt: 'Bengaluru technology district at dusk', palette: 'saffron, indigo, concrete grey', caption: 'India is treating shared infrastructure as a competitive advantage.' }, topic: 'India', sources: ['indiaai-mission', 'stanford-ai-index-2026'], bottomLine: 'India is building a shared layer for language, compute and public-interest deployment.', whyItMatters: 'A public substrate could lower the cost of building products for hundreds of millions of users.', keyTakeaways: ['Compute access is moving beyond the largest companies.', 'Indic-language data is a strategic asset.', 'Procurement will determine whether infrastructure becomes useful.'], whatChanges: 'Startups can spend more effort on products and less on recreating basic AI infrastructure.' },
