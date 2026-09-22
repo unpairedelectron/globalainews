@@ -2138,6 +2138,11 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.ok(routes.length >= 15, 'sitemap unexpectedly contains too few public routes');
   assert.equal(new Set(routes).size, routes.length, 'sitemap contains duplicate routes');
   assert.equal(routes[0], '/', 'sitemap should start with the homepage');
+  assert.deepEqual(
+    [...routes].sort(),
+    metadataManifest.routes.map((metadata) => metadata.path).sort(),
+    'static sitemap routes drifted from the API-backed metadata manifest',
+  );
 
   const items = feedItems(feed);
   assert.ok(items.length >= 3, 'RSS feed unexpectedly contains too few items');

@@ -36,9 +36,11 @@ import {
   essays,
   evidenceSummaries,
   getEditorialSchedule,
+  getReleaseDraftWordCount,
   getPublishedStories,
   indiaIndex,
   industryMap,
+  MINIMUM_STORY_WORDS,
   scheduledStories,
   signals,
   sources as maintainedSources,
@@ -124,6 +126,25 @@ function storyFromInput(
       paragraphs: [paragraph],
     })),
   };
+}
+
+function storyBodyText(story: ScheduledStory): string {
+  return story.body.flatMap((section) => section.paragraphs).join("\n\n");
+}
+
+function rejectShortRelease(
+  res: ExpressResponse,
+  dek: string,
+  body: string,
+): boolean {
+  const wordCount = getReleaseDraftWordCount(dek, body);
+  if (wordCount >= MINIMUM_STORY_WORDS) return false;
+  res.status(422).json({
+    error: `A release needs at least ${MINIMUM_STORY_WORDS} editorial words before it can enter the queue. This draft has ${wordCount}.`,
+    wordCount,
+    minimumWordCount: MINIMUM_STORY_WORDS,
+  });
+  return true;
 }
 
 async function ensureSeeded(): Promise<void> {
@@ -212,22 +233,6 @@ function escapeXml(value: string): string {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&apos;");
 }
-
-const staticSitemapRoutes = [
-  "/",
-  "/brief",
-  "/signals",
-  "/research",
-  "/essays",
-  "/industry",
-  "/models",
-  "/policy",
-  "/india",
-  "/ask",
-  "/insights",
-  "/topic/ai",
-  "/topic/india",
-];
 
 router.get("/newsroom/automation/status", async (_req, res): Promise<void> => {
   try {
@@ -377,11 +382,14 @@ if (process.env.NODE_ENV === "test") {
 router.get("/newsroom/sitemap.xml", async (_req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
-    const urls = [
-      ...staticSitemapRoutes.map((path) => ({ path, lastmod: undefined })),
-      ...publishedStories.map((story) => ({ path: `/article/${story.slug}`, lastmod: story.date })),
-    ];
-    const unique = [...new Map(urls.map((entry) => [entry.path, entry])).values()];
+    const metadataManifest = getSeoMetadataManifest(publishedStories);
+    const lastmodByPath = new Map(
+      publishedStories.map((story) => [`/article/${story.slug}`, story.date]),
+    );
+    const unique = metadataManifest.routes.map((metadata) => ({
+      path: metadata.path,
+      lastmod: lastmodByPath.get(metadata.path),
+    }));
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${unique
       .map(
         (entry) =>
@@ -560,6 +568,7 @@ router.post("/newsroom/releases", requireEditorAuth, async (req, res): Promise<v
       return;
     }
     const story = storyFromInput(parsed.data as ReleaseInput);
+    if (rejectShortRelease(res, story.dek, storyBodyText(story))) return;
     const created = await db.transaction(async (tx) => {
       const [release] = await tx
         .insert(editorialReleasesTable)
@@ -667,6 +676,7 @@ router.patch("/newsroom/releases/:slug", requireEditorAuth, async (req, res): Pr
     const currentStory = toScheduledStory(existing);
     const story = storyFromInput({ ...parsed.data, slug: existing.slug } as ReleaseUpdate, currentStory);
     const nextStory = { ...currentStory, ...story, slug: existing.slug };
+    if (rejectShortRelease(res, nextStory.dek, storyBodyText(nextStory))) return;
     const nextPublishAt = new Date(nextStory.publishAt);
     const changedFields = [
       existing.title !== nextStory.title ? "title" : null,

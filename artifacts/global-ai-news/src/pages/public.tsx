@@ -3,7 +3,7 @@ import { ArrowDown, ArrowUp, ArrowUpRight, Pencil, Plus, RefreshCw, Search, Shar
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth, useClerk, useUser } from '@clerk/react';
 import { Link, useLocation, useParams, useSearch } from 'wouter';
-import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, indiaIndex, industryMap, signals, sources, stories, timelineEvents, type Story } from '@/content';
+import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, getReleaseDraftWordCount, indiaIndex, industryMap, MINIMUM_STORY_WORDS, signals, sources, stories, timelineEvents, type Story } from '@/content';
 import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryRow, TimelineList } from '@/components/site';
 import { BRAND_COLORS } from '@/brand';
 import { EditorialSealGlyph } from '@/components/brand-mark';
@@ -263,6 +263,9 @@ function ReleaseEditor({
 }) {
   const [value, setValue] = useState(initialValue);
   const update = (field: keyof ReleaseFormValue, next: string) => setValue((current) => ({ ...current, [field]: next }));
+  const wordCount = getReleaseDraftWordCount(value.dek, value.body);
+  const wordsRemaining = Math.max(0, MINIMUM_STORY_WORDS - wordCount);
+  const meetsWordMinimum = wordCount >= MINIMUM_STORY_WORDS;
   return <form data-testid={editing ? 'form-edit-release' : 'form-create-release'} onSubmit={(event) => { event.preventDefault(); onSubmit(value); }} className="border border-primary/30 bg-surface-muted p-5 md:p-7">
     <div className="flex items-start justify-between gap-5 border-b border-foreground/15 pb-5">
       <div><p className="eyebrow text-primary">{editing ? 'Edit prepared article' : 'New prepared article'}</p><h3 className="mt-2 font-serif text-3xl leading-none">{editing ? 'Keep the handoff precise.' : 'Prepare the next edition.'}</h3></div>
@@ -278,7 +281,7 @@ function ReleaseEditor({
       <label><span className="eyebrow text-muted-foreground">Author</span><select data-testid="select-release-author" required value={value.author} onChange={(event) => update('author', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary">{authors.map((author) => <option value={author.slug} key={author.slug}>{author.name}</option>)}</select></label>
       <label className="md:col-span-2"><span className="eyebrow text-muted-foreground">Working copy</span><textarea data-testid="textarea-release-body" required minLength={1} value={value.body} onChange={(event) => update('body', event.target.value)} rows={7} className="mt-2 w-full resize-y border border-foreground/20 bg-background p-3 text-sm leading-6 outline-none focus:border-primary" /></label>
     </div>
-    <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-foreground/15 pt-5"><p className="max-w-md text-xs leading-5 text-muted-foreground">The article will enter the durable release queue and remain editable until it publishes.</p><div className="flex gap-2"><button data-testid="button-cancel-release-editor" type="button" onClick={onCancel} className="border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest hover:border-primary">Discard</button><button data-testid="button-save-release" type="submit" disabled={saving} className="inline-flex items-center gap-2 bg-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-background disabled:cursor-wait disabled:opacity-50">{saving ? 'Saving…' : editing ? 'Save changes' : 'Add to queue'}</button></div></div>
+     <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-foreground/15 pt-5"><div className="max-w-md text-xs leading-5 text-muted-foreground"><p data-testid="release-word-count" className={meetsWordMinimum ? 'text-primary' : 'text-destructive'}>{wordCount} / {MINIMUM_STORY_WORDS} editorial words</p><p className="mt-1">{meetsWordMinimum ? 'The article will enter the durable release queue and remain editable until it publishes.' : `Add ${wordsRemaining} more words before this release can enter the queue.`}</p></div><div className="flex gap-2"><button data-testid="button-cancel-release-editor" type="button" onClick={onCancel} className="border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest hover:border-primary">Discard</button><button data-testid="button-save-release" type="submit" disabled={saving || !meetsWordMinimum} className="inline-flex items-center gap-2 bg-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-background disabled:cursor-not-allowed disabled:opacity-50">{saving ? 'Saving…' : editing ? 'Save changes' : 'Add to queue'}</button></div></div>
   </form>;
 }
 

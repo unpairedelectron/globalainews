@@ -7,4 +7,4 @@ Initial route metadata should be generated from the API-backed newsroom metadata
 
 **Why:** Editorial edits can land in the maintained newsroom source without a frontend rebuild; a build-safe manifest gives static route generation an explicit contract and makes drift testable.
 
-**How to apply:** Keep the manifest derived from the same content source as `/newsroom/content`, connect release builds to the current API endpoint, fail builds when the endpoint is unavailable, malformed, incomplete, or stale, and compare initial and hydrated metadata against it in route smoke checks.
+**How to apply:** Keep the manifest derived from the same content source as `/newsroom/content`, connect release builds to the current API endpoint, generate both the static sitemap and per-route HTML from it, fail builds when the endpoint is unavailable, malformed, incomplete, or stale, and compare initial and hydrated metadata against it in route smoke checks.

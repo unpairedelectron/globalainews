@@ -448,12 +448,26 @@ function ampArticlePlugin() {
   };
 }
 
-function routePathsFromPublishingFiles(projectRoot: string): string[] {
+function routePathsFromPublishingFiles(
+  projectRoot: string,
+  metadataManifest?: SeoMetadataManifest,
+): string[] {
   const sitemap = readFileSync(path.join(projectRoot, 'public', 'sitemap.xml'), 'utf8');
   const feed = readFileSync(path.join(projectRoot, 'public', 'feed.xml'), 'utf8');
   const sitemapPaths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
   const feedPaths = [...feed.matchAll(/<link>([^<]+)<\/link>/g)].map((match) => new URL(match[1]).pathname);
-  return [...new Set(['/', ...sitemapPaths, ...feedPaths].map((route) => route.trim() || '/'))];
+  const manifestPaths = metadataManifest?.routes.map((metadata) => metadata.path) ?? [];
+  return [...new Set(['/', ...sitemapPaths, ...feedPaths, ...manifestPaths].map((route) => route.trim() || '/'))];
+}
+
+function writeSitemap(outputDir: string, metadataManifest: SeoMetadataManifest): void {
+  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${metadataManifest.routes
+    .map(
+      (metadata) =>
+        `  <url><loc>${escapeHtml(`https://www.globalainews.in${metadata.path}`)}</loc></url>`,
+    )
+    .join('\n')}\n</urlset>`;
+  writeFileSync(path.join(outputDir, 'sitemap.xml'), body);
 }
 
 function withRouteMetadata(baseHtml: string, route: string): string {
@@ -507,9 +521,10 @@ function routeMetadataPlugin() {
       const outputDir = buildOutputDir(projectRoot);
       const metadataManifest = await loadBuildMetadataManifest(projectRoot);
       const baseHtml = readFileSync(path.join(outputDir, 'index.html'), 'utf8');
+      writeSitemap(outputDir, metadataManifest);
       writeSocialPreviewAssets(outputDir, getPublishedStories(), metadataManifest);
       writeAmpArticleDocument(outputDir);
-      for (const route of routePathsFromPublishingFiles(projectRoot)) {
+      for (const route of routePathsFromPublishingFiles(projectRoot, metadataManifest)) {
         const routeDirectory = route === '/' ? outputDir : path.join(outputDir, route.replace(/^\/|\/$/g, ''));
         mkdirSync(routeDirectory, { recursive: true });
         writeFileSync(path.join(routeDirectory, 'index.html'), withRouteMetadata(baseHtml, route));

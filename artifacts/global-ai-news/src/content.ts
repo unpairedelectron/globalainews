@@ -97,6 +97,14 @@ export interface Story {
 }
 export const MINIMUM_STORY_WORDS = 800;
 
+export function countEditorialWords(copy: string): number {
+  return copy.trim().split(/\s+/).filter(Boolean).length;
+}
+
+export function getReleaseDraftWordCount(dek: string, body: string): number {
+  return countEditorialWords(`${dek} ${body}`);
+}
+
 export function getStoryWordCount(story: Story): number {
   const visibleCopy = [
     story.dek,
@@ -106,7 +114,7 @@ export function getStoryWordCount(story: Story): number {
     ...story.keyTakeaways,
     story.whatChanges,
   ].join(' ');
-  return visibleCopy.trim().split(/\s+/).filter(Boolean).length;
+  return countEditorialWords(visibleCopy);
 }
 
 export type EditorialCadence = 'daily' | 'weekly';
