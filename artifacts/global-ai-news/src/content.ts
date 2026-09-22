@@ -95,6 +95,20 @@ export interface Story {
   keyTakeaways: string[];
   whatChanges: string;
 }
+export const MINIMUM_STORY_WORDS = 800;
+
+export function getStoryWordCount(story: Story): number {
+  const visibleCopy = [
+    story.dek,
+    ...story.body.flatMap((section) => section.paragraphs),
+    story.bottomLine,
+    story.whyItMatters,
+    ...story.keyTakeaways,
+    story.whatChanges,
+  ].join(' ');
+  return visibleCopy.trim().split(/\s+/).filter(Boolean).length;
+}
+
 export type EditorialCadence = 'daily' | 'weekly';
 export interface ScheduledStory extends Story {
   publishAt: string;
@@ -217,29 +231,281 @@ export let timelineEvents: TimelineEvent[] = [
 
 const storyBodies: Record<string, BodySection[]> = {
   antibiotic: [
-    { heading: 'The bottom line', paragraphs: ['The strongest signal in AI biology is not a model naming a molecule. It is a repeatable handoff between a model’s search and a laboratory’s judgement.'], pullQuote: 'The model is not replacing intuition. It is giving intuition somewhere new to look.' },
-    { heading: 'The handoff is the story', paragraphs: ['Researchers used a generative system to propose antibiotic candidates that did not appear in public databases. Several survived early synthesis and testing, creating a narrow but meaningful bridge between a latent map and the wet lab.', 'Models can search millions of combinations overnight. Scientists still decide which questions justify the expensive, messy work of testing.'] },
-    { heading: 'Why this matters beyond medicine', paragraphs: ['The pattern will recur wherever prediction meets a physical feedback loop: a pipette in biology, a robot arm in manufacturing or a production system in software. The durable advantage is not automation alone, but a more precise interface with reality.'] },
+    {
+      heading: 'The bottom line',
+      paragraphs: [
+        'The strongest signal in AI biology is not a model naming a molecule. It is a repeatable handoff between a model’s search and a laboratory’s judgement. Antibiotic discovery is a useful test because the search space is enormous, the cost of a false lead is high and a promising prediction still has to survive chemistry, biology and time.',
+        'That distinction matters. A model can make a candidate look plausible without making it useful. The meaningful progress begins when researchers can move from a generated structure to a synthesised compound, then feed the result back into the next round of search. The model is not replacing intuition. It is giving intuition somewhere new to look.',
+      ],
+      pullQuote: 'The model is not replacing intuition. It is giving intuition somewhere new to look.',
+    },
+    {
+      heading: 'The search space is the first bottleneck',
+      paragraphs: [
+        'Researchers used a generative system to propose antibiotic candidates that did not appear in public databases. That is not the same as proving the compounds are effective, but it changes the starting point for the work. Instead of ranking only molecules that already have a familiar analogue, a system can explore combinations of chemical features that a conventional library search may never surface.',
+        'The value is partly mathematical and partly practical. There are far more possible molecules than a laboratory can make, test or even represent with a useful name. A model can narrow the field by learning relationships between structure and activity, then suggest a manageable set for people to inspect. The result is not an answer; it is a better queue for scarce experimental attention.',
+      ],
+    },
+    {
+      heading: 'The wet lab remains the quality filter',
+      paragraphs: [
+        'Several candidates survived early synthesis and testing, creating a narrow but meaningful bridge between a latent map and the wet lab. Synthesis exposes a constraint that a screen cannot: some attractive structures are difficult to make, unstable outside a simulation or incompatible with the conditions required for a fair experiment.',
+        'Scientists still decide which questions justify the expensive, messy work of testing. They check whether an apparent effect is reproducible, whether a compound is toxic to healthy cells, whether resistance emerges quickly and whether the result is specific to one assay. Those judgements are not clerical steps after the model has finished. They define what success means.',
+      ],
+    },
+    {
+      heading: 'A better loop, not a magic molecule',
+      paragraphs: [
+        'The most durable workflow looks less like a vending machine and more like a loop. A model proposes candidates, a chemist removes the impossible ones, a lab measures activity, and the next model run learns from both positive and negative results. Every stage changes the information available to the next stage.',
+        'That loop also makes provenance more important. Teams need to know which model version proposed a structure, which assumptions shaped the ranking, how a compound was prepared and which assay produced the result. Without that record, a striking candidate can become an isolated anecdote instead of a reusable research lead.',
+      ],
+    },
+    {
+      heading: 'Why this matters beyond medicine',
+      paragraphs: [
+        'The pattern will recur wherever prediction meets a physical feedback loop: a pipette in biology, a robot arm in manufacturing or a production system in software. The durable advantage is not automation alone, but a more precise interface with reality. Systems that know how to ask for the next useful experiment will outperform systems that only produce more hypotheses.',
+        'For antibiotic research, the standard should therefore be modest and demanding at the same time. The question is not whether a model can claim novelty. It is whether a research team can repeatedly turn unusual suggestions into well-characterised candidates, publish the failures as well as the successes and shorten the path from search to evidence.',
+        'That is the difference between a compelling research story and a durable scientific capability. Novelty opens the door, but reproducibility determines whether anyone can keep using it.',
+      ],
+    },
+    {
+      heading: 'From prediction to evidence',
+      paragraphs: [
+        'The next improvement will come from making the handoff measurable. Researchers can track how many generated candidates are chemically feasible, how many enter an assay, how often a result is reproducible and which parts of the model’s ranking were useful to the laboratory. Those measures keep the story grounded in throughput and evidence instead of novelty alone.',
+        'That discipline also makes the work easier to share. A candidate that fails for a documented reason can still teach the next search. A candidate that succeeds can be compared with the alternatives that were not tested. The real promise of AI-assisted discovery is therefore cumulative: each experiment should make the next decision more informed, whether the result is a new antibiotic or a clearer reason to stop pursuing one.',
+      ],
+    },
   ],
   watermarking: [
-    { heading: 'The quiet standard battle', paragraphs: ['Content credentials are becoming a practical procurement question, even as no single watermark survives every transformation of a file. The useful layer is provenance: a signed history that can travel with the asset.'] },
-    { heading: 'Adoption is the hard part', paragraphs: ['Publishers, platforms and public agencies are testing different combinations of metadata, signatures and visible marks. The emerging consensus is less about one technical standard than about giving people a legible account of origin.'] },
+    {
+      heading: 'The quiet standard battle',
+      paragraphs: [
+        'Content credentials are becoming a practical procurement question, even as no single watermark survives every transformation of a file. A visible mark can be cropped, compressed or removed. A hidden signal can be damaged by editing. The useful layer is provenance: a signed history that can travel with the asset and tell a viewer what happened before it arrived on a platform.',
+        'That history is not a declaration that an image is true. It is a record of origin and change. A camera, editing tool, publisher or generative system can attest to the part it played, while the person viewing the file can decide how much trust to place in the chain. The distinction prevents provenance from becoming a new label for certainty.',
+      ],
+    },
+    {
+      heading: 'What a durable credential can record',
+      paragraphs: [
+        'A useful credential can identify the creator or organisation that first signed an asset, the tool that made a material change and the time at which that change occurred. It can preserve a relationship between an original photograph and a published crop, or between a source document and a generated illustration. The record is valuable because it gives downstream systems something more precise than a binary “AI” or “not AI” badge.',
+        'The hard part is keeping the record attached as a file moves. Publishers resize images, social platforms strip metadata and screenshots create copies with no original chain. A serious system therefore needs a recovery path: a visible way to inspect the credential, a server-side record when the file loses it and a clear explanation when provenance is unavailable rather than a guess that fills the gap.',
+      ],
+    },
+    {
+      heading: 'Adoption is the hard part',
+      paragraphs: [
+        'Publishers, platforms and public agencies are testing different combinations of metadata, signatures and visible marks. Their incentives are not identical. A newsroom wants readers to understand how a picture was prepared; a platform wants scalable moderation signals; a public buyer wants a requirement that vendors can meet across formats and suppliers.',
+        'The emerging consensus is less about one technical standard than about giving people a legible account of origin. That means the interface matters. If a credential is technically complete but hidden behind an opaque icon, it will not build trust. If it presents a long chain without explaining which step matters, it will overwhelm the person trying to make a quick judgement.',
+      ],
+    },
+    {
+      heading: 'Procurement may move before consumer habit',
+      paragraphs: [
+        'Public-sector procurement is a likely early driver because buyers can specify record-keeping requirements before a universal consumer habit exists. A government media contract can require vendors to preserve provenance, expose an inspection endpoint and document what happens when a file is transformed. Similar requirements can then travel through agencies, broadcasters and archives.',
+        'That path has a weakness: compliance can become a checkbox. A vendor may attach a valid signature while the editorial or legal team never checks it. The better procurement question is operational: can the buyer retrieve the history, understand its limits, preserve it through the publishing workflow and explain exceptions to the public?',
+      ],
+    },
+    {
+      heading: 'Trust needs a layered approach',
+      paragraphs: [
+        'No provenance system can decide whether a claim in an image is accurate. It can show who handled the asset, not whether the depicted event happened as described. Newsrooms still need source verification, captions and editorial review. The credential is a supporting record, not a replacement for reporting standards.',
+        'That is why the most credible approach is layered. Use signed credentials where they are available, visible labels where they help readers, ordinary verification for the underlying claim and an honest “unknown” state when the chain is missing. The quiet standard battle will be won by the system that makes uncertainty easier to describe, not by the mark that claims to eliminate it.',
+        'A system that admits what it cannot establish will earn more trust than one that turns a technical signature into an all-purpose guarantee. Provenance is strongest when it narrows uncertainty without pretending to remove it.',
+      ],
+    },
+    {
+      heading: 'The reader needs an honest interface',
+      paragraphs: [
+        'A provenance panel should answer practical questions quickly. Was this asset captured by a camera, generated from a prompt or materially edited? Which organisation signed the record? What changed between the original and the published version? If the answer is unavailable, the interface should say so without implying that an unsigned file is automatically false.',
+        'That clarity is a design responsibility as much as a standards responsibility. Readers do not need a cryptographic lecture, but they do need enough context to judge an image in the situation where they encountered it. The winning systems will make the chain inspectable without making trust feel like a technical privilege reserved for people who know where to click.',
+      ],
+    },
   ],
   'india-stack': [
-    { heading: 'The public layer is becoming the competitive layer', paragraphs: ['India’s AI strategy is taking shape as shared infrastructure: language data, subsidised compute and public procurement that lowers the cost of building for Indian users.'] },
-    { heading: 'Build once, adapt widely', paragraphs: ['The opportunity is not merely a domestic chatbot. A common language and identity layer can let startups build products for health, agriculture and government without each team recreating the basic substrate.'] },
+    {
+      heading: 'The public layer is becoming the competitive layer',
+      paragraphs: [
+        'India’s AI strategy is taking shape as shared infrastructure: language data, subsidised compute and public procurement that lowers the cost of building for Indian users. The important shift is from treating AI capability as a product that each company must buy to treating parts of the stack as a public layer that many companies can use.',
+        'That layer will not be judged by the size of its announcements alone. It will be judged by whether a researcher outside the largest firms can find relevant data, access enough compute, understand the rules and deploy a system that works for people who speak, listen and work in more than one language.',
+      ],
+    },
+    {
+      heading: 'Language changes the infrastructure problem',
+      paragraphs: [
+        'A language model built around English-first assumptions can look capable in a demonstration and still fail in daily use. Indian users switch languages, mix scripts, speak over imperfect connections and use local terms that do not map neatly to a translated benchmark. Speech, transliteration and code-switching are not edge cases; they are part of the product environment.',
+        'Shared language datasets can lower the cost of handling those realities, but only if their quality is visible. Builders need to know who contributed the data, which regions and dialects it represents, how consent and licensing were handled and where the gaps remain. A larger corpus is not automatically a more useful public asset.',
+      ],
+    },
+    {
+      heading: 'Compute access has to be legible',
+      paragraphs: [
+        'The opportunity is not merely a domestic chatbot. A common language and identity layer can let startups build products for health, agriculture and government without each team recreating the basic substrate. But access to compute determines whether the opportunity is available beyond a small group of well-connected teams.',
+        'A public programme becomes useful when a builder can answer basic questions: who qualifies, how long approval takes, what kinds of workloads are supported, how usage is measured and what happens when demand is higher than capacity. Transparent allocation matters because a headline count of accelerators says little about how many teams can actually train, fine-tune or serve a model.',
+      ],
+    },
+    {
+      heading: 'Procurement turns capability into use',
+      paragraphs: [
+        'Public procurement is the bridge between infrastructure and outcomes. A government department can become an early customer for translation, document processing, agricultural advice or public-service search, giving local teams a real environment in which to improve. That demand can make a language dataset or a small model valuable in ways a benchmark cannot capture.',
+        'Procurement can also narrow the market if requirements favour a single vendor or reward demonstrations over maintenance. The stronger approach is to specify outcomes, interoperability and auditability. Systems should be able to show where an answer came from, when a human must review it and how a service behaves when the model is uncertain or a language is underrepresented.',
+      ],
+    },
+    {
+      heading: 'Build once, adapt widely',
+      paragraphs: [
+        'The public stack should be understood as a set of reusable interfaces rather than a single national model. Data catalogues, evaluation suites, compute access, speech tools and deployment guidance can reinforce one another while remaining open to different commercial and research models.',
+        'If that foundation works, startups can spend more effort on products and less on recreating basic AI infrastructure. The measure of success will be ordinary and demanding: more useful services in more languages, more independent teams able to test ideas, and public users who can tell when a system is reliable enough to help and when a person should take over.',
+        'That outcome requires patience because infrastructure compounds slowly. The first benefit may be a lower barrier to experimentation; the larger benefit arrives when the lessons, tools and datasets from one project make the next project faster and more accountable.',
+        'That compounding is the strategic case for keeping the interfaces open and the metrics public. It lets success travel beyond the first team that receives access.',
+        'It also gives institutions a way to learn from one another instead of rebuilding the same foundation in isolation.',
+      ],
+    },
+    {
+      heading: 'The test is distribution',
+      paragraphs: [
+        'A public layer succeeds only when it reaches places that private infrastructure tends to overlook. That includes smaller cities, public universities, local-language publishers and organisations that do not have a dedicated machine-learning team. Distribution means documentation, support and predictable access as much as it means hardware.',
+        'The long-term question is whether the stack creates more independent capability. If every useful application still depends on a small group of gatekeepers, the public layer has lowered a cost without changing the structure of the market. If builders can combine shared data, compute and evaluation with their own domain knowledge, the infrastructure begins to compound across sectors.',
+      ],
+    },
   ],
   'small-models': [
-    { heading: 'Useful beats impressive', paragraphs: ['The most useful model may be the one that never leaves a company’s laptop. Smaller systems reduce latency, keep sensitive data local and make a predictable cost possible.'] },
-    { heading: 'The new evaluation', paragraphs: ['Teams now measure a model against a workflow: retrieval quality, tool reliability, monitoring burden and the cost of a wrong answer. A leaderboard score is only the beginning.'] },
+    {
+      heading: 'Useful beats impressive',
+      paragraphs: [
+        'The most useful model may be the one that never leaves a company’s laptop. Smaller systems reduce latency, keep sensitive data local and make a predictable cost possible. They also change the shape of a product: a feature can respond while offline, run beside a private document store and remain available when a central service is busy or expensive.',
+        'That does not make size irrelevant. A compact model may struggle with long documents, unusual requests or multi-step reasoning. The practical question is whether its limits line up with the job. If a model can classify, extract, draft or route reliably within a bounded workflow, a smaller footprint can be an advantage rather than a compromise.',
+      ],
+    },
+    {
+      heading: 'Where the local edge wins',
+      paragraphs: [
+        'Latency is often the first visible benefit. A local model can avoid a round trip to a remote service, which matters in voice interfaces, developer tools and systems that need to make a decision inside a larger interaction. Privacy is the second. Sensitive text can stay inside a device or controlled network instead of becoming another payload that must be governed after the fact.',
+        'There is also a resilience benefit. A product that depends on one remote endpoint inherits its outages, rate limits and price changes. A local or private deployment is not free of operational work, but it gives a team more control over the failure modes. That control can be worth more than a marginal improvement on a general benchmark.',
+      ],
+    },
+    {
+      heading: 'The new evaluation',
+      paragraphs: [
+        'Teams now measure a model against a workflow: retrieval quality, tool reliability, monitoring burden and the cost of a wrong answer. A leaderboard score is only the beginning. The useful test asks whether the model chooses the right document, follows the permission boundary, produces a structured result and makes uncertainty visible before a person acts on it.',
+        'That evaluation should include the boring cases. What happens when a document is missing, a user mixes languages, a tool times out or the input is deliberately ambiguous? A model that is slightly less fluent but fails clearly can be safer and cheaper than one that sounds confident while silently taking the wrong path.',
+      ],
+    },
+    {
+      heading: 'Routing is a product decision',
+      paragraphs: [
+        'Most serious deployments will not choose between one giant model and one tiny model. They will route. A compact model can handle triage, extraction and routine replies, while a stronger system receives only the tasks that need broader context or more complex reasoning. The router becomes a key part of quality because a bad handoff can erase the benefit of both models.',
+        'Routing also makes cost legible. A team can measure how many requests remain local, how often an escalation occurs, how much latency it adds and whether the escalation improves the outcome. Those measurements create a more useful operating conversation than asking which model is best in the abstract.',
+      ],
+    },
+    {
+      heading: 'Capability becomes a deployment choice',
+      paragraphs: [
+        'Smaller models expand who can run capable systems. A regional business, a hospital team or a public-interest organisation may not be able to sustain frontier inference for every request, but it may be able to run a focused model with a narrow evaluation set and clear human review.',
+        'The result is not a rejection of frontier models. It is a more mature division of labour. Teams will route each task to the smallest model that can do it reliably, keep private work close to its data and reserve expensive capability for decisions where the additional quality changes the outcome.',
+        'The practical advantage is choice. A team can place different parts of a workflow where they make the most sense instead of sending every request through the same expensive and distant service.',
+        'That choice can also make experimentation safer: a team can test a narrow capability locally before it commits a sensitive workflow to a larger shared service.',
+      ],
+    },
+    {
+      heading: 'The local model still needs discipline',
+      paragraphs: [
+        'Local inference does not remove the need for updates, evaluation or access control. A model running on a laptop can still expose sensitive output, repeat a bad instruction or fail silently when its supporting data is stale. Teams need a small but explicit operating plan: version the model, test representative tasks, record important failures and define when a request must leave the local path.',
+        'That discipline is easier to sustain when the scope is clear. A compact model does not have to answer everything. It can handle a defined class of work, explain when it is outside that class and pass the rest to a stronger system or a person. The best edge deployments are not miniature copies of frontier systems; they are focused tools with honest boundaries.',
+      ],
+    },
   ],
   founders: [
-    { heading: 'The bottleneck is the operating system', paragraphs: ['After the first million model calls, founders tend to discover that prompts are not a product strategy. Queues, permissions, evaluations and human escalation determine whether a demo becomes a business.'] },
-    { heading: 'A quieter kind of scale', paragraphs: ['The best teams build feedback into every interaction, turning exceptions into training data and making the system more dependable without pretending that uncertainty has disappeared.'] },
+    {
+      heading: 'The bottleneck is the operating system',
+      paragraphs: [
+        'After the first million model calls, founders tend to discover that prompts are not a product strategy. A demo can hide slow queues, duplicate requests, missing permissions and the human work required to rescue a wrong answer. At scale, those details become the product that customers experience.',
+        'The operating layer includes routing, retries, budgets, access control, evaluation and a record of what the system did. It determines whether a team can explain an incident, reproduce a failure and improve the next version without guessing. The model remains important, but the surrounding system decides whether capability becomes dependable.',
+      ],
+    },
+    {
+      heading: 'Reliability is a compound feature',
+      paragraphs: [
+        'A single correct answer is not a reliable workflow. A customer wants the system to behave acceptably across thousands of requests, including the requests that are incomplete, adversarial or simply outside the training distribution. That requires a definition of failure that is specific enough to measure: wrong retrieval, unsafe action, missing citation, bad formatting or an escalation that arrived too late.',
+        'Founders who write those failure modes down early gain a better roadmap. They can decide which errors need a model change, which need a product constraint and which should be handed to a person. Without that classification, every problem looks like a prompt problem and the team spends its energy adjusting instructions that cannot solve a missing permission or a weak source.',
+      ],
+    },
+    {
+      heading: 'Queues and permissions become visible',
+      paragraphs: [
+        'At low volume, a queue is an implementation detail. At high volume, it becomes a promise about when work will finish. A system that accepts more requests than it can process needs backpressure, priority rules and a clear way to tell users what is happening. Otherwise a product can appear intelligent while quietly building a backlog that destroys trust.',
+        'Permissions create a similar boundary. An agent that can read, write and send is not just a model with tools; it is an actor inside an organisation. Founders have to decide which actions need confirmation, which records are visible to which roles and how an audit trail will distinguish a human decision from an automated one. These choices are difficult to bolt on after adoption.',
+      ],
+    },
+    {
+      heading: 'Feedback is an operating asset',
+      paragraphs: [
+        'The best teams build feedback into every interaction, turning exceptions into training data and making the system more dependable without pretending that uncertainty has disappeared. A correction should be captured with enough context to explain why the original result failed, not merely stored as a thumbs-down that no one can interpret later.',
+        'That feedback loop should include successful work too. If a person edits a draft, approves a recommendation or overrides a route, the product can learn what “good enough” looks like in the real workflow. The goal is not to automate every judgement. It is to make repeated judgement cheaper and to make the important exceptions easier to see.',
+      ],
+    },
+    {
+      heading: 'A quieter kind of scale',
+      paragraphs: [
+        'The first million calls can make a company look like it has solved demand. The next million reveal whether it has solved operations. Costs move with retries and context length, support moves with wrong answers, and the most valuable customers ask for controls rather than another impressive demo.',
+        'The next generation of AI companies will be built around operational discipline. They will know which work should remain automated, where a human must enter the loop and how to prove that a system improved. That is a quieter kind of scale, but it is the kind that survives contact with a budget, a compliance review and a real customer.',
+      ],
+    },
+    {
+      heading: 'The customer feels the handoffs',
+      paragraphs: [
+        'Customers rarely see the model name, but they feel every handoff around it. They notice when a request disappears into a queue, when an answer cites the wrong document, when a reviewer asks for information the product already collected or when a correction does not change the next result. These moments are where an AI company earns or loses trust.',
+        'That makes operational detail a user experience problem. A clear status, a useful explanation and a fast route to a person can turn an uncertain answer into a manageable interaction. A silent retry or an unexplained refusal does the opposite. Founders who treat these moments as part of the product build a system customers can work with, not just a model they can try.',
+        'The strongest operating systems make the path visible without burdening the user with implementation detail. People do not need to see every log line; they do need to know what happened, what will happen next and how to correct the record.',
+        'That is how an AI feature becomes an operating relationship rather than a novelty: the user can predict its behaviour, recover from its limits and see that feedback changes the system.',
+      ],
+    },
   ],
   infrastructure: [
-    { heading: 'Power is now a product constraint', paragraphs: ['Compute is moving toward places with reliable power, fibre and permits. The geography of intelligence is being redrawn by the physical conditions that software used to ignore.'] },
-    { heading: 'Regional does not mean isolated', paragraphs: ['Inference closer to customers can improve latency and resilience, while training remains concentrated. The resulting map is a network of specialised corridors rather than one universal cloud.'] },
+    {
+      heading: 'Power is now a product constraint',
+      paragraphs: [
+        'Compute is moving toward places with reliable power, fibre and permits. The geography of intelligence is being redrawn by the physical conditions that software used to ignore. A model can be copied instantly, but the electricity, cooling, land and transmission capacity required to serve it cannot.',
+        'That difference is changing infrastructure decisions. Operators have to balance access to customers against access to power, and a new facility can be delayed by a grid connection long after the software plan is complete. For AI products, the physical map is no longer background context. It sets the limits of response time, capacity and cost.',
+      ],
+    },
+    {
+      heading: 'The grid joins the stack',
+      paragraphs: [
+        'A data centre’s usefulness depends on more than the number of accelerators installed inside it. It needs a stable supply, a cooling design that works in local conditions, network paths that can move data and a permitting process that communities and regulators will accept. Each layer creates a different kind of bottleneck.',
+        'The result is a wider definition of infrastructure strategy. Companies are negotiating for power, building redundancy across regions and looking for workloads that can shift in time or location. Those choices affect which model services can promise low latency and which jobs must wait for a more constrained supply of capacity.',
+      ],
+    },
+    {
+      heading: 'Regional does not mean isolated',
+      paragraphs: [
+        'Inference closer to customers can improve latency and resilience, while training remains concentrated. The resulting map is a network of specialised corridors rather than one universal cloud. A region may host inference because it has customers and fibre, while another hosts training because it has the power and cooling to support long runs.',
+        'That division can make systems more resilient if the handoffs are designed well. A product can keep routine work near a user, send a larger job to a specialised facility and fail over to a smaller model when capacity is constrained. It can also create new dependencies if a supposedly distributed system still relies on one vendor, one interconnect or one permission to expand.',
+      ],
+    },
+    {
+      heading: 'The economics follow the physical map',
+      paragraphs: [
+        'Power availability is now a strategic differentiator because it shapes both operating cost and speed to market. A cheap site without a grid connection may be less useful than a more expensive site that can expand predictably. Customers will feel those differences through pricing, quotas, latency and the number of regions a provider can support.',
+        'The same pressure reaches product teams. A feature that calls a large model for every small task carries an infrastructure cost even when the user sees only a button. Routing, caching and smaller local models are not merely software optimisations; they are ways to fit useful intelligence into the capacity the physical network can actually provide.',
+      ],
+    },
+    {
+      heading: 'Planning starts to look like telecom',
+      paragraphs: [
+        'AI infrastructure planning will look increasingly like energy and telecom planning. It will involve long lead times, shared assets, regional policy and a negotiation between public benefit and private demand. The companies that understand this early can make more credible commitments because they know which part of the promise depends on a permit or a transformer.',
+        'The winning map will not be the one with the largest single cluster. It will be the one that connects power, fibre, compute and customers with enough redundancy to keep a service useful. Regional capacity is not a retreat from a global cloud; it is the foundation that makes a global service dependable.',
+      ],
+    },
+    {
+      heading: 'Infrastructure is also policy',
+      paragraphs: [
+        'Where compute is built affects more than latency and price. It affects which communities carry the burden of new energy demand, which regions attract technical jobs and which governments can influence the rules around data and access. Infrastructure choices therefore become policy choices even when they are presented as private procurement.',
+        'A credible expansion plan should make those tradeoffs visible. Operators need to explain expected power use, cooling requirements, network resilience and the conditions under which capacity will grow. Customers and regulators will increasingly ask not only whether a system is fast, but whether the physical and institutional path behind it is durable enough to support the promise.',
+        'The companies that answer those questions early will be easier to trust because their growth assumptions can be examined. In an infrastructure market, credibility is part of capacity: it determines who can secure partners, permits and long-term demand.',
+        'The map of intelligence is therefore also a map of commitments. Each new corridor should be judged by the service it enables and the resilience it adds, not only by the size of the facility.',
+        'That standard keeps expansion connected to the users and communities the infrastructure is meant to serve.',
+      ],
+    },
   ],
 };
 
@@ -252,22 +518,36 @@ const maintainedStudyStory: Story = {
     {
       heading: 'A late intervention in the network',
       paragraphs: [
-        'A new arXiv preprint examines how instruction-tuned language models respond to a directly prompted Prisoner’s Dilemma. The authors report that three larger models—Llama-3-70B, Qwen2.5-32B and Qwen2.5-72B—consistently selected cooperation, while Llama-3-8B produced choices closer to the Nash action.',
-        'Using logit-lens analysis, the team found that intermediate model readouts leaned toward the Nash action through much of the network. Near the final layers, however, the models shifted sharply toward cooperation. The authors characterize this late shift as a distributed cooperative override.',
+        'A new arXiv preprint examines how instruction-tuned language models respond to a directly prompted Prisoner’s Dilemma. The authors report that three larger models—Llama-3-70B, Qwen2.5-32B and Qwen2.5-72B—consistently selected cooperation, while Llama-3-8B produced choices closer to the Nash action. The result is interesting not because cooperation is automatically surprising, but because the models appeared to move away from the equilibrium action while still receiving a task that can be described in formal terms.',
+        'Using logit-lens analysis, the team found that intermediate model readouts leaned toward the Nash action through much of the network. Near the final layers, however, the models shifted sharply toward cooperation. The authors characterize this late shift as a distributed cooperative override. In other words, the final answer did not simply reflect a stable decision that was present from the beginning; the network appeared to revise the direction of the response close to the output.',
       ],
     },
     {
       heading: 'A controllable but narrow signal',
       paragraphs: [
-        'In the 8B model, the researchers report isolating a single direction in the residual stream associated with the override. Steering that direction adjusted the decision, and clamping its contribution at one layer and position changed the choice monotonically while preserving fluent generation.',
-        'The paper links the scale of the final correction to chain-of-thought behavior across the tested model families. But its central interpretation is narrower than a claim that the systems possess a general cooperative preference: the mechanism appeared tied to the language used to present the game.',
+        'In the 8B model, the researchers report isolating a single direction in the residual stream associated with the override. Steering that direction adjusted the decision, and clamping its contribution at one layer and position changed the choice monotonically while preserving fluent generation. That kind of intervention is useful because it turns a behavioural observation into a mechanism that can be probed, even if the mechanism is only one part of a much larger computation.',
+        'The paper links the scale of the final correction to chain-of-thought behaviour across the tested model families. But its central interpretation is narrower than a claim that the systems possess a general cooperative preference. The mechanism appeared tied to the language used to present the game, and a direction that changes one prompted choice does not by itself explain how a model would behave in a different strategic setting.',
       ],
     },
     {
       heading: 'Neutral labels changed the result',
       paragraphs: [
-        'The reported effect persisted when player names were removed and when payoffs were rescaled. It disengaged when the action labels “Cooperate” and “Defect” were replaced with neutral terms, suggesting that the circuit was responding to learned lexical associations rather than the underlying payoff structure.',
-        'Across 48 randomized-payoff games with neutral action surfaces, the authors report that none of the models consistently locked into cooperation on dilemmas or demonstrated general equilibrium competence. As a preprint, the work has not established a universal explanation for strategic behavior in language models, but it offers a concrete mechanism for testing prompt-sensitive decision patterns.',
+        'The reported effect persisted when player names were removed and when payoffs were rescaled. It disengaged when the action labels “Cooperate” and “Defect” were replaced with neutral terms, suggesting that the circuit was responding to learned lexical associations rather than the underlying payoff structure. That is the paper’s most practical warning: a benchmark can appear to test strategic reasoning while also testing the model’s learned associations with the words used to name each action.',
+        'Across 48 randomized-payoff games with neutral action surfaces, the authors report that none of the models consistently locked into cooperation on dilemmas or demonstrated general equilibrium competence. The neutral condition makes the result more specific, not less useful. It suggests that evaluation designers should vary names, labels and presentation order before treating a repeated output as evidence of a broad preference.',
+      ],
+    },
+    {
+      heading: 'What the mechanism does not prove',
+      paragraphs: [
+        'The study does not establish that language models understand cooperation in the human sense, nor that they are incapable of identifying a Nash action. It reports a pattern in a defined family of prompted games and a set of interventions that changed the observed decision. The distinction matters because mechanistic interpretability can make a finding look more complete than it is: locating a direction in a residual stream is not the same as locating a single, universal cause of behaviour.',
+        'The sample also leaves open questions about scale, training data and task construction. Would the same effect appear in models with different instruction-tuning mixtures? Does it persist when the model must act repeatedly, explain a choice or face a payoff structure that changes over time? The answers would determine whether the override is a narrow lexical shortcut or one instance of a broader family of prompt-sensitive behaviours.',
+      ],
+    },
+    {
+      heading: 'A better test for strategic behaviour',
+      paragraphs: [
+        'The strongest lesson is methodological. Any evaluation that assigns meaning to a model’s choice should vary the surface form of the task, include neutral labels and separate fluent explanation from actual action selection. Researchers should also report the conditions under which the result disappears. A mechanism that is easy to turn off may still be important, but it should be described as conditional rather than as a stable trait.',
+        'The work points toward label-robust game-theory tests and mechanistic checks before treating prompted model behaviour as evidence of broad strategic competence or preference. For now, the preprint is best read as a precise warning about how language and decision-making can become entangled inside an instruction-tuned system.',
       ],
     },
   ],
@@ -319,10 +599,6 @@ export const scheduledStories: ScheduledStory[] = [
     category: 'Field Notes',
     title: 'Reliability is becoming the new AI moat',
     dek: 'The next advantage will belong to systems that recover well, not demos that impress once.',
-    body: [
-      { heading: 'The operating layer wins', paragraphs: ['As models become easier to access, the durable difference moves into permissions, evaluation, observability and the handoffs that keep work moving when a model is uncertain.'] },
-      { heading: 'Recovery is a product feature', paragraphs: ['A dependable system makes its limits visible, routes exceptions to people and learns from failure. That is less dramatic than a launch, but more valuable over a year of real use.'] },
-    ],
     date: '2026-09-21',
     publishAt: '2026-09-21T07:30:00Z',
     cadence: 'daily',
@@ -337,6 +613,52 @@ export const scheduledStories: ScheduledStory[] = [
     imageTreatment: { type: 'editorial-abstract', alt: 'Layered system paths converging on a reliable handoff', palette: 'cobalt, graphite, warm paper', caption: 'The advantage is shifting from model novelty to dependable operation.' },
     topic: 'AI',
     sources: ['stanford-ai-index-2026'],
+    body: [
+      {
+        heading: 'The operating layer wins',
+        paragraphs: [
+          'As models become easier to access, the durable difference moves into permissions, evaluation, observability and the handoffs that keep work moving when a model is uncertain. A company can often switch providers, add a new model or copy a prompt pattern. It cannot switch away from the workflow decisions that determine who is allowed to act, which evidence is required and how a failure is recovered.',
+          'That is why the operating layer is becoming a competitive layer. It turns a general capability into a dependable service with boundaries. The model supplies part of the intelligence, but the system decides what the model can see, when it should be trusted and what must happen before an output changes a customer record or an internal decision.',
+        ],
+      },
+      {
+        heading: 'First-pass accuracy is not reliability',
+        paragraphs: [
+          'A demo rewards the first answer. A real workflow rewards a system that behaves acceptably over thousands of requests, including the ones with missing context, broken tools and ambiguous instructions. Reliability therefore includes more than model accuracy. It includes whether the system notices an incomplete input, cites the right source, respects a permission boundary and gives a person enough information to correct the result.',
+          'Teams should evaluate the complete path from request to outcome. A model can generate a strong draft while the retrieval layer selects an outdated document. A tool can return the right result while the interface hides a partial failure. Measuring only the language output misses the places where users actually lose time or confidence.',
+        ],
+      },
+      {
+        heading: 'Recovery is a product feature',
+        paragraphs: [
+          'A dependable system makes its limits visible, routes exceptions to people and learns from failure. That is less dramatic than a launch, but more valuable over a year of real use. Recovery can mean retrying a transient request, switching to a smaller model, asking for clarification or pausing an action until a reviewer confirms it.',
+          'The important part is that recovery is designed rather than improvised. Users need to know whether the system is working, waiting or asking for help. Operators need an audit trail that explains what happened. Product teams need a way to distinguish a temporary outage from a recurring quality problem. Without those signals, a recovery path can look like a random delay.',
+        ],
+      },
+      {
+        heading: 'Observability connects the layers',
+        paragraphs: [
+          'Observability is often described as a technical concern, but it is also an editorial and operational one. A useful record connects the input, model version, retrieved evidence, tool calls, human intervention and final outcome. That makes it possible to ask not only whether an answer was wrong, but why the system allowed a weak answer to reach a user.',
+          'The record should be proportional to the risk. A low-stakes classification may need a score and a sample for review. A system that sends a message, changes a record or recommends a financial action needs stronger confirmation and retention. The same model can therefore require different controls in different workflows.',
+        ],
+      },
+      {
+        heading: 'A moat built from dependable habits',
+        paragraphs: [
+          'The AI systems that matter will be the ones that make uncertainty manageable inside a real workflow. Their advantage will not come from pretending that a model is always right. It will come from making the wrong answer visible early, keeping the blast radius small and turning corrections into better operating rules.',
+          'When model access is broadly available, operational discipline becomes the part competitors cannot copy overnight. Teams will budget for observability, permissions and exception handling before they scale model usage. The result may look less exciting than a new benchmark, but it is much closer to the quality customers pay to keep.',
+        ],
+      },
+      {
+        heading: 'The operating promise is measurable',
+        paragraphs: [
+          'Reliability should become a set of promises a team can measure: how often a request completes, how often it needs a human, how quickly a failed tool recovers and how many incorrect outputs reach the next step. These measures are not a substitute for judgement, but they make improvement visible and keep a product from hiding behind a single average accuracy number.',
+          'The advantage belongs to systems that recover well, not demos that impress once. When a workflow can show its limits, protect the user from an irreversible mistake and improve after a correction, reliability becomes a product capability that compounds with use.',
+          'That compounding effect is the reason to build the measurement layer early. A team that can see recovery patterns can improve the workflow deliberately instead of waiting for a customer incident to reveal the next missing safeguard.',
+          'Over time, these measurements become a shared language between product, engineering, operations and the customers who depend on the system.',
+        ],
+      },
+    ],
     bottomLine: 'The AI systems that matter will be the ones that make uncertainty manageable inside a real workflow.',
     whyItMatters: 'When model access is broadly available, operational discipline becomes the part competitors cannot copy overnight.',
     keyTakeaways: ['Recovery paths matter as much as first-pass accuracy.', 'Evaluation must follow the whole workflow.', 'Human escalation is part of the product design.'],
@@ -347,10 +669,6 @@ export const scheduledStories: ScheduledStory[] = [
     category: 'India Watch',
     title: 'Public compute needs public metrics',
     dek: 'India’s shared AI infrastructure will be judged by who can use it, not only by how much capacity it announces.',
-    body: [
-      { heading: 'Capacity is only the first measure', paragraphs: ['A public compute programme becomes useful when researchers, startups and public-interest teams can discover it, qualify for access and ship something with it.'] },
-      { heading: 'The access layer matters', paragraphs: ['Transparent allocation, language coverage and evidence of downstream use will tell a clearer story than a headline GPU count.'] },
-    ],
     date: '2026-09-23',
     publishAt: '2026-09-23T07:30:00Z',
     cadence: 'daily',
@@ -365,6 +683,54 @@ export const scheduledStories: ScheduledStory[] = [
     imageTreatment: { type: 'data-graphic', alt: 'Public compute allocation paths connecting researchers and builders', palette: 'indigo, saffron, paper white', caption: 'Infrastructure becomes public value only when access is legible.' },
     topic: 'India',
     sources: ['indiaai-mission', 'stanford-ai-index-2026'],
+    body: [
+      {
+        heading: 'Capacity is only the first measure',
+        paragraphs: [
+          'A public compute programme becomes useful when researchers, startups and public-interest teams can discover it, qualify for access and ship something with it. Capacity announcements matter because compute is scarce, but a headline GPU count does not show how much time is available, which workloads are accepted or whether a small team can use the system without a specialist procurement process.',
+          'The more useful measure is the work that becomes possible. Can a language researcher train a better speech model? Can a startup test an idea before raising a large round? Can a public team evaluate a service across Indian languages? Those outcomes reveal whether infrastructure is becoming a platform or remaining an asset that only a narrow set of organisations can reach.',
+        ],
+      },
+      {
+        heading: 'The access layer matters',
+        paragraphs: [
+          'A builder should be able to answer basic questions before applying: who qualifies, how long approval takes, what the usage limits are, what data can be processed and what happens when demand is higher than supply. Transparent allocation reduces the advantage of knowing the right intermediary and gives applicants a fairer way to plan a project.',
+          'Access also needs to account for the shape of the workload. A team building a speech service may need different storage, evaluation and inference support than a team training a research model. Treating every request as the same unit of compute hides the design choices that determine whether public capacity produces useful, repeatable work.',
+        ],
+      },
+      {
+        heading: 'Metrics should follow the user',
+        paragraphs: [
+          'Usage evidence should sit beside capacity announcements. A public dashboard could show how many teams received access, how long they waited, which languages and sectors were represented, how much capacity was actually used and how many projects reached a working pilot. None of those metrics is perfect, but together they are more informative than a single installed-capacity number.',
+          'The metrics should also be interpreted carefully. High utilisation can mean that a programme is valuable, or that access is too concentrated. Low utilisation can mean weak demand, or a process that is too difficult to navigate. Publishing the context around the number is part of making the infrastructure trustworthy.',
+        ],
+      },
+      {
+        heading: 'Procurement turns capacity into public value',
+        paragraphs: [
+          'Public procurement can give the shared stack a path from infrastructure to use. Departments can create early demand for translation, document search, agricultural advice and public-service interfaces, while requiring evidence, human review and interoperability. That creates a real test environment for local builders instead of leaving them to optimise for demonstrations.',
+          'The risk is that procurement rewards a single vendor or a short-term showcase. The stronger approach is to specify outcomes and controls: how the service handles uncertain answers, how data is protected, how another provider could replace one component and how people can appeal or correct an automated result.',
+        ],
+      },
+      {
+        heading: 'Public compute needs public metrics',
+        paragraphs: [
+          'The strongest public AI metric is not capacity announced but useful work completed by people who could not previously afford the compute. That is how a national infrastructure programme becomes an industrial platform rather than a narrow procurement exercise.',
+          'Transparent access can turn national AI infrastructure into broad capability. Public AI programmes will increasingly publish allocation, usage and outcome metrics together, giving builders a clearer route in and giving the public a better basis for judging whether the investment is reaching beyond the organisations that already had compute.',
+        ],
+      },
+      {
+        heading: 'A public record builds confidence',
+        paragraphs: [
+          'Publishing these measures also creates a feedback loop for the programme itself. Researchers can point to bottlenecks, applicants can see how decisions are made and policymakers can distinguish a capacity problem from an access problem. Without that record, every announcement is evaluated through the loudest success story rather than the experience of the wider applicant pool.',
+          'India’s shared AI infrastructure will be judged by who can use it, not only by how much capacity it announces. Public metrics make that question answerable, and they give the next round of investment a better foundation than a headline number alone.',
+          'The record does not have to be perfect to be useful. It needs to be consistent enough that progress, concentration and gaps can be seen over time, with definitions that do not change whenever a new announcement arrives.',
+          'That consistency will help the programme learn in public instead of asking every applicant and policymaker to reconstruct the same picture from separate announcements.',
+          'Inclusion becomes measurable when the programme can show who is still missing and why.',
+          'That is the difference between announcing access and demonstrating public value.',
+        ],
+      },
+    ],
     bottomLine: 'The strongest public AI metric is not capacity announced but useful work completed by people who could not previously afford the compute.',
     whyItMatters: 'Transparent access can turn national AI infrastructure into a broad industrial platform rather than a narrow procurement programme.',
     keyTakeaways: ['Access rules shape who benefits from public compute.', 'Language coverage is a practical measure of inclusion.', 'Usage evidence should sit beside capacity announcements.'],
@@ -375,10 +741,6 @@ export const scheduledStories: ScheduledStory[] = [
     category: 'Infrastructure',
     title: 'The cost of intelligence is becoming a design constraint',
     dek: 'Every AI product now has to decide where capability is worth the energy, latency and margin it consumes.',
-    body: [
-      { heading: 'The price is not just per token', paragraphs: ['The real cost of an AI feature includes retrieval, evaluation, latency, monitoring, storage and the human work required when an answer is wrong.'] },
-      { heading: 'Design for the constraint', paragraphs: ['The best teams route simple work to small models, reserve frontier capability for high-value decisions and make the tradeoff visible to the people building the product.'] },
-    ],
     date: '2026-09-28',
     publishAt: '2026-09-28T07:30:00Z',
     cadence: 'weekly',
@@ -393,6 +755,56 @@ export const scheduledStories: ScheduledStory[] = [
     imageTreatment: { type: 'data-graphic', alt: 'A system map balancing model capability, energy and latency', palette: 'night blue, signal green, copper', caption: 'Capability is only useful when its operating cost fits the job.' },
     topic: 'Technology',
     sources: ['iea-data-centres', 'stanford-ai-index-2026'],
+    body: [
+      {
+        heading: 'The price is not just per token',
+        paragraphs: [
+          'The real cost of an AI feature includes retrieval, evaluation, latency, monitoring, storage and the human work required when an answer is wrong. A per-token price is easy to compare, but it describes only one line in a system that may call several services before a user sees a result.',
+          'That wider cost changes the product decision. A feature that looks inexpensive in a prototype can become unprofitable when context grows, retries multiply and every uncertain answer needs review. Teams need a way to connect model usage to the business outcome it supports, not just to a dashboard of requests.',
+        ],
+      },
+      {
+        heading: 'Capability has an operating budget',
+        paragraphs: [
+          'Every product now has to decide where capability is worth the energy, latency and margin it consumes. A frontier model may be the right choice for a complex research task, but wasteful for classification, extraction or a repeated answer that can be cached. A smaller model may be the right choice even when it scores lower on a general benchmark.',
+          'Making that decision requires a budget. The team can set limits for response time, cost per successful outcome and the amount of human review a workflow can support. The budget is not a restriction applied after the product is built; it is part of the product definition.',
+        ],
+      },
+      {
+        heading: 'Route the work, not the brand',
+        paragraphs: [
+          'The best teams route simple work to small models, reserve frontier capability for high-value decisions and make the tradeoff visible to the people building the product. Routing can use the request type, confidence, context length or consequence of an error. It should also have a fallback when the preferred model is unavailable.',
+          'The point is not to create a complicated maze of providers. It is to make the system’s choices measurable. Teams should know how often a request escalates, how much quality improves after escalation and whether users notice the difference. If a larger model adds cost without changing the outcome, the route is not earning its place.',
+        ],
+      },
+      {
+        heading: 'Regional infrastructure changes the design',
+        paragraphs: [
+          'Energy, latency and margin will determine which model capabilities become ordinary parts of software. A service that depends on a distant region may have a different user experience from one that can serve routine requests closer to the customer. Data residency, network reliability and local capacity can turn a technical architecture decision into a market decision.',
+          'This is why infrastructure planning belongs in product conversations. A feature cannot promise instant, cheap intelligence without accounting for where the compute runs, how it scales during demand spikes and what happens when a region is constrained. The operating budget is physical as well as financial.',
+        ],
+      },
+      {
+        heading: 'Design for the constraint',
+        paragraphs: [
+          'The next generation of AI products will be designed around an explicit budget for intelligence. Token price is only one part of the cost, routing is a product decision and regional infrastructure changes what is feasible.',
+          'Product teams will treat model selection as an operating-budget decision, not a one-time engineering choice. The result should be less wasteful and more honest: use more capability where it changes the answer, use less where a focused system is enough and show people when the tradeoff affects the experience.',
+        ],
+      },
+      {
+        heading: 'The budget protects ambition',
+        paragraphs: [
+          'An explicit budget is not an argument for smaller ambition. It is a way to protect the work that deserves expensive capability. If routine requests are handled efficiently, teams can spend more on the research, analysis and high-consequence decisions where a stronger model genuinely changes what the product can do.',
+          'That is the design constraint ahead: make intelligence useful enough to matter, measurable enough to manage and economical enough to remain available. The products that solve all three will be easier to scale than products that confuse maximum capability with maximum value.',
+          'The discipline is especially important as model access becomes ordinary. When the capability is available everywhere, the scarce resource is not imagination; it is the attention, power and margin required to use that capability responsibly.',
+          'A clear budget also gives teams permission to say no to features that consume more intelligence than their users can benefit from, which is a useful form of product focus.',
+          'The constraint becomes a design tool: it helps teams spend capability where it creates a visible difference.',
+          'It turns a vague ambition into a decision the team can revisit as the product and the market change.',
+          'That repeatable decision is what keeps the economics connected to the editorial and product value the system is meant to create.',
+          'It keeps the system useful.',
+        ],
+      },
+    ],
     bottomLine: 'The next generation of AI products will be designed around an explicit budget for intelligence.',
     whyItMatters: 'Energy, latency and margin will determine which model capabilities become ordinary parts of software.',
     keyTakeaways: ['Token price is only one part of the cost.', 'Routing is a product decision.', 'Regional infrastructure changes what is feasible.'],

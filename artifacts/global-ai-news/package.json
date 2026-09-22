@@ -12,9 +12,10 @@
     "test:release-metadata": "node tests/release-metadata.test.mjs",
     "test:release-history": "node tests/release-history.test.mjs",
     "test:theme": "node tests/theme.test.mjs",
+    "test:content-quality": "pnpm exec tsx --test tests/content-quality.test.mjs",
     "test:visual": "node --test --test-name-pattern=\"light and dark themes stay readable across key public and newsroom routes\" tests/seo-smoke.test.mjs",
     "update:visual-baselines": "UPDATE_VISUAL_BASELINES=1 pnpm run test:visual",
-    "test:smoke": "pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run build:release && node --test tests/seo-smoke.test.mjs"
+    "test:smoke": "pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:content-quality && pnpm run build:release && node --test tests/seo-smoke.test.mjs"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",
