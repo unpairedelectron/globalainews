@@ -525,10 +525,19 @@ components:
           type: integer
         story:
           $ref: "#/components/schemas/EditorialStory"
+        wordCount:
+          type: integer
+          description: Number of words in the release standfirst and working copy.
+        remainingWords:
+          type: integer
+          description: Number of words still needed before the release can publish.
+        publishable:
+          type: boolean
+          description: Whether the release meets the minimum visible-copy length.
         updatedAt:
           type: string
           format: date-time
-      required: [id, slug, title, dek, publishAt, cadence, status, position, story, updatedAt]
+      required: [id, slug, title, dek, publishAt, cadence, status, position, story, wordCount, remainingWords, publishable, updatedAt]
     EditorialReleaseInput:
       type: object
       properties:

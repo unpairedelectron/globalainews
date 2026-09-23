@@ -37,10 +37,12 @@ import {
   evidenceSummaries,
   getEditorialSchedule,
   getReleaseDraftWordCount,
+  getReleaseWordCount,
   getPublishedStories,
+  getStoryWordCount,
+  MINIMUM_STORY_WORDS,
   indiaIndex,
   industryMap,
-  MINIMUM_STORY_WORDS,
   scheduledStories,
   signals,
   sources as maintainedSources,
@@ -77,6 +79,9 @@ type ReleaseInput = {
   body: string;
 };
 type ReleaseUpdate = Partial<Omit<ReleaseInput, "slug">>;
+type EditorialReleaseStory = ScheduledStory & {
+  editorialSource?: "editor";
+};
 
 let seedPromise: Promise<void> | undefined;
 
@@ -102,8 +107,8 @@ function formatReleaseDate(date: Date): string {
 
 function storyFromInput(
   input: ReleaseInput | ReleaseUpdate,
-  existing?: ScheduledStory,
-): ScheduledStory {
+  existing?: EditorialReleaseStory,
+): EditorialReleaseStory {
   const publishAt = input.publishAt ?? (existing ? new Date(existing.publishAt) : new Date());
   const title = input.title ?? existing?.title ?? "Untitled release";
   const dek = input.dek ?? existing?.dek ?? "";
@@ -125,26 +130,12 @@ function storyFromInput(
       heading: index === 0 ? "The signal" : "What changes",
       paragraphs: [paragraph],
     })),
+    editorialSource: "editor",
   };
 }
 
 function storyBodyText(story: ScheduledStory): string {
   return story.body.flatMap((section) => section.paragraphs).join("\n\n");
-}
-
-function rejectShortRelease(
-  res: ExpressResponse,
-  dek: string,
-  body: string,
-): boolean {
-  const wordCount = getReleaseDraftWordCount(dek, body);
-  if (wordCount >= MINIMUM_STORY_WORDS) return false;
-  res.status(422).json({
-    error: `A release needs at least ${MINIMUM_STORY_WORDS} editorial words before it can enter the queue. This draft has ${wordCount}.`,
-    wordCount,
-    minimumWordCount: MINIMUM_STORY_WORDS,
-  });
-  return true;
 }
 
 async function ensureSeeded(): Promise<void> {
@@ -183,8 +174,8 @@ async function getReleaseRows(): Promise<ReleaseRow[]> {
     .orderBy(asc(editorialReleasesTable.position), asc(editorialReleasesTable.publishAt));
 }
 
-function toScheduledStory(row: ReleaseRow): ScheduledStory {
-  const story = row.story as unknown as ScheduledStory;
+function toScheduledStory(row: ReleaseRow): EditorialReleaseStory {
+  const story = row.story as unknown as EditorialReleaseStory;
   return {
     ...story,
     slug: row.slug,
@@ -195,12 +186,22 @@ function toScheduledStory(row: ReleaseRow): ScheduledStory {
   };
 }
 
+function releaseWordCount(story: EditorialReleaseStory, slug = story.slug): number {
+  if (story.editorialSource === "editor") {
+    return getReleaseWordCount(story.dek, story.body);
+  }
+  const maintainedStory = scheduledStories.find((candidate) => candidate.slug === slug);
+  return getStoryWordCount(maintainedStory ?? story);
+}
+
 function toReleaseResponse(row: ReleaseRow, now = new Date()) {
   const story = toScheduledStory(row);
+  const wordCount = releaseWordCount(story, row.slug);
+  const publishable = wordCount >= MINIMUM_STORY_WORDS;
   const status =
     row.status === "canceled"
       ? "canceled"
-      : Date.parse(story.publishAt) <= now.getTime()
+      : publishable && Date.parse(story.publishAt) <= now.getTime()
         ? "published"
         : "scheduled";
   return {
@@ -213,6 +214,9 @@ function toReleaseResponse(row: ReleaseRow, now = new Date()) {
     status,
     position: row.position,
     story: story as unknown as Record<string, unknown>,
+    wordCount,
+    remainingWords: Math.max(0, MINIMUM_STORY_WORDS - wordCount),
+    publishable,
     updatedAt: row.updatedAt,
   };
 }
@@ -220,9 +224,28 @@ function toReleaseResponse(row: ReleaseRow, now = new Date()) {
 async function getPublishedStoriesFromDatabase(): Promise<Story[]> {
   const rows = await getReleaseRows();
   const schedule = rows
-    .filter((row) => row.status !== "canceled")
+    .filter(
+      (row) =>
+        row.status !== "canceled" &&
+        releaseWordCount(toScheduledStory(row), row.slug) >= MINIMUM_STORY_WORDS,
+    )
     .map(toScheduledStory);
   return getPublishedStories(new Date(), schedule);
+}
+
+function rejectShortRelease(
+  res: ExpressResponse,
+  dek: string,
+  body: string,
+): boolean {
+  const wordCount = getReleaseDraftWordCount(dek, body);
+  if (wordCount >= MINIMUM_STORY_WORDS) return false;
+  res.status(422).json({
+    error: `A release needs at least ${MINIMUM_STORY_WORDS} editorial words before it can enter the queue. This draft has ${wordCount}.`,
+    wordCount,
+    minimumWordCount: MINIMUM_STORY_WORDS,
+  });
+  return true;
 }
 
 function escapeXml(value: string): string {
@@ -233,6 +256,22 @@ function escapeXml(value: string): string {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&apos;");
 }
+
+const staticSitemapRoutes = [
+  "/",
+  "/brief",
+  "/signals",
+  "/research",
+  "/essays",
+  "/industry",
+  "/models",
+  "/policy",
+  "/india",
+  "/ask",
+  "/insights",
+  "/topic/ai",
+  "/topic/india",
+];
 
 router.get("/newsroom/automation/status", async (_req, res): Promise<void> => {
   try {
@@ -382,14 +421,11 @@ if (process.env.NODE_ENV === "test") {
 router.get("/newsroom/sitemap.xml", async (_req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
-    const metadataManifest = getSeoMetadataManifest(publishedStories);
-    const lastmodByPath = new Map(
-      publishedStories.map((story) => [`/article/${story.slug}`, story.date]),
-    );
-    const unique = metadataManifest.routes.map((metadata) => ({
-      path: metadata.path,
-      lastmod: lastmodByPath.get(metadata.path),
-    }));
+    const urls = [
+      ...staticSitemapRoutes.map((path) => ({ path, lastmod: undefined })),
+      ...publishedStories.map((story) => ({ path: `/article/${story.slug}`, lastmod: story.date })),
+    ];
+    const unique = [...new Map(urls.map((entry) => [entry.path, entry])).values()];
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${unique
       .map(
         (entry) =>
@@ -676,8 +712,8 @@ router.patch("/newsroom/releases/:slug", requireEditorAuth, async (req, res): Pr
     const currentStory = toScheduledStory(existing);
     const story = storyFromInput({ ...parsed.data, slug: existing.slug } as ReleaseUpdate, currentStory);
     const nextStory = { ...currentStory, ...story, slug: existing.slug };
-    if (rejectShortRelease(res, nextStory.dek, storyBodyText(nextStory))) return;
     const nextPublishAt = new Date(nextStory.publishAt);
+    if (rejectShortRelease(res, nextStory.dek, storyBodyText(nextStory))) return;
     const changedFields = [
       existing.title !== nextStory.title ? "title" : null,
       (existing.story as Partial<ScheduledStory>).dek !== nextStory.dek ? "dek" : null,

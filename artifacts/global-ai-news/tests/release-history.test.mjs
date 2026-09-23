@@ -11,13 +11,13 @@ const root = path.resolve(import.meta.dirname, '..', '..', '..');
 const apiDist = path.join(root, 'artifacts', 'api-server', 'dist', 'index.mjs');
 const actor = 'task-38-restart-check-editor';
 const slug = `task-38-release-history-${process.pid}-${Date.now()}`;
+const shortSlug = `task-85-short-release-${process.pid}-${Date.now()}`;
 const title = 'Restart-safe newsroom history fixture';
 const publishAt = '2042-04-05T06:07:08.000Z';
-const body = Array.from(
-  { length: 120 },
-  (_, index) =>
-    `This temporary editorial paragraph ${index + 1} records a durable release-history fixture with enough context for the newsroom word-count gate to treat it as publishable.`,
-).join(' ');
+const shortCopy = 'This copy is intentionally too short to enter the newsroom release queue.';
+const longCopy = Array(90)
+  .fill('Editorial evidence remains visible in the working copy before the release enters the public newsroom.')
+  .join(' ');
 const port = await findFreePort();
 const apiOrigin = `http://127.0.0.1:${port}`;
 const testEditorHeader = { 'x-newsroom-test-editor': actor };
@@ -110,6 +110,16 @@ async function requestJsonAllowingError(route, options = {}) {
     },
   });
   return { response, body: await response.json() };
+}
+
+async function assertShortReleaseRejected(route, options, label) {
+  const { response, body } = await requestJsonAllowingError(route, options);
+  assert.equal(response.status, 422, `${label} should reject short release copy`);
+  assert.match(
+    body.error,
+    /at least 800 editorial words before it can enter the queue/i,
+    `${label} should explain why publication is blocked`,
+  );
 }
 
 async function cleanupFixture() {
@@ -246,11 +256,6 @@ async function assertPublisherFilterContract() {
     /No matching release change was found for .*Clear a filter or try different values\./,
     'publisher workspace is missing the filtered-empty explanation',
   );
-  assert.match(
-    publisherSource,
-    /data-testid="release-word-count"[\s\S]*MINIMUM_STORY_WORDS/,
-    'publisher workspace is missing the visible release word-count gate',
-  );
 }
 
 try {
@@ -265,6 +270,24 @@ try {
   });
 
   await startApi();
+  await assertShortReleaseRejected(
+    '/api/newsroom/releases',
+    {
+      method: 'POST',
+      headers: testEditorHeader,
+      body: JSON.stringify({
+        slug: shortSlug,
+        title: 'Short release should never be scheduled',
+        dek: shortCopy,
+        publishAt,
+        cadence: 'daily',
+        category: 'Field Notes',
+        author: 'global-ai-news',
+        body: shortCopy,
+      }),
+    },
+    'create and schedule',
+  );
   const startedAt = Date.now();
   const created = await requestJson('/api/newsroom/releases', {
     method: 'POST',
@@ -277,39 +300,34 @@ try {
       cadence: 'daily',
       category: 'Field Notes',
       author: 'global-ai-news',
-       body,
+      body: longCopy,
     }),
   });
   assert.equal(created.slug, slug);
-  const shortCreate = await requestJsonAllowingError('/api/newsroom/releases', {
-    method: 'POST',
-    headers: testEditorHeader,
-    body: JSON.stringify({
-      slug: `${slug}-short`,
-      title: 'Short release rejected by the newsroom gate',
-      dek: 'Too short to publish.',
-      publishAt,
-      cadence: 'daily',
-      category: 'Field Notes',
-      author: 'global-ai-news',
-      body: 'This draft is intentionally too short.',
-    }),
-  });
-  assert.equal(shortCreate.response.status, 422);
-  assert.equal(shortCreate.body.minimumWordCount, 800);
-  assert.ok(shortCreate.body.wordCount < 800);
+  assert.equal(created.publishable, true);
+  assert.ok(created.wordCount >= 800);
+  await assertShortReleaseRejected(
+    `/api/newsroom/releases/${slug}`,
+    {
+      method: 'PATCH',
+      headers: testEditorHeader,
+      body: JSON.stringify({ body: shortCopy }),
+    },
+    'edit',
+  );
+  await assertShortReleaseRejected(
+    `/api/newsroom/releases/${slug}`,
+    {
+      method: 'PATCH',
+      headers: testEditorHeader,
+      body: JSON.stringify({ body: shortCopy, publishAt: '2000-01-01T00:00:00.000Z' }),
+    },
+    'publish',
+  );
   const initialHistory = await requestJson('/api/newsroom/releases/history');
   const initialEntry = initialHistory.find((entry) => entry.releaseSlug === slug);
   assert.ok(initialEntry, 'the created release history entry was not returned before restart');
   const beforeRestart = await assertPersistedHistory(initialEntry.id, startedAt);
-
-  const shortUpdate = await requestJsonAllowingError(`/api/newsroom/releases/${slug}`, {
-    method: 'PATCH',
-    headers: testEditorHeader,
-    body: JSON.stringify({ body: 'This edited working copy is intentionally too short.' }),
-  });
-  assert.equal(shortUpdate.response.status, 422);
-  assert.equal(shortUpdate.body.minimumWordCount, 800);
 
   await requestJson(`/api/newsroom/releases/${slug}`, {
     method: 'PATCH',

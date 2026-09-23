@@ -120,6 +120,9 @@ export const GetNewsroomReleasesResponseItem = zod.object({
   "status": zod.enum(['scheduled', 'published', 'canceled']),
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
+  "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
+  "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
+  "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
   "updatedAt": zod.coerce.date()
 })
 export const GetNewsroomReleasesResponse = zod.array(GetNewsroomReleasesResponseItem)
@@ -163,6 +166,9 @@ export const CreateNewsroomReleaseResponse = zod.object({
   "status": zod.enum(['scheduled', 'published', 'canceled']),
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
+  "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
+  "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
+  "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
   "updatedAt": zod.coerce.date()
 })
 
@@ -213,6 +219,9 @@ export const ReorderNewsroomReleasesResponseItem = zod.object({
   "status": zod.enum(['scheduled', 'published', 'canceled']),
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
+  "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
+  "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
+  "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
   "updatedAt": zod.coerce.date()
 })
 export const ReorderNewsroomReleasesResponse = zod.array(ReorderNewsroomReleasesResponseItem)
@@ -254,6 +263,9 @@ export const UpdateNewsroomReleaseResponse = zod.object({
   "status": zod.enum(['scheduled', 'published', 'canceled']),
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
+  "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
+  "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
+  "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
   "updatedAt": zod.coerce.date()
 })
 
@@ -275,6 +287,9 @@ export const CancelNewsroomReleaseResponse = zod.object({
   "status": zod.enum(['scheduled', 'published', 'canceled']),
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
+  "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
+  "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
+  "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
   "updatedAt": zod.coerce.date()
 })
 

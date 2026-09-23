@@ -105,6 +105,16 @@ export function getReleaseDraftWordCount(dek: string, body: string): number {
   return countEditorialWords(`${dek} ${body}`);
 }
 
+export function getReleaseWordCount(dek: string, body: string | BodySection[]): number {
+  const bodyCopy =
+    typeof body === 'string'
+      ? body
+      : body
+          .flatMap((section) => section.paragraphs)
+          .join(' ');
+  return countEditorialWords([dek, bodyCopy].join(' '));
+}
+
 export function getStoryWordCount(story: Story): number {
   const visibleCopy = [
     story.dek,

@@ -19,5 +19,11 @@ export interface EditorialRelease {
   status: EditorialReleaseStatus;
   position: number;
   story: EditorialStory;
+  /** Number of words in the release standfirst and working copy. */
+  wordCount: number;
+  /** Number of words still needed before the release can publish. */
+  remainingWords: number;
+  /** Whether the release meets the minimum visible-copy length. */
+  publishable: boolean;
   updatedAt: Date;
 }
