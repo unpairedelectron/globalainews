@@ -255,6 +255,18 @@ function sitemapRoutes(xml) {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => routeFromUrl(match[1]));
 }
 
+function assertRouteSetsMatch(expectedRoutes, actualRoutes, message) {
+  const expected = [...new Set(expectedRoutes)].sort();
+  const actual = [...new Set(actualRoutes)].sort();
+  const missing = expected.filter((route) => !actual.includes(route));
+  const unexpected = actual.filter((route) => !expected.includes(route));
+  assert.deepEqual(
+    { missing, unexpected },
+    { missing: [], unexpected: [] },
+    `${message}: missing routes [${missing.join(', ') || 'none'}]; unexpected routes [${unexpected.join(', ') || 'none'}]`,
+  );
+}
+
 function openingTags(document, tagName) {
   return [...document.matchAll(new RegExp(`<${tagName}\\b[^>]*>`, 'gi'))].map((match) => match[0]);
 }
@@ -2119,11 +2131,20 @@ after(async () => {
 });
 
 test('public routes, metadata, structured data, links, images, AMP, RSS, and responsive pages pass', async () => {
-  const [{ response: sitemapResponse, body: sitemap }, { response: feedResponse, body: feed }] = await Promise.all([
+  const [
+    { response: sitemapResponse, body: sitemap },
+    { response: apiSitemapResponse, body: apiSitemap },
+    { response: feedResponse, body: feed },
+  ] = await Promise.all([
     fetchText('/sitemap.xml'),
+    fetch(`${apiOrigin}/api/newsroom/sitemap.xml`).then(async (response) => ({
+      response,
+      body: await response.text(),
+    })),
     fetchText('/feed.xml'),
   ]);
   assert.equal(sitemapResponse.status, 200, 'sitemap.xml is not reachable');
+  assert.equal(apiSitemapResponse.status, 200, 'API newsroom sitemap.xml is not reachable');
   assert.equal(feedResponse.status, 200, 'feed.xml is not reachable');
 
   const { response: metadataResponse, body: metadataBody } = await fetchText('/api/newsroom/metadata');
@@ -2144,6 +2165,14 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.ok(routes.length >= 15, 'sitemap unexpectedly contains too few public routes');
   assert.equal(new Set(routes).size, routes.length, 'sitemap contains duplicate routes');
   assert.equal(routes[0], '/', 'sitemap should start with the homepage');
+  const apiRoutes = sitemapRoutes(apiSitemap);
+  assert.ok(apiRoutes.length >= 15, 'API sitemap unexpectedly contains too few public routes');
+  assert.equal(new Set(apiRoutes).size, apiRoutes.length, 'API sitemap contains duplicate routes');
+  assertRouteSetsMatch(
+    routes,
+    apiRoutes,
+    'API sitemap routes drifted from the built static sitemap',
+  );
   assert.deepEqual(
     [...routes].sort(),
     metadataManifest.routes.map((metadata) => metadata.path).sort(),

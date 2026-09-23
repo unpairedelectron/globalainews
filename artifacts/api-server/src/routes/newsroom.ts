@@ -257,22 +257,6 @@ function escapeXml(value: string): string {
     .replaceAll("'", "&apos;");
 }
 
-const staticSitemapRoutes = [
-  "/",
-  "/brief",
-  "/signals",
-  "/research",
-  "/essays",
-  "/industry",
-  "/models",
-  "/policy",
-  "/india",
-  "/ask",
-  "/insights",
-  "/topic/ai",
-  "/topic/india",
-];
-
 router.get("/newsroom/automation/status", async (_req, res): Promise<void> => {
   try {
     res.setHeader("Cache-Control", "no-store");
@@ -421,11 +405,14 @@ if (process.env.NODE_ENV === "test") {
 router.get("/newsroom/sitemap.xml", async (_req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
-    const urls = [
-      ...staticSitemapRoutes.map((path) => ({ path, lastmod: undefined })),
-      ...publishedStories.map((story) => ({ path: `/article/${story.slug}`, lastmod: story.date })),
-    ];
-    const unique = [...new Map(urls.map((entry) => [entry.path, entry])).values()];
+    const metadataManifest = getSeoMetadataManifest(publishedStories);
+    const articleDates = new Map(
+      publishedStories.map((story) => [`/article/${story.slug}`, story.date]),
+    );
+    const unique = metadataManifest.routes.map((metadata) => ({
+      path: metadata.path,
+      lastmod: articleDates.get(metadata.path),
+    }));
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${unique
       .map(
         (entry) =>
