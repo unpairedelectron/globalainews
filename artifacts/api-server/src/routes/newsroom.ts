@@ -187,11 +187,11 @@ function toScheduledStory(row: ReleaseRow): EditorialReleaseStory {
 }
 
 function releaseWordCount(story: EditorialReleaseStory, slug = story.slug): number {
-  if (story.editorialSource === "editor") {
+  const maintainedStory = scheduledStories.find((candidate) => candidate.slug === slug);
+  if (story.editorialSource === "editor" || !maintainedStory) {
     return getReleaseWordCount(story.dek, story.body);
   }
-  const maintainedStory = scheduledStories.find((candidate) => candidate.slug === slug);
-  return getStoryWordCount(maintainedStory ?? story);
+  return getStoryWordCount(maintainedStory);
 }
 
 function toReleaseResponse(row: ReleaseRow, now = new Date()) {

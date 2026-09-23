@@ -12,6 +12,7 @@ const apiDist = path.join(root, 'artifacts', 'api-server', 'dist', 'index.mjs');
 const actor = 'task-38-restart-check-editor';
 const slug = `task-38-release-history-${process.pid}-${Date.now()}`;
 const shortSlug = `task-85-short-release-${process.pid}-${Date.now()}`;
+const legacySlug = `task-88-legacy-release-${process.pid}-${Date.now()}`;
 const title = 'Restart-safe newsroom history fixture';
 const publishAt = '2042-04-05T06:07:08.000Z';
 const shortCopy = 'This copy is intentionally too short to enter the newsroom release queue.';
@@ -122,16 +123,81 @@ async function assertShortReleaseRejected(route, options, label) {
   );
 }
 
+async function markAsLegacyShortRelease(story) {
+  const legacyStory = {
+    ...story,
+    slug: legacySlug,
+    title: 'Legacy short release should stay private',
+    dek: shortCopy,
+    body: [{ heading: 'The signal', paragraphs: [shortCopy] }],
+    bottomLine: longCopy,
+    whyItMatters: longCopy,
+    keyTakeaways: [longCopy, longCopy, longCopy],
+    whatChanges: longCopy,
+  };
+  delete legacyStory.editorialSource;
+  const mutationScript = `
+    import { eq } from "drizzle-orm";
+    import { db, pool, editorialReleasesTable } from "@workspace/db";
+    (async () => {
+      await db
+        .update(editorialReleasesTable)
+        .set({
+          publishAt: new Date("2000-01-01T00:00:00.000Z"),
+          story: JSON.parse(process.env.LEGACY_STORY_JSON),
+        })
+        .where(eq(editorialReleasesTable.slug, process.env.LEGACY_RELEASE_SLUG));
+      await pool.end();
+    })().catch((error) => {
+      console.error(error);
+      process.exitCode = 1;
+    });
+  `;
+  await execFileAsync(
+    'pnpm',
+    ['--filter', '@workspace/db', 'exec', 'tsx', '--eval', mutationScript],
+    {
+      cwd: root,
+      env: {
+        ...process.env,
+        LEGACY_RELEASE_SLUG: legacySlug,
+        LEGACY_STORY_JSON: JSON.stringify(legacyStory),
+      },
+      maxBuffer: 2 * 1024 * 1024,
+    },
+  );
+}
+
+async function assertLegacyReleaseCannotPublish() {
+  const releases = await requestJson('/api/newsroom/releases');
+  const legacyRelease = releases.find((release) => release.slug === legacySlug);
+  assert.ok(legacyRelease, 'the pre-marker legacy release fixture was not returned');
+  assert.ok(legacyRelease.wordCount < 800, 'legacy release count must use only standfirst and body copy');
+  assert.equal(legacyRelease.publishable, false, 'legacy short release must remain blocked');
+  assert.equal(legacyRelease.status, 'scheduled', 'legacy short release must not become published after its due time');
+
+  const maintainedRelease = releases.find((release) => release.slug === 'weekly-deep-dive-cost-of-intelligence');
+  assert.ok(maintainedRelease, 'the maintained scheduled snapshot was not returned');
+  assert.ok(maintainedRelease.wordCount >= 800, 'maintained snapshot should use its complete story count');
+  assert.equal(maintainedRelease.publishable, true, 'maintained scheduled snapshot should remain publishable');
+
+  const content = await requestJson('/api/newsroom/content');
+  assert.ok(
+    !content.stories.some((story) => story.slug === legacySlug),
+    'a due legacy short release must stay out of public content',
+  );
+}
+
 async function cleanupFixture() {
   const cleanupScript = `
-    import { eq } from "drizzle-orm";
+    import { inArray } from "drizzle-orm";
     import { db, pool, editorialReleaseHistoryTable, editorialReleasesTable } from "@workspace/db";
     (async () => {
-      const slug = process.env.RELEASE_HISTORY_FIXTURE_SLUG;
-      await db.delete(editorialReleaseHistoryTable).where(eq(editorialReleaseHistoryTable.releaseSlug, slug));
-      await db.delete(editorialReleasesTable).where(eq(editorialReleasesTable.slug, slug));
-      const [history] = await db.select({ id: editorialReleaseHistoryTable.id }).from(editorialReleaseHistoryTable).where(eq(editorialReleaseHistoryTable.releaseSlug, slug)).limit(1);
-      const [release] = await db.select({ id: editorialReleasesTable.id }).from(editorialReleasesTable).where(eq(editorialReleasesTable.slug, slug)).limit(1);
+      const slugs = JSON.parse(process.env.RELEASE_HISTORY_FIXTURE_SLUGS);
+      await db.delete(editorialReleaseHistoryTable).where(inArray(editorialReleaseHistoryTable.releaseSlug, slugs));
+      await db.delete(editorialReleasesTable).where(inArray(editorialReleasesTable.slug, slugs));
+      const [history] = await db.select({ id: editorialReleaseHistoryTable.id }).from(editorialReleaseHistoryTable).where(inArray(editorialReleaseHistoryTable.releaseSlug, slugs)).limit(1);
+      const [release] = await db.select({ id: editorialReleasesTable.id }).from(editorialReleasesTable).where(inArray(editorialReleasesTable.slug, slugs)).limit(1);
       if (history || release) throw new Error("Release history fixture cleanup did not remove all rows.");
       await pool.end();
     })().catch((error) => {
@@ -144,7 +210,10 @@ async function cleanupFixture() {
     ['--filter', '@workspace/db', 'exec', 'tsx', '--eval', cleanupScript],
     {
       cwd: root,
-      env: { ...process.env, RELEASE_HISTORY_FIXTURE_SLUG: slug },
+      env: {
+        ...process.env,
+        RELEASE_HISTORY_FIXTURE_SLUGS: JSON.stringify([slug, legacySlug]),
+      },
       maxBuffer: 2 * 1024 * 1024,
     },
   );
@@ -306,6 +375,22 @@ try {
   assert.equal(created.slug, slug);
   assert.equal(created.publishable, true);
   assert.ok(created.wordCount >= 800);
+  const legacyCreated = await requestJson('/api/newsroom/releases', {
+    method: 'POST',
+    headers: testEditorHeader,
+    body: JSON.stringify({
+      slug: legacySlug,
+      title: 'Legacy short release should stay private',
+      dek: 'Temporary copy for the legacy provenance regression fixture.',
+      publishAt,
+      cadence: 'daily',
+      category: 'Field Notes',
+      author: 'global-ai-news',
+      body: longCopy,
+    }),
+  });
+  await markAsLegacyShortRelease(legacyCreated.story);
+  await assertLegacyReleaseCannotPublish();
   await assertShortReleaseRejected(
     `/api/newsroom/releases/${slug}`,
     {
