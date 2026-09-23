@@ -556,7 +556,7 @@ async function ensureScheduledAutomationRunForSmoke() {
       && run.slug
       && releases.some((release) => release.slug === run.slug && release.status === 'scheduled'),
   );
-  if (scheduledRun) return { runs, scheduledRun, createdRun: false };
+  if (scheduledRun) return { runs, releases, scheduledRun, createdRun: false };
 
   const response = await fetch(`${apiOrigin}/api/newsroom/automation/runs/smoke-fixture`, {
     method: 'POST',
@@ -574,11 +574,13 @@ async function ensureScheduledAutomationRunForSmoke() {
     scheduledRun,
     `The automation run did not produce a scheduled release: ${JSON.stringify(runs.slice(0, 3))}`,
   );
-  return { runs, scheduledRun, createdRun: true };
+  return { runs, releases, scheduledRun, createdRun: true };
 }
 
 async function checkAutomationAuditReleaseLink() {
-  const { runs, scheduledRun, createdRun } = await ensureScheduledAutomationRunForSmoke();
+  const { runs, releases, scheduledRun, createdRun } = await ensureScheduledAutomationRunForSmoke();
+  const scheduledRelease = releases.find((release) => release.slug === scheduledRun.slug);
+  assert.ok(scheduledRelease, `The scheduled release ${scheduledRun.slug} was not returned by the queue endpoint.`);
   const debugPort = await findFreePort();
   const userDataDir = `${os.tmpdir()}/gan-automation-audit-${process.pid}`;
   const browserProcess = spawn(chromium, [
@@ -649,6 +651,8 @@ async function checkAutomationAuditReleaseLink() {
       return {
         testId: card?.getAttribute('data-testid') ?? null,
         title: card?.querySelector('h3')?.textContent?.trim() ?? null,
+        status: card?.querySelector('[data-testid^="release-status-"]')?.textContent?.trim() ?? null,
+        readiness: card?.querySelector('[data-testid^="release-readiness-"]')?.textContent?.trim() ?? null,
         visible: Boolean(rect && rect.width > 0 && rect.height > 0),
       };
     })()`);
@@ -657,6 +661,8 @@ async function checkAutomationAuditReleaseLink() {
       {
         testId: `editorial-queue-${scheduledRun.slug}`,
         title: scheduledRun.title,
+        status: scheduledRelease.publishable ? scheduledRelease.status : 'blocked',
+        readiness: `${scheduledRelease.wordCount} / 800 words · ${scheduledRelease.remainingWords} remaining${scheduledRelease.publishable ? 'Minimum copy met · ready for publication.' : `Blocked · ${scheduledRelease.remainingWords} more ${scheduledRelease.remainingWords === 1 ? 'word' : 'words'} needed before publishing.`}`,
         visible: true,
       },
       `The scheduled automation audit link did not open the matching release card: ${JSON.stringify(scheduledCard)}`,
