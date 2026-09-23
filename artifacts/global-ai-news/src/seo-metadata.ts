@@ -6,6 +6,7 @@ export interface SeoMetadata {
   title: string;
   description: string;
   path: string;
+  lastmod?: string;
   article?: boolean;
   ampPath?: string;
   imagePath?: string;
@@ -115,6 +116,7 @@ export function getSeoMetadata(route: string, publishedStories = getPublishedSto
       title: `${story.title} — Global AI News`,
       description: story.dek,
       path: `/article/${story.slug}`,
+      lastmod: story.date,
       article: true,
        ...(isMaintainedStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
       imagePath: `/social/articles/${story.slug}.png`,

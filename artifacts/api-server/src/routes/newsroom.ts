@@ -406,12 +406,9 @@ router.get("/newsroom/sitemap.xml", async (_req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
     const metadataManifest = getSeoMetadataManifest(publishedStories);
-    const articleDates = new Map(
-      publishedStories.map((story) => [`/article/${story.slug}`, story.date]),
-    );
     const unique = metadataManifest.routes.map((metadata) => ({
       path: metadata.path,
-      lastmod: articleDates.get(metadata.path),
+      lastmod: metadata.lastmod,
     }));
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${unique
       .map(

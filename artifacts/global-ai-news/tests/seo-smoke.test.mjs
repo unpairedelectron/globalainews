@@ -252,7 +252,14 @@ async function waitForDevelopmentPreviewTitle(title, route) {
 }
 
 function sitemapRoutes(xml) {
-  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => routeFromUrl(match[1]));
+  return sitemapEntries(xml).map((entry) => entry.route);
+}
+
+function sitemapEntries(xml) {
+  return [...xml.matchAll(/<url>\s*<loc>([^<]+)<\/loc>\s*(?:<lastmod>([^<]+)<\/lastmod>\s*)?<\/url>/g)].map((match) => ({
+    route: routeFromUrl(match[1]),
+    lastmod: match[2] ?? null,
+  }));
 }
 
 function assertRouteSetsMatch(expectedRoutes, actualRoutes, message) {
@@ -264,6 +271,19 @@ function assertRouteSetsMatch(expectedRoutes, actualRoutes, message) {
     { missing, unexpected },
     { missing: [], unexpected: [] },
     `${message}: missing routes [${missing.join(', ') || 'none'}]; unexpected routes [${unexpected.join(', ') || 'none'}]`,
+  );
+}
+
+function assertSitemapDatesMatch(expectedXml, actualXml, message) {
+  const expected = new Map(sitemapEntries(expectedXml).map((entry) => [entry.route, entry.lastmod]));
+  const actual = new Map(sitemapEntries(actualXml).map((entry) => [entry.route, entry.lastmod]));
+  const mismatches = [...expected.entries()]
+    .filter(([route, lastmod]) => actual.has(route) && actual.get(route) !== lastmod)
+    .map(([route, lastmod]) => `${route} (expected ${lastmod ?? 'none'}, received ${actual.get(route) ?? 'none'})`);
+  assert.deepEqual(
+    mismatches,
+    [],
+    `${message}: ${mismatches.join('; ') || 'no mismatches'}`,
   );
 }
 
@@ -2172,6 +2192,11 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     routes,
     apiRoutes,
     'API sitemap routes drifted from the built static sitemap',
+  );
+  assertSitemapDatesMatch(
+    apiSitemap,
+    sitemap,
+    'Sitemap last-modified dates drifted between the API and static documents',
   );
   assert.deepEqual(
     [...routes].sort(),

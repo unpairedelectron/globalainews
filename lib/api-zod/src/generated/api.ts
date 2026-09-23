@@ -53,6 +53,9 @@ export const GetNewsroomContentResponse = zod.object({
  * Returns the build-safe title and description manifest generated from the same maintained source as newsroom content.
  * @summary Get metadata for published newsroom routes
  */
+export const getNewsroomMetadataResponseRoutesItemLastmodRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
 export const GetNewsroomMetadataResponse = zod.object({
   "source": zod.enum(['maintained-editorial-source']),
   "generatedAt": zod.coerce.date(),
@@ -60,6 +63,7 @@ export const GetNewsroomMetadataResponse = zod.object({
   "title": zod.string(),
   "description": zod.string(),
   "path": zod.string(),
+  "lastmod": zod.string().regex(getNewsroomMetadataResponseRoutesItemLastmodRegExp).optional(),
   "article": zod.boolean().optional(),
   "ampPath": zod.string().optional(),
   "imagePath": zod.string().optional(),

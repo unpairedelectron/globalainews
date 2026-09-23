@@ -382,6 +382,9 @@ async function loadBuildMetadataManifest(projectRoot: string): Promise<SeoMetada
       metadata.title.trim().length === 0 ||
       typeof metadata.description !== 'string' ||
       metadata.description.trim().length === 0 ||
+        (metadata.lastmod !== undefined &&
+          (typeof metadata.lastmod !== 'string' ||
+            !/^\d{4}-\d{2}-\d{2}$/.test(metadata.lastmod))) ||
       routeMetadata.has(metadata.path)
     ) {
       throw new Error(
@@ -464,7 +467,7 @@ function writeSitemap(outputDir: string, metadataManifest: SeoMetadataManifest):
   const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${metadataManifest.routes
     .map(
       (metadata) =>
-        `  <url><loc>${escapeHtml(`https://www.globalainews.in${metadata.path}`)}</loc></url>`,
+        `  <url><loc>${escapeHtml(`https://www.globalainews.in${metadata.path}`)}</loc>${metadata.lastmod ? `<lastmod>${escapeHtml(metadata.lastmod)}</lastmod>` : ''}</url>`,
     )
     .join('\n')}\n</urlset>`;
   writeFileSync(path.join(outputDir, 'sitemap.xml'), body);
