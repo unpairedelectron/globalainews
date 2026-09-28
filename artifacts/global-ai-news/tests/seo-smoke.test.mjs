@@ -1006,6 +1006,166 @@ async function checkMobileEditorHistory() {
   }
 }
 
+async function checkReleaseReadinessRecovery() {
+  const slug = `readiness-recovery-${process.pid}-${Date.now()}`;
+  const dek = 'Signal';
+  const bodyForWordCount = (count) => Array(count).fill('signal').join(' ');
+  const editorHeaders = {
+    'content-type': 'application/json',
+    'x-newsroom-test-editor': smokeEditorId,
+  };
+  let fixtureCreated = false;
+  const createResponse = await fetch(`${apiOrigin}/api/newsroom/releases`, {
+    method: 'POST',
+    headers: editorHeaders,
+    body: JSON.stringify({
+      slug,
+      title: 'Readiness recovery smoke fixture',
+      dek,
+      publishAt: '2099-04-05T06:07:08.000Z',
+      cadence: 'daily',
+      category: 'Field Notes',
+      author: 'global-ai-news',
+      body: bodyForWordCount(799),
+    }),
+  });
+  const createdRelease = await createResponse.json();
+  fixtureCreated = createResponse.status === 201;
+  assert.equal(
+    createResponse.status,
+    201,
+    `The readiness recovery fixture could not be created (${createResponse.status}): ${JSON.stringify(createdRelease)}`,
+  );
+
+  const debugPort = await findFreePort();
+  const userDataDir = `${os.tmpdir()}/gan-readiness-recovery-${process.pid}`;
+  let browserProcess;
+  let cdp;
+  try {
+    assert.equal(createdRelease.wordCount, 800, 'The readiness recovery fixture should start at the minimum copy threshold.');
+    browserProcess = spawn(chromium, [
+      '--headless',
+      '--no-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--disable-extensions',
+      '--no-first-run',
+      `--user-data-dir=${userDataDir}`,
+      `--remote-debugging-port=${debugPort}`,
+      'about:blank',
+    ], { stdio: ['ignore', 'ignore', 'ignore'] });
+    const debugDeadline = Date.now() + 10_000;
+    let target;
+    while (Date.now() < debugDeadline) {
+      try {
+        const targets = await fetch(`http://127.0.0.1:${debugPort}/json/list`).then((response) => response.json());
+        target = targets.find((item) => item.type === 'page');
+        if (target?.webSocketDebuggerUrl) break;
+      } catch {
+        // Chromium may still be starting its debugging endpoint.
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    assert.ok(target?.webSocketDebuggerUrl, 'Chromium did not expose a debuggable page for release readiness recovery.');
+    cdp = await connectToChromium(target.webSocketDebuggerUrl);
+    await cdp.send('Network.enable');
+    await cdp.send('Emulation.setDeviceMetricsOverride', {
+      width: 1280,
+      height: 1000,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    await cdp.send('Page.navigate', { url: `${baseUrl}/insights?smoke-editor=1` });
+    await waitForBrowserCondition(
+      cdp,
+      `Boolean(document.querySelector('[data-testid="editorial-queue-${slug}"] [data-testid="release-readiness-${slug}"]'))`,
+      'The release readiness fixture did not render in the newsroom queue.',
+    );
+
+    const initialCards = await evaluateBrowser(cdp, `(() => [...document.querySelectorAll('[data-testid^="editorial-queue-"]')].map((card) => ({
+      testId: card.getAttribute('data-testid'),
+      readiness: card.querySelector('[data-testid^="release-readiness-"]')?.textContent?.trim() ?? '',
+    })))()`);
+    const initialFixtureCard = initialCards.find((card) => card.testId === `editorial-queue-${slug}`);
+    assert.ok(initialFixtureCard, 'The initial release cards did not include the readiness fixture.');
+    assert.match(initialFixtureCard.readiness, /800 \/ 800 words/, 'The initial fixture readiness should show the minimum word count.');
+
+    await cdp.send('Network.setBlockedURLs', { urls: ['*://*/*newsroom/releases'] });
+    await evaluateBrowser(cdp, `(() => {
+      const refresh = document.querySelector('[data-testid="button-refresh-releases"]');
+      if (!refresh) throw new Error('The release queue refresh button is missing.');
+      refresh.click();
+      return true;
+    })()`);
+    await waitForBrowserCondition(
+      cdp,
+      `Boolean(document.querySelector('[data-testid="release-queue-refresh-error"]'))`,
+      'A failed readiness refresh did not show the queue outage notice.',
+    );
+    const failedRefreshState = await evaluateBrowser(cdp, `(() => ({
+      message: document.querySelector('[data-testid="release-queue-refresh-error"]')?.textContent?.trim() ?? '',
+      cards: [...document.querySelectorAll('[data-testid^="editorial-queue-"]')].map((card) => ({
+        testId: card.getAttribute('data-testid'),
+        readiness: card.querySelector('[data-testid^="release-readiness-"]')?.textContent?.trim() ?? '',
+      })),
+    }))()`);
+    assert.match(failedRefreshState.message, /Readiness refresh failed\..*Showing the last known queue state\./, 'The failed refresh notice should explain that the last known queue remains visible.');
+    assert.deepEqual(
+      failedRefreshState.cards,
+      initialCards,
+      'The failed readiness refresh should preserve all previously visible release cards and readiness values.',
+    );
+
+    const updateResponse = await fetch(`${apiOrigin}/api/newsroom/releases/${encodeURIComponent(slug)}`, {
+      method: 'PATCH',
+      headers: editorHeaders,
+      body: JSON.stringify({ body: bodyForWordCount(819) }),
+    });
+    const updatedRelease = await updateResponse.json();
+    assert.equal(
+      updateResponse.status,
+      200,
+      `The readiness recovery fixture could not be updated (${updateResponse.status}): ${JSON.stringify(updatedRelease)}`,
+    );
+    assert.equal(updatedRelease.wordCount, 820, 'The recovered fixture should expose the updated word count.');
+
+    await cdp.send('Network.setBlockedURLs', { urls: [] });
+    await evaluateBrowser(cdp, `(() => {
+      const retry = document.querySelector('[data-testid="release-queue-refresh-error"] button');
+      if (!retry) throw new Error('The release queue recovery action is missing.');
+      retry.click();
+      return true;
+    })()`);
+    await waitForBrowserCondition(
+      cdp,
+      `(() => {
+        const card = document.querySelector('[data-testid="editorial-queue-${slug}"] [data-testid="release-readiness-${slug}"]');
+        return !document.querySelector('[data-testid="release-queue-refresh-error"]')
+          && card?.textContent?.includes('820 / 800 words')
+          && card?.textContent?.includes('Minimum copy met · ready for publication.');
+      })()`,
+      'The successful readiness retry did not clear the outage notice and render fresh queue data.',
+    );
+    const recoveredReadiness = await evaluateBrowser(cdp, `document.querySelector('[data-testid="editorial-queue-${slug}"] [data-testid="release-readiness-${slug}"]')?.textContent?.trim() ?? ''`);
+    assert.match(recoveredReadiness, /820 \/ 800 words/, 'The recovered card did not replace its stale word count.');
+    assert.match(recoveredReadiness, /Minimum copy met · ready for publication\./, 'The recovered card did not show the updated publishable state.');
+  } finally {
+    cdp?.close();
+    browserProcess?.kill('SIGTERM');
+    if (fixtureCreated) {
+      const cleanupResponse = await fetch(`${apiOrigin}/api/newsroom/releases/${encodeURIComponent(slug)}`, {
+        method: 'DELETE',
+        headers: { 'x-newsroom-test-editor': smokeEditorId },
+      });
+      assert.equal(
+        cleanupResponse.status,
+        200,
+        `The readiness recovery fixture could not be cleaned up (${cleanupResponse.status}).`,
+      );
+    }
+  }
+}
+
 function parseCssRgb(value) {
   const match = value.match(/rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
   if (!match) return null;
@@ -2340,6 +2500,10 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
 
 test('signed-in release history filters remain usable at a mobile viewport', { concurrency: false }, async () => {
   await checkMobileEditorHistory();
+});
+
+test('release readiness recovers after a temporary API outage', { concurrency: false }, async () => {
+  await checkReleaseReadinessRecovery();
 });
 
 test('automation audit links open the matching scheduled release and rejected runs stay unlinked', { concurrency: false }, async () => {
