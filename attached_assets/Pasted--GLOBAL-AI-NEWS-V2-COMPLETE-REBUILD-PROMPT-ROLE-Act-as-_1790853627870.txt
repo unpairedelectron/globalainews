@@ -1,0 +1,3124 @@
+# GLOBAL AI NEWS V2 — COMPLETE REBUILD PROMPT
+
+## ROLE
+
+Act as a combined:
+
+* Senior product designer
+* UX architect
+* SEO technical lead
+* News publication information architect
+* Senior Next.js engineer
+* Content-platform architect
+* Performance engineer
+* Editorial product strategist
+
+You are rebuilding **Global AI News** into a serious AI intelligence publication.
+
+Website:
+
+**https://www.globalainews.in/**
+
+Current technology stack:
+
+* Next.js
+* App Router
+* TypeScript
+* React
+* Tailwind CSS
+* Supabase
+* Vercel
+* Existing CMS/content ingestion system
+* Existing newsletter functionality
+* Existing AdSense implementation/review considerations
+
+Do NOT assume the current implementation is correct.
+
+First inspect the existing codebase, routes, Supabase schema, data relationships, metadata generation, sitemap, robots.txt, content ingestion, caching, image handling, author model, and deployment configuration.
+
+The goal is not to make the existing site slightly prettier.
+
+The goal is to transform it into a **credible, useful, technically sound AI publication that can build organic search authority and repeat readership over time.**
+
+---
+
+# 1. CORE PRODUCT PHILOSOPHY
+
+The product principle is:
+
+> **Don't build the prettiest AI news site. Build the AI publication that Google has a reason to cite and readers have a reason to return to.**
+
+The website must stop feeling like:
+
+> "another AI news aggregator"
+
+and instead feel like:
+
+> **"An intelligent editorial system that explains what changed in AI, why it matters, and what happens next."**
+
+Global AI News should combine three distinct products:
+
+### A. DAILY BRIEF
+
+Fast-moving AI developments.
+
+Purpose:
+
+* discovery
+* frequency
+* daily habit
+* returning visitors
+* concise summaries
+
+### B. ORIGINAL INTELLIGENCE
+
+Original:
+
+* analysis
+* explainers
+* essays
+* research
+* comparisons
+* investigations
+* technical interpretation
+* India-focused analysis
+
+Purpose:
+
+* differentiation
+* topical authority
+* backlinks
+* search intent
+* editorial credibility
+
+### C. DATA / REPORTS
+
+Evergreen high-value resources:
+
+* AI statistics
+* AI in India statistics
+* AI jobs and salaries
+* enterprise adoption
+* model comparisons
+* AI infrastructure data
+* market comparisons
+* annual reports
+* timelines
+* datasets where appropriate
+
+Purpose:
+
+* search demand
+* backlinks
+* citations
+* long-term traffic
+* authority
+
+These three systems must be visibly connected.
+
+---
+
+# 2. IMPORTANT: AUDIT BEFORE MODIFYING
+
+Before changing the application, perform a complete audit.
+
+Do not immediately rewrite components.
+
+Create an internal implementation report covering:
+
+## Frontend
+
+Inspect:
+
+* homepage
+* article pages
+* research pages
+* industry pages
+* policy pages
+* model pages
+* India pages
+* author pages
+* topic pages
+* reports
+* archive
+* search
+* 404
+* about
+* ethics
+* corrections
+* contact
+* newsletter
+* robots
+* sitemap
+
+## Backend
+
+Inspect:
+
+* Supabase tables
+* article schema
+* authors
+* categories
+* tags
+* sources
+* images
+* publish status
+* updated timestamps
+* canonical URL fields
+* slugs
+* redirects
+* article relationships
+* source attribution
+* ingestion jobs
+* duplicate detection
+* cron jobs
+
+## SEO
+
+Inspect:
+
+* title tags
+* meta descriptions
+* canonical URLs
+* robots directives
+* sitemap generation
+* sitemap contents
+* robots.txt
+* structured data
+* Open Graph
+* Twitter/X metadata
+* breadcrumbs
+* author markup
+* internal linking
+* orphan pages
+* pagination
+* query parameters
+* duplicate URLs
+* thin pages
+* legacy pages
+* 404 pages
+* redirects
+* noindex rules
+* archive pages
+* category pages
+* author pages
+* topic pages
+
+## Performance
+
+Inspect:
+
+* LCP
+* CLS
+* INP
+* image loading
+* font loading
+* JavaScript bundle size
+* unnecessary client components
+* Suspense boundaries
+* client-side hydration
+* server-side rendering
+* caching
+* database query waterfalls
+* duplicate queries
+* unnecessary API calls
+* Vercel caching
+* ISR/revalidation behavior
+
+## Content
+
+Inspect:
+
+* originality
+* article length
+* source attribution
+* duplicate content
+* syndicated content
+* thin content
+* stale content
+* old irrelevant content
+* author consistency
+* editorial voice
+* headline quality
+* article differentiation
+* internal links
+* topical clusters
+
+## Critical requirement
+
+Do not destroy working functionality just because it is not part of the redesign.
+
+Preserve:
+
+* environment variables
+* production credentials
+* Supabase connectivity
+* ingestion pipeline
+* newsletter functionality
+* authentication if present
+* AdSense functionality
+* existing editorial data
+* existing image assets
+* working API routes
+
+Any schema migration must be backward compatible unless a replacement is implemented and verified.
+
+---
+
+# 3. FIRST PRIORITY: FIX THE FOUNDATION
+
+Before major visual redesign, fix the structural problems.
+
+## P0 — Broken URL audit
+
+Find every internal link.
+
+Build a route integrity check that identifies:
+
+* 404s
+* dead internal links
+* broken navigation links
+* missing author pages
+* missing topic pages
+* missing report pages
+* dead article URLs
+* incorrect slug references
+
+No navigation item should point to a dead route.
+
+Create a development script such as:
+
+`npm run audit:links`
+
+The script should crawl the application's known internal routes and report:
+
+```text
+URL
+HTTP Status
+Canonical
+Indexability
+Link Source
+Issue
+```
+
+Fix all high-priority broken links.
+
+---
+
+# 4. P0 — HOMEPAGE FRESHNESS
+
+The homepage must never display stale editorial content.
+
+The homepage is a dynamic publication surface and should always reflect the latest available edition/stories.
+
+Audit:
+
+* Next.js caching
+* fetch caching
+* Supabase caching
+* `revalidate`
+* static rendering
+* ISR
+* Vercel cache
+* browser cache
+* database queries
+* edition generation
+* timezone handling
+
+The homepage must correctly display the latest publication date.
+
+Use the appropriate Next.js caching/revalidation model.
+
+Do NOT solve this by forcing the entire application to become fully dynamic if selective revalidation can provide the correct result with better performance.
+
+Use server rendering wherever practical.
+
+The latest content must be rendered in HTML without requiring client-side hydration for the primary editorial content.
+
+---
+
+# 5. P0 — LEGACY CONTENT / INDEX CLEANUP SYSTEM
+
+Audit every existing article and route.
+
+Classify URLs into:
+
+### KEEP + INDEX
+
+Current, relevant, useful, sufficiently substantive content.
+
+### KEEP + NOINDEX
+
+Useful to users but not useful as standalone search landing pages.
+
+Examples may include certain filtered listings, internal search pages, or low-value archives.
+
+### REDIRECT
+
+Old URL with a clear equivalent current canonical URL.
+
+### REMOVE / 410
+
+Irrelevant, obsolete, useless legacy content where no meaningful replacement exists.
+
+### REPAIR
+
+Content that should remain but currently has a broken URL, metadata problem, or missing structure.
+
+Do not blindly redirect everything to the homepage.
+
+Do not keep irrelevant historical content merely because it already exists.
+
+Do not create fake replacement pages purely for SEO.
+
+Create an internal migration/audit report.
+
+---
+
+# 6. INFORMATION ARCHITECTURE
+
+Simplify the primary navigation.
+
+Target structure:
+
+```text
+GLOBAL AI NEWS
+
+Brief
+Research
+Industry
+Policy
+Models
+India
+Reports
+```
+
+Secondary navigation:
+
+```text
+Topics
+Archive
+About
+```
+
+Utility:
+
+```text
+Search
+Newsletter
+```
+
+Avoid exposing every CMS category as a top-level navigation item.
+
+Do not force users to understand the database taxonomy.
+
+The navigation must communicate the publication's editorial model immediately.
+
+---
+
+# 7. HOMEPAGE PRODUCT DESIGN
+
+The homepage should feel like an editorial publication, not a CMS dashboard.
+
+## Hero
+
+Use:
+
+```text
+GLOBAL AI NEWS
+
+Understand what changed in AI.
+Without the hype.
+
+Daily intelligence on models, agents,
+infrastructure, policy and India's AI ecosystem.
+
+[Read Today's Brief]
+```
+
+Then immediately introduce a featured story.
+
+Example structure:
+
+```text
+TODAY'S SIGNAL
+
+[Large visual]
+
+CATEGORY
+
+Headline
+
+One-sentence explanation.
+
+Why it matters:
+...
+
+[Read analysis]
+```
+
+The featured story should visually differ from standard cards.
+
+---
+
+# 8. HOMEPAGE INFORMATION HIERARCHY
+
+Build homepage sections in this order:
+
+## 1. Today's Signal
+
+One important story.
+
+## 2. Today's Brief
+
+Fast scan of current developments.
+
+Each card:
+
+```text
+Desk
+Headline
+One-line standfirst
+Published time/date
+Author
+```
+
+## 3. Research
+
+Original analytical work.
+
+## 4. Industry
+
+Enterprise, infrastructure, startups, markets.
+
+## 5. Policy
+
+Regulation, governance, public-sector AI, legislation.
+
+## 6. India
+
+India-specific AI developments.
+
+## 7. Reports
+
+Evergreen research/data resources.
+
+## 8. Newsletter
+
+Clear recurring-value proposition.
+
+---
+
+# 9. DO NOT MAKE EVERY CARD IDENTICAL
+
+The current visual identity is strong and should be retained.
+
+Do NOT replace it with a generic:
+
+* purple gradient
+* glassmorphism
+* AI neon
+* dashboard-style
+* SaaS template
+
+The site should remain editorial.
+
+However, introduce a controlled visual hierarchy.
+
+Use:
+
+### Feature card
+
+Large.
+
+Contextual image.
+
+Large typography.
+
+### Standard article card
+
+Smaller.
+
+Contextual image.
+
+### Research card
+
+More typographic.
+
+Data/diagram treatment.
+
+### Report card
+
+Structured data-oriented visual.
+
+### Brief card
+
+Compact and highly scannable.
+
+The brand system should stay consistent while the content type changes the visual treatment.
+
+---
+
+# 10. IMAGE SYSTEM
+
+Stop using identical branded graphics for every article.
+
+Images must communicate editorial context.
+
+Examples:
+
+AI infrastructure:
+
+* data centers
+* GPUs
+* power infrastructure
+* networking
+
+AI policy:
+
+* government
+* legislation
+* institutional imagery
+* policy documents
+
+AI models:
+
+* technical/model visualization
+* model-specific graphics
+
+Robotics:
+
+* robotics hardware
+* factories
+* physical systems
+
+Research:
+
+* charts
+* diagrams
+* conceptual editorial artwork
+
+India:
+
+* relevant Indian institutional/industry imagery
+
+Keep the Global AI News brand through:
+
+* typography
+* spacing
+* border treatment
+* accent geometry
+* image framing
+
+not by placing the same logo graphic onto every image.
+
+---
+
+# 11. ARTICLE TEMPLATE V2
+
+Redesign article pages around usefulness.
+
+Target structure:
+
+```text
+DESK / TOPIC
+
+# Headline
+
+One-sentence answer:
+What happened and why it matters.
+
+Byline
+Published date
+Updated date
+Reading time
+
+Hero image
+
+THE SHORT VERSION
+
+• Key takeaway
+• Key takeaway
+• Key takeaway
+
+WHAT HAPPENED
+
+Main factual explanation.
+
+WHY IT MATTERS
+
+Original interpretation.
+
+WHAT CHANGES NOW
+
+Concrete implications.
+
+INDIA ANGLE
+
+Only when genuinely relevant.
+
+WHAT TO WATCH
+
+3–5 concrete follow-ups.
+
+SOURCES
+
+Primary sources
+Secondary sources
+
+EDITORIAL CONTEXT
+
+Additional Global AI News analysis.
+
+RELATED STORIES
+
+Related articles.
+
+RELATED TOPICS
+
+Topic hubs.
+```
+
+Do not fill every section artificially.
+
+If a section isn't useful for a particular article, omit it.
+
+---
+
+# 12. ORIGINALITY RULE
+
+This is critical.
+
+Global AI News may summarize external reporting.
+
+But the product value must be obvious.
+
+For every aggregated/sourced article, ask:
+
+> What does the reader get here that they do not get from clicking the original source?
+
+The article should contribute one or more of:
+
+* synthesis
+* context
+* technical interpretation
+* timeline
+* comparison
+* India relevance
+* implications
+* data
+* expert commentary
+* cross-source synthesis
+* historical context
+* explanation
+
+Do NOT simply rewrite another publication's article with different wording.
+
+Do not fabricate original reporting.
+
+Do not fabricate interviews.
+
+Do not fabricate data.
+
+Do not invent experts.
+
+Do not invent citations.
+
+Do not make unsupported claims that Global AI News conducted reporting when it did not.
+
+Clearly distinguish:
+
+```text
+Source reporting
+Global AI News analysis
+Editorial interpretation
+```
+
+---
+
+# 13. "WHY IT MATTERS" MUST ACTUALLY MATTER
+
+Ban generic copy such as:
+
+> Relevant for professionals tracking industry developments.
+
+Replace generic explanations with concrete implications.
+
+Good:
+
+> Smaller models can reduce inference cost and latency, making on-device AI more practical where cloud connectivity is unreliable.
+
+Bad:
+
+> This development is important for the AI industry.
+
+Every "Why it matters" section should answer:
+
+* Who is affected?
+* What changes?
+* Why now?
+* What becomes cheaper/faster/slower/harder?
+* What should people watch next?
+
+---
+
+# 14. ARTICLE METADATA
+
+Human-facing dates must be formatted naturally.
+
+Use:
+
+```text
+Sep 23, 2026
+```
+
+or:
+
+```text
+September 23, 2026
+```
+
+Never expose:
+
+```text
+2026-09-23
+```
+
+as the primary visual format.
+
+Never expose raw author slugs:
+
+```text
+ananya-rao
+```
+
+Use:
+
+```text
+Ananya Rao
+```
+
+Store structured machine-readable identifiers in the database/URLs separately.
+
+---
+
+# 15. AUTHOR ENTITY SYSTEM
+
+Build a real author system.
+
+Every author needs:
+
+```text
+Name
+Slug
+Photo
+Bio
+Role
+Areas of expertise
+Location if appropriate
+Professional links
+Social links where appropriate
+Published work
+Updated profile
+```
+
+Author page structure:
+
+```text
+AUTHOR
+
+[PHOTO]
+
+Name
+
+Role
+
+Short biography
+
+Areas of expertise
+
+Latest analysis
+
+Latest research
+
+Latest reporting
+```
+
+Use a real profile URL for every author.
+
+Articles should link to the author's profile.
+
+Do not create author pages solely to produce SEO URLs.
+
+Every author page must contain useful information.
+
+Use ProfilePage structured data for appropriate author profile pages.
+
+Use Person structured data where applicable.
+
+On article structured data, connect the article author to the author's profile URL.
+
+Follow current Google guidance for Article and ProfilePage structured data.
+
+---
+
+# 16. TOPIC HUB SYSTEM
+
+This is one of the highest-value changes.
+
+Create authoritative topic hubs.
+
+Examples:
+
+```text
+/ai/openai
+/ai/anthropic
+/ai/google
+/ai/agents
+/ai/reasoning-models
+/ai/enterprise-ai
+/ai/ai-infrastructure
+/ai/ai-regulation
+/ai/ai-in-india
+```
+
+Do not create hundreds of empty topic pages.
+
+A topic page must have enough useful material to justify existing.
+
+Each topic hub should contain:
+
+```text
+TOPIC NAME
+
+Short authoritative introduction.
+
+What this topic means.
+
+Latest developments.
+
+Key developments.
+
+Global AI News analysis.
+
+Research.
+
+Related reports.
+
+Timeline.
+
+Related topics.
+```
+
+Example:
+
+```text
+OpenAI
+
+What changed
+
+Latest
+
+Research
+
+Models
+
+Timeline
+
+Related companies
+
+Related topics
+```
+
+Topic pages should become navigational hubs connecting related content.
+
+---
+
+# 17. INTERNAL LINKING ENGINE
+
+Do not treat internal links as an afterthought.
+
+Every article should have deliberate internal links to:
+
+* relevant topic
+* relevant research
+* relevant reports
+* relevant related articles
+* related entity
+* relevant India coverage where applicable
+
+Build relationships such as:
+
+```text
+Article
+↓
+Topic
+↓
+Research
+↓
+Report
+↓
+Related Topic
+```
+
+Avoid random "related articles" widgets that have no semantic relationship.
+
+Prefer relevance over quantity.
+
+---
+
+# 18. REPORTS / DATA PRODUCT
+
+Turn Reports into a major evergreen product.
+
+Create a framework such as:
+
+```text
+AI Statistics 2026
+AI in India 2026
+AI Jobs & Salaries 2026
+Enterprise GenAI Adoption 2026
+AI Models Compared
+AI Assistants Compared
+AI Image Models Compared
+AI Infrastructure Trends 2026
+```
+
+Only build reports where enough reliable source data exists.
+
+Each report should include:
+
+```text
+Title
+Executive summary
+Key findings
+Charts
+Tables
+Definitions
+Methodology
+Sources
+Last updated
+Original publication date
+Related articles
+Related topics
+```
+
+Use primary/reputable sources whenever possible.
+
+Do not fabricate statistics to make a report look comprehensive.
+
+Where data is unavailable, explicitly state the limitation.
+
+---
+
+# 19. REPORTS MUST BE LINKABLE
+
+A report should be something another writer can cite.
+
+For example:
+
+> "According to Global AI News' 2026 AI adoption tracker..."
+
+That requires:
+
+* clear data
+* visible source attribution
+* methodology
+* update dates
+* stable canonical URL
+* useful tables
+* easy-to-reference facts
+
+This is one of the primary mechanisms for earning organic authority.
+
+---
+
+# 20. SEARCH EXPERIENCE
+
+Build a real site search.
+
+Search should support:
+
+* article title
+* article body
+* topic
+* author
+* entity
+* category
+
+Results should show:
+
+```text
+Headline
+Desk
+Author
+Date
+Standfirst
+```
+
+Do not allow arbitrary search-result URLs to become indexable SEO pages.
+
+Internal search pages should normally be treated as utility pages rather than SEO landing pages unless there is a deliberate editorial reason otherwise.
+
+---
+
+# 21. ARCHIVE
+
+Create a useful archive.
+
+Support:
+
+```text
+Year
+Month
+Desk
+Topic
+```
+
+Example:
+
+```text
+September 2026
+
+Latest
+Research
+Industry
+Policy
+India
+```
+
+Archive pages should primarily serve users.
+
+Do not generate thousands of near-empty archive combinations.
+
+---
+
+# 22. SEO FOUNDATION
+
+Implement and verify:
+
+## Every indexable page
+
+* unique `<title>`
+* unique meta description
+* canonical URL
+* correct robots directive
+* correct Open Graph metadata
+* correct Twitter metadata
+* valid H1
+* logical H2/H3 structure
+* clean URL
+* breadcrumb where appropriate
+
+## Article pages
+
+Implement suitable Article / NewsArticle structured data.
+
+Include where applicable:
+
+```text
+headline
+image
+datePublished
+dateModified
+author
+publisher
+mainEntityOfPage
+description
+```
+
+Authors should resolve to real author profile pages.
+
+Publisher should resolve to Global AI News organization information.
+
+Follow current Google Search Central structured-data guidance.
+
+---
+
+# 23. ORGANIZATION ENTITY
+
+Implement an Organization entity for Global AI News.
+
+Include accurate information such as:
+
+```text
+name
+url
+logo
+description
+contact information where appropriate
+social profiles where appropriate
+```
+
+Do not invent social profiles or organization details.
+
+Use `sameAs` only for real, controlled/valid profiles.
+
+---
+
+# 24. BREADCRUMBS
+
+Implement breadcrumb navigation where it materially improves orientation.
+
+Example:
+
+```text
+Home
+→ Research
+→ AI Infrastructure
+→ Article
+```
+
+Do not create meaningless breadcrumb chains.
+
+Breadcrumbs should match the actual information architecture.
+
+---
+
+# 25. SITEMAP SYSTEM
+
+The sitemap must contain only URLs that are intended to be discoverable/indexable.
+
+Do NOT include:
+
+* 404 URLs
+* redirected URLs
+* noindex URLs
+* duplicate canonical URLs
+* internal search
+* thin utility pages
+* arbitrary query URLs
+* obsolete legacy URLs
+
+The sitemap should reflect the site's current canonical architecture.
+
+Build a sitemap validation process.
+
+Example:
+
+`npm run audit:sitemap`
+
+Output:
+
+```text
+URL
+Status
+Canonical
+Indexable
+In Sitemap
+Issue
+```
+
+---
+
+# 26. ROBOTS.TXT
+
+Review robots.txt from scratch.
+
+Make sure useful public content is crawlable.
+
+Do not accidentally block:
+
+* article pages
+* topic pages
+* authors
+* reports
+* important static resources required for rendering
+
+Do not use robots.txt as a substitute for index management.
+
+---
+
+# 27. 404 EXPERIENCE
+
+Create a useful 404 page.
+
+Do not show an empty technical error.
+
+Use:
+
+```text
+This page no longer exists.
+
+Search Global AI News
+
+Latest Brief
+
+Popular Topics
+
+Research
+```
+
+If a user reaches an obsolete article URL, help them find the closest useful content.
+
+---
+
+# 28. REDIRECT MANAGEMENT
+
+Create a clean redirect architecture.
+
+Prefer:
+
+```text
+Old relevant URL
+→ 301
+→ exact current equivalent
+```
+
+Avoid:
+
+```text
+Old URL
+→ homepage
+```
+
+unless there is no better meaningful destination.
+
+Create a redirect map for migrated content.
+
+Keep redirect rules centralized and maintainable.
+
+---
+
+# 29. CACHING / RENDERING MODEL
+
+Use Next.js App Router correctly.
+
+Primary editorial content should preferably be server rendered.
+
+Do not make article content dependent on client-side hydration.
+
+Avoid loading placeholders appearing before actual article content whenever possible.
+
+Use appropriate caching/revalidation.
+
+The system should ensure:
+
+* latest content is fresh
+* pages remain fast
+* database isn't hammered on every request
+* new publications become visible without requiring a full deployment
+
+Where data mutations occur, use appropriate cache invalidation/revalidation mechanisms.
+
+---
+
+# 30. LOADING EXPERIENCE
+
+Replace:
+
+> "We're loading the latest stories..."
+
+with content-shaped skeleton states only where loading is unavoidable.
+
+Skeletons should resemble the actual layout.
+
+Avoid large layout shifts.
+
+Do not display an artificial loading UI if server rendering makes it unnecessary.
+
+---
+
+# 31. MOBILE EXPERIENCE
+
+Treat mobile as a first-class publication experience.
+
+Verify:
+
+* typography
+* tap targets
+* navigation
+* article reading width
+* sticky elements
+* image ratios
+* newsletter form
+* search
+* topic navigation
+* ads
+
+Avoid desktop layouts simply compressed into mobile.
+
+The article experience should be comfortable for long-form reading on a phone.
+
+---
+
+# 32. TYPOGRAPHY
+
+Keep the existing editorial character.
+
+Use:
+
+* serif display typography for major editorial headlines where appropriate
+* clean sans-serif for interface/meta text
+* high contrast
+* generous whitespace
+* controlled line length
+* strong hierarchy
+
+Avoid:
+
+* excessive gradients
+* neon AI aesthetic
+* excessive rounded cards
+* giant floating UI elements
+* visual noise
+* dashboard styling
+
+The design language should feel like:
+
+```text
+serious editorial publication
++
+modern technology publication
++
+Indian/global intelligence briefing
+```
+
+not:
+
+```text
+AI SaaS landing page
+```
+
+---
+
+# 33. NEWSLETTER
+
+Create a strong return loop.
+
+Position the newsletter as a product:
+
+```text
+THE GLOBAL AI BRIEF
+
+What changed in AI.
+What matters.
+What to watch.
+
+Delivered [cadence].
+```
+
+Do not use:
+
+> Subscribe to our newsletter!
+
+as the only value proposition.
+
+Explain exactly what the reader receives.
+
+Newsletter CTA should appear:
+
+* homepage
+* article pages
+* research pages
+* reports
+* end of relevant topic hubs
+
+Do not interrupt readers aggressively with popups.
+
+---
+
+# 34. ARTICLE RETENTION
+
+At the end of each article, build:
+
+```text
+Continue reading
+
+Related analysis
+Related topic
+Latest developments
+```
+
+Also optionally:
+
+```text
+Stay ahead of the next change.
+
+[Get the Global AI Brief]
+```
+
+The user must always have an obvious next step.
+
+---
+
+# 35. EDITORIAL SIGNALS
+
+Introduce clear publication signals:
+
+```text
+Original analysis
+Explainer
+Research
+Brief
+Industry
+Policy
+India
+Report
+```
+
+Readers must immediately understand what kind of content they're reading.
+
+Do not combine multiple overlapping labels.
+
+Avoid duplicated metadata such as:
+
+```text
+FIELD NOTES / FIELD NOTE
+```
+
+Use a single controlled content-type taxonomy.
+
+---
+
+# 36. CONTENT MODEL
+
+If necessary, extend the existing database schema.
+
+Suggested conceptual model:
+
+```text
+articles
+authors
+topics
+entities
+sources
+article_sources
+article_topics
+article_entities
+reports
+redirects
+newsletters
+```
+
+Article fields should support:
+
+```text
+id
+title
+slug
+dek / standfirst
+body
+summary
+content_type
+desk
+author_id
+published_at
+updated_at
+canonical_url
+hero_image
+source_type
+source_url
+is_original
+is_indexable
+seo_title
+seo_description
+status
+```
+
+Do not blindly implement this schema if an equivalent existing schema already exists.
+
+Adapt to the current database.
+
+---
+
+# 37. SOURCE MODEL
+
+Every sourced/aggregated article should have explicit source metadata.
+
+Example:
+
+```text
+Source:
+Ars Technica
+
+Original reporting:
+[link]
+```
+
+For multiple sources:
+
+```text
+Sources
+- Reuters
+- Company filing
+- Official announcement
+- Research paper
+```
+
+Do not imply direct reporting by Global AI News where none occurred.
+
+---
+
+# 38. CONTENT-TYPE SYSTEM
+
+Create a controlled content taxonomy.
+
+Recommended types:
+
+```text
+Brief
+Analysis
+Explainer
+Research
+Essay
+Report
+Comparison
+India
+```
+
+Do not allow editors or ingestion systems to create arbitrary new content-type labels.
+
+---
+
+# 39. SEO TITLE SYSTEM
+
+Do not auto-generate terrible SEO titles.
+
+Headline should remain editorially strong.
+
+SEO title can provide slightly more context where appropriate.
+
+Avoid:
+
+```text
+10 Things You Won't Believe...
+```
+
+Avoid clickbait.
+
+Prefer:
+
+```text
+OpenAI Expands Agent Infrastructure as Enterprise AI Moves Beyond Chat
+```
+
+The headline should accurately represent the page.
+
+---
+
+# 40. META DESCRIPTION SYSTEM
+
+Meta descriptions should explain:
+
+* what happened
+* why it matters
+* what the reader will learn
+
+Avoid keyword stuffing.
+
+---
+
+# 41. URL ARCHITECTURE
+
+Keep URLs:
+
+* stable
+* readable
+* canonical
+* descriptive
+* short enough to remain manageable
+
+Prefer a clear article system.
+
+Do not introduce unnecessary hierarchical complexity unless there is a strong product/SEO reason.
+
+Before changing existing URLs, create redirects.
+
+Do not break existing backlinks.
+
+---
+
+# 42. ENTITY LINKING
+
+Where an article discusses a significant organization, model, technology, or person, connect it to the corresponding topic/entity page.
+
+Examples:
+
+```text
+OpenAI
+Anthropic
+Google DeepMind
+Meta
+NVIDIA
+Claude
+Gemini
+GPT
+AI agents
+AI infrastructure
+```
+
+Do not create entity pages automatically for every noun.
+
+Only create durable entities that have enough editorial substance.
+
+---
+
+# 43. INDIA DIFFERENTIATION
+
+India should become a genuine editorial advantage.
+
+Build an India AI vertical around:
+
+* Indian AI policy
+* Indian startups
+* government AI initiatives
+* enterprise adoption
+* talent
+* jobs
+* infrastructure
+* semiconductor ecosystem
+* public-sector deployment
+* Indian-language AI
+* research institutions
+* funding
+* regulation
+
+But do NOT turn every global story into a fake "India angle."
+
+Only include an India angle where it adds real information.
+
+---
+
+# 44. ORIGINAL RESEARCH STRATEGY
+
+Prioritize original content that can accumulate value.
+
+Examples:
+
+```text
+The State of AI Infrastructure in India — 2026
+AI Adoption in Indian Enterprises — 2026
+AI Jobs & Salaries in India — 2026
+India's AI Compute Landscape
+AI Regulation Tracker
+AI Model Comparison Database
+Enterprise AI Adoption Tracker
+```
+
+The content should be:
+
+* sourced
+* transparent
+* updateable
+* linkable
+* useful
+
+Build update timestamps and methodology.
+
+---
+
+# 45. SEARCH INTENT FIRST
+
+For every proposed content type ask:
+
+```text
+Who searches for this?
+
+Why do they search?
+
+What question are they trying to answer?
+
+What existing results satisfy them?
+
+What additional value can Global AI News provide?
+
+Why would someone link to this?
+
+Why would someone return six months later?
+```
+
+If there is no clear answer, do not manufacture the page.
+
+---
+
+# 46. SEO ANTI-SPAM RULES
+
+Do NOT:
+
+* keyword stuff
+* generate doorway pages
+* create hundreds of empty topic pages
+* create fake statistics
+* create meaningless tag pages
+* create thin location pages
+* rewrite competitors verbatim
+* mass-produce AI articles with no editorial value
+* create fake authors
+* create fake expertise
+* manufacture backlinks
+* hide text
+* create deceptive redirects
+* index internal search results
+* create pages solely for search-engine traffic
+
+The goal is sustainable publication quality.
+
+---
+
+# 47. TRUST / TRANSPARENCY
+
+Ensure these pages actually work:
+
+```text
+/about-us
+/code-of-ethics
+/corrections
+/contact
+```
+
+No trust page may return 404.
+
+The ethical framework should be visible and functional.
+
+Where relevant, publish:
+
+* editorial standards
+* correction policy
+* sourcing approach
+* AI usage policy
+* ownership/funding transparency
+* contact information
+
+Only include claims that are actually true.
+
+---
+
+# 48. AI USAGE POLICY
+
+If AI is involved in content generation, editing, summarization, images, or workflow automation, create a transparent editorial AI policy.
+
+Do not claim that all content is manually written if it is not.
+
+The goal is transparency and editorial accountability.
+
+The editorial workflow must include human-quality controls.
+
+---
+
+# 49. ACCESSIBILITY
+
+Implement strong accessibility basics:
+
+* semantic HTML
+* proper heading hierarchy
+* keyboard navigation
+* alt text
+* focus states
+* accessible buttons
+* accessible form labels
+* sufficient contrast
+* responsive text
+* reduced-motion support where appropriate
+
+Do not rely solely on visual styling to communicate meaning.
+
+---
+
+# 50. PERFORMANCE TARGETS
+
+Set explicit targets.
+
+Aim for:
+
+```text
+LCP: < 2.5s
+CLS: < 0.1
+INP: < 200ms
+```
+
+But do not optimize blindly.
+
+Measure real bottlenecks.
+
+Prioritize:
+
+* critical rendering path
+* hero image
+* fonts
+* server response
+* database latency
+* client JS
+* unnecessary hydration
+* image dimensions
+* caching
+
+Do not sacrifice editorial usability purely for synthetic scores.
+
+---
+
+# 51. IMAGE OPTIMIZATION
+
+Every editorial image must have:
+
+* correct aspect ratio
+* explicit dimensions
+* optimized format
+* responsive loading
+* appropriate compression
+* descriptive alt text where useful
+
+Do not lazy-load the primary above-the-fold image if that harms LCP.
+
+Do not use huge source images when a smaller optimized asset is sufficient.
+
+---
+
+# 52. ADSENSE SAFETY
+
+Do not make unnecessary changes to the existing AdSense implementation.
+
+Preserve:
+
+* ads.txt
+* publisher configuration
+* existing ad placement logic
+* privacy/consent implementation
+* Funding Choices configuration
+* existing review-sensitive files
+
+Do not suddenly introduce aggressive:
+
+* interstitial ads
+* auto-playing video
+* intrusive popups
+* fake buttons
+* misleading ad placements
+
+Ads must remain clearly distinguishable from editorial content.
+
+---
+
+# 53. ANALYTICS
+
+Instrument the product around actual user behavior.
+
+Track at minimum:
+
+```text
+Page view
+Article open
+Scroll depth
+Newsletter signup
+Search
+Topic click
+Author click
+Related article click
+Report click
+External source click
+```
+
+Create useful events, not hundreds of meaningless events.
+
+The goal is to answer:
+
+```text
+What content attracts users?
+
+What content retains users?
+
+What topics drive sessions?
+
+Which internal links work?
+
+What converts readers into subscribers?
+```
+
+---
+
+# 54. HOMEPAGE PERSONALIZATION SHOULD NOT BE REQUIRED
+
+Do not make the site dependent on login or personalization.
+
+Core editorial content must remain crawlable and accessible to anonymous users.
+
+---
+
+# 55. ARTICLE DISCOVERY
+
+Every article should expose clear discovery paths:
+
+```text
+Article
+↓
+Topic
+↓
+Author
+↓
+Related article
+↓
+Research
+↓
+Report
+```
+
+The reader should never hit a dead end.
+
+---
+
+# 56. EMPTY STATES
+
+For any empty section, do not display:
+
+> No articles found.
+
+Instead provide useful fallback content.
+
+Example:
+
+```text
+No recent coverage.
+
+Explore the latest:
+Industry
+Policy
+Research
+India
+```
+
+Avoid building indexable empty pages.
+
+---
+
+# 57. ERROR HANDLING
+
+Every major route needs a proper failure state.
+
+Handle:
+
+* Supabase unavailable
+* article missing
+* image missing
+* author missing
+* topic missing
+* report missing
+* database timeout
+
+Do not crash the page.
+
+---
+
+# 58. DATABASE PERFORMANCE
+
+Audit all Supabase queries.
+
+Avoid:
+
+* N+1 queries
+* duplicate queries
+* unnecessarily fetching full article bodies for cards
+* loading all articles and filtering in JavaScript
+* repeated author lookups
+* repeated topic lookups
+
+Use:
+
+* appropriate indexes
+* selective columns
+* database filtering
+* pagination
+* joins where appropriate
+* caching/revalidation
+
+---
+
+# 59. CARD DATA CONTRACT
+
+Standardize card data.
+
+Every card should receive the minimum required fields rather than entire database rows.
+
+Example conceptual contract:
+
+```ts
+type ArticleCard = {
+  id: string
+  slug: string
+  title: string
+  standfirst?: string
+  image?: string
+  author: {
+    name: string
+    slug: string
+  }
+  publishedAt: string
+  contentType: string
+  desk: string
+}
+```
+
+Do not expose database internals directly to UI components.
+
+---
+
+# 60. COMPONENT ARCHITECTURE
+
+Create reusable publication components such as:
+
+```text
+SiteHeader
+PrimaryNav
+MobileNav
+SectionHeader
+FeaturedStory
+ArticleCard
+BriefCard
+ResearchCard
+ReportCard
+AuthorByline
+AuthorCard
+TopicHeader
+TopicArticleList
+SourceList
+ArticleMeta
+Breadcrumbs
+NewsletterCTA
+RelatedStories
+SearchBox
+SearchResults
+Footer
+```
+
+Avoid duplicate markup across pages.
+
+---
+
+# 61. DESIGN SYSTEM
+
+Create reusable design tokens for:
+
+```text
+Typography
+Spacing
+Radius
+Borders
+Shadows
+Max widths
+Reading width
+Breakpoints
+Editorial accents
+```
+
+Do not scatter arbitrary Tailwind values everywhere.
+
+The visual system must be consistent.
+
+---
+
+# 62. DESKTOP LAYOUT
+
+Use a publication-style editorial grid.
+
+Avoid full-width text blocks.
+
+Suggested reading width:
+
+approximately:
+
+```text
+650–760px
+```
+
+depending on font size.
+
+Supporting content may extend wider.
+
+The page should have clear visual rhythm.
+
+---
+
+# 63. MOBILE LAYOUT
+
+On mobile:
+
+* simplify navigation
+* maintain hierarchy
+* prioritize headline/image
+* avoid dense metadata
+* keep tap targets comfortable
+* keep reading width effectively full with appropriate padding
+
+Do not preserve desktop card density.
+
+---
+
+# 64. SEO CONTENT DEPTH
+
+Do not impose a universal article word count.
+
+A 400-word factual brief may be correct.
+
+A research article may require 2,000+ words.
+
+Quality > arbitrary length.
+
+The content should be as long as needed to satisfy the intent without padding.
+
+---
+
+# 65. ARTICLE FRESHNESS
+
+For articles that are actually updated:
+
+Show:
+
+```text
+Published Sep 23, 2026
+Updated Sep 24, 2026
+```
+
+Do not change publication dates merely to appear fresh.
+
+`dateModified` should reflect genuine meaningful modification.
+
+---
+
+# 66. NO FAKE FRESHNESS
+
+Never:
+
+* update timestamps just to manipulate rankings
+* republish unchanged stories
+* change dates without substantive edits
+* create "2026" pages that contain recycled old information without clear update work
+
+---
+
+# 67. SEARCH ENGINE ACCESSIBILITY
+
+Ensure critical article content exists in server-rendered HTML.
+
+A crawler visiting:
+
+```text
+https://www.globalainews.in/article/example
+```
+
+must be able to discover:
+
+* title
+* article content
+* author
+* dates
+* source
+* links
+* structured metadata
+
+without requiring the browser to execute complicated client-side application logic.
+
+---
+
+# 68. SOCIAL SHARING
+
+Maintain the existing disciplined OG visual identity.
+
+Improve it rather than replacing it.
+
+Each article should have:
+
+* article title
+* publication branding
+* relevant image
+* editorial category
+* consistent dimensions
+
+Avoid generic social cards for every story.
+
+---
+
+# 69. NEWSLETTER CONVERSION EXPERIMENT
+
+Create a clean CTA system.
+
+Test:
+
+### Version A
+
+```text
+Get the AI Brief
+
+What changed in AI, what matters,
+and what to watch next.
+
+[Email]
+[Subscribe]
+```
+
+### Version B
+
+```text
+5 minutes.
+The week's AI that mattered.
+
+[Subscribe]
+```
+
+Do not implement both simultaneously unless controlled experimentation is available.
+
+---
+
+# 70. SEARCH CONSOLE READINESS
+
+Ensure:
+
+* sitemap works
+* robots works
+* canonical URLs work
+* indexable pages return 200
+* no accidental `noindex`
+* structured data is valid
+* author URLs resolve
+* Organization data resolves
+* internal links resolve
+* important content isn't blocked
+* redirects are intentional
+
+Create developer documentation describing the verification process.
+
+---
+
+# 71. QA AUTOMATION
+
+Add automated validation where practical.
+
+Suggested commands:
+
+```bash
+npm run lint
+npm run build
+npm run audit:links
+npm run audit:sitemap
+npm run audit:seo
+```
+
+`audit:seo` should flag:
+
+* missing title
+* duplicate title
+* missing description
+* duplicate description
+* missing canonical
+* invalid canonical
+* missing H1
+* multiple H1s where inappropriate
+* missing author
+* missing date
+* broken author URL
+* missing structured data
+* indexable 404
+* noindex page in sitemap
+
+---
+
+# 72. SEO AUDIT OUTPUT
+
+Create a developer-facing report:
+
+```text
+SEO HEALTH REPORT
+
+Routes:
+Indexable:
+Noindex:
+Redirects:
+404s:
+Canonical issues:
+Missing metadata:
+Structured-data issues:
+Orphan pages:
+Thin pages:
+Legacy pages:
+Sitemap problems:
+```
+
+Do not hide failed checks.
+
+---
+
+# 73. CONTENT QUALITY AUDIT OUTPUT
+
+Create:
+
+```text
+CONTENT HEALTH REPORT
+
+Total articles
+Original articles
+Aggregated articles
+Thin articles
+Legacy articles
+Irrelevant articles
+Articles without authors
+Articles without sources
+Articles without images
+Articles without internal links
+Articles without topic assignments
+```
+
+---
+
+# 74. ORPHAN CONTENT AUDIT
+
+Find pages that have:
+
+* no incoming internal links
+* no topic association
+* no category association
+* no author relationship
+
+Important pages should not be orphans.
+
+---
+
+# 75. TOPICAL CLUSTER REPORT
+
+For each major topic, show:
+
+```text
+Topic
+Articles
+Research
+Reports
+Authors
+Internal links
+Orphan count
+Last updated
+```
+
+This makes the content architecture measurable.
+
+---
+
+# 76. DO NOT CHASE DAILY PUBLISHING VOLUME
+
+The system should not optimize for:
+
+> publish more articles
+
+It should optimize for:
+
+> publish more useful information.
+
+Ten weak articles do not equal one authoritative research asset.
+
+The ingestion pipeline should favor relevance and quality.
+
+---
+
+# 77. INGESTION PIPELINE
+
+The existing ingestion pipeline should be evaluated.
+
+Required safeguards:
+
+* source validation
+* duplicate detection
+* similarity detection
+* spam filtering
+* category validation
+* author assignment
+* source attribution
+* minimum quality threshold
+* content-type assignment
+* image validation
+* publish status
+* retry handling
+
+Do not automatically publish low-quality material simply because the ingestion job succeeded.
+
+---
+
+# 78. EDITORIAL REVIEW STATE
+
+Where feasible, content should support:
+
+```text
+draft
+review
+scheduled
+published
+updated
+archived
+```
+
+Automated ingestion can create draft/review content rather than blindly publishing everything.
+
+---
+
+# 79. CONTENT PRIORITIZATION
+
+Build a simple editorial scoring model for internal workflow only.
+
+Possible factors:
+
+* relevance
+* novelty
+* source quality
+* user interest
+* strategic topic
+* India relevance
+* original analysis potential
+
+Do not expose arbitrary "SEO scores" to users.
+
+---
+
+# 80. HOMEPAGE CONTENT SELECTION
+
+Do not just display latest database rows.
+
+The homepage should select editorially meaningful content.
+
+Potential logic:
+
+```text
+Featured
+↓
+Most important recent story
+
+Brief
+↓
+Recent high-quality stories
+
+Research
+↓
+Original analysis
+
+Reports
+↓
+Evergreen assets
+```
+
+Avoid allowing ten nearly identical stories from the same source/topic to dominate the homepage.
+
+---
+
+# 81. SOURCE DIVERSITY
+
+Where reasonable, avoid filling the homepage with many articles derived from one publisher.
+
+The goal is a diverse briefing:
+
+* official sources
+* primary announcements
+* reputable publications
+* research
+* technical sources
+* Indian sources
+
+---
+
+# 82. SOURCE QUALITY
+
+Prefer primary sources when available:
+
+* company announcements
+* filings
+* research papers
+* government documents
+* official datasets
+* legislation
+* technical documentation
+
+Secondary journalism can provide context.
+
+Do not misrepresent secondary reporting as primary reporting.
+
+---
+
+# 83. EDITORIAL VOICE
+
+The voice should be:
+
+* precise
+* calm
+* technical where needed
+* analytical
+* concise
+* evidence-driven
+* internationally readable
+* accessible to intelligent non-specialists
+
+Avoid:
+
+* hype
+* "AI will change everything"
+* sensationalism
+* fake urgency
+* exaggerated predictions
+
+---
+
+# 84. HEADLINE STYLE
+
+Prefer:
+
+```text
+What happened + why it matters
+```
+
+Examples:
+
+```text
+OpenAI Pushes Deeper Into Enterprise Agents as Adoption Moves Beyond Chat
+
+India's AI Compute Gap Is Becoming a Deployment Constraint
+
+Smaller AI Models Move Closer to Production as Inference Costs Fall
+```
+
+Headlines must remain factual and defensible.
+
+---
+
+# 85. REPORT / RESEARCH DIFFERENTIATION
+
+Research pages should look different from brief articles.
+
+Research should feel:
+
+```text
+deep
+considered
+data-led
+evergreen
+```
+
+Brief should feel:
+
+```text
+fast
+clear
+current
+scannable
+```
+
+Do not force one visual template onto all content.
+
+---
+
+# 86. FOOTER
+
+Footer architecture:
+
+```text
+Global AI News
+
+Brief
+Research
+Industry
+Policy
+Models
+India
+Reports
+
+Topics
+Archive
+About
+Ethics
+Corrections
+Contact
+
+Newsletter
+```
+
+Do not clutter it with dozens of links.
+
+---
+
+# 87. TRUST BAR
+
+Consider a subtle publication-trust section:
+
+```text
+Independent publication
+Sources cited
+Corrections published
+Editorial standards
+```
+
+Only include claims that can be verified.
+
+---
+
+# 88. FIRST-TIME USER EXPERIENCE
+
+The first visit should answer within seconds:
+
+### What is this?
+
+AI intelligence publication.
+
+### Why should I care?
+
+It explains what changed and why it matters.
+
+### What can I read?
+
+Brief / Research / India / Reports.
+
+### What should I do next?
+
+Read today's brief or subscribe.
+
+---
+
+# 89. RETURNING USER EXPERIENCE
+
+A returning reader should immediately see:
+
+```text
+What's new since I last visited?
+```
+
+Useful patterns:
+
+* latest brief
+* newest research
+* topic updates
+* weekly newsletter
+* refreshed reports
+
+Do not implement invasive personalization.
+
+---
+
+# 90. WHAT NOT TO DO
+
+Do not:
+
+* rebuild everything merely for visual novelty
+* replace the brand with generic AI styling
+* add unnecessary animations
+* add dozens of gradients
+* add infinite scroll everywhere
+* add huge hero videos
+* make every page client-rendered
+* create hundreds of thin SEO pages
+* create fake author profiles
+* fabricate expertise
+* fabricate data
+* fabricate citations
+* auto-generate meaningless internal links
+* chase keyword density
+* obsess over arbitrary word counts
+* break existing ads
+* delete existing content without classification
+* change URL structures without redirects
+* introduce massive dependencies without justification
+
+---
+
+# 91. IMPLEMENTATION ORDER
+
+Implement in this exact general order.
+
+## PHASE 0 — AUDIT
+
+No major UI rewrite.
+
+Produce findings.
+
+## PHASE 1 — FOUNDATION
+
+Fix:
+
+* 404s
+* stale homepage
+* canonical problems
+* sitemap
+* robots
+* redirects
+* legacy index issues
+* broken trust pages
+* metadata
+* structured data
+
+## PHASE 2 — CONTENT ARCHITECTURE
+
+Implement:
+
+* content types
+* author system
+* topic hubs
+* report structure
+* source relationships
+* internal linking
+
+## PHASE 3 — ARTICLE EXPERIENCE
+
+Rebuild article template.
+
+## PHASE 4 — HOMEPAGE
+
+Rebuild homepage around editorial hierarchy.
+
+## PHASE 5 — RESEARCH / REPORTS
+
+Turn them into high-value organic assets.
+
+## PHASE 6 — DISCOVERY
+
+Build:
+
+* search
+* topics
+* archive
+* related content
+* author exploration
+
+## PHASE 7 — PERFORMANCE
+
+Optimize real bottlenecks.
+
+## PHASE 8 — NEWSLETTER / RETENTION
+
+Strengthen return loops.
+
+## PHASE 9 — QA
+
+Run full audit suite.
+
+---
+
+# 92. VISUAL DIRECTION
+
+Preserve the site's strongest existing traits:
+
+* cream/warm background
+* editorial serif typography
+* restrained palette
+* premium publication feel
+* strong hierarchy
+* whitespace
+* disciplined branding
+
+Improve:
+
+* information density
+* image storytelling
+* visual hierarchy
+* discoverability
+* article readability
+* author credibility
+* topic navigation
+
+Do not turn the site into a conventional technology news template.
+
+---
+
+# 93. DESIGN PRINCIPLE
+
+Every visual element should answer one of:
+
+```text
+What happened?
+
+Why does it matter?
+
+What should I read next?
+```
+
+Remove UI that does none of these.
+
+---
+
+# 94. SEO PRINCIPLE
+
+Every indexable URL must answer:
+
+```text
+What unique useful purpose does this page serve?
+```
+
+If the answer is unclear:
+
+* consolidate
+* noindex
+* redirect
+* remove
+
+Do not create pages just because they can rank.
+
+---
+
+# 95. ORGANIC GROWTH PRINCIPLE
+
+The traffic strategy should be:
+
+```text
+Original research
+        ↓
+Search discovery
+        ↓
+Article / topic ecosystem
+        ↓
+Internal navigation
+        ↓
+Newsletter signup
+        ↓
+Repeat readership
+```
+
+Not:
+
+```text
+Publish 20 AI news summaries
+        ↓
+Hope Google ranks them
+```
+
+---
+
+# 96. SUCCESS METRICS
+
+Do not measure success only by page views.
+
+Track:
+
+### Search
+
+* impressions
+* clicks
+* CTR
+* indexed URLs
+* non-indexed URLs
+* average position
+* branded vs non-branded traffic
+
+### Content
+
+* organic entrances by article
+* research traffic
+* report traffic
+* returning visitors
+* time engaged
+* scroll depth
+
+### Product
+
+* newsletter signup rate
+* articles/session
+* internal click-through rate
+* topic exploration
+
+### Technical
+
+* 404 count
+* redirect count
+* sitemap errors
+* structured-data errors
+* Core Web Vitals
+* server response time
+
+---
+
+# 97. ACCEPTANCE CRITERIA
+
+The rebuild is not complete until all of these are true.
+
+## Technical
+
+* production build passes
+* lint passes
+* no critical console errors
+* no broken internal navigation
+* sitemap is valid
+* robots is valid
+* canonical URLs are correct
+* major public pages return 200
+* no accidental noindex
+* no accidental route blocking
+
+## SEO
+
+* article structured data implemented correctly
+* author structured data implemented where appropriate
+* Organization structured data implemented
+* author pages exist
+* topic pages are meaningful
+* internal linking exists
+* orphan content minimized
+* legacy URL strategy implemented
+
+## UX
+
+* homepage communicates the product immediately
+* featured story has hierarchy
+* cards aren't visually monotonous
+* article page is highly readable
+* mobile experience is strong
+* navigation is understandable
+* source attribution is obvious
+* newsletter CTA is clear
+* no dead-end article pages
+
+## Editorial
+
+* original content clearly differentiated
+* sourced reporting clearly attributed
+* no fabricated information
+* no fabricated authors
+* no fake statistics
+* no generic filler sections
+
+## Performance
+
+* primary content is server-rendered
+* homepage freshness works
+* article pages load efficiently
+* images are optimized
+* unnecessary client JS minimized
+* Core Web Vitals are actively monitored
+
+---
+
+# 98. DELIVERABLES
+
+At the end of implementation provide:
+
+## A. Changed files
+
+List every important modified file.
+
+## B. Database changes
+
+Describe:
+
+* migrations
+* indexes
+* new relationships
+* data backfills
+
+## C. Route changes
+
+List:
+
+* new routes
+* removed routes
+* redirected routes
+* repaired routes
+
+## D. SEO changes
+
+Describe:
+
+* metadata
+* canonical strategy
+* robots
+* sitemap
+* schema
+* redirects
+* noindex rules
+
+## E. Content changes
+
+Describe:
+
+* taxonomy
+* authors
+* topic hubs
+* reports
+* research
+
+## F. Performance changes
+
+Describe:
+
+* caching
+* rendering
+* images
+* queries
+* bundles
+
+## G. QA results
+
+Show:
+
+```text
+Build: PASS/FAIL
+Lint: PASS/FAIL
+Links: PASS/FAIL
+Sitemap: PASS/FAIL
+SEO audit: PASS/FAIL
+Structured data: PASS/FAIL
+```
+
+---
+
+# 99. CRITICAL DEVELOPMENT RULE
+
+Do not stop after making the site "look good."
+
+A successful result must simultaneously improve:
+
+```text
+Design
++
+Information Architecture
++
+Technical SEO
++
+Content Differentiation
++
+Discovery
++
+Trust
++
+Performance
++
+Reader Retention
+```
+
+If a proposed design change improves aesthetics but makes navigation, performance, SEO, accessibility or readability worse, reject it.
+
+If a proposed SEO technique creates thin, repetitive or manipulative content, reject it.
+
+If a proposed feature does not create meaningful user value, reject it.
+
+---
+
+# 100. FINAL PRODUCT TEST
+
+Pretend you are a first-time user who discovered Global AI News through Google.
+
+Within 10 seconds, can you answer:
+
+1. What is Global AI News?
+2. Why is it different from TechCrunch/The Verge/Reuters?
+3. What happened today?
+4. Where is the original analysis?
+5. Where can I explore a topic?
+6. Who wrote this?
+7. Where are the sources?
+8. What should I read next?
+9. Why should I return tomorrow?
+10. Why should I subscribe?
+
+If the answer to any of these is "not obvious," continue refining the product.
+
+---
+
+# FINAL DIRECTIVE
+
+Do not optimize this website for superficial "SEO score."
+
+Do not optimize this website for visual awards.
+
+Do not optimize this website for maximum article volume.
+
+Optimize for:
+
+> **usefulness + authority + discoverability + trust + retention.**
+
+The finished Global AI News experience should feel like a publication that could plausibly be bookmarked by an AI engineer, cited by a researcher, read by an executive, referenced by a journalist, and revisited by someone who wants to understand what changed in AI.
+
+The product should make the following statement visually and structurally obvious:
+
+# GLOBAL AI NEWS
+
+## Understand what changed in AI.
+
+## Without the hype.
+
+Build the system that makes that promise true.
