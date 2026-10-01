@@ -1,0 +1,739 @@
+# GLOBAL AI NEWS V2 — P0/P1 PRODUCTION HARDENING
+
+The latest production audit has been completed.
+
+Do NOT redesign the website.
+
+Do NOT publish.
+
+Do NOT invent editorial content.
+
+The current priority is to make V2 technically and editorially safe for production.
+
+The audit identified:
+
+* 7 required public routes returning 404
+* unauthenticated newsroom/release API exposure
+* production/V2 byline mismatch
+* production/V2 date mismatch
+* missing source links on production articles
+* incorrect author archive contents
+* missing author/profile schema in production
+* stale homepage/content state
+* build-time SEO/sitemap behavior
+* incomplete performance measurement
+* inconsistent content-type presentation
+
+Treat these as the current source of truth.
+
+---
+
+# PHASE 1 — SECURITY
+
+## 1. Protect newsroom/release APIs
+
+Audit every endpoint under:
+
+```text
+/api/newsroom/*
+```
+
+Identify which endpoints are public and which are editorial/admin-only.
+
+At minimum investigate:
+
+```text
+/api/newsroom/releases
+/api/newsroom/history
+/api/newsroom/automation/status
+```
+
+The current production audit found that unauthenticated requests can retrieve release payloads and a non-publishable draft.
+
+This MUST NOT remain public.
+
+Implement actual authorization at the server/API layer.
+
+Do NOT rely on:
+
+* robots.txt
+* X-Robots-Tag
+* noindex
+* client-side checks
+* hidden UI
+
+as the security mechanism.
+
+A request from an unauthenticated user to an editorial/private endpoint must return an appropriate authorization response.
+
+Do not expose:
+
+* drafts
+* unpublished releases
+* scheduled editorial payloads
+* internal release history
+* automation state
+* editorial workflow metadata
+
+through public endpoints.
+
+---
+
+# PHASE 2 — SEPARATE PUBLIC AND PRIVATE DATA
+
+Create a clear distinction between:
+
+### PUBLIC
+
+Published editorial data only.
+
+### PRIVATE
+
+Editorial workflow data.
+
+The public API must never accidentally serialize private database columns.
+
+Do not return entire Supabase rows where only selected fields are needed.
+
+Use explicit field selection.
+
+For example, conceptually:
+
+```text
+public article response
+=
+title
+slug
+summary
+body
+author
+published_at
+updated_at
+sources
+image
+topics
+```
+
+not:
+
+```text
+entire database row
+```
+
+---
+
+# PHASE 3 — HOMEPAGE FRESHNESS
+
+The production audit found that the latest snapshot exists but is marked stale and the homepage remains tied to older content.
+
+Determine exactly why.
+
+Audit:
+
+* Supabase data retrieval
+* newsroom snapshot generation
+* Next.js caching
+* ISR
+* fetch cache
+* route cache
+* Vercel cache
+* client polling
+* publishing workflow
+
+The requirement is:
+
+> Publishing an editorial story must not require a full application deployment for readers to see the new content.
+
+Implement an explicit revalidation/invalidation mechanism.
+
+The desired architecture is:
+
+```text
+editorial publish
+        ↓
+database mutation
+        ↓
+revalidation / cache invalidation
+        ↓
+homepage refresh
+article refresh
+topic refresh
+author refresh where needed
+sitemap refresh where needed
+```
+
+Use the correct Next.js mechanism for the current application architecture.
+
+Do not convert the entire application to fully dynamic rendering unless necessary.
+
+Preserve performance.
+
+---
+
+# PHASE 4 — TEST REAL CONTENT REVALIDATION
+
+Do not merely inspect code.
+
+Perform a real non-destructive staging/local test.
+
+Use a controlled test record or existing development record.
+
+Verify:
+
+1. old article state
+2. content change
+3. publish event
+4. cache invalidation
+5. homepage update
+6. article update
+7. metadata update
+8. sitemap behavior
+
+Document the exact flow.
+
+If a real production editorial mutation cannot safely be performed, reproduce the complete path in a staging/test database.
+
+Do NOT mutate live editorial content just to test this.
+
+---
+
+# PHASE 5 — FIX TRUST ROUTES
+
+The following routes currently return 404:
+
+```text
+/reports
+/topics
+/archive
+/about-us
+/code-of-ethics
+/corrections
+/contact-us
+```
+
+Create the route structure, but do not invent unsupported editorial copy.
+
+If the necessary authoritative content is not present in the codebase/database, create the structural route and clearly mark the missing content as requiring editorial input rather than fabricating it.
+
+However:
+
+DO NOT leave navigation pointing to 404 routes.
+
+If a page cannot responsibly be published yet, either:
+
+* provide a proper temporary non-indexable implementation where appropriate, or
+* remove its navigation exposure until authoritative content exists.
+
+Do not create SEO filler.
+
+---
+
+# PHASE 6 — FIX AUTHOR RELATIONSHIPS
+
+The current production audit found:
+
+* 6 authors
+* 10 stories
+* article pages showing raw author slugs
+* author archives showing all 10 stories rather than assigned stories
+
+Fix the underlying relationship.
+
+For every article:
+
+```text
+article.author_id
+        ↓
+authors.id
+```
+
+or the equivalent existing relationship.
+
+Author page queries must filter by the selected author.
+
+Do not hard-code author/article relationships.
+
+Do not duplicate author data unnecessarily.
+
+---
+
+# PHASE 7 — HUMAN-READABLE BYLINES
+
+Production article pages must display:
+
+```text
+By Ananya Rao
+```
+
+not:
+
+```text
+ananya-rao
+```
+
+Display the author's name from the actual author record.
+
+The author name must link to:
+
+```text
+/author/<slug>
+```
+
+or the application's canonical equivalent.
+
+Never invent an author.
+
+If no valid author exists:
+
+```text
+Byline unavailable
+```
+
+is acceptable.
+
+Do not use fallback attribution from:
+
+* source publisher
+* first database author
+* editor
+* ingesting user
+* arbitrary default author
+
+unless that fallback is an explicitly defined editorial rule supported by the product.
+
+---
+
+# PHASE 8 — AUTHOR PROFILE PAGES
+
+Author profile pages must show only that author's content.
+
+Each profile should contain:
+
+* name
+* biography where available
+* role where available
+* relevant expertise where available
+* current published work
+* canonical URL
+
+Do not create artificial biographies.
+
+Do not fabricate credentials.
+
+---
+
+# PHASE 9 — AUTHOR STRUCTURED DATA
+
+Implement appropriate:
+
+```text
+ProfilePage
+Person
+```
+
+structured data according to current Google guidance.
+
+Article author structured data should reference the actual author profile URL where appropriate.
+
+Ensure structured data matches the visible page.
+
+Do not output schema for information that isn't actually present or true.
+
+---
+
+# PHASE 10 — HUMAN-READABLE DATES
+
+Replace visible ISO-formatted dates such as:
+
+```text
+2026-09-23
+```
+
+with a publication-friendly format:
+
+```text
+September 23, 2026
+```
+
+or:
+
+```text
+Sep 23, 2026
+```
+
+Keep the machine-readable ISO value in:
+
+* structured data
+* metadata
+* database
+* internal representations
+
+Do not expose machine-oriented formatting to readers.
+
+---
+
+# PHASE 11 — SOURCE ATTRIBUTION
+
+The audit confirms that source records exist in the editorial snapshot but are not exposed as external links on production article pages.
+
+Fix this.
+
+Every sourced article should have a clear source area.
+
+Example:
+
+```text
+Sources
+
+Ars Technica
+OpenAI
+Research paper
+```
+
+Each source should link to its real source URL.
+
+Do not invent links.
+
+Do not substitute unrelated URLs.
+
+Do not claim Global AI News directly reported facts that came from external reporting.
+
+Use the existing editorial/source data.
+
+---
+
+# PHASE 12 — CONTENT-TYPE VISIBILITY
+
+The editorial snapshot distinguishes content such as:
+
+```text
+synthesis
+reported
+analysis
+```
+
+Map the internal classifications into a consistent reader-facing taxonomy.
+
+The exact labels must be understandable to readers.
+
+Examples:
+
+```text
+Brief
+Analysis
+Research
+Explainer
+Report
+```
+
+Do not create duplicate labels such as:
+
+```text
+FIELD NOTES / FIELD NOTE
+```
+
+Use one controlled content-type representation.
+
+---
+
+# PHASE 13 — ARTICLE TEMPLATE PARITY
+
+Make production article rendering match the validated V2 implementation for:
+
+* byline
+* date
+* updated date where available
+* content type
+* sources
+* author links
+* related content
+* breadcrumbs
+* structured data
+* Open Graph metadata
+
+Compare at least 10 representative articles.
+
+Generate a parity report.
+
+---
+
+# PHASE 14 — SEARCH ROUTE
+
+The audit found:
+
+```text
+/search
+/search?q=ai
+```
+
+return 404.
+
+Determine whether search is intended as part of V2.
+
+If search is part of the product:
+
+Implement it.
+
+It should support:
+
+* title
+* summary
+* article body
+* topic
+* author
+
+Search result pages should be treated primarily as utility experiences.
+
+Do not accidentally create thousands of indexable search-query URLs.
+
+If search is not yet part of V2, remove visible search entry points rather than exposing broken routes.
+
+---
+
+# PHASE 15 — SITEMAP
+
+Keep the current property that:
+
+* sitemap URLs return 200
+* URLs are canonical
+* URLs are indexable
+* no listed URL redirects
+
+However, solve the larger architectural issue:
+
+New published content should become discoverable without requiring a full code deployment where technically feasible.
+
+Determine how sitemap freshness will be achieved after editorial publication.
+
+Test it.
+
+---
+
+# PHASE 16 — ROBOTS / PRIVATE API EXPOSURE
+
+Do NOT treat robots.txt as protection for private APIs.
+
+Private APIs require authorization.
+
+After securing them, review whether public JSON endpoints should emit:
+
+```text
+X-Robots-Tag: noindex
+```
+
+where appropriate.
+
+Again:
+
+Noindex is an indexing control, NOT an authorization control.
+
+---
+
+# PHASE 17 — PERFORMANCE TESTING
+
+The previous audit has not measured:
+
+* LCP
+* CLS
+* INP
+
+Do this now.
+
+Also investigate the 5,647 ms TTFB outlier.
+
+Identify why:
+
+```text
+/company/sarvam-ai/
+```
+
+is significantly slower than the median route.
+
+Measure:
+
+* server response
+* database/query time
+* external API time
+* rendering
+* caching
+* asset loading
+
+Do not make arbitrary optimizations without measurements.
+
+---
+
+# PHASE 18 — PRODUCTION PARITY TEST
+
+After fixes, compare:
+
+```text
+V2 build
+vs
+public production
+```
+
+For at least:
+
+* homepage
+* 3 articles
+* 2 author pages
+* 2 topic/entity pages
+* relevant report page
+* trust page
+* sitemap
+* robots
+* RSS
+* AMP if still supported
+
+Check:
+
+* HTML
+* title
+* canonical
+* robots
+* H1
+* author
+* date
+* source links
+* structured data
+* Open Graph
+* HTTP status
+
+---
+
+# PHASE 19 — SECURITY TEST
+
+Test as an unauthenticated user.
+
+Verify that private editorial endpoints do NOT expose:
+
+* drafts
+* release payloads
+* internal status
+* automation details
+* workflow information
+
+Then test as an authorized editorial/admin user.
+
+Verify editorial functionality still works.
+
+---
+
+# PHASE 20 — FINAL QA
+
+Run:
+
+```bash
+npm run lint
+npm run build
+npm run audit:links
+npm run audit:sitemap
+npm run audit:seo
+```
+
+Add a security audit if one does not exist.
+
+Create:
+
+```bash
+npm run audit:production-parity
+```
+
+and make the output explicit.
+
+---
+
+# FINAL ACCEPTANCE CRITERIA
+
+Do NOT publish until all of the following are true:
+
+```text
+Private editorial APIs publicly accessible      = 0
+Important 404 routes                             = 0
+Broken internal references                       = 0
+Author slug shown to reader                      = 0
+Articles missing valid source links              = 0*
+Author archives showing unrelated stories         = 0
+Missing author profile links                     = 0
+Critical structured-data errors                  = 0
+Indexable 404s                                   = 0
+Noindex URLs in sitemap                          = 0
+Unexpected redirects                             = 0
+Production/V2 material mismatch                  = 0
+Unexplained homepage freshness problem           = 0
+```
+
+* Exception only for genuinely original content where no external source exists.
+
+---
+
+# FINAL REPORT
+
+Return:
+
+## Security
+
+Protected endpoints:
+Remaining exposed endpoints:
+Authorization test:
+
+## Routes
+
+Total:
+Working:
+404:
+Redirects:
+
+## Authors
+
+Articles with valid authors:
+Author pages:
+Author relationship issues:
+
+## Sources
+
+Articles with sources:
+Articles with visible source links:
+
+## Freshness
+
+Latest edition:
+Latest article:
+Revalidation test:
+Sitemap freshness:
+
+## SEO
+
+Canonical:
+Robots:
+Sitemap:
+Structured data:
+Metadata:
+
+## Performance
+
+LCP:
+CLS:
+INP:
+TTFB:
+Outliers:
+
+## Production Parity
+
+PASS / FAIL
+
+## Remaining Issues
+
+List everything unresolved.
+
+## Publication Gate
+
+Return exactly one:
+
+READY TO PUBLISH
+
+or
+
+NOT READY TO PUBLISH
+
+Do not publish automatically.
