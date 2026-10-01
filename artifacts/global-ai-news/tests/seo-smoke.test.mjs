@@ -2,13 +2,11 @@ import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { copyFileSync, createReadStream, existsSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
-import { execFile, execFileSync, spawn, spawnSync } from 'node:child_process';
-import { promisify } from 'node:util';
+import { execFileSync, spawn, spawnSync } from 'node:child_process';
 import path from 'node:path';
 import os from 'node:os';
 import { after, before, test } from 'node:test';
 
-const execFileAsync = promisify(execFile);
 const root = path.resolve(import.meta.dirname, '..');
 const distDir = path.join(root, 'dist', 'public');
 const publicDir = path.join(root, 'public');
@@ -40,6 +38,10 @@ let apiProcess;
 let devProcess;
 let baseUrl;
 let devBaseUrl;
+let routeBrowserProcess;
+let routeBrowserCdp;
+let routeBrowserPromise;
+let routeBrowserStderr = '';
 
 const mimeTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -256,10 +258,15 @@ function sitemapRoutes(xml) {
 }
 
 function sitemapEntries(xml) {
-  return [...xml.matchAll(/<url>\s*<loc>([^<]+)<\/loc>\s*(?:<lastmod>([^<]+)<\/lastmod>\s*)?<\/url>/g)].map((match) => ({
-    route: routeFromUrl(match[1]),
-    lastmod: match[2] ?? null,
-  }));
+  return [...xml.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((match) => {
+    const entry = match[1];
+    const location = entry.match(/<loc>([^<]+)<\/loc>/)?.[1] ?? '';
+    return {
+      route: routeFromUrl(location),
+      lastmod: entry.match(/<lastmod>([^<]+)<\/lastmod>/)?.[1] ?? null,
+      images: [...entry.matchAll(/<image:loc>([^<]+)<\/image:loc>/g)].map((image) => image[1]),
+    };
+  });
 }
 
 function assertRouteSetsMatch(expectedRoutes, actualRoutes, message) {
@@ -312,15 +319,23 @@ function assertMeaningfulDescription(description, message) {
   assert.doesNotMatch(description, /^(?:image|photo|picture|graphic|icon|placeholder)$/i, `${message}: description is generic`);
 }
 
-async function assertRenderedPageIntegrity(document, route, allowedRoutes, responseCache) {
+async function assertRenderedPageIntegrity(
+  document,
+  route,
+  allowedRoutes,
+  responseCache,
+  nonIndexableRoutes,
+) {
   for (const anchor of openingTags(document, 'a')) {
     const href = attributeValue(anchor, 'href');
     const targetRoute = sameSiteRoute(href);
     if (!targetRoute) continue;
 
     assert.ok(
-      allowedRoutes.has(targetRoute) || intentional404Routes.has(targetRoute),
-      `${route}: internal link "${href}" points to ${targetRoute}, which is not in sitemap.xml or the intentional 404 set`,
+      allowedRoutes.has(targetRoute)
+        || intentional404Routes.has(targetRoute)
+        || nonIndexableRoutes.has(targetRoute),
+      `${route}: internal link "${href}" points to ${targetRoute}, which is not in sitemap.xml or a known non-indexable route`,
     );
 
     if (intentional404Routes.has(targetRoute)) continue;
@@ -332,7 +347,15 @@ async function assertRenderedPageIntegrity(document, route, allowedRoutes, respo
       assert.fail(`${route}: internal link "${href}" could not be fetched (${error.message})`);
     }
     assert.equal(target.response.status, 200, `${route}: internal link "${href}" returned HTTP ${target.response.status}`);
-    assert.match(target.body, /<div id="root"><\/div>/, `${route}: internal link "${href}" did not return the SPA shell`);
+    if (nonIndexableRoutes.has(targetRoute)) {
+      assert.equal(
+        metaContent(target.body, 'name', 'robots'),
+        'noindex,follow',
+        `${route}: internal link "${href}" does not lead to an explicitly non-indexable page`,
+      );
+      continue;
+    }
+    assert.match(target.body, /<div id="root">[\s\S]*<main\b/, `${route}: internal link "${href}" did not return prerendered content`);
   }
 
   for (const image of openingTags(document, 'img')) {
@@ -373,7 +396,17 @@ async function serveFile(response, filePath) {
   ) {
     response.setHeader('Cache-Control', socialPreviewCacheControl);
   }
-  createReadStream(filePath).pipe(response);
+  const stream = createReadStream(filePath);
+  stream.once('error', (error) => {
+    if (response.destroyed) return;
+    if (response.headersSent) {
+      response.destroy(error);
+      return;
+    }
+    response.statusCode = 500;
+    response.end(`Could not read ${filePath}: ${error.message}`);
+  });
+  stream.pipe(response);
 }
 
 async function startStaticServer() {
@@ -419,6 +452,10 @@ async function startStaticServer() {
     }
   });
 
+  // ImageMagick assertions leave idle gaps between local page requests; keep
+  // Node's pooled fetch connections alive long enough to avoid stale-socket resets.
+  server.keepAliveTimeout = 120_000;
+  server.headersTimeout = 121_000;
   await new Promise((resolve) => server.listen(port, '127.0.0.1', resolve));
   baseUrl = `http://127.0.0.1:${server.address().port}`;
 }
@@ -426,7 +463,7 @@ async function startStaticServer() {
 async function startDevServer() {
   devProcess = spawn(
     'pnpm',
-    ['exec', 'vite', '--config', 'vite.config.ts', '--mode', 'test', '--host', '127.0.0.1', '--port', String(devPort)],
+    ['exec', 'vite', '--config', 'vite.config.ts', '--mode', 'test', '--host', '127.0.0.1', '--port', String(devPort), '--strictPort'],
     {
       cwd: root,
       env: {
@@ -435,64 +472,144 @@ async function startDevServer() {
         NODE_ENV: 'development',
         PORT: String(devPort),
       },
-      stdio: ['ignore', 'ignore', 'pipe'],
+      stdio: ['ignore', 'pipe', 'pipe'],
     },
   );
 
-  let stderr = '';
-  devProcess.stderr?.on('data', (chunk) => {
-    stderr += chunk.toString();
-  });
+  let output = '';
+  const captureOutput = (chunk) => {
+    output = `${output}${chunk.toString()}`.slice(-12_000);
+  };
+  devProcess.stdout?.on('data', captureOutput);
+  devProcess.stderr?.on('data', captureOutput);
 
   const deadline = Date.now() + 60_000;
   while (Date.now() < deadline) {
+    if (devProcess.exitCode !== null || devProcess.signalCode !== null) break;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2_000);
     try {
-      const response = await fetch(
-        `http://127.0.0.1:${devPort}/social/articles/ai-models-antibiotic-discovery.png`,
-      );
+      // Check the server itself; requesting a generated PNG can block on ImageMagick.
+      const response = await fetch(`http://127.0.0.1:${devPort}/`, { signal: controller.signal });
       if (response.ok) {
         devBaseUrl = `http://127.0.0.1:${devPort}`;
         return;
       }
     } catch {
       // The Vite dev server may still be starting.
+    } finally {
+      clearTimeout(timeout);
     }
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
 
   throw new Error(
-    `The Vite dev server did not become ready within 60 seconds.${stderr ? `\n${stderr}` : ''}`,
+    `The Vite dev server did not become ready within 60 seconds (exit code ${devProcess.exitCode ?? 'pending'}, signal ${devProcess.signalCode ?? 'none'}).${output ? `\n${output}` : ''}`,
   );
 }
 
 async function fetchText(route) {
-  const response = await fetch(`${baseUrl}${route}`);
-  return { response, body: await response.text() };
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const response = await fetch(`${baseUrl}${route}`);
+      return { response, body: await response.text() };
+    } catch (error) {
+      if (attempt === 0 && error?.cause?.code === 'ECONNRESET') {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        continue;
+      }
+      throw new Error(
+        `Could not fetch ${route} from the smoke server: ${error instanceof Error ? error.message : String(error)}`,
+        { cause: error },
+      );
+    }
+  }
+  throw new Error(`Could not fetch ${route} from the smoke server after retry.`);
+}
+
+async function getRouteBrowser() {
+  if (!routeBrowserPromise) {
+    routeBrowserPromise = (async () => {
+      const debugPort = await findFreePort();
+      const userDataDir = `${os.tmpdir()}/gan-smoke-${process.pid}-${debugPort}`;
+      routeBrowserProcess = spawn(chromium, [
+        '--headless',
+        '--no-sandbox',
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--disable-extensions',
+        '--no-first-run',
+        `--user-data-dir=${userDataDir}`,
+        `--remote-debugging-port=${debugPort}`,
+        'about:blank',
+      ], { stdio: ['ignore', 'ignore', 'pipe'] });
+      routeBrowserStderr = '';
+      routeBrowserProcess.stderr?.on('data', (chunk) => {
+        routeBrowserStderr += chunk.toString();
+      });
+
+      const debugDeadline = Date.now() + 60_000;
+      let target;
+      while (Date.now() < debugDeadline) {
+        if (routeBrowserProcess.exitCode !== null || routeBrowserProcess.signalCode !== null) break;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 500);
+        try {
+          const response = await fetch(`http://127.0.0.1:${debugPort}/json/list`, {
+            signal: controller.signal,
+          });
+          if (response.ok) {
+            const targets = await response.json();
+            target = targets.find((item) => item.type === 'page');
+            if (target?.webSocketDebuggerUrl) break;
+          }
+        } catch {
+          // Chromium may still be starting its debugging endpoint.
+        } finally {
+          clearTimeout(timeout);
+        }
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+      if (!target?.webSocketDebuggerUrl) {
+        const processState = `exit code ${routeBrowserProcess.exitCode ?? 'pending'}, signal ${routeBrowserProcess.signalCode ?? 'none'}`;
+        throw new Error(
+          `Chromium did not expose a debuggable page (${processState}).${routeBrowserStderr ? `\n${routeBrowserStderr.slice(-4000)}` : ''}`,
+        );
+      }
+
+      routeBrowserCdp = await connectToChromium(target.webSocketDebuggerUrl);
+      await routeBrowserCdp.send('Page.enable');
+      await routeBrowserCdp.send('Runtime.enable');
+      return routeBrowserCdp;
+    })().catch(async (error) => {
+      routeBrowserCdp?.close();
+      routeBrowserCdp = undefined;
+      await stopBrowserProcess(routeBrowserProcess);
+      routeBrowserProcess = undefined;
+      routeBrowserPromise = undefined;
+      throw error;
+    });
+  }
+  return routeBrowserPromise;
 }
 
 async function renderRoute(route, width, height) {
-  const userDataDir = await stat(os.tmpdir()).then(() => `${os.tmpdir()}/gan-smoke-${process.pid}-${width}-${route.replace(/[^a-z0-9]/gi, '-')}`);
+  const cdp = await getRouteBrowser();
   const url = `${baseUrl}${route}`;
-  const args = [
-    '--headless',
-    '--no-sandbox',
-    '--disable-gpu',
-    '--disable-dev-shm-usage',
-    '--disable-extensions',
-    '--no-first-run',
-    `--user-data-dir=${userDataDir}`,
-    `--window-size=${width},${height}`,
-    '--virtual-time-budget=2500',
-    '--dump-dom',
-    url,
-  ];
-  try {
-    const result = await execFileAsync(chromium, args, { maxBuffer: 8 * 1024 * 1024, timeout: 30_000 });
-    return result.stdout;
-  } catch (error) {
-    const details = [error.stdout, error.stderr].filter(Boolean).join('\n');
-    throw new Error(`Chromium failed for ${route} at ${width}px:\n${details}`, { cause: error });
-  }
+  await cdp.send('Emulation.setDeviceMetricsOverride', {
+    width,
+    height,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+  await cdp.send('Page.navigate', { url });
+  const expectedPath = new URL(url).pathname;
+  await waitForBrowserCondition(
+    cdp,
+    `location.pathname === ${JSON.stringify(expectedPath)} && document.readyState !== 'loading' && Boolean(document.querySelector('main'))`,
+    `${route}: initial page content did not render in Chromium.`,
+  );
+  return await evaluateBrowser(cdp, 'document.documentElement.outerHTML');
 }
 
 async function findFreePort() {
@@ -543,6 +660,35 @@ async function connectToChromium(url) {
   };
 }
 
+function waitForChildExit(child, timeoutMs) {
+  return new Promise((resolve) => {
+    if (!child || child.exitCode !== null || child.signalCode !== null) {
+      resolve(true);
+      return;
+    }
+    const onExit = () => {
+      clearTimeout(timer);
+      resolve(true);
+    };
+    const timer = setTimeout(() => {
+      child.removeListener('exit', onExit);
+      resolve(false);
+    }, timeoutMs);
+    child.once('exit', onExit);
+  });
+}
+
+async function stopBrowserProcess(child) {
+  if (!child || child.exitCode !== null || child.signalCode !== null) return;
+  const gracefulExit = waitForChildExit(child, 3000);
+  child.kill('SIGTERM');
+  if (await gracefulExit) return;
+
+  const forcedExit = waitForChildExit(child, 3000);
+  child.kill('SIGKILL');
+  await forcedExit;
+}
+
 async function evaluateBrowser(cdp, expression) {
   const result = await cdp.send('Runtime.evaluate', {
     expression,
@@ -562,6 +708,51 @@ async function waitForBrowserCondition(cdp, expression, message) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
   assert.fail(message);
+}
+
+async function waitForThemeBrowserCondition(cdp, expression, message) {
+  try {
+    await waitForBrowserCondition(cdp, expression, message);
+  } catch (error) {
+    let pageState;
+    try {
+      pageState = await evaluateBrowser(cdp, `(() => ({
+        url: location.href,
+        readyState: document.readyState,
+        theme: document.documentElement.dataset.theme,
+        hasMain: !!document.querySelector('main'),
+        hasThemeToggle: !!document.querySelector('[data-testid="button-theme-toggle"]'),
+        bodyText: (document.body?.innerText ?? '').slice(0, 500),
+        inputCount: document.querySelectorAll('input:not([type="hidden"])').length,
+        buttonCount: document.querySelectorAll('button').length,
+      }))()`);
+    } catch {
+      pageState = { unavailable: true };
+    }
+    const browserErrors = cdp.events
+      .filter((event) => (
+        (event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
+        || event.method === 'Runtime.exceptionThrown'
+      ))
+      .map((event) => event.method === 'Runtime.exceptionThrown'
+        ? event.params.exceptionDetails?.text ?? 'Unhandled browser exception'
+        : event.params.args?.map((argument) => argument.value ?? argument.description ?? '').join(' '))
+      .map((message) => String(message).replace(/\b(?:pk|sk)_(?:test|live)_[A-Za-z0-9_-]+\b/g, '[redacted-key]'))
+      .slice(-6);
+    const failedRequests = cdp.events
+      .filter((event) => event.method === 'Network.loadingFailed' && event.params.errorText !== 'net::ERR_ABORTED')
+      .map((event) => event.params.errorText)
+      .slice(-6);
+    const failedResponses = cdp.events
+      .filter((event) => event.method === 'Network.responseReceived' && event.params.response.status >= 400)
+      .map((event) => event.params.response.status)
+      .slice(-6);
+    throw new Error(
+      `${error instanceof Error ? error.message : String(error)} ` +
+        `Diagnostics: ${JSON.stringify({ pageState, browserErrors, failedRequests, failedResponses })}.`,
+      { cause: error },
+    );
+  }
 }
 
 async function getAutomationRunsForSmoke() {
@@ -718,7 +909,7 @@ async function checkAutomationAuditReleaseLink() {
     }
   } finally {
     cdp?.close();
-    browserProcess.kill('SIGTERM');
+    await stopBrowserProcess(browserProcess);
     if (createdRun) {
       const cleanupResponse = await fetch(`${apiOrigin}/api/newsroom/releases/${encodeURIComponent(scheduledRun.slug)}`, {
         method: 'DELETE',
@@ -1002,7 +1193,7 @@ async function checkMobileEditorHistory() {
     );
   } finally {
     cdp?.close();
-    browserProcess.kill('SIGTERM');
+    await stopBrowserProcess(browserProcess);
   }
 }
 
@@ -1260,22 +1451,41 @@ async function checkThemeRegression() {
     `--user-data-dir=${userDataDir}`,
     `--remote-debugging-port=${debugPort}`,
     'about:blank',
-  ], { stdio: ['ignore', 'ignore', 'ignore'] });
+  ], { stdio: ['ignore', 'ignore', 'pipe'] });
+  let browserStderr = '';
+  browserProcess.stderr?.on('data', (chunk) => {
+    browserStderr = `${browserStderr}${chunk.toString()}`.slice(-4_000);
+  });
   let cdp;
   try {
-    const debugDeadline = Date.now() + 10_000;
+    const debugDeadline = Date.now() + 60_000;
     let target;
     while (Date.now() < debugDeadline) {
+      if (browserProcess.exitCode !== null || browserProcess.signalCode !== null) break;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 500);
       try {
-        const targets = await fetch(`http://127.0.0.1:${debugPort}/json/list`).then((response) => response.json());
-        target = targets.find((item) => item.type === 'page');
-        if (target?.webSocketDebuggerUrl) break;
+        const response = await fetch(`http://127.0.0.1:${debugPort}/json/list`, {
+          signal: controller.signal,
+        });
+        if (response.ok) {
+          const targets = await response.json();
+          target = targets.find((item) => item.type === 'page');
+          if (target?.webSocketDebuggerUrl) break;
+        }
       } catch {
         // Chromium may still be starting its debugging endpoint.
+      } finally {
+        clearTimeout(timeout);
       }
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    assert.ok(target?.webSocketDebuggerUrl, 'Chromium did not expose a debuggable page for theme regression checks.');
+    assert.ok(
+      target?.webSocketDebuggerUrl,
+      `Chromium did not expose a debuggable page for theme regression checks ` +
+        `(exit code ${browserProcess.exitCode ?? 'pending'}, signal ${browserProcess.signalCode ?? 'none'}).` +
+        `${browserStderr ? `\n${browserStderr}` : ''}`,
+    );
     cdp = await connectToChromium(target.webSocketDebuggerUrl);
     await cdp.send('Emulation.setDeviceMetricsOverride', {
       width: 1440,
@@ -1285,6 +1495,7 @@ async function checkThemeRegression() {
     });
     await cdp.send('Runtime.enable');
     await cdp.send('Page.enable');
+    await cdp.send('Network.enable');
 
     const routes = [
       { route: '/', name: 'homepage' },
@@ -1296,9 +1507,9 @@ async function checkThemeRegression() {
     const snapshots = new Map();
 
     await cdp.send('Page.navigate', { url: `${baseUrl}/` });
-    await waitForBrowserCondition(
+    await waitForThemeBrowserCondition(
       cdp,
-      `document.readyState === 'complete' && !!document.querySelector('[data-testid="button-theme-toggle"]')`,
+      `!!document.querySelector('[data-testid="button-theme-toggle"]')`,
       'The homepage did not render the theme toggle.',
     );
 
@@ -1307,17 +1518,19 @@ async function checkThemeRegression() {
         cdp.events.length = 0;
         await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', '${theme}')`);
         await cdp.send('Page.navigate', { url: `${baseUrl}${route}` });
-        await waitForBrowserCondition(
+        await waitForThemeBrowserCondition(
           cdp,
-          `document.readyState === 'complete' && !!document.querySelector('[data-testid="button-theme-toggle"]') && !!document.querySelector('main')`,
+          `!!document.querySelector('[data-testid="button-theme-toggle"]') && !!document.querySelector('main')`,
           `${route}: ${theme} mode did not render its main content and theme toggle.`,
         );
-        await waitForBrowserCondition(
+        await waitForThemeBrowserCondition(
           cdp,
           `!document.fonts || document.fonts.status === 'loaded'`,
           `${route}: ${theme} web fonts did not finish loading before the visual capture.`,
         );
         await new Promise((resolve) => setTimeout(resolve, 150));
+        // Exclude this time-dependent editorial health notice from stable theme baselines.
+        await evaluateBrowser(cdp, `document.querySelector('[data-testid="status-content-stale"]')?.remove()`);
 
         const visualState = await evaluateBrowser(cdp, `(() => {
           const root = getComputedStyle(document.documentElement);
@@ -1413,9 +1626,9 @@ async function checkThemeRegression() {
         cdp.events.length = 0;
         await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', '${theme}')`);
         await cdp.send('Page.navigate', { url: `${baseUrl}${route}` });
-        await waitForBrowserCondition(
+        await waitForThemeBrowserCondition(
           cdp,
-          `document.readyState === 'complete' && !!document.querySelector('input:not([type="hidden"])') && !!document.querySelector('button')`,
+          `!!document.querySelector('input:not([type="hidden"])') && !!document.querySelector('button')`,
           `${route}: ${theme} mode did not render the Clerk form controls.`,
         );
         await new Promise((resolve) => setTimeout(resolve, 250));
@@ -2156,7 +2369,7 @@ async function checkThemeRegression() {
     );
   } finally {
     cdp?.close();
-    browserProcess.kill('SIGTERM');
+    await stopBrowserProcess(browserProcess);
   }
 }
 
@@ -2194,7 +2407,7 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
   const title = htmlText(tagContent(document, 'title'));
   const description = metaContent(document, 'name', 'description');
   const canonical = linkHref(document, 'canonical');
-  const expectedCanonical = `${site}${route === '/' ? '/' : route}`;
+  const expectedCanonical = `${site}${route === '/' ? '/' : `${route}/`}`;
 
   assert.ok(title.length >= 20, `${route}: title is missing or too short`);
   assert.ok(description.length >= 20, `${route}: description is missing or too short`);
@@ -2224,10 +2437,12 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
     assert.equal(articleData.author['@type'], 'Person', `${route}: JSON-LD author should identify the maintained story author`);
     assert.ok(expectedStory && expectedAuthor, `${route}: maintained story record is missing for JSON-LD verification`);
     assert.equal(articleData.author.name, expectedAuthor.name, `${route}: JSON-LD author drifted from the maintained story record`);
-    assert.equal(articleData.author.url, `${site}/person/${expectedAuthor.slug}`, `${route}: JSON-LD author URL drifted from the maintained story record`);
+    assert.equal(articleData.author.url, `${site}/person/${expectedAuthor.slug}/`, `${route}: JSON-LD author URL drifted from the maintained story record`);
     assert.equal(articleData.datePublished, expectedStory.date, `${route}: JSON-LD publication date drifted from the maintained story record`);
+    assert.equal(articleData.dateModified, expectedStory.updatedAt?.slice(0, 10) ?? expectedStory.date, `${route}: JSON-LD update date drifted from the published story record`);
     assert.equal(articleData.articleSection, expectedStory.category, `${route}: JSON-LD article section drifted from the maintained story record`);
-    assert.equal(articleData.mainEntityOfPage['@id'], `${site}${route}`, `${route}: JSON-LD main entity does not match the canonical article URL`);
+    assert.equal(articleData.mainEntityOfPage['@id'], `${site}${route}/`, `${route}: JSON-LD main entity does not match the canonical article URL`);
+    assert.equal(articleData.publisher.logo.url, `${site}/logo.svg`, `${route}: JSON-LD publisher logo is missing`);
      assert.equal(
        linkHref(document, 'amphtml'),
        ampPath ? `${site}${ampPath}` : '',
@@ -2245,7 +2460,7 @@ function assertInitialSeoDocument(document, route, { article = false, ampPath = 
   const title = htmlText(tagContent(document, 'title'));
   const description = metaContent(document, 'name', 'description');
   const canonical = linkHref(document, 'canonical');
-  const expectedCanonical = `${site}${route === '/' ? '/' : route}`;
+  const expectedCanonical = `${site}${route === '/' ? '/' : `${route}/`}`;
 
   assert.ok(title.length >= 20, `${route}: initial title is missing or too short`);
   assert.ok(description.length >= 20, `${route}: initial description is missing or too short`);
@@ -2292,6 +2507,11 @@ before(async () => {
 });
 
 after(async () => {
+  routeBrowserCdp?.close();
+  await stopBrowserProcess(routeBrowserProcess);
+  routeBrowserCdp = undefined;
+  routeBrowserProcess = undefined;
+  routeBrowserPromise = undefined;
   await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
   if (apiProcess?.pid) {
     try {
@@ -2314,6 +2534,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   const [
     { response: sitemapResponse, body: sitemap },
     { response: apiSitemapResponse, body: apiSitemap },
+    rootApiSitemapResult,
     { response: feedResponse, body: feed },
   ] = await Promise.all([
     fetchText('/sitemap.xml'),
@@ -2321,10 +2542,20 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       response,
       body: await response.text(),
     })),
+    fetch(`${apiOrigin}/sitemap.xml`, {
+      headers: { 'Accept-Encoding': 'gzip' },
+    }).then(async (response) => ({
+      response,
+      body: await response.text(),
+    })),
     fetchText('/feed.xml'),
   ]);
   assert.equal(sitemapResponse.status, 200, 'sitemap.xml is not reachable');
   assert.equal(apiSitemapResponse.status, 200, 'API newsroom sitemap.xml is not reachable');
+  assert.equal(rootApiSitemapResult.response.status, 200, 'root API sitemap.xml is not reachable');
+  assert.match(rootApiSitemapResult.response.headers.get('content-encoding') ?? '', /gzip/i, 'root API sitemap.xml does not support gzip');
+  assert.match(rootApiSitemapResult.response.headers.get('content-type') ?? '', /^application\/xml\b/i, 'root API sitemap.xml has the wrong content type');
+  assert.ok(rootApiSitemapResult.body.includes('<urlset'), 'gzip sitemap response did not decode to XML');
   assert.equal(feedResponse.status, 200, 'feed.xml is not reachable');
 
   const { response: metadataResponse, body: metadataBody } = await fetchText('/api/newsroom/metadata');
@@ -2360,9 +2591,34 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   );
   assert.deepEqual(
     [...routes].sort(),
-    metadataManifest.routes.map((metadata) => metadata.path).sort(),
+    metadataManifest.routes.filter((metadata) => metadata.indexable !== false).map((metadata) => metadata.path).sort(),
     'static sitemap routes drifted from the API-backed metadata manifest',
   );
+  for (const route of ['/insights', '/sign-in', '/sign-up']) {
+    assert.equal(
+      metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
+      false,
+      `${route}: editor-only route must be explicitly non-indexable in the metadata manifest`,
+    );
+    const { response, body } = await fetchText(route);
+    assert.equal(response.status, 200, `${route}: direct non-indexable route failed`);
+    const robotsTags = openingTags(body, 'meta')
+      .filter((tag) => attributeValue(tag, 'name').toLowerCase() === 'robots');
+    assert.equal(robotsTags.length, 1, `${route}: initial HTML must contain exactly one robots directive`);
+    assert.equal(
+      attributeValue(robotsTags[0], 'content'),
+      'noindex,follow',
+      `${route}: initial HTML must explicitly prevent indexing before JavaScript runs`,
+    );
+  }
+  const articleRoutes = newsroomContent.stories.map((story) => `/article/${story.slug}`);
+  const entries = sitemapEntries(sitemap);
+  for (const articleRoute of articleRoutes) {
+    const entry = entries.find((candidate) => candidate.route === articleRoute);
+    assert.ok(entry?.lastmod, `${articleRoute}: sitemap is missing lastmod`);
+    assert.ok(entry.images.length > 0, `${articleRoute}: sitemap is missing its article image`);
+  }
+  assert.ok(!routes.includes('/insights'), 'internal editor workspace must not appear in the sitemap');
 
   const items = feedItems(feed);
   assert.ok(items.length >= 3, 'RSS feed unexpectedly contains too few items');
@@ -2379,7 +2635,16 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   for (const route of new Set(staticRoutes)) {
     const { response, body } = await fetchText(route);
     assert.equal(response.status, 200, `${route}: direct request failed`);
-    assert.match(body, /<div id="root"><\/div>/, `${route}: direct request did not receive the SPA shell`);
+      assert.match(body, /<div id="root">[\s\S]*<main\b/, `${route}: initial HTML is missing prerendered page content`);
+      assert.match(body, /<h1\b/, `${route}: initial HTML is missing a prerendered page heading`);
+      assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing its newsroom bootstrap marker`);
+      if (route.startsWith('/article/')) {
+        const slug = route.split('/')[2];
+        const story = newsroomContent.stories.find((candidate) => candidate.slug === slug);
+        assert.ok(story, `${route}: published story is missing from the newsroom content snapshot`);
+        assert.ok(body.includes(story.title.replaceAll('&', '&amp;')), `${route}: initial HTML is missing the article headline`);
+        assert.ok(body.includes(story.body[0].paragraphs[0].slice(0, 40)), `${route}: initial HTML is missing article body copy`);
+      }
      assertInitialSeoDocument(body, route, {
        article: route.startsWith('/article/'),
        ampPath: metadataManifest.routes.find((metadata) => metadata.path === route)?.ampPath ?? '',
@@ -2418,6 +2683,11 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
 
   const titles = new Map();
   const allowedRoutes = new Set(routes);
+  const nonIndexableRoutes = new Set(
+    metadataManifest.routes
+      .filter((metadata) => metadata.indexable === false)
+      .map((metadata) => metadata.path),
+  );
   const responseCache = new Map();
   for (const route of new Set([...staticRoutes, ampPath])) {
     const document = await renderRoute(route, 1440, 900);
@@ -2430,7 +2700,13 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       });
       assertMetadataMatchesManifest(document, route, metadataManifest);
     }
-    await assertRenderedPageIntegrity(document, route, allowedRoutes, responseCache);
+    await assertRenderedPageIntegrity(
+      document,
+      route,
+      allowedRoutes,
+      responseCache,
+      nonIndexableRoutes,
+    );
     if (route === '/insights') {
       assert.match(document, /data-testid="social-preview-card"/, 'Insights is missing the social preview card');
       assert.match(document, /data-testid="social-preview-dimensions"[^>]*>1200 × 630 PNG/, 'Insights is missing the 1200 × 630 card dimensions');
@@ -2472,7 +2748,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.ok(ampStory, 'AMP source story is missing from the newsroom snapshot');
   assert.equal(ampResponse.status, 200, 'AMP document is not reachable');
   assert.match(ampDocument, /<html[^>]*\bamp\b/i, 'AMP document is missing the amp attribute');
-  assert.equal(linkHref(ampDocument, 'canonical'), `${site}/article/ai-models-antibiotic-discovery`, 'AMP canonical is incorrect');
+  assert.equal(linkHref(ampDocument, 'canonical'), `${site}/article/ai-models-antibiotic-discovery/`, 'AMP canonical is incorrect');
   assert.equal(tagContent(ampDocument, 'title'), ampStory.title, 'AMP title drifted from the newsroom snapshot');
   assert.equal(metaContent(ampDocument, 'name', 'description'), ampStory.dek, 'AMP description drifted from the newsroom snapshot');
   assert.equal(tagContent(ampDocument, 'h1'), ampStory.title, 'AMP visible headline drifted from the newsroom snapshot');

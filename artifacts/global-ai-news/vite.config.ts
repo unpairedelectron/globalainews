@@ -1,18 +1,22 @@
 import path from 'path';
 import { execFileSync } from 'child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type ViteDevServer } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
-import { authors, findStory, getPublishedStories, stories } from './src/content';
+import { authors, findStory, getPublishedStories, stories, type Story } from './src/content';
 import {
+  getCanonicalUrl,
   getSeoMetadata,
   getStructuredData,
   setSeoMetadataManifest,
   type SeoMetadataManifest,
 } from './src/seo-metadata';
+import { SeoPrerender } from './src/seo-prerender';
 import {
   layoutPreviewTitle,
   previewTitleColor,
@@ -81,7 +85,7 @@ function renderAmpArticleDocument() {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
-    <link rel="canonical" href="${escapeHtml(`https://www.globalainews.in${metadata.path}`)}" />
+    <link rel="canonical" href="${escapeHtml(getCanonicalUrl(metadata.path))}" />
     <title>${escapeHtml(story.title)}</title>
     <meta name="description" content="${escapeHtml(story.dek)}" />
     <script async src="https://cdn.ampproject.org/v0.js"></script>
@@ -371,6 +375,11 @@ async function loadBuildMetadataManifest(projectRoot: string): Promise<SeoMetada
       `Newsroom metadata manifest from ${manifestUrl} has an invalid shape.`,
     );
   }
+  if (manifest.stories !== undefined && !Array.isArray(manifest.stories)) {
+    throw new Error(
+      `Newsroom metadata manifest from ${manifestUrl} has an invalid article snapshot.`,
+    );
+  }
 
   const routeMetadata = new Map<string, SeoMetadataManifest['routes'][number]>();
   for (const metadata of manifest.routes) {
@@ -382,6 +391,7 @@ async function loadBuildMetadataManifest(projectRoot: string): Promise<SeoMetada
       metadata.title.trim().length === 0 ||
       typeof metadata.description !== 'string' ||
       metadata.description.trim().length === 0 ||
+        (metadata.indexable !== undefined && typeof metadata.indexable !== 'boolean') ||
         (metadata.lastmod !== undefined &&
           (typeof metadata.lastmod !== 'string' ||
             !/^\d{4}-\d{2}-\d{2}$/.test(metadata.lastmod))) ||
@@ -392,6 +402,18 @@ async function loadBuildMetadataManifest(projectRoot: string): Promise<SeoMetada
       );
     }
     routeMetadata.set(metadata.path, metadata);
+  }
+
+  if (manifest.stories) {
+    const storySlugs = new Set(manifest.stories.map((story) => story.slug));
+    const missingStories = manifest.routes
+      .map((metadata) => metadata.path.match(/^\/article\/([^/]+)$/)?.[1])
+      .filter((slug): slug is string => Boolean(slug && !storySlugs.has(slug)));
+    if (missingStories.length > 0) {
+      throw new Error(
+        `Newsroom article snapshot is missing published stories: ${missingStories.join(', ')}.`,
+      );
+    }
   }
 
   for (const route of routePathsFromPublishingFiles(projectRoot)) {
@@ -460,22 +482,50 @@ function routePathsFromPublishingFiles(
   const sitemapPaths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
   const feedPaths = [...feed.matchAll(/<link>([^<]+)<\/link>/g)].map((match) => new URL(match[1]).pathname);
   const manifestPaths = metadataManifest?.routes.map((metadata) => metadata.path) ?? [];
-  return [...new Set(['/', ...sitemapPaths, ...feedPaths, ...manifestPaths].map((route) => route.trim() || '/'))];
+  return [
+    ...new Set(
+      ['/', ...sitemapPaths, ...feedPaths, ...manifestPaths].map((route) => {
+        const trimmed = route.trim() || '/';
+        return trimmed.length > 1 ? trimmed.replace(/\/+$/, '') : '/';
+      }),
+    ),
+  ];
+}
+
+function escapeXml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&apos;');
 }
 
 function writeSitemap(outputDir: string, metadataManifest: SeoMetadataManifest): void {
-  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${metadataManifest.routes
-    .map(
-      (metadata) =>
-        `  <url><loc>${escapeHtml(`https://www.globalainews.in${metadata.path}`)}</loc>${metadata.lastmod ? `<lastmod>${escapeHtml(metadata.lastmod)}</lastmod>` : ''}</url>`,
-    )
+  const routes = metadataManifest.routes.filter((metadata) => metadata.indexable !== false);
+  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${routes
+    .map((metadata) => {
+      const lastmod = metadata.lastmod
+        ? `<lastmod>${escapeXml(metadata.lastmod)}</lastmod>`
+        : '';
+      const image = metadata.imagePath
+        ? `<image:image><image:loc>${escapeXml(`https://www.globalainews.in${metadata.imagePath}`)}</image:loc><image:title>${escapeXml(metadata.title)}</image:title></image:image>`
+        : '';
+      return `  <url><loc>${escapeXml(getCanonicalUrl(metadata.path))}</loc>${lastmod}${image}</url>`;
+    })
     .join('\n')}\n</urlset>`;
   writeFileSync(path.join(outputDir, 'sitemap.xml'), body);
 }
 
-function withRouteMetadata(baseHtml: string, route: string): string {
-  const metadata = getSeoMetadata(route);
-  const canonical = `https://www.globalainews.in${metadata.path}`;
+function withRouteMetadata(
+  baseHtml: string,
+  route: string,
+  metadataManifest: SeoMetadataManifest,
+): string {
+  const metadata = metadataManifest.routes.find((candidate) => candidate.path === route) ??
+    getSeoMetadata(route, metadataManifest.stories);
+  const canonical = getCanonicalUrl(metadata.path);
+  const publishedStories = metadataManifest.stories ?? getPublishedStories();
   const title = escapeHtml(metadata.title);
   const description = escapeHtml(metadata.description);
   const canonicalUrl = escapeHtml(canonical);
@@ -490,6 +540,7 @@ function withRouteMetadata(baseHtml: string, route: string): string {
     : '';
   const existingHeadMetadata = [
     /<title>[\s\S]*?<\/title>\s*/gi,
+    /<meta\b[^>]*name=["']robots["'][^>]*>\s*/gi,
     /<meta\b[^>]*(?:name|property)=["'](?:description|og:title|og:description|og:url|og:type|og:image|og:image:alt|og:image:type|twitter:title|twitter:description|twitter:card|twitter:image|twitter:image:alt)["'][^>]*>\s*/gi,
     /<link\b[^>]*rel=["'](?:canonical|amphtml)["'][^>]*>\s*/gi,
     /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>\s*/gi,
@@ -502,6 +553,7 @@ function withRouteMetadata(baseHtml: string, route: string): string {
     : '';
   const headMetadata = `    <title>${title}</title>
     <meta name="description" content="${description}" />
+    ${metadata.indexable === false ? '<meta name="robots" content="noindex,follow" />' : ''}
     <link rel="canonical" href="${canonicalUrl}" />
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
@@ -510,9 +562,25 @@ function withRouteMetadata(baseHtml: string, route: string): string {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />${imageTags}${ampLink}
-    <script type="application/ld+json" data-global-ai-ld>${getStructuredData(metadata)}</script>
+    <script type="application/ld+json" data-global-ai-ld>${getStructuredData(metadata, publishedStories)}</script>
 `;
-  return html.replace('</head>', `${headMetadata}  </head>`);
+  html = html.replace('</head>', `${headMetadata}  </head>`);
+  const prerenderedBody = metadata.indexable === false
+    ? ''
+    : renderToStaticMarkup(
+        createElement(SeoPrerender, {
+          route,
+          metadata,
+          stories: publishedStories,
+        }),
+      );
+  const bootstrapMarker = metadata.indexable === false
+    ? ''
+    : '<script id="global-ai-prerender" type="application/json">{}</script>';
+  return html.replace(
+    /<div\s+id=["']root["']>\s*<\/div>/,
+    `<div id="root">${prerenderedBody}</div>${bootstrapMarker}`,
+  );
 }
 
 function routeMetadataPlugin() {
@@ -525,12 +593,19 @@ function routeMetadataPlugin() {
       const metadataManifest = await loadBuildMetadataManifest(projectRoot);
       const baseHtml = readFileSync(path.join(outputDir, 'index.html'), 'utf8');
       writeSitemap(outputDir, metadataManifest);
-      writeSocialPreviewAssets(outputDir, getPublishedStories(), metadataManifest);
+      writeSocialPreviewAssets(
+        outputDir,
+        metadataManifest.stories ?? getPublishedStories(),
+        metadataManifest,
+      );
       writeAmpArticleDocument(outputDir);
       for (const route of routePathsFromPublishingFiles(projectRoot, metadataManifest)) {
         const routeDirectory = route === '/' ? outputDir : path.join(outputDir, route.replace(/^\/|\/$/g, ''));
         mkdirSync(routeDirectory, { recursive: true });
-        writeFileSync(path.join(routeDirectory, 'index.html'), withRouteMetadata(baseHtml, route));
+        writeFileSync(
+          path.join(routeDirectory, 'index.html'),
+          withRouteMetadata(baseHtml, route, metadataManifest),
+        );
       }
     },
   };

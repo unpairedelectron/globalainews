@@ -5,7 +5,7 @@ import { authors, findEntity, findStory, timelineEvents } from '@/content';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { useTheme } from '@/theme';
 import { useSubscribeNewsletter } from '@workspace/api-client-react';
-import { getSeoMetadata, getStructuredData, SITE_URL } from '@/seo-metadata';
+import { getCanonicalUrl, getSeoMetadata, getStructuredData, SITE_URL } from '@/seo-metadata';
 import { GlobalAiNewsLockup } from '@/components/brand-mark';
 import { trackEvent } from '@/analytics';
 
@@ -20,7 +20,7 @@ export function SeoHead({ title, description, path, article = false }: { title: 
 
   useEffect(() => {
     document.title = resolvedTitle;
-    const canonical = `${SITE}${resolvedPath}`;
+    const canonical = getCanonicalUrl(resolvedPath);
     const ensure = (selector: string, create: () => HTMLElement) => {
       const found = document.head.querySelector(selector) as HTMLElement | null;
       const element = found ?? create();
@@ -31,6 +31,17 @@ export function SeoHead({ title, description, path, article = false }: { title: 
     descriptionTag.content = resolvedDescription;
     const canonicalTag = ensure('link[rel="canonical"]', () => { const el = document.createElement('link'); el.rel = 'canonical'; return el; });
     canonicalTag.setAttribute('href', canonical);
+    const robotsTag = document.head.querySelector('meta[name="robots"]');
+    if (routeMetadata?.indexable === false) {
+      const tag = ensure('meta[name="robots"]', () => {
+        const el = document.createElement('meta');
+        el.name = 'robots';
+        return el;
+      }) as HTMLMetaElement;
+      tag.content = 'noindex,follow';
+    } else {
+      robotsTag?.remove();
+    }
     [['og:title', resolvedTitle], ['og:description', resolvedDescription], ['og:url', canonical], ['og:type', resolvedArticle ? 'article' : 'website'], ['twitter:title', resolvedTitle], ['twitter:description', resolvedDescription]].forEach(([property, content]) => {
       const tag = ensure(`meta[property="${property}"]`, () => { const el = document.createElement('meta'); el.setAttribute('property', property); return el; });
       tag.setAttribute('content', content);

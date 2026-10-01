@@ -4,6 +4,7 @@ import pinoHttp from "pino-http";
 import { clerkMiddleware } from "@clerk/express";
 import { publishableKeyFromHost } from "@clerk/shared/keys";
 import router from "./routes";
+import { serveNewsroomSitemap } from "./routes/newsroom";
 import { logger } from "./lib/logger";
 import {
   CLERK_PROXY_PATH,
@@ -45,6 +46,7 @@ app.use(
   })),
 );
 
+app.get("/sitemap.xml", serveNewsroomSitemap);
 app.use("/api", router);
 
 export default app;

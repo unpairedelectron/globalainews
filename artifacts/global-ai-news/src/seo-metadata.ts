@@ -7,6 +7,7 @@ export interface SeoMetadata {
   description: string;
   path: string;
   lastmod?: string;
+  indexable?: boolean;
   article?: boolean;
   ampPath?: string;
   imagePath?: string;
@@ -17,6 +18,7 @@ export interface SeoMetadataManifest {
   source: 'maintained-editorial-source';
   generatedAt: string;
   routes: SeoMetadata[];
+  stories?: Story[];
 }
 
 const staticMetadata: Record<string, SeoMetadata> = {
@@ -74,6 +76,19 @@ const staticMetadata: Record<string, SeoMetadata> = {
     title: 'Publisher workspace — Global AI News',
     description: 'Internal editorial intelligence workspace.',
     path: '/insights',
+    indexable: false,
+  },
+  '/sign-in': {
+    title: 'Editor sign in — Global AI News',
+    description: 'Sign in to the Global AI News editorial workspace.',
+    path: '/sign-in',
+    indexable: false,
+  },
+  '/sign-up': {
+    title: 'Editor access — Global AI News',
+    description: 'Create access to the Global AI News editorial workspace.',
+    path: '/sign-up',
+    indexable: false,
   },
   '/topic/ai': {
     title: 'Artificial intelligence — Global AI News',
@@ -116,7 +131,7 @@ export function getSeoMetadata(route: string, publishedStories = getPublishedSto
       title: `${story.title} — Global AI News`,
       description: story.dek,
       path: `/article/${story.slug}`,
-      lastmod: story.date,
+      lastmod: story.updatedAt?.slice(0, 10) ?? story.date,
       article: true,
        ...(isMaintainedStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
       imagePath: `/social/articles/${story.slug}.png`,
@@ -164,6 +179,12 @@ export function getSeoMetadata(route: string, publishedStories = getPublishedSto
   };
 }
 
+export function getCanonicalUrl(route: string): string {
+  const cleanPath = cleanRoute(route);
+  const canonicalPath = cleanPath === '/' ? '/' : `${cleanPath}/`;
+  return `${SITE_URL}${canonicalPath}`;
+}
+
 export function getSeoMetadataManifest(publishedStories: Story[] = getPublishedStories()): SeoMetadataManifest {
   const dynamicPaths = [
     ...publishedStories.map((story) => `/article/${story.slug}`),
@@ -171,40 +192,65 @@ export function getSeoMetadataManifest(publishedStories: Story[] = getPublishedS
     ...entities.map((entity) => `/${entity.kind}/${entity.slug}`),
     ...authors.map((author) => `/person/${author.slug}`),
   ];
+  const generatedAt = new Date().toISOString();
+  const generatedDate = generatedAt.slice(0, 10);
   const routes = [...new Set([...Object.keys(staticMetadata), ...dynamicPaths])]
-    .map((path) => getSeoMetadata(path, publishedStories));
+    .map((path) => {
+      const metadata = getSeoMetadata(path, publishedStories);
+      return {
+        ...metadata,
+        lastmod: metadata.lastmod ?? generatedDate,
+      };
+    });
 
   return {
     source: 'maintained-editorial-source',
-    generatedAt: new Date().toISOString(),
+    generatedAt,
     routes,
   };
 }
 
-export function getStructuredData(metadata: SeoMetadata): string {
-  const canonical = `${SITE_URL}${metadata.path}`;
+export function getStructuredData(metadata: SeoMetadata, publishedStories = getPublishedStories()): string {
+  const canonical = getCanonicalUrl(metadata.path);
   const articleSlug = metadata.path.match(/^\/article\/([^/]+)$/)?.[1];
-  const articleStory = articleSlug ? findStory(articleSlug) : undefined;
+  const articleStory = articleSlug
+    ? publishedStories.find((story) => story.slug === articleSlug) ?? findStory(articleSlug)
+    : undefined;
   const articleAuthor = articleStory ? authors.find((author) => author.slug === articleStory.author) : undefined;
+  const publisher = {
+    '@type': 'Organization',
+    name: 'Global AI News',
+    url: SITE_URL,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/logo.svg`,
+    },
+  };
   return JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
       metadata.article
         ? {
             '@type': 'NewsArticle',
-            headline: metadata.title,
+            headline: articleStory?.title ?? metadata.title,
             description: metadata.description,
             url: canonical,
             ...(metadata.imagePath ? { image: `${SITE_URL}${metadata.imagePath}` } : {}),
-            ...(articleStory ? { articleSection: articleStory.category, datePublished: articleStory.date } : {}),
+            ...(articleStory
+              ? {
+                  articleSection: articleStory.category,
+                  datePublished: articleStory.date,
+                  dateModified: articleStory.updatedAt?.slice(0, 10) ?? metadata.lastmod ?? articleStory.date,
+                }
+              : {}),
             author: articleAuthor
               ? {
                   '@type': 'Person',
                   name: articleAuthor.name,
-                  url: `${SITE_URL}/person/${articleAuthor.slug}`,
+                  url: getCanonicalUrl(`/person/${articleAuthor.slug}`),
                 }
               : { '@type': 'Organization', name: 'Global AI News' },
-            publisher: { '@type': 'Organization', name: 'Global AI News' },
+            publisher,
             mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
           }
         : {
@@ -216,7 +262,7 @@ export function getStructuredData(metadata: SeoMetadata): string {
               target: `${SITE_URL}/brief?q={search_term_string}`,
             },
           },
-      { '@type': 'Organization', name: 'Global AI News', url: SITE_URL },
+      publisher,
       {
         '@type': 'BreadcrumbList',
         itemListElement: [

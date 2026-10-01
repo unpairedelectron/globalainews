@@ -79,6 +79,7 @@ export interface Story {
   dek: string;
   body: BodySection[];
   date: string;
+  updatedAt?: string;
   readTime: string;
   author: string;
   evidence: string;

@@ -20,12 +20,21 @@ serve = "static"
 publicDir = "artifacts/global-ai-news/dist/public"
 
 [[services.production.rewrites]]
-from = "/*"
-to = "/index.html"
+from = "/sign-in/*"
+to = "/sign-in/index.html"
+
+[[services.production.rewrites]]
+from = "/sign-up/*"
+to = "/sign-up/index.html"
 
 [services.env]
 PORT = "19819"
 BASE_PATH = "/"
+
+[[services.production.responseHeaders]]
+path = "/sitemap.xml"
+name = "Content-Type"
+value = "application/xml; charset=utf-8"
 
 [[services.production.responseHeaders]]
 path = "/social/articles/*"

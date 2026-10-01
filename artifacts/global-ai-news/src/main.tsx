@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 
-import App from './App';
+import App, { primeNewsroomContent } from './App';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { initializeTheme } from './theme';
 import { trackEvent } from './analytics';
@@ -38,9 +38,41 @@ function observeWebVitals(): void {
 
 observeWebVitals();
 
-createRoot(document.getElementById('root')!, {
-  // Keeps caught errors off reportError(), which would raise the dev overlay.
-  onCaughtError: (error, errorInfo) => {
-    console.error(error, errorInfo.componentStack);
-  },
-}).render(<ErrorBoundary><App initialTheme={initialTheme} /></ErrorBoundary>);
+async function startApp(): Promise<void> {
+  const prerenderMarker = document.getElementById('global-ai-prerender');
+  if (prerenderMarker) {
+    const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 5_000);
+    try {
+      const response = await fetch(`${basePath}/api/newsroom/content`, {
+        signal: controller.signal,
+        credentials: 'same-origin',
+      });
+      if (response.ok) {
+        const snapshot: unknown = await response.json();
+        if (
+          typeof snapshot === 'object' &&
+          snapshot !== null &&
+          'stories' in snapshot &&
+          Array.isArray(snapshot.stories)
+        ) {
+          primeNewsroomContent(snapshot);
+        }
+      }
+    } catch {
+      // The newsroom query retries and renders its existing explicit error state.
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+
+  createRoot(document.getElementById('root')!, {
+    // Keeps caught errors off reportError(), which would raise the dev overlay.
+    onCaughtError: (error, errorInfo) => {
+      console.error(error, errorInfo.componentStack);
+    },
+  }).render(<ErrorBoundary><App initialTheme={initialTheme} /></ErrorBoundary>);
+}
+
+void startApp();

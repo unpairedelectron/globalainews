@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { getGetNewsroomContentQueryKey } from '@workspace/api-client-react';
 import { ClerkProvider, SignIn, SignUp, useSignIn } from '@clerk/react';
 import { publishableKeyFromHost } from '@clerk/react/internal';
 import { shadcn } from '@clerk/themes';
@@ -36,6 +37,10 @@ const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 
 if (!clerkPubKey) {
   throw new Error('Missing VITE_CLERK_PUBLISHABLE_KEY.');
+}
+
+export function primeNewsroomContent(snapshot: unknown): void {
+  queryClient.setQueryData(getGetNewsroomContentQueryKey(), snapshot);
 }
 
 function getClerkAppearance(theme: Theme) {

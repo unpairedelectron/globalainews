@@ -64,6 +64,7 @@ export const GetNewsroomMetadataResponse = zod.object({
   "description": zod.string(),
   "path": zod.string(),
   "lastmod": zod.string().regex(getNewsroomMetadataResponseRoutesItemLastmodRegExp).optional(),
+  "indexable": zod.boolean().optional(),
   "article": zod.boolean().optional(),
   "ampPath": zod.string().optional(),
   "imagePath": zod.string().optional(),

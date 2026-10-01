@@ -1,4 +1,5 @@
 import { and, asc, desc, eq } from "drizzle-orm";
+import { gzipSync } from "node:zlib";
 import {
   Router,
   type IRouter,
@@ -53,7 +54,10 @@ import {
   type Story,
   type StoryCategory,
 } from "../../../global-ai-news/src/content";
-import { getSeoMetadataManifest } from "../../../global-ai-news/src/seo-metadata";
+import {
+  getCanonicalUrl,
+  getSeoMetadataManifest,
+} from "../../../global-ai-news/src/seo-metadata";
 import { renderSocialPreviewSvg } from "../../../global-ai-news/src/social-preview";
 import {
   getAutomationStatus,
@@ -183,6 +187,7 @@ function toScheduledStory(row: ReleaseRow): EditorialReleaseStory {
     publishAt: row.publishAt.toISOString(),
     cadence: row.cadence as EditorialCadence,
     date: dateOnly(row.publishAt),
+    updatedAt: row.updatedAt.toISOString(),
   };
 }
 
@@ -402,31 +407,51 @@ if (process.env.NODE_ENV === "test") {
   });
 }
 
-router.get("/newsroom/sitemap.xml", async (_req, res): Promise<void> => {
+export async function serveNewsroomSitemap(
+  req: Request,
+  res: ExpressResponse,
+): Promise<void> {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
     const metadataManifest = getSeoMetadataManifest(publishedStories);
-    const unique = metadataManifest.routes.map((metadata) => ({
-      path: metadata.path,
-      lastmod: metadata.lastmod,
-    }));
-    const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${unique
-      .map(
-        (entry) =>
-          `  <url><loc>https://www.globalainews.in${entry.path}</loc>${entry.lastmod ? `<lastmod>${entry.lastmod}</lastmod>` : ""}</url>`,
-      )
+    const routes = metadataManifest.routes.filter(
+      (metadata) => metadata.indexable !== false,
+    );
+    const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${routes
+      .map((metadata) => {
+        const lastmod = metadata.lastmod
+          ? `<lastmod>${escapeXml(metadata.lastmod)}</lastmod>`
+          : "";
+        const image = metadata.imagePath
+          ? `<image:image><image:loc>${escapeXml(`https://www.globalainews.in${metadata.imagePath}`)}</image:loc><image:title>${escapeXml(metadata.title)}</image:title></image:image>`
+          : "";
+        return `  <url><loc>${escapeXml(getCanonicalUrl(metadata.path))}</loc>${lastmod}${image}</url>`;
+      })
       .join("\n")}\n</urlset>`;
-    res.type("application/xml").send(body);
+    res
+      .status(200)
+      .type("application/xml")
+      .set("Cache-Control", "public, max-age=300, s-maxage=300, stale-while-revalidate=86400")
+      .vary("Accept-Encoding");
+    if (req.acceptsEncodings("gzip") === "gzip") {
+      res.setHeader("Content-Encoding", "gzip");
+      res.send(gzipSync(body));
+      return;
+    }
+    res.send(body);
   } catch (error) {
+    req.log.error({ err: error }, "Newsroom sitemap failed");
     res.status(500).type("text/plain").send("Sitemap unavailable.");
   }
-});
+}
+
+router.get("/newsroom/sitemap.xml", serveNewsroomSitemap);
 
 router.get("/newsroom/feed.xml", async (_req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
     const items = publishedStories.slice(0, 30).map((story) => {
-      const url = `https://www.globalainews.in/article/${story.slug}`;
+      const url = `https://www.globalainews.in/article/${story.slug}/`;
       return `    <item><title>${escapeXml(story.title)}</title><link>${url}</link><guid>${url}</guid><pubDate>${new Date(`${story.date}T07:30:00Z`).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`;
     });
     const body = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Global AI News</title><link>https://www.globalainews.in/</link><description>Intelligence for the AI economy.</description><language>en-us</language>\n${items.join("\n")}\n</channel></rss>`;

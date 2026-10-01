@@ -14,3 +14,15 @@ When a visual change is intentional, regenerate baselines only after the final D
 **Why:** A temporary hot-reload regression can otherwise be captured as the new expected appearance and hide a real layout defect.
 
 **How to apply:** After shared layout edits, run a final rendered-DOM sanity check, fix structural regressions, then update baselines and run the visual test again.
+
+Route-level browser smoke checks should reuse one CDP browser session across sequential URL navigations instead of launching Chromium for every route. Separate visual checks may still need an isolated browser profile. Local test servers should keep pooled HTTP connections alive through long image-comparison gaps and retry one reset on idempotent GETs.
+
+**Why:** Cold Chromium startup under concurrent Vite and image-processing work can exceed short timeouts before any page assertion runs, while a short server keep-alive can close an otherwise valid pooled connection during ImageMagick assertions.
+
+**How to apply:** Start one browser for sequential route checks; give every separately launched profile up to 60 seconds to expose CDP, bound each endpoint probe, monitor process exit, and retain startup stderr. Keep long keep-alive settings scoped to test servers. For page screenshots, wait for required DOM controls and fonts rather than `document.readyState === 'complete'`, which can be delayed by unrelated external resources.
+
+Smoke setup should probe the Vite root route for server readiness, not request a generated social-preview PNG; keep preview generation checks in their dedicated assertions.
+
+**Why:** The preview plugin performs synchronous ImageMagick work, so using a generated image as a readiness probe can time out cold starts and cascade one setup failure across the whole suite.
+
+**How to apply:** Use a bounded HTTP check against the app shell to confirm Vite is listening, then test dynamic preview generation separately with its own timeout and diagnostics.
