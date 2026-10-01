@@ -2,6 +2,7 @@
 - [Global AI News institutional direction](global-ai-news-atlas-direction.md) — use warm ivory, restrained blue, and connected intelligence surfaces for the publication.
 - [Newsroom delivery boundary](newsroom-delivery-boundary.md) — public pages consume the maintained API snapshot; newsletter delivery uses a configured provider with a durable queue fallback.
 - [Newsroom metadata source](newsroom-metadata-source.md) — initial HTML and hydrated SEO should consume the API-backed metadata manifest for the same published route records.
+- [Editorial modification dates](editorial-modification-dates.md) — keep article modification dates editorial, preserve them across queue reschedules, and reuse the same value in JSON-LD and sitemap.
 - [Social preview pixel contract](social-preview-pixel-contract.md) — build and smoke raster checks should share the renderer’s title region and use sufficiently inked fixtures for every size tier.
 - [Vite build-time JSX](vite-build-time-jsx.md) — config-side SSR may need explicit React even when app TSX uses the automatic JSX runtime.
 - [Page visual baselines](page-visual-baselines.md) — wait for fonts, tolerate antialiasing, give each Chromium launch a generous CDP deadline, and probe Vite root for readiness.

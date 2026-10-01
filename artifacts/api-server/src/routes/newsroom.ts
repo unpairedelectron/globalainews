@@ -126,6 +126,7 @@ function storyFromInput(
     title,
     dek,
     date: dateOnly(publishAt),
+    dateModified: existing?.dateModified ?? dateOnly(new Date()),
     publishAt: publishAt.toISOString(),
     cadence: input.cadence ?? existing?.cadence ?? "daily",
     category: (input.category ?? existing?.category ?? "Field Notes") as StoryCategory,
@@ -180,6 +181,7 @@ async function getReleaseRows(): Promise<ReleaseRow[]> {
 
 function toScheduledStory(row: ReleaseRow): EditorialReleaseStory {
   const story = row.story as unknown as EditorialReleaseStory;
+  const maintainedStory = scheduledStories.find((candidate) => candidate.slug === row.slug);
   return {
     ...story,
     slug: row.slug,
@@ -187,6 +189,7 @@ function toScheduledStory(row: ReleaseRow): EditorialReleaseStory {
     publishAt: row.publishAt.toISOString(),
     cadence: row.cadence as EditorialCadence,
     date: dateOnly(row.publishAt),
+    dateModified: story.dateModified ?? maintainedStory?.dateModified ?? dateOnly(row.publishAt),
     updatedAt: row.updatedAt.toISOString(),
   };
 }
@@ -451,7 +454,7 @@ router.get("/newsroom/feed.xml", async (_req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
     const items = publishedStories.slice(0, 30).map((story) => {
-      const url = `https://www.globalainews.in/article/${story.slug}/`;
+      const url = escapeXml(getCanonicalUrl(`/article/${story.slug}`));
       return `    <item><title>${escapeXml(story.title)}</title><link>${url}</link><guid>${url}</guid><pubDate>${new Date(`${story.date}T07:30:00Z`).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`;
     });
     const body = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Global AI News</title><link>https://www.globalainews.in/</link><description>Intelligence for the AI economy.</description><language>en-us</language>\n${items.join("\n")}\n</channel></rss>`;
@@ -731,6 +734,9 @@ router.patch("/newsroom/releases/:slug", requireEditorAuth, async (req, res): Pr
       (existing.story as Partial<ScheduledStory>).author !== nextStory.author ? "author" : null,
       JSON.stringify((existing.story as Partial<ScheduledStory>).body) !== JSON.stringify(nextStory.body) ? "working copy" : null,
     ].filter((field): field is string => Boolean(field));
+    if (changedFields.some((field) => field !== "cadence")) {
+      nextStory.dateModified = dateOnly(new Date());
+    }
     const wasRescheduled = existing.publishAt.getTime() !== nextPublishAt.getTime();
     const updated = await db.transaction(async (tx) => {
       const [release] = await tx

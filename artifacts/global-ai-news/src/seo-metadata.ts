@@ -131,7 +131,7 @@ export function getSeoMetadata(route: string, publishedStories = getPublishedSto
       title: `${story.title} — Global AI News`,
       description: story.dek,
       path: `/article/${story.slug}`,
-      lastmod: story.updatedAt?.slice(0, 10) ?? story.date,
+      lastmod: story.dateModified ?? story.date,
       article: true,
        ...(isMaintainedStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
       imagePath: `/social/articles/${story.slug}.png`,
@@ -185,14 +185,16 @@ export function getCanonicalUrl(route: string): string {
   return `${SITE_URL}${canonicalPath}`;
 }
 
-export function getSeoMetadataManifest(publishedStories: Story[] = getPublishedStories()): SeoMetadataManifest {
+export function getSeoMetadataManifest(
+  publishedStories: Story[] = getPublishedStories(),
+  generatedAt = new Date().toISOString(),
+): SeoMetadataManifest {
   const dynamicPaths = [
     ...publishedStories.map((story) => `/article/${story.slug}`),
     ...timelineEvents.map((event) => `/timeline/${event.slug}`),
     ...entities.map((entity) => `/${entity.kind}/${entity.slug}`),
     ...authors.map((author) => `/person/${author.slug}`),
   ];
-  const generatedAt = new Date().toISOString();
   const generatedDate = generatedAt.slice(0, 10);
   const routes = [...new Set([...Object.keys(staticMetadata), ...dynamicPaths])]
     .map((path) => {
@@ -240,7 +242,7 @@ export function getStructuredData(metadata: SeoMetadata, publishedStories = getP
               ? {
                   articleSection: articleStory.category,
                   datePublished: articleStory.date,
-                  dateModified: articleStory.updatedAt?.slice(0, 10) ?? metadata.lastmod ?? articleStory.date,
+                    dateModified: metadata.lastmod ?? articleStory.dateModified ?? articleStory.date,
                 }
               : {}),
             author: articleAuthor

@@ -79,6 +79,7 @@ export interface Story {
   dek: string;
   body: BodySection[];
   date: string;
+  dateModified?: string;
   updatedAt?: string;
   readTime: string;
   author: string;
@@ -619,6 +620,7 @@ export const scheduledStories: ScheduledStory[] = [
     title: 'Reliability is becoming the new AI moat',
     dek: 'The next advantage will belong to systems that recover well, not demos that impress once.',
     date: '2026-09-21',
+    dateModified: '2026-09-21',
     publishAt: '2026-09-21T07:30:00Z',
     cadence: 'daily',
     readTime: '6 min read',
@@ -689,6 +691,7 @@ export const scheduledStories: ScheduledStory[] = [
     title: 'Public compute needs public metrics',
     dek: 'India’s shared AI infrastructure will be judged by who can use it, not only by how much capacity it announces.',
     date: '2026-09-23',
+    dateModified: '2026-09-21',
     publishAt: '2026-09-23T07:30:00Z',
     cadence: 'daily',
     readTime: '7 min read',
@@ -761,6 +764,7 @@ export const scheduledStories: ScheduledStory[] = [
     title: 'The cost of intelligence is becoming a design constraint',
     dek: 'Every AI product now has to decide where capability is worth the energy, latency and margin it consumes.',
     date: '2026-09-28',
+    dateModified: '2026-09-21',
     publishAt: '2026-09-28T07:30:00Z',
     cadence: 'weekly',
     readTime: '10 min read',

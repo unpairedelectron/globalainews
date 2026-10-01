@@ -24,15 +24,19 @@ async function getPublishedStoriesForBuild() {
   const schedule = rows.flatMap((row) => {
     if (row.status === 'canceled') return [];
     const story = row.story ?? {};
+    const maintainedStory = scheduledStories.find((candidate) => candidate.slug === row.slug);
     const scheduledStory = {
       ...story,
       slug: row.slug,
       title: row.title,
       publishAt: row.publishAt.toISOString(),
       date: row.publishAt.toISOString().slice(0, 10),
+      dateModified:
+        story.dateModified ??
+        maintainedStory?.dateModified ??
+        row.publishAt.toISOString().slice(0, 10),
       updatedAt: row.updatedAt.toISOString(),
     };
-    const maintainedStory = scheduledStories.find((candidate) => candidate.slug === row.slug);
     const wordCount =
       story.editorialSource === 'editor' || !maintainedStory
         ? getReleaseWordCount(story.dek, story.body)

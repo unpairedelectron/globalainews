@@ -262,11 +262,46 @@ function sitemapEntries(xml) {
     const entry = match[1];
     const location = entry.match(/<loc>([^<]+)<\/loc>/)?.[1] ?? '';
     return {
+      location,
       route: routeFromUrl(location),
       lastmod: entry.match(/<lastmod>([^<]+)<\/lastmod>/)?.[1] ?? null,
       images: [...entry.matchAll(/<image:loc>([^<]+)<\/image:loc>/g)].map((image) => image[1]),
     };
   });
+}
+
+function canonicalPathname(pathname) {
+  return pathname === '/' ? '/' : `${pathname.replace(/\/+$/, '')}/`;
+}
+
+function assertCanonicalSiteUrl(value, message) {
+  const parsed = new URL(value);
+  assert.equal(parsed.hostname, new URL(site).hostname, `${message}: URL uses another host`);
+  assert.equal(parsed.protocol, 'https:', `${message}: URL is not HTTPS`);
+  assert.equal(parsed.pathname, canonicalPathname(parsed.pathname), `${message}: URL omits its trailing slash`);
+  assert.equal(
+    value,
+    `${site}${parsed.pathname}${parsed.search}${parsed.hash}`,
+    `${message}: URL is not the direct canonical URL`,
+  );
+}
+
+function assertCanonicalSitemapUrls(xml, label) {
+  for (const entry of sitemapEntries(xml)) {
+    assertCanonicalSiteUrl(entry.location, `${label} ${entry.route}`);
+  }
+}
+
+function assertRssCanonicalUrls(xml, label) {
+  const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)];
+  assert.ok(items.length > 0, `${label}: no RSS items were found`);
+  for (const [index, match] of items.entries()) {
+    const link = match[1].match(/<link>([^<]+)<\/link>/)?.[1] ?? '';
+    const guid = match[1].match(/<guid(?:\s[^>]*)?>([^<]+)<\/guid>/)?.[1] ?? '';
+    assertCanonicalSiteUrl(link, `${label} item ${index + 1} link`);
+    assert.equal(guid, link, `${label} item ${index + 1} GUID differs from its canonical link`);
+    assertCanonicalSiteUrl(guid, `${label} item ${index + 1} GUID`);
+  }
 }
 
 function assertRouteSetsMatch(expectedRoutes, actualRoutes, message) {
@@ -326,6 +361,26 @@ async function assertRenderedPageIntegrity(
   responseCache,
   nonIndexableRoutes,
 ) {
+  for (const anchor of openingTags(document, 'a')) {
+    const href = attributeValue(anchor, 'href');
+    if (!href || href.startsWith('#') || href.startsWith('?')) continue;
+
+    let target;
+    try {
+      target = new URL(href, site);
+    } catch {
+      continue;
+    }
+    if (target.hostname !== new URL(site).hostname || /\.[a-z0-9]{1,8}$/i.test(target.pathname)) continue;
+
+    assert.equal(target.protocol, 'https:', `${route}: internal link "${href}" is not HTTPS`);
+    assert.equal(
+      target.pathname,
+      canonicalPathname(target.pathname),
+      `${route}: internal link "${href}" omits its trailing slash`,
+    );
+  }
+
   for (const anchor of openingTags(document, 'a')) {
     const href = attributeValue(anchor, 'href');
     const targetRoute = sameSiteRoute(href);
@@ -2439,7 +2494,7 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
     assert.equal(articleData.author.name, expectedAuthor.name, `${route}: JSON-LD author drifted from the maintained story record`);
     assert.equal(articleData.author.url, `${site}/person/${expectedAuthor.slug}/`, `${route}: JSON-LD author URL drifted from the maintained story record`);
     assert.equal(articleData.datePublished, expectedStory.date, `${route}: JSON-LD publication date drifted from the maintained story record`);
-    assert.equal(articleData.dateModified, expectedStory.updatedAt?.slice(0, 10) ?? expectedStory.date, `${route}: JSON-LD update date drifted from the published story record`);
+    assert.equal(articleData.dateModified, expectedStory.dateModified ?? expectedStory.date, `${route}: JSON-LD update date drifted from the published story record`);
     assert.equal(articleData.articleSection, expectedStory.category, `${route}: JSON-LD article section drifted from the maintained story record`);
     assert.equal(articleData.mainEntityOfPage['@id'], `${site}${route}/`, `${route}: JSON-LD main entity does not match the canonical article URL`);
     assert.equal(articleData.publisher.logo.url, `${site}/logo.svg`, `${route}: JSON-LD publisher logo is missing`);
@@ -2536,6 +2591,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     { response: apiSitemapResponse, body: apiSitemap },
     rootApiSitemapResult,
     { response: feedResponse, body: feed },
+    { response: apiFeedResponse, body: apiFeed },
   ] = await Promise.all([
     fetchText('/sitemap.xml'),
     fetch(`${apiOrigin}/api/newsroom/sitemap.xml`).then(async (response) => ({
@@ -2549,6 +2605,10 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       body: await response.text(),
     })),
     fetchText('/feed.xml'),
+    fetch(`${apiOrigin}/api/newsroom/feed.xml`).then(async (response) => ({
+      response,
+      body: await response.text(),
+    })),
   ]);
   assert.equal(sitemapResponse.status, 200, 'sitemap.xml is not reachable');
   assert.equal(apiSitemapResponse.status, 200, 'API newsroom sitemap.xml is not reachable');
@@ -2557,6 +2617,12 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.match(rootApiSitemapResult.response.headers.get('content-type') ?? '', /^application\/xml\b/i, 'root API sitemap.xml has the wrong content type');
   assert.ok(rootApiSitemapResult.body.includes('<urlset'), 'gzip sitemap response did not decode to XML');
   assert.equal(feedResponse.status, 200, 'feed.xml is not reachable');
+  assert.equal(apiFeedResponse.status, 200, 'API newsroom RSS feed is not reachable');
+  assertCanonicalSitemapUrls(sitemap, 'static sitemap');
+  assertCanonicalSitemapUrls(apiSitemap, 'API newsroom sitemap');
+  assertCanonicalSitemapUrls(rootApiSitemapResult.body, 'root API sitemap');
+  assertRssCanonicalUrls(feed, 'static RSS feed');
+  assertRssCanonicalUrls(apiFeed, 'API newsroom RSS feed');
 
   const { response: metadataResponse, body: metadataBody } = await fetchText('/api/newsroom/metadata');
   assert.equal(metadataResponse.status, 200, 'newsroom metadata manifest is not reachable');
@@ -2615,8 +2681,13 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   const entries = sitemapEntries(sitemap);
   for (const articleRoute of articleRoutes) {
     const entry = entries.find((candidate) => candidate.route === articleRoute);
+    const slug = articleRoute.split('/')[2];
+    const story = newsroomContent.stories.find((candidate) => candidate.slug === slug);
+    const metadata = metadataManifest.routes.find((candidate) => candidate.path === articleRoute);
     assert.ok(entry?.lastmod, `${articleRoute}: sitemap is missing lastmod`);
     assert.ok(entry.images.length > 0, `${articleRoute}: sitemap is missing its article image`);
+    assert.equal(metadata?.lastmod, story?.dateModified ?? story?.date, `${articleRoute}: fresh metadata manifest has the wrong lastmod`);
+    assert.equal(entry.lastmod, metadata?.lastmod, `${articleRoute}: static sitemap differs from the fresh metadata manifest`);
   }
   assert.ok(!routes.includes('/insights'), 'internal editor workspace must not appear in the sitemap');
 

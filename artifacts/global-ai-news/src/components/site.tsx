@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ArrowUpRight, Bookmark, BookmarkCheck, Menu, Moon, Search, Share2, Sun, X } from 'lucide-react';
-import { Link, useLocation } from 'wouter';
+import { useLocation } from 'wouter';
+import { Link } from '@/components/canonical-link';
 import { authors, findEntity, findStory, timelineEvents } from '@/content';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { useTheme } from '@/theme';
