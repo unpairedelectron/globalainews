@@ -1,0 +1,748 @@
+# GLOBAL AI NEWS V2 — PRE-PUBLICATION PRODUCTION GATE
+
+The V2 application has passed its internal smoke suite:
+
+* 51 routes
+* 363 internal references
+* 0 reported issues
+* typecheck passes
+* responsive checks pass
+* AMP/RSS checks pass
+* release-history checks pass
+* article routing works
+* explicit author attribution is enforced
+
+However, **DO NOT PUBLISH YET**.
+
+The next task is to establish that the V2 application is not merely internally correct, but also fully consistent with the actual public production state of:
+
+**https://www.globalainews.in/**
+
+The objective is:
+
+> **Production must exactly reflect the verified V2 publication architecture, with no broken trust pages, stale routes, legacy leakage, or SEO inconsistencies surviving deployment.**
+
+---
+
+# 1. PRODUCTION PARITY AUDIT
+
+Before changing code, compare:
+
+## V2/staging
+
+against:
+
+## public production
+
+for all publicly reachable routes.
+
+Generate a table:
+
+| Route | V2 status | Production status | Canonical | Indexability | Difference |
+| ----- | --------: | ----------------: | --------- | ------------ | ---------- |
+
+Do not assume that because a route passed the local smoke test it exists in production.
+
+Test actual public HTTP responses.
+
+---
+
+# 2. CRITICAL PRODUCTION ROUTES
+
+Explicitly verify these:
+
+```text
+/
+/brief
+/research
+/industry
+/policy
+/models
+/india
+/reports
+/topics
+/archive
+/about-us
+/code-of-ethics
+/corrections
+/contact-us
+```
+
+Also verify:
+
+* every author page
+* every topic page
+* every report page
+* every article page
+* every RSS endpoint
+* every AMP route
+* robots.txt
+* sitemap.xml
+* sitemap indexes if present
+
+No important publication/trust route may return 404.
+
+---
+
+# 3. FIX THE PUBLIC TRUST PAGES FIRST
+
+These pages are mandatory:
+
+```text
+/about-us
+/code-of-ethics
+/corrections
+/contact-us
+```
+
+Verify they actually resolve in production.
+
+The site's editorial/trust messaging must not refer users to nonexistent pages.
+
+Do not create placeholder pages.
+
+The Ethics page must contain the actual editorial standards supported by the existing product.
+
+The Corrections page must explain the actual corrections process.
+
+Do not invent policies merely to satisfy SEO.
+
+---
+
+# 4. NAVIGATION INTEGRITY
+
+Crawl the actual rendered navigation.
+
+Every visible:
+
+* header link
+* footer link
+* mobile navigation link
+* category link
+* author link
+* topic link
+* report link
+* related-content link
+
+must resolve correctly.
+
+Report:
+
+```text
+source route
+link text
+destination
+HTTP status
+canonical
+issue
+```
+
+Zero important internal links may point to 404.
+
+---
+
+# 5. HOMEPAGE FRESHNESS
+
+Verify the actual production homepage.
+
+The homepage must display the latest available newsroom edition.
+
+Do not accept:
+
+* old cached editions
+* stale Supabase responses
+* stale ISR output
+* stale Vercel CDN content
+* outdated edition metadata
+
+Verify:
+
+```text
+latest article
+latest edition date
+latest updated timestamp
+source snapshot
+cache behavior
+```
+
+Test after:
+
+1. fresh deployment
+2. content change
+3. cache revalidation
+4. hard refresh
+5. new browser session
+
+Document exactly how new editorial content becomes visible without a full redeployment.
+
+---
+
+# 6. DO NOT HIDE STALE DATA
+
+The current V2 implementation correctly preserves the stale-source notice.
+
+Keep that behavior.
+
+If the API/newsroom source is stale:
+
+* show the stale-source notice
+* do not silently invent fresh timestamps
+* do not silently substitute old data as current
+* do not fabricate editorial content
+
+The system must distinguish:
+
+```text
+Current
+Delayed
+Stale
+Unavailable
+```
+
+visibly and correctly.
+
+---
+
+# 7. ARTICLE ROUTING
+
+The article-routing fix has been verified internally.
+
+Now verify production directly.
+
+For at least 10 representative articles, test:
+
+```text
+direct URL
+hard refresh
+incognito
+mobile
+desktop
+crawler-style request
+navigation from homepage
+navigation from topic
+navigation from author
+```
+
+The article must render correctly without depending on a fragile client-only routing state.
+
+The primary article content must be present in server-rendered HTML wherever practical.
+
+---
+
+# 8. AUTHOR ATTRIBUTION
+
+The explicit-author requirement is correct.
+
+Maintain this rule:
+
+> Never invent an author.
+
+If an article has no valid author:
+
+```text
+Byline unavailable
+```
+
+is preferable to fake attribution.
+
+Verify production article pages show:
+
+```text
+Author name
+Author profile link
+Publication date
+Modified date where applicable
+```
+
+Never expose:
+
+```text
+ananya-rao
+lena-hoff
+```
+
+as the primary human-facing author label.
+
+Use:
+
+```text
+Ananya Rao
+Lena Hoff
+```
+
+Human-readable date:
+
+```text
+September 23, 2026
+```
+
+not:
+
+```text
+2026-09-23
+```
+
+---
+
+# 9. AUTHOR ENTITY VALIDATION
+
+For every author actually used by published articles:
+
+Verify:
+
+```text
+/author/<slug>
+```
+
+exists and returns 200.
+
+Verify the page has:
+
+* name
+* biography
+* relevant description
+* published work
+* appropriate metadata
+* canonical URL
+
+Do not create empty author archives.
+
+If an author has no meaningful public profile information, resolve the editorial/data issue rather than generating filler.
+
+---
+
+# 10. TOPIC ROUTES
+
+Every topic exposed by the UI must resolve.
+
+Do not allow:
+
+```text
+UI topic
+→ 404
+```
+
+The taxonomy exposed to readers must match the real database taxonomy.
+
+Do not expose CMS labels that do not have actual destination pages.
+
+---
+
+# 11. REPORTS AND STANDARDS
+
+Proceed with the previously proposed:
+
+```text
+Reports
+Standards
+```
+
+follow-up only where actual content exists.
+
+Do not launch empty shells.
+
+The Reports product must eventually support:
+
+* authoritative data
+* source attribution
+* methodology
+* update date
+* stable canonical URL
+* related articles
+* related topics
+
+The Standards section should expose genuine publication standards, not SEO filler.
+
+---
+
+# 12. SITEMAP PRODUCTION CHECK
+
+Inspect the actual production sitemap.
+
+For every URL:
+
+```text
+HTTP 200?
+Canonical self-referencing?
+Indexable?
+Not redirected?
+Not noindex?
+Useful?
+```
+
+The sitemap must contain only canonical, intended indexable URLs.
+
+Explicitly detect:
+
+* 404s
+* 301/302 URLs
+* noindex URLs
+* duplicate URLs
+* obsolete URLs
+* utility pages
+* thin pages
+* stale legacy URLs
+
+---
+
+# 13. LEGACY URL AUDIT
+
+Run a full inventory against the current database and known historical routes.
+
+Classify every legacy page:
+
+```text
+KEEP
+NOINDEX
+REDIRECT
+REMOVE
+REPAIR
+```
+
+Do not blindly redirect obsolete content to the homepage.
+
+For every redirect, document:
+
+```text
+old URL
+new URL
+reason
+```
+
+---
+
+# 14. INDEXATION SAFETY
+
+Ensure the following do NOT accidentally become indexable:
+
+```text
+/search
+/search?q=...
+internal filtered views
+empty topic pages
+empty author pages
+temporary previews
+draft content
+release-management routes
+administrative routes
+```
+
+Where appropriate use canonical/noindex controls.
+
+Do not rely on robots.txt to manage indexation.
+
+---
+
+# 15. ARTICLE SEO VALIDATION
+
+For every published article verify:
+
+```text
+<title>
+meta description
+canonical
+H1
+author
+datePublished
+dateModified where applicable
+Article/NewsArticle schema where appropriate
+publisher
+mainEntityOfPage
+Open Graph
+```
+
+Verify that structured data values match visible content.
+
+Do not allow JSON-LD to claim information that is not actually visible or true.
+
+---
+
+# 16. PRODUCTION STRUCTURED DATA
+
+Validate:
+
+```text
+Organization
+WebSite
+BreadcrumbList
+Article / NewsArticle
+ProfilePage / Person where appropriate
+```
+
+Do not add schema solely for the sake of increasing the number of schema types.
+
+Every entity must represent something real.
+
+---
+
+# 17. ARTICLE CONTENT DIFFERENTIATION
+
+Keep the editorial distinction between:
+
+```text
+Brief
+Analysis
+Explainer
+Research
+Essay
+Report
+India
+```
+
+Every article must make its content type obvious.
+
+For sourced reporting:
+
+```text
+Source
+Original reporting
+Global AI News analysis
+```
+
+must remain distinct.
+
+Do not imply that Global AI News performed reporting it did not perform.
+
+---
+
+# 18. HOMEPAGE FINAL UX CHECK
+
+Do not redesign the entire visual language again.
+
+Preserve the existing strong identity:
+
+* warm editorial background
+* serif display typography
+* restrained palette
+* strong hierarchy
+* premium publication aesthetic
+
+Improve only where necessary.
+
+Homepage hierarchy should clearly establish:
+
+```text
+GLOBAL AI NEWS
+
+Understand what changed.
+
+Today's Signal
+
+Today's Brief
+
+Research
+
+Industry
+
+Policy
+
+India
+
+Reports
+
+Newsletter
+```
+
+The homepage must immediately communicate:
+
+1. what the publication is
+2. what's important today
+3. where original intelligence lives
+4. how to explore topics
+5. why readers should return
+
+---
+
+# 19. REPETITIVE CARD DESIGN
+
+Keep the brand system.
+
+But distinguish visually between:
+
+```text
+Featured
+Brief
+Research
+Report
+```
+
+Do not use one identical card treatment for everything.
+
+Images should communicate editorial context rather than simply repeat branding.
+
+---
+
+# 20. LOADING UX
+
+Keep server rendering wherever possible.
+
+Use skeletons only where a loading state is genuinely unavoidable.
+
+Do not create fake loading states for content that can be rendered on the server.
+
+---
+
+# 21. PERFORMANCE REGRESSION CHECK
+
+After all changes verify:
+
+```text
+LCP
+CLS
+INP
+TTFB
+JS bundle size
+image payload
+font payload
+Supabase query latency
+```
+
+Do not trade away performance for visual effects.
+
+---
+
+# 22. PRODUCTION CRAWLER TEST
+
+Run a final crawler-like audit against the actual public domain.
+
+Check:
+
+```text
+GET /
+GET /robots.txt
+GET /sitemap.xml
+GET important article
+GET author
+GET topic
+GET report
+GET trust page
+```
+
+Capture:
+
+```text
+HTTP status
+title
+canonical
+robots
+H1
+word/content presence
+structured-data presence
+```
+
+The production audit must be based on actual HTTP responses, not only source-code assumptions.
+
+---
+
+# 23. RELEASE GATE
+
+The release must NOT be considered publish-ready unless:
+
+```text
+Broken important routes: 0
+Broken internal references: 0
+Important trust-page 404s: 0
+Canonical conflicts: 0
+Indexable 404s: 0
+Noindex URLs in sitemap: 0
+Unexpected redirects: 0
+Missing critical article metadata: 0
+Missing required author relationships: 0
+Critical structured-data errors: 0
+Homepage freshness issue: 0
+Production/V2 route mismatch: 0
+```
+
+If any of these fail, stop before publishing.
+
+---
+
+# 24. REQUIRED FINAL REPORT
+
+Before publication, return exactly:
+
+## Production Parity
+
+PASS / FAIL
+
+## Routes
+
+Total:
+Working:
+404:
+Redirect:
+Unexpected:
+
+## SEO
+
+Canonical:
+Robots:
+Sitemap:
+Structured data:
+Metadata:
+
+## Editorial
+
+Authors:
+Sources:
+Content types:
+Trust pages:
+
+## Freshness
+
+Latest edition:
+Latest article:
+Cache/revalidation:
+
+## Performance
+
+LCP:
+CLS:
+INP:
+TTFB:
+
+## Remaining Issues
+
+List every unresolved issue.
+
+## Publication Recommendation
+
+Choose only:
+
+```text
+READY TO PUBLISH
+```
+
+or:
+
+```text
+NOT READY TO PUBLISH
+```
+
+Do not declare READY TO PUBLISH if the public production domain still differs materially from the verified V2 application.
+
+---
+
+# FINAL PRINCIPLE
+
+The objective is not to prove that the code works.
+
+The objective is to prove that:
+
+> **the public Global AI News publication works.**
+
+That means:
+
+* users can navigate it
+* crawlers can discover it
+* authors are real
+* dates are trustworthy
+* sources are clear
+* important pages exist
+* content is differentiated
+* the homepage is fresh
+* the information architecture is coherent
+* the sitemap represents reality
+* the publication's trust signals are functional
+
+Only after that gate passes should the application be published.
