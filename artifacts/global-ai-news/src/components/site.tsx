@@ -15,11 +15,23 @@ export const SITE = SITE_URL;
 
 export function SeoHead({ title, description, path, article = false }: { title: string; description: string; path: string; article?: boolean }) {
   const [currentLocation] = useLocation();
-  const routeMetadata = path.startsWith('/amp/') ? undefined : getSeoMetadata(path);
+  const snapshot = useNewsroomSnapshot();
+  const routeMetadata = path.startsWith('/amp/')
+    ? undefined
+    : getSeoMetadata(path, snapshot.stories);
   const resolvedTitle = routeMetadata?.title ?? title;
   const resolvedDescription = routeMetadata?.description ?? description;
   const resolvedPath = routeMetadata?.path ?? path;
   const resolvedArticle = article || Boolean(routeMetadata?.article);
+  const articleSlug = resolvedArticle
+    ? resolvedPath.match(/^\/article\/([^/]+)$/)?.[1]
+    : undefined;
+  const resolvedStory = articleSlug
+    ? snapshot.stories.find((story) => story.slug === articleSlug)
+    : undefined;
+  const resolvedAuthor = resolvedStory
+    ? snapshot.authors.find((author) => author.slug === resolvedStory.author)
+    : undefined;
   const currentQuery = new URLSearchParams(currentLocation.split('?')[1] ?? '');
   const routePath = path.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
   const isSearchResults = ['/brief', '/search'].includes(routePath) && currentQuery.has('q');
@@ -33,6 +45,15 @@ export function SeoHead({ title, description, path, article = false }: { title: 
       const element = found ?? create();
       if (!found) document.head.appendChild(element);
       return element;
+    };
+    const upsertMeta = (attribute: 'property' | 'name', key: string, content: string) => {
+      const tag = ensure(`meta[${attribute}="${key}"]`, () => {
+        const el = document.createElement('meta');
+        el.setAttribute(attribute, key);
+        return el;
+      });
+      tag.setAttribute('content', content);
+      return tag as HTMLMetaElement;
     };
     const descriptionTag = ensure('meta[name="description"]', () => { const el = document.createElement('meta'); el.name = 'description'; return el; }) as HTMLMetaElement;
     descriptionTag.content = resolvedDescription;
@@ -49,27 +70,60 @@ export function SeoHead({ title, description, path, article = false }: { title: 
     } else {
       robotsTag?.remove();
     }
-    [['og:title', resolvedTitle], ['og:description', resolvedDescription], ['og:url', canonical], ['og:type', resolvedArticle ? 'article' : 'website'], ['twitter:title', resolvedTitle], ['twitter:description', resolvedDescription]].forEach(([property, content]) => {
-      const tag = ensure(`meta[property="${property}"]`, () => { const el = document.createElement('meta'); el.setAttribute('property', property); return el; });
-      tag.setAttribute('content', content);
+    [
+      ['property', 'og:title', resolvedTitle],
+      ['property', 'og:description', resolvedDescription],
+      ['property', 'og:url', canonical],
+      ['property', 'og:type', resolvedArticle ? 'article' : 'website'],
+      ['property', 'og:site_name', 'Global AI News'],
+      ['name', 'twitter:title', resolvedTitle],
+      ['name', 'twitter:description', resolvedDescription],
+    ].forEach(([attribute, key, content]) => {
+      upsertMeta(attribute as 'property' | 'name', key, content);
     });
+    const findServerImageTag = (selector: string) =>
+      Array.from(document.head.querySelectorAll<HTMLMetaElement>(selector))
+        .find((tag) => tag.dataset.globalAiMetaPath === resolvedPath);
+    const serverOgImage = findServerImageTag('meta[property="og:image"]');
+    const serverOgImageAlt = findServerImageTag('meta[property="og:image:alt"]');
+    const serverTwitterImage = findServerImageTag('meta[name="twitter:image"]');
+    const serverTwitterImageAlt = findServerImageTag('meta[name="twitter:image:alt"]');
+    let structuredImagePath = routeMetadata?.imagePath;
+    if (serverOgImage?.content) {
+      try {
+        const serverImageUrl = new URL(serverOgImage.content, SITE);
+        if (serverImageUrl.origin === new URL(SITE).origin) {
+          structuredImagePath = serverImageUrl.pathname;
+        }
+      } catch {
+        // Keep the configured route image if a malformed server tag is encountered.
+      }
+    }
     const imageMetadata: Array<['property' | 'name', string, string]> = routeMetadata?.imagePath
       ? [
-          ['property', 'og:image', `${SITE}${routeMetadata.imagePath}`],
-          ['property', 'og:image:alt', routeMetadata.imageAlt ?? resolvedTitle],
+          [
+            'property',
+            'og:image',
+            serverOgImage?.content ?? `${SITE}${routeMetadata.imagePath}`,
+          ],
+          [
+            'property',
+            'og:image:alt',
+            serverOgImageAlt?.content ?? routeMetadata.imageAlt ?? resolvedTitle,
+          ],
           ['property', 'og:image:type', 'image/png'],
-          ['name', 'twitter:image', `${SITE}${routeMetadata.imagePath}`],
-          ['name', 'twitter:image:alt', routeMetadata.imageAlt ?? resolvedTitle],
+          [
+            'name',
+            'twitter:image',
+            serverTwitterImage?.content ?? serverOgImage?.content ?? `${SITE}${routeMetadata.imagePath}`,
+          ],
+          [
+            'name',
+            'twitter:image:alt',
+            serverTwitterImageAlt?.content ?? serverOgImageAlt?.content ?? routeMetadata.imageAlt ?? resolvedTitle,
+          ],
         ]
       : [];
-    const upsertMeta = (attribute: 'property' | 'name', key: string, content: string) => {
-      const tag = ensure(`meta[${attribute}="${key}"]`, () => {
-        const el = document.createElement('meta');
-        el.setAttribute(attribute, key);
-        return el;
-      });
-      tag.setAttribute('content', content);
-    };
     ['og:image', 'og:image:alt', 'og:image:type'].forEach((property) => {
       if (!imageMetadata.some(([attribute, key]) => attribute === 'property' && key === property)) {
         document.head.querySelector(`meta[property="${property}"]`)?.remove();
@@ -80,7 +134,14 @@ export function SeoHead({ title, description, path, article = false }: { title: 
         document.head.querySelector(`meta[name="${name}"]`)?.remove();
       }
     });
-    imageMetadata.forEach(([attribute, key, content]) => upsertMeta(attribute, key, content));
+    imageMetadata.forEach(([attribute, key, content]) => {
+      const tag = upsertMeta(attribute, key, content);
+      if (
+        ['og:image', 'og:image:alt', 'twitter:image', 'twitter:image:alt'].includes(key)
+      ) {
+        tag.dataset.globalAiMetaPath = resolvedPath;
+      }
+    });
     const twitter = ensure('meta[name="twitter:card"]', () => { const el = document.createElement('meta'); el.name = 'twitter:card'; return el; }) as HTMLMetaElement;
     twitter.content = 'summary_large_image';
      const amp = document.head.querySelector('link[rel="amphtml"]');
@@ -96,10 +157,42 @@ export function SeoHead({ title, description, path, article = false }: { title: 
       description: resolvedDescription,
       path: resolvedPath,
       article: resolvedArticle,
-      imagePath: routeMetadata?.imagePath,
+      imagePath: structuredImagePath,
       imageAlt: routeMetadata?.imageAlt,
+    }, snapshot.stories, snapshot.authors);
+
+    const articleMeta: Array<[string, string]> = resolvedStory
+      ? [
+          ['article:published_time', resolvedStory.date],
+          ...(resolvedStory.dateModified
+            ? [['article:modified_time', resolvedStory.dateModified] as [string, string]]
+            : []),
+          ...(resolvedAuthor
+            ? [['article:author', getCanonicalUrl(`/person/${resolvedAuthor.slug}`)] as [string, string]]
+            : []),
+          ['article:section', resolvedStory.category],
+        ]
+      : [];
+    ['article:published_time', 'article:modified_time', 'article:author', 'article:section']
+      .forEach((property) => {
+        if (!articleMeta.some(([key]) => key === property)) {
+          document.head.querySelector(`meta[property="${property}"]`)?.remove();
+        }
+      });
+    articleMeta.forEach(([property, content]) => {
+      upsertMeta('property', property, content);
     });
-  }, [resolvedArticle, resolvedDescription, resolvedIndexable, resolvedPath, resolvedTitle]);
+  }, [
+    resolvedArticle,
+    resolvedAuthor,
+    resolvedDescription,
+    resolvedIndexable,
+    resolvedPath,
+    resolvedStory,
+    resolvedTitle,
+    snapshot.authors,
+    snapshot.stories,
+  ]);
   return null;
 }
 

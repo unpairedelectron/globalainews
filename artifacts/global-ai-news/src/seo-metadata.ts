@@ -164,19 +164,54 @@ export function setSeoMetadataManifest(manifest: SeoMetadataManifest | undefined
   activeManifest = manifest;
 }
 
+function articleTitle(headline: string): string {
+  const cleanHeadline = headline
+    .trim()
+    .replace(/\s*(?:—|\|)\s*Global AI News$/i, '')
+    .trim();
+  return `${cleanHeadline || headline.trim()} — Global AI News`;
+}
+
+/**
+ * The public story contract currently has no separate SEO-description or summary
+ * field, so use its editorial dek and never infer article claims from the body.
+ */
+export function getArticleDescription(story: Pick<Story, 'dek'>): string {
+  const description = story.dek.replace(/\s+/g, ' ').trim();
+  if (!description) return staticMetadata['/'].description;
+
+  const characters = Array.from(description);
+  if (characters.length <= 160) return description;
+
+  const truncated = characters.slice(0, 159).join('');
+  const wordBoundary = truncated.lastIndexOf(' ');
+  const safePrefix = (wordBoundary > 0 ? truncated.slice(0, wordBoundary) : truncated).trim();
+  return `${safePrefix.replace(/[\s,.;:—-]+$/u, '')}…`;
+}
+
+export function getArticleSeoMetadata(
+  story: Story,
+  imagePath = `/social/articles/${story.slug}.png`,
+  imageAlt = `${story.title} — Global AI News editorial preview`,
+): SeoMetadata {
+  const isMaintainedStory = maintainedArticleSlugs.has(story.slug);
+  return {
+    title: articleTitle(story.title),
+    description: getArticleDescription(story),
+    path: `/article/${story.slug}`,
+    lastmod: story.dateModified ?? story.date,
+    article: true,
+    ...(isMaintainedStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
+    imagePath,
+    imageAlt,
+  };
+}
+
 export function getSeoMetadata(route: string, publishedStories = getPublishedStories()): SeoMetadata {
   const cleanPath = cleanRoute(route);
-  const manifestMetadata = activeManifest?.routes.find((metadata) => metadata.path === cleanPath);
-  if (manifestMetadata) return manifestMetadata;
-
-  const staticPage = staticMetadata[cleanPath];
-  if (staticPage) return staticPage;
-
   const articleMatch = cleanPath.match(/^\/article\/([^/]+)$/);
   if (articleMatch) {
-    const publishedSlugs = new Set(publishedStories.map((candidate) => candidate.slug));
-    const candidate = publishedStories.find((item) => item.slug === articleMatch[1]) ?? findStory(articleMatch[1]);
-    const story = candidate && publishedSlugs.has(candidate.slug) ? candidate : undefined;
+    const story = publishedStories.find((candidate) => candidate.slug === articleMatch[1]);
     if (!story) {
       return {
         title: 'Article not found — Global AI News',
@@ -185,18 +220,14 @@ export function getSeoMetadata(route: string, publishedStories = getPublishedSto
         indexable: false,
       };
     }
-    const isMaintainedStory = maintainedArticleSlugs.has(story.slug);
-    return {
-      title: `${story.title} — Global AI News`,
-      description: story.dek,
-      path: `/article/${story.slug}`,
-      lastmod: story.dateModified ?? story.date,
-      article: true,
-        ...(isMaintainedStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
-      imagePath: `/social/articles/${story.slug}.png`,
-      imageAlt: `${story.title} — Global AI News editorial preview`,
-    };
+    return getArticleSeoMetadata(story);
   }
+
+  const manifestMetadata = activeManifest?.routes.find((metadata) => metadata.path === cleanPath);
+  if (manifestMetadata) return manifestMetadata;
+
+  const staticPage = staticMetadata[cleanPath];
+  if (staticPage) return staticPage;
 
   const timelineMatch = cleanPath.match(/^\/timeline\/([^/]+)$/);
   if (timelineMatch) {
@@ -310,7 +341,7 @@ export function getStructuredData(
               ? {
                   articleSection: articleStory.category,
                   datePublished: articleStory.date,
-                    dateModified: metadata.lastmod ?? articleStory.dateModified ?? articleStory.date,
+                  dateModified: articleStory.dateModified ?? articleStory.date,
                 }
               : {}),
             ...(articleAuthor

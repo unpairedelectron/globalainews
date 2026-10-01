@@ -103,16 +103,18 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             </p>
             <figure className="my-8 border border-foreground/15 bg-surface-muted">
               <img
-                src={articleImagePath(story.slug)}
-                alt={story.imageTreatment.alt}
+                src={metadata.imagePath ?? articleImagePath(story.slug)}
+                alt={metadata.imageAlt ?? story.imageTreatment.alt}
                 width={1200}
                 height={630}
                 fetchPriority="high"
                 className="aspect-[1.91/1] w-full object-cover"
               />
-              <figcaption className="border-t border-foreground/15 px-4 py-3 text-xs leading-5 text-muted-foreground">
-                {story.imageTreatment.caption}
-              </figcaption>
+              {metadata.imagePath === `/social/articles/${story.slug}.png` && (
+                <figcaption className="border-t border-foreground/15 px-4 py-3 text-xs leading-5 text-muted-foreground">
+                  {story.imageTreatment.caption}
+                </figcaption>
+              )}
             </figure>
             <div className="prose prose-lg mt-8 max-w-none text-foreground">
               <section className="not-prose my-8 border-l-2 border-primary bg-secondary/50 p-6">

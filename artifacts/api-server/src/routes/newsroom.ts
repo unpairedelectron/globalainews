@@ -259,7 +259,7 @@ async function getPublishedStoriesFromDatabase(): Promise<Story[]> {
   const schedule = rows
     .filter(
       (row) =>
-        row.status !== "canceled" &&
+        (row.status === "scheduled" || row.status === "published") &&
         releaseWordCount(toScheduledStory(row), row.slug) >= MINIMUM_STORY_WORDS,
     )
     .map(toScheduledStory);

@@ -15,9 +15,22 @@ localPort = 19819
 run = "pnpm --filter @workspace/global-ai-news run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/global-ai-news", "run", "build:release" ]
-serve = "static"
-publicDir = "artifacts/global-ai-news/dist/public"
+[services.production.build]
+args = [ "pnpm", "--filter", "@workspace/global-ai-news", "run", "build:production" ]
+
+[services.production.build.env]
+NODE_ENV = "production"
+
+[services.production.run]
+args = [ "node", "--enable-source-maps", "artifacts/global-ai-news/dist/server/server.mjs" ]
+
+[services.production.run.env]
+PORT = "19819"
+NODE_ENV = "production"
+NEWSROOM_API_ORIGIN = "http://localhost:80"
+
+[services.production.health.startup]
+path = "/"
 
 [[services.production.rewrites]]
 from = "/sign-in/*"
@@ -27,13 +40,11 @@ to = "/sign-in/index.html"
 from = "/sign-up/*"
 to = "/sign-up/index.html"
 
-[[services.production.rewrites]]
-from = "/article/*"
-to = "/index.html"
 
 [services.env]
 PORT = "19819"
 BASE_PATH = "/"
+NEWSROOM_API_ORIGIN = "http://localhost:80"
 
 [[services.production.responseHeaders]]
 path = "/sitemap.xml"

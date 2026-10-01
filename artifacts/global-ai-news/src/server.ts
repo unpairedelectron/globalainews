@@ -1,0 +1,98 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import express from 'express';
+
+import { fetchNewsroomContentSnapshot, renderArticleHtml } from './server/article-html';
+
+const serverDirectory = path.dirname(fileURLToPath(import.meta.url));
+const distributionDirectory = path.resolve(serverDirectory, '..');
+const publicDirectory = path.join(distributionDirectory, 'public');
+const templatePath = path.join(serverDirectory, 'index.template.html');
+const baseHtml = readFileSync(templatePath, 'utf8');
+const rawPort = process.env.PORT;
+
+if (!rawPort) {
+  throw new Error('PORT environment variable is required for the Global AI News web server.');
+}
+
+const port = Number(rawPort);
+if (!Number.isInteger(port) || port <= 0 || port > 65_535) {
+  throw new Error(`Invalid PORT value: "${rawPort}".`);
+}
+
+const app = express();
+app.disable('x-powered-by');
+
+app.use((request, response, next) => {
+  const requestUrl = new URL(request.originalUrl, 'http://localhost');
+  const pathname = requestUrl.pathname;
+  if (pathname !== '/article' && !pathname.startsWith('/article/')) {
+    next();
+    return;
+  }
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    response.setHeader('Allow', 'GET, HEAD');
+    response.status(405).end();
+    return;
+  }
+
+  void (async () => {
+    const snapshot = await fetchNewsroomContentSnapshot(process.env.NEWSROOM_API_ORIGIN);
+    const result = renderArticleHtml(
+      baseHtml,
+      pathname,
+      publicDirectory,
+      snapshot,
+    );
+    response.status(result.status);
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.setHeader('Cache-Control', 'no-store');
+    if (result.status === 404) response.setHeader('X-Robots-Tag', 'noindex');
+    response.send(result.html);
+  })().catch((error: unknown) => {
+    process.stderr.write(
+      `Article first-response rendering failed: ${error instanceof Error ? error.message : 'unknown error'}\n`,
+    );
+    if (response.headersSent) {
+      response.destroy();
+      return;
+    }
+    response.status(503);
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('X-Robots-Tag', 'noindex');
+    response.send(
+      '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Article temporarily unavailable — Global AI News</title></head><body><main><h1>Article temporarily unavailable</h1></main></body></html>',
+    );
+  });
+});
+
+app.use(express.static(publicDirectory, { fallthrough: true }));
+
+app.use((request, response) => {
+  const pathname = new URL(request.originalUrl, 'http://localhost').pathname;
+  const authRoute = pathname.match(/^\/(sign-in|sign-up)(?:\/.*)?$/);
+  if (authRoute) {
+    response.sendFile(path.join(publicDirectory, authRoute[1], 'index.html'), (error) => {
+      if (!error || response.headersSent) return;
+      response.status(404);
+      response.setHeader('Cache-Control', 'no-store');
+      response.setHeader('X-Robots-Tag', 'noindex');
+      response.type('html').send(
+        '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
+      );
+    });
+    return;
+  }
+
+  response.status(404);
+  response.setHeader('Cache-Control', 'no-store');
+  response.setHeader('X-Robots-Tag', 'noindex');
+  response.type('html').send(
+    '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
+  );
+});
+
+app.listen(port, '0.0.0.0');

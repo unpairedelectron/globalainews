@@ -2823,7 +2823,8 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   }
 
   const webArtifactConfig = await readFile(path.join(root, '.replit-artifact', 'artifact.toml'), 'utf8');
-  assert.match(webArtifactConfig, /from = "\/article\/\*"\s+to = "\/index\.html"/, 'static production artifact is missing the new-article SPA fallback');
+  assert.match(webArtifactConfig, /dist\/server\/server\.mjs/, 'production article routes are not served by the request-time Express renderer');
+  assert.doesNotMatch(webArtifactConfig, /from = "\/article\/\*"/, 'production article routes must not bypass request-time rendering through the SPA shell');
   const apiArtifactConfig = await readFile(path.resolve(root, '..', 'api-server', '.replit-artifact', 'artifact.toml'), 'utf8');
   assert.match(apiArtifactConfig, /paths = \["\/api", "\/sitemap\.xml", "\/feed\.xml"\]/, 'production API artifact is not routing the live root RSS feed');
 

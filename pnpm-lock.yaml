@@ -241,6 +241,9 @@ importers:
       '@clerk/themes':
         specifier: ^2.4.57
         version: 2.4.57(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      express:
+        specifier: ^5.2.1
+        version: 5.2.1
     devDependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0
@@ -344,6 +347,9 @@ importers:
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.102.8(react@19.1.0)
+      '@types/express':
+        specifier: ^5.0.6
+        version: 5.0.6
       '@types/node':
         specifier: 'catalog:'
         version: 25.9.6

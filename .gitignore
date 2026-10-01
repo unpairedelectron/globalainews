@@ -50,3 +50,4 @@ Thumbs.db
 
 # Generated editorial preview cards
 /artifacts/global-ai-news/public/social/articles/*.png
+/artifacts/global-ai-news/public/social/*.png

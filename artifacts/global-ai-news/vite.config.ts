@@ -1,8 +1,6 @@
 import path from 'path';
 import { execFileSync } from 'child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { createElement } from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type ViteDevServer } from 'vite';
@@ -16,7 +14,8 @@ import {
   setSeoMetadataManifest,
   type SeoMetadataManifest,
 } from './src/seo-metadata';
-import { SeoPrerender } from './src/seo-prerender';
+import { fetchNewsroomContentSnapshot, renderArticleHtml } from './src/server/article-html';
+import { renderSeoRouteHtml } from './src/seo-html';
 import {
   layoutPreviewTitle,
   previewTitleColor,
@@ -256,6 +255,7 @@ function writeSocialPreviewAssets(
   sourceStories: readonly typeof stories = getPublishedStories(),
   metadataManifest?: SeoMetadataManifest,
 ) {
+  mkdirSync(path.join(outputDir, 'social'), { recursive: true });
   const outputSocialDir = path.join(outputDir, 'social', 'articles');
   mkdirSync(outputSocialDir, { recursive: true });
   const generatedSlugs = new Set<string>();
@@ -284,6 +284,22 @@ function writeSocialPreviewAssets(
     });
     validatePreviewAsset(outputPath, metadata.path, svg, metadata.title);
   }
+
+  const defaultTitle = getSeoMetadata('/').description;
+  const defaultDescription = getSeoMetadata('/').title;
+  const defaultSlug = 'global-ai-news-default';
+  const defaultSvg = renderSocialPreviewSvg(defaultTitle, defaultDescription, defaultSlug);
+  const defaultImagePath = path.join(outputDir, 'social', `${defaultSlug}.png`);
+  execFileSync('magick', ['svg:-', '-set', 'comment', defaultTitle, defaultImagePath], {
+    input: defaultSvg,
+    stdio: ['pipe', 'ignore', 'inherit'],
+  });
+  validatePreviewAsset(
+    defaultImagePath,
+    `/social/${defaultSlug}`,
+    defaultSvg,
+    defaultTitle,
+  );
 }
 
 const socialPreviewPathPattern = /^\/social\/articles\/[^/]+\.png(?:\?.*)?$/;
@@ -616,78 +632,11 @@ function withRouteMetadata(
 ): string {
   const metadata = metadataManifest.routes.find((candidate) => candidate.path === route) ??
     getSeoMetadata(route, metadataManifest.stories);
-  const canonical = getCanonicalUrl(metadata.path);
   const contentSnapshot = metadataManifest.contentSnapshot;
   if (!contentSnapshot) {
     throw new Error('Cannot prerender publication routes without the API newsroom content snapshot.');
   }
-  const publishedStories = metadataManifest.stories ?? contentSnapshot.stories ?? getPublishedStories();
-  const title = escapeHtml(metadata.title);
-  const description = escapeHtml(metadata.description);
-  const canonicalUrl = escapeHtml(canonical);
-  const socialType = metadata.article ? 'article' : 'website';
-  const imageTags = metadata.imagePath
-    ? `
-    <meta property="og:image" content="${escapeHtml(`https://www.globalainews.in${metadata.imagePath}`)}" />
-    <meta property="og:image:alt" content="${escapeHtml(metadata.imageAlt ?? metadata.title)}" />
-    <meta property="og:image:type" content="image/png" />
-    <meta name="twitter:image" content="${escapeHtml(`https://www.globalainews.in${metadata.imagePath}`)}" />
-    <meta name="twitter:image:alt" content="${escapeHtml(metadata.imageAlt ?? metadata.title)}" />`
-    : '';
-  const existingHeadMetadata = [
-    /<title>[\s\S]*?<\/title>\s*/gi,
-    /<meta\b[^>]*name=["']robots["'][^>]*>\s*/gi,
-    /<meta\b[^>]*(?:name|property)=["'](?:description|og:title|og:description|og:url|og:type|og:image|og:image:alt|og:image:type|twitter:title|twitter:description|twitter:card|twitter:image|twitter:image:alt)["'][^>]*>\s*/gi,
-    /<link\b[^>]*rel=["'](?:canonical|amphtml)["'][^>]*>\s*/gi,
-    /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>\s*/gi,
-  ];
-  let html = baseHtml;
-  for (const pattern of existingHeadMetadata) html = html.replace(pattern, '');
-
-  const ampLink = metadata.ampPath
-    ? `\n    <link rel="amphtml" href="${escapeHtml(`https://www.globalainews.in${metadata.ampPath}`)}" />`
-    : '';
-  const headMetadata = `    <title>${title}</title>
-    <meta name="description" content="${description}" />
-    ${metadata.indexable === false ? '<meta name="robots" content="noindex,follow" />' : ''}
-    <link rel="canonical" href="${canonicalUrl}" />
-    <meta property="og:title" content="${title}" />
-    <meta property="og:description" content="${description}" />
-    <meta property="og:url" content="${canonicalUrl}" />
-    <meta property="og:type" content="${socialType}" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="${title}" />
-    <meta name="twitter:description" content="${description}" />${imageTags}${ampLink}
-    <script type="application/ld+json" data-global-ai-ld>${getStructuredData(metadata, publishedStories, contentSnapshot.authors)}</script>
-`;
-  html = html.replace('</head>', `${headMetadata}  </head>`);
-  const prerenderPublicNoindexRoutes = new Set([
-    '/search',
-    '/reports',
-    '/topics',
-    '/archive',
-    '/about-us',
-    '/code-of-ethics',
-    '/corrections',
-    '/contact-us',
-  ]);
-  const shouldPrerender = metadata.indexable !== false || prerenderPublicNoindexRoutes.has(route);
-  const prerenderedBody = shouldPrerender
-    ? renderToStaticMarkup(
-        createElement(SeoPrerender, {
-          route,
-          metadata,
-          snapshot: contentSnapshot,
-        }),
-      )
-    : '';
-  const bootstrapMarker = shouldPrerender
-    ? '<script id="global-ai-prerender" type="application/json">{}</script>'
-    : '';
-  return html.replace(
-    /<div\s+id=["']root["']>\s*<\/div>/,
-    `<div id="root">${prerenderedBody}</div>${bootstrapMarker}`,
-  );
+  return renderSeoRouteHtml(baseHtml, route, metadata, contentSnapshot);
 }
 
 function routeMetadataPlugin() {
@@ -699,6 +648,9 @@ function routeMetadataPlugin() {
       const outputDir = buildOutputDir(projectRoot);
       const metadataManifest = await loadBuildMetadataManifest(projectRoot);
       const baseHtml = readFileSync(path.join(outputDir, 'index.html'), 'utf8');
+      const serverOutputDir = path.resolve(outputDir, '..', 'server');
+      mkdirSync(serverOutputDir, { recursive: true });
+      writeFileSync(path.join(serverOutputDir, 'index.template.html'), baseHtml);
       writeSitemap(outputDir, metadataManifest);
       writeSocialPreviewAssets(
         outputDir,
@@ -718,12 +670,68 @@ function routeMetadataPlugin() {
   };
 }
 
+function articleResponsePlugin() {
+  const projectRoot = path.resolve(import.meta.dirname);
+  return {
+    name: 'global-ai-news-article-first-response',
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use((request, response, next) => {
+        const requestUrl = request.url ?? '/';
+        const pathname = new URL(requestUrl, 'http://localhost').pathname;
+        if (pathname !== '/article' && !pathname.startsWith('/article/')) {
+          next();
+          return;
+        }
+        if (request.method !== 'GET' && request.method !== 'HEAD') {
+          next();
+          return;
+        }
+
+        void (async () => {
+          const rawTemplate = readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
+          const baseHtml = await server.transformIndexHtml(requestUrl, rawTemplate);
+          const snapshot = await fetchNewsroomContentSnapshot(
+            process.env.NEWSROOM_API_ORIGIN,
+          );
+          const result = renderArticleHtml(
+            baseHtml,
+            pathname,
+            path.join(projectRoot, 'public'),
+            snapshot,
+          );
+          response.statusCode = result.status;
+          response.setHeader('Content-Type', 'text/html; charset=utf-8');
+          response.setHeader('Cache-Control', 'no-store');
+          if (result.status === 404) response.setHeader('X-Robots-Tag', 'noindex');
+          response.end(result.html);
+        })().catch((error: unknown) => {
+          process.stderr.write(
+            `Article first-response rendering failed: ${error instanceof Error ? error.message : 'unknown error'}\n`,
+          );
+          if (response.headersSent) {
+            response.destroy();
+            return;
+          }
+          response.statusCode = 503;
+          response.setHeader('Content-Type', 'text/html; charset=utf-8');
+          response.setHeader('Cache-Control', 'no-store');
+          response.setHeader('X-Robots-Tag', 'noindex');
+          response.end(
+            '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Article temporarily unavailable — Global AI News</title></head><body><main><h1>Article temporarily unavailable</h1></main></body></html>',
+          );
+        });
+      });
+    },
+  };
+}
+
 export default defineConfig({
   base: basePath,
   plugins: [
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
+    articleResponsePlugin(),
     socialPreviewAssetsPlugin(),
     ampArticlePlugin(),
     routeMetadataPlugin(),
