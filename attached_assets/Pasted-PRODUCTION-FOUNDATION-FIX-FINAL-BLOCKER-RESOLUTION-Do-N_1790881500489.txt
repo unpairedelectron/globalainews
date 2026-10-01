@@ -1,0 +1,265 @@
+PRODUCTION FOUNDATION FIX — FINAL BLOCKER RESOLUTION
+
+Do NOT begin the Authority Engine.
+
+Do NOT add new content architecture, reports, research systems, topic expansion, entity expansion, analytics, newsletter features, or SEO growth features.
+
+The previous foundation audit concluded:
+
+FOUNDATION NOT READY — AUTHORITY ENGINE BLOCKED
+
+Your job now is ONLY to resolve the remaining production foundation blockers and verify production parity.
+
+==================================================
+P0 — DEPLOY THE SECURITY FIX
+==================================================
+
+The local implementation already protects:
+
+- release list/history
+- release create/update/delete/reorder
+- automation status/runs/run
+
+and explicitly projects public fields.
+
+Production currently still exposes the old API response containing release records.
+
+Deploy the current security implementation.
+
+After deployment, verify anonymously against the actual deployed API:
+
+1. Private release endpoints return 401.
+2. No release status/scheduling/cadence/queue/readiness/word-count/editorial provenance/internal timestamps/automation data leaks through public content endpoints.
+3. Public article/content responses contain only intentional public fields.
+4. Sitemap and RSS remain publicly accessible.
+5. Do NOT expose internal release objects through any public response.
+
+Capture the exact production verification result.
+
+==================================================
+P0 — FIX PUBLICATION LIFECYCLE PARITY
+==================================================
+
+Reconcile these surfaces:
+
+Database
+→ content snapshot
+→ release view
+→ article route
+→ homepage
+→ RSS API
+→ deployed /feed.xml
+→ sitemap
+
+The current observed state is:
+
+DB:
+4 releases
+0 published
+4 scheduled
+
+Effective release view:
+3 effectively published
+1 scheduled
+
+Public articles:
+10
+
+Current API RSS:
+10 items
+
+Deployed /feed.xml:
+3 items
+
+This discrepancy MUST be resolved.
+
+Do not simply change counts to make them match.
+
+Identify the actual intended publication rule and ensure every public surface uses the same publication eligibility logic.
+
+Important:
+
+- Draft content must not be public.
+- Unpublished content must not be public.
+- Scheduled content must only become public according to the canonical publication rule.
+- A scheduled database row that is eligible for publication must be represented consistently across article routing, sitemap and RSS.
+- Private releases must never leak through public API responses.
+
+After fixing, verify:
+
+- article count
+- homepage count
+- RSS API count
+- deployed RSS count
+- sitemap article URLs
+
+and explain why those counts are expected.
+
+==================================================
+P0 — VERIFY NEW PUBLICATION FLOW
+==================================================
+
+Use an isolated/non-production fixture if possible.
+
+Do NOT create permanent test/editorial content in production.
+
+Verify:
+
+1. A newly eligible publication becomes publicly addressable.
+2. First-response HTML contains:
+   - title
+   - description
+   - canonical
+   - Open Graph metadata
+   - JSON-LD
+   - author
+   - publication date
+   - article body
+
+3. The article appears in the appropriate sitemap.
+4. The article appears in RSS.
+5. No rebuild/redeploy is required for normal publication if that is the intended architecture.
+6. The same behavior is confirmed against the deployed runtime, not merely localhost.
+
+If production verification cannot safely be performed, explicitly report:
+
+NOT VERIFIED
+
+Do not convert local PASS into production PASS.
+
+==================================================
+P1 — TRUST ROUTES
+==================================================
+
+Resolve the production state of:
+
+/about-us
+/code-of-ethics
+/corrections
+/contact-us
+/contact
+/privacy
+/terms
+
+Do NOT invent legal or editorial copy.
+
+If approved authoritative copy does not exist:
+
+- keep the route clearly marked as pending editorial approval, or
+- leave it unavailable if that is the intended policy.
+
+Do not create fake Privacy or Terms content.
+
+If local noindex pending pages already exist, deploy them consistently.
+
+Verify production navigation does not point to nonexistent trust pages.
+
+==================================================
+P1 — DEPENDENCY SECURITY
+==================================================
+
+The regression audit reports:
+
+- 2 high
+- 2 moderate
+
+development-time dependency findings involving:
+
+- brace-expansion
+- fast-uri
+
+SAST and HoundDog found no issues.
+
+Before changing dependencies:
+
+1. Identify the exact dependency chain.
+2. Determine whether the vulnerable packages are production-runtime dependencies or development/build-time dependencies.
+3. Determine whether a safe patched version exists.
+4. Make the smallest compatible update.
+5. Run:
+   - install
+   - typecheck
+   - build
+   - smoke
+   - SEO tests
+   - link audit
+   - security audit
+
+Do not perform broad dependency upgrades.
+
+If fixing them requires a risky unrelated upgrade, report the exact reason instead of making an uncontrolled change.
+
+==================================================
+P2 — SOURCE INTEGRITY
+==================================================
+
+Do not rewrite source URLs unless the exact direct source URL is known.
+
+Current findings:
+
+- 6 direct-source records across 10 uses
+- 2 homepage-only sources: Nature and IndiaAI
+- USPTO citation relevance remains unverified
+- no confirmed 404s
+- Nature redirects to an identity gateway
+- IndiaAI and IEA returned 403
+
+Do not invent replacement URLs.
+
+Flag unresolved editorial-source issues clearly for later editorial review.
+
+==================================================
+REGRESSION GATE
+==================================================
+
+Run:
+
+- typecheck
+- production build
+- smoke tests
+- SEO tests
+- link audit
+- API security tests
+- publication lifecycle tests
+- first-response tests
+- sitemap tests
+- RSS tests
+- date integrity tests
+- dependency/security audit
+
+==================================================
+DEPLOYMENT RULE
+==================================================
+
+You MAY deploy because this task is specifically to resolve the already identified foundation blockers.
+
+However:
+
+- do not modify unrelated features
+- do not add Authority Engine functionality
+- do not create new articles
+- do not alter historical publication dates
+- do not fabricate trust/legal content
+- do not mutate production editorial data except where absolutely required to correct an identified application-state inconsistency
+
+After deployment, test the ACTUAL production URL.
+
+Do not report localhost results as production results.
+
+==================================================
+FINAL GATE
+==================================================
+
+Return exactly one of:
+
+FOUNDATION READY — AUTHORITY ENGINE MAY BEGIN
+
+OR
+
+FOUNDATION NOT READY — AUTHORITY ENGINE BLOCKED
+
+If blocked, list only the remaining blockers, their severity, and the exact verification still required.
+
+Do not begin the Authority Engine unless the final gate is:
+
+FOUNDATION READY — AUTHORITY ENGINE MAY BEGIN
