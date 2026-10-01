@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { getPublishedStories } from '../src/content.ts';
-import { getSeoMetadataManifest, getStructuredData } from '../src/seo-metadata.ts';
+import { authors, getPublishedStories } from '../src/content.ts';
+import { getSeoMetadata, getSeoMetadataManifest, getStructuredData } from '../src/seo-metadata.ts';
 
 const explicitArticleDates = {
   'reliability-is-the-new-ai-moat': '2026-09-21',
@@ -38,4 +38,26 @@ test('article dates stay editorial when identical content is built on different 
       .find((entry) => entry['@type'] === 'NewsArticle');
     assert.equal(articleData.dateModified, expectedDate, `${slug}: JSON-LD dateModified drifted`);
   }
+});
+
+test('unknown article URLs are noindex instead of inheriting an unrelated story', () => {
+  const stories = getPublishedStories(new Date('2026-10-01T00:00:00.000Z'));
+  const metadata = getSeoMetadata('/article/not-a-published-story', stories);
+
+  assert.equal(metadata.title, 'Article not found — Global AI News');
+  assert.equal(metadata.indexable, false);
+  assert.equal(metadata.article, undefined);
+});
+
+test('author profile routes emit ProfilePage structured data from maintained author records', () => {
+  const author = authors[0];
+  const stories = getPublishedStories(new Date('2026-10-01T00:00:00.000Z'));
+  const metadata = getSeoMetadata(`/person/${author.slug}`, stories);
+  const profilePage = JSON.parse(getStructuredData(metadata, stories, authors))
+    ['@graph']
+    .find((entry) => entry['@type'] === 'ProfilePage');
+
+  assert.ok(profilePage, 'author page is missing ProfilePage structured data');
+  assert.equal(profilePage.mainEntity.name, author.name);
+  assert.equal(profilePage.mainEntity.description, author.bio);
 });

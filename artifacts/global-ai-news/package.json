@@ -8,6 +8,7 @@
     "build": "vite build --config vite.config.ts",
     "build:release": "node ../../scripts/build-global-ai-news-release.mjs",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
+    "audit:links": "node scripts/audit-links.mjs",
     "typecheck": "pnpm --filter @workspace/api-client-react exec tsc --build && tsc -p tsconfig.json --noEmit",
     "test:release-metadata": "node tests/release-metadata.test.mjs",
     "test:release-history": "node tests/release-history.test.mjs",
@@ -16,7 +17,7 @@
     "test:seo-date-stability": "pnpm exec tsx --test tests/seo-date-stability.test.mjs",
     "test:visual": "node --test --test-name-pattern=\"light and dark themes stay readable across key public and newsroom routes\" tests/seo-smoke.test.mjs",
     "update:visual-baselines": "UPDATE_VISUAL_BASELINES=1 pnpm run test:visual",
-    "test:smoke": "pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:content-quality && pnpm run test:seo-date-stability && pnpm run build:release && node --test tests/seo-smoke.test.mjs"
+    "test:smoke": "pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:content-quality && pnpm run test:seo-date-stability && pnpm run build:release && pnpm run audit:links && node --test tests/seo-smoke.test.mjs"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",

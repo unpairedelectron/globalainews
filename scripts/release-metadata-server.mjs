@@ -2,13 +2,25 @@ import { createServer } from 'node:http';
 
 import { db, editorialReleasesTable } from '../lib/db/src/index.ts';
 import {
+  askGlobalAnswers,
+  authors,
+  entities,
+  essays,
+  evidenceSummaries,
+  getEditorialSchedule,
   getPublishedStories,
   getReleaseWordCount,
   getStoryWordCount,
+  indiaIndex,
+  industryMap,
   MINIMUM_STORY_WORDS,
   scheduledStories,
+  signals,
+  sources as maintainedSources,
+  timelineEvents,
 } from '../artifacts/global-ai-news/src/content.ts';
 import { getSeoMetadataManifest } from '../artifacts/global-ai-news/src/seo-metadata.ts';
+import { getDynamicSourceRecords } from '../artifacts/api-server/src/editorial/automation.ts';
 
 const port = Number(process.env.PORT);
 
@@ -43,11 +55,55 @@ async function getPublishedStoriesForBuild() {
         : getStoryWordCount(maintainedStory);
     return wordCount >= MINIMUM_STORY_WORDS ? [scheduledStory] : [];
   });
-  return getPublishedStories(now, schedule);
+  return {
+    stories: getPublishedStories(now, schedule),
+    schedule: getEditorialSchedule(now, schedule),
+    now,
+  };
+}
+
+async function getNewsroomContentForBuild() {
+  const [{ stories, schedule, now }, dynamicSources] = await Promise.all([
+    getPublishedStoriesForBuild(),
+    getDynamicSourceRecords(),
+  ]);
+  const latestPublishedAt = stories.reduce(
+    (latest, story) => (story.date > latest ? story.date : latest),
+    '',
+  );
+  const stale =
+    latestPublishedAt.length > 0 &&
+    Date.now() - Date.parse(`${latestPublishedAt}T23:59:59Z`) > 36 * 60 * 60 * 1000;
+
+  return {
+    generatedAt: new Date().toISOString(),
+    source: 'maintained-editorial-source',
+    stale,
+    authors,
+    sources: [
+      ...maintainedSources,
+      ...dynamicSources.filter(
+        (source) => !maintainedSources.some((existing) => existing.slug === source.slug),
+      ),
+    ],
+    evidenceSummaries,
+    entities,
+    timelineEvents,
+    stories,
+    signals,
+    industryMap,
+    indiaIndex,
+    essays,
+    askGlobalAnswers,
+    schedule,
+  };
 }
 
 const server = createServer(async (request, response) => {
-  if (request.url !== '/api/newsroom/metadata') {
+  if (
+    request.url !== '/api/newsroom/metadata' &&
+    request.url !== '/api/newsroom/content'
+  ) {
     response.statusCode = 404;
     response.end('Not found');
     return;
@@ -55,16 +111,19 @@ const server = createServer(async (request, response) => {
 
   try {
     response.setHeader('Content-Type', 'application/json; charset=utf-8');
-    const stories = await getPublishedStoriesForBuild();
-    response.end(
-      JSON.stringify({
-        ...getSeoMetadataManifest(stories),
-        stories,
-      }),
-    );
+    response.setHeader('Cache-Control', 'no-store');
+    const content = await getNewsroomContentForBuild();
+    if (request.url === '/api/newsroom/content') {
+      response.end(JSON.stringify(content));
+      return;
+    }
+    response.end(JSON.stringify({
+      ...getSeoMetadataManifest(content.stories),
+      stories: content.stories,
+    }));
   } catch (error) {
     response.statusCode = 500;
-    response.end(`Metadata generation failed: ${String(error)}`);
+    response.end(`Newsroom release source failed: ${String(error)}`);
   }
 });
 

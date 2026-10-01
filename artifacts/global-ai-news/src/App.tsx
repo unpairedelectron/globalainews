@@ -394,7 +394,6 @@ function AppRoutes() {
     <Route path="/policy"><FocusIndexPage kind="policy" /></Route>
     <Route path="/india" component={IndiaPage} />
     <Route path="/ask" component={AskPage} />
-    <Route path="/article/ai-models-antibiotic-discovery" component={ArticlePage} />
     <Route path="/article/:slug" component={ArticlePage} />
     <Route path="/amp/article/ai-models-antibiotic-discovery/" component={AmpArticlePage} />
     <Route path="/topic/ai"><TopicPage kind="ai" /></Route>

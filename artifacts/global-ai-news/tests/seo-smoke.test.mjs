@@ -2406,7 +2406,8 @@ async function checkThemeRegression() {
       deviceScaleFactor: 1,
       mobile: false,
     });
-    await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', 'light'); location.href = '${baseUrl}/'`);
+    await evaluateBrowser(cdp, `localStorage.setItem('global-ai-news-theme', 'light')`);
+    await cdp.send('Page.navigate', { url: `${baseUrl}/` });
     await waitForBrowserCondition(
       cdp,
       `document.documentElement.dataset.theme === 'light' && document.querySelector('[data-testid="button-theme-toggle"]')?.getAttribute('aria-pressed') === 'false'`,
@@ -2479,7 +2480,12 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
   const structuredData = JSON.parse(structuredDataText);
   assert.equal(structuredData['@context'], 'https://schema.org', `${route}: JSON-LD context is invalid`);
   assert.ok(Array.isArray(structuredData['@graph']), `${route}: JSON-LD graph is missing`);
-  assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === (article ? 'NewsArticle' : 'WebSite')), `${route}: expected primary JSON-LD type is missing`);
+  const primaryType = route.startsWith('/person/')
+    ? 'ProfilePage'
+    : article
+      ? 'NewsArticle'
+      : 'WebSite';
+  assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === primaryType), `${route}: expected primary JSON-LD type is missing`);
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === 'BreadcrumbList'), `${route}: breadcrumb JSON-LD is missing`);
 
   if (article) {
@@ -2529,7 +2535,12 @@ function assertInitialSeoDocument(document, route, { article = false, ampPath = 
   assert.ok(structuredDataText, `${route}: initial JSON-LD is missing`);
   const structuredData = JSON.parse(structuredDataText);
   assert.equal(structuredData['@context'], 'https://schema.org', `${route}: initial JSON-LD context is invalid`);
-  assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === (article ? 'NewsArticle' : 'WebSite')), `${route}: initial primary JSON-LD type is missing`);
+  const primaryType = route.startsWith('/person/')
+    ? 'ProfilePage'
+    : article
+      ? 'NewsArticle'
+      : 'WebSite';
+  assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === primaryType), `${route}: initial primary JSON-LD type is missing`);
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === 'BreadcrumbList'), `${route}: initial breadcrumb JSON-LD is missing`);
 
   if (article) {

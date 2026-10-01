@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type ViteDevServer } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
-import { authors, findStory, getPublishedStories, stories, type Story } from './src/content';
+import { authors, findStory, getPublishedStories, stories, type NewsroomContentSnapshot, type Story } from './src/content';
 import {
   getCanonicalUrl,
   getSeoMetadata,
@@ -118,7 +118,7 @@ function renderAmpArticleDocument() {
       <div class="kicker">${escapeHtml(story.category)} · ${escapeHtml(story.readTime)}</div>
       <h1>${escapeHtml(story.title)}</h1>
       <p class="dek">${escapeHtml(story.dek)}</p>
-      <div class="byline"><strong>${escapeHtml(author?.name ?? story.author)}</strong> · ${escapeHtml(author?.role ?? 'Global AI News editor')} · ${formatPublishedDate(story.date)}</div>
+      <div class="byline">${author ? `<strong>${escapeHtml(author.name)}</strong> · ${escapeHtml(author.role)}` : '<strong>Byline unavailable</strong>'} · ${formatPublishedDate(story.date)}</div>
       <div class="hero">${escapeHtml(story.imageTreatment.caption)}</div>
       <article>
         <p><strong>${escapeHtml(story.bottomLine)}</strong></p>
@@ -375,6 +375,99 @@ async function loadBuildMetadataManifest(projectRoot: string): Promise<SeoMetada
       `Newsroom metadata manifest from ${manifestUrl} has an invalid shape.`,
     );
   }
+
+  const contentUrl = new URL(parsedManifestUrl);
+  if (!/\/newsroom\/metadata\/?$/.test(contentUrl.pathname)) {
+    throw new Error(
+      `Newsroom metadata URL must end in /newsroom/metadata so its matching content snapshot can be loaded: ${manifestUrl}`,
+    );
+  }
+  contentUrl.pathname = contentUrl.pathname.replace(/\/metadata\/?$/, '/content');
+  contentUrl.search = '';
+  let contentResponse: Response;
+  try {
+    contentResponse = await fetch(contentUrl);
+  } catch (error) {
+    throw new Error(
+      `Could not fetch newsroom content snapshot from ${contentUrl}: ${String(error)}`,
+    );
+  }
+  if (!contentResponse.ok) {
+    throw new Error(
+      `Newsroom content snapshot returned HTTP ${contentResponse.status} from ${contentUrl}`,
+    );
+  }
+
+  let contentSnapshot: NewsroomContentSnapshot & { generatedAt?: string };
+  try {
+    contentSnapshot = (await contentResponse.json()) as NewsroomContentSnapshot & {
+      generatedAt?: string;
+    };
+  } catch (error) {
+    throw new Error(
+      `Newsroom content snapshot from ${contentUrl} was not valid JSON: ${String(error)}`,
+    );
+  }
+  if (!contentSnapshot || typeof contentSnapshot !== 'object') {
+    throw new Error(
+      `Newsroom content snapshot from ${contentUrl} has an invalid shape.`,
+    );
+  }
+  const contentGeneratedAt = Date.parse(contentSnapshot.generatedAt ?? '');
+  if (!Number.isFinite(contentGeneratedAt)) {
+    throw new Error(
+      `Newsroom content snapshot from ${contentUrl} has an invalid generatedAt timestamp.`,
+    );
+  }
+  const contentAge = Date.now() - contentGeneratedAt;
+  if (contentAge > metadataManifestMaxAgeMs) {
+    throw new Error(
+      `Newsroom content snapshot from ${contentUrl} is stale: ` +
+        `generated ${Math.round(contentAge / 60_000)} minutes ago; ` +
+        `maximum age is ${metadataManifestMaxAgeMs / 60_000} minutes.`,
+    );
+  }
+  if (contentAge < -metadataManifestMaxAgeMs) {
+    throw new Error(
+      `Newsroom content snapshot from ${contentUrl} has a generatedAt timestamp too far in the future.`,
+    );
+  }
+  const requiredSnapshotArrays: (keyof NewsroomContentSnapshot)[] = [
+    'authors',
+    'sources',
+    'entities',
+    'timelineEvents',
+    'stories',
+    'signals',
+    'industryMap',
+    'indiaIndex',
+    'essays',
+    'askGlobalAnswers',
+    'schedule',
+  ];
+  if (requiredSnapshotArrays.some((key) => !Array.isArray(contentSnapshot[key]))) {
+    throw new Error(
+      `Newsroom content snapshot from ${contentUrl} is missing required content arrays.`,
+    );
+  }
+  if (
+    contentSnapshot.stories.some(
+      (story) =>
+        !story ||
+        typeof story.slug !== 'string' ||
+        typeof story.title !== 'string' ||
+        typeof story.date !== 'string' ||
+        !Array.isArray(story.body) ||
+        !Array.isArray(story.sources),
+    )
+  ) {
+    throw new Error(
+      `Newsroom content snapshot from ${contentUrl} contains an invalid story record.`,
+    );
+  }
+  manifest.contentSnapshot = contentSnapshot;
+  manifest.stories = contentSnapshot.stories;
+
   if (manifest.stories !== undefined && !Array.isArray(manifest.stories)) {
     throw new Error(
       `Newsroom metadata manifest from ${manifestUrl} has an invalid article snapshot.`,
@@ -525,7 +618,11 @@ function withRouteMetadata(
   const metadata = metadataManifest.routes.find((candidate) => candidate.path === route) ??
     getSeoMetadata(route, metadataManifest.stories);
   const canonical = getCanonicalUrl(metadata.path);
-  const publishedStories = metadataManifest.stories ?? getPublishedStories();
+  const contentSnapshot = metadataManifest.contentSnapshot;
+  if (!contentSnapshot) {
+    throw new Error('Cannot prerender publication routes without the API newsroom content snapshot.');
+  }
+  const publishedStories = metadataManifest.stories ?? contentSnapshot.stories ?? getPublishedStories();
   const title = escapeHtml(metadata.title);
   const description = escapeHtml(metadata.description);
   const canonicalUrl = escapeHtml(canonical);
@@ -562,7 +659,7 @@ function withRouteMetadata(
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />${imageTags}${ampLink}
-    <script type="application/ld+json" data-global-ai-ld>${getStructuredData(metadata, publishedStories)}</script>
+    <script type="application/ld+json" data-global-ai-ld>${getStructuredData(metadata, publishedStories, contentSnapshot.authors)}</script>
 `;
   html = html.replace('</head>', `${headMetadata}  </head>`);
   const prerenderedBody = metadata.indexable === false
@@ -571,7 +668,7 @@ function withRouteMetadata(
         createElement(SeoPrerender, {
           route,
           metadata,
-          stories: publishedStories,
+          snapshot: contentSnapshot,
         }),
       );
   const bootstrapMarker = metadata.indexable === false

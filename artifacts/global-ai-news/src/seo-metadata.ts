@@ -1,4 +1,4 @@
-import { authors, entities, findEntity, findStory, findTimeline, getPublishedStories, stories, timelineEvents, type Story } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, getPublishedStories, stories, timelineEvents, type Author, type NewsroomContentSnapshot, type Story } from './content';
 
 export const SITE_URL = 'https://www.globalainews.in';
 
@@ -19,6 +19,7 @@ export interface SeoMetadataManifest {
   generatedAt: string;
   routes: SeoMetadata[];
   stories?: Story[];
+  contentSnapshot?: NewsroomContentSnapshot;
 }
 
 const staticMetadata: Record<string, SeoMetadata> = {
@@ -125,15 +126,25 @@ export function getSeoMetadata(route: string, publishedStories = getPublishedSto
 
   const articleMatch = cleanPath.match(/^\/article\/([^/]+)$/);
   if (articleMatch) {
-    const story = publishedStories.find((candidate) => candidate.slug === articleMatch[1]) ?? findStory('ai-models-antibiotic-discovery')!;
-     const isMaintainedStory = maintainedArticleSlugs.has(story.slug);
+    const publishedSlugs = new Set(publishedStories.map((candidate) => candidate.slug));
+    const candidate = publishedStories.find((item) => item.slug === articleMatch[1]) ?? findStory(articleMatch[1]);
+    const story = candidate && publishedSlugs.has(candidate.slug) ? candidate : undefined;
+    if (!story) {
+      return {
+        title: 'Article not found — Global AI News',
+        description: 'No published article exists at this URL.',
+        path: cleanPath,
+        indexable: false,
+      };
+    }
+    const isMaintainedStory = maintainedArticleSlugs.has(story.slug);
     return {
       title: `${story.title} — Global AI News`,
       description: story.dek,
       path: `/article/${story.slug}`,
       lastmod: story.dateModified ?? story.date,
       article: true,
-       ...(isMaintainedStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
+        ...(isMaintainedStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
       imagePath: `/social/articles/${story.slug}.png`,
       imageAlt: `${story.title} — Global AI News editorial preview`,
     };
@@ -173,9 +184,10 @@ export function getSeoMetadata(route: string, publishedStories = getPublishedSto
   }
 
   return {
-    title: 'Global AI News — Intelligence for the AI economy',
-    description: 'Stories, signals and context for understanding the AI industry.',
+    title: 'Page not found — Global AI News',
+    description: 'This URL is not part of the current Global AI News record.',
     path: cleanPath,
+    indexable: false,
   };
 }
 
@@ -212,13 +224,21 @@ export function getSeoMetadataManifest(
   };
 }
 
-export function getStructuredData(metadata: SeoMetadata, publishedStories = getPublishedStories()): string {
+export function getStructuredData(
+  metadata: SeoMetadata,
+  publishedStories = getPublishedStories(),
+  authorRecords: Author[] = authors,
+): string {
   const canonical = getCanonicalUrl(metadata.path);
   const articleSlug = metadata.path.match(/^\/article\/([^/]+)$/)?.[1];
   const articleStory = articleSlug
-    ? publishedStories.find((story) => story.slug === articleSlug) ?? findStory(articleSlug)
+    ? publishedStories.find((story) => story.slug === articleSlug)
     : undefined;
-  const articleAuthor = articleStory ? authors.find((author) => author.slug === articleStory.author) : undefined;
+  const articleAuthor = articleStory ? authorRecords.find((author) => author.slug === articleStory.author) : undefined;
+  const authorSlug = metadata.path.match(/^\/person\/([^/]+)$/)?.[1];
+  const profileAuthor = authorSlug
+    ? authorRecords.find((author) => author.slug === authorSlug)
+    : undefined;
   const publisher = {
     '@type': 'Organization',
     name: 'Global AI News',
@@ -254,6 +274,18 @@ export function getStructuredData(metadata: SeoMetadata, publishedStories = getP
               : { '@type': 'Organization', name: 'Global AI News' },
             publisher,
             mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+          }
+        : profileAuthor
+        ? {
+            '@type': 'ProfilePage',
+            mainEntity: {
+              '@type': 'Person',
+              name: profileAuthor.name,
+              description: profileAuthor.bio,
+              jobTitle: profileAuthor.role,
+              url: getCanonicalUrl(`/person/${profileAuthor.slug}`),
+            },
+            url: canonical,
           }
         : {
             '@type': 'WebSite',

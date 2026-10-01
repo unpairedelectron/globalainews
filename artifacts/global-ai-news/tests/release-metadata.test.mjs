@@ -74,6 +74,7 @@ try {
   const apiUrl = `http://127.0.0.1:${apiPort}`;
   await waitFor(`${apiUrl}/api/healthz`, apiProcess);
   const apiManifest = await (await fetch(`${apiUrl}/api/newsroom/metadata`)).json();
+  const apiContent = await (await fetch(`${apiUrl}/api/newsroom/content`)).json();
   const editedTitle = 'Edited by the newsroom before release — Global AI News';
   const editedDescription =
     'An API editorial update reaches the crawler-visible first response before publication.';
@@ -90,6 +91,11 @@ try {
     if (request.url === '/api/newsroom/metadata') {
       response.setHeader('Content-Type', 'application/json');
       response.end(JSON.stringify(editedManifest));
+      return;
+    }
+    if (request.url === '/api/newsroom/content') {
+      response.setHeader('Content-Type', 'application/json');
+      response.end(JSON.stringify(apiContent));
       return;
     }
     if (request.url === '/api/newsroom/stale') {
@@ -156,6 +162,36 @@ try {
       `<meta name="description" content="${escapeHtml(editedDescription)}"`,
     ),
     'the first response kept the old API description',
+  );
+  const releaseStory = apiContent.stories.find(
+    (story) => `/article/${story.slug}` === route,
+  );
+  assert.ok(releaseStory, 'release content snapshot is missing the tested article');
+  const releaseAuthor = apiContent.authors.find(
+    (author) => author.slug === releaseStory.author,
+  );
+  assert.ok(releaseAuthor, 'release article has no author attribution record');
+  assert.ok(
+    document.includes(`/person/${releaseAuthor.slug}/`) &&
+      document.includes(releaseAuthor.name),
+    'the first response is missing the API-backed author attribution',
+  );
+  const releaseSource = apiContent.sources.find(
+    (source) => releaseStory.sources.includes(source.slug),
+  );
+  assert.ok(releaseSource, 'release article has no resolvable source record');
+  assert.ok(
+    document.includes(releaseSource.name),
+    'the first response is missing the API-backed source attribution',
+  );
+  const authorPage = await readFile(
+    path.join(outputDir, 'person', releaseAuthor.slug, 'index.html'),
+    'utf8',
+  );
+  assert.match(
+    authorPage,
+    /"@type":"ProfilePage"/,
+    'author page is missing ProfilePage structured data',
   );
 
   async function assertBuildFails(metadataUrl, message) {
