@@ -35,9 +35,12 @@ import {
   entities,
   essays,
   evidenceSummaries,
+  getEditorialLifecycleStatus,
+  getPublicDateModified,
   getReleaseDraftWordCount,
   getReleaseWordCount,
   getPublishedStories,
+  isPublicEditorialRelease,
   getStoryWordCount,
   MINIMUM_STORY_WORDS,
   indiaIndex,
@@ -86,6 +89,7 @@ type EditorialReleaseStory = ScheduledStory & {
 };
 
 function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
+  const dateModified = getPublicDateModified(story);
   return {
     slug: story.slug,
     category: story.category,
@@ -93,7 +97,7 @@ function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
     dek: story.dek,
     body: story.body,
     date: story.date,
-    dateModified: story.dateModified,
+    ...(dateModified ? { dateModified } : {}),
     readTime: story.readTime,
     author: story.author,
     evidence: story.evidence,
@@ -151,7 +155,7 @@ function storyFromInput(
     title,
     dek,
     date: dateOnly(publishAt),
-    dateModified: existing?.dateModified ?? dateOnly(new Date()),
+    dateModified: existing?.dateModified,
     publishAt: publishAt.toISOString(),
     cadence: input.cadence ?? existing?.cadence ?? "daily",
     category: (input.category ?? existing?.category ?? "Field Notes") as StoryCategory,
@@ -214,7 +218,7 @@ function toScheduledStory(row: ReleaseRow): EditorialReleaseStory {
     publishAt: row.publishAt.toISOString(),
     cadence: row.cadence as EditorialCadence,
     date: dateOnly(row.publishAt),
-    dateModified: story.dateModified ?? maintainedStory?.dateModified ?? dateOnly(row.publishAt),
+    dateModified: story.dateModified ?? maintainedStory?.dateModified,
     updatedAt: row.updatedAt.toISOString(),
   };
 }
@@ -231,12 +235,12 @@ function toReleaseResponse(row: ReleaseRow, now = new Date()) {
   const story = toScheduledStory(row);
   const wordCount = releaseWordCount(story, row.slug);
   const publishable = wordCount >= MINIMUM_STORY_WORDS;
-  const status =
-    row.status === "canceled"
-      ? "canceled"
-      : publishable && Date.parse(story.publishAt) <= now.getTime()
-        ? "published"
-        : "scheduled";
+  const status = getEditorialLifecycleStatus(
+    row.status,
+    story.publishAt,
+    wordCount,
+    now,
+  );
   return {
     id: row.id,
     slug: row.slug,
@@ -256,14 +260,19 @@ function toReleaseResponse(row: ReleaseRow, now = new Date()) {
 
 async function getPublishedStoriesFromDatabase(): Promise<Story[]> {
   const rows = await getReleaseRows();
-  const schedule = rows
-    .filter(
-      (row) =>
-        (row.status === "scheduled" || row.status === "published") &&
-        releaseWordCount(toScheduledStory(row), row.slug) >= MINIMUM_STORY_WORDS,
+  const now = new Date();
+  const schedule = rows.flatMap((row) => {
+    const story = toScheduledStory(row);
+    return isPublicEditorialRelease(
+      row.status,
+      story.publishAt,
+      releaseWordCount(story, row.slug),
+      now,
     )
-    .map(toScheduledStory);
-  return getPublishedStories(new Date(), schedule);
+      ? [story]
+      : [];
+  });
+  return getPublishedStories(now, schedule);
 }
 
 function rejectShortRelease(
@@ -507,7 +516,27 @@ router.get("/newsroom/social/articles/:slug.svg", async (req, res): Promise<void
 router.get("/newsroom/content", async (_req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
-    const dynamicSources = await getDynamicSourceRecords();
+    const citedSourceSlugs = new Set(
+      publishedStories.flatMap((story) => story.sources),
+    );
+    const dynamicSources = (await getDynamicSourceRecords()).filter((source) =>
+      citedSourceSlugs.has(source.slug),
+    );
+    const publicSources = [
+      ...maintainedSources.filter((source) => citedSourceSlugs.has(source.slug)),
+      ...dynamicSources.filter(
+        (source) => !maintainedSources.some((existing) => existing.slug === source.slug),
+      ),
+    ];
+    const resolvedSourceSlugs = new Set(publicSources.map((source) => source.slug));
+    const unresolvedSourceSlugs = [...citedSourceSlugs].filter(
+      (slug) => !resolvedSourceSlugs.has(slug),
+    );
+    if (unresolvedSourceSlugs.length > 0) {
+      throw new Error(
+        `Published newsroom stories reference unavailable sources: ${unresolvedSourceSlugs.join(", ")}`,
+      );
+    }
     const latestPublishedAt = publishedStories.reduce(
       (latest, story) => (story.date > latest ? story.date : latest),
       "",
@@ -520,12 +549,7 @@ router.get("/newsroom/content", async (_req, res): Promise<void> => {
       source: "maintained-editorial-source",
       stale,
       authors,
-      sources: [
-        ...maintainedSources,
-        ...dynamicSources.filter(
-          (source) => !maintainedSources.some((existing) => existing.slug === source.slug),
-        ),
-      ],
+      sources: publicSources,
       evidenceSummaries,
       entities,
       timelineEvents,

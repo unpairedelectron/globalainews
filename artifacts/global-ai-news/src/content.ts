@@ -111,6 +111,58 @@ export function getReaderFacingContentType(classification: Story['classification
 
 export const MINIMUM_STORY_WORDS = 800;
 
+export function getPublicDateModified(
+  story: Pick<Story, 'date' | 'dateModified'>,
+): string | undefined {
+  if (!story.dateModified) return undefined;
+  const publishedDate = story.date.slice(0, 10);
+  const modifiedDate = story.dateModified.slice(0, 10);
+  const isValidDate = (value: string) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    const parsed = new Date(`${value}T00:00:00.000Z`);
+    return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+  };
+  if (
+    !isValidDate(publishedDate) ||
+    !isValidDate(modifiedDate) ||
+    !Number.isFinite(Date.parse(story.dateModified)) ||
+    modifiedDate < publishedDate
+  ) {
+    return undefined;
+  }
+  return modifiedDate;
+}
+
+export function isPublicEditorialRelease(
+  status: string,
+  publishAt: string | Date,
+  wordCount: number,
+  now = new Date(),
+): boolean {
+  const publishTime = publishAt instanceof Date ? publishAt.getTime() : Date.parse(publishAt);
+  return (
+    (status === 'scheduled' || status === 'published') &&
+    Number.isFinite(publishTime) &&
+    publishTime <= now.getTime() &&
+    wordCount >= MINIMUM_STORY_WORDS
+  );
+}
+
+export function getEditorialLifecycleStatus(
+  status: string,
+  publishAt: string | Date,
+  wordCount: number,
+  now = new Date(),
+): EditorialLifecycleStatus {
+  if (status === 'draft' || status === 'unpublished' || status === 'archived' || status === 'canceled') {
+    return status;
+  }
+  if (status !== 'scheduled' && status !== 'published') return 'unpublished';
+  return isPublicEditorialRelease(status, publishAt, wordCount, now)
+    ? 'published'
+    : 'scheduled';
+}
+
 export function countEditorialWords(copy: string): number {
   return copy.trim().split(/\s+/).filter(Boolean).length;
 }
@@ -142,6 +194,13 @@ export function getStoryWordCount(story: Story): number {
 }
 
 export type EditorialCadence = 'daily' | 'weekly';
+export type EditorialLifecycleStatus =
+  | 'draft'
+  | 'scheduled'
+  | 'published'
+  | 'unpublished'
+  | 'archived'
+  | 'canceled';
 export interface ScheduledStory extends Story {
   publishAt: string;
   cadence: EditorialCadence;
@@ -152,7 +211,7 @@ export interface EditorialScheduleItem {
   dek: string;
   publishAt: string;
   cadence: EditorialCadence;
-  status: 'scheduled' | 'published' | 'canceled';
+  status: EditorialLifecycleStatus;
   position: number;
   story?: Story;
 }
@@ -218,13 +277,13 @@ export let authors: Author[] = [
 
 export let sources: Source[] = [
   { slug: 'nature-antibiotic-study', name: 'A generative deep learning approach to antibiotic discovery', publisher: 'Nature Chemical Biology', kind: 'primary', url: 'https://www.nature.com/', accessed: '2026-09-10' },
-  { slug: 'open-a7f1c833c9a1e5c0', name: 'How a Cooperative-Override Circuit Suppresses Nash Play in Large Language Models', publisher: 'arXiv AI', kind: 'primary', url: 'https://arxiv.org/abs/2604.27167', accessed: '2026-09-21' },
-  { slug: 'uspto-ai-inventorship', name: 'Guidance on AI-assisted inventions', publisher: 'United States Patent and Trademark Office', kind: 'primary', url: 'https://www.uspto.gov/', accessed: '2026-09-09' },
+  { slug: 'open-a7f1c833c9a1e5c0', name: 'How a Cooperative-Override Circuit Suppresses Nash Play in Large Language Models', publisher: 'arXiv AI', kind: 'primary', url: 'https://arxiv.org/abs/2604.27167', accessed: '2026-10-02' },
+  { slug: 'uspto-ai-inventorship', name: 'Guidance on AI-assisted inventions', publisher: 'United States Patent and Trademark Office', kind: 'primary', url: 'https://www.uspto.gov/sites/default/files/documents/ai-inventorship-memo.pdf', accessed: '2026-10-02' },
   { slug: 'indiaai-mission', name: 'IndiaAI Mission', publisher: 'Ministry of Electronics and Information Technology', kind: 'primary', url: 'https://indiaai.gov.in/', accessed: '2026-09-08' },
-  { slug: 'stanford-ai-index-2026', name: 'AI Index Report 2026', publisher: 'Stanford Institute for Human-Centered AI', kind: 'dataset', url: 'https://aiindex.stanford.edu/', accessed: '2026-09-07' },
-  { slug: 'iea-data-centres', name: 'Energy and AI: data centre demand', publisher: 'International Energy Agency', kind: 'dataset', url: 'https://www.iea.org/', accessed: '2026-09-06' },
-  { slug: 'eu-ai-act-code', name: 'Code of practice for general-purpose AI', publisher: 'European Commission', kind: 'primary', url: 'https://digital-strategy.ec.europa.eu/', accessed: '2026-09-05' },
-  { slug: 'mistral-model-card', name: 'Mistral Small 4 model card', publisher: 'Mistral AI', kind: 'primary', url: 'https://mistral.ai/', accessed: '2026-09-04' },
+  { slug: 'stanford-ai-index-2026', name: 'AI Index Report 2026', publisher: 'Stanford Institute for Human-Centered AI', kind: 'dataset', url: 'https://hai.stanford.edu/ai-index/2026-ai-index-report', accessed: '2026-10-02' },
+  { slug: 'iea-data-centres', name: 'Energy and AI: data centre demand', publisher: 'International Energy Agency', kind: 'dataset', url: 'https://www.iea.org/reports/energy-and-ai', accessed: '2026-10-01' },
+  { slug: 'eu-ai-act-code', name: 'Code of practice for general-purpose AI', publisher: 'European Commission', kind: 'primary', url: 'https://digital-strategy.ec.europa.eu/en/policies/ai-code-practice', accessed: '2026-10-02' },
+  { slug: 'mistral-model-card', name: 'Mistral Small 4 model card', publisher: 'Mistral AI', kind: 'primary', url: 'https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03', accessed: '2026-10-02' },
 ];
 
 export const evidenceSummaries: Record<string, EvidenceSummary> = {

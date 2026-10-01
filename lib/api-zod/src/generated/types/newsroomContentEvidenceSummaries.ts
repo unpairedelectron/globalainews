@@ -5,5 +5,6 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { PublicNewsroomEvidenceSummary } from './publicNewsroomEvidenceSummary';
 
-export type NewsroomContentEvidenceSummaries = { [key: string]: unknown };
+export type NewsroomContentEvidenceSummaries = {[key: string]: PublicNewsroomEvidenceSummary};

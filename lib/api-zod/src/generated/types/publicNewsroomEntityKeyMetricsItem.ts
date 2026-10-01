@@ -6,4 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type NewsroomContentSignalsItem = { [key: string]: unknown };
+export type PublicNewsroomEntityKeyMetricsItem = {
+  label: string;
+  value: string;
+  context: string;
+};

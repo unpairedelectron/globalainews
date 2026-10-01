@@ -1,5 +1,11 @@
 import React from 'react';
-import { findStory, getReaderFacingContentType, type NewsroomContentSnapshot, type Story } from './content';
+import {
+  findStory,
+  getPublicDateModified,
+  getReaderFacingContentType,
+  type NewsroomContentSnapshot,
+  type Story,
+} from './content';
 import { formatEditorialDate, getLatestStory } from './editorial-date';
 import type { SeoMetadata } from './seo-metadata';
 
@@ -76,6 +82,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
           : undefined;
       })
       .filter((relatedStory): relatedStory is Story => Boolean(relatedStory));
+    const publicDateModified = getPublicDateModified(story);
 
     return (
       <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
@@ -96,8 +103,8 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
                 ? <>By <a href={`/person/${author.slug}/`} className="font-semibold underline decoration-foreground/30 underline-offset-2 hover:text-primary">{author.name}</a> · {author.role}</>
                 : 'Byline unavailable'}
               {' · '}Published <time dateTime={story.date}>{formatEditorialDate(story.date)}</time>
-              {story.dateModified && story.dateModified !== story.date
-                ? <> · Updated <time dateTime={story.dateModified}>{formatEditorialDate(story.dateModified)}</time></>
+              {publicDateModified && publicDateModified !== story.date
+                ? <> · Updated <time dateTime={publicDateModified}>{formatEditorialDate(publicDateModified)}</time></>
                 : null}
               {' · '}{story.readTime}
             </p>

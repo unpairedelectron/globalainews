@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ArrowUpRight, Bookmark, BookmarkCheck, Menu, Moon, Search, Share2, Sun, X } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { Link } from '@/components/canonical-link';
-import { authors, findEntity, findStory, timelineEvents } from '@/content';
+import { authors, findEntity, findStory, getPublicDateModified, timelineEvents } from '@/content';
 import { formatEditorialDate, getLatestStory } from '@/editorial-date';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { useTheme } from '@/theme';
@@ -161,11 +161,14 @@ export function SeoHead({ title, description, path, article = false }: { title: 
       imageAlt: routeMetadata?.imageAlt,
     }, snapshot.stories, snapshot.authors);
 
+    const publicDateModified = resolvedStory
+      ? getPublicDateModified(resolvedStory)
+      : undefined;
     const articleMeta: Array<[string, string]> = resolvedStory
       ? [
           ['article:published_time', resolvedStory.date],
-          ...(resolvedStory.dateModified
-            ? [['article:modified_time', resolvedStory.dateModified] as [string, string]]
+          ...(publicDateModified
+            ? [['article:modified_time', publicDateModified] as [string, string]]
             : []),
           ...(resolvedAuthor
             ? [['article:author', getCanonicalUrl(`/person/${resolvedAuthor.slug}`)] as [string, string]]

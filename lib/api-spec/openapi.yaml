@@ -460,12 +460,389 @@ components:
         - status
         - provider
         - message
+    PublicNewsroomAuthor:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+        bio:
+          type: string
+        location:
+          type: string
+        initials:
+          type: string
+      required: [slug, name, role, bio, location, initials]
+    PublicNewsroomSource:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        publisher:
+          type: string
+        kind:
+          type: string
+          enum: [primary, independent, dataset, filing, interview]
+        url:
+          type: string
+          format: uri
+        accessed:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+      required: [slug, name, publisher, kind, url, accessed]
+    PublicNewsroomEvidenceSummary:
+      type: object
+      additionalProperties: false
+      properties:
+        primarySources:
+          type: integer
+        independentConfirmations:
+          type: integer
+        confidence:
+          type: string
+          enum: [HIGH, MEDIUM, DEVELOPING]
+        note:
+          type: string
+      required: [primarySources, independentConfirmations, confidence, note]
+    PublicNewsroomBodySection:
+      type: object
+      additionalProperties: false
+      properties:
+        heading:
+          type: string
+        paragraphs:
+          type: array
+          items:
+            type: string
+        pullQuote:
+          type: string
+      required: [heading, paragraphs]
+    PublicNewsroomImageTreatment:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          enum: [editorial-abstract, field-photograph, data-graphic, portrait]
+        alt:
+          type: string
+        palette:
+          type: string
+        caption:
+          type: string
+      required: [type, alt, palette, caption]
+    PublicNewsroomTimelineEvent:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        date:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        title:
+          type: string
+        description:
+          type: string
+        entities:
+          type: array
+          items:
+            type: string
+        story:
+          type: string
+      required: [slug, date, title, description, entities]
+    PublicNewsroomEntity:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        kind:
+          type: string
+          enum: [company, lab, model, person, technology, policy]
+        strapline:
+          type: string
+        overview:
+          type: string
+        headquarters:
+          type: string
+        founded:
+          type: string
+        relatedOrganizations:
+          type: array
+          items:
+            type: string
+        keyMetrics:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              label:
+                type: string
+              value:
+                type: string
+              context:
+                type: string
+            required: [label, value, context]
+        latestDevelopments:
+          type: array
+          items:
+            type: string
+        timeline:
+          type: array
+          items:
+            type: string
+        signals:
+          type: array
+          items:
+            type: string
+        recentStories:
+          type: array
+          items:
+            type: string
+      required:
+        - slug
+        - name
+        - kind
+        - strapline
+        - overview
+        - relatedOrganizations
+        - keyMetrics
+        - latestDevelopments
+        - timeline
+        - signals
+        - recentStories
+    PublicNewsroomStory:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        category:
+          type: string
+          enum: [Breakthroughs, Signals, India Watch, The Edge, Field Notes, Infrastructure, Policy]
+        title:
+          type: string
+        dek:
+          type: string
+        body:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicNewsroomBodySection"
+        date:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        dateModified:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        readTime:
+          type: string
+        author:
+          type: string
+        evidence:
+          type: string
+        evidenceSummary:
+          $ref: "#/components/schemas/PublicNewsroomEvidenceSummary"
+        classification:
+          type: string
+          enum: [reported, analysis, opinion, synthesis]
+        entities:
+          type: array
+          items:
+            type: string
+        timeline:
+          type: array
+          items:
+            type: string
+        relatedStories:
+          type: array
+          items:
+            type: string
+        imageTreatment:
+          $ref: "#/components/schemas/PublicNewsroomImageTreatment"
+        topic:
+          type: string
+        sources:
+          type: array
+          items:
+            type: string
+        bottomLine:
+          type: string
+        whyItMatters:
+          type: string
+        keyTakeaways:
+          type: array
+          items:
+            type: string
+        whatChanges:
+          type: string
+      required:
+        - slug
+        - category
+        - title
+        - dek
+        - body
+        - date
+        - readTime
+        - author
+        - evidence
+        - evidenceSummary
+        - classification
+        - entities
+        - timeline
+        - relatedStories
+        - imageTreatment
+        - topic
+        - sources
+        - bottomLine
+        - whyItMatters
+        - keyTakeaways
+        - whatChanges
+    PublicNewsroomSignal:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        label:
+          type: string
+        topic:
+          type: string
+        direction:
+          type: string
+          enum: [up, down, steady]
+        impact:
+          type: string
+          enum: [low, medium, high]
+        change:
+          type: string
+        summary:
+          type: string
+        entities:
+          type: array
+          items:
+            type: string
+        stories:
+          type: array
+          items:
+            type: string
+        updated:
+          type: string
+      required: [slug, label, topic, direction, impact, change, summary, entities, stories, updated]
+    PublicNewsroomIndustryMapNode:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        layer:
+          type: string
+          enum: [Frontier Labs, Infrastructure, Models, Agents, Applications, Capital, Policy]
+        description:
+          type: string
+        entities:
+          type: array
+          items:
+            type: string
+        pressure:
+          type: string
+        x:
+          type: number
+        y:
+          type: number
+      required: [slug, name, layer, description, entities, pressure, x, y]
+    PublicNewsroomIndiaIndexMetric:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+        change:
+          type: string
+        context:
+          type: string
+        source:
+          type: string
+      required: [slug, label, value, change, context, source]
+    PublicNewsroomEssay:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        dek:
+          type: string
+        author:
+          type: string
+        date:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        readTime:
+          type: string
+        themes:
+          type: array
+          items:
+            type: string
+        body:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicNewsroomBodySection"
+      required: [slug, title, dek, author, date, readTime, themes, body]
+    PublicNewsroomAskGlobalAnswer:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        question:
+          type: string
+        answer:
+          type: string
+        citedStories:
+          type: array
+          items:
+            type: string
+        citedSources:
+          type: array
+          items:
+            type: string
+        citedTimeline:
+          type: array
+          items:
+            type: string
+        citedEntities:
+          type: array
+          items:
+            type: string
+        asOf:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+      required: [slug, question, answer, citedStories, citedSources, citedTimeline, citedEntities, asOf]
     NewsroomContent:
       type: object
+      additionalProperties: false
       properties:
         generatedAt:
           type: string
-          format: date-time
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]+)?Z$'
         source:
           type: string
         stale:
@@ -473,56 +850,47 @@ components:
         authors:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PublicNewsroomAuthor"
         sources:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PublicNewsroomSource"
         evidenceSummaries:
           type: object
-          additionalProperties: true
+          additionalProperties:
+            $ref: "#/components/schemas/PublicNewsroomEvidenceSummary"
         entities:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PublicNewsroomEntity"
         timelineEvents:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PublicNewsroomTimelineEvent"
         stories:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PublicNewsroomStory"
         signals:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PublicNewsroomSignal"
         industryMap:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PublicNewsroomIndustryMapNode"
         indiaIndex:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PublicNewsroomIndiaIndexMetric"
         essays:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PublicNewsroomEssay"
         askGlobalAnswers:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PublicNewsroomAskGlobalAnswer"
       required:
         - generatedAt
         - source
@@ -557,7 +925,7 @@ components:
       additionalProperties: true
     EditorialReleaseStatus:
       type: string
-      enum: [scheduled, published, canceled]
+      enum: [draft, scheduled, published, unpublished, archived, canceled]
     EditorialCadence:
       type: string
       enum: [daily, weekly]

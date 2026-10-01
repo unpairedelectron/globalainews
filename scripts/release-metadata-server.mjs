@@ -11,9 +11,9 @@ import {
   getPublishedStories,
   getReleaseWordCount,
   getStoryWordCount,
+  isPublicEditorialRelease,
   indiaIndex,
   industryMap,
-  MINIMUM_STORY_WORDS,
   scheduledStories,
   signals,
   sources as maintainedSources,
@@ -34,7 +34,6 @@ async function getPublishedStoriesForBuild() {
     .from(editorialReleasesTable);
   const now = new Date();
   const schedule = rows.flatMap((row) => {
-    if (row.status === 'canceled') return [];
     const story = row.story ?? {};
     const maintainedStory = scheduledStories.find((candidate) => candidate.slug === row.slug);
     const scheduledStory = {
@@ -43,17 +42,16 @@ async function getPublishedStoriesForBuild() {
       title: row.title,
       publishAt: row.publishAt.toISOString(),
       date: row.publishAt.toISOString().slice(0, 10),
-      dateModified:
-        story.dateModified ??
-        maintainedStory?.dateModified ??
-        row.publishAt.toISOString().slice(0, 10),
+      dateModified: story.dateModified ?? maintainedStory?.dateModified,
       updatedAt: row.updatedAt.toISOString(),
     };
     const wordCount =
       story.editorialSource === 'editor' || !maintainedStory
         ? getReleaseWordCount(story.dek, story.body)
         : getStoryWordCount(maintainedStory);
-    return wordCount >= MINIMUM_STORY_WORDS ? [scheduledStory] : [];
+    return isPublicEditorialRelease(row.status, row.publishAt, wordCount, now)
+      ? [scheduledStory]
+      : [];
   });
   return {
     stories: getPublishedStories(now, schedule),

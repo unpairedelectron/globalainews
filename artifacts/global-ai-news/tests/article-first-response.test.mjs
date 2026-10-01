@@ -19,6 +19,8 @@ const slugs = {
   scheduled: `first-response-scheduled-${fixtureToken}`,
   draft: `first-response-draft-${fixtureToken}`,
   canceled: `first-response-canceled-${fixtureToken}`,
+  unpublished: `first-response-unpublished-${fixtureToken}`,
+  archived: `first-response-archived-${fixtureToken}`,
 };
 const publishedTitle = 'A live article renders before browser scripts run';
 const publishedDek = 'A temporary publication fixture verifies first-response article metadata and visible content.';
@@ -166,6 +168,8 @@ async function setReleaseStates() {
     (async () => {
       await db.update(editorialReleasesTable).set({ status: "draft" }).where(eq(editorialReleasesTable.slug, process.env.DRAFT_SLUG));
       await db.update(editorialReleasesTable).set({ status: "canceled" }).where(eq(editorialReleasesTable.slug, process.env.CANCELED_SLUG));
+      await db.update(editorialReleasesTable).set({ status: "unpublished" }).where(eq(editorialReleasesTable.slug, process.env.UNPUBLISHED_SLUG));
+      await db.update(editorialReleasesTable).set({ status: "archived" }).where(eq(editorialReleasesTable.slug, process.env.ARCHIVED_SLUG));
       await pool.end();
     })().catch(async (error) => {
       console.error(error);
@@ -182,6 +186,8 @@ async function setReleaseStates() {
         ...process.env,
         DRAFT_SLUG: slugs.draft,
         CANCELED_SLUG: slugs.canceled,
+        UNPUBLISHED_SLUG: slugs.unpublished,
+        ARCHIVED_SLUG: slugs.archived,
       },
       maxBuffer: 2 * 1024 * 1024,
     },
@@ -251,6 +257,73 @@ async function assertNotPublic(slug, label) {
   assert.doesNotMatch(html, /<h1[^>]*>.*(?:draft|scheduled).*<\/h1>/i);
 }
 
+async function assertPublishedOnlyFeeds() {
+  const [contentResponse, metadataResponse, sitemapResponse, feedResponse, apiFeedResponse] =
+    await Promise.all([
+      fetch(`${apiOrigin}/api/newsroom/content`),
+      fetch(`${apiOrigin}/api/newsroom/metadata`),
+      fetch(`${apiOrigin}/sitemap.xml`),
+      fetch(`${apiOrigin}/feed.xml`),
+      fetch(`${apiOrigin}/api/newsroom/feed.xml`),
+    ]);
+  for (const response of [
+    contentResponse,
+    metadataResponse,
+    sitemapResponse,
+    feedResponse,
+    apiFeedResponse,
+  ]) {
+    assert.equal(response.status, 200);
+  }
+
+  const content = await contentResponse.json();
+  const metadata = await metadataResponse.json();
+  const [sitemap, feed, apiFeed] = await Promise.all([
+    sitemapResponse.text(),
+    feedResponse.text(),
+    apiFeedResponse.text(),
+  ]);
+  const publishedSlugs = new Set(content.stories.map((story) => story.slug));
+  const articlePaths = new Set(
+    metadata.routes.filter((route) => route.article).map((route) => route.path),
+  );
+  assert.equal(
+    articlePaths.size,
+    content.stories.length,
+    'article metadata must include every published story and no unpublished story',
+  );
+  for (const story of content.stories) {
+    assert.ok(
+      !story.dateModified || story.dateModified >= story.date,
+      `${story.slug} exposes dateModified before datePublished`,
+    );
+    const route = metadata.routes.find((candidate) => candidate.path === `/article/${story.slug}`);
+    assert.ok(route, `${story.slug} is missing public SEO metadata`);
+    assert.equal(route.lastmod, story.dateModified);
+  }
+  const forbiddenSlugs = [
+    slugs.scheduled,
+    slugs.draft,
+    slugs.canceled,
+    slugs.unpublished,
+    slugs.archived,
+  ];
+
+  assert.ok(publishedSlugs.has(slugs.published), 'published fixture is absent from public content');
+  assert.ok(articlePaths.has(`/article/${slugs.published}`), 'published fixture is absent from metadata');
+  assert.ok(sitemap.includes(`https://www.globalainews.in/article/${slugs.published}/`));
+  assert.ok(feed.includes(`https://www.globalainews.in/article/${slugs.published}/`));
+  assert.ok(apiFeed.includes(`https://www.globalainews.in/article/${slugs.published}/`));
+
+  for (const slug of forbiddenSlugs) {
+    assert.equal(publishedSlugs.has(slug), false, `${slug} leaked into public content`);
+    assert.equal(articlePaths.has(`/article/${slug}`), false, `${slug} leaked into public metadata`);
+    assert.equal(sitemap.includes(`/article/${slug}/`), false, `${slug} leaked into sitemap`);
+    assert.equal(feed.includes(`/article/${slug}/`), false, `${slug} leaked into root RSS`);
+    assert.equal(apiFeed.includes(`/article/${slug}/`), false, `${slug} leaked into API RSS`);
+  }
+}
+
 async function cleanupFixtures() {
   const script = `
     import { inArray } from "drizzle-orm";
@@ -287,6 +360,71 @@ async function testRawArticleResponses() {
   const publicContentResponse = await fetch(`${apiOrigin}/api/newsroom/content`);
   assert.equal(publicContentResponse.status, 200);
   const publicContent = await publicContentResponse.json();
+  assert.deepEqual(
+    Object.keys(publicContent).sort(),
+    [
+      'generatedAt',
+      'source',
+      'stale',
+      'authors',
+      'sources',
+      'evidenceSummaries',
+      'entities',
+      'timelineEvents',
+      'stories',
+      'signals',
+      'industryMap',
+      'indiaIndex',
+      'essays',
+      'askGlobalAnswers',
+    ].sort(),
+  );
+  assert.equal(Object.hasOwn(publicContent, 'schedule'), false);
+  const forbiddenFields = new Set([
+    'schedule',
+    'publishAt',
+    'cadence',
+    'editorialSource',
+    'updatedAt',
+    'position',
+    'editorialStatus',
+    'status',
+    'releaseStatus',
+    'releaseState',
+    'draftState',
+    'isDraft',
+    'isPublished',
+    'workflow',
+    'automation',
+  ]);
+  const assertNoEditorialFields = (value, path = '') => {
+    if (!value || typeof value !== 'object') return;
+    for (const [key, nested] of Object.entries(value)) {
+      assert.equal(forbiddenFields.has(key), false, `private newsroom field leaked at ${path}/${key}`);
+      assertNoEditorialFields(nested, `${path}/${key}`);
+    }
+  };
+  assertNoEditorialFields(publicContent);
+  for (const story of publicContent.stories) {
+    assert.ok(
+      !story.dateModified || story.dateModified >= story.date,
+      `${story.slug} exposes dateModified before datePublished`,
+    );
+  }
+  const citedSourceSlugs = new Set(publicContent.stories.flatMap((story) => story.sources));
+  const returnedSourceSlugs = new Set(publicContent.sources.map((source) => source.slug));
+  assert.deepEqual(
+    [...returnedSourceSlugs].sort(),
+    [...citedSourceSlugs].sort(),
+    'public sources must be limited to sources cited by published articles',
+  );
+  for (const source of publicContent.sources) {
+    assert.deepEqual(
+      Object.keys(source).sort(),
+      ['accessed', 'kind', 'name', 'publisher', 'slug', 'url'].sort(),
+      'public source records must contain only citation fields',
+    );
+  }
 
   const existingStories = publicContent.stories.filter(
     (story) => !Object.values(slugs).includes(story.slug),
@@ -374,6 +512,8 @@ async function testRawArticleResponses() {
   assert.equal(articleSchema.author.name, publicContent.authors.find((author) => author.slug === story.author).name);
   assert.equal(articleSchema.author.url, `https://www.globalainews.in/person/${story.author}/`);
   assert.equal(articleSchema.publisher.name, 'Global AI News');
+  assert.equal(Object.hasOwn(articleSchema, 'dateModified'), false);
+  assert.doesNotMatch(html, /property="article:modified_time"/);
   assert.ok(graph.some((item) => item['@type'] === 'BreadcrumbList'));
 
   const crawlerResponse = await getArticle(
@@ -424,7 +564,10 @@ async function testRawArticleResponses() {
   await assertNotPublic(slugs.scheduled, 'future scheduled article');
   await assertNotPublic(slugs.draft, 'draft article');
   await assertNotPublic(slugs.canceled, 'canceled/unpublished article');
+  await assertNotPublic(slugs.unpublished, 'unpublished article');
+  await assertNotPublic(slugs.archived, 'archived article');
   await assertNotPublic(`missing-article-${fixtureToken}`, 'missing article');
+  await assertPublishedOnlyFeeds();
 }
 
 async function main() {
@@ -443,6 +586,8 @@ async function main() {
     await createRelease(slugs.scheduled, 'A scheduled article fixture', futureAt);
     await createRelease(slugs.draft, 'A draft article fixture', publishedAt);
     await createRelease(slugs.canceled, 'A canceled article fixture', publishedAt);
+    await createRelease(slugs.unpublished, 'An unpublished article fixture', publishedAt);
+    await createRelease(slugs.archived, 'An archived article fixture', publishedAt);
     await setReleaseStates();
 
     await startWeb();

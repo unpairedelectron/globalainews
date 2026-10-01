@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import type { NewsroomContentSnapshot } from './content';
+import { getPublicDateModified, type NewsroomContentSnapshot } from './content';
 import { getCanonicalUrl, getStructuredData, SITE_URL, type SeoMetadata } from './seo-metadata';
 import { SeoPrerender } from './seo-prerender';
 
@@ -61,11 +61,14 @@ export function renderSeoRouteHtml(
     <meta name="twitter:image" content="${imageUrl}" data-global-ai-meta-path="${escapeHtml(metadata.path)}" />
     <meta name="twitter:image:alt" content="${escapeHtml(metadata.imageAlt ?? metadata.title)}" data-global-ai-meta-path="${escapeHtml(metadata.path)}" />`
     : '';
+  const articleDateModified = articleStory
+    ? getPublicDateModified(articleStory)
+    : undefined;
   const articleTags = articleStory
     ? `
     <meta property="article:published_time" content="${escapeHtml(articleStory.date)}" />
-    ${articleStory.dateModified
-      ? `<meta property="article:modified_time" content="${escapeHtml(articleStory.dateModified)}" />`
+    ${articleDateModified
+      ? `<meta property="article:modified_time" content="${escapeHtml(articleDateModified)}" />`
       : ''}
     ${articleAuthor
       ? `<meta property="article:author" content="${escapeHtml(getCanonicalUrl(`/person/${articleAuthor.slug}`))}" />`

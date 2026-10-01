@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuth, useClerk, useUser } from '@clerk/react';
 import { useLocation, useParams, useSearch } from 'wouter';
 import { Link } from '@/components/canonical-link';
-import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, getReaderFacingContentType, getReleaseDraftWordCount, indiaIndex, industryMap, MINIMUM_STORY_WORDS, signals, sources, stories, timelineEvents, type Story } from '@/content';
+import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, getPublicDateModified, getReaderFacingContentType, getReleaseDraftWordCount, indiaIndex, industryMap, MINIMUM_STORY_WORDS, signals, sources, stories, timelineEvents, type Story } from '@/content';
 import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryRow, TimelineList } from '@/components/site';
 import { BRAND_COLORS } from '@/brand';
 import { EditorialSealGlyph } from '@/components/brand-mark';
@@ -162,6 +162,7 @@ export function ArticlePage() {
     .map((sourceSlug) => snapshot.sources.find((item) => item.slug === sourceSlug))
     .filter((source): source is (typeof snapshot.sources)[number] => Boolean(source));
   const missingSourceRecords = story.sources.length - resolvedSources.length;
+  const publicDateModified = getPublicDateModified(story);
   return <Shell>
     <SeoHead article title={`${story.title} — Global AI News`} description={story.dek} path={`/article/${story.slug}`} />
     <main className={`${container} max-w-[1180px]`}>
@@ -176,7 +177,7 @@ export function ArticlePage() {
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             {author ? <span>By <Link data-testid="link-article-author" href={`/person/${author.slug}`} className="font-semibold underline decoration-foreground/30 underline-offset-2 hover:text-primary">{author.name}</Link> · {author.role}</span> : <span data-testid="text-article-author-unavailable">Byline unavailable</span>}
             <span aria-hidden="true">·</span><span>Published <time dateTime={story.date}>{formatEditorialDate(story.date)}</time></span>
-            {story.dateModified && story.dateModified !== story.date && <><span aria-hidden="true">·</span><span>Updated <time dateTime={story.dateModified}>{formatEditorialDate(story.dateModified)}</time></span></>}
+            {publicDateModified && publicDateModified !== story.date && <><span aria-hidden="true">·</span><span>Updated <time dateTime={publicDateModified}>{formatEditorialDate(publicDateModified)}</time></span></>}
             <span aria-hidden="true">·</span><span>{story.readTime}</span>
           </div>
           <div className="flex gap-2">

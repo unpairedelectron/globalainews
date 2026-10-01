@@ -5,31 +5,32 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { NewsroomContentAskGlobalAnswersItem } from './newsroomContentAskGlobalAnswersItem';
-import type { NewsroomContentAuthorsItem } from './newsroomContentAuthorsItem';
-import type { NewsroomContentEntitiesItem } from './newsroomContentEntitiesItem';
-import type { NewsroomContentEssaysItem } from './newsroomContentEssaysItem';
 import type { NewsroomContentEvidenceSummaries } from './newsroomContentEvidenceSummaries';
-import type { NewsroomContentIndiaIndexItem } from './newsroomContentIndiaIndexItem';
-import type { NewsroomContentIndustryMapItem } from './newsroomContentIndustryMapItem';
-import type { NewsroomContentSignalsItem } from './newsroomContentSignalsItem';
-import type { NewsroomContentSourcesItem } from './newsroomContentSourcesItem';
-import type { NewsroomContentStoriesItem } from './newsroomContentStoriesItem';
-import type { NewsroomContentTimelineEventsItem } from './newsroomContentTimelineEventsItem';
+import type { PublicNewsroomAskGlobalAnswer } from './publicNewsroomAskGlobalAnswer';
+import type { PublicNewsroomAuthor } from './publicNewsroomAuthor';
+import type { PublicNewsroomEntity } from './publicNewsroomEntity';
+import type { PublicNewsroomEssay } from './publicNewsroomEssay';
+import type { PublicNewsroomIndiaIndexMetric } from './publicNewsroomIndiaIndexMetric';
+import type { PublicNewsroomIndustryMapNode } from './publicNewsroomIndustryMapNode';
+import type { PublicNewsroomSignal } from './publicNewsroomSignal';
+import type { PublicNewsroomSource } from './publicNewsroomSource';
+import type { PublicNewsroomStory } from './publicNewsroomStory';
+import type { PublicNewsroomTimelineEvent } from './publicNewsroomTimelineEvent';
 
 export interface NewsroomContent {
-  generatedAt: Date;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]+)?Z$ */
+  generatedAt: string;
   source: string;
   stale: boolean;
-  authors: NewsroomContentAuthorsItem[];
-  sources: NewsroomContentSourcesItem[];
+  authors: PublicNewsroomAuthor[];
+  sources: PublicNewsroomSource[];
   evidenceSummaries: NewsroomContentEvidenceSummaries;
-  entities: NewsroomContentEntitiesItem[];
-  timelineEvents: NewsroomContentTimelineEventsItem[];
-  stories: NewsroomContentStoriesItem[];
-  signals: NewsroomContentSignalsItem[];
-  industryMap: NewsroomContentIndustryMapItem[];
-  indiaIndex: NewsroomContentIndiaIndexItem[];
-  essays: NewsroomContentEssaysItem[];
-  askGlobalAnswers: NewsroomContentAskGlobalAnswersItem[];
+  entities: PublicNewsroomEntity[];
+  timelineEvents: PublicNewsroomTimelineEvent[];
+  stories: PublicNewsroomStory[];
+  signals: PublicNewsroomSignal[];
+  industryMap: PublicNewsroomIndustryMapNode[];
+  indiaIndex: PublicNewsroomIndiaIndexMetric[];
+  essays: PublicNewsroomEssay[];
+  askGlobalAnswers: PublicNewsroomAskGlobalAnswer[];
 }

@@ -21,21 +21,160 @@ export const HealthCheckResponse = zod.object({
  * Returns the maintained editorial content used by the public publication.
  * @summary Get the current newsroom content snapshot
  */
+export const getNewsroomContentResponseGeneratedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]+)?Z$');
+export const getNewsroomContentResponseSourcesItemAccessedRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseTimelineEventsItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseStoriesItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseStoriesItemDateModifiedRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseEssaysItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseAskGlobalAnswersItemAsOfRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+
+
 export const GetNewsroomContentResponse = zod.object({
-  "generatedAt": zod.coerce.date(),
+  "generatedAt": zod.string().regex(getNewsroomContentResponseGeneratedAtRegExp),
   "source": zod.string(),
   "stale": zod.boolean(),
-  "authors": zod.array(zod.record(zod.string(), zod.unknown())),
-  "sources": zod.array(zod.record(zod.string(), zod.unknown())),
-  "evidenceSummaries": zod.record(zod.string(), zod.unknown()),
-  "entities": zod.array(zod.record(zod.string(), zod.unknown())),
-  "timelineEvents": zod.array(zod.record(zod.string(), zod.unknown())),
-  "stories": zod.array(zod.record(zod.string(), zod.unknown())),
-  "signals": zod.array(zod.record(zod.string(), zod.unknown())),
-  "industryMap": zod.array(zod.record(zod.string(), zod.unknown())),
-  "indiaIndex": zod.array(zod.record(zod.string(), zod.unknown())),
-  "essays": zod.array(zod.record(zod.string(), zod.unknown())),
-  "askGlobalAnswers": zod.array(zod.record(zod.string(), zod.unknown()))
+  "authors": zod.array(zod.object({
+  "slug": zod.string(),
+  "name": zod.string(),
+  "role": zod.string(),
+  "bio": zod.string(),
+  "location": zod.string(),
+  "initials": zod.string()
+})),
+  "sources": zod.array(zod.object({
+  "slug": zod.string(),
+  "name": zod.string(),
+  "publisher": zod.string(),
+  "kind": zod.enum(['primary', 'independent', 'dataset', 'filing', 'interview']),
+  "url": zod.string().url(),
+  "accessed": zod.string().regex(getNewsroomContentResponseSourcesItemAccessedRegExp)
+})),
+  "evidenceSummaries": zod.record(zod.string(), zod.object({
+  "primarySources": zod.number().int(),
+  "independentConfirmations": zod.number().int(),
+  "confidence": zod.enum(['HIGH', 'MEDIUM', 'DEVELOPING']),
+  "note": zod.string()
+})),
+  "entities": zod.array(zod.object({
+  "slug": zod.string(),
+  "name": zod.string(),
+  "kind": zod.enum(['company', 'lab', 'model', 'person', 'technology', 'policy']),
+  "strapline": zod.string(),
+  "overview": zod.string(),
+  "headquarters": zod.string().optional(),
+  "founded": zod.string().optional(),
+  "relatedOrganizations": zod.array(zod.string()),
+  "keyMetrics": zod.array(zod.object({
+  "label": zod.string(),
+  "value": zod.string(),
+  "context": zod.string()
+})),
+  "latestDevelopments": zod.array(zod.string()),
+  "timeline": zod.array(zod.string()),
+  "signals": zod.array(zod.string()),
+  "recentStories": zod.array(zod.string())
+})),
+  "timelineEvents": zod.array(zod.object({
+  "slug": zod.string(),
+  "date": zod.string().regex(getNewsroomContentResponseTimelineEventsItemDateRegExp),
+  "title": zod.string(),
+  "description": zod.string(),
+  "entities": zod.array(zod.string()),
+  "story": zod.string().optional()
+})),
+  "stories": zod.array(zod.object({
+  "slug": zod.string(),
+  "category": zod.enum(['Breakthroughs', 'Signals', 'India Watch', 'The Edge', 'Field Notes', 'Infrastructure', 'Policy']),
+  "title": zod.string(),
+  "dek": zod.string(),
+  "body": zod.array(zod.object({
+  "heading": zod.string(),
+  "paragraphs": zod.array(zod.string()),
+  "pullQuote": zod.string().optional()
+})),
+  "date": zod.string().regex(getNewsroomContentResponseStoriesItemDateRegExp),
+  "dateModified": zod.string().regex(getNewsroomContentResponseStoriesItemDateModifiedRegExp).optional(),
+  "readTime": zod.string(),
+  "author": zod.string(),
+  "evidence": zod.string(),
+  "evidenceSummary": zod.object({
+  "primarySources": zod.number().int(),
+  "independentConfirmations": zod.number().int(),
+  "confidence": zod.enum(['HIGH', 'MEDIUM', 'DEVELOPING']),
+  "note": zod.string()
+}),
+  "classification": zod.enum(['reported', 'analysis', 'opinion', 'synthesis']),
+  "entities": zod.array(zod.string()),
+  "timeline": zod.array(zod.string()),
+  "relatedStories": zod.array(zod.string()),
+  "imageTreatment": zod.object({
+  "type": zod.enum(['editorial-abstract', 'field-photograph', 'data-graphic', 'portrait']),
+  "alt": zod.string(),
+  "palette": zod.string(),
+  "caption": zod.string()
+}),
+  "topic": zod.string(),
+  "sources": zod.array(zod.string()),
+  "bottomLine": zod.string(),
+  "whyItMatters": zod.string(),
+  "keyTakeaways": zod.array(zod.string()),
+  "whatChanges": zod.string()
+})),
+  "signals": zod.array(zod.object({
+  "slug": zod.string(),
+  "label": zod.string(),
+  "topic": zod.string(),
+  "direction": zod.enum(['up', 'down', 'steady']),
+  "impact": zod.enum(['low', 'medium', 'high']),
+  "change": zod.string(),
+  "summary": zod.string(),
+  "entities": zod.array(zod.string()),
+  "stories": zod.array(zod.string()),
+  "updated": zod.string()
+})),
+  "industryMap": zod.array(zod.object({
+  "slug": zod.string(),
+  "name": zod.string(),
+  "layer": zod.enum(['Frontier Labs', 'Infrastructure', 'Models', 'Agents', 'Applications', 'Capital', 'Policy']),
+  "description": zod.string(),
+  "entities": zod.array(zod.string()),
+  "pressure": zod.string(),
+  "x": zod.number(),
+  "y": zod.number()
+})),
+  "indiaIndex": zod.array(zod.object({
+  "slug": zod.string(),
+  "label": zod.string(),
+  "value": zod.string(),
+  "change": zod.string(),
+  "context": zod.string(),
+  "source": zod.string()
+})),
+  "essays": zod.array(zod.object({
+  "slug": zod.string(),
+  "title": zod.string(),
+  "dek": zod.string(),
+  "author": zod.string(),
+  "date": zod.string().regex(getNewsroomContentResponseEssaysItemDateRegExp),
+  "readTime": zod.string(),
+  "themes": zod.array(zod.string()),
+  "body": zod.array(zod.object({
+  "heading": zod.string(),
+  "paragraphs": zod.array(zod.string()),
+  "pullQuote": zod.string().optional()
+}))
+})),
+  "askGlobalAnswers": zod.array(zod.object({
+  "slug": zod.string(),
+  "question": zod.string(),
+  "answer": zod.string(),
+  "citedStories": zod.array(zod.string()),
+  "citedSources": zod.array(zod.string()),
+  "citedTimeline": zod.array(zod.string()),
+  "citedEntities": zod.array(zod.string()),
+  "asOf": zod.string().regex(getNewsroomContentResponseAskGlobalAnswersItemAsOfRegExp)
+}))
 })
 
 
@@ -129,7 +268,7 @@ export const GetNewsroomReleasesResponseItem = zod.object({
   "dek": zod.string(),
   "publishAt": zod.coerce.date(),
   "cadence": zod.enum(['daily', 'weekly']),
-  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "status": zod.enum(['draft', 'scheduled', 'published', 'unpublished', 'archived', 'canceled']),
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
@@ -175,7 +314,7 @@ export const CreateNewsroomReleaseResponse = zod.object({
   "dek": zod.string(),
   "publishAt": zod.coerce.date(),
   "cadence": zod.enum(['daily', 'weekly']),
-  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "status": zod.enum(['draft', 'scheduled', 'published', 'unpublished', 'archived', 'canceled']),
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
@@ -228,7 +367,7 @@ export const ReorderNewsroomReleasesResponseItem = zod.object({
   "dek": zod.string(),
   "publishAt": zod.coerce.date(),
   "cadence": zod.enum(['daily', 'weekly']),
-  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "status": zod.enum(['draft', 'scheduled', 'published', 'unpublished', 'archived', 'canceled']),
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
@@ -272,7 +411,7 @@ export const UpdateNewsroomReleaseResponse = zod.object({
   "dek": zod.string(),
   "publishAt": zod.coerce.date(),
   "cadence": zod.enum(['daily', 'weekly']),
-  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "status": zod.enum(['draft', 'scheduled', 'published', 'unpublished', 'archived', 'canceled']),
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
@@ -296,7 +435,7 @@ export const CancelNewsroomReleaseResponse = zod.object({
   "dek": zod.string(),
   "publishAt": zod.coerce.date(),
   "cadence": zod.enum(['daily', 'weekly']),
-  "status": zod.enum(['scheduled', 'published', 'canceled']),
+  "status": zod.enum(['draft', 'scheduled', 'published', 'unpublished', 'archived', 'canceled']),
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),

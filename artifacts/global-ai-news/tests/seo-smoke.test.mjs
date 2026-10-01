@@ -2494,13 +2494,35 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
     const slug = route.split('/')[2];
     const expectedStory = stories.find((story) => story.slug === slug);
     const expectedAuthor = expectedStory && authors.find((author) => author.slug === expectedStory.author);
+    const expectedModifiedDate =
+      expectedStory?.dateModified &&
+      expectedStory.dateModified >= expectedStory.date
+        ? expectedStory.dateModified
+        : undefined;
     assert.equal(articleData.image, metaContent(document, 'property', 'og:image'), `${route}: JSON-LD image does not match social preview`);
     assert.equal(articleData.author['@type'], 'Person', `${route}: JSON-LD author should identify the maintained story author`);
     assert.ok(expectedStory && expectedAuthor, `${route}: maintained story record is missing for JSON-LD verification`);
     assert.equal(articleData.author.name, expectedAuthor.name, `${route}: JSON-LD author drifted from the maintained story record`);
     assert.equal(articleData.author.url, `${site}/person/${expectedAuthor.slug}/`, `${route}: JSON-LD author URL drifted from the maintained story record`);
     assert.equal(articleData.datePublished, expectedStory.date, `${route}: JSON-LD publication date drifted from the maintained story record`);
-    assert.equal(articleData.dateModified, expectedStory.dateModified ?? expectedStory.date, `${route}: JSON-LD update date drifted from the published story record`);
+    assert.equal(articleData.dateModified, expectedModifiedDate, `${route}: JSON-LD modification date is not publication-safe`);
+    const expectedVisibleUpdatedDate =
+      expectedModifiedDate && expectedModifiedDate !== expectedStory.date
+        ? expectedModifiedDate
+        : undefined;
+    const visibleUpdatedDate = document.match(
+      /\bUpdated\s*<time\b[^>]*datetime=["']([^"']+)["']/i,
+    )?.[1];
+    assert.equal(
+      visibleUpdatedDate,
+      expectedVisibleUpdatedDate,
+      `${route}: visible updated date is not publication-safe`,
+    );
+    assert.equal(
+      metaContent(document, 'property', 'article:modified_time'),
+      expectedModifiedDate ?? '',
+      `${route}: article modified-time metadata is not publication-safe`,
+    );
     assert.equal(articleData.articleSection, expectedStory.category, `${route}: JSON-LD article section drifted from the maintained story record`);
     assert.equal(articleData.mainEntityOfPage['@id'], `${site}${route}/`, `${route}: JSON-LD main entity does not match the canonical article URL`);
     assert.equal(articleData.publisher.logo.url, `${site}/logo.svg`, `${route}: JSON-LD publisher logo is missing`);
@@ -2737,10 +2759,17 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     const slug = articleRoute.split('/')[2];
     const story = newsroomContent.stories.find((candidate) => candidate.slug === slug);
     const metadata = metadataManifest.routes.find((candidate) => candidate.path === articleRoute);
-    assert.ok(entry?.lastmod, `${articleRoute}: sitemap is missing lastmod`);
+    const expectedLastmod =
+      story?.dateModified && story.dateModified >= story.date
+        ? story.dateModified
+        : undefined;
     assert.ok(entry.images.length > 0, `${articleRoute}: sitemap is missing its article image`);
-    assert.equal(metadata?.lastmod, story?.dateModified ?? story?.date, `${articleRoute}: fresh metadata manifest has the wrong lastmod`);
-    assert.equal(entry.lastmod, metadata?.lastmod, `${articleRoute}: static sitemap differs from the fresh metadata manifest`);
+    assert.equal(metadata?.lastmod, expectedLastmod, `${articleRoute}: fresh metadata manifest has an invalid lastmod`);
+    assert.equal(
+      entry.lastmod ?? undefined,
+      metadata?.lastmod,
+      `${articleRoute}: static sitemap differs from the fresh metadata manifest`,
+    );
   }
   assert.ok(!routes.includes('/insights'), 'internal editor workspace must not appear in the sitemap');
 

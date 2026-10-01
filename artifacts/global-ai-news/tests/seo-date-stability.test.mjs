@@ -1,7 +1,15 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { authors, getPublishedStories } from '../src/content.ts';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import {
+  authors,
+  getPublishedStories,
+  getPublicDateModified,
+  sources,
+} from '../src/content.ts';
 import { getSeoMetadata, getSeoMetadataManifest, getStructuredData } from '../src/seo-metadata.ts';
+import { SeoPrerender } from '../src/seo-prerender.tsx';
 
 const explicitArticleDates = {
   'reliability-is-the-new-ai-moat': '2026-09-21',
@@ -28,15 +36,62 @@ test('article dates stay editorial when identical content is built on different 
     const story = stories.find((candidate) => candidate.slug === slug);
     const route = `/article/${slug}`;
     const metadata = firstManifest.routes.find((candidate) => candidate.path === route);
+    const publicModifiedDate =
+      story?.dateModified && story.dateModified >= story.date
+        ? story.dateModified
+        : undefined;
 
     assert.ok(story, `${slug}: maintained story is missing`);
     assert.equal(story.dateModified, expectedDate, `${slug}: editorial modification date changed`);
-    assert.equal(metadata?.lastmod, expectedDate, `${slug}: manifest lastmod drifted`);
+    assert.equal(metadata?.lastmod, publicModifiedDate, `${slug}: manifest lastmod is not publication-safe`);
 
     const articleData = JSON.parse(getStructuredData(metadata, stories))
       ['@graph']
       .find((entry) => entry['@type'] === 'NewsArticle');
-    assert.equal(articleData.dateModified, expectedDate, `${slug}: JSON-LD dateModified drifted`);
+    assert.equal(articleData.dateModified, publicModifiedDate, `${slug}: JSON-LD dateModified is not publication-safe`);
+    assert.equal(
+      getPublicDateModified(story),
+      publicModifiedDate,
+      `${slug}: shared public date helper is not publication-safe`,
+    );
+
+    if (story.dateModified && !publicModifiedDate) {
+      const snapshot = {
+        authors,
+        sources,
+        evidenceSummaries: {},
+        entities: [],
+        timelineEvents: [],
+        stories,
+        signals: [],
+        industryMap: [],
+        indiaIndex: [],
+        essays: [],
+        askGlobalAnswers: [],
+      };
+      const html = renderToStaticMarkup(createElement(SeoPrerender, {
+        route,
+        metadata,
+        snapshot,
+      }));
+      assert.doesNotMatch(
+        html,
+        /\bUpdated\s*<time\b/i,
+        `${slug}: first-response article markup showed a pre-publication updated date`,
+      );
+    }
+  }
+
+  for (const story of stories.filter((candidate) => !candidate.dateModified)) {
+    const metadata = firstManifest.routes.find(
+      (candidate) => candidate.path === `/article/${story.slug}`,
+    );
+    const articleData = JSON.parse(getStructuredData(metadata, stories))
+      ['@graph']
+      .find((entry) => entry['@type'] === 'NewsArticle');
+
+    assert.equal(metadata?.lastmod, undefined, `${story.slug}: manifest invented a modification date`);
+    assert.equal(articleData.dateModified, undefined, `${story.slug}: JSON-LD invented a modification date`);
   }
 });
 

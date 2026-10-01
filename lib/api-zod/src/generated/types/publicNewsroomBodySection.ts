@@ -6,4 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type NewsroomContentTimelineEventsItem = { [key: string]: unknown };
+export interface PublicNewsroomBodySection {
+  heading: string;
+  paragraphs: string[];
+  pullQuote?: string;
+}

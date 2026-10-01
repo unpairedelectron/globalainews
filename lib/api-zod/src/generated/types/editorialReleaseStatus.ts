@@ -10,7 +10,10 @@ export type EditorialReleaseStatus = typeof EditorialReleaseStatus[keyof typeof 
 
 
 export const EditorialReleaseStatus = {
+  draft: 'draft',
   scheduled: 'scheduled',
   published: 'published',
+  unpublished: 'unpublished',
+  archived: 'archived',
   canceled: 'canceled',
 } as const;

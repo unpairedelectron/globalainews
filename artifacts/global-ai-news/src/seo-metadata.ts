@@ -1,4 +1,4 @@
-import { authors, entities, findEntity, findStory, findTimeline, getPublishedStories, stories, timelineEvents, type Author, type NewsroomContentSnapshot, type Story } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, stories, timelineEvents, type Author, type NewsroomContentSnapshot, type Story } from './content';
 
 export const SITE_URL = 'https://www.globalainews.in';
 
@@ -199,7 +199,7 @@ export function getArticleSeoMetadata(
     title: articleTitle(story.title),
     description: getArticleDescription(story),
     path: `/article/${story.slug}`,
-    lastmod: story.dateModified ?? story.date,
+    lastmod: getPublicDateModified(story),
     article: true,
     ...(isMaintainedStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
     imagePath,
@@ -292,7 +292,7 @@ export function getSeoMetadataManifest(
       const metadata = getSeoMetadata(path, publishedStories);
       return {
         ...metadata,
-        lastmod: metadata.lastmod ?? generatedDate,
+        lastmod: metadata.lastmod ?? (metadata.article ? undefined : generatedDate),
       };
     });
 
@@ -318,6 +318,7 @@ export function getStructuredData(
   const profileAuthor = authorSlug
     ? authorRecords.find((author) => author.slug === authorSlug)
     : undefined;
+  const articleDateModified = articleStory ? getPublicDateModified(articleStory) : undefined;
   const publisher = {
     '@type': 'Organization',
     name: 'Global AI News',
@@ -341,7 +342,7 @@ export function getStructuredData(
               ? {
                   articleSection: articleStory.category,
                   datePublished: articleStory.date,
-                  dateModified: articleStory.dateModified ?? articleStory.date,
+                    ...(articleDateModified ? { dateModified: articleDateModified } : {}),
                 }
               : {}),
             ...(articleAuthor

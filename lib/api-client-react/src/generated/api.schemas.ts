@@ -35,43 +35,275 @@ export interface NewsletterSubscription {
   message: string;
 }
 
-export type NewsroomContentAuthorsItem = { [key: string]: unknown };
+export interface PublicNewsroomAuthor {
+  slug: string;
+  name: string;
+  role: string;
+  bio: string;
+  location: string;
+  initials: string;
+}
 
-export type NewsroomContentSourcesItem = { [key: string]: unknown };
+export type PublicNewsroomSourceKind = typeof PublicNewsroomSourceKind[keyof typeof PublicNewsroomSourceKind];
 
-export type NewsroomContentEvidenceSummaries = { [key: string]: unknown };
 
-export type NewsroomContentEntitiesItem = { [key: string]: unknown };
+export const PublicNewsroomSourceKind = {
+  primary: 'primary',
+  independent: 'independent',
+  dataset: 'dataset',
+  filing: 'filing',
+  interview: 'interview',
+} as const;
 
-export type NewsroomContentTimelineEventsItem = { [key: string]: unknown };
+export interface PublicNewsroomSource {
+  slug: string;
+  name: string;
+  publisher: string;
+  kind: PublicNewsroomSourceKind;
+  url: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  accessed: string;
+}
 
-export type NewsroomContentStoriesItem = { [key: string]: unknown };
+export type PublicNewsroomEvidenceSummaryConfidence = typeof PublicNewsroomEvidenceSummaryConfidence[keyof typeof PublicNewsroomEvidenceSummaryConfidence];
 
-export type NewsroomContentSignalsItem = { [key: string]: unknown };
 
-export type NewsroomContentIndustryMapItem = { [key: string]: unknown };
+export const PublicNewsroomEvidenceSummaryConfidence = {
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  DEVELOPING: 'DEVELOPING',
+} as const;
 
-export type NewsroomContentIndiaIndexItem = { [key: string]: unknown };
+export interface PublicNewsroomEvidenceSummary {
+  primarySources: number;
+  independentConfirmations: number;
+  confidence: PublicNewsroomEvidenceSummaryConfidence;
+  note: string;
+}
 
-export type NewsroomContentEssaysItem = { [key: string]: unknown };
+export interface PublicNewsroomBodySection {
+  heading: string;
+  paragraphs: string[];
+  pullQuote?: string;
+}
 
-export type NewsroomContentAskGlobalAnswersItem = { [key: string]: unknown };
+export type PublicNewsroomImageTreatmentType = typeof PublicNewsroomImageTreatmentType[keyof typeof PublicNewsroomImageTreatmentType];
+
+
+export const PublicNewsroomImageTreatmentType = {
+  'editorial-abstract': 'editorial-abstract',
+  'field-photograph': 'field-photograph',
+  'data-graphic': 'data-graphic',
+  portrait: 'portrait',
+} as const;
+
+export interface PublicNewsroomImageTreatment {
+  type: PublicNewsroomImageTreatmentType;
+  alt: string;
+  palette: string;
+  caption: string;
+}
+
+export interface PublicNewsroomTimelineEvent {
+  slug: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  date: string;
+  title: string;
+  description: string;
+  entities: string[];
+  story?: string;
+}
+
+export type PublicNewsroomEntityKind = typeof PublicNewsroomEntityKind[keyof typeof PublicNewsroomEntityKind];
+
+
+export const PublicNewsroomEntityKind = {
+  company: 'company',
+  lab: 'lab',
+  model: 'model',
+  person: 'person',
+  technology: 'technology',
+  policy: 'policy',
+} as const;
+
+export type PublicNewsroomEntityKeyMetricsItem = {
+  label: string;
+  value: string;
+  context: string;
+};
+
+export interface PublicNewsroomEntity {
+  slug: string;
+  name: string;
+  kind: PublicNewsroomEntityKind;
+  strapline: string;
+  overview: string;
+  headquarters?: string;
+  founded?: string;
+  relatedOrganizations: string[];
+  keyMetrics: PublicNewsroomEntityKeyMetricsItem[];
+  latestDevelopments: string[];
+  timeline: string[];
+  signals: string[];
+  recentStories: string[];
+}
+
+export type PublicNewsroomStoryCategory = typeof PublicNewsroomStoryCategory[keyof typeof PublicNewsroomStoryCategory];
+
+
+export const PublicNewsroomStoryCategory = {
+  Breakthroughs: 'Breakthroughs',
+  Signals: 'Signals',
+  India_Watch: 'India Watch',
+  The_Edge: 'The Edge',
+  Field_Notes: 'Field Notes',
+  Infrastructure: 'Infrastructure',
+  Policy: 'Policy',
+} as const;
+
+export type PublicNewsroomStoryClassification = typeof PublicNewsroomStoryClassification[keyof typeof PublicNewsroomStoryClassification];
+
+
+export const PublicNewsroomStoryClassification = {
+  reported: 'reported',
+  analysis: 'analysis',
+  opinion: 'opinion',
+  synthesis: 'synthesis',
+} as const;
+
+export interface PublicNewsroomStory {
+  slug: string;
+  category: PublicNewsroomStoryCategory;
+  title: string;
+  dek: string;
+  body: PublicNewsroomBodySection[];
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  date: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  dateModified?: string;
+  readTime: string;
+  author: string;
+  evidence: string;
+  evidenceSummary: PublicNewsroomEvidenceSummary;
+  classification: PublicNewsroomStoryClassification;
+  entities: string[];
+  timeline: string[];
+  relatedStories: string[];
+  imageTreatment: PublicNewsroomImageTreatment;
+  topic: string;
+  sources: string[];
+  bottomLine: string;
+  whyItMatters: string;
+  keyTakeaways: string[];
+  whatChanges: string;
+}
+
+export type PublicNewsroomSignalDirection = typeof PublicNewsroomSignalDirection[keyof typeof PublicNewsroomSignalDirection];
+
+
+export const PublicNewsroomSignalDirection = {
+  up: 'up',
+  down: 'down',
+  steady: 'steady',
+} as const;
+
+export type PublicNewsroomSignalImpact = typeof PublicNewsroomSignalImpact[keyof typeof PublicNewsroomSignalImpact];
+
+
+export const PublicNewsroomSignalImpact = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+} as const;
+
+export interface PublicNewsroomSignal {
+  slug: string;
+  label: string;
+  topic: string;
+  direction: PublicNewsroomSignalDirection;
+  impact: PublicNewsroomSignalImpact;
+  change: string;
+  summary: string;
+  entities: string[];
+  stories: string[];
+  updated: string;
+}
+
+export type PublicNewsroomIndustryMapNodeLayer = typeof PublicNewsroomIndustryMapNodeLayer[keyof typeof PublicNewsroomIndustryMapNodeLayer];
+
+
+export const PublicNewsroomIndustryMapNodeLayer = {
+  Frontier_Labs: 'Frontier Labs',
+  Infrastructure: 'Infrastructure',
+  Models: 'Models',
+  Agents: 'Agents',
+  Applications: 'Applications',
+  Capital: 'Capital',
+  Policy: 'Policy',
+} as const;
+
+export interface PublicNewsroomIndustryMapNode {
+  slug: string;
+  name: string;
+  layer: PublicNewsroomIndustryMapNodeLayer;
+  description: string;
+  entities: string[];
+  pressure: string;
+  x: number;
+  y: number;
+}
+
+export interface PublicNewsroomIndiaIndexMetric {
+  slug: string;
+  label: string;
+  value: string;
+  change: string;
+  context: string;
+  source: string;
+}
+
+export interface PublicNewsroomEssay {
+  slug: string;
+  title: string;
+  dek: string;
+  author: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  date: string;
+  readTime: string;
+  themes: string[];
+  body: PublicNewsroomBodySection[];
+}
+
+export interface PublicNewsroomAskGlobalAnswer {
+  slug: string;
+  question: string;
+  answer: string;
+  citedStories: string[];
+  citedSources: string[];
+  citedTimeline: string[];
+  citedEntities: string[];
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  asOf: string;
+}
+
+export type NewsroomContentEvidenceSummaries = {[key: string]: PublicNewsroomEvidenceSummary};
 
 export interface NewsroomContent {
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]+)?Z$ */
   generatedAt: string;
   source: string;
   stale: boolean;
-  authors: NewsroomContentAuthorsItem[];
-  sources: NewsroomContentSourcesItem[];
+  authors: PublicNewsroomAuthor[];
+  sources: PublicNewsroomSource[];
   evidenceSummaries: NewsroomContentEvidenceSummaries;
-  entities: NewsroomContentEntitiesItem[];
-  timelineEvents: NewsroomContentTimelineEventsItem[];
-  stories: NewsroomContentStoriesItem[];
-  signals: NewsroomContentSignalsItem[];
-  industryMap: NewsroomContentIndustryMapItem[];
-  indiaIndex: NewsroomContentIndiaIndexItem[];
-  essays: NewsroomContentEssaysItem[];
-  askGlobalAnswers: NewsroomContentAskGlobalAnswersItem[];
+  entities: PublicNewsroomEntity[];
+  timelineEvents: PublicNewsroomTimelineEvent[];
+  stories: PublicNewsroomStory[];
+  signals: PublicNewsroomSignal[];
+  industryMap: PublicNewsroomIndustryMapNode[];
+  indiaIndex: PublicNewsroomIndiaIndexMetric[];
+  essays: PublicNewsroomEssay[];
+  askGlobalAnswers: PublicNewsroomAskGlobalAnswer[];
 }
 
 export interface EditorialAutomationStatus { [key: string]: unknown }
@@ -89,8 +321,11 @@ export type EditorialReleaseStatus = typeof EditorialReleaseStatus[keyof typeof 
 
 
 export const EditorialReleaseStatus = {
+  draft: 'draft',
   scheduled: 'scheduled',
   published: 'published',
+  unpublished: 'unpublished',
+  archived: 'archived',
   canceled: 'canceled',
 } as const;
 
