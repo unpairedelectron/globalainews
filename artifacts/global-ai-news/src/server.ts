@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 
 import { fetchNewsroomContentSnapshot, renderArticleHtml } from './server/article-html';
 
@@ -24,6 +24,52 @@ if (!Number.isInteger(port) || port <= 0 || port > 65_535) {
 
 const app = express();
 app.disable('x-powered-by');
+
+function proxyNewsroomXmlDocument(apiPath: string, defaultContentType: string) {
+  return async (_request: Request, response: Response): Promise<void> => {
+    const configuredOrigin = process.env.NEWSROOM_API_ORIGIN;
+    if (!configuredOrigin) {
+      response.status(503).type('text/plain').send('Newsroom document temporarily unavailable.');
+      return;
+    }
+
+    let endpoint: URL;
+    try {
+      const configuredUrl = new URL(configuredOrigin);
+      if (configuredUrl.protocol !== 'http:' && configuredUrl.protocol !== 'https:') {
+        throw new Error('Unsupported newsroom API protocol.');
+      }
+      endpoint = new URL(apiPath, configuredUrl.origin);
+    } catch {
+      response.status(503).type('text/plain').send('Newsroom document temporarily unavailable.');
+      return;
+    }
+
+    try {
+      const upstream = await fetch(endpoint, {
+        headers: { accept: defaultContentType },
+        signal: AbortSignal.timeout(10_000),
+      });
+      const body = await upstream.text();
+      response
+        .status(upstream.status)
+        .set('Content-Type', upstream.headers.get('content-type') ?? defaultContentType)
+        .set('Cache-Control', upstream.headers.get('cache-control') ?? 'no-store')
+        .send(body);
+    } catch (error) {
+      process.stderr.write(
+        `Newsroom XML proxy failed: ${error instanceof Error ? error.message : 'unknown error'}\n`,
+      );
+      response.status(503).type('text/plain').send('Newsroom document temporarily unavailable.');
+    }
+  };
+}
+
+app.get('/feed.xml', proxyNewsroomXmlDocument('/api/newsroom/feed.xml', 'application/rss+xml'));
+app.get('/sitemap.xml', proxyNewsroomXmlDocument('/api/newsroom/sitemap.xml', 'application/xml'));
+app.get('/contact', (_request, response) => {
+  response.redirect(308, '/contact-us');
+});
 
 app.use((request, response, next) => {
   const requestUrl = new URL(request.originalUrl, 'http://localhost');

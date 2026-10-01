@@ -258,31 +258,48 @@ async function assertNotPublic(slug, label) {
 }
 
 async function assertPublishedOnlyFeeds() {
-  const [contentResponse, metadataResponse, sitemapResponse, feedResponse, apiFeedResponse] =
-    await Promise.all([
-      fetch(`${apiOrigin}/api/newsroom/content`),
-      fetch(`${apiOrigin}/api/newsroom/metadata`),
-      fetch(`${apiOrigin}/sitemap.xml`),
-      fetch(`${apiOrigin}/feed.xml`),
-      fetch(`${apiOrigin}/api/newsroom/feed.xml`),
-    ]);
+  const [
+    contentResponse,
+    metadataResponse,
+    sitemapResponse,
+    feedResponse,
+    apiFeedResponse,
+    webSitemapResponse,
+    webFeedResponse,
+  ] = await Promise.all([
+    fetch(`${apiOrigin}/api/newsroom/content`),
+    fetch(`${apiOrigin}/api/newsroom/metadata`),
+    fetch(`${apiOrigin}/sitemap.xml`),
+    fetch(`${apiOrigin}/feed.xml`),
+    fetch(`${apiOrigin}/api/newsroom/feed.xml`),
+    fetch(`${webOrigin}/sitemap.xml`),
+    fetch(`${webOrigin}/feed.xml`),
+  ]);
   for (const response of [
     contentResponse,
     metadataResponse,
     sitemapResponse,
     feedResponse,
     apiFeedResponse,
+    webSitemapResponse,
+    webFeedResponse,
   ]) {
     assert.equal(response.status, 200);
   }
 
   const content = await contentResponse.json();
   const metadata = await metadataResponse.json();
-  const [sitemap, feed, apiFeed] = await Promise.all([
+  const [sitemap, feed, apiFeed, webSitemap, webFeed] = await Promise.all([
     sitemapResponse.text(),
     feedResponse.text(),
     apiFeedResponse.text(),
+    webSitemapResponse.text(),
+    webFeedResponse.text(),
   ]);
+  assert.match(webSitemapResponse.headers.get('content-type') ?? '', /application\/xml/i);
+  assert.match(webFeedResponse.headers.get('content-type') ?? '', /application\/rss\+xml/i);
+  assert.equal(webSitemap, sitemap, 'web sitemap must proxy the current API sitemap');
+  assert.equal(webFeed, apiFeed, 'web RSS must proxy the current API feed');
   const publishedSlugs = new Set(content.stories.map((story) => story.slug));
   const articlePaths = new Set(
     metadata.routes.filter((route) => route.article).map((route) => route.path),
@@ -321,7 +338,21 @@ async function assertPublishedOnlyFeeds() {
     assert.equal(sitemap.includes(`/article/${slug}/`), false, `${slug} leaked into sitemap`);
     assert.equal(feed.includes(`/article/${slug}/`), false, `${slug} leaked into root RSS`);
     assert.equal(apiFeed.includes(`/article/${slug}/`), false, `${slug} leaked into API RSS`);
+    assert.equal(webSitemap.includes(`/article/${slug}/`), false, `${slug} leaked into web sitemap`);
+    assert.equal(webFeed.includes(`/article/${slug}/`), false, `${slug} leaked into web RSS`);
   }
+}
+
+async function assertContactAlias() {
+  const response = await fetch(`${webOrigin}/contact`, { redirect: 'manual' });
+  assert.equal(response.status, 308, '/contact must redirect to the approved pending route');
+  assert.equal(response.headers.get('location'), '/contact-us');
+
+  const destination = await fetch(`${webOrigin}/contact-us`);
+  const html = await destination.text();
+  assert.equal(destination.status, 200);
+  assert.match(html, /name="robots" content="noindex,follow"/i);
+  assert.match(html, /data-testid="editorial-input-required"/);
 }
 
 async function cleanupFixtures() {
@@ -592,6 +623,7 @@ async function main() {
 
     await startWeb();
     await testRawArticleResponses();
+    await assertContactAlias();
     process.stdout.write('PASS: article first-response raw HTML, publication gates, and crawler parity\n');
   } finally {
     await stopProcess(webProcess);
