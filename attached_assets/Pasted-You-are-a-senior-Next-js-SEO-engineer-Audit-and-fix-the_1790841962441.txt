@@ -1,0 +1,36 @@
+You are a senior Next.js/SEO engineer. Audit and fix the SEO of our news site at globalainews.in (Next.js App Router). The site is a client-side-rendered news app and Google has zero pages indexed. Fix the following, in order of priority:
+1. Fix the broken sitemap
+The sitemap at /api/newsroom/sitemap.xml currently returns an error. Make https://www.globalainews.in/sitemap.xml serve valid XML with:
+Every article URL on the site
+<lastmod> for each URL (use the article's updated date)
+<image:image> tags with each article's featured image
+Proper xmlns namespaces, correct Content-Type: application/xml, and gzip support
+Dynamically generate it from our article database/CMS so new articles appear automatically (or use generateSitemap with ISR revalidation).
+Also generate a sitemap_index.xml if we have more than 50,000 URLs, splitting into paginated sub-sitemaps.
+Verify the sitemap loads in a browser and passes the W3C XML validator.
+2. Convert article pages to Server-Side Rendering (SSR)
+Currently pages render client-side only ("We're loading the latest stories..."), so Googlebot sees no content.
+Move article list pages and individual article pages from client components fetching in useEffect to server components that fetch data server-side (async Server Components, or getServerSideProps if using Pages Router).
+The initial HTML response must contain the full article text, headline, and images — verify with curl <url> (raw HTML, not a browser).
+Keep any interactive widgets (search, filters) as client components, but all primary content must be in the server-rendered HTML.
+3. Unique metadata per page
+Fix the site-wide generic title. Every page needs unique, dynamic metadata:
+Article pages: <title> = article headline, meta description = first 155 chars of the article or a summary
+Homepage, category pages, tag pages: unique titles and descriptions
+Implement via the Metadata API (export async function generateMetadata) reading from the article data.
+Add Open Graph and Twitter Card tags (og:title, og:description, og:image, og:url, twitter:card).
+4. Structured data (JSON-LD)
+Add NewsArticle schema on every article page with: headline, image, datePublished, dateModified, author (Person or Organization), publisher (Organization with logo).
+Add WebSite schema on the homepage, and BreadcrumbList schema on article pages.
+Output via a <script type="application/ld+json"> tag in the server-rendered HTML.
+5. Technical hygiene
+Check robots.txt allows all and correctly references /sitemap.xml.
+Verify canonical tags on every page (rel="canonical" pointing to the canonical URL, no query-param duplicates).
+Ensure no pages are blocked by noindex or X-Robots-Tag headers.
+Check Core Web Vitals: server response time under 600ms, LCP image preloaded and lazy-loaded below the fold.
+Acceptance criteria before you finish:
+curl https://www.globalainews.in/ | head -100 shows real article content in raw HTML, not just a loading spinner.
+/sitemap.xml returns valid XML listing all articles.
+Run each article URL through the Rich Results Test and Schema Markup Validator — no errors.
+Every page has a unique <title> and meta description when viewing page source.
+Do not change the design or content — only the rendering, metadata, sitemap, and structured data. Explain each change you make and why.
