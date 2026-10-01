@@ -57,36 +57,6 @@ export type NewsroomContentEssaysItem = { [key: string]: unknown };
 
 export type NewsroomContentAskGlobalAnswersItem = { [key: string]: unknown };
 
-export type EditorialCadence = typeof EditorialCadence[keyof typeof EditorialCadence];
-
-
-export const EditorialCadence = {
-  daily: 'daily',
-  weekly: 'weekly',
-} as const;
-
-export type EditorialReleaseStatus = typeof EditorialReleaseStatus[keyof typeof EditorialReleaseStatus];
-
-
-export const EditorialReleaseStatus = {
-  scheduled: 'scheduled',
-  published: 'published',
-  canceled: 'canceled',
-} as const;
-
-export interface EditorialStory { [key: string]: unknown }
-
-export interface EditorialScheduleItem {
-  slug: string;
-  title: string;
-  dek: string;
-  publishAt: string;
-  cadence: EditorialCadence;
-  status: EditorialReleaseStatus;
-  position: number;
-  story?: EditorialStory;
-}
-
 export interface NewsroomContent {
   generatedAt: string;
   source: string;
@@ -102,7 +72,45 @@ export interface NewsroomContent {
   indiaIndex: NewsroomContentIndiaIndexItem[];
   essays: NewsroomContentEssaysItem[];
   askGlobalAnswers: NewsroomContentAskGlobalAnswersItem[];
-  schedule: EditorialScheduleItem[];
+}
+
+export interface EditorialAutomationStatus { [key: string]: unknown }
+
+export type EditorialAutomationRunAcceptedResultsItem = { [key: string]: unknown };
+
+export interface EditorialAutomationRunAccepted {
+  accepted: boolean;
+  results: EditorialAutomationRunAcceptedResultsItem[];
+}
+
+export interface EditorialStory { [key: string]: unknown }
+
+export type EditorialReleaseStatus = typeof EditorialReleaseStatus[keyof typeof EditorialReleaseStatus];
+
+
+export const EditorialReleaseStatus = {
+  scheduled: 'scheduled',
+  published: 'published',
+  canceled: 'canceled',
+} as const;
+
+export type EditorialCadence = typeof EditorialCadence[keyof typeof EditorialCadence];
+
+
+export const EditorialCadence = {
+  daily: 'daily',
+  weekly: 'weekly',
+} as const;
+
+export interface EditorialScheduleItem {
+  slug: string;
+  title: string;
+  dek: string;
+  publishAt: string;
+  cadence: EditorialCadence;
+  status: EditorialReleaseStatus;
+  position: number;
+  story?: EditorialStory;
 }
 
 export interface EditorialRelease {

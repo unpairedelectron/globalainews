@@ -13,6 +13,7 @@ const actor = 'task-38-restart-check-editor';
 const slug = `task-38-release-history-${process.pid}-${Date.now()}`;
 const shortSlug = `task-85-short-release-${process.pid}-${Date.now()}`;
 const legacySlug = `task-88-legacy-release-${process.pid}-${Date.now()}`;
+const publishedSlug = `release-revalidation-${process.pid}-${Date.now()}`;
 const title = 'Restart-safe newsroom history fixture';
 const publishAt = '2042-04-05T06:07:08.000Z';
 const shortCopy = 'This copy is intentionally too short to enter the newsroom release queue.';
@@ -94,6 +95,7 @@ async function requestJson(route, options = {}) {
     ...options,
     headers: {
       ...(options.body ? { 'content-type': 'application/json' } : {}),
+      ...testEditorHeader,
       ...(options.headers ?? {}),
     },
   });
@@ -188,6 +190,100 @@ async function assertLegacyReleaseCannotPublish() {
   );
 }
 
+async function assertPrivateRoutesRequireAuth() {
+  const privateRoutes = [
+    ['/api/newsroom/releases', 'GET'],
+    ['/api/newsroom/releases/history', 'GET'],
+    ['/api/newsroom/automation/status', 'GET'],
+    ['/api/newsroom/automation/runs', 'GET'],
+    ['/api/newsroom/automation/run', 'POST'],
+  ];
+  for (const [route, method] of privateRoutes) {
+    const { response } = await requestJsonAllowingError(route, { method });
+    assert.equal(response.status, 401, `unauthenticated ${method} ${route} must return 401`);
+  }
+}
+
+async function assertPrivateRoutesRemainAvailableToEditors() {
+  assert.ok(Array.isArray(await requestJson('/api/newsroom/releases')));
+  assert.ok(Array.isArray(await requestJson('/api/newsroom/releases/history')));
+  assert.equal(typeof (await requestJson('/api/newsroom/automation/status')).enabled, 'boolean');
+  assert.ok(Array.isArray(await requestJson('/api/newsroom/automation/runs')));
+}
+
+async function assertPublicContentContract() {
+  const response = await fetch(`${apiOrigin}/api/newsroom/content`);
+  const content = await response.json();
+  assert.ok(response.ok, `public newsroom content failed: ${response.status}`);
+  assert.equal(Object.hasOwn(content, 'schedule'), false, 'public content must not include editorial schedule');
+  assert.match(response.headers.get('x-robots-tag') ?? '', /noindex/i);
+
+  const allowedStoryFields = new Set([
+    'slug', 'category', 'title', 'dek', 'body', 'date', 'dateModified', 'readTime',
+    'author', 'evidence', 'evidenceSummary', 'classification', 'entities', 'timeline',
+    'relatedStories', 'imageTreatment', 'topic', 'sources', 'bottomLine', 'whyItMatters',
+    'keyTakeaways', 'whatChanges',
+  ]);
+  for (const story of content.stories) {
+    for (const field of Object.keys(story)) {
+      assert.ok(allowedStoryFields.has(field), `public story serialized non-public field: ${field}`);
+    }
+  }
+
+  const metadata = await requestJson('/api/newsroom/metadata');
+  const publishedArticlePaths = new Set(
+    metadata.routes.filter((route) => route.article).map((route) => route.path),
+  );
+  assert.ok(
+    content.stories.every((story) => publishedArticlePaths.has(`/article/${story.slug}`)),
+    'public content must contain only stories represented as published article metadata',
+  );
+}
+
+async function assertPublishedStoryFlowsThroughLivePublicSurfaces() {
+  const title = 'Live release revalidation fixture';
+  const publishAt = new Date(Date.now() - 120_000).toISOString();
+  const created = await requestJson('/api/newsroom/releases', {
+    method: 'POST',
+    body: JSON.stringify({
+      slug: publishedSlug,
+      title,
+      dek: 'A temporary test release verifies live reader surfaces without rebuilding the web artifact.',
+      publishAt,
+      cadence: 'daily',
+      category: 'Field Notes',
+      author: 'lena-hoff',
+      body: longCopy,
+    }),
+  });
+  assert.equal(created.slug, publishedSlug);
+  assert.equal(created.publishable, true);
+
+  const contentResponse = await fetch(`${apiOrigin}/api/newsroom/content`);
+  const content = await contentResponse.json();
+  assert.ok(contentResponse.ok, 'public newsroom content stopped serving after a release was published');
+  assert.ok(content.stories.some((story) => story.slug === publishedSlug), 'published story did not appear in live reader content');
+  assert.equal(contentResponse.headers.get('cache-control'), 'no-store', 'live reader content should not be cached after publication');
+
+  const metadata = await requestJson('/api/newsroom/metadata');
+  assert.ok(metadata.routes.some((route) => route.path === `/article/${publishedSlug}` && route.article), 'published article metadata did not refresh');
+
+  const expectedUrl = `https://www.globalainews.in/article/${publishedSlug}/`;
+  const sitemapResponse = await fetch(`${apiOrigin}/sitemap.xml`);
+  const sitemap = await sitemapResponse.text();
+  assert.equal(sitemapResponse.status, 200, 'live root sitemap failed after publication');
+  assert.ok(sitemap.includes(expectedUrl), 'live root sitemap did not include the new release');
+  assert.match(sitemapResponse.headers.get('cache-control') ?? '', /max-age=60/, 'live root sitemap cache exceeds the release freshness interval');
+
+  for (const route of ['/feed.xml', '/api/newsroom/feed.xml']) {
+    const response = await fetch(`${apiOrigin}${route}`);
+    const body = await response.text();
+    assert.equal(response.status, 200, `${route} failed after publication`);
+    assert.ok(body.includes(expectedUrl), `${route} did not include the new release`);
+    assert.match(response.headers.get('cache-control') ?? '', /max-age=60/, `${route} cache exceeds the release freshness interval`);
+  }
+}
+
 async function cleanupFixture() {
   const cleanupScript = `
     import { inArray } from "drizzle-orm";
@@ -212,7 +308,7 @@ async function cleanupFixture() {
       cwd: root,
       env: {
         ...process.env,
-        RELEASE_HISTORY_FIXTURE_SLUGS: JSON.stringify([slug, legacySlug]),
+        RELEASE_HISTORY_FIXTURE_SLUGS: JSON.stringify([slug, legacySlug, publishedSlug]),
       },
       maxBuffer: 2 * 1024 * 1024,
     },
@@ -270,6 +366,7 @@ async function assertHistoryFilters() {
 
   const invalidAction = await requestJsonAllowingError(
     '/api/newsroom/releases/history?action=not-a-real-action',
+    { headers: testEditorHeader },
   );
   assert.equal(invalidAction.response.status, 400);
   assert.deepEqual(invalidAction.body, { error: 'Unknown release history action.' });
@@ -339,6 +436,10 @@ try {
   });
 
   await startApi();
+  await assertPrivateRoutesRequireAuth();
+  await assertPrivateRoutesRemainAvailableToEditors();
+  await assertPublicContentContract();
+  await assertPublishedStoryFlowsThroughLivePublicSurfaces();
   await assertShortReleaseRejected(
     '/api/newsroom/releases',
     {

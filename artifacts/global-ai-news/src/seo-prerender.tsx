@@ -1,5 +1,5 @@
 import React from 'react';
-import type { NewsroomContentSnapshot, Story } from './content';
+import { findStory, getReaderFacingContentType, type NewsroomContentSnapshot, type Story } from './content';
 import { formatEditorialDate, getLatestStory } from './editorial-date';
 import type { SeoMetadata } from './seo-metadata';
 
@@ -43,7 +43,7 @@ function StoryList({
               {' · '}
               {authors.find((author) => author.slug === story.author)
                 ? <a href={`/person/${story.author}/`} className="hover:text-primary">{authors.find((author) => author.slug === story.author)?.name}</a>
-                : story.author}
+                : 'Byline unavailable'}
             </p>
           </div>
         </article>
@@ -61,6 +61,22 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
       throw new Error(`Cannot prerender published article without its story snapshot: ${route}`);
     }
 
+    const author = authors.find((candidate) => candidate.slug === story.author);
+    const resolvedSources = story.sources
+      .map((sourceSlug) => sources.find((candidate) => candidate.slug === sourceSlug))
+      .filter((source): source is (typeof sources)[number] => Boolean(source));
+    const missingSourceRecords = story.sources.length - resolvedSources.length;
+    const relatedStories = story.relatedStories
+      .map((relatedSlug) => {
+        const exactMatch = stories.find((candidate) => candidate.slug === relatedSlug);
+        if (exactMatch) return exactMatch;
+        const aliasedStory = findStory(relatedSlug);
+        return aliasedStory
+          ? stories.find((candidate) => candidate.slug === aliasedStory.slug) ?? aliasedStory
+          : undefined;
+      })
+      .filter((relatedStory): relatedStory is Story => Boolean(relatedStory));
+
     return (
       <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
         <header className="flex items-center justify-between border-b border-foreground/20 py-5">
@@ -68,7 +84,23 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
           <a href="/brief/" className="eyebrow text-primary">The Daily Brief</a>
         </header>
         <main className="mx-auto max-w-4xl">
+          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center pt-10 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <a href="/">Home</a><span className="mx-2">/</span><a href="/research/">Research</a><span className="mx-2">/</span><span>{story.category}</span><span className="mx-2">/</span><span aria-current="page" className="max-w-[22rem] truncate">{story.title}</span>
+          </nav>
           <article>
+            <p className="mt-8 eyebrow text-primary">{story.category} · {getReaderFacingContentType(story.classification)}</p>
+            <h1 className="mt-4 font-serif text-5xl leading-[.9] tracking-[-.03em] md:text-7xl">{story.title}</h1>
+            <p className="mt-6 max-w-3xl text-xl leading-8 text-muted-foreground">{story.dek}</p>
+            <p className="mt-6 border-b border-foreground/15 pb-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              {author
+                ? <>By <a href={`/person/${author.slug}/`} className="font-semibold underline decoration-foreground/30 underline-offset-2 hover:text-primary">{author.name}</a> · {author.role}</>
+                : 'Byline unavailable'}
+              {' · '}Published <time dateTime={story.date}>{formatEditorialDate(story.date)}</time>
+              {story.dateModified && story.dateModified !== story.date
+                ? <> · Updated <time dateTime={story.dateModified}>{formatEditorialDate(story.dateModified)}</time></>
+                : null}
+              {' · '}{story.readTime}
+            </p>
             <figure className="my-8 border border-foreground/15 bg-surface-muted">
               <img
                 src={articleImagePath(story.slug)}
@@ -82,19 +114,21 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
                 {story.imageTreatment.caption}
               </figcaption>
             </figure>
-            <p className="eyebrow text-primary">{story.category} · {story.classification} · {story.readTime}</p>
-            <h1 className="mt-4 font-serif text-5xl leading-[.9] tracking-[-.03em] md:text-7xl">{story.title}</h1>
-            <p className="mt-6 max-w-3xl text-xl leading-8 text-muted-foreground">{story.dek}</p>
-            <p className="mt-6 border-b border-foreground/15 pb-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              {authors.find((author) => author.slug === story.author)
-                ? <a href={`/person/${story.author}/`} className="hover:text-primary">{authors.find((author) => author.slug === story.author)?.name}</a>
-                : story.author}
-              {authors.find((author) => author.slug === story.author)?.role
-                ? ` · ${authors.find((author) => author.slug === story.author)?.role}`
-                : ''}
-              {' · '}<time dateTime={story.date}>{formatEditorialDate(story.date)}</time> · {story.readTime}
-            </p>
             <div className="prose prose-lg mt-8 max-w-none text-foreground">
+              <section className="not-prose my-8 border-l-2 border-primary bg-secondary/50 p-6">
+                <p className="eyebrow text-primary">The bottom line</p>
+                <p className="mt-3 font-serif text-3xl leading-none">{story.bottomLine}</p>
+              </section>
+              <section className="not-prose my-8">
+                <p className="eyebrow text-primary">Why this matters</p>
+                <p className="mt-3 text-lg leading-8">{story.whyItMatters}</p>
+              </section>
+              {story.keyTakeaways.length > 0 && (
+                <section className="not-prose my-8 border-y border-foreground/15 py-6">
+                  <p className="eyebrow text-primary">Key takeaways</p>
+                  <ul className="mt-4 grid gap-3 text-sm">{story.keyTakeaways.map((takeaway) => <li key={takeaway} className="flex gap-3"><span className="text-primary">—</span>{takeaway}</li>)}</ul>
+                </section>
+              )}
               {story.body.map((section, index) => (
                 <section key={`${story.slug}-section-${index}`} className="mb-8">
                   <h2 className="font-serif text-3xl leading-tight">{section.heading}</h2>
@@ -111,44 +145,32 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
                 </section>
               ))}
             </div>
-            <section className="my-10 grid gap-6 border-y border-foreground/20 py-7 md:grid-cols-2">
-              <div>
-                <h2 className="eyebrow text-primary">The bottom line</h2>
-                <p className="mt-3 font-serif text-2xl leading-tight">{story.bottomLine}</p>
-              </div>
-              <div>
-                <h2 className="eyebrow text-primary">Why it matters</h2>
-                <p className="mt-3 text-base leading-7 text-muted-foreground">{story.whyItMatters}</p>
-              </div>
-            </section>
-            {story.keyTakeaways.length > 0 && (
-              <section className="my-10">
-                <h2 className="font-serif text-3xl">Key takeaways</h2>
-                <ul className="mt-4 list-disc space-y-2 pl-6 text-base leading-7">
-                  {story.keyTakeaways.map((takeaway) => <li key={takeaway}>{takeaway}</li>)}
-                </ul>
-              </section>
-            )}
             <section className="my-10 border-t border-foreground/15 pt-6">
               <h2 className="eyebrow text-primary">What changes</h2>
               <p className="mt-3 max-w-3xl text-base leading-7">{story.whatChanges}</p>
             </section>
-            <section className="my-10 border-t border-foreground/15 pt-6">
-              <h2 className="eyebrow text-primary">Sources</h2>
-              <ul className="mt-4 grid gap-3 text-sm">
-                {story.sources.map((slug) => {
-                  const source = sources.find((candidate) => candidate.slug === slug);
-                  return (
-                    <li key={slug} className="border-b border-foreground/10 pb-3">
-                      {source
-                        ? <a href={source.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary">{source.name}<span className="mt-1 block text-xs text-muted-foreground">{source.publisher} · {source.kind}</span></a>
-                        : slug}
+            {story.sources.length > 0 && (
+              <section className="my-10 border-t border-foreground/15 pt-6" data-testid="article-sources">
+                <h2 className="eyebrow text-primary">Sources</h2>
+                <ul className="mt-4 grid gap-3 text-sm">
+                  {resolvedSources.map((source) => (
+                    <li key={source.slug} className="border-b border-foreground/10 pb-3">
+                      <a href={source.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary">{source.name}<span className="mt-1 block text-xs text-muted-foreground">{source.publisher} · {source.kind}</span></a>
                     </li>
-                  );
-                })}
+                  ))}
+                </ul>
+                {missingSourceRecords > 0 && <p className="mt-3 text-xs text-warning">Some source records need editorial review before they can be linked.</p>}
+              </section>
+            )}
+          </article>
+          {relatedStories.length > 0 && (
+            <section className="border-t border-foreground/15 py-12">
+              <h2 className="eyebrow mb-5 text-primary">Next stories</h2>
+              <ul className="grid gap-4 md:grid-cols-3">
+                {relatedStories.map((relatedStory) => <li key={relatedStory.slug} className="border-t border-foreground/15 pt-4"><a href={`/article/${relatedStory.slug}/`} className="font-serif text-xl leading-tight hover:text-primary">{relatedStory.title}</a><p className="mt-2 text-xs leading-5 text-muted-foreground">{relatedStory.dek}</p></li>)}
               </ul>
             </section>
-          </article>
+          )}
         </main>
       </div>
     );
@@ -238,7 +260,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
         </header>
         <main>
           <section className="border-b border-foreground/20 py-14 md:py-20">
-            <p className="eyebrow text-primary">Timeline event · {timelineEvent.date}</p>
+            <p className="eyebrow text-primary">Timeline event · <time dateTime={timelineEvent.date}>{formatEditorialDate(timelineEvent.date)}</time></p>
             <h1 className="mt-6 max-w-5xl font-serif text-7xl leading-[.84] md:text-[8rem]">{timelineEvent.title}</h1>
             <p className="mt-8 max-w-2xl text-xl leading-8 text-muted-foreground">{timelineEvent.description}</p>
           </section>
@@ -249,6 +271,55 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
   }
 
   const heading = metadata.title.replace(/\s+—\s+Global AI News$/, '');
+  const editorialInputTitles: Record<string, string> = {
+    '/reports': 'Reports',
+    '/topics': 'Topics',
+    '/archive': 'Archive',
+    '/about-us': 'About us',
+    '/code-of-ethics': 'Code of ethics',
+    '/corrections': 'Corrections',
+    '/contact-us': 'Contact us',
+  };
+  if (route === '/search') {
+    return (
+      <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
+        <header className="flex items-center justify-between border-b border-foreground/20 py-5"><a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a><a href="/brief/" className="eyebrow text-primary">The Daily Brief</a></header>
+        <main className="mx-auto max-w-[1180px] py-14 md:py-20">
+          <p className="eyebrow text-primary">Search published stories</p>
+          <h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">Find the<br /><em className="text-primary">record.</em></h1>
+          <form action="/search/" method="get" className="mt-9 flex max-w-2xl gap-3 border-b border-foreground/40 py-3">
+            <label htmlFor="prerender-search-query" className="sr-only">Search published stories</label>
+            <input id="prerender-search-query" name="q" className="min-w-0 flex-1 bg-transparent outline-none" placeholder="Search stories, topics and authors" />
+            <button className="font-mono text-[10px] uppercase tracking-widest text-primary">Search</button>
+          </form>
+        </main>
+      </div>
+    );
+  }
+  if (editorialInputTitles[route]) {
+    return (
+      <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
+        <header className="flex items-center justify-between border-b border-foreground/20 py-5"><a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a><a href="/brief/" className="eyebrow text-primary">The Daily Brief</a></header>
+        <main className="mx-auto min-h-[60vh] max-w-[1180px] py-20 md:py-28" data-testid="editorial-input-required">
+          <p className="eyebrow text-primary">Editorial review pending</p>
+          <h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">{editorialInputTitles[route]}</h1>
+          <p className="mt-8 max-w-xl border-t border-foreground/15 pt-5 text-lg leading-8 text-muted-foreground">{metadata.description}</p>
+        </main>
+      </div>
+    );
+  }
+  if (metadata.indexable === false) {
+    return (
+      <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
+        <header className="flex items-center justify-between border-b border-foreground/20 py-5"><a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a><a href="/brief/" className="eyebrow text-primary">The Daily Brief</a></header>
+        <main className="mx-auto min-h-[60vh] max-w-[1180px] py-20 md:py-28">
+          <p className="eyebrow text-primary">Global AI News</p>
+          <h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">{heading}</h1>
+          <p className="mt-8 max-w-xl border-t border-foreground/15 pt-5 text-lg leading-8 text-muted-foreground">{metadata.description}</p>
+        </main>
+      </div>
+    );
+  }
   if (route === '/') {
     const latestStory = getLatestStory(stories);
     const orderedStories = latestStory

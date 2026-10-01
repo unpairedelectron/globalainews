@@ -20,9 +20,10 @@ export function SeoHead({ title, description, path, article = false }: { title: 
   const resolvedDescription = routeMetadata?.description ?? description;
   const resolvedPath = routeMetadata?.path ?? path;
   const resolvedArticle = article || Boolean(routeMetadata?.article);
-  const isBriefSearch = path.split(/[?#]/, 1)[0].replace(/\/+$/, '') === '/brief'
-    && new URLSearchParams(currentLocation.split('?')[1] ?? '').has('q');
-  const resolvedIndexable = routeMetadata?.indexable !== false && !isBriefSearch;
+  const currentQuery = new URLSearchParams(currentLocation.split('?')[1] ?? '');
+  const routePath = path.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
+  const isSearchResults = ['/brief', '/search'].includes(routePath) && currentQuery.has('q');
+  const resolvedIndexable = routeMetadata?.indexable !== false && !isSearchResults;
 
   useEffect(() => {
     document.title = resolvedTitle;
@@ -114,7 +115,7 @@ export function Header() {
   const snapshot = useNewsroomSnapshot();
   const latestStory = getLatestStory(snapshot.stories);
   const tickerSignals = snapshot.signals.slice(0, 3);
-  const submit = (event: FormEvent) => { event.preventDefault(); if (query.trim()) { trackEvent('site_search_submitted', { location: 'header' }); setLocation(`/brief?q=${encodeURIComponent(query.trim())}`); } };
+  const submit = (event: FormEvent) => { event.preventDefault(); if (query.trim()) { trackEvent('site_search_submitted', { location: 'header' }); setLocation(`/search?q=${encodeURIComponent(query.trim())}`); } };
   return <header className="sticky top-0 z-40 border-b border-foreground/15 bg-background/95 shadow-[0_1px_0_hsl(var(--foreground)/.04)] backdrop-blur-sm">
     <div className="mx-auto flex min-h-[68px] max-w-[1440px] items-center justify-between gap-4 px-5 py-4 md:px-10">
       <Link href="/" data-testid="link-logo" aria-label="Global AI News home" className="shrink-0">
@@ -152,7 +153,8 @@ export function StoryRow({ slug, rank, compact = false }: { slug: string; rank?:
   const story = findStory(slug);
   const [saved, setSaved] = useState(false);
   if (!story) return null;
-  return <article data-testid={`card-story-${slug}`} className={`group -mx-3 border-t border-foreground/15 px-3 py-5 transition-colors hover:bg-primary/[.035] ${compact ? '' : 'md:py-7'}`}><div className="grid grid-cols-[auto_1fr_auto] gap-4"><span className="font-serif text-3xl leading-none text-primary/70">{rank ? `0${rank}` : '—'}</span><div><div className="flex flex-wrap items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span className="h-1 w-1 rounded-full bg-accent" /><span className="text-xs text-muted-foreground">{story.readTime}</span></div><Link data-testid={`link-story-${slug}`} href={`/article/${story.slug}`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] transition-colors group-hover:text-primary md:text-3xl">{story.title}</Link><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p><p className="mt-4 text-xs text-muted-foreground">By {authors.find((author) => author.slug === story.author)?.name ?? story.author} · {story.date}</p></div><button data-testid={`button-bookmark-${slug}`} type="button" aria-label={saved ? 'Remove bookmark' : 'Bookmark story'} onClick={() => { const nextSaved = !saved; setSaved(nextSaved); trackEvent(nextSaved ? 'story_bookmarked' : 'story_unbookmarked', { story_slug: story.slug }); }} className="self-start rounded-full p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary">{saved ? <BookmarkCheck size={17} /> : <Bookmark size={17} />}</button></div></article>;
+  const author = authors.find((candidate) => candidate.slug === story.author);
+  return <article data-testid={`card-story-${slug}`} className={`group -mx-3 border-t border-foreground/15 px-3 py-5 transition-colors hover:bg-primary/[.035] ${compact ? '' : 'md:py-7'}`}><div className="grid grid-cols-[auto_1fr_auto] gap-4"><span className="font-serif text-3xl leading-none text-primary/70">{rank ? `0${rank}` : '—'}</span><div><div className="flex flex-wrap items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span className="h-1 w-1 rounded-full bg-accent" /><span className="text-xs text-muted-foreground">{story.readTime}</span></div><Link data-testid={`link-story-${slug}`} href={`/article/${story.slug}`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] transition-colors group-hover:text-primary md:text-3xl">{story.title}</Link><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p><p className="mt-4 text-xs text-muted-foreground">{author ? <>By <Link data-testid={`link-story-author-${story.slug}`} href={`/person/${author.slug}`} className="underline decoration-foreground/30 underline-offset-2 hover:text-primary">{author.name}</Link></> : 'Byline unavailable'} · <time dateTime={story.date}>{formatEditorialDate(story.date)}</time></p></div><button data-testid={`button-bookmark-${slug}`} type="button" aria-label={saved ? 'Remove bookmark' : 'Bookmark story'} onClick={() => { const nextSaved = !saved; setSaved(nextSaved); trackEvent(nextSaved ? 'story_bookmarked' : 'story_unbookmarked', { story_slug: story.slug }); }} className="self-start rounded-full p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary">{saved ? <BookmarkCheck size={17} /> : <Bookmark size={17} />}</button></div></article>;
 }
 
 export function EvidencePanel({ storySlug }: { storySlug: string }) {
@@ -167,5 +169,5 @@ export function EntityLinks({ slugs }: { slugs: string[] }) {
 }
 
 export function TimelineList({ slugs }: { slugs: string[] }) {
-  return <div className="grid gap-0">{slugs.map((slug) => { const event = timelineEvents.find((item) => item.slug === slug); return event ? <Link data-testid={`link-timeline-${slug}`} href={`/timeline/${slug}`} key={slug} className="grid grid-cols-[110px_1fr] gap-4 border-t border-foreground/15 py-4 text-sm hover:text-primary"><span className="font-mono text-[10px] text-muted-foreground">{event.date}</span><span><b className="font-medium">{event.title}</b><span className="mt-1 block text-xs leading-5 text-muted-foreground">{event.description}</span></span></Link> : null; })}</div>;
+  return <div className="grid gap-0">{slugs.map((slug) => { const event = timelineEvents.find((item) => item.slug === slug); return event ? <Link data-testid={`link-timeline-${slug}`} href={`/timeline/${slug}`} key={slug} className="grid grid-cols-[110px_1fr] gap-4 border-t border-foreground/15 py-4 text-sm hover:text-primary"><time dateTime={event.date} className="font-mono text-[10px] text-muted-foreground">{formatEditorialDate(event.date)}</time><span><b className="font-medium">{event.title}</b><span className="mt-1 block text-xs leading-5 text-muted-foreground">{event.description}</span></span></Link> : null; })}</div>;
 }

@@ -20,7 +20,9 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  EditorialAutomationRunAccepted,
   EditorialAutomationRunQueue,
+  EditorialAutomationStatus,
   EditorialRelease,
   EditorialReleaseHistory,
   EditorialReleaseInput,
@@ -382,6 +384,159 @@ export function useGetNewsroomAutomationRuns<TData = Awaited<ReturnType<typeof g
 
 
 
+
+export const getGetNewsroomAutomationStatusUrl = () => {
+
+
+
+
+  return `/api/newsroom/automation/status`
+}
+
+/**
+ * Returns editor-facing automation configuration and the latest run.
+ * @summary Get editorial automation status
+ */
+export const getNewsroomAutomationStatus = async ( options?: Parameters<typeof customFetch>[1]): Promise<EditorialAutomationStatus> => {
+
+  return customFetch<EditorialAutomationStatus>(getGetNewsroomAutomationStatusUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetNewsroomAutomationStatusQueryKey = () => {
+    return [
+    `/api/newsroom/automation/status`
+    ] as const;
+    }
+
+
+export const getGetNewsroomAutomationStatusQueryOptions = <TData = Awaited<ReturnType<typeof getNewsroomAutomationStatus>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomAutomationStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNewsroomAutomationStatusQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNewsroomAutomationStatus>>> = ({ signal }) => getNewsroomAutomationStatus({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNewsroomAutomationStatus>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNewsroomAutomationStatusQueryResult = NonNullable<Awaited<ReturnType<typeof getNewsroomAutomationStatus>>>
+export type GetNewsroomAutomationStatusQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Get editorial automation status
+ */
+
+export function useGetNewsroomAutomationStatus<TData = Awaited<ReturnType<typeof getNewsroomAutomationStatus>>, TError = ErrorType<ErrorResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNewsroomAutomationStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetNewsroomAutomationStatusQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getRunNewsroomAutomationUrl = () => {
+
+
+
+
+  return `/api/newsroom/automation/run`
+}
+
+/**
+ * Starts a manual editorial automation run.
+ * @summary Run editorial automation manually
+ */
+export const runNewsroomAutomation = async ( options?: Parameters<typeof customFetch>[1]): Promise<EditorialAutomationRunAccepted> => {
+
+  return customFetch<EditorialAutomationRunAccepted>(getRunNewsroomAutomationUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getRunNewsroomAutomationMutationKey = () => ['runNewsroomAutomation'] as const;
+
+export const getRunNewsroomAutomationMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof runNewsroomAutomation>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof runNewsroomAutomation>>, TError,void, TContext> => {
+
+const mutationKey = getRunNewsroomAutomationMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof runNewsroomAutomation>>, void> = () => {
+
+
+          return  runNewsroomAutomation(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RunNewsroomAutomationMutationResult = NonNullable<Awaited<ReturnType<typeof runNewsroomAutomation>>>
+
+    export type RunNewsroomAutomationMutationError = ErrorType<ErrorResponse>
+
+
+    /**
+ * @summary Run editorial automation manually
+ */
+export const useRunNewsroomAutomation = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof runNewsroomAutomation>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof runNewsroomAutomation>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getRunNewsroomAutomationMutationOptions(options));
+    }
 
 export const getGetNewsroomReleasesUrl = () => {
 

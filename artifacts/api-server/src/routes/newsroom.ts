@@ -3,7 +3,6 @@ import { gzipSync } from "node:zlib";
 import {
   Router,
   type IRouter,
-  type NextFunction,
   type Request,
   type Response as ExpressResponse,
 } from "express";
@@ -36,7 +35,6 @@ import {
   entities,
   essays,
   evidenceSummaries,
-  getEditorialSchedule,
   getReleaseDraftWordCount,
   getReleaseWordCount,
   getPublishedStories,
@@ -86,6 +84,33 @@ type ReleaseUpdate = Partial<Omit<ReleaseInput, "slug">>;
 type EditorialReleaseStory = ScheduledStory & {
   editorialSource?: "editor";
 };
+
+function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
+  return {
+    slug: story.slug,
+    category: story.category,
+    title: story.title,
+    dek: story.dek,
+    body: story.body,
+    date: story.date,
+    dateModified: story.dateModified,
+    readTime: story.readTime,
+    author: story.author,
+    evidence: story.evidence,
+    evidenceSummary: story.evidenceSummary,
+    classification: story.classification,
+    entities: story.entities,
+    timeline: story.timeline,
+    relatedStories: story.relatedStories,
+    imageTreatment: story.imageTreatment,
+    topic: story.topic,
+    sources: story.sources,
+    bottomLine: story.bottomLine,
+    whyItMatters: story.whyItMatters,
+    keyTakeaways: story.keyTakeaways,
+    whatChanges: story.whatChanges,
+  };
+}
 
 let seedPromise: Promise<void> | undefined;
 
@@ -265,7 +290,7 @@ function escapeXml(value: string): string {
     .replaceAll("'", "&apos;");
 }
 
-router.get("/newsroom/automation/status", async (_req, res): Promise<void> => {
+router.get("/newsroom/automation/status", requireEditorAuth, async (_req, res): Promise<void> => {
   try {
     res.setHeader("Cache-Control", "no-store");
     res.json(await getAutomationStatus());
@@ -296,12 +321,7 @@ router.get("/newsroom/automation/runs", requireEditorAuth, async (req, res): Pro
   }
 });
 
-const automationRunAuth =
-  process.env.NODE_ENV === "production"
-    ? requireEditorAuth
-    : (_req: Request, _res: ExpressResponse, next: NextFunction) => next();
-
-router.post("/newsroom/automation/run", automationRunAuth, async (_req, res): Promise<void> => {
+router.post("/newsroom/automation/run", requireEditorAuth, async (_req, res): Promise<void> => {
   try {
     res.status(202).json({ accepted: true, results: await runEditorialAutomation("manual") });
   } catch (error) {
@@ -434,7 +454,7 @@ export async function serveNewsroomSitemap(
     res
       .status(200)
       .type("application/xml")
-      .set("Cache-Control", "public, max-age=300, s-maxage=300, stale-while-revalidate=86400")
+      .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")
       .vary("Accept-Encoding");
     if (req.acceptsEncodings("gzip") === "gzip") {
       res.setHeader("Content-Encoding", "gzip");
@@ -450,7 +470,7 @@ export async function serveNewsroomSitemap(
 
 router.get("/newsroom/sitemap.xml", serveNewsroomSitemap);
 
-router.get("/newsroom/feed.xml", async (_req, res): Promise<void> => {
+export async function serveNewsroomFeed(_req: Request, res: ExpressResponse): Promise<void> {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
     const items = publishedStories.slice(0, 30).map((story) => {
@@ -458,11 +478,16 @@ router.get("/newsroom/feed.xml", async (_req, res): Promise<void> => {
       return `    <item><title>${escapeXml(story.title)}</title><link>${url}</link><guid>${url}</guid><pubDate>${new Date(`${story.date}T07:30:00Z`).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`;
     });
     const body = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Global AI News</title><link>https://www.globalainews.in/</link><description>Intelligence for the AI economy.</description><language>en-us</language>\n${items.join("\n")}\n</channel></rss>`;
-    res.type("application/rss+xml").send(body);
+    res
+      .type("application/rss+xml")
+      .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")
+      .send(body);
   } catch (error) {
     res.status(500).type("text/plain").send("Feed unavailable.");
   }
-});
+}
+
+router.get("/newsroom/feed.xml", serveNewsroomFeed);
 
 router.get("/newsroom/social/articles/:slug.svg", async (req, res): Promise<void> => {
   try {
@@ -490,12 +515,6 @@ router.get("/newsroom/content", async (_req, res): Promise<void> => {
     const stale =
       latestPublishedAt.length > 0 &&
       Date.now() - Date.parse(`${latestPublishedAt}T23:59:59Z`) > 36 * 60 * 60 * 1000;
-    const rows = await getReleaseRows();
-    const schedule = getEditorialSchedule(
-      new Date(),
-      rows.filter((row) => row.status !== "canceled").map(toScheduledStory),
-    );
-
     const snapshot = GetNewsroomContentResponse.parse({
       generatedAt: new Date().toISOString(),
       source: "maintained-editorial-source",
@@ -510,15 +529,16 @@ router.get("/newsroom/content", async (_req, res): Promise<void> => {
       evidenceSummaries,
       entities,
       timelineEvents,
-      stories: publishedStories,
+      stories: publishedStories.map(toPublicStory),
       signals,
       industryMap,
       indiaIndex,
       essays,
       askGlobalAnswers,
-      schedule,
     });
 
+    res.setHeader("X-Robots-Tag", "noindex");
+    res.setHeader("Cache-Control", "no-store");
     res.json(snapshot);
   } catch (error) {
     res.status(500).json({ error: "Newsroom content source unavailable." });
@@ -529,6 +549,7 @@ router.get("/newsroom/metadata", async (req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
     res.setHeader("Cache-Control", "no-store");
+    res.setHeader("X-Robots-Tag", "noindex");
     res.json(
       GetNewsroomMetadataResponse.parse(
         getSeoMetadataManifest(publishedStories),
@@ -540,7 +561,7 @@ router.get("/newsroom/metadata", async (req, res): Promise<void> => {
   }
 });
 
-router.get("/newsroom/releases", async (req, res): Promise<void> => {
+router.get("/newsroom/releases", requireEditorAuth, async (req, res): Promise<void> => {
   try {
     const releases = (await getReleaseRows()).map((row) => toReleaseResponse(row));
     res.setHeader("Cache-Control", "no-store");
@@ -551,7 +572,7 @@ router.get("/newsroom/releases", async (req, res): Promise<void> => {
   }
 });
 
-router.get("/newsroom/releases/history", async (req, res): Promise<void> => {
+router.get("/newsroom/releases/history", requireEditorAuth, async (req, res): Promise<void> => {
   try {
     const releaseSlug =
       typeof req.query.releaseSlug === "string" && req.query.releaseSlug.trim().length > 0

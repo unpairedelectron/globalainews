@@ -15,6 +15,7 @@ import {
   ArticlePage,
   AskPage,
   BriefPage,
+  EditorialInputPage,
   EntityPage,
   FocusIndexPage,
   HomePage,
@@ -22,6 +23,7 @@ import {
   IndustryPage,
   InsightsPage,
   ResearchPage,
+  SearchPage,
   SignalsPage,
   TimelinePage,
   TopicPage,
@@ -386,6 +388,7 @@ function AppRoutes() {
     <Route path="/sign-up/*?" component={SignUpPage} />
     <Route path="/" component={HomePage} />
     <Route path="/brief" component={BriefPage} />
+    <Route path="/search" component={SearchPage} />
     <Route path="/signals" component={SignalsPage} />
     <Route path="/research"><ResearchPage /></Route>
     <Route path="/essays"><ResearchPage essay /></Route>
@@ -406,6 +409,13 @@ function AppRoutes() {
     <Route path="/technology/:slug"><EntityPage kind="technology" /></Route>
     <Route path="/policy/:slug"><EntityPage kind="policy" /></Route>
     <Route path="/timeline/:slug" component={TimelinePage} />
+    <Route path="/reports"><EditorialInputPage title="Reports" path="/reports" /></Route>
+    <Route path="/topics"><EditorialInputPage title="Topics" path="/topics" /></Route>
+    <Route path="/archive"><EditorialInputPage title="Archive" path="/archive" /></Route>
+    <Route path="/about-us"><EditorialInputPage title="About us" path="/about-us" /></Route>
+    <Route path="/code-of-ethics"><EditorialInputPage title="Code of ethics" path="/code-of-ethics" /></Route>
+    <Route path="/corrections"><EditorialInputPage title="Corrections" path="/corrections" /></Route>
+    <Route path="/contact-us"><EditorialInputPage title="Contact us" path="/contact-us" /></Route>
     <Route component={NotFound} />
   </Switch></ErrorBoundary>;
 }

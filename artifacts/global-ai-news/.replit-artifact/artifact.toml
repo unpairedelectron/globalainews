@@ -27,6 +27,10 @@ to = "/sign-in/index.html"
 from = "/sign-up/*"
 to = "/sign-up/index.html"
 
+[[services.production.rewrites]]
+from = "/article/*"
+to = "/index.html"
+
 [services.env]
 PORT = "19819"
 BASE_PATH = "/"

@@ -34,8 +34,9 @@ export function NewsroomProvider({ children }: { children: ReactNode }) {
   const query = useGetNewsroomContent({
     query: {
       queryKey: getGetNewsroomContentQueryKey(),
-      staleTime: 5 * 60 * 1000,
-      refetchInterval: 5 * 60 * 1000,
+      staleTime: 60_000,
+      refetchInterval: 60_000,
+      refetchIntervalInBackground: false,
       retry: 2,
     },
   });

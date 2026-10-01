@@ -3,8 +3,8 @@ name: Published route source of truth
 description: Static publishing files and newsroom metadata must agree on every public article route.
 ---
 
-Keep every article URL advertised by the static sitemap backed by maintained editorial content or a release record that is guaranteed to exist during the production build.
+The root sitemap and RSS feed should be served from the live API so they reflect newly published releases without a web rebuild. Static article HTML and route metadata remain build-time snapshots; keep an article-only missing-file fallback so a post-build slug can load the SPA without shadowing existing pre-rendered articles.
 
-**Why:** A route can exist in the development database and pass browser smoke checks while being absent from the database available during a publish build, causing the metadata gate to fail or leaving production with an incomplete article.
+**Why:** Replit static rewrites preserve an existing matching file and only rewrite missing paths. The fallback lets readers open a newly published route, but its first HTML response still carries generic build-time metadata until browser JavaScript runs; social crawlers and non-JavaScript clients may not see the article-specific title, canonical, or structured data.
 
-**How to apply:** When adding a sitemap article route, add its complete maintained story/source record or make the route database-backed for the build environment; then run the release build, not only the frontend build.
+**How to apply:** Keep the public API snapshot free of editorial scheduling data and use it for hydrated article content, the root sitemap, and RSS. If first-response SEO is required for post-build releases, add request-time rendering or metadata injection within the existing Express/Vite architecture and verify the raw HTTP response without executing JavaScript.

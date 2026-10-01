@@ -112,12 +112,68 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/automation/status:
+    get:
+      operationId: getNewsroomAutomationStatus
+      tags: [newsroom]
+      summary: Get editorial automation status
+      description: Returns editor-facing automation configuration and the latest run.
+      security:
+        - clerkSession: []
+      responses:
+        "200":
+          description: Editorial automation status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorialAutomationStatus"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Automation status unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/automation/run:
+    post:
+      operationId: runNewsroomAutomation
+      tags: [newsroom]
+      summary: Run editorial automation manually
+      description: Starts a manual editorial automation run.
+      security:
+        - clerkSession: []
+      responses:
+        "202":
+          description: Editorial automation run accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditorialAutomationRunAccepted"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Automation run failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /newsroom/releases:
     get:
       operationId: getNewsroomReleases
       tags: [newsroom]
       summary: Get the editor-managed release queue
       description: Returns scheduled, published, and canceled prepared articles in editorial order.
+      security:
+        - clerkSession: []
       responses:
         "200":
           description: Editorial release queue
@@ -125,6 +181,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditorialReleaseQueue"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "500":
           description: Release queue unavailable
           content:
@@ -174,6 +236,8 @@ paths:
       tags: [newsroom]
       summary: Get recent release change history
       description: Returns the latest durable audit entries for editor-managed release changes.
+      security:
+        - clerkSession: []
       parameters:
         - name: releaseSlug
           in: query
@@ -201,6 +265,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditorialReleaseHistory"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "500":
           description: Release history unavailable
           content:
@@ -453,10 +523,6 @@ components:
           items:
             type: object
             additionalProperties: true
-        schedule:
-          type: array
-          items:
-            $ref: "#/components/schemas/EditorialScheduleItem"
       required:
         - generatedAt
         - source
@@ -472,7 +538,20 @@ components:
         - indiaIndex
         - essays
         - askGlobalAnswers
-        - schedule
+    EditorialAutomationStatus:
+      type: object
+      additionalProperties: true
+    EditorialAutomationRunAccepted:
+      type: object
+      properties:
+        accepted:
+          type: boolean
+        results:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required: [accepted, results]
     EditorialStory:
       type: object
       additionalProperties: true

@@ -33,6 +33,54 @@ const staticMetadata: Record<string, SeoMetadata> = {
     description: 'A three-minute editorial briefing on what changed across the AI economy.',
     path: '/brief',
   },
+  '/search': {
+    title: 'Search — Global AI News',
+    description: 'Search published Global AI News stories.',
+    path: '/search',
+    indexable: false,
+  },
+  '/reports': {
+    title: 'Reports — Global AI News',
+    description: 'Editorial input is required before this route is published.',
+    path: '/reports',
+    indexable: false,
+  },
+  '/topics': {
+    title: 'Topics — Global AI News',
+    description: 'Editorial input is required before this route is published.',
+    path: '/topics',
+    indexable: false,
+  },
+  '/archive': {
+    title: 'Archive — Global AI News',
+    description: 'Editorial input is required before this route is published.',
+    path: '/archive',
+    indexable: false,
+  },
+  '/about-us': {
+    title: 'About us — Global AI News',
+    description: 'Editorial input is required before this route is published.',
+    path: '/about-us',
+    indexable: false,
+  },
+  '/code-of-ethics': {
+    title: 'Code of ethics — Global AI News',
+    description: 'Editorial input is required before this route is published.',
+    path: '/code-of-ethics',
+    indexable: false,
+  },
+  '/corrections': {
+    title: 'Corrections — Global AI News',
+    description: 'Editorial input is required before this route is published.',
+    path: '/corrections',
+    indexable: false,
+  },
+  '/contact-us': {
+    title: 'Contact us — Global AI News',
+    description: 'Editorial input is required before this route is published.',
+    path: '/contact-us',
+    indexable: false,
+  },
   '/signals': {
     title: 'Signals — Global AI News',
     description: 'Directional intelligence across the AI economy.',
@@ -265,13 +313,13 @@ export function getStructuredData(
                     dateModified: metadata.lastmod ?? articleStory.dateModified ?? articleStory.date,
                 }
               : {}),
-            author: articleAuthor
-              ? {
+            ...(articleAuthor
+              ? { author: {
                   '@type': 'Person',
                   name: articleAuthor.name,
                   url: getCanonicalUrl(`/person/${articleAuthor.slug}`),
-                }
-              : { '@type': 'Organization', name: 'Global AI News' },
+                } }
+              : {}),
             publisher,
             mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
           }
@@ -291,18 +339,25 @@ export function getStructuredData(
             '@type': 'WebSite',
             name: 'Global AI News',
             url: SITE_URL,
-            potentialAction: {
+        potentialAction: {
               '@type': 'SearchAction',
-              target: `${SITE_URL}/brief?q={search_term_string}`,
+            target: `${SITE_URL}/search?q={search_term_string}`,
             },
           },
       publisher,
       {
         '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-          { '@type': 'ListItem', position: 2, name: metadata.title, item: canonical },
-        ],
+        itemListElement: articleStory
+          ? [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+              { '@type': 'ListItem', position: 2, name: 'Research', item: getCanonicalUrl('/research') },
+              { '@type': 'ListItem', position: 3, name: articleStory.category },
+              { '@type': 'ListItem', position: 4, name: articleStory.title, item: canonical },
+            ]
+          : [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+              { '@type': 'ListItem', position: 2, name: metadata.title, item: canonical },
+            ],
       },
     ],
   });

@@ -15,5 +15,5 @@
 - [Autonomous editorial gates](autonomous-editorial-gates.md) — source selection must stay coherent before AI drafting; unrelated citations are a hard rejection, not a confidence downgrade.
 - [Newsroom analytics boundary](newsroom-analytics-boundary.md) — use Replit’s injected analytics for pageviews and safe events; never add a second tracker or send visitor data.
 - [API smoke environment](api-smoke-environment.md) — preserve NODE_ENV=test so synthetic editor auth and deterministic fixtures remain isolated.
-- [Published route source of truth](published-route-source-of-truth.md) — every sitemap article URL must have build-time editorial content or a guaranteed release record.
+- [Published route source of truth](published-route-source-of-truth.md) — live feeds reflect releases, while static article fallbacks still lack first-response SEO for new slugs.
 - [Editorial release word counts](editorial-release-word-counts.md) — validate editor copy by provenance while maintained records use the complete story snapshot.

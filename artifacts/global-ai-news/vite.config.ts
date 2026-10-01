@@ -443,7 +443,6 @@ async function loadBuildMetadataManifest(projectRoot: string): Promise<SeoMetada
     'indiaIndex',
     'essays',
     'askGlobalAnswers',
-    'schedule',
   ];
   if (requiredSnapshotArrays.some((key) => !Array.isArray(contentSnapshot[key]))) {
     throw new Error(
@@ -662,18 +661,29 @@ function withRouteMetadata(
     <script type="application/ld+json" data-global-ai-ld>${getStructuredData(metadata, publishedStories, contentSnapshot.authors)}</script>
 `;
   html = html.replace('</head>', `${headMetadata}  </head>`);
-  const prerenderedBody = metadata.indexable === false
-    ? ''
-    : renderToStaticMarkup(
+  const prerenderPublicNoindexRoutes = new Set([
+    '/search',
+    '/reports',
+    '/topics',
+    '/archive',
+    '/about-us',
+    '/code-of-ethics',
+    '/corrections',
+    '/contact-us',
+  ]);
+  const shouldPrerender = metadata.indexable !== false || prerenderPublicNoindexRoutes.has(route);
+  const prerenderedBody = shouldPrerender
+    ? renderToStaticMarkup(
         createElement(SeoPrerender, {
           route,
           metadata,
           snapshot: contentSnapshot,
         }),
-      );
-  const bootstrapMarker = metadata.indexable === false
-    ? ''
-    : '<script id="global-ai-prerender" type="application/json">{}</script>';
+      )
+    : '';
+  const bootstrapMarker = shouldPrerender
+    ? '<script id="global-ai-prerender" type="application/json">{}</script>'
+    : '';
   return html.replace(
     /<div\s+id=["']root["']>\s*<\/div>/,
     `<div id="root">${prerenderedBody}</div>${bootstrapMarker}`,

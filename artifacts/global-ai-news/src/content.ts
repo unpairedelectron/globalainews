@@ -97,6 +97,18 @@ export interface Story {
   keyTakeaways: string[];
   whatChanges: string;
 }
+
+const readerFacingContentTypes: Record<Story['classification'], string> = {
+  reported: 'Reporting',
+  analysis: 'Analysis',
+  opinion: 'Opinion',
+  synthesis: 'Synthesis',
+};
+
+export function getReaderFacingContentType(classification: Story['classification']): string {
+  return readerFacingContentTypes[classification];
+}
+
 export const MINIMUM_STORY_WORDS = 800;
 
 export function countEditorialWords(copy: string): number {
@@ -915,7 +927,6 @@ export interface NewsroomContentSnapshot {
   indiaIndex: IndiaIndexMetric[];
   essays: Essay[];
   askGlobalAnswers: AskGlobalAnswer[];
-  schedule: EditorialScheduleItem[];
 }
 
 export function hydrateContent(snapshot: NewsroomContentSnapshot): void {

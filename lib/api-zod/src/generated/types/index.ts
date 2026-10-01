@@ -7,8 +7,11 @@
  */
 
 export * from './editorialAutomationRun';
+export * from './editorialAutomationRunAccepted';
+export * from './editorialAutomationRunAcceptedResultsItem';
 export * from './editorialAutomationRunOutcome';
 export * from './editorialAutomationRunQueue';
+export * from './editorialAutomationStatus';
 export * from './editorialAutomationVerification';
 export * from './editorialCadence';
 export * from './editorialRelease';

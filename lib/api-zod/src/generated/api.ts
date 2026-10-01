@@ -35,17 +35,7 @@ export const GetNewsroomContentResponse = zod.object({
   "industryMap": zod.array(zod.record(zod.string(), zod.unknown())),
   "indiaIndex": zod.array(zod.record(zod.string(), zod.unknown())),
   "essays": zod.array(zod.record(zod.string(), zod.unknown())),
-  "askGlobalAnswers": zod.array(zod.record(zod.string(), zod.unknown())),
-  "schedule": zod.array(zod.object({
-  "slug": zod.string(),
-  "title": zod.string(),
-  "dek": zod.string(),
-  "publishAt": zod.coerce.date(),
-  "cadence": zod.enum(['daily', 'weekly']),
-  "status": zod.enum(['scheduled', 'published', 'canceled']),
-  "position": zod.number().int(),
-  "story": zod.record(zod.string(), zod.unknown()).optional()
-}))
+  "askGlobalAnswers": zod.array(zod.record(zod.string(), zod.unknown()))
 })
 
 
@@ -109,6 +99,23 @@ export const GetNewsroomAutomationRunsResponseItem = zod.object({
   "finishedAt": zod.coerce.date().nullable()
 })
 export const GetNewsroomAutomationRunsResponse = zod.array(GetNewsroomAutomationRunsResponseItem)
+
+
+/**
+ * Returns editor-facing automation configuration and the latest run.
+ * @summary Get editorial automation status
+ */
+export const GetNewsroomAutomationStatusResponse = zod.record(zod.string(), zod.unknown())
+
+
+/**
+ * Starts a manual editorial automation run.
+ * @summary Run editorial automation manually
+ */
+export const RunNewsroomAutomationResponse = zod.object({
+  "accepted": zod.boolean(),
+  "results": zod.array(zod.record(zod.string(), zod.unknown()))
+})
 
 
 /**

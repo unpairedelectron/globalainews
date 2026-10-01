@@ -1,5 +1,29 @@
 [
   {
+    "url": "https://www.globalainews.in/about-us",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/about-us/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/about-us",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/about-us",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/amp/article/ai-models-antibiotic-discovery",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
@@ -13,6 +37,30 @@
     "canonical": "https://www.globalainews.in/",
     "indexability": "indexable",
     "linkSource": "/amp/article/ai-models-antibiotic-discovery",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/archive",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/archive/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/archive",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/archive",
     "issue": ""
   },
   {
@@ -40,9 +88,33 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/article/ai-models-antibiotic-discovery",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/person/mira-patel/",
     "status": "200",
     "canonical": "https://www.globalainews.in/person/mira-patel/",
+    "indexability": "indexable",
+    "linkSource": "/article/ai-models-antibiotic-discovery",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "indexability": "indexable",
+    "linkSource": "/article/ai-models-antibiotic-discovery",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
     "indexability": "indexable",
     "linkSource": "/article/ai-models-antibiotic-discovery",
     "issue": ""
@@ -72,9 +144,33 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/article/founders-first-million-model-calls",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/person/lena-hoff/",
     "status": "200",
     "canonical": "https://www.globalainews.in/person/lena-hoff/",
+    "indexability": "indexable",
+    "linkSource": "/article/founders-first-million-model-calls",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "indexability": "indexable",
+    "linkSource": "/article/founders-first-million-model-calls",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/article/founders-first-million-model-calls",
     "issue": ""
@@ -104,9 +200,33 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/article/indias-public-ai-stack",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/person/ananya-rao/",
     "status": "200",
     "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/article/indias-public-ai-stack",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "indexability": "indexable",
+    "linkSource": "/article/indias-public-ai-stack",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/article/indias-public-ai-stack",
     "issue": ""
@@ -136,9 +256,33 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/article/new-geography-of-compute",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/person/david-okafor/",
     "status": "200",
     "canonical": "https://www.globalainews.in/person/david-okafor/",
+    "indexability": "indexable",
+    "linkSource": "/article/new-geography-of-compute",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "indexability": "indexable",
+    "linkSource": "/article/new-geography-of-compute",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "indexability": "indexable",
     "linkSource": "/article/new-geography-of-compute",
     "issue": ""
@@ -168,9 +312,33 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/person/ananya-rao/",
     "status": "200",
     "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/article/public-compute-needs-public-metrics",
     "issue": ""
@@ -200,9 +368,25 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/person/jonas-rhee/",
     "status": "200",
     "canonical": "https://www.globalainews.in/person/jonas-rhee/",
+    "indexability": "indexable",
+    "linkSource": "/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
     "indexability": "indexable",
     "linkSource": "/article/quiet-race-watermark-everything-ai-makes",
     "issue": ""
@@ -232,9 +416,33 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/article/reliability-is-the-new-ai-moat",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/person/lena-hoff/",
     "status": "200",
     "canonical": "https://www.globalainews.in/person/lena-hoff/",
+    "indexability": "indexable",
+    "linkSource": "/article/reliability-is-the-new-ai-moat",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "indexability": "indexable",
+    "linkSource": "/article/reliability-is-the-new-ai-moat",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
     "indexability": "indexable",
     "linkSource": "/article/reliability-is-the-new-ai-moat",
     "issue": ""
@@ -264,9 +472,33 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/article/small-models-serious-workflows",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/person/ishaan-mehta/",
     "status": "200",
     "canonical": "https://www.globalainews.in/person/ishaan-mehta/",
+    "indexability": "indexable",
+    "linkSource": "/article/small-models-serious-workflows",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
+    "indexability": "indexable",
+    "linkSource": "/article/small-models-serious-workflows",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/article/small-models-serious-workflows",
     "issue": ""
@@ -291,6 +523,14 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/article/study-finds-word-cues-can-override-game-theory-choices-in-llms",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
     "indexability": "indexable",
     "linkSource": "/article/study-finds-word-cues-can-override-game-theory-choices-in-llms",
     "issue": ""
@@ -328,9 +568,33 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/article/weekly-deep-dive-cost-of-intelligence",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/person/david-okafor/",
     "status": "200",
     "canonical": "https://www.globalainews.in/person/david-okafor/",
+    "indexability": "indexable",
+    "linkSource": "/article/weekly-deep-dive-cost-of-intelligence",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "indexability": "indexable",
+    "linkSource": "/article/weekly-deep-dive-cost-of-intelligence",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "indexability": "indexable",
     "linkSource": "/article/weekly-deep-dive-cost-of-intelligence",
     "issue": ""
@@ -640,6 +904,30 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/code-of-ethics",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/code-of-ethics/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/code-of-ethics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/code-of-ethics",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/company/anthropic",
     "status": "200",
     "canonical": "https://www.globalainews.in/company/anthropic/",
@@ -733,6 +1021,54 @@
     "canonical": "https://www.globalainews.in/brief/",
     "indexability": "indexable",
     "linkSource": "/company/sarvam-ai",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/contact-us",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/contact-us/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/contact-us",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/contact-us",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/corrections",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/corrections/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/corrections",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/corrections",
     "issue": ""
   },
   {
@@ -2024,6 +2360,30 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/reports",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/research",
     "status": "200",
     "canonical": "https://www.globalainews.in/research/",
@@ -2173,6 +2533,30 @@
     "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/research",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/search",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/search/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/search",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/search",
     "issue": ""
   },
   {
@@ -2909,6 +3293,30 @@
     "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/topics",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/topics/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/topics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/topics",
     "issue": ""
   },
   {

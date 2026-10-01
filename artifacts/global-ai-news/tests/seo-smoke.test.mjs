@@ -2603,6 +2603,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     rootApiSitemapResult,
     { response: feedResponse, body: feed },
     { response: apiFeedResponse, body: apiFeed },
+    rootApiFeedResult,
   ] = await Promise.all([
     fetchText('/sitemap.xml'),
     fetch(`${apiOrigin}/api/newsroom/sitemap.xml`).then(async (response) => ({
@@ -2620,6 +2621,10 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       response,
       body: await response.text(),
     })),
+    fetch(`${apiOrigin}/feed.xml`).then(async (response) => ({
+      response,
+      body: await response.text(),
+    })),
   ]);
   assert.equal(sitemapResponse.status, 200, 'sitemap.xml is not reachable');
   assert.equal(apiSitemapResponse.status, 200, 'API newsroom sitemap.xml is not reachable');
@@ -2629,11 +2634,20 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.ok(rootApiSitemapResult.body.includes('<urlset'), 'gzip sitemap response did not decode to XML');
   assert.equal(feedResponse.status, 200, 'feed.xml is not reachable');
   assert.equal(apiFeedResponse.status, 200, 'API newsroom RSS feed is not reachable');
+  assert.equal(rootApiFeedResult.response.status, 200, 'root API RSS feed is not reachable');
+  assert.match(rootApiFeedResult.response.headers.get('content-type') ?? '', /^application\/rss\+xml\b/i, 'root API RSS feed has the wrong content type');
+  assert.match(rootApiFeedResult.response.headers.get('cache-control') ?? '', /max-age=60/, 'root API RSS feed cache is not set for short-lived freshness');
   assertCanonicalSitemapUrls(sitemap, 'static sitemap');
   assertCanonicalSitemapUrls(apiSitemap, 'API newsroom sitemap');
   assertCanonicalSitemapUrls(rootApiSitemapResult.body, 'root API sitemap');
   assertRssCanonicalUrls(feed, 'static RSS feed');
   assertRssCanonicalUrls(apiFeed, 'API newsroom RSS feed');
+  assertRssCanonicalUrls(rootApiFeedResult.body, 'root API RSS feed');
+  assert.deepEqual(
+    feedItems(rootApiFeedResult.body).map((item) => item.guid),
+    feedItems(apiFeed).map((item) => item.guid),
+    'root API RSS feed drifted from the newsroom RSS endpoint',
+  );
 
   const { response: metadataResponse, body: metadataBody } = await fetchText('/api/newsroom/metadata');
   assert.equal(metadataResponse.status, 200, 'newsroom metadata manifest is not reachable');
@@ -2688,6 +2702,34 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       `${route}: initial HTML must explicitly prevent indexing before JavaScript runs`,
     );
   }
+  const publicNoindexRoutes = [
+    '/search',
+    '/reports',
+    '/topics',
+    '/archive',
+    '/about-us',
+    '/code-of-ethics',
+    '/corrections',
+    '/contact-us',
+  ];
+  for (const route of publicNoindexRoutes) {
+    assert.equal(
+      metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
+      false,
+      `${route}: utility/editorial-input route must be non-indexable`,
+    );
+    const { response, body } = await fetchText(route);
+    assert.equal(response.status, 200, `${route}: direct non-indexable route failed`);
+    assert.match(body, /<meta name="robots" content="noindex,follow"/, `${route}: initial HTML must explicitly prevent indexing`);
+    assert.match(body, /<main\b/, `${route}: initial HTML is missing page content`);
+    assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing the newsroom bootstrap marker`);
+    if (route === '/search') {
+      assert.match(body, /name="q"/, 'search route is missing a usable initial HTML search form');
+    } else {
+      assert.match(body, /data-testid="editorial-input-required"/, `${route}: placeholder must clearly require editorial input`);
+      assert.doesNotMatch(body, /Latest stories/, `${route}: editorial-input placeholder must not present unrelated stories`);
+    }
+  }
   const articleRoutes = newsroomContent.stories.map((story) => `/article/${story.slug}`);
   const entries = sitemapEntries(sitemap);
   for (const articleRoute of articleRoutes) {
@@ -2723,9 +2765,36 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       if (route.startsWith('/article/')) {
         const slug = route.split('/')[2];
         const story = newsroomContent.stories.find((candidate) => candidate.slug === slug);
+        const author = newsroomContent.authors.find((candidate) => candidate.slug === story?.author);
         assert.ok(story, `${route}: published story is missing from the newsroom content snapshot`);
         assert.ok(body.includes(story.title.replaceAll('&', '&amp;')), `${route}: initial HTML is missing the article headline`);
         assert.ok(body.includes(story.body[0].paragraphs[0].slice(0, 40)), `${route}: initial HTML is missing article body copy`);
+        assert.match(body, /aria-label="Breadcrumb"/, `${route}: visible breadcrumb is missing`);
+        assert.doesNotMatch(body, /Metrics in context/, `${route}: unsupported generic metrics panel is present`);
+        assert.ok(!new RegExp(`<time[^>]*>${story.date}</time>`).test(body), `${route}: visible publication date is still ISO-formatted`);
+        const contentTypeLabel = {
+          reported: 'Reporting',
+          analysis: 'Analysis',
+          opinion: 'Opinion',
+          synthesis: 'Synthesis',
+        }[story.classification];
+        assert.ok(body.includes(`${story.category} · ${contentTypeLabel}`), `${route}: reader-facing content type label is missing`);
+        if (author) {
+          assert.ok(body.includes(`href="/person/${author.slug}/"`), `${route}: verified author byline is not linked to the profile`);
+          assert.ok(body.includes(author.name), `${route}: verified author name is missing from the byline`);
+        } else {
+          assert.match(body, /Byline unavailable/, `${route}: missing author record should be explicit`);
+          assert.ok(!body.includes(story.author), `${route}: raw author slug was displayed`);
+        }
+        for (const sourceSlug of story.sources) {
+          const source = newsroomContent.sources.find((candidate) => candidate.slug === sourceSlug);
+          if (source) {
+            assert.ok(body.includes(source.name), `${route}: verified source name is missing`);
+            assert.ok(body.includes(source.url.replaceAll('&', '&amp;')), `${route}: verified source URL is missing`);
+          } else {
+            assert.ok(!body.includes(sourceSlug), `${route}: unresolved source slug was displayed as a citation`);
+          }
+        }
       }
      assertInitialSeoDocument(body, route, {
        article: route.startsWith('/article/'),
@@ -2752,6 +2821,11 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       assertVisualPreviewAsset(previewPath, route, previewSourceTitle(previewPath, route));
     }
   }
+
+  const webArtifactConfig = await readFile(path.join(root, '.replit-artifact', 'artifact.toml'), 'utf8');
+  assert.match(webArtifactConfig, /from = "\/article\/\*"\s+to = "\/index\.html"/, 'static production artifact is missing the new-article SPA fallback');
+  const apiArtifactConfig = await readFile(path.resolve(root, '..', 'api-server', '.replit-artifact', 'artifact.toml'), 'utf8');
+  assert.match(apiArtifactConfig, /paths = \["\/api", "\/sitemap\.xml", "\/feed\.xml"\]/, 'production API artifact is not routing the live root RSS feed');
 
   const devImageResponse = await fetch(
     `${devBaseUrl}/social/articles/ai-models-antibiotic-discovery.png`,

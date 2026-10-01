@@ -5,7 +5,6 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { EditorialScheduleItem } from './editorialScheduleItem';
 import type { NewsroomContentAskGlobalAnswersItem } from './newsroomContentAskGlobalAnswersItem';
 import type { NewsroomContentAuthorsItem } from './newsroomContentAuthorsItem';
 import type { NewsroomContentEntitiesItem } from './newsroomContentEntitiesItem';
@@ -33,5 +32,4 @@ export interface NewsroomContent {
   indiaIndex: NewsroomContentIndiaIndexItem[];
   essays: NewsroomContentEssaysItem[];
   askGlobalAnswers: NewsroomContentAskGlobalAnswersItem[];
-  schedule: EditorialScheduleItem[];
 }
