@@ -14,3 +14,9 @@ After publishing a change that spans the web and API artifacts, a successful-bui
 **Why:** Production checks showed a successful deployment state while both published hosts still exposed editor GET routes, leaked schedule fields, served a shorter root RSS feed, and missed current trust routes.
 
 **How to apply:** Verify the homepage, API projection, editor authorization, root/API feeds, sitemap, trust routes, and 404/noindex behavior on each published host. Do not create production editorial records just to test a release; use an isolated fixture or leave the deployed publication flow explicitly unverified.
+
+When root RSS differs from API RSS, inspect production response headers and target identity before changing publication eligibility. A static-style root response with an older `Last-Modified` and `Accept-Ranges`, contrasted with an Express/API RSS response, points to a separate stale root artifact. AMP checks must also compare each article's declared target, returned title, and canonical—not just HTTP 200.
+
+**Why:** After republishing, root RSS still returned three items from a static-style response while the API feed returned ten; six article pages also pointed to the same AMP route and content.
+
+**How to apply:** Use a cache-busted request and compare headers, article sets, AMP target URLs, and canonical destinations on production. Preserve the eligible article set; fix the serving route or artifact instead of hiding a routing mismatch by changing editorial rules.
