@@ -1,0 +1,186 @@
+POST-PUBLISH LIVE VERIFICATION — BOTH PRODUCTION HOSTS
+
+The repaired web and API artifacts have now been published.
+
+Run ONE production verification pass against:
+
+1. https://www.globalainews.in
+2. https://global-ai-media.replit.app
+
+Do not modify code or production editorial data during this verification.
+
+==================================================
+A. API AUTHORIZATION
+==================================================
+
+Anonymous requests must return 401 for:
+
+GET /api/newsroom/releases
+GET /api/newsroom/releases/history
+GET /api/newsroom/automation/status
+GET /api/newsroom/automation/runs
+
+Verify unauthenticated mutation/run endpoints remain 401.
+
+Inspect public content and confirm none of these are exposed:
+
+schedule
+status
+position
+cadence
+publishAt
+updatedAt
+release metadata
+queue/readiness fields
+editorial provenance
+automation/audit data
+
+Do NOT invoke a live automation run merely to test it.
+
+==================================================
+B. ROOT XML OWNERSHIP
+==================================================
+
+Verify:
+
+/feed.xml
+
+and:
+
+/sitemap.xml
+
+are served by the web artifact and reflect the current API data.
+
+Verify:
+
+/api/newsroom/feed.xml
+
+and:
+
+/api/newsroom/sitemap.xml
+
+remain available from the API artifact.
+
+Expected:
+
+/feed.xml = 10 current eligible stories
+/api/newsroom/feed.xml = same 10 stories
+
+/sitemap.xml = 47 current URLs
+/api/newsroom/sitemap.xml = corresponding current sitemap data
+
+Confirm the root feed is NOT an old static snapshot.
+
+==================================================
+C. ARTICLE / AMP PARITY
+==================================================
+
+For all 10 public article routes:
+
+- first-response HTML is correct
+- canonical is correct
+- JSON-LD identifies the same article
+- AMP link points to its own article
+- AMP title/H1/canonical match that same article
+
+No article may reference:
+
+/amp/article/ai-models-antibiotic-discovery/
+
+unless that is actually its own slug.
+
+==================================================
+D. TRUST ROUTES
+==================================================
+
+Verify:
+
+/about-us
+/code-of-ethics
+/corrections
+/contact-us
+
+return HTTP 200 with pending editorial content and noindex.
+
+Verify:
+
+/contact
+
+redirects to:
+
+/contact-us
+
+Verify:
+
+/privacy
+/terms
+
+remain intentionally unavailable and unlinked.
+
+==================================================
+E. UNKNOWN ARTICLE
+==================================================
+
+Request a guaranteed nonexistent article URL.
+
+Expected:
+
+HTTP 404
+
+AND noindex via:
+
+X-Robots-Tag
+
+or robots meta.
+
+==================================================
+F. PUBLICATION FLOW
+==================================================
+
+Use the already-supported safe isolated fixture mechanism if it can be routed through the deployed runtime.
+
+Do NOT create permanent production content.
+
+Verify:
+
+publication
+→ article first response
+→ homepage
+→ sitemap
+→ RSS API
+→ /feed.xml
+
+Verify metadata:
+
+title
+description
+canonical
+Open Graph
+JSON-LD
+author
+date
+body
+
+Verify publication does not require rebuild/redeploy.
+
+If the deployed runtime cannot safely support the fixture:
+
+NOT VERIFIED — SAFE DEPLOYED FIXTURE UNAVAILABLE
+
+Do not substitute localhost evidence.
+
+==================================================
+FINAL RESULT
+==================================================
+
+If all production checks pass:
+
+FOUNDATION READY — AUTHORITY ENGINE MAY BEGIN
+
+Otherwise:
+
+FOUNDATION NOT READY — AUTHORITY ENGINE BLOCKED
+
+If blocked, identify the exact production route and observed discrepancy.
+
+Do not make another workspace-only conclusion.
