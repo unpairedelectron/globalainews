@@ -21,6 +21,12 @@ When root RSS differs from API RSS, inspect production response headers and targ
 
 **How to apply:** Use a cache-busted request and compare headers, article sets, AMP target URLs, and canonical destinations on production. Preserve the eligible article set; fix the serving route or artifact instead of hiding a routing mismatch by changing editorial rules.
 
+Do not assume the `localhost:80` service routing used by workspace web requests is available to server-side fetches in a published web service. A web/API origin that cannot be reached at runtime can produce 503s for root XML, article HTML, and trust pages while the public `/api` endpoints remain healthy.
+
+**Why:** Production logs showed web-side `fetch failed` errors for those routes while the same deployment returned 200 from the namespaced API endpoints.
+
+**How to apply:** For cross-artifact server rendering and proxy routes, verify the configured API origin is reachable from the published web service; a successful build and healthy public API alone do not prove that connection works.
+
 The local link-audit server must model production ownership for root XML routes after static feed and sitemap files are removed; proxy `/feed.xml` and `/sitemap.xml` to their namespaced API endpoints.
 
 **Why:** A build-only smoke server otherwise falls back to the SPA shell, so tests can report HTML as a successful root feed response even when the real web server correctly proxies the API.
