@@ -1,0 +1,205 @@
+FINAL PRODUCTION PARITY CHECK — AFTER REPUBLISH
+
+The current web and API artifacts have now been republished.
+
+Do NOT modify application code unless a concrete production defect is discovered.
+Do NOT modify production editorial data.
+Do NOT begin the Authority Engine.
+
+This is a verification task only.
+
+Test BOTH production hosts if both remain publicly active.
+
+==================================================
+P0 — API SECURITY
+==================================================
+
+Anonymous requests must return 401 for:
+
+GET /api/newsroom/releases
+GET /api/newsroom/releases/history
+GET /api/newsroom/automation/status
+GET /api/newsroom/automation/runs
+
+Also verify unauthenticated:
+
+create
+update
+delete
+reorder
+automation run
+
+remain 401.
+
+Then inspect public content responses.
+
+The following MUST NOT be exposed publicly:
+
+- schedule
+- cadence
+- publishAt
+- release status
+- queue position
+- readiness
+- word count
+- editor/source provenance
+- internal update timestamps
+- automation/audit information
+- internal release records
+
+Report exact production status codes and representative public-field inspection.
+
+==================================================
+P0 — ROOT RSS PARITY
+==================================================
+
+Verify:
+
+/feed.xml
+
+against:
+
+RSS API
+
+against:
+
+sitemap article URLs
+
+against:
+
+currently public article routes
+
+Expected current publication set:
+
+10 public stories.
+
+The following must represent the same eligible article set:
+
+- homepage
+- RSS API
+- /feed.xml
+- sitemap article URLs
+- public article routes
+
+The previous state was:
+
+API RSS = 10
+/feed.xml = 3
+
+If /feed.xml remains at 3 after republish:
+
+1. identify which route/build actually serves /feed.xml
+2. determine whether a stale static artifact, cached route, alternate web service, or mismatched deployment is serving it
+3. DO NOT simply alter article eligibility logic to make the numbers match
+
+==================================================
+P0 — NEW PUBLICATION FLOW
+==================================================
+
+Do NOT create permanent production editorial content.
+
+Use a genuinely isolated fixture routed through the DEPLOYED runtime if the architecture supports it.
+
+The fixture must prove:
+
+publication
+→ deployed runtime
+→ first-response article HTML
+→ homepage
+→ sitemap
+→ RSS API
+→ /feed.xml
+
+Verify first-response HTML contains:
+
+- title
+- description
+- canonical
+- Open Graph
+- JSON-LD
+- author
+- publication date
+- article body
+
+Also verify that publication becomes visible WITHOUT rebuilding or redeploying.
+
+If the deployed architecture cannot safely perform this test without creating permanent production content, report:
+
+NOT VERIFIED — SAFE DEPLOYED FIXTURE UNAVAILABLE
+
+Do not substitute localhost evidence.
+
+==================================================
+P1 — TRUST ROUTES
+==================================================
+
+Verify production:
+
+/about-us
+/code-of-ethics
+/corrections
+/contact-us
+
+Expected:
+
+- HTTP 200
+- pending editorial page
+- noindex
+
+Verify:
+
+/contact
+
+Expected:
+
+- redirect to /contact-us
+
+Verify:
+
+/privacy
+/terms
+
+remain 404 and are not linked in production navigation.
+
+Do not invent legal or editorial content.
+
+==================================================
+P1 — UNKNOWN ARTICLE NOINDEX
+==================================================
+
+Request a guaranteed nonexistent article URL.
+
+Expected:
+
+- HTTP 404
+- X-Robots-Tag containing noindex OR robots meta containing noindex
+
+Verify the response body/head as well as headers.
+
+==================================================
+FINAL PRODUCTION GATE
+==================================================
+
+Do not report local results.
+
+Use ONLY the deployed production runtime as evidence for this gate.
+
+If all P0 and P1 checks pass:
+
+FOUNDATION READY — AUTHORITY ENGINE MAY BEGIN
+
+Otherwise:
+
+FOUNDATION NOT READY — AUTHORITY ENGINE BLOCKED
+
+For any failure, report:
+
+1. exact URL/route
+2. HTTP status
+3. observed behavior
+4. expected behavior
+5. likely deployment/artifact cause if identifiable
+6. exact next action
+
+Do not modify unrelated code.
+Do not start Authority Engine work.
