@@ -91,31 +91,16 @@ function extractAnchors(html) {
   return links;
 }
 
-function extractSitemapUrls(xml) {
-  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => decodeHtml(match[1]));
-}
-
-function extractFeedItems(xml) {
-  const items = [];
-  for (const match of xml.matchAll(/<item\b[^>]*>([\s\S]*?)<\/item>/gi)) {
-    const item = match[1];
-    const url = item.match(/<link>([^<]+)<\/link>/i)?.[1];
-    const title = item.match(/<title>([\s\S]*?)<\/title>/i)?.[1];
-    if (url) items.push({ url: decodeHtml(url.trim()), title: decodeHtml(title?.trim() ?? '') });
-  }
-  return items;
-}
-
 if (!existsSync(outputDir)) {
   console.error(`Build output not found at ${outputDir}. Run build:release before audit:links.`);
   process.exit(1);
 }
 
-const sitemapPath = path.join(outputDir, 'sitemap.xml');
-const feedPath = path.join(outputDir, 'feed.xml');
-if (!existsSync(sitemapPath) || !existsSync(feedPath)) {
-  console.error('The release output must include both sitemap.xml and feed.xml.');
-  process.exit(1);
+for (const documentName of ['sitemap.xml', 'feed.xml']) {
+  if (existsSync(path.join(outputDir, documentName))) {
+    console.error(`The release output must not contain static ${documentName}; the web service proxies it to the live newsroom API.`);
+    process.exit(1);
+  }
 }
 
 const routeFiles = listIndexFiles(outputDir);
@@ -211,16 +196,6 @@ for (const record of routeRecords) {
     if (/^(?:mailto:|tel:|javascript:|data:)/i.test(href)) continue;
     checkInternalUrl(href, record.route);
   }
-}
-
-const sitemapXml = readFileSync(sitemapPath, 'utf8');
-for (const url of extractSitemapUrls(sitemapXml)) {
-  checkInternalUrl(url, 'sitemap.xml', true);
-}
-
-const feedXml = readFileSync(feedPath, 'utf8');
-for (const item of extractFeedItems(feedXml)) {
-  checkInternalUrl(item.url, 'feed.xml', true);
 }
 
 const reportDirectory = path.join(projectRoot, 'reports');

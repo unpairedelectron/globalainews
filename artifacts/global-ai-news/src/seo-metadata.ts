@@ -201,7 +201,7 @@ export function getArticleSeoMetadata(
     path: `/article/${story.slug}`,
     lastmod: getPublicDateModified(story),
     article: true,
-    ...(isMaintainedStory ? { ampPath: '/amp/article/ai-models-antibiotic-discovery/' } : {}),
+    ...(isMaintainedStory ? { ampPath: `/amp/article/${story.slug}/` } : {}),
     imagePath,
     imageAlt,
   };

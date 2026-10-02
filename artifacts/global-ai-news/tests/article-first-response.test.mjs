@@ -263,15 +263,17 @@ async function assertPublishedOnlyFeeds() {
     metadataResponse,
     sitemapResponse,
     feedResponse,
-    apiFeedResponse,
+    apiRootSitemapResponse,
+    apiRootFeedResponse,
     webSitemapResponse,
     webFeedResponse,
   ] = await Promise.all([
     fetch(`${apiOrigin}/api/newsroom/content`),
     fetch(`${apiOrigin}/api/newsroom/metadata`),
+    fetch(`${apiOrigin}/api/newsroom/sitemap.xml`),
+    fetch(`${apiOrigin}/api/newsroom/feed.xml`),
     fetch(`${apiOrigin}/sitemap.xml`),
     fetch(`${apiOrigin}/feed.xml`),
-    fetch(`${apiOrigin}/api/newsroom/feed.xml`),
     fetch(`${webOrigin}/sitemap.xml`),
     fetch(`${webOrigin}/feed.xml`),
   ]);
@@ -280,26 +282,36 @@ async function assertPublishedOnlyFeeds() {
     metadataResponse,
     sitemapResponse,
     feedResponse,
-    apiFeedResponse,
     webSitemapResponse,
     webFeedResponse,
   ]) {
     assert.equal(response.status, 200);
   }
+  assert.equal(apiRootSitemapResponse.status, 404, 'API artifact must not own the root sitemap route');
+  assert.equal(apiRootFeedResponse.status, 404, 'API artifact must not own the root RSS route');
+
+  const editorReadResponses = await Promise.all([
+    '/api/newsroom/releases',
+    '/api/newsroom/releases/history',
+    '/api/newsroom/automation/status',
+    '/api/newsroom/automation/runs',
+  ].map((route) => fetch(`${apiOrigin}${route}`)));
+  for (const response of editorReadResponses) {
+    assert.equal(response.status, 401, 'editor-only read endpoint must reject anonymous requests');
+  }
 
   const content = await contentResponse.json();
   const metadata = await metadataResponse.json();
-  const [sitemap, feed, apiFeed, webSitemap, webFeed] = await Promise.all([
+  const [sitemap, feed, webSitemap, webFeed] = await Promise.all([
     sitemapResponse.text(),
     feedResponse.text(),
-    apiFeedResponse.text(),
     webSitemapResponse.text(),
     webFeedResponse.text(),
   ]);
   assert.match(webSitemapResponse.headers.get('content-type') ?? '', /application\/xml/i);
   assert.match(webFeedResponse.headers.get('content-type') ?? '', /application\/rss\+xml/i);
   assert.equal(webSitemap, sitemap, 'web sitemap must proxy the current API sitemap');
-  assert.equal(webFeed, apiFeed, 'web RSS must proxy the current API feed');
+  assert.equal(webFeed, feed, 'web RSS must proxy the current API feed');
   const publishedSlugs = new Set(content.stories.map((story) => story.slug));
   const articlePaths = new Set(
     metadata.routes.filter((route) => route.article).map((route) => route.path),
@@ -330,14 +342,12 @@ async function assertPublishedOnlyFeeds() {
   assert.ok(articlePaths.has(`/article/${slugs.published}`), 'published fixture is absent from metadata');
   assert.ok(sitemap.includes(`https://www.globalainews.in/article/${slugs.published}/`));
   assert.ok(feed.includes(`https://www.globalainews.in/article/${slugs.published}/`));
-  assert.ok(apiFeed.includes(`https://www.globalainews.in/article/${slugs.published}/`));
 
   for (const slug of forbiddenSlugs) {
     assert.equal(publishedSlugs.has(slug), false, `${slug} leaked into public content`);
     assert.equal(articlePaths.has(`/article/${slug}`), false, `${slug} leaked into public metadata`);
     assert.equal(sitemap.includes(`/article/${slug}/`), false, `${slug} leaked into sitemap`);
     assert.equal(feed.includes(`/article/${slug}/`), false, `${slug} leaked into root RSS`);
-    assert.equal(apiFeed.includes(`/article/${slug}/`), false, `${slug} leaked into API RSS`);
     assert.equal(webSitemap.includes(`/article/${slug}/`), false, `${slug} leaked into web sitemap`);
     assert.equal(webFeed.includes(`/article/${slug}/`), false, `${slug} leaked into web RSS`);
   }
@@ -348,11 +358,14 @@ async function assertContactAlias() {
   assert.equal(response.status, 308, '/contact must redirect to the approved pending route');
   assert.equal(response.headers.get('location'), '/contact-us');
 
-  const destination = await fetch(`${webOrigin}/contact-us`);
-  const html = await destination.text();
-  assert.equal(destination.status, 200);
-  assert.match(html, /name="robots" content="noindex,follow"/i);
-  assert.match(html, /data-testid="editorial-input-required"/);
+  for (const route of ['/about-us', '/code-of-ethics', '/corrections', '/contact-us']) {
+    const destination = await fetch(`${webOrigin}${route}`);
+    const html = await destination.text();
+    assert.equal(destination.status, 200, `${route} must resolve to its pending page`);
+    assert.equal(destination.headers.get('x-robots-tag'), 'noindex');
+    assert.match(html, /name="robots" content="noindex,follow"/i);
+    assert.match(html, /data-testid="editorial-input-required"/);
+  }
 }
 
 async function cleanupFixtures() {

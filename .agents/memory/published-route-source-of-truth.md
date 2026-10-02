@@ -20,3 +20,9 @@ When root RSS differs from API RSS, inspect production response headers and targ
 **Why:** After republishing, root RSS still returned three items from a static-style response while the API feed returned ten; six article pages also pointed to the same AMP route and content.
 
 **How to apply:** Use a cache-busted request and compare headers, article sets, AMP target URLs, and canonical destinations on production. Preserve the eligible article set; fix the serving route or artifact instead of hiding a routing mismatch by changing editorial rules.
+
+The local link-audit server must model production ownership for root XML routes after static feed and sitemap files are removed; proxy `/feed.xml` and `/sitemap.xml` to their namespaced API endpoints.
+
+**Why:** A build-only smoke server otherwise falls back to the SPA shell, so tests can report HTML as a successful root feed response even when the real web server correctly proxies the API.
+
+**How to apply:** Keep static-output and Vite-dev smoke checks explicit about which server they exercise, and verify root XML parity against the API endpoints.

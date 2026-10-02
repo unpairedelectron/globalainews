@@ -269,19 +269,17 @@ async function assertPublishedStoryFlowsThroughLivePublicSurfaces() {
   assert.ok(metadata.routes.some((route) => route.path === `/article/${publishedSlug}` && route.article), 'published article metadata did not refresh');
 
   const expectedUrl = `https://www.globalainews.in/article/${publishedSlug}/`;
-  const sitemapResponse = await fetch(`${apiOrigin}/sitemap.xml`);
+  const sitemapResponse = await fetch(`${apiOrigin}/api/newsroom/sitemap.xml`);
   const sitemap = await sitemapResponse.text();
-  assert.equal(sitemapResponse.status, 200, 'live root sitemap failed after publication');
-  assert.ok(sitemap.includes(expectedUrl), 'live root sitemap did not include the new release');
-  assert.match(sitemapResponse.headers.get('cache-control') ?? '', /max-age=60/, 'live root sitemap cache exceeds the release freshness interval');
+  assert.equal(sitemapResponse.status, 200, 'live API sitemap failed after publication');
+  assert.ok(sitemap.includes(expectedUrl), 'live API sitemap did not include the new release');
+  assert.match(sitemapResponse.headers.get('cache-control') ?? '', /max-age=60/, 'live API sitemap cache exceeds the release freshness interval');
 
-  for (const route of ['/feed.xml', '/api/newsroom/feed.xml']) {
-    const response = await fetch(`${apiOrigin}${route}`);
-    const body = await response.text();
-    assert.equal(response.status, 200, `${route} failed after publication`);
-    assert.ok(body.includes(expectedUrl), `${route} did not include the new release`);
-    assert.match(response.headers.get('cache-control') ?? '', /max-age=60/, `${route} cache exceeds the release freshness interval`);
-  }
+  const feedResponse = await fetch(`${apiOrigin}/api/newsroom/feed.xml`);
+  const feed = await feedResponse.text();
+  assert.equal(feedResponse.status, 200, 'live API RSS failed after publication');
+  assert.ok(feed.includes(expectedUrl), 'live API RSS did not include the new release');
+  assert.match(feedResponse.headers.get('cache-control') ?? '', /max-age=60/, 'live API RSS cache exceeds the release freshness interval');
 }
 
 async function cleanupFixture() {

@@ -469,14 +469,29 @@ async function startStaticServer() {
     try {
       const parsedUrl = new URL(request.url ?? '/', 'http://127.0.0.1');
       const requestPath = decodeURIComponent(parsedUrl.pathname);
-      if (requestPath.startsWith('/api/')) {
+      const apiPath = requestPath.startsWith('/api/')
+        ? requestPath
+        : requestPath === '/feed.xml'
+          ? '/api/newsroom/feed.xml'
+          : requestPath === '/sitemap.xml'
+            ? '/api/newsroom/sitemap.xml'
+            : undefined;
+      if (apiPath) {
         try {
-          const apiResponse = await fetch(`${apiOrigin}${requestPath}${parsedUrl.search}`, {
-            headers: { 'x-newsroom-test-editor': smokeEditorId },
+          const isEditorApiRequest = requestPath.startsWith('/api/');
+          const apiResponse = await fetch(`${apiOrigin}${apiPath}${parsedUrl.search}`, {
+            headers: isEditorApiRequest
+              ? { 'x-newsroom-test-editor': smokeEditorId }
+              : { accept: requestPath === '/feed.xml' ? 'application/rss+xml' : 'application/xml' },
           });
           response.statusCode = apiResponse.status;
-          const contentType = apiResponse.headers.get('content-type');
-          if (contentType) response.setHeader('Content-Type', contentType);
+          for (const [sourceName, targetName] of [
+            ['content-type', 'Content-Type'],
+            ['cache-control', 'Cache-Control'],
+          ]) {
+            const header = apiResponse.headers.get(sourceName);
+            if (header) response.setHeader(targetName, header);
+          }
           response.end(await apiResponse.text());
         } catch (error) {
           response.statusCode = 502;
@@ -524,6 +539,7 @@ async function startDevServer() {
       env: {
         ...process.env,
         BASE_PATH: '/',
+        NEWSROOM_API_ORIGIN: apiOrigin,
         NODE_ENV: 'development',
         PORT: String(devPort),
       },
@@ -2632,9 +2648,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       response,
       body: await response.text(),
     })),
-    fetch(`${apiOrigin}/sitemap.xml`, {
-      headers: { 'Accept-Encoding': 'gzip' },
-    }).then(async (response) => ({
+    fetch(`${apiOrigin}/sitemap.xml`).then(async (response) => ({
       response,
       body: await response.text(),
     })),
@@ -2650,26 +2664,30 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   ]);
   assert.equal(sitemapResponse.status, 200, 'sitemap.xml is not reachable');
   assert.equal(apiSitemapResponse.status, 200, 'API newsroom sitemap.xml is not reachable');
-  assert.equal(rootApiSitemapResult.response.status, 200, 'root API sitemap.xml is not reachable');
-  assert.match(rootApiSitemapResult.response.headers.get('content-encoding') ?? '', /gzip/i, 'root API sitemap.xml does not support gzip');
-  assert.match(rootApiSitemapResult.response.headers.get('content-type') ?? '', /^application\/xml\b/i, 'root API sitemap.xml has the wrong content type');
-  assert.ok(rootApiSitemapResult.body.includes('<urlset'), 'gzip sitemap response did not decode to XML');
+  assert.equal(rootApiSitemapResult.response.status, 404, 'API artifact must not own the root sitemap route');
   assert.equal(feedResponse.status, 200, 'feed.xml is not reachable');
   assert.equal(apiFeedResponse.status, 200, 'API newsroom RSS feed is not reachable');
-  assert.equal(rootApiFeedResult.response.status, 200, 'root API RSS feed is not reachable');
-  assert.match(rootApiFeedResult.response.headers.get('content-type') ?? '', /^application\/rss\+xml\b/i, 'root API RSS feed has the wrong content type');
-  assert.match(rootApiFeedResult.response.headers.get('cache-control') ?? '', /max-age=60/, 'root API RSS feed cache is not set for short-lived freshness');
-  assertCanonicalSitemapUrls(sitemap, 'static sitemap');
+  assert.equal(rootApiFeedResult.response.status, 404, 'API artifact must not own the root RSS route');
+  assertCanonicalSitemapUrls(sitemap, 'root sitemap');
   assertCanonicalSitemapUrls(apiSitemap, 'API newsroom sitemap');
-  assertCanonicalSitemapUrls(rootApiSitemapResult.body, 'root API sitemap');
-  assertRssCanonicalUrls(feed, 'static RSS feed');
+  assertRssCanonicalUrls(feed, 'root RSS feed');
   assertRssCanonicalUrls(apiFeed, 'API newsroom RSS feed');
-  assertRssCanonicalUrls(rootApiFeedResult.body, 'root API RSS feed');
+  assert.equal(sitemap, apiSitemap, 'root sitemap drifted from the API newsroom sitemap');
   assert.deepEqual(
-    feedItems(rootApiFeedResult.body).map((item) => item.guid),
+    feedItems(feed).map((item) => item.guid),
     feedItems(apiFeed).map((item) => item.guid),
-    'root API RSS feed drifted from the newsroom RSS endpoint',
+    'root RSS feed drifted from the newsroom RSS endpoint',
   );
+  const [devSitemapResult, devFeedResult] = await Promise.all(
+    ['/sitemap.xml', '/feed.xml'].map(async (route) => {
+      const response = await fetch(`${devBaseUrl}${route}`);
+      return { route, response, body: await response.text() };
+    }),
+  );
+  for (const result of [devSitemapResult, devFeedResult]) {
+    assert.equal(result.response.status, 200, `Vite development proxy failed for ${result.route}`);
+    assert.equal(result.body, result.route === '/sitemap.xml' ? apiSitemap : apiFeed, `Vite development proxy drifted for ${result.route}`);
+  }
 
   const { response: metadataResponse, body: metadataBody } = await fetchText('/api/newsroom/metadata');
   assert.equal(metadataResponse.status, 200, 'newsroom metadata manifest is not reachable');
@@ -2855,7 +2873,8 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.match(webArtifactConfig, /dist\/server\/server\.mjs/, 'production article routes are not served by the request-time Express renderer');
   assert.doesNotMatch(webArtifactConfig, /from = "\/article\/\*"/, 'production article routes must not bypass request-time rendering through the SPA shell');
   const apiArtifactConfig = await readFile(path.resolve(root, '..', 'api-server', '.replit-artifact', 'artifact.toml'), 'utf8');
-  assert.match(apiArtifactConfig, /paths = \["\/api", "\/sitemap\.xml", "\/feed\.xml"\]/, 'production API artifact is not routing the live root RSS feed');
+  assert.match(apiArtifactConfig, /paths = \["\/api"\]/, 'production API artifact must own only the /api route prefix');
+  assert.doesNotMatch(apiArtifactConfig, /paths = \[[^\]]*\/(?:sitemap|feed)\.xml/, 'root RSS and sitemap routes must not be owned by the API artifact');
 
   const devImageResponse = await fetch(
     `${devBaseUrl}/social/articles/ai-models-antibiotic-discovery.png`,
@@ -2957,7 +2976,32 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.equal(metaContent(devAmpDocument, 'name', 'description'), ampStory.dek, 'development AMP description drifted from the newsroom snapshot');
   assert.equal(tagContent(devAmpDocument, 'h1'), ampStory.title, 'development AMP headline drifted from the newsroom snapshot');
 
-  console.log(`Smoke checked ${new Set(staticRoutes).size} public routes at desktop, ${mobileRoutes.length} at mobile, plus AMP and RSS.`);
+  const ampStories = newsroomSnapshot.stories.filter((story) =>
+    Boolean(metadataManifest.routes.find((metadata) => metadata.path === `/article/${story.slug}`)?.ampPath),
+  );
+  const ampTargets = ampStories.map((story) =>
+    metadataManifest.routes.find((metadata) => metadata.path === `/article/${story.slug}`).ampPath,
+  );
+  assert.equal(new Set(ampTargets).size, ampTargets.length, 'published article AMP targets must be unique');
+  for (const story of ampStories) {
+    const storyAmpPath = metadataManifest.routes.find(
+      (metadata) => metadata.path === `/article/${story.slug}`,
+    ).ampPath;
+    const { response, body } = await fetchText(storyAmpPath);
+    assert.equal(response.status, 200, `${story.slug}: AMP target is not reachable`);
+    assert.equal(linkHref(body, 'canonical'), `${site}/article/${story.slug}/`, `${story.slug}: AMP canonical is incorrect`);
+    assert.equal(tagContent(body, 'title'), story.title, `${story.slug}: AMP title does not match its article`);
+    assert.equal(tagContent(body, 'h1'), story.title, `${story.slug}: AMP heading does not match its article`);
+    const { response: devResponse, body: devBody } = await fetch(`${devBaseUrl}${storyAmpPath}`).then(async (response) => ({
+      response,
+      body: await response.text(),
+    }));
+    assert.equal(devResponse.status, 200, `${story.slug}: development AMP target is not reachable`);
+    assert.equal(linkHref(devBody, 'canonical'), `${site}/article/${story.slug}/`, `${story.slug}: development AMP canonical is incorrect`);
+    assert.equal(tagContent(devBody, 'h1'), story.title, `${story.slug}: development AMP heading does not match its article`);
+  }
+
+  console.log(`Smoke checked ${new Set(staticRoutes).size} public routes at desktop, ${mobileRoutes.length} at mobile, plus ${ampStories.length} AMP pages and RSS.`);
 });
 
 test('signed-in release history filters remain usable at a mobile viewport', { concurrency: false }, async () => {

@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type ViteDevServer } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
-import { authors, findStory, getPublishedStories, stories, type NewsroomContentSnapshot, type Story } from './src/content';
+import { authors, getPublishedStories, stories, type NewsroomContentSnapshot, type Story } from './src/content';
 import {
   getCanonicalUrl,
   getSeoMetadata,
@@ -43,7 +43,18 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 const basePath = process.env.BASE_PATH;
-const ampArticlePath = '/amp/article/ai-models-antibiotic-discovery/';
+const newsroomXmlProxy = {
+  '/feed.xml': {
+    target: process.env.NEWSROOM_API_ORIGIN ?? 'http://localhost:80',
+    changeOrigin: true,
+    rewrite: () => '/api/newsroom/feed.xml',
+  },
+  '/sitemap.xml': {
+    target: process.env.NEWSROOM_API_ORIGIN ?? 'http://localhost:80',
+    changeOrigin: true,
+    rewrite: () => '/api/newsroom/sitemap.xml',
+  },
+};
 
 if (!basePath) {
   throw new Error(
@@ -67,10 +78,7 @@ function formatPublishedDate(date: string): string {
   }).format(new Date(`${date}T00:00:00Z`));
 }
 
-function renderAmpArticleDocument() {
-  const story = findStory('ai-models-antibiotic-discovery');
-  if (!story) throw new Error('AMP article source story is missing: ai-models-antibiotic-discovery');
-  const metadata = getSeoMetadata(`/article/${story.slug}`);
+function renderAmpArticleDocument(story: Story) {
   const author = authors.find((candidate) => candidate.slug === story.author);
   const sections = story.body.map((section) => `
         <section>
@@ -84,7 +92,7 @@ function renderAmpArticleDocument() {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
-    <link rel="canonical" href="${escapeHtml(getCanonicalUrl(metadata.path))}" />
+    <link rel="canonical" href="${escapeHtml(getCanonicalUrl(`/article/${story.slug}`))}" />
     <title>${escapeHtml(story.title)}</title>
     <meta name="description" content="${escapeHtml(story.dek)}" />
     <script async src="https://cdn.ampproject.org/v0.js"></script>
@@ -130,10 +138,17 @@ function renderAmpArticleDocument() {
 </html>`;
 }
 
-function writeAmpArticleDocument(outputDir: string) {
-  const outputPath = path.join(outputDir, ampArticlePath.replace(/^\/+/, ''), 'index.html');
+function writeAmpArticleDocument(outputDir: string, story: Story) {
+  const outputPath = path.join(outputDir, 'amp', 'article', story.slug, 'index.html');
   mkdirSync(path.dirname(outputPath), { recursive: true });
-  writeFileSync(outputPath, renderAmpArticleDocument());
+  writeFileSync(outputPath, renderAmpArticleDocument(story));
+}
+
+function writeAmpArticleDocuments(outputDir: string, publishedStories: Story[]) {
+  for (const story of publishedStories) {
+    if (!getSeoMetadata(`/article/${story.slug}`, publishedStories).ampPath) continue;
+    writeAmpArticleDocument(outputDir, story);
+  }
 }
 function escapeSvg(value: string): string {
   return value
@@ -524,7 +539,7 @@ async function loadBuildMetadataManifest(projectRoot: string): Promise<SeoMetada
     }
   }
 
-  for (const route of routePathsFromPublishingFiles(projectRoot)) {
+  for (const route of routePathsFromPublishedContent()) {
     if (!routeMetadata.has(route)) {
       throw new Error(
         `Newsroom metadata manifest from ${manifestUrl} is missing published route "${route}".`,
@@ -564,65 +579,49 @@ function ampArticlePlugin() {
     configureServer(server: ViteDevServer) {
       server.middlewares.use((request, response, next) => {
         const requestPath = new URL(request.url ?? '/', 'http://127.0.0.1').pathname;
-        if (requestPath !== ampArticlePath) {
+        const match = requestPath.match(/^\/amp\/article\/([^/]+)\/?$/);
+        if (!match) {
+          next();
+          return;
+        }
+        let slug: string;
+        try {
+          slug = decodeURIComponent(match[1]);
+        } catch {
+          next();
+          return;
+        }
+        const story = getPublishedStories().find((candidate) => candidate.slug === slug);
+        if (!story || !getSeoMetadata(`/article/${story.slug}`).ampPath) {
           next();
           return;
         }
         response.statusCode = 200;
         response.setHeader('Content-Type', 'text/html; charset=utf-8');
-        response.end(renderAmpArticleDocument());
+        response.end(renderAmpArticleDocument(story));
       });
     },
     handleHotUpdate({ file }: { file: string }) {
       if (file === path.join(projectRoot, 'src', 'content.ts')) {
-        writeAmpArticleDocument(path.join(projectRoot, 'public'));
+        writeAmpArticleDocuments(path.join(projectRoot, 'public'), getPublishedStories());
       }
     },
   };
 }
 
-function routePathsFromPublishingFiles(
-  projectRoot: string,
+function routePathsFromPublishedContent(
   metadataManifest?: SeoMetadataManifest,
 ): string[] {
-  const sitemap = readFileSync(path.join(projectRoot, 'public', 'sitemap.xml'), 'utf8');
-  const feed = readFileSync(path.join(projectRoot, 'public', 'feed.xml'), 'utf8');
-  const sitemapPaths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
-  const feedPaths = [...feed.matchAll(/<link>([^<]+)<\/link>/g)].map((match) => new URL(match[1]).pathname);
+  const sourceStoryPaths = getPublishedStories().map((story) => `/article/${story.slug}`);
   const manifestPaths = metadataManifest?.routes.map((metadata) => metadata.path) ?? [];
   return [
     ...new Set(
-      ['/', ...sitemapPaths, ...feedPaths, ...manifestPaths].map((route) => {
+      ['/', ...sourceStoryPaths, ...manifestPaths].map((route) => {
         const trimmed = route.trim() || '/';
         return trimmed.length > 1 ? trimmed.replace(/\/+$/, '') : '/';
       }),
     ),
   ];
-}
-
-function escapeXml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&apos;');
-}
-
-function writeSitemap(outputDir: string, metadataManifest: SeoMetadataManifest): void {
-  const routes = metadataManifest.routes.filter((metadata) => metadata.indexable !== false);
-  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${routes
-    .map((metadata) => {
-      const lastmod = metadata.lastmod
-        ? `<lastmod>${escapeXml(metadata.lastmod)}</lastmod>`
-        : '';
-      const image = metadata.imagePath
-        ? `<image:image><image:loc>${escapeXml(`https://www.globalainews.in${metadata.imagePath}`)}</image:loc><image:title>${escapeXml(metadata.title)}</image:title></image:image>`
-        : '';
-      return `  <url><loc>${escapeXml(getCanonicalUrl(metadata.path))}</loc>${lastmod}${image}</url>`;
-    })
-    .join('\n')}\n</urlset>`;
-  writeFileSync(path.join(outputDir, 'sitemap.xml'), body);
 }
 
 function withRouteMetadata(
@@ -651,14 +650,16 @@ function routeMetadataPlugin() {
       const serverOutputDir = path.resolve(outputDir, '..', 'server');
       mkdirSync(serverOutputDir, { recursive: true });
       writeFileSync(path.join(serverOutputDir, 'index.template.html'), baseHtml);
-      writeSitemap(outputDir, metadataManifest);
       writeSocialPreviewAssets(
         outputDir,
         metadataManifest.stories ?? getPublishedStories(),
         metadataManifest,
       );
-      writeAmpArticleDocument(outputDir);
-      for (const route of routePathsFromPublishingFiles(projectRoot, metadataManifest)) {
+      writeAmpArticleDocuments(
+        outputDir,
+        metadataManifest.stories ?? getPublishedStories(),
+      );
+      for (const route of routePathsFromPublishedContent(metadataManifest)) {
         const routeDirectory = route === '/' ? outputDir : path.join(outputDir, route.replace(/^\/|\/$/g, ''));
         mkdirSync(routeDirectory, { recursive: true });
         writeFileSync(
@@ -771,6 +772,7 @@ export default defineConfig({
     strictPort: true,
     host: '0.0.0.0',
     allowedHosts: true,
+    proxy: newsroomXmlProxy,
     fs: {
       strict: true,
     },
@@ -779,6 +781,7 @@ export default defineConfig({
     port,
     host: '0.0.0.0',
     allowedHosts: true,
+    proxy: newsroomXmlProxy,
   },
 });
 

@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import express, { type Request, type Response } from 'express';
 
 import { fetchNewsroomContentSnapshot, renderArticleHtml } from './server/article-html';
+import { getSeoMetadata } from './seo-metadata';
+import { renderSeoRouteHtml } from './seo-html';
 
 const serverDirectory = path.dirname(fileURLToPath(import.meta.url));
 const distributionDirectory = path.resolve(serverDirectory, '..');
@@ -113,6 +115,37 @@ app.use((request, response, next) => {
       '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Article temporarily unavailable — Global AI News</title></head><body><main><h1>Article temporarily unavailable</h1></main></body></html>',
     );
   });
+});
+
+const pendingEditorialRoutes = [
+  '/about-us',
+  '/code-of-ethics',
+  '/corrections',
+  '/contact-us',
+];
+
+app.get(pendingEditorialRoutes, async (request, response): Promise<void> => {
+  const route = new URL(request.originalUrl, 'http://localhost').pathname.replace(/\/+$/, '') || '/';
+  try {
+    const snapshot = await fetchNewsroomContentSnapshot(process.env.NEWSROOM_API_ORIGIN);
+    const metadata = { ...getSeoMetadata(route, snapshot.stories), indexable: false };
+    response.status(200);
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('X-Robots-Tag', 'noindex');
+    response.send(renderSeoRouteHtml(baseHtml, route, metadata, snapshot));
+  } catch (error) {
+    process.stderr.write(
+      `Editorial placeholder rendering failed: ${error instanceof Error ? error.message : 'unknown error'}\n`,
+    );
+    response.status(503);
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('X-Robots-Tag', 'noindex');
+    response.send(
+      '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page temporarily unavailable — Global AI News</title></head><body><main><h1>Page temporarily unavailable</h1></main></body></html>',
+    );
+  }
 });
 
 app.use(express.static(publicDirectory, { fallthrough: true }));
