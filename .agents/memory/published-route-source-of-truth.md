@@ -23,7 +23,7 @@ When root RSS differs from API RSS, inspect production response headers and targ
 
 Do not assume the `localhost:80` service routing used by workspace web requests is available to server-side fetches in a published web service. A web/API origin that cannot be reached at runtime can produce 503s for root XML, article HTML, and trust pages while the public `/api` endpoints remain healthy. Replit documents path-based artifact routing but does not provide a private per-service hostname for these server-side calls; use a verified production origin when no private target is exposed.
 
-**Why:** Production logs showed web-side `fetch failed` errors for those routes while the same deployment returned 200 from the namespaced API endpoints.
+**Why:** Production logs showed web-side `fetch failed` errors for those routes while the same deployment returned 200 from the namespaced API endpoints. After configuring the web service with the verified public origin, both published hosts served root XML and server-rendered articles/trust pages successfully.
 
 **How to apply:** Keep the development proxy origin separate from production. For cross-artifact server rendering and proxy routes, verify the configured production origin from the web handler itself and preserve API authorization; a successful build and healthy public API alone do not prove that connection works.
 
