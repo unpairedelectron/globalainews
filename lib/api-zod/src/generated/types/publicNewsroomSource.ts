@@ -5,7 +5,9 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { PublicNewsroomSourceEvidenceType } from './publicNewsroomSourceEvidenceType';
 import type { PublicNewsroomSourceKind } from './publicNewsroomSourceKind';
+import type { PublicNewsroomSourceTier } from './publicNewsroomSourceTier';
 
 export interface PublicNewsroomSource {
   slug: string;
@@ -15,4 +17,9 @@ export interface PublicNewsroomSource {
   url: string;
   /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
   accessed: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  publicationDate?: string;
+  tier?: PublicNewsroomSourceTier;
+  evidenceType?: PublicNewsroomSourceEvidenceType;
+  scopeNote?: string;
 }

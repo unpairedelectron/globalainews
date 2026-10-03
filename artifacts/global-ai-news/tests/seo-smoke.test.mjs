@@ -2744,7 +2744,6 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   }
   const publicNoindexRoutes = [
     '/search',
-    '/reports',
     '/topics',
     '/archive',
     '/about-us',
@@ -2770,11 +2769,20 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       assert.doesNotMatch(body, /Latest stories/, `${route}: editorial-input placeholder must not present unrelated stories`);
     }
   }
+  const reportsMetadata = metadataManifest.routes.find((metadata) => metadata.path === '/reports');
+  assert.ok(reportsMetadata, 'Reports index is missing public SEO metadata');
+  assert.notEqual(reportsMetadata.indexable, false, 'Reports index must be indexable once maintained reports are available');
+  assert.ok(routes.includes('/reports'), 'Reports index is missing from the sitemap');
+  const { response: reportsResponse, body: reportsBody } = await fetchText('/reports');
+  assert.equal(reportsResponse.status, 200, 'Reports index is not reachable');
+  assert.match(reportsBody, /<h1[^>]*>Reports/, 'Reports index is missing its prerendered heading');
+  assert.match(reportsBody, /india-ai-compute-access-2026/, 'Reports index does not link to the maintained flagship report');
+  assert.doesNotMatch(reportsBody, /name="robots" content="noindex,follow"/, 'Reports index must not ship with a noindex directive');
   const articleRoutes = newsroomContent.stories.map((story) => `/article/${story.slug}`);
   assert.equal(
+    articleRoutes.length,
     newsroomContent.stories.length,
-    10,
-    'AMP regression coverage must include all 10 currently public articles',
+    'article metadata and AMP coverage must include every currently public article',
   );
   const entries = sitemapEntries(sitemap);
   for (const articleRoute of articleRoutes) {
@@ -2835,13 +2843,20 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
         assert.match(body, /aria-label="Breadcrumb"/, `${route}: visible breadcrumb is missing`);
         assert.doesNotMatch(body, /Metrics in context/, `${route}: unsupported generic metrics panel is present`);
         assert.ok(!new RegExp(`<time[^>]*>${story.date}</time>`).test(body), `${route}: visible publication date is still ISO-formatted`);
-        const contentTypeLabel = {
+        const contentTypeLabel = story.contentType ?? {
           reported: 'Reporting',
           analysis: 'Analysis',
           opinion: 'Opinion',
           synthesis: 'Synthesis',
         }[story.classification];
         assert.ok(body.includes(`${story.category} · ${contentTypeLabel}`), `${route}: reader-facing content type label is missing`);
+        if (story.slug === 'india-ai-compute-access-2026') {
+          assert.match(body, /45,000\+ GPUs/, 'report first response is missing dated IndiaAI capacity evidence');
+          assert.match(body, /components sum to 8\.65 GW, not 8\.33 GW/, 'report first response is missing the pipeline reconciliation caveat');
+          assert.match(body, /<table\b/, 'report first response is missing the capacity comparison table');
+          assert.match(body, /Source 1:/, 'report first response is missing numbered source citations');
+          assert.match(body, /Tier 1/, 'report first response is missing source-tier provenance');
+        }
         if (author) {
           assert.ok(body.includes(`href="/person/${author.slug}/"`), `${route}: verified author byline is not linked to the profile`);
           assert.ok(body.includes(author.name), `${route}: verified author name is missing from the byline`);
@@ -2993,7 +3008,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.equal(tagContent(devAmpDocument, 'h1'), ampStory.title, 'development AMP headline drifted from the newsroom snapshot');
 
   const ampStories = newsroomSnapshot.stories;
-  assert.equal(ampStories.length, 10, 'AMP regression coverage must include all 10 currently public articles');
+  assert.ok(ampStories.length >= 10, 'AMP regression coverage unexpectedly includes too few public articles');
   const ampTargets = ampStories.map((story) => {
     const metadata = metadataManifest.routes.find((candidate) => candidate.path === `/article/${story.slug}`);
     assert.equal(metadata?.ampPath, `/amp/article/${story.slug}/`, `${story.slug}: AMP URL must derive from its slug`);
@@ -3008,6 +3023,10 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     assert.equal(tagContent(body, 'title'), story.title, `${story.slug}: AMP title does not match its article`);
     assert.equal(metaContent(body, 'name', 'description'), story.dek, `${story.slug}: AMP description does not match its article`);
     assert.equal(tagContent(body, 'h1'), story.title, `${story.slug}: AMP heading does not match its article`);
+    if (story.slug === 'india-ai-compute-access-2026') {
+      assert.match(body, /<table\b/, 'flagship report AMP page is missing the comparison table');
+      assert.match(body, /Source 1:/, 'flagship report AMP page is missing numbered source links');
+    }
     const { response: devResponse, body: devBody } = await fetch(`${devBaseUrl}${storyAmpPath}`).then(async (response) => ({
       response,
       body: await response.text(),

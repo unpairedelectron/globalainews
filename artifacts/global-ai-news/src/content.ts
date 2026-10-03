@@ -2,6 +2,7 @@
  * The editorial content model. The API serves these maintained records and the
  * client hydrates them at runtime so every public page uses the same snapshot.
  */
+import { indiaAiComputeReport } from './reports/india-ai-compute-2026';
 
 export type StoryCategory =
   | 'Breakthroughs'
@@ -31,6 +32,10 @@ export interface Source {
   kind: 'primary' | 'independent' | 'dataset' | 'filing' | 'interview';
   url: string;
   accessed: string;
+  publicationDate?: string;
+  tier?: 1 | 2 | 3;
+  evidenceType?: 'full-page' | 'portal-capture' | 'snippet-only';
+  scopeNote?: string;
 }
 export interface EvidenceSummary {
   primarySources: number;
@@ -42,6 +47,11 @@ export interface BodySection {
   heading: string;
   paragraphs: string[];
   pullQuote?: string;
+  table?: {
+    caption?: string;
+    headers: string[];
+    rows: { cells: string[] }[];
+  };
 }
 export interface ImageTreatment {
   type: 'editorial-abstract' | 'field-photograph' | 'data-graphic' | 'portrait';
@@ -86,6 +96,7 @@ export interface Story {
   evidence: string;
   evidenceSummary: EvidenceSummary;
   classification: 'reported' | 'analysis' | 'opinion' | 'synthesis';
+  contentType?: 'Report';
   entities: string[];
   timeline: string[];
   relatedStories: string[];
@@ -284,6 +295,25 @@ export let sources: Source[] = [
   { slug: 'iea-data-centres', name: 'Energy and AI: data centre demand', publisher: 'International Energy Agency', kind: 'dataset', url: 'https://www.iea.org/reports/energy-and-ai', accessed: '2026-10-01' },
   { slug: 'eu-ai-act-code', name: 'Code of practice for general-purpose AI', publisher: 'European Commission', kind: 'primary', url: 'https://digital-strategy.ec.europa.eu/en/policies/ai-code-practice', accessed: '2026-10-02' },
   { slug: 'mistral-model-card', name: 'Mistral Small 4 model card', publisher: 'Mistral AI', kind: 'primary', url: 'https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03', accessed: '2026-10-02' },
+  { slug: 'indiaai-cabinet-approval-2024', name: 'Cabinet approves the IndiaAI Mission', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2012355', accessed: '2026-10-03', publicationDate: '2024-03-07', tier: 1, evidenceType: 'full-page', scopeNote: 'Programme authorization and target; not proof of delivered capacity.' },
+  { slug: 'pib-initial-compute-2025', name: 'With robust and high-end common computing facility in place, India all set to launch its own AI model', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2097709', accessed: '2026-10-03', publicationDate: '2025-01-30', tier: 1, evidenceType: 'full-page', scopeNote: 'Describes an initial facility and further GPUs to be added; does not establish that all planned GPUs were live.' },
+  { slug: 'pib-common-compute-34000-2025', name: 'India’s Common Compute Capacity Crosses 34,000 GPUs', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2132817&lang=1&reg=3', accessed: '2026-10-03', publicationDate: '2025-05-30', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports 34,333 GPUs, including empanelled and additional capacity; status is not defined as installed or live.' },
+  { slug: 'pib-compute-onboarded-2026', name: 'Government supporting organisations and consortia to develop sovereign foundational models', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2245063', accessed: '2026-10-03', publicationDate: '2026-03-25', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports 38,231 GPUs onboarded from 14 providers; retain the government’s “onboarded” wording.' },
+  { slug: 'pib-data-centre-capacity-2026', name: 'Data centre capacity in the country has increased from about 375 MW in 2020 to around 1,500 MW by 2025', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2239616&lang=1&reg=3', accessed: '2026-10-03', publicationDate: '2026-03-13', tier: 1, evidenceType: 'full-page', scopeNote: 'Data-centre total and future projection are not AI-specific capacity or present electricity demand.' },
+  { slug: 'pib-capacity-and-use-factsheet-2026', name: 'Semiconductor and AI Revolution', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/FactsheetDetails.aspx?Id=150860&lang=1&reg=48', accessed: '2026-10-03', publicationDate: '2026-08-13', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports 45,000+ shared GPUs and 93.18 lakh GPU-hours; the hours are not defined as metered consumption.' },
+  { slug: 'indiaai-portal-eligibility', name: 'IndiaAI Compute Portal: eligibility criteria', publisher: 'IndiaAI Compute Portal', kind: 'primary', url: 'https://compute.indiaai.gov.in/eligibilitycriteria', accessed: '2026-10-03', tier: 1, evidenceType: 'portal-capture', scopeNote: 'Live programme guidance; recheck before treating criteria as current.' },
+  { slug: 'indiaai-compute-portal', name: 'IndiaAI Compute Portal', publisher: 'IndiaAI Compute Portal', kind: 'primary', url: 'https://www.compute.indiaai.gov.in/', accessed: '2026-10-03', tier: 1, evidenceType: 'portal-capture', scopeNote: 'Shows application, provider and allocation process; not a dated utilization ledger.' },
+  { slug: 'indiaai-compute-price-calculator', name: 'IndiaAI Compute Portal price calculator', publisher: 'IndiaAI Compute Portal', kind: 'primary', url: 'https://compute.indiaai.gov.in/indiaaipricecalculator', accessed: '2026-10-03', tier: 1, evidenceType: 'portal-capture', scopeNote: 'Portal rate-card capture has no explicit update date and is not directly comparable with the PIB programme-wide average.' },
+  { slug: 'sansad-power-data-centres-2026', name: 'Data Centres Power and Water Infrastructure Crisis, Rajya Sabha Unstarred Question No. 4151', publisher: 'Rajya Sabha, Ministry of Power', kind: 'primary', url: 'https://sansad.in/getFile/annex/270/AU4151_DoYAWR.pdf?source=pqars', accessed: '2026-10-03', publicationDate: '2026-03-30', tier: 1, evidenceType: 'full-page', scopeNote: 'National generation adequacy does not measure local grid connections or facility-level draw.' },
+  { slug: 'ceew-data-centre-footprint', name: 'Land, water, and energy footprint of India’s data centres', publisher: 'Council on Energy, Environment and Water', kind: 'independent', url: 'https://www.ceew.in/sites/default/files/ceew-data-centre-study-web-ready-final.pdf', accessed: '2026-10-03', tier: 2, evidenceType: 'full-page', scopeNote: 'National energy and water estimates rely on underlying third-party sources, not a government meter-based inventory.' },
+  { slug: 'jll-india-data-centres-2026', name: 'India data centre 2026 mid-year report', publisher: 'JLL', kind: 'independent', url: 'https://www.jll.com/en-in/insights/market-dynamics/india-data-centers', accessed: '2026-10-03', publicationDate: '2026-08-31', tier: 2, evidenceType: 'full-page', scopeNote: 'Industry estimates distinguish delivered stock, absorption, pre-commitments and projected pipeline.' },
+  { slug: 'hbl-knight-frank-data-centre-pipeline-2026', name: 'India’s data centre pipeline reaches 8.33 GW on AI and cloud demand surge', publisher: 'The Hindu BusinessLine, reporting Knight Frank India', kind: 'independent', url: 'https://www.thehindubusinessline.com/info-tech/indias-data-centre-capacity-pipeline-hits-833-gw-amid-ai-and-cloud-boom/article71125654.ece', accessed: '2026-10-03', publicationDate: '2026-06-20', tier: 2, evidenceType: 'full-page', scopeNote: 'Reports live, under-construction, committed and early-stage capacity as different stages.' },
+  { slug: 'knight-frank-india-data-centre-market-2025', name: 'India Data Centre Market Update 2025', publisher: 'Knight Frank Research', kind: 'independent', url: 'https://content.knightfrank.com/research/3111/documents/en/india-data-centre-market-update-2025-12895.pdf', accessed: '2026-10-03', tier: 2, evidenceType: 'full-page', scopeNote: 'Year-end 2025 market estimates; under-construction, committed and early-stage pipeline are not operating stock.' },
+  { slug: 'ettech-indiaai-recalibration-2026', name: 'IndiaAI Mission likely to rewire after GPU glitch', publisher: 'ETtech, The Economic Times', kind: 'independent', url: 'https://m.economictimes.com/tech/technology/indiaai-mission-likely-to-rewire-after-gpu-glitch/amp_articleshow/134600368.cms', accessed: '2026-10-03', publicationDate: '2026-10-01', tier: 2, evidenceType: 'full-page', scopeNote: 'Reports access to about 30,000 GPUs against a commitment of 45,000; this is not a government-reconciled inventory.' },
+  { slug: 'pib-ai-models-datasets-2026', name: 'AI models developed under IndiaAI Mission represent important progress in building India’s own AI capabilities', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2239614&lang=1&reg=3', accessed: '2026-10-03', publicationDate: '2026-03-13', tier: 1, evidenceType: 'full-page', scopeNote: 'Government programme-output claims do not independently establish model quality, adoption or public-service impact.' },
+  { slug: 'cbre-india-data-centre-market-2025', name: 'India’s Data Centre Market in a New Era', publisher: 'CBRE India Research', kind: 'independent', url: 'https://www.cbre.co.in/insights/reports/india-s-data-centre-market-in-a-new-era', accessed: '2026-10-03', publicationDate: '2025-11-12', tier: 2, evidenceType: 'full-page', scopeNote: 'Estimates 1,530 MW of operational stock in January–September 2025.' },
+  { slug: 'ieefa-india-data-centre-power', name: 'India’s power-hungry data centre sector at a crossroads', publisher: 'Institute for Energy Economics and Financial Analysis', kind: 'independent', url: 'https://ieefa.org/resources/indias-power-hungry-data-centre-sector-crossroads', accessed: '2026-10-03', tier: 2, evidenceType: 'full-page', scopeNote: 'Attribute current and projected values to IEEFA; projections are not measured official totals.' },
+  { slug: 'pib-data-centre-water-response-2026', name: 'Government response on data-centre water consumption and cooling', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2246886&lang=1&reg=6', accessed: '2026-10-03', publicationDate: '2026-03-30', tier: 1, evidenceType: 'full-page', scopeNote: '“No concerns received” is not a measured national water-use inventory.' },
 ];
 
 export const evidenceSummaries: Record<string, EvidenceSummary> = {
@@ -682,6 +712,7 @@ export let stories: Story[] = [
   { slug: 'small-models-serious-workflows', category: 'The Edge', title: 'Small models are finding their way into serious workflows', dek: 'The most useful AI may be the one that never leaves your laptop.', body: storyBodies['small-models'], date: '2026-09-08', readTime: '4 min read', author: 'ishaan-mehta', evidence: 'High confidence · 3 primary sources · 4 independent confirmations', evidenceSummary: evidenceSummaries['small-models'], classification: 'reported', entities: ['gpt-5', 'claude-4', 'sarvam-ai'], timeline: ['gpt-5-release', 'claude-4-release', 'sarvam-public-model'], relatedStories: ['founders', 'infrastructure'], imageTreatment: { type: 'editorial-abstract', alt: 'Compact model running beside a laptop and local data', palette: 'slate, electric blue, paper white', caption: 'Capability is increasingly measured inside a workflow.' }, topic: 'AI', sources: ['mistral-model-card', 'stanford-ai-index-2026'], bottomLine: 'Local and compact models are winning where latency, privacy and predictable cost matter more than benchmark leadership.', whyItMatters: 'Deployment economics will decide which AI capabilities become routine.', keyTakeaways: ['Latency and privacy are product features.', 'Workflow evaluation matters more than a single leaderboard.', 'Smaller models expand who can run capable systems.'], whatChanges: 'Teams will route each task to the smallest model that can do it reliably.' },
   { slug: 'founders-first-million-model-calls', category: 'Field Notes', title: 'What founders notice after their first million model calls', dek: 'The bottleneck is rarely the model. It is the operating system around it.', body: storyBodies.founders, date: '2026-09-07', readTime: '8 min read', author: 'lena-hoff', evidence: 'Medium confidence · 2 primary sources · 6 independent confirmations', evidenceSummary: evidenceSummaries.founders, classification: 'analysis', entities: ['openai', 'anthropic'], timeline: ['openai-agent-platform'], relatedStories: ['small-models', 'infrastructure'], imageTreatment: { type: 'portrait', alt: 'Founder reviewing an AI operations dashboard in a quiet office', palette: 'ink, copper, soft green', caption: 'Scale exposes the system around the model.' }, topic: 'Founders', sources: ['stanford-ai-index-2026'], bottomLine: 'At scale, reliability, permissions and feedback loops matter more than clever prompts.', whyItMatters: 'The next generation of AI companies will be built around operational discipline.', keyTakeaways: ['Exceptions are product feedback.', 'Human escalation is a feature, not a failure.', 'Unit economics include monitoring and wrong answers.'], whatChanges: 'Founders will treat evaluation and governance as core product infrastructure.' },
   { slug: 'new-geography-of-compute', category: 'Infrastructure', title: 'The new geography of compute is surprisingly regional', dek: 'Power, permits and proximity are redrawing the map of intelligence.', body: storyBodies.infrastructure, date: '2026-09-06', readTime: '9 min read', author: 'david-okafor', evidence: 'High confidence · 4 primary sources · 5 independent confirmations', evidenceSummary: evidenceSummaries.infrastructure, classification: 'analysis', entities: ['microsoft'], timeline: ['azure-inference-expansion'], relatedStories: ['indias-public-ai-stack', 'small-models'], imageTreatment: { type: 'data-graphic', alt: 'Map showing regional compute corridors and energy connections', palette: 'night blue, grid green, signal orange', caption: 'The infrastructure map follows power, fibre and permission.' }, topic: 'Technology', sources: ['iea-data-centres', 'stanford-ai-index-2026'], bottomLine: 'The AI cloud is becoming a network of regional corridors shaped by physical constraints.', whyItMatters: 'Energy and permitting will influence who can offer fast, affordable intelligence.', keyTakeaways: ['Inference is moving closer to users.', 'Training remains more concentrated than deployment.', 'Power availability is now a strategic differentiator.'], whatChanges: 'AI infrastructure planning will look increasingly like energy and telecom planning.' },
+  indiaAiComputeReport,
 ];
 
 export const scheduledStories: ScheduledStory[] = [
@@ -952,12 +983,12 @@ export let industryMap: IndustryMapNode[] = [
 ];
 
 export let indiaIndex: IndiaIndexMetric[] = [
-  { slug: 'compute-allocation', label: 'Public compute allocation', value: '10,000+ GPUs', change: '+35% q/q', context: 'Capacity made available through the IndiaAI programme and partner clouds.', source: 'indiaai-mission' },
+  { slug: 'compute-allocation', label: 'Public shared compute capacity', value: '45,000+ GPUs', change: 'Government snapshot · June 2026', context: 'Source: PIB factsheet, published 13 Aug 2026. Reported as shared capacity; not a count of installed, live, available or consumed GPUs.', source: 'pib-capacity-and-use-factsheet-2026' },
   { slug: 'venture-funding', label: 'AI venture funding', value: '$1.1B', change: '+18% y/y', context: 'Disclosed funding for Indian AI startups in the current index period.', source: 'stanford-ai-index-2026' },
   { slug: 'indic-language-coverage', label: 'Indic language coverage', value: '22 languages', change: '+6 this year', context: 'Languages represented in public speech and text dataset initiatives.', source: 'indiaai-mission' },
   { slug: 'research-output', label: 'AI research papers', value: '14,800', change: '+23% y/y', context: 'India-affiliated publications indexed across major AI research fields.', source: 'stanford-ai-index-2026' },
   { slug: 'skilling-pipeline', label: 'People in AI skilling programmes', value: '2.4M', change: '+41% y/y', context: 'Public and industry programmes reporting completed training.', source: 'indiaai-mission' },
-  { slug: 'data-centre-capacity', label: 'Data-centre capacity', value: '1.2GW', change: '+16% y/y', context: 'Operational and announced capacity relevant to AI workloads.', source: 'iea-data-centres' },
+  { slug: 'data-centre-capacity', label: 'Operational data-centre capacity', value: '1.6 GW', change: 'Knight Frank via BusinessLine · 20 Jun 2026', context: 'Source: Knight Frank reporting, published by The Hindu BusinessLine. All-workload live stock estimate; excludes pipeline and is not IndiaAI GPU capacity.', source: 'hbl-knight-frank-data-centre-pipeline-2026' },
 ];
 
 export let essays: Essay[] = [

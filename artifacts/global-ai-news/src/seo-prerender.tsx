@@ -8,6 +8,7 @@ import {
 } from './content';
 import { formatEditorialDate, getLatestStory } from './editorial-date';
 import type { SeoMetadata } from './seo-metadata';
+import { StoryBody, StoryCitedText, StorySourceList } from './components/story-content';
 
 interface SeoPrerenderProps {
   route: string;
@@ -68,10 +69,6 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
     }
 
     const author = authors.find((candidate) => candidate.slug === story.author);
-    const resolvedSources = story.sources
-      .map((sourceSlug) => sources.find((candidate) => candidate.slug === sourceSlug))
-      .filter((source): source is (typeof sources)[number] => Boolean(source));
-    const missingSourceRecords = story.sources.length - resolvedSources.length;
     const relatedStories = story.relatedStories
       .map((relatedSlug) => {
         const exactMatch = stories.find((candidate) => candidate.slug === relatedSlug);
@@ -83,6 +80,8 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
       })
       .filter((relatedStory): relatedStory is Story => Boolean(relatedStory));
     const publicDateModified = getPublicDateModified(story);
+    const sectionHref = story.contentType === 'Report' ? '/reports/' : '/research/';
+    const sectionLabel = story.contentType === 'Report' ? 'Reports' : 'Research';
 
     return (
       <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
@@ -91,11 +90,11 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
           <a href="/brief/" className="eyebrow text-primary">The Daily Brief</a>
         </header>
         <main className="mx-auto max-w-4xl">
-          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center pt-10 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            <a href="/">Home</a><span className="mx-2">/</span><a href="/research/">Research</a><span className="mx-2">/</span><span>{story.category}</span><span className="mx-2">/</span><span aria-current="page" className="max-w-[22rem] truncate">{story.title}</span>
+            <nav aria-label="Breadcrumb" className="flex flex-wrap items-center pt-10 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              <a href="/">Home</a><span className="mx-2">/</span><a href={sectionHref}>{sectionLabel}</a><span className="mx-2">/</span><span>{story.category}</span><span className="mx-2">/</span><span aria-current="page" className="max-w-[22rem] truncate">{story.title}</span>
           </nav>
           <article>
-            <p className="mt-8 eyebrow text-primary">{story.category} · {getReaderFacingContentType(story.classification)}</p>
+            <p className="mt-8 eyebrow text-primary">{story.category} · {story.contentType ?? getReaderFacingContentType(story.classification)}</p>
             <h1 className="mt-4 font-serif text-5xl leading-[.9] tracking-[-.03em] md:text-7xl">{story.title}</h1>
             <p className="mt-6 max-w-3xl text-xl leading-8 text-muted-foreground">{story.dek}</p>
             <p className="mt-6 border-b border-foreground/15 pb-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -126,51 +125,25 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             <div className="prose prose-lg mt-8 max-w-none text-foreground">
               <section className="not-prose my-8 border-l-2 border-primary bg-secondary/50 p-6">
                 <p className="eyebrow text-primary">The bottom line</p>
-                <p className="mt-3 font-serif text-3xl leading-none">{story.bottomLine}</p>
+                <p className="mt-3 font-serif text-3xl leading-none"><StoryCitedText text={story.bottomLine} story={story} sources={sources} /></p>
               </section>
               <section className="not-prose my-8">
                 <p className="eyebrow text-primary">Why this matters</p>
-                <p className="mt-3 text-lg leading-8">{story.whyItMatters}</p>
+                <p className="mt-3 text-lg leading-8"><StoryCitedText text={story.whyItMatters} story={story} sources={sources} /></p>
               </section>
               {story.keyTakeaways.length > 0 && (
                 <section className="not-prose my-8 border-y border-foreground/15 py-6">
                   <p className="eyebrow text-primary">Key takeaways</p>
-                  <ul className="mt-4 grid gap-3 text-sm">{story.keyTakeaways.map((takeaway) => <li key={takeaway} className="flex gap-3"><span className="text-primary">—</span>{takeaway}</li>)}</ul>
+                  <ul className="mt-4 grid gap-3 text-sm">{story.keyTakeaways.map((takeaway) => <li key={takeaway} className="flex gap-3"><span className="text-primary">—</span><span><StoryCitedText text={takeaway} story={story} sources={sources} /></span></li>)}</ul>
                 </section>
               )}
-              {story.body.map((section, index) => (
-                <section key={`${story.slug}-section-${index}`} className="mb-8">
-                  <h2 className="font-serif text-3xl leading-tight">{section.heading}</h2>
-                  {section.paragraphs.map((paragraph, paragraphIndex) => (
-                    <p key={`${story.slug}-paragraph-${index}-${paragraphIndex}`} className="mt-4 text-base leading-7">
-                      {paragraph}
-                    </p>
-                  ))}
-                  {section.pullQuote && (
-                    <blockquote className="my-7 border-l-2 border-primary pl-5 font-serif text-2xl leading-tight text-primary">
-                      {section.pullQuote}
-                    </blockquote>
-                  )}
-                </section>
-              ))}
+              <StoryBody story={story} sources={sources} />
             </div>
             <section className="my-10 border-t border-foreground/15 pt-6">
               <h2 className="eyebrow text-primary">What changes</h2>
-              <p className="mt-3 max-w-3xl text-base leading-7">{story.whatChanges}</p>
+              <p className="mt-3 max-w-3xl text-base leading-7"><StoryCitedText text={story.whatChanges} story={story} sources={sources} /></p>
             </section>
-            {story.sources.length > 0 && (
-              <section className="my-10 border-t border-foreground/15 pt-6" data-testid="article-sources">
-                <h2 className="eyebrow text-primary">Sources</h2>
-                <ul className="mt-4 grid gap-3 text-sm">
-                  {resolvedSources.map((source) => (
-                    <li key={source.slug} className="border-b border-foreground/10 pb-3">
-                      <a href={source.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary">{source.name}<span className="mt-1 block text-xs text-muted-foreground">{source.publisher} · {source.kind}</span></a>
-                    </li>
-                  ))}
-                </ul>
-                {missingSourceRecords > 0 && <p className="mt-3 text-xs text-warning">Some source records need editorial review before they can be linked.</p>}
-              </section>
-            )}
+            {story.sources.length > 0 && <StorySourceList story={story} sources={sources} />}
           </article>
           {relatedStories.length > 0 && (
             <section className="border-t border-foreground/15 py-12">
@@ -280,8 +253,26 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
   }
 
   const heading = metadata.title.replace(/\s+—\s+Global AI News$/, '');
+  if (route === '/reports') {
+    const reports = stories.filter((story) => story.contentType === 'Report').sort((a, b) => b.date.localeCompare(a.date));
+    return (
+      <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
+        <header className="flex items-center justify-between border-b border-foreground/20 py-5"><a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a><a href="/brief/" className="eyebrow text-primary">The Daily Brief</a></header>
+        <main className="mx-auto max-w-[1180px]">
+          <section className="grid gap-9 border-b border-foreground/20 py-14 md:grid-cols-[1.2fr_.8fr] md:items-end md:py-20">
+            <div><p className="eyebrow text-primary">Global AI News · Report desk</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] tracking-[-.04em] md:text-[9rem]">Reports<span className="text-primary">.</span></h1><p className="mt-7 max-w-2xl text-lg leading-7 text-muted-foreground">Maintained reporting that follows the evidence beyond the headline — and maps what each finding changes across the AI industry.</p></div>
+            <p className="max-w-sm border-l border-primary/30 pl-4 text-sm leading-6 text-muted-foreground">Every report is connected to its sources, people and events.</p>
+          </section>
+          <section className="grid gap-10 py-10 md:grid-cols-[.55fr_1.45fr] md:py-14">
+            <div><h2 className="eyebrow border-b border-foreground/15 pb-3 text-primary">The report index</h2><p className="mt-4 text-sm leading-6 text-muted-foreground">{reports.length} {reports.length === 1 ? 'maintained report' : 'maintained reports'}</p></div>
+            {reports.length ? <div className="border-t border-foreground/15">{reports.map((story, index) => <article key={story.slug} className="border-b border-foreground/15 py-6"><p className="eyebrow text-primary">Report · {story.category} · {story.readTime}</p><h2 className="mt-3 max-w-3xl font-serif text-3xl leading-[.95]"><a href={`/article/${story.slug}/`} className="hover:text-primary">{story.title}</a></h2><p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{story.dek}</p><p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"><time dateTime={story.date}>{formatEditorialDate(story.date)}</time>{' · '}{authors.find((author) => author.slug === story.author)?.name ?? 'Byline unavailable'}</p></article>)}</div> : <div className="border border-foreground/15 bg-surface-muted p-8"><h2 className="font-serif text-3xl">No reports are published yet.</h2><p className="mt-3 text-sm leading-6 text-muted-foreground">When a maintained report is published, it will appear here with its sources and connected context.</p></div>}
+          </section>
+        </main>
+      </div>
+    );
+  }
+
   const editorialInputTitles: Record<string, string> = {
-    '/reports': 'Reports',
     '/topics': 'Topics',
     '/archive': 'Archive',
     '/about-us': 'About us',

@@ -28,3 +28,17 @@ mtime_ms = 1789929061431
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/885d8b9c-47af-433b-ad44-c94f758a772d/572c10a4-d8b7-445d-9471-de31cf92f386"
 storage_version_token = "1789929356094818"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "veVecV4ehNOXQRwwwZVnZ"
+uri = "file://research/notes.md"
+type = "text"
+title = "Research Notes: AI Compute in India"
+description = "Research plan, coverage questions, and evidence log for the flagship report."
+logical_id = "52340e16-710d-4fec-934d-7fbd1e0c9f04"
+content_hash = "sha256:11d5fecb7438e41a394bd0cb26b60be9d72c8867e460ed26e873d74e26c44f7f"
+size = 4540
+mtime_ms = 1791025053876
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/52340e16-710d-4fec-934d-7fbd1e0c9f04/4a53d4b7-a936-4cbc-8ca1-2ed26033f895"
+storage_version_token = "1791025061157595"
+content_type = "text/markdown"

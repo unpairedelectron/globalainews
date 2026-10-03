@@ -55,6 +55,24 @@ export const PublicNewsroomSourceKind = {
   interview: 'interview',
 } as const;
 
+export type PublicNewsroomSourceTier = typeof PublicNewsroomSourceTier[keyof typeof PublicNewsroomSourceTier];
+
+
+export const PublicNewsroomSourceTier = {
+  NUMBER_1: 1,
+  NUMBER_2: 2,
+  NUMBER_3: 3,
+} as const;
+
+export type PublicNewsroomSourceEvidenceType = typeof PublicNewsroomSourceEvidenceType[keyof typeof PublicNewsroomSourceEvidenceType];
+
+
+export const PublicNewsroomSourceEvidenceType = {
+  'full-page': 'full-page',
+  'portal-capture': 'portal-capture',
+  'snippet-only': 'snippet-only',
+} as const;
+
 export interface PublicNewsroomSource {
   slug: string;
   name: string;
@@ -63,6 +81,11 @@ export interface PublicNewsroomSource {
   url: string;
   /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
   accessed: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  publicationDate?: string;
+  tier?: PublicNewsroomSourceTier;
+  evidenceType?: PublicNewsroomSourceEvidenceType;
+  scopeNote?: string;
 }
 
 export type PublicNewsroomEvidenceSummaryConfidence = typeof PublicNewsroomEvidenceSummaryConfidence[keyof typeof PublicNewsroomEvidenceSummaryConfidence];
@@ -81,10 +104,21 @@ export interface PublicNewsroomEvidenceSummary {
   note: string;
 }
 
+export interface PublicNewsroomTableRow {
+  cells: string[];
+}
+
+export interface PublicNewsroomTable {
+  caption?: string;
+  headers: string[];
+  rows: PublicNewsroomTableRow[];
+}
+
 export interface PublicNewsroomBodySection {
   heading: string;
   paragraphs: string[];
   pullQuote?: string;
+  table?: PublicNewsroomTable;
 }
 
 export type PublicNewsroomImageTreatmentType = typeof PublicNewsroomImageTreatmentType[keyof typeof PublicNewsroomImageTreatmentType];
@@ -171,6 +205,13 @@ export const PublicNewsroomStoryClassification = {
   synthesis: 'synthesis',
 } as const;
 
+export type PublicNewsroomStoryContentType = typeof PublicNewsroomStoryContentType[keyof typeof PublicNewsroomStoryContentType];
+
+
+export const PublicNewsroomStoryContentType = {
+  Report: 'Report',
+} as const;
+
 export interface PublicNewsroomStory {
   slug: string;
   category: PublicNewsroomStoryCategory;
@@ -186,6 +227,7 @@ export interface PublicNewsroomStory {
   evidence: string;
   evidenceSummary: PublicNewsroomEvidenceSummary;
   classification: PublicNewsroomStoryClassification;
+  contentType?: PublicNewsroomStoryContentType;
   entities: string[];
   timeline: string[];
   relatedStories: string[];

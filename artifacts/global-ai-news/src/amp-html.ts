@@ -1,4 +1,4 @@
-import { authors, type Author, type Story } from './content';
+import { authors, type Author, type Source, type Story } from './content';
 import { getCanonicalUrl } from './seo-metadata';
 
 function escapeHtml(value: string): string {
@@ -21,14 +21,39 @@ function formatPublishedDate(date: string): string {
 export function renderAmpArticleDocument(
   story: Story,
   authorRecords: readonly Author[] = authors,
+  sourceRecords: readonly Source[] = [],
 ): string {
   const author = authorRecords.find((candidate) => candidate.slug === story.author);
+  const renderCitedText = (text: string) =>
+    escapeHtml(text).replace(/\[@([a-z0-9-]+)\]/g, (_marker, slug: string) => {
+      const source = sourceRecords.find((candidate) => candidate.slug === slug);
+      const number = story.sources.indexOf(slug) + 1;
+      if (!source || number === 0) return '<span class="citation-missing">[source not found]</span>';
+      return `<a class="citation" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer" aria-label="Source ${number}: ${escapeHtml(source.name)}">[${number}]</a>`;
+    });
   const sections = story.body.map((section) => `
         <section>
           <h2>${escapeHtml(section.heading)}</h2>
-          ${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('\n          ')}
-          ${section.pullQuote ? `<blockquote>${escapeHtml(section.pullQuote)}</blockquote>` : ''}
+          ${section.paragraphs.map((paragraph) => `<p>${renderCitedText(paragraph)}</p>`).join('\n          ')}
+          ${section.pullQuote ? `<blockquote>${renderCitedText(section.pullQuote)}</blockquote>` : ''}
+          ${section.table ? `<div class="table-scroll"><table>${section.table.caption ? `<caption>${renderCitedText(section.table.caption)}</caption>` : ''}<thead><tr>${section.table.headers.map((header) => `<th scope="col">${renderCitedText(header)}</th>`).join('')}</tr></thead><tbody>${section.table.rows.map((row) => `<tr>${row.cells.map((cell) => `<td>${renderCitedText(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : ''}
         </section>`).join('\n');
+  const takeaways = story.keyTakeaways.length
+    ? `<section><h2>Key takeaways</h2><ul>${story.keyTakeaways.map((item) => `<li>${renderCitedText(item)}</li>`).join('')}</ul></section>`
+    : '';
+  const sourceList = story.sources.length
+    ? `<section class="sources"><h2>Sources</h2><ol>${story.sources.map((slug, index) => {
+        const source = sourceRecords.find((candidate) => candidate.slug === slug);
+        if (!source) return `<li id="source-${index + 1}">[source record unavailable: ${escapeHtml(slug)}]</li>`;
+        const details = [
+          source.publisher,
+          source.tier ? `Tier ${source.tier}` : undefined,
+          source.publicationDate ? `Published ${source.publicationDate}` : undefined,
+          source.accessed ? `Accessed ${source.accessed}` : undefined,
+        ].filter(Boolean).join(' · ');
+        return `<li id="source-${index + 1}"><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">[${index + 1}] ${escapeHtml(source.name)}</a><p>${escapeHtml(details)}</p>${source.scopeNote ? `<p>${escapeHtml(source.scopeNote)}</p>` : ''}</li>`;
+      }).join('')}</ol></section>`
+    : '';
 
   return `<!doctype html>
 <html amp lang="en">
@@ -53,11 +78,21 @@ export function renderAmpArticleDocument(
       .kicker { color: var(--coral); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; margin-top: 52px; }
       h1 { font-family: Georgia, serif; font-size: clamp(42px, 9vw, 76px); font-weight: 400; line-height: .94; margin: 16px 0; }
       .dek { font-size: 20px; line-height: 1.5; color: rgba(19,38,50,.7); }
+      .citation { color: var(--teal); font-size: .7em; vertical-align: super; margin: 0 2px; }
+      .citation-missing { color: #9b2c20; font: 12px Arial, sans-serif; }
       .byline { border-block: 1px solid rgba(19,38,50,.2); padding: 16px 0; margin: 24px 0 40px; font-size: 13px; }
       .hero { background: #193b3e; color: white; padding: 42px 24px; border-radius: 16px; font-family: Georgia, serif; font-size: 34px; }
       article { font-family: Georgia, serif; font-size: 20px; line-height: 1.7; }
       article h2 { font-size: 34px; line-height: 1; font-weight: 400; margin-top: 52px; }
       blockquote { border-left: 3px solid var(--coral); padding-left: 20px; margin: 36px 0; font-size: 25px; }
+      .table-scroll { overflow-x: auto; margin: 28px 0; font: 14px/1.5 Arial, sans-serif; }
+      table { border-collapse: collapse; min-width: 680px; width: 100%; }
+      th, td { border: 1px solid rgba(19,38,50,.2); padding: 10px; text-align: left; vertical-align: top; }
+      th, caption { font-weight: 700; }
+      caption { padding: 12px; text-align: left; }
+      .sources { font: 14px/1.55 Arial, sans-serif; }
+      .sources li { border-bottom: 1px solid rgba(19,38,50,.2); padding: 14px 0; }
+      .sources p { margin: 6px 0 0; font-size: 12px; }
       .ad { border: 1px dashed rgba(19,38,50,.35); padding: 24px; margin: 42px 0; text-align: center; font: 11px Arial, sans-serif; letter-spacing: .15em; }
       footer { border-top: 1px solid rgba(19,38,50,.2); color: rgba(19,38,50,.65); font-size: 12px; }
     </style>
@@ -65,14 +100,18 @@ export function renderAmpArticleDocument(
   <body>
     <header><div class="brand">GLOBAL AI NEWS</div></header>
     <main>
-      <div class="kicker">${escapeHtml(story.category)} · ${escapeHtml(story.readTime)}</div>
+      <div class="kicker">${escapeHtml(story.category)} · ${escapeHtml(story.contentType ?? story.readTime)}</div>
       <h1>${escapeHtml(story.title)}</h1>
       <p class="dek">${escapeHtml(story.dek)}</p>
       <div class="byline">${author ? `<strong>${escapeHtml(author.name)}</strong> · ${escapeHtml(author.role)}` : '<strong>Byline unavailable</strong>'} · ${formatPublishedDate(story.date)}</div>
       <div class="hero">${escapeHtml(story.imageTreatment.caption)}</div>
       <article>
-        <p><strong>${escapeHtml(story.bottomLine)}</strong></p>
+        <p><strong>${renderCitedText(story.bottomLine)}</strong></p>
+        <p>${renderCitedText(story.whyItMatters)}</p>
+        ${takeaways}
         ${sections}
+        <p><strong>What changes:</strong> ${renderCitedText(story.whatChanges)}</p>
+        ${sourceList}
         <div class="ad">NATIVE AD · CLEARLY LABELED INVENTORY</div>
       </article>
     </main>

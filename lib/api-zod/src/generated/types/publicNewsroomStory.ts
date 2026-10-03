@@ -10,6 +10,7 @@ import type { PublicNewsroomEvidenceSummary } from './publicNewsroomEvidenceSumm
 import type { PublicNewsroomImageTreatment } from './publicNewsroomImageTreatment';
 import type { PublicNewsroomStoryCategory } from './publicNewsroomStoryCategory';
 import type { PublicNewsroomStoryClassification } from './publicNewsroomStoryClassification';
+import type { PublicNewsroomStoryContentType } from './publicNewsroomStoryContentType';
 
 export interface PublicNewsroomStory {
   slug: string;
@@ -26,6 +27,7 @@ export interface PublicNewsroomStory {
   evidence: string;
   evidenceSummary: PublicNewsroomEvidenceSummary;
   classification: PublicNewsroomStoryClassification;
+  contentType?: PublicNewsroomStoryContentType;
   entities: string[];
   timeline: string[];
   relatedStories: string[];

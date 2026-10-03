@@ -219,7 +219,7 @@ async function assertPublicContentContract() {
   assert.match(response.headers.get('x-robots-tag') ?? '', /noindex/i);
 
   const allowedStoryFields = new Set([
-    'slug', 'category', 'title', 'dek', 'body', 'date', 'dateModified', 'readTime',
+    'slug', 'category', 'contentType', 'title', 'dek', 'body', 'date', 'dateModified', 'readTime',
     'author', 'evidence', 'evidenceSummary', 'classification', 'entities', 'timeline',
     'relatedStories', 'imageTreatment', 'topic', 'sources', 'bottomLine', 'whyItMatters',
     'keyTakeaways', 'whatChanges',

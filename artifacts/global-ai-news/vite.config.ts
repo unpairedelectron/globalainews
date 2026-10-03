@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type ViteDevServer } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
-import { authors, getPublishedStories, stories, type NewsroomContentSnapshot, type Story } from './src/content';
+import { authors, getPublishedStories, sources, stories, type NewsroomContentSnapshot, type Story } from './src/content';
 import { renderAmpArticleDocument } from './src/amp-html';
 import {
   getCanonicalUrl,
@@ -67,20 +67,22 @@ function writeAmpArticleDocument(
   outputDir: string,
   story: Story,
   authorRecords: NewsroomContentSnapshot['authors'] = authors,
+  sourceRecords: NewsroomContentSnapshot['sources'] = sources,
 ) {
   const outputPath = path.join(outputDir, 'amp', 'article', story.slug, 'index.html');
   mkdirSync(path.dirname(outputPath), { recursive: true });
-  writeFileSync(outputPath, renderAmpArticleDocument(story, authorRecords));
+  writeFileSync(outputPath, renderAmpArticleDocument(story, authorRecords, sourceRecords));
 }
 
 function writeAmpArticleDocuments(
   outputDir: string,
   publishedStories: Story[],
   authorRecords: NewsroomContentSnapshot['authors'] = authors,
+  sourceRecords: NewsroomContentSnapshot['sources'] = sources,
 ) {
   for (const story of publishedStories) {
     if (!getSeoMetadata(`/article/${story.slug}`, publishedStories).ampPath) continue;
-    writeAmpArticleDocument(outputDir, story, authorRecords);
+    writeAmpArticleDocument(outputDir, story, authorRecords, sourceRecords);
   }
 }
 function escapeSvg(value: string): string {
@@ -563,7 +565,7 @@ function ampArticlePlugin() {
           response.end(
             request.method === 'HEAD'
               ? undefined
-              : renderAmpArticleDocument(story, snapshot.authors),
+              : renderAmpArticleDocument(story, snapshot.authors, snapshot.sources),
           );
         })().catch((error: unknown) => {
           process.stderr.write(
@@ -641,6 +643,7 @@ function routeMetadataPlugin() {
         outputDir,
         metadataManifest.stories ?? getPublishedStories(),
         metadataManifest.contentSnapshot?.authors ?? authors,
+        metadataManifest.contentSnapshot?.sources ?? sources,
       );
       for (const route of routePathsFromPublishedContent(metadataManifest)) {
         const routeDirectory = route === '/' ? outputDir : path.join(outputDir, route.replace(/^\/|\/$/g, ''));

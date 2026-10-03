@@ -313,6 +313,13 @@ async function assertPublishedOnlyFeeds() {
   assert.equal(webSitemap, sitemap, 'web sitemap must proxy the current API sitemap');
   assert.equal(webFeed, feed, 'web RSS must proxy the current API feed');
   const publishedSlugs = new Set(content.stories.map((story) => story.slug));
+  const flagshipReport = content.stories.find((story) => story.slug === 'india-ai-compute-access-2026');
+  assert.equal(flagshipReport?.contentType, 'Report', 'API-backed snapshot must preserve the maintained report type');
+  assert.ok(flagshipReport?.body.some((section) => section.table?.headers.length), 'API-backed snapshot must preserve report tables');
+  assert.ok(
+    content.sources.find((source) => source.slug === 'pib-capacity-and-use-factsheet-2026')?.tier === 1,
+    'API-backed snapshot must preserve report source provenance metadata',
+  );
   const articlePaths = new Set(
     metadata.routes.filter((route) => route.article).map((route) => route.path),
   );
@@ -462,13 +469,20 @@ async function testRawArticleResponses() {
     [...citedSourceSlugs].sort(),
     'public sources must be limited to sources cited by published articles',
   );
+  const allowedSourceFields = new Set([
+    'accessed', 'evidenceType', 'kind', 'name', 'publicationDate',
+    'publisher', 'scopeNote', 'slug', 'tier', 'url',
+  ]);
   for (const source of publicContent.sources) {
-    assert.deepEqual(
-      Object.keys(source).sort(),
-      ['accessed', 'kind', 'name', 'publisher', 'slug', 'url'].sort(),
-      'public source records must contain only citation fields',
-    );
+    for (const field of Object.keys(source)) {
+      assert.ok(allowedSourceFields.has(field), `public source serialized non-citation field: ${field}`);
+    }
   }
+  const factsheetSource = publicContent.sources.find((source) => source.slug === 'pib-capacity-and-use-factsheet-2026');
+  assert.equal(factsheetSource?.publicationDate, '2026-08-13', 'flagship source publication date must survive the public API');
+  assert.equal(factsheetSource?.tier, 1, 'flagship source tier must survive the public API');
+  assert.equal(factsheetSource?.evidenceType, 'full-page', 'flagship evidence type must survive the public API');
+  assert.ok(factsheetSource?.scopeNote, 'flagship source scope note must survive the public API');
 
   const existingStories = publicContent.stories.filter(
     (story) => !Object.values(slugs).includes(story.slug),

@@ -1,0 +1,226 @@
+{
+  "researchSlug": "india-ai-compute-access-2026",
+  "researchDate": "2026-10-03",
+  "deduplication": "Canonical source URLs; language and tracking query parameters are normalized when they identify the same document.",
+  "sources": [
+    {
+      "key": "indiaai-cabinet-approval-2024",
+      "title": "Cabinet approves the IndiaAI Mission",
+      "publisher": "Press Information Bureau, Government of India",
+      "url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2012355",
+      "publishedDate": "2024-03-07",
+      "tier": 1,
+      "evidencePath": "research/sources/primary-01-pib-cabinet-approval.md",
+      "evidenceType": "full-page",
+      "caveat": "An authorization and programme-design source, not evidence that the target capacity was delivered."
+    },
+    {
+      "key": "pib-initial-compute-2025",
+      "title": "With robust and high-end common computing facility in place, India all set to launch its own AI model",
+      "publisher": "Press Information Bureau, Government of India",
+      "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2097709",
+      "publishedDate": "2025-01-30",
+      "tier": 1,
+      "evidencePath": "research/sources/policy-02-pib-initial-compute.md",
+      "alternateEvidencePaths": [
+        "research/sources/capability-02-compute-capacity.md"
+      ],
+      "evidenceType": "full-page",
+      "caveat": "The release describes roughly 10,000 GPUs at the initial stage and 8,693 more to be added; it does not establish that the remainder was then live."
+    },
+    {
+      "key": "pib-common-compute-34000-2025",
+      "title": "India’s Common Compute Capacity Crosses 34,000 GPUs",
+      "publisher": "Press Information Bureau, Government of India",
+      "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2132817&lang=1&reg=3",
+      "publishedDate": "2025-05-30",
+      "tier": 1,
+      "evidencePath": "research/sources/policy-05-pib-34k-compute.md",
+      "evidenceType": "full-page",
+      "caveat": "The release says 34,333 GPUs and distinguishes empanelled from additional capacity, but does not define installed, live, or consumed capacity."
+    },
+    {
+      "key": "pib-compute-onboarded-2026",
+      "title": "Government supporting organisations and consortia to develop sovereign foundational models",
+      "publisher": "Press Information Bureau, Government of India",
+      "url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2245063",
+      "publishedDate": "2026-03-25",
+      "tier": 1,
+      "evidencePath": "research/sources/access-03-pib-onboarded.md",
+      "evidenceType": "full-page",
+      "caveat": "Reports 38,231 GPUs onboarded from 14 empanelled providers and an average rate near ₹65 per GPU-hour except selected high-end GPUs; retain the release’s own wording."
+    },
+    {
+      "key": "pib-data-centre-capacity-2026",
+      "title": "Data centre capacity in the country has increased from about 375 MW in 2020 to around 1,500 MW by 2025",
+      "publisher": "Press Information Bureau, Government of India",
+      "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2239616&lang=1&reg=3",
+      "publishedDate": "2026-03-13",
+      "tier": 1,
+      "evidencePath": "research/sources/power-01-indiaai-capacity.md",
+      "alternateEvidencePaths": [
+        "research/sources/datacentres-01-operational-capacity.md"
+      ],
+      "evidenceType": "full-page",
+      "caveat": "The 13.56 GW figure is a data-centre capacity projection for 2031–32, not a measure of AI-only capacity or current electricity demand."
+    },
+    {
+      "key": "pib-capacity-and-use-factsheet-2026",
+      "title": "Semiconductor and AI Revolution",
+      "publisher": "Press Information Bureau, Government of India",
+      "url": "https://www.pib.gov.in/FactsheetDetails.aspx?Id=150860&lang=1&reg=48",
+      "publishedDate": "2026-08-13",
+      "tier": 1,
+      "evidencePath": "research/sources/access-02-pib-factsheet.md",
+      "alternateEvidencePaths": [
+        "research/sources/policy-03-pib-2026-capacity-factsheet.md",
+        "research/sources/capability-03-usage-factsheet.md"
+      ],
+      "evidenceType": "full-page",
+      "caveat": "Reports 45,000+ shared GPUs as of June 2026 and 237 projects with 93.18 lakh GPU-hours by August 2026; it does not define the GPU-hours as consumed, allocated, or another metering state."
+    },
+    {
+      "key": "indiaai-portal-eligibility",
+      "title": "IndiaAI Compute Portal: eligibility criteria",
+      "publisher": "IndiaAI Compute Portal",
+      "url": "https://compute.indiaai.gov.in/eligibilitycriteria",
+      "publishedDate": null,
+      "tier": 1,
+      "evidencePath": "research/sources/access-01-eligibility.md",
+      "evidenceType": "captured-portal",
+      "caveat": "A live programme page; eligibility and review criteria should be rechecked before being treated as current."
+    },
+    {
+      "key": "indiaai-compute-portal",
+      "title": "IndiaAI Compute Portal",
+      "publisher": "IndiaAI Compute Portal",
+      "url": "https://www.compute.indiaai.gov.in/",
+      "publishedDate": null,
+      "tier": 1,
+      "evidencePath": "research/sources/datacentres-02-indiaai-compute-portal.md",
+      "evidenceType": "captured-portal",
+      "caveat": "Describes application, approval, provider and allocation processes; the capture is not a dated utilisation ledger."
+    },
+    {
+      "key": "indiaai-compute-price-calculator",
+      "title": "IndiaAI Compute Portal price calculator",
+      "publisher": "IndiaAI Compute Portal",
+      "url": "https://compute.indiaai.gov.in/indiaaipricecalculator",
+      "publishedDate": null,
+      "tier": 1,
+      "evidencePath": "research/sources/access-04-pricing-calculator.md",
+      "evidenceType": "captured-portal",
+      "caveat": "Lists accelerator-specific rates and reservation periods but gives no capture date or general subsidy rule; not directly comparable with the PIB average rate."
+    },
+    {
+      "key": "sansad-power-data-centres-2026",
+      "title": "Data Centres Power and Water Infrastructure Crisis, Rajya Sabha Unstarred Question No. 4151",
+      "publisher": "Rajya Sabha, Ministry of Power",
+      "url": "https://sansad.in/getFile/annex/270/AU4151_DoYAWR.pdf?source=pqars",
+      "publishedDate": "2026-03-30",
+      "tier": 1,
+      "evidencePath": "research/sources/power-02-parliament-constraints.md",
+      "evidenceType": "full-page",
+      "caveat": "The answer gives a national generation-adequacy statement and sector capacity projections; these do not measure local grid connection availability or data-centre electricity draw."
+    },
+    {
+      "key": "ceew-data-centre-footprint",
+      "title": "Land, water, and energy footprint of India’s data centres",
+      "publisher": "Council on Energy, Environment and Water",
+      "url": "https://www.ceew.in/sites/default/files/ceew-data-centre-study-web-ready-final.pdf",
+      "publishedDate": null,
+      "tier": 2,
+      "evidencePath": "research/sources/power-03-ceew-water-energy.md",
+      "evidenceType": "full-page",
+      "caveat": "The cited 2024 electricity and water estimates rely on underlying third-party sources; they are not a government meter-based inventory."
+    },
+    {
+      "key": "jll-india-data-centres-2026",
+      "title": "India data centre 2026 mid-year report",
+      "publisher": "JLL",
+      "url": "https://www.jll.com/en-in/insights/market-dynamics/india-data-centers",
+      "publishedDate": "2026-08-31",
+      "tier": 2,
+      "evidencePath": "research/sources/datacentres-03-jll-market-dynamics.md",
+      "evidenceType": "full-page",
+      "caveat": "An industry market estimate; distinguish delivered stock, absorption, pre-commitments and future pipeline."
+    },
+    {
+      "key": "hbl-knight-frank-data-centre-pipeline-2026",
+      "title": "India’s data centre pipeline reaches 8.33 GW on AI and cloud demand surge",
+      "publisher": "The Hindu BusinessLine, reporting Knight Frank India",
+      "url": "https://www.thehindubusinessline.com/info-tech/indias-data-centre-capacity-pipeline-hits-833-gw-amid-ai-and-cloud-boom/article71125654.ece",
+      "publishedDate": "2026-06-20",
+      "tier": 2,
+      "evidencePath": "research/sources/datacentres-04-knightfrank-pipeline-reporting.md",
+      "evidenceType": "full-page",
+      "caveat": "Separates 1.6 GW live, 0.32 GW under construction, 2.92 GW committed and 5.41 GW early-stage; those components total 8.65 GW, not the article's 8.33 GW headline, and the latter stages are not operating capacity."
+    },
+    {
+      "key": "knight-frank-india-data-centre-market-2025",
+      "title": "India Data Centre Market Update 2025",
+      "publisher": "Knight Frank Research",
+      "url": "https://content.knightfrank.com/research/3111/documents/en/india-data-centre-market-update-2025-12895.pdf",
+      "publishedDate": null,
+      "tier": 2,
+      "evidencePath": "research/sources/datacentres-05-knightfrank-2025-report.md",
+      "evidenceType": "full-page",
+      "caveat": "Period is 2025 year-end; the report distinguishes under-construction projects from committed and early-stage pipeline."
+    },
+    {
+      "key": "ettech-indiaai-recalibration-2026",
+      "title": "IndiaAI Mission likely to rewire after GPU glitch",
+      "publisher": "ETtech, The Economic Times",
+      "url": "https://m.economictimes.com/tech/technology/indiaai-mission-likely-to-rewire-after-gpu-glitch/amp_articleshow/134600368.cms",
+      "publishedDate": "2026-10-01",
+      "tier": 2,
+      "evidencePath": "research/sources/policy-04-oct-2026-reporting.md",
+      "evidenceType": "full-page",
+      "caveat": "Reports access to about 30,000 GPUs against a 45,000 commitment and possible recalibration; these are reported terms, not a government-reconciled inventory."
+    },
+    {
+      "key": "pib-ai-models-datasets-2026",
+      "title": "AI models developed under IndiaAI Mission represent important progress in building India’s own AI capabilities",
+      "publisher": "Press Information Bureau, Government of India",
+      "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2239614&lang=1&reg=3",
+      "publishedDate": "2026-03-13",
+      "tier": 1,
+      "evidencePath": "research/sources/capability-01-models-datasets.md",
+      "evidenceType": "full-page",
+      "caveat": "Government programme-output claims; they do not independently establish model quality, adoption, or public-service impact."
+    },
+    {
+      "key": "cbre-india-data-centre-market-2025",
+      "title": "India’s Data Centre Market in a New Era",
+      "publisher": "CBRE India Research",
+      "url": "https://www.cbre.co.in/insights/reports/india-s-data-centre-market-in-a-new-era",
+      "publishedDate": "2025-11-12",
+      "tier": 2,
+      "evidencePath": "research/sources/datacentres-06-cbre-market-2025.md",
+      "evidenceType": "full-page",
+      "caveat": "Estimates roughly 1,530 MW of operational stock in January–September 2025 but does not define operational capacity in the captured text."
+    },
+    {
+      "key": "ieefa-india-data-centre-power",
+      "title": "India’s power-hungry data centre sector at a crossroads",
+      "publisher": "Institute for Energy Economics and Financial Analysis",
+      "url": "https://ieefa.org/resources/indias-power-hungry-data-centre-sector-crossroads",
+      "publishedDate": null,
+      "tier": 2,
+      "evidencePath": "research/sources/power-04-ieefa-grid-analysis.md",
+      "evidenceType": "full-page",
+      "caveat": "Independent analysis with current and projected values; cite estimates and recommendations as IEEFA’s, not as measured official totals."
+    },
+    {
+      "key": "pib-data-centre-water-response-2026",
+      "title": "Government response on data-centre water consumption and cooling",
+      "publisher": "Press Information Bureau, Government of India",
+      "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2246886&lang=1&reg=6",
+      "publishedDate": "2026-03-30",
+      "tier": 1,
+      "evidencePath": "research/sources/power-05-pib-water-response.md",
+      "evidenceType": "full-page",
+      "caveat": "The statement that no concerns were received is not equivalent to a measured national water-use inventory."
+    }
+  ]
+}

@@ -28,6 +28,7 @@ import {
   TimelinePage,
   TopicPage,
 } from '@/pages/public';
+import { ReportsIndexPage } from '@/pages/reports-index';
 
 const queryClient = new QueryClient();
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -409,7 +410,7 @@ function AppRoutes() {
     <Route path="/technology/:slug"><EntityPage kind="technology" /></Route>
     <Route path="/policy/:slug"><EntityPage kind="policy" /></Route>
     <Route path="/timeline/:slug" component={TimelinePage} />
-    <Route path="/reports"><EditorialInputPage title="Reports" path="/reports" /></Route>
+    <Route path="/reports" component={ReportsIndexPage} />
     <Route path="/topics"><EditorialInputPage title="Topics" path="/topics" /></Route>
     <Route path="/archive"><EditorialInputPage title="Archive" path="/archive" /></Route>
     <Route path="/about-us"><EditorialInputPage title="About us" path="/about-us" /></Route>

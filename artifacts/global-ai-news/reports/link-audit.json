@@ -56,6 +56,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/amp/article/india-ai-compute-access-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/india-ai-compute-access-2026",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/amp/article/indias-public-ai-stack",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
@@ -317,6 +333,62 @@
     "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/article/founders-first-million-model-calls",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/article/india-ai-compute-access-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/article/india-ai-compute-access-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/",
+    "indexability": "indexable",
+    "linkSource": "/article/india-ai-compute-access-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/article/india-ai-compute-access-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "indexability": "indexable",
+    "linkSource": "/article/india-ai-compute-access-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "indexability": "indexable",
+    "linkSource": "/article/india-ai-compute-access-2026",
     "issue": ""
   },
   {
@@ -768,6 +840,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/ask",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/ask",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -787,14 +875,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/ask",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/ask",
     "issue": ""
@@ -920,6 +1000,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/brief",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/brief",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -939,14 +1035,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/brief",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/brief",
     "issue": ""
@@ -1240,6 +1328,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/essays",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/essays",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -1259,14 +1363,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/essays",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/essays",
     "issue": ""
@@ -1392,9 +1488,25 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
+    "indexability": "indexable",
+    "linkSource": "/",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/david-okafor/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/david-okafor/",
     "indexability": "indexable",
     "linkSource": "/",
     "issue": ""
@@ -1507,14 +1619,6 @@
     "url": "https://www.globalainews.in/article/new-geography-of-compute/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "indexability": "indexable",
-    "linkSource": "/",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/david-okafor/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/david-okafor/",
     "indexability": "indexable",
     "linkSource": "/",
     "issue": ""
@@ -1544,6 +1648,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/india",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -1563,14 +1683,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/india",
     "issue": ""
@@ -1696,6 +1808,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/industry",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/industry",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -1715,14 +1843,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/industry",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/industry",
     "issue": ""
@@ -1928,6 +2048,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/models",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/models",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -1947,14 +2083,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/models",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/models",
     "issue": ""
@@ -2080,9 +2208,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
     "indexability": "indexable",
     "linkSource": "/person/ananya-rao",
     "issue": ""
@@ -2091,6 +2219,14 @@
     "url": "https://www.globalainews.in/person/ananya-rao/",
     "status": "200",
     "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/person/ananya-rao",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "indexability": "indexable",
     "linkSource": "/person/ananya-rao",
     "issue": ""
@@ -2352,6 +2488,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/policy",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/policy",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -2371,14 +2523,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/policy",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/policy",
     "issue": ""
@@ -2507,7 +2651,7 @@
     "url": "https://www.globalainews.in/reports",
     "status": "200",
     "canonical": "https://www.globalainews.in/reports/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -2523,6 +2667,14 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
     "indexability": "indexable",
     "linkSource": "/reports",
     "issue": ""
@@ -2552,6 +2704,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/research",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/research",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -2571,14 +2739,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/research",
     "issue": ""
@@ -2744,6 +2904,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/signals",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/signals",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -2763,14 +2939,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/signals",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/signals",
     "issue": ""
@@ -3160,6 +3328,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/topic/ai",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/topic/ai",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -3179,14 +3363,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/topic/ai",
     "issue": ""
@@ -3312,6 +3488,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -3331,14 +3523,6 @@
     "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/topic/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""

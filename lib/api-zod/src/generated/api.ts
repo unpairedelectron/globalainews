@@ -23,6 +23,7 @@ export const HealthCheckResponse = zod.object({
  */
 export const getNewsroomContentResponseGeneratedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]+)?Z$');
 export const getNewsroomContentResponseSourcesItemAccessedRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseSourcesItemPublicationDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseTimelineEventsItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseStoriesItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseStoriesItemDateModifiedRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
@@ -48,7 +49,11 @@ export const GetNewsroomContentResponse = zod.object({
   "publisher": zod.string(),
   "kind": zod.enum(['primary', 'independent', 'dataset', 'filing', 'interview']),
   "url": zod.string().url(),
-  "accessed": zod.string().regex(getNewsroomContentResponseSourcesItemAccessedRegExp)
+  "accessed": zod.string().regex(getNewsroomContentResponseSourcesItemAccessedRegExp),
+  "publicationDate": zod.string().regex(getNewsroomContentResponseSourcesItemPublicationDateRegExp).optional(),
+  "tier": zod.union([zod.literal(1),zod.literal(2),zod.literal(3)]).optional(),
+  "evidenceType": zod.enum(['full-page', 'portal-capture', 'snippet-only']).optional(),
+  "scopeNote": zod.string().optional()
 })),
   "evidenceSummaries": zod.record(zod.string(), zod.object({
   "primarySources": zod.number().int(),
@@ -91,7 +96,14 @@ export const GetNewsroomContentResponse = zod.object({
   "body": zod.array(zod.object({
   "heading": zod.string(),
   "paragraphs": zod.array(zod.string()),
-  "pullQuote": zod.string().optional()
+  "pullQuote": zod.string().optional(),
+  "table": zod.object({
+  "caption": zod.string().optional(),
+  "headers": zod.array(zod.string()),
+  "rows": zod.array(zod.object({
+  "cells": zod.array(zod.string())
+}))
+}).optional()
 })),
   "date": zod.string().regex(getNewsroomContentResponseStoriesItemDateRegExp),
   "dateModified": zod.string().regex(getNewsroomContentResponseStoriesItemDateModifiedRegExp).optional(),
@@ -105,6 +117,7 @@ export const GetNewsroomContentResponse = zod.object({
   "note": zod.string()
 }),
   "classification": zod.enum(['reported', 'analysis', 'opinion', 'synthesis']),
+  "contentType": zod.enum(['Report']).optional(),
   "entities": zod.array(zod.string()),
   "timeline": zod.array(zod.string()),
   "relatedStories": zod.array(zod.string()),
@@ -162,7 +175,14 @@ export const GetNewsroomContentResponse = zod.object({
   "body": zod.array(zod.object({
   "heading": zod.string(),
   "paragraphs": zod.array(zod.string()),
-  "pullQuote": zod.string().optional()
+  "pullQuote": zod.string().optional(),
+  "table": zod.object({
+  "caption": zod.string().optional(),
+  "headers": zod.array(zod.string()),
+  "rows": zod.array(zod.object({
+  "cells": zod.array(zod.string())
+}))
+}).optional()
 }))
 })),
   "askGlobalAnswers": zod.array(zod.object({

@@ -41,9 +41,8 @@ const staticMetadata: Record<string, SeoMetadata> = {
   },
   '/reports': {
     title: 'Reports — Global AI News',
-    description: 'Editorial input is required before this route is published.',
+    description: 'Maintained reports on the AI industry, with transparent sourcing and connected context.',
     path: '/reports',
-    indexable: false,
   },
   '/topics': {
     title: 'Topics — Global AI News',

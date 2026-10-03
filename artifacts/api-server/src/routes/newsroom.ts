@@ -103,6 +103,7 @@ function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
     evidence: story.evidence,
     evidenceSummary: story.evidenceSummary,
     classification: story.classification,
+    ...(story.contentType ? { contentType: story.contentType } : {}),
     entities: story.entities,
     timeline: story.timeline,
     relatedStories: story.relatedStories,

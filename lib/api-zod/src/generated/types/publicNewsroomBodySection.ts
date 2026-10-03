@@ -5,9 +5,11 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { PublicNewsroomTable } from './publicNewsroomTable';
 
 export interface PublicNewsroomBodySection {
   heading: string;
   paragraphs: string[];
   pullQuote?: string;
+  table?: PublicNewsroomTable;
 }

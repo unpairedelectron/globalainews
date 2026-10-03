@@ -156,6 +156,11 @@ overrides:
   esbuild: 0.28.2
   js-yaml: 4.3.2
 
+patchedDependencies:
+  braces@3.0.3:
+    hash: 1ac1889152a0fd1a25b8ea0166ad8fd6f2e82581f6b1f26b92a1d8f6d5274fb4
+    path: patches/braces@3.0.3.patch
+
 importers:
 
   .:
@@ -4615,7 +4620,7 @@ snapshots:
     dependencies:
       balanced-match: 4.0.4
 
-  braces@3.0.3:
+  braces@3.0.3(patch_hash=1ac1889152a0fd1a25b8ea0166ad8fd6f2e82581f6b1f26b92a1d8f6d5274fb4):
     dependencies:
       fill-range: 7.1.1
 
@@ -5176,7 +5181,7 @@ snapshots:
 
   micromatch@4.0.8:
     dependencies:
-      braces: 3.0.3
+      braces: 3.0.3(patch_hash=1ac1889152a0fd1a25b8ea0166ad8fd6f2e82581f6b1f26b92a1d8f6d5274fb4)
       picomatch: 2.3.2
 
   mime-db@1.54.0: {}

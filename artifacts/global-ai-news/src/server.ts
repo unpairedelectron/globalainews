@@ -195,7 +195,7 @@ app.get('/amp/article/:slug', (request, response) => {
     response.status(200);
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Cache-Control', 'no-store');
-    response.send(renderAmpArticleDocument(story, snapshot.authors));
+    response.send(renderAmpArticleDocument(story, snapshot.authors, snapshot.sources));
   })().catch((error: unknown) => {
     process.stderr.write(
       `AMP article rendering failed: ${error instanceof Error ? error.message : 'unknown error'}\n`,

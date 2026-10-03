@@ -199,7 +199,7 @@ export function SeoHead({ title, description, path, article = false }: { title: 
   return null;
 }
 
-const nav = [['Brief', '/brief'], ['Signals', '/signals'], ['Research', '/research'], ['Industry', '/industry'], ['Models', '/models'], ['Policy', '/policy'], ['India', '/india'], ['Essays', '/essays']];
+const nav = [['Brief', '/brief'], ['Signals', '/signals'], ['Research', '/research'], ['Reports', '/reports'], ['Industry', '/industry'], ['Models', '/models'], ['Policy', '/policy'], ['India', '/india'], ['Essays', '/essays']];
 
 export function Header() {
   const [open, setOpen] = useState(false);

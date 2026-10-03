@@ -9,6 +9,7 @@
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:automation": "node --experimental-strip-types --test tests/automation-contract.test.ts",
+    "test:security": "node --test tests/braces-depth-security.test.mjs",
     "replay:automation": "pnpm run build && node ./dist/editorial/replay-command.mjs"
   },
   "dependencies": {

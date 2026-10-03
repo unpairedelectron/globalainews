@@ -6,6 +6,7 @@ import { useLocation, useParams, useSearch } from 'wouter';
 import { Link } from '@/components/canonical-link';
 import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, getPublicDateModified, getReaderFacingContentType, getReleaseDraftWordCount, indiaIndex, industryMap, MINIMUM_STORY_WORDS, signals, sources, stories, timelineEvents, type Story } from '@/content';
 import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryRow, TimelineList } from '@/components/site';
+import { StoryBody, StoryCitedText, StorySourceList } from '@/components/story-content';
 import { BRAND_COLORS } from '@/brand';
 import { EditorialSealGlyph } from '@/components/brand-mark';
 import { useNewsroomSnapshot } from '@/newsroom';
@@ -158,19 +159,17 @@ export function ArticlePage() {
   const story = snapshot.stories.find((candidate) => candidate.slug === slug);
   if (!story) return <NotFound />;
   const author = snapshot.authors.find((item) => item.slug === story.author);
-  const resolvedSources = story.sources
-    .map((sourceSlug) => snapshot.sources.find((item) => item.slug === sourceSlug))
-    .filter((source): source is (typeof snapshot.sources)[number] => Boolean(source));
-  const missingSourceRecords = story.sources.length - resolvedSources.length;
   const publicDateModified = getPublicDateModified(story);
+  const sectionIndex = story.contentType === 'Report' ? '/reports' : '/research';
+  const sectionLabel = story.contentType === 'Report' ? 'Reports' : 'Research';
   return <Shell>
     <SeoHead article title={`${story.title} — Global AI News`} description={story.dek} path={`/article/${story.slug}`} />
     <main className={`${container} max-w-[1180px]`}>
       <nav aria-label="Breadcrumb" className="flex flex-wrap items-center pt-10 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-        <Link href="/">Home</Link><span className="mx-2">/</span><Link href="/research">Research</Link><span className="mx-2">/</span><span>{story.category}</span><span className="mx-2">/</span><span aria-current="page" className="max-w-[22rem] truncate">{story.title}</span>
+        <Link href="/">Home</Link><span className="mx-2">/</span><Link href={sectionIndex}>{sectionLabel}</Link><span className="mx-2">/</span><span>{story.category}</span><span className="mx-2">/</span><span aria-current="page" className="max-w-[22rem] truncate">{story.title}</span>
       </nav>
       <header className="max-w-5xl py-10 md:py-16">
-        <p className="eyebrow text-primary">{story.category} · {getReaderFacingContentType(story.classification)}</p>
+        <p className="eyebrow text-primary">{story.category} · {story.contentType ?? getReaderFacingContentType(story.classification)}</p>
         <h1 className="mt-5 font-serif text-6xl leading-[.84] tracking-[-.03em] md:text-[7.8rem]">{story.title}</h1>
         <p className="mt-7 max-w-3xl text-xl leading-8 text-muted-foreground">{story.dek}</p>
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-foreground/15 py-4 text-xs">
@@ -189,16 +188,12 @@ export function ArticlePage() {
       <EditorialImage large treatment={story.imageTreatment.type} alt={story.imageTreatment.alt} caption={story.imageTreatment.caption} />
       <div className="grid gap-12 py-12 md:grid-cols-[minmax(0,740px)_280px]">
         <article className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:font-normal prose-p:leading-8 prose-p:text-foreground/85">
-          <section className="not-prose border-l-2 border-primary bg-secondary/50 p-6"><p className="eyebrow text-primary">The bottom line</p><p className="mt-3 font-serif text-3xl leading-none">{story.bottomLine}</p></section>
-          <section className="not-prose mt-10"><p className="eyebrow text-primary">Why this matters</p><p className="mt-3 text-lg leading-8">{story.whyItMatters}</p></section>
-          <section className="not-prose mt-10 border-y border-foreground/15 py-6"><p className="eyebrow text-primary">Key takeaways</p><ul className="mt-4 grid gap-3 text-sm">{story.keyTakeaways.map((item) => <li key={item} className="flex gap-3"><span className="text-primary">—</span>{item}</li>)}</ul></section>
-          {story.body.map((section) => <section key={section.heading}><h2>{section.heading}</h2>{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}{section.pullQuote && <blockquote>{section.pullQuote}</blockquote>}</section>)}
-          <section className="not-prose mt-10 border-t border-foreground/15 pt-6"><p className="eyebrow text-primary">What changes</p><p className="mt-3 text-lg leading-8">{story.whatChanges}</p></section>
-          {story.sources.length > 0 && <section className="not-prose mt-10" data-testid="article-sources">
-            <SectionLabel>Sources</SectionLabel>
-            <div className="grid gap-3">{resolvedSources.map((source) => <a href={source.url} target="_blank" rel="noreferrer" key={source.slug} className="border-b border-foreground/15 pb-3 text-sm hover:text-primary">{source.name}<span className="mt-1 block text-xs text-muted-foreground">{source.publisher} · {source.kind}</span></a>)}</div>
-            {missingSourceRecords > 0 && <p role="status" className="mt-3 text-xs text-warning">Some source records need editorial review before they can be linked.</p>}
-          </section>}
+          <section className="not-prose border-l-2 border-primary bg-secondary/50 p-6"><p className="eyebrow text-primary">The bottom line</p><p className="mt-3 font-serif text-3xl leading-none"><StoryCitedText text={story.bottomLine} story={story} sources={snapshot.sources} /></p></section>
+          <section className="not-prose mt-10"><p className="eyebrow text-primary">Why this matters</p><p className="mt-3 text-lg leading-8"><StoryCitedText text={story.whyItMatters} story={story} sources={snapshot.sources} /></p></section>
+          <section className="not-prose mt-10 border-y border-foreground/15 py-6"><p className="eyebrow text-primary">Key takeaways</p><ul className="mt-4 grid gap-3 text-sm">{story.keyTakeaways.map((item) => <li key={item} className="flex gap-3"><span className="text-primary">—</span><span><StoryCitedText text={item} story={story} sources={snapshot.sources} /></span></li>)}</ul></section>
+          <StoryBody story={story} sources={snapshot.sources} />
+          <section className="not-prose mt-10 border-t border-foreground/15 pt-6"><p className="eyebrow text-primary">What changes</p><p className="mt-3 text-lg leading-8"><StoryCitedText text={story.whatChanges} story={story} sources={snapshot.sources} /></p></section>
+          {story.sources.length > 0 && <StorySourceList story={story} sources={snapshot.sources} />}
         </article>
         <aside className="space-y-10"><EvidencePanel storySlug={story.slug} /><section><SectionLabel>Related entities</SectionLabel><EntityLinks slugs={story.entities} /></section><section><SectionLabel>Timeline</SectionLabel><TimelineList slugs={story.timeline} /></section></aside>
       </div>
@@ -652,10 +647,27 @@ export function TopicPage({ kind }: { kind: 'ai' | 'india' }) {
 
 export function AmpArticlePage() {
   const { slug = '' } = useParams();
-  const { stories: newsroomStories } = useNewsroomSnapshot();
-  const story = newsroomStories.find((candidate) => candidate.slug === slug);
+  const snapshot = useNewsroomSnapshot();
+  const story = snapshot.stories.find((candidate) => candidate.slug === slug);
   if (!story) {
     return <main className="mx-auto max-w-2xl px-5 py-10"><h1 className="font-serif text-4xl">AMP article not found</h1></main>;
   }
-  return <><SeoHead article title={`${story.title} — Global AI News`} description={story.dek} path={`/article/${story.slug}`} /><main className="mx-auto max-w-2xl px-5 py-10"><p className="eyebrow text-primary">Global AI News · AMP preview</p><h1 className="mt-5 font-serif text-5xl leading-none">{story.title}</h1><p className="mt-5 text-lg text-muted-foreground">{story.dek}</p><EditorialImage alt={story.imageTreatment.alt} caption={story.imageTreatment.caption} /><p className="mt-8 text-lg leading-8">{story.bottomLine}</p>{story.body.map((section) => <section key={section.heading}><h2 className="mt-10 font-serif text-3xl">{section.heading}</h2>{section.paragraphs.map((paragraph) => <p className="mt-4 leading-8" key={paragraph}>{paragraph}</p>)}</section>)}<Link href={`/article/${story.slug}`} className="mt-10 inline-block text-primary">Read the complete story →</Link></main></>;
+  return (
+    <>
+      <SeoHead article title={`${story.title} — Global AI News`} description={story.dek} path={`/article/${story.slug}`} />
+      <main className="mx-auto max-w-2xl px-5 py-10">
+        <p className="eyebrow text-primary">Global AI News · AMP preview · {story.contentType ?? story.category}</p>
+        <h1 className="mt-5 font-serif text-5xl leading-none">{story.title}</h1>
+        <p className="mt-5 text-lg text-muted-foreground">{story.dek}</p>
+        <EditorialImage alt={story.imageTreatment.alt} caption={story.imageTreatment.caption} />
+        <p className="mt-8 text-lg leading-8"><StoryCitedText text={story.bottomLine} story={story} sources={snapshot.sources} /></p>
+        <p className="mt-6 leading-8"><StoryCitedText text={story.whyItMatters} story={story} sources={snapshot.sources} /></p>
+        <ul className="mt-6 grid gap-3 text-sm">{story.keyTakeaways.map((item) => <li key={item}><StoryCitedText text={item} story={story} sources={snapshot.sources} /></li>)}</ul>
+        <div className="prose prose-lg mt-8 max-w-none"><StoryBody story={story} sources={snapshot.sources} /></div>
+        <p className="mt-8 leading-8"><StoryCitedText text={story.whatChanges} story={story} sources={snapshot.sources} /></p>
+        {story.sources.length > 0 && <StorySourceList story={story} sources={snapshot.sources} />}
+        <Link href={`/article/${story.slug}`} className="mt-10 inline-block text-primary">Read the complete story →</Link>
+      </main>
+    </>
+  );
 }
