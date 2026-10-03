@@ -1,0 +1,219 @@
+GLOBAL AI NEWS — FINAL PRODUCTION CUTOVER
+==========================================
+
+The Authority Engine workspace implementation is COMPLETE and verified.
+
+Do NOT add more Authority Engine features.
+Do NOT redesign the architecture.
+Do NOT modify editorial content.
+
+Move now to FINAL PRODUCTION CUTOVER AND VERIFICATION.
+
+==================================================
+1. SECURITY PRE-CHECK
+==================================================
+
+Investigate:
+
+braces@3.0.3 — HIGH advisory
+
+Determine:
+
+- exact dependency chain
+- runtime vs development/build-time usage
+- production exposure
+- available mitigation
+- whether a safe patch exists
+
+If it is development-only and no upstream fix exists:
+
+document:
+
+- dependency chain
+- why it is not included in the production runtime
+- mitigation/status
+
+Do NOT perform a broad dependency upgrade.
+
+Run typecheck/build/smoke afterward.
+
+==================================================
+2. LEGACY SCHEDULER
+==================================================
+
+The old API scheduler is still active.
+
+The known platform operation to stop it is:
+
+Publishing → Unpublish
+
+This temporarily takes the existing site offline.
+
+Prepare the cutover as ONE controlled maintenance operation.
+
+Before doing so, confirm:
+
+- current production state recorded
+- new Web artifact ready
+- new API artifact ready
+- new API automation disabled
+- source revision recorded
+- build fingerprints recorded
+- rollback/recovery procedure documented
+
+DO NOT invoke production automation.
+
+==================================================
+3. CUTOVER
+==================================================
+
+Perform the minimum necessary production transition:
+
+OLD DEPLOYMENT
+→ OFFLINE
+→ OLD SCHEDULER STOPPED
+→ CURRENT WEB + API ARTIFACTS
+→ NEW DEPLOYMENT ACTIVE
+
+Ensure both Web and API are built from the current verified workspace revision.
+
+Do not change production editorial data.
+
+==================================================
+4. DEPLOYMENT PROVENANCE
+==================================================
+
+After cutover, establish:
+
+WEB deployed revision
+API deployed revision
+source revision
+
+They must match the intended current workspace revision.
+
+If fingerprints exist, verify them.
+
+If the platform exposes a deployment/build identifier, record it.
+
+Do NOT accept "deployment successful" as evidence of parity.
+
+==================================================
+5. PRODUCTION VERIFICATION
+==================================================
+
+Test BOTH:
+
+https://www.globalainews.in
+https://global-ai-media.replit.app
+
+Verify:
+
+API SECURITY
+- all protected editor GETs = 401
+- protected mutations = 401
+- no public editorial fields
+
+PUBLIC CONTENT
+- 10 public stories
+- first-response article HTML works
+
+RSS
+- /feed.xml = API feed
+- 10 stories
+
+SITEMAP
+- /sitemap.xml = API sitemap
+- 47 URLs
+
+AMP
+Verify ALL 10 article pages:
+
+- rel="amphtml"
+- correct ampPath
+- AMP = 200
+- title matches
+- H1 matches
+- canonical matches article
+
+Explicitly verify:
+
+weekly-deep-dive-cost-of-intelligence
+public-compute-needs-public-metrics
+reliability-is-the-new-ai-moat
+
+Unknown AMP = 404 + noindex.
+
+TRUST
+
+/about-us = 200 + noindex
+/code-of-ethics = 200 + noindex
+/corrections = 200 + noindex
+/contact-us = 200 + noindex
+
+/contact → /contact-us
+
+/privacy = 404
+/terms = 404
+
+UNKNOWN ARTICLE
+
+404 + noindex
+
+ROBOTS
+
+Canonical domain must remain crawlable.
+
+Replit alias must not compete with canonical indexing.
+
+==================================================
+6. REPORTING
+==================================================
+
+Report exact:
+
+- deployed Web revision
+- deployed API revision
+- production URLs
+- API status
+- article status
+- AMP coverage
+- RSS count
+- sitemap count
+- trust-route status
+- robots status
+- security status
+- performance observations
+
+==================================================
+7. SAFE PUBLICATION TEST
+==================================================
+
+Do NOT write production editorial data.
+
+Use the isolated publication fixture if available.
+
+If unavailable:
+
+SAFE DEPLOYED PUBLICATION FIXTURE = NOT VERIFIED
+
+Do not create production test stories.
+
+==================================================
+FINAL GATE
+==================================================
+
+If production is running the current revision and all production checks
+pass:
+
+FOUNDATION = READY
+AUTHORITY ENGINE = READY
+PRODUCTION = VERIFIED
+
+Otherwise:
+
+BLOCKED
+
+List only the exact remaining production blocker.
+
+Do not restart feature development.
+Do not perform another architecture audit.
