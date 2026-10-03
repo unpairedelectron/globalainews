@@ -38,6 +38,7 @@ let apiProcess;
 let devProcess;
 let baseUrl;
 let devBaseUrl;
+let devServerOutput = '';
 let routeBrowserProcess;
 let routeBrowserCdp;
 let routeBrowserPromise;
@@ -243,7 +244,10 @@ async function waitForDevelopmentPreviewTitle(title, route) {
       }
       await new Promise((resolve) => setTimeout(resolve, 250));
     }
-    assert.fail(`${route}: development preview did not refresh to "${title}" within 20 seconds`);
+    assert.fail(
+      `${route}: development preview did not refresh to "${title}" within 20 seconds.` +
+        (devServerOutput ? `\nVite output:\n${devServerOutput}` : ''),
+    );
   } finally {
     try {
       unlinkSync(filePath);
@@ -531,6 +535,7 @@ async function startStaticServer() {
 }
 
 async function startDevServer() {
+  devServerOutput = '';
   devProcess = spawn(
     'pnpm',
     ['exec', 'vite', '--config', 'vite.config.ts', '--mode', 'test', '--host', '127.0.0.1', '--port', String(devPort), '--strictPort'],
@@ -547,9 +552,8 @@ async function startDevServer() {
     },
   );
 
-  let output = '';
   const captureOutput = (chunk) => {
-    output = `${output}${chunk.toString()}`.slice(-12_000);
+    devServerOutput = `${devServerOutput}${chunk.toString()}`.slice(-12_000);
   };
   devProcess.stdout?.on('data', captureOutput);
   devProcess.stderr?.on('data', captureOutput);
@@ -575,7 +579,7 @@ async function startDevServer() {
   }
 
   throw new Error(
-    `The Vite dev server did not become ready within 60 seconds (exit code ${devProcess.exitCode ?? 'pending'}, signal ${devProcess.signalCode ?? 'none'}).${output ? `\n${output}` : ''}`,
+    `The Vite dev server did not become ready within 60 seconds (exit code ${devProcess.exitCode ?? 'pending'}, signal ${devProcess.signalCode ?? 'none'}).${devServerOutput ? `\n${devServerOutput}` : ''}`,
   );
 }
 
@@ -767,7 +771,11 @@ async function evaluateBrowser(cdp, expression) {
     returnByValue: true,
   });
   if (result.exceptionDetails) {
-    throw new Error(result.exceptionDetails.text || 'Chromium evaluation failed.');
+    throw new Error(
+      result.exceptionDetails.exception?.description
+        || result.exceptionDetails.text
+        || 'Chromium evaluation failed.',
+    );
   }
   return result.result?.value;
 }
@@ -2426,7 +2434,7 @@ async function checkThemeRegression() {
     await cdp.send('Page.navigate', { url: `${baseUrl}/` });
     await waitForBrowserCondition(
       cdp,
-      `document.documentElement.dataset.theme === 'light' && document.querySelector('[data-testid="button-theme-toggle"]')?.getAttribute('aria-pressed') === 'false'`,
+      `document.documentElement?.dataset.theme === 'light' && document.querySelector('[data-testid="button-theme-toggle"]')?.getAttribute('aria-pressed') === 'false'`,
       'The persisted light theme did not restore after a full navigation.',
     );
     await evaluateBrowser(cdp, `document.querySelector('[data-testid="button-theme-toggle"]').click()`);
@@ -2745,7 +2753,6 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   }
   const publicNoindexRoutes = [
     '/search',
-    '/topics',
     '/archive',
     '/about-us',
     '/code-of-ethics',
@@ -2770,6 +2777,16 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       assert.doesNotMatch(body, /Latest stories/, `${route}: editorial-input placeholder must not present unrelated stories`);
     }
   }
+  const topicsMetadata = metadataManifest.routes.find((metadata) => metadata.path === '/topics');
+  assert.ok(topicsMetadata, 'Topics index is missing public SEO metadata');
+  assert.notEqual(topicsMetadata.indexable, false, 'Topics index must be indexable when connected topic records exist');
+  assert.ok(routes.includes('/topics'), 'Topics index is missing from the sitemap');
+  const { response: topicsResponse, body: topicsBody } = await fetchText('/topics');
+  assert.equal(topicsResponse.status, 200, 'Topics index is not reachable');
+  assert.match(topicsBody, /<h1[^>]*>Topics that/, 'Topics index is missing its prerendered heading');
+  assert.match(topicsBody, /data-testid="topics-index"/, 'Topics index is missing connected topic records');
+  assert.match(topicsBody, /href="\/topic\/(?:ai|india)\//, 'Topics index is missing links to topic detail pages');
+  assert.doesNotMatch(topicsBody, /editorial-input-required|name="robots" content="noindex,follow"/, 'Topics index must not ship as an unpublished placeholder');
   const reportsMetadata = metadataManifest.routes.find((metadata) => metadata.path === '/reports');
   assert.ok(reportsMetadata, 'Reports index is missing public SEO metadata');
   assert.notEqual(reportsMetadata.indexable, false, 'Reports index must be indexable once maintained reports are available');
@@ -2778,6 +2795,8 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.equal(reportsResponse.status, 200, 'Reports index is not reachable');
   assert.match(reportsBody, /<h1[^>]*>Reports/, 'Reports index is missing its prerendered heading');
   assert.match(reportsBody, /india-ai-compute-access-2026/, 'Reports index does not link to the maintained flagship report');
+  assert.match(reportsBody, /data-testid="reports-authority-network"/, 'Reports index is missing its research/data/topic/entity connections');
+  assert.match(reportsBody, /Published research records|Research/, 'Reports index is missing its research context');
   assert.doesNotMatch(reportsBody, /name="robots" content="noindex,follow"/, 'Reports index must not ship with a noindex directive');
   const publishedResearch = newsroomContent.researchRecords.find((record) => record.status === 'published');
   const publishedDataProduct = newsroomContent.dataProducts.find((product) => product.status === 'published');
@@ -3138,6 +3157,11 @@ test('development preview cards refresh when an editor changes a story title', a
     writeFileSync(contentPath, originalContent);
     await waitForDevelopmentPreviewTitle('AI models are accelerating the hunt for new antibiotics — Global AI News', route);
   }
+  assert.doesNotMatch(
+    devServerOutput,
+    /src\/content\.ts changed, restarting server/,
+    `${route}: editing a story restarted Vite instead of refreshing only the changed preview.`,
+  );
 });
 
 test('long article headlines scale without dropping words, while impossible titles fail by route', () => {

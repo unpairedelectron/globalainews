@@ -7,7 +7,6 @@ import { SeoPrerender } from './seo-prerender';
 
 const prerenderPublicNoindexRoutes = new Set([
   '/search',
-  '/topics',
   '/archive',
   '/about-us',
   '/code-of-ethics',

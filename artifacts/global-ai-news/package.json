@@ -23,7 +23,7 @@
     "test:article-first-response": "node tests/article-first-response.test.mjs",
     "test:visual": "node --test --test-name-pattern=\"light and dark themes stay readable across key public and newsroom routes\" tests/seo-smoke.test.mjs",
     "update:visual-baselines": "UPDATE_VISUAL_BASELINES=1 pnpm run test:visual",
-    "test:smoke": "pnpm --filter @workspace/api-server run build && pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:content-quality && pnpm run test:research-report && pnpm run test:authority-registry && pnpm run test:seo-date-stability && pnpm run build:production && pnpm run test:publication-fixture && pnpm run test:article-first-response && pnpm run audit:links && node --test tests/seo-smoke.test.mjs"
+    "test:smoke": "pnpm --filter @workspace/api-server run build && pnpm --filter @workspace/api-server run test:security && pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:content-quality && pnpm run test:research-report && pnpm run test:authority-registry && pnpm run test:seo-date-stability && pnpm run build:production && pnpm run test:publication-fixture && pnpm run test:article-first-response && pnpm run audit:links && node --test tests/seo-smoke.test.mjs"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",

@@ -3,7 +3,7 @@ import { ClerkProvider, SignIn, SignUp, useClerk, useSignIn, useUser, useAuth } 
 import { publishableKeyFromHost } from '@clerk/react/internal';
 import { shadcn } from '@clerk/themes';
 import { useLocation } from 'wouter';
-import { InsightsPage } from '@/pages/public';
+import { InsightsPage } from '@/pages/insights';
 import { useTheme, type Theme } from '@/theme';
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');

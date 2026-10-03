@@ -25,7 +25,7 @@ import {
   TopicPage,
 } from '@/pages/public';
 import { ReportsIndexPage } from '@/pages/reports-index';
-import { DataProductPage, ResearchIndexPage, ResearchRecordPage, SourceRecordPage } from '@/pages/authority-pages';
+import { DataProductPage, ResearchIndexPage, ResearchRecordPage, SourceRecordPage, TopicsIndexPage } from '@/pages/authority-pages';
 
 const queryClient = new QueryClient();
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -80,9 +80,12 @@ function AppRoutes() {
     <Route path="/person/:slug"><EntityPage kind="person" /></Route>
     <Route path="/technology/:slug"><EntityPage kind="technology" /></Route>
     <Route path="/policy/:slug"><EntityPage kind="policy" /></Route>
+    <Route path="/institution/:slug"><EntityPage kind="institution" /></Route>
+    <Route path="/dataset/:slug"><EntityPage kind="dataset" /></Route>
+    <Route path="/infrastructure/:slug"><EntityPage kind="infrastructure" /></Route>
     <Route path="/timeline/:slug" component={TimelinePage} />
     <Route path="/reports" component={ReportsIndexPage} />
-    <Route path="/topics"><EditorialInputPage title="Topics" path="/topics" /></Route>
+    <Route path="/topics" component={TopicsIndexPage} />
     <Route path="/archive"><EditorialInputPage title="Archive" path="/archive" /></Route>
     <Route path="/about-us"><EditorialInputPage title="About us" path="/about-us" /></Route>
     <Route path="/code-of-ethics"><EditorialInputPage title="Code of ethics" path="/code-of-ethics" /></Route>

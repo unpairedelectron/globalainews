@@ -11,6 +11,15 @@ export function ReportsIndexPage() {
   const reports = snapshot.stories
     .filter((story) => story.contentType === 'Report')
     .sort((a, b) => b.date.localeCompare(a.date));
+  const featuredReport = reports[0];
+  const researchRecords = snapshot.researchRecords
+    .filter((record) => record.status === 'published')
+    .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
+  const dataProducts = snapshot.dataProducts
+    .filter((product) => product.status === 'published')
+    .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
+  const indexableTopics = snapshot.topics.filter((topic) => topic.indexable);
+  const reportEntityKinds = ['company', 'lab', 'model', 'person', 'technology', 'institution', 'policy', 'dataset', 'infrastructure'];
 
   return (
     <>
@@ -40,9 +49,11 @@ export function ReportsIndexPage() {
             <div aria-hidden="true" className="absolute right-[18%] top-[59%] h-2 w-2 rounded-full bg-primary" />
             <div className="relative flex min-h-36 flex-col justify-between">
               <span className="eyebrow text-primary">Evidence / sources / context</span>
-              <p className="max-w-xs font-serif text-3xl leading-[.95]">
-                Follow the connections, not just the claim.
-              </p>
+              {featuredReport ? <div>
+                <p className="eyebrow text-muted-foreground">Featured report</p>
+                <Link href={`/article/${featuredReport.slug}`} className="mt-3 block max-w-sm font-serif text-3xl leading-[.95] hover:text-primary">{featuredReport.title}<ArrowUpRight aria-hidden="true" size={17} className="ml-2 inline" /></Link>
+                <p className="mt-4 text-xs text-muted-foreground">Updated <time dateTime={featuredReport.dateModified ?? featuredReport.date}>{formatEditorialDate(featuredReport.dateModified ?? featuredReport.date)}</time></p>
+              </div> : <p className="max-w-xs font-serif text-3xl leading-[.95]">Follow the connections, not just the claim.</p>}
             </div>
           </div>
         </section>
@@ -64,6 +75,13 @@ export function ReportsIndexPage() {
               <div className="border-t border-foreground/15">
                 {reports.map((story, index) => {
                   const author = snapshot.authors.find((candidate) => candidate.slug === story.author);
+                  const storyResearch = snapshot.researchRecords.filter((record) => record.status === 'published' && (record.storySlug === story.slug || record.relatedStorySlugs.includes(story.slug)));
+                  const storyData = snapshot.dataProducts.filter((product) => product.status === 'published' && product.storySlugs.includes(story.slug));
+                  const storyTopics = snapshot.topics.filter((topic) => topic.indexable && topic.storySlugs.includes(story.slug));
+                  const storyEntities = story.entities.flatMap((slug) => {
+                    const entity = snapshot.entities.find((candidate) => candidate.slug === slug);
+                    return entity && reportEntityKinds.includes(entity.kind) ? [entity] : [];
+                  });
                   return (
                     <article
                       key={story.slug}
@@ -94,6 +112,13 @@ export function ReportsIndexPage() {
                             {author ? `By ${author.name}` : 'Byline unavailable'} ·{' '}
                             <time dateTime={story.date}>{formatEditorialDate(story.date)}</time>
                           </p>
+                          <p className="mt-2 text-xs text-muted-foreground">Updated <time dateTime={story.dateModified ?? story.date}>{formatEditorialDate(story.dateModified ?? story.date)}</time></p>
+                          {(storyResearch.length > 0 || storyData.length > 0 || storyTopics.length > 0 || storyEntities.length > 0) && <div data-testid={`report-network-${story.slug}`} className="mt-6 grid gap-x-6 gap-y-5 border-t border-foreground/15 pt-5 sm:grid-cols-2">
+                            {storyResearch.length > 0 && <div><p className="eyebrow text-primary">Research</p>{storyResearch.map((record) => <Link key={record.slug} href={`/research/${record.slug}`} className="mt-2 block text-sm hover:text-primary">{record.title}<span className="mt-1 block text-xs text-muted-foreground">Updated {formatEditorialDate(record.updatedAt)}</span></Link>)}</div>}
+                            {storyData.length > 0 && <div><p className="eyebrow text-primary">Data products</p>{storyData.map((product) => <Link key={product.slug} href={`/data/${product.slug}`} className="mt-2 block text-sm hover:text-primary">{product.title}<span className="mt-1 block text-xs text-muted-foreground">Updated {formatEditorialDate(product.updatedAt)}</span></Link>)}</div>}
+                            {storyTopics.length > 0 && <div><p className="eyebrow text-primary">Topics</p>{storyTopics.map((topic) => <Link key={topic.slug} href={topic.route} className="mt-2 block text-sm hover:text-primary">{topic.label}</Link>)}</div>}
+                            {storyEntities.length > 0 && <div><p className="eyebrow text-primary">Entities</p>{storyEntities.map((entity) => <Link key={entity.slug} href={`/${entity.kind}/${entity.slug}`} className="mt-2 block text-sm hover:text-primary">{entity.name}</Link>)}</div>}
+                          </div>}
                         </div>
                         <span aria-hidden="true" className="hidden self-start pt-2 text-primary sm:block">
                           <ArrowUpRight size={17} strokeWidth={1.5} />
@@ -121,6 +146,18 @@ export function ReportsIndexPage() {
               </div>
             )}
           </div>
+        </section>
+        <section data-testid="reports-research-data" className="grid gap-10 border-t border-foreground/15 py-12 md:grid-cols-2">
+          <div><SectionLabel aside={`${researchRecords.length} published`}>Research register</SectionLabel>
+            {researchRecords.length ? <div className="border-t border-foreground/15">{researchRecords.map((record) => <Link key={record.slug} href={`/research/${record.slug}`} className="block border-b border-foreground/15 py-4 hover:text-primary"><span className="block text-sm">{record.title}</span><span className="mt-1 block text-xs text-muted-foreground">{record.provenance.replaceAll('-', ' ')} · updated {formatEditorialDate(record.updatedAt)}</span></Link>)}</div> : <p className="border-t border-foreground/15 py-4 text-sm text-muted-foreground">No published research records are connected yet.</p>}
+          </div>
+          <div><SectionLabel aside={`${dataProducts.length} published`}>Data products</SectionLabel>
+            {dataProducts.length ? <div className="border-t border-foreground/15">{dataProducts.map((product) => <Link key={product.slug} href={`/data/${product.slug}`} className="block border-b border-foreground/15 py-4 hover:text-primary"><span className="block text-sm">{product.title}</span><span className="mt-1 block text-xs text-muted-foreground">Updated {formatEditorialDate(product.updatedAt)} · {product.observations.length} dated observations</span></Link>)}</div> : <p className="border-t border-foreground/15 py-4 text-sm text-muted-foreground">No published data products are connected yet.</p>}
+          </div>
+        </section>
+        <section data-testid="reports-topic-index" className="grid gap-10 border-t border-foreground/15 py-12 md:grid-cols-2">
+          <div><SectionLabel>Topics</SectionLabel><div className="border-t border-foreground/15">{indexableTopics.map((topic) => <Link key={topic.slug} href={topic.route} className="block border-b border-foreground/15 py-4 hover:text-primary"><span className="block text-sm">{topic.label}</span><span className="mt-1 block text-xs text-muted-foreground">{topic.description}</span></Link>)}</div></div>
+          <div><SectionLabel>Explore the record</SectionLabel><p className="max-w-lg text-sm leading-6 text-muted-foreground">Follow each report into its topic hubs, cited sources, research methods, dated data and related entities.</p><div className="mt-5 flex flex-wrap gap-x-6 gap-y-3"><Link href="/topics" className="border-b border-primary/50 pb-1 text-sm text-primary">Browse topics</Link><Link href="/research" className="border-b border-primary/50 pb-1 text-sm text-primary">Browse research</Link></div></div>
         </section>
       </main>
       <Footer />

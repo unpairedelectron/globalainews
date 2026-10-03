@@ -1,24 +1,25 @@
 # Final pre-cutover checklist
 
-**Prepared:** 2026-10-03  
-**State:** HOLD — this checklist is documentation only. No production cutover has been performed.
+**Prepared:** 2026-10-04
+**State:** READY FOR HUMAN PUBLISH — the previous deployment is offline and its process-owned scheduler is stopped. Publishing remains a human action.
 
 ## Scope and approval boundary
 
-This is the final pre-cutover handoff for Global AI News. It does not authorize or perform Publish, Unpublish, production automation, production editorial writes, production configuration changes, or database migrations. Do not start another foundation audit as part of this handoff.
+This is the final pre-publish handoff for Global AI News. It does not authorize or perform Publish, production automation, production editorial writes, production configuration changes, or database migrations. Do not start another foundation audit as part of this handoff.
 
-The current production service is a public Autoscale deployment. Replit's current documentation says Unpublish takes the app offline and stops the deployment; the project files and database remain, and the app must be published again from the Publishing tool. Unpublish therefore stops the old process-owned scheduler only by taking the whole public Web and API offline. A human must approve that outage before the sequence below is started.
+The latest available deployment metadata reports that the Autoscale app is not deployed, has no successful published build, and has no current deployment URLs. The previous deployment is offline, so its process-owned scheduler is stopped; both public Web and API remain unavailable until a human publishes the reviewed workspace.
 
 ## Verified state
 
 ### Production metadata and read-only probes
 
-Replit deployment metadata reports a public, deployed Autoscale app with a successful published build:
+The latest available Replit deployment metadata reports:
 
-- Primary URL: `https://www.globalainews.in`
-- Additional URL: `https://global-ai-media.replit.app`
+- `isDeployed`: `false`
+- `hasSuccessfulBuild`: `false`
+- Current deployment URLs: none
 
-Read-only checks on 2026-10-03 returned:
+The following are historical read-only observations from 2026-10-03, before the current offline state:
 
 | Request | Result |
 | --- | --- |
@@ -29,9 +30,9 @@ Read-only checks on 2026-10-03 returned:
 | Primary-host `GET /robots.txt` | `200`; general crawling allowed; sitemap listed |
 | Alias-host `GET /robots.txt` | `200`; general crawling disallowed; social bots allowed |
 
-No `X-GAN-*` response headers were observed on the tested production root or health responses. Production source/Web/API fingerprint parity is therefore **unverified**, despite the deployment metadata's successful-build status.
+No `X-GAN-*` response headers were observed on those historical production root or health responses. Current production source/Web/API fingerprint parity is **unverified**; no production routes were probed after the deployment went offline.
 
-The canonical and alias `robots.txt` responses differ. The checked-in `public/robots.txt` is host-independent, and the layer supplying the alias-specific response has not been identified. Do not change the file to try to fix the alias behavior; identify the responsible hosting/domain layer first.
+The historical canonical and alias `robots.txt` responses differ. The checked-in `public/robots.txt` is host-independent, and the layer supplying the alias-specific response has not been identified. Do not change the file to try to fix the alias behavior; identify the responsible hosting/domain layer first.
 
 ### Production GETs that are not safe diagnostics
 
@@ -49,9 +50,9 @@ These routes reach `getPublishedStoriesFromDatabase()` → `getReleaseRows()` �
 
 ### Scheduler and current production risk
 
-- The current deployed API predates the explicit automation override and may still run its process-owned 30-minute timer.
+- The previous deployed API predates the explicit automation override. That deployment is offline, so its process-owned 30-minute timer is stopped.
 - The pending API artifact sets `EDITORIAL_AUTOMATION_ENABLED=false`; retain that setting.
-- The old process cannot be stopped independently through the confirmed Replit control. Unpublishing stops the full deployment and causes public Web and API downtime.
+- The new API automation remains disabled. Do not enable or invoke it as part of publishing.
 - No production automation was invoked manually for this work.
 
 ### Local build and test evidence
@@ -62,9 +63,9 @@ The configured full smoke command passed:
 pnpm --filter @workspace/global-ai-news run test:smoke
 ```
 
-Coverage included 49 desktop routes, 8 mobile routes, 11 AMP pages, RSS, first-response article/report checks, responsive and Clerk theme checks, publication-fixture cleanup, internal-link audit, and content/research/authority/SEO checks. The API dependency-depth security test passed all 6 cases.
+Coverage included 58 desktop routes, 8 mobile routes, 11 AMP pages, RSS, first-response article/report checks, responsive and Clerk theme checks, publication-fixture cleanup, internal-link audit, and content/research/authority/SEO checks. The link audit covered 104 built routes and 465 internal references with 0 issues. The API dependency-depth security test passed all 6 cases. The development preview refresh test also confirms article-title edits update the social card without restarting Vite.
 
-Fresh local security scans reported:
+The latest local security scan results available for this handoff reported:
 
 - Dependency audit: **1 high** finding, `GHSA-vfj7-8cjw-p6xm` / `CVE-2026-93687`, `braces@3.0.3`; no upstream patch is available.
 - SAST: **0** findings.
@@ -72,42 +73,39 @@ Fresh local security scans reported:
 
 The repository's depth guard and six regression tests are defense-in-depth, not a clean audit. Code inspection found no user-controlled `micromatch` pattern in the current Clerk proxy configuration; this narrows the apparent request path but does not resolve the advisory or prove the package unreachable.
 
-The public JavaScript entry is `575,108` bytes (`170,551` gzip), down from `678,492` bytes (`196,028` gzip). The Clerk route chunk is deferred and measures `105,294` bytes (`26,575` gzip). The public entry still triggers Vite's 500 kB chunk warning. These are local build measurements, not production payload measurements.
+The public JavaScript entry is `588,045` bytes (`171,280` gzip). The Clerk route chunk is deferred and measures `146,770` bytes (`36,890` gzip). CSS is `147,507` bytes (`23,190` gzip). The public entry still triggers Vite's 500 kB chunk warning. These are local build measurements, not production payload measurements.
 
 ### Expected local fingerprints
 
-The final workspace build and `scripts/build-fingerprint.mjs` agree on these values:
+The final workspace build and `scripts/build-fingerprint.mjs` agree on these values. After the managed workflow restart, the local API health response returned `200`, and all three `X-GAN-*` headers matched this table:
 
 | Fingerprint | Value |
 | --- | --- |
-| Source | `290eb8530edec72be6cd6aee71b7fbe046169fcb+source-sha256:41a4ffc49dcbe608c1239f5fa6920181e054cad266e12d85d1e75eb067ca45ac` |
-| Web artifact | `web-sha256:fe42d22f6320cbdbb0f8eae803c4df6773099e555cc659c37fbc2d650738c469` |
-| API artifact | `api-sha256:705ef28902243e4fc83ab30ce6465b290e41947fe539b7e26f1f55109383b36b` |
+| Source | `69283d30a906b48ba210fe2e96dff92d6b678301+source-sha256:75730aa7fb4e854b0568077ed015ae0a2bee0a7b6596bfda5c80bd1c84edf729` |
+| Web artifact | `web-sha256:181241e3a1b5121398423b79dd574d09a3d500b36c7ba26abe4384e0bb9e5a98` |
+| API artifact | `api-sha256:1d8ef79e443a206a1d6195bb05dbb7e6f3de479ac69426de73279be77402d63b` |
 
 After a future approved publish, compare `X-GAN-Source-Revision`, `X-GAN-Web-Artifact-Revision`, and `X-GAN-API-Artifact-Revision` on both the public root and API health response with the values above. If a build changes before that publish, regenerate the fingerprints and update this document before comparing.
 
 ## Ordered maintenance-window procedure
 
-Do not begin until a human has approved the maintenance window and understands the full-site outage.
+The old deployment is already offline. The next production action is a human Publish of the reviewed workspace.
 
-1. **Preflight and record the starting state.**
-   - Confirm the exact deployment and both public URLs in the Publishing tool.
+1. **Preflight and record the current state.**
+   - Confirm the Autoscale deployment is still offline in the Publishing tool.
    - Save a current project checkpoint or identify the known-good checkpoint to restore if needed.
-   - Confirm the pending API production configuration still sets `EDITORIAL_AUTOMATION_ENABLED=false`.
+   - Confirm the API production configuration still sets `EDITORIAL_AUTOMATION_ENABLED=false`.
    - Review any Publish dialog for database/schema operations. Stop if it proposes a destructive or unexplained migration; this hardening work made no production schema changes.
    - Do not run any automation endpoint or newsroom GET listed above.
 
-2. **Stop the old timer, only with outage approval.**
-   - In the Publishing tool, select **Unpublish** and confirm only after the outage is approved.
-   - This takes both the public Web and API offline; it is not an API-only scheduler stop.
-   - Confirm both URLs are offline. Do not leave the old deployment running while assuming the timer has stopped.
-
-3. **Publish the prepared workspace.**
+2. **Publish the prepared workspace.**
+   - A human must initiate Publish; this action is not performed by the agent.
+   - Publishing restores the public Web and API from their current offline state.
    - From the Publishing tool, publish the reviewed current workspace.
    - Do not change production settings, enable automation, or approve an unfamiliar migration during this step.
    - Wait for the new Autoscale deployment to report successful startup.
 
-4. **Run only the safe post-publish checks.**
+3. **Run only the safe post-publish checks.**
    - Confirm the root returns `200` using a plain HTTP request; do not run browser JavaScript against production during this check.
    - Confirm `GET /api/healthz` returns `200` and `{"status":"ok"}`.
    - Confirm unauthenticated `GET /api/newsroom/releases` and `/api/newsroom/automation/status` return `401`.
@@ -116,7 +114,7 @@ Do not begin until a human has approved the maintenance window and understands t
    - Do not fetch production newsroom content, metadata, RSS, sitemap, social-preview, article, or AMP routes for this check: request-time rendering or the API snapshot may reach the seeding path described above.
    - Do not invoke editorial automation. The pending API configuration must remain disabled.
 
-5. **Hold if any gate fails.**
+4. **Hold if any gate fails.**
    - A missing/mismatched fingerprint, failed health check, unexpected robots response, unexpected database migration, or evidence that automation is enabled is a stop condition.
    - Keep the issue local and do not attempt a second production action without approval.
 
@@ -128,4 +126,4 @@ If the new publish fails after Unpublish, the expected consequence is continued 
 
 ## Current decision
 
-**HOLD — no cutover, Publish, Unpublish, production automation, production editorial write, production configuration change, or migration was performed for this checklist.** Production fingerprint parity, the source of the alias `robots.txt` response, and the old scheduler's live runtime state remain unverified.
+**READY FOR HUMAN PUBLISH — the previous deployment is offline, so the old scheduler is stopped.** Local build, smoke, and fingerprint generation are complete. The agent did not publish or perform production writes or automation. Production fingerprint parity and the source of the historical alias `robots.txt` response remain unverified until safe checks after Publish.

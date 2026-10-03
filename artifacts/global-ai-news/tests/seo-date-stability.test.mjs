@@ -4,9 +4,14 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
   authors,
+  getStoryWordCount,
   getPublishedStories,
   getPublicDateModified,
+  isPublicArticle,
+  MINIMUM_STORY_WORDS,
+  scheduledStories,
   sources,
+  stories as maintainedStories,
 } from '../src/content.ts';
 import { getSeoMetadata, getSeoMetadataManifest, getStructuredData } from '../src/seo-metadata.ts';
 import { SeoPrerender } from '../src/seo-prerender.tsx';
@@ -16,6 +21,36 @@ const explicitArticleDates = {
   'public-compute-needs-public-metrics': '2026-09-21',
   'weekly-deep-dive-cost-of-intelligence': '2026-09-21',
 };
+
+test('one public eligibility rule governs dated articles and prepared releases', () => {
+  const now = new Date('2026-10-03T12:00:00.000Z');
+  const publishAt = '2026-10-03T12:00:00.000Z';
+
+  assert.equal(isPublicArticle({ date: '2026-10-03' }, now), true);
+  assert.equal(isPublicArticle({ date: '2026-10-04' }, now), false);
+  assert.equal(isPublicArticle({ date: 'not-a-date' }, now), false);
+  assert.equal(isPublicArticle({ status: 'draft', publishAt, wordCount: MINIMUM_STORY_WORDS }, now), false);
+  assert.equal(isPublicArticle({ status: 'canceled', publishAt, wordCount: MINIMUM_STORY_WORDS }, now), false);
+  assert.equal(isPublicArticle({ status: 'scheduled', publishAt, wordCount: MINIMUM_STORY_WORDS }, now), true);
+  assert.equal(isPublicArticle({ status: 'published', publishAt, wordCount: MINIMUM_STORY_WORDS }, now), true);
+  assert.equal(isPublicArticle({ status: 'scheduled', publishAt, wordCount: MINIMUM_STORY_WORDS - 1 }, now), false);
+  assert.equal(isPublicArticle({ status: 'scheduled', publishAt: '2026-10-03T12:00:01.000Z', wordCount: MINIMUM_STORY_WORDS }, now), false);
+  assert.equal(isPublicArticle({ status: 'scheduled', publishAt, wordCount: MINIMUM_STORY_WORDS }, new Date('invalid')), false);
+
+  const publishedScheduledSlugs = getPublishedStories(now, scheduledStories)
+    .filter((story) => !maintainedStories.some((maintained) => maintained.slug === story.slug))
+    .map((story) => story.slug);
+  const expectedScheduledSlugs = scheduledStories
+    .filter((story) => !maintainedStories.some((maintained) => maintained.slug === story.slug))
+    .filter((story) => isPublicArticle({
+      status: 'scheduled',
+      publishAt: story.publishAt,
+      wordCount: getStoryWordCount(story),
+    }, now))
+    .map((story) => story.slug)
+    .sort();
+  assert.deepEqual(publishedScheduledSlugs.sort(), expectedScheduledSlugs);
+});
 
 test('article dates stay editorial when identical content is built on different days', () => {
   const stories = getPublishedStories(new Date('2026-10-01T00:00:00.000Z'));

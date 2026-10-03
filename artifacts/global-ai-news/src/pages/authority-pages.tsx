@@ -35,7 +35,7 @@ function LinkList({ title, links }: { title: string; links: { href: string; labe
 function entityHref(snapshot: ReturnType<typeof useNewsroomSnapshot>, slug: string) {
   const entity = snapshot.entities.find((item) => item.slug === slug);
   if (!entity) return undefined;
-  const routeKinds = ['company', 'lab', 'model', 'person', 'technology', 'policy'];
+  const routeKinds = ['company', 'lab', 'model', 'person', 'technology', 'institution', 'policy', 'dataset', 'infrastructure'];
   return routeKinds.includes(entity.kind) ? { href: `/${entity.kind}/${slug}`, label: entity.name, detail: entity.strapline } : undefined;
 }
 function topicLinks(snapshot: ReturnType<typeof useNewsroomSnapshot>, slugs: string[]) {
@@ -182,6 +182,72 @@ export function SourceRecordPage() {
         <LinkList title="Timeline" links={timelineLinks(snapshot, timelines.map((event) => event.slug))} />
         <LinkList title="Topics" links={topicLinks(snapshot, [...new Set([...research.flatMap((r) => r.topicSlugs), ...products.flatMap((p) => p.topicSlugs), ...timelines.flatMap((e) => e.topicSlugs ?? [])])])} />
       </aside></section>
+    </main>
+  </> })}</>;
+}
+
+export function TopicsIndexPage() {
+  const snapshot = useNewsroomSnapshot();
+  const topics = snapshot.topics
+    .filter((topic) => topic.indexable)
+    .map((topic) => ({
+      topic,
+      stories: topic.storySlugs.flatMap((slug) => {
+        const story = snapshot.stories.find((item) => item.slug === slug);
+        return story ? [story] : [];
+      }),
+    }))
+    .filter(({ stories }) => stories.length > 0)
+    .sort((left, right) => right.stories.length - left.stories.length || left.topic.label.localeCompare(right.topic.label));
+
+  return <>{shell({ children: <>
+    <SeoHead
+      title="Topics — Global AI News"
+      description="Explore connected topic records linking published reporting, research, data, sources and timelines."
+      path="/topics"
+    />
+    <main className={container}>
+      <TitleBlock
+        eyebrow="Global AI News · Topic index"
+        title="Topics that connect the record."
+        dek="Each topic groups published reporting with the research, entities, sources and events that explain what changed."
+      />
+      <section data-testid="topics-index" className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 md:grid-cols-2">
+        {topics.length ? topics.map(({ topic, stories }, index) => {
+          const reports = topic.reportSlugs.flatMap((slug) => {
+            const story = snapshot.stories.find((item) => item.slug === slug && item.contentType === 'Report');
+            return story ? [story] : [];
+          });
+          return <article key={topic.slug} data-testid={`topic-card-${topic.slug}`} className="bg-background p-6 md:p-8">
+            <div className="flex items-start justify-between gap-5">
+              <p className="eyebrow text-primary">Connected topic · {String(index + 1).padStart(2, '0')}</p>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{stories.length} {stories.length === 1 ? 'story' : 'stories'}</span>
+            </div>
+            <Link href={topic.route} className="mt-5 block font-serif text-4xl leading-none hover:text-primary">{topic.label}<ArrowUpRight aria-hidden="true" size={18} className="ml-2 inline" /></Link>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">{topic.description}</p>
+            {topic.importantDevelopments.length > 0 && <div className="mt-6 border-t border-foreground/15 pt-5">
+              <p className="eyebrow text-muted-foreground">Recent developments</p>
+              <ul className="mt-3 grid gap-2 text-sm leading-6">{topic.importantDevelopments.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul>
+            </div>}
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-foreground/15 pt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              <span>{topic.entitySlugs.length} entities</span>
+              <span>{topic.researchSlugs.length} research records</span>
+              <span>{topic.dataProductSlugs.length} data products</span>
+              <span>{topic.timelineSlugs.length} timeline events</span>
+              {reports.length > 0 && <span>{reports.length} reports</span>}
+            </div>
+            {reports.length > 0 && <div className="mt-5">
+              <p className="eyebrow text-primary">Featured report</p>
+              {reports.map((report) => <Link key={report.slug} href={`/article/${report.slug}`} className="mt-2 block text-sm hover:text-primary">{report.title}<ArrowUpRight aria-hidden="true" size={13} className="ml-1 inline" /></Link>)}
+            </div>}
+          </article>;
+        }) : <div data-testid="topics-index-empty" className="bg-background p-8 md:col-span-2">
+          <p className="eyebrow text-primary">No indexable topic records</p>
+          <h2 className="mt-4 font-serif text-3xl">Topics appear when the newsroom has connected reporting.</h2>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">Unpublished and empty topic records are kept out of this public index.</p>
+        </div>}
+      </section>
+      <p className="max-w-2xl py-8 text-xs leading-5 text-muted-foreground">Only topics with published reporting are listed. Counts reflect the current newsroom snapshot; they are not estimates of the wider field.</p>
     </main>
   </> })}</>;
 }

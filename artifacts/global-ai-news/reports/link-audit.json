@@ -2840,6 +2840,46 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/india-ai-compute-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/india-ai-compute-2026/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/data/india-ai-compute-snapshots/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/data/india-ai-compute-snapshots/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/topic/india/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/topic/india/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/topic/ai/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/topic/ai/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/policy/indiaai-mission/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/policy/indiaai-mission/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/research",
     "status": "200",
     "canonical": "https://www.globalainews.in/research/",
@@ -4475,7 +4515,7 @@
     "url": "https://www.globalainews.in/topics",
     "status": "200",
     "canonical": "https://www.globalainews.in/topics/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -4491,6 +4531,22 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/topics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/topic/ai/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/topic/ai/",
+    "indexability": "indexable",
+    "linkSource": "/topics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/topic/india/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/topic/india/",
     "indexability": "indexable",
     "linkSource": "/topics",
     "issue": ""

@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
-    <link rel="canonical" href="https://www.globalainews.in/article/ai-models-antibiotic-discovery" />
+    <link rel="canonical" href="https://www.globalainews.in/article/ai-models-antibiotic-discovery/" />
     <title>AI models are accelerating the hunt for new antibiotics</title>
-    <meta name="description" content="A new generation of AI models is moving beyond prediction and into the wet lab." />
+    <meta name="description" content="A new generation of models is moving beyond prediction — and into the wet lab." />
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <style amp-boilerplate>
       body { visibility: hidden }
@@ -21,11 +21,21 @@
       .kicker { color: var(--coral); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; margin-top: 52px; }
       h1 { font-family: Georgia, serif; font-size: clamp(42px, 9vw, 76px); font-weight: 400; line-height: .94; margin: 16px 0; }
       .dek { font-size: 20px; line-height: 1.5; color: rgba(19,38,50,.7); }
+      .citation { color: var(--teal); font-size: .7em; vertical-align: super; margin: 0 2px; }
+      .citation-missing { color: #9b2c20; font: 12px Arial, sans-serif; }
       .byline { border-block: 1px solid rgba(19,38,50,.2); padding: 16px 0; margin: 24px 0 40px; font-size: 13px; }
       .hero { background: #193b3e; color: white; padding: 42px 24px; border-radius: 16px; font-family: Georgia, serif; font-size: 34px; }
       article { font-family: Georgia, serif; font-size: 20px; line-height: 1.7; }
       article h2 { font-size: 34px; line-height: 1; font-weight: 400; margin-top: 52px; }
       blockquote { border-left: 3px solid var(--coral); padding-left: 20px; margin: 36px 0; font-size: 25px; }
+      .table-scroll { overflow-x: auto; margin: 28px 0; font: 14px/1.5 Arial, sans-serif; }
+      table { border-collapse: collapse; min-width: 680px; width: 100%; }
+      th, td { border: 1px solid rgba(19,38,50,.2); padding: 10px; text-align: left; vertical-align: top; }
+      th, caption { font-weight: 700; }
+      caption { padding: 12px; text-align: left; }
+      .sources { font: 14px/1.55 Arial, sans-serif; }
+      .sources li { border-bottom: 1px solid rgba(19,38,50,.2); padding: 14px 0; }
+      .sources p { margin: 6px 0 0; font-size: 12px; }
       .ad { border: 1px dashed rgba(19,38,50,.35); padding: 24px; margin: 42px 0; text-align: center; font: 11px Arial, sans-serif; letter-spacing: .15em; }
       footer { border-top: 1px solid rgba(19,38,50,.2); color: rgba(19,38,50,.65); font-size: 12px; }
     </style>
@@ -33,17 +43,61 @@
   <body>
     <header><div class="brand">GLOBAL AI NEWS</div></header>
     <main>
-      <div class="kicker">Breakthroughs · Long read</div>
+      <div class="kicker">Breakthroughs · 7 min read</div>
       <h1>AI models are accelerating the hunt for new antibiotics</h1>
       <p class="dek">A new generation of models is moving beyond prediction — and into the wet lab.</p>
-      <div class="byline"><strong>Mira Patel</strong> · Science &amp; systems editor · 11 Sep 2026</div>
-      <div class="hero">A new map of the invisible.</div>
+      <div class="byline"><strong>Mira Patel</strong> · Science &amp; systems editor · 11 Sept 2026</div>
+      <div class="hero">The interface between a model’s search and the laboratory is becoming more precise.</div>
       <article>
-        <p><strong>The most interesting thing about the latest wave of AI biology models is what they refuse to do.</strong> They do not promise a magic button for discovery. Instead, they make the search space legible.</p>
-        <p>Models can search millions of combinations overnight. Researchers still decide which questions are worth the expensive, messy work of testing.</p>
-        <blockquote>“The model is not replacing intuition. It is giving intuition somewhere new to look.”</blockquote>
-        <h2>The handoff is the story</h2>
-        <p>That handoff — from suggestion to experiment — is where the field is finding its durable advantage. The interface between models and reality is becoming more precise.</p>
+        <p><strong>AI is making the search space for antibiotic candidates more legible, not removing the need for experiments.</strong></p>
+        <p>The same model-to-reality feedback loop could reshape materials, manufacturing and drug discovery.</p>
+        <section><h2>Key takeaways</h2><ul><li>Novel candidates still require synthesis and testing.</li><li>The useful breakthrough is the feedback loop, not a single prediction.</li><li>Scientific judgement remains central to deciding what to test.</li></ul></section>
+
+        <section>
+          <h2>The bottom line</h2>
+          <p>The strongest signal in AI biology is not a model naming a molecule. It is a repeatable handoff between a model’s search and a laboratory’s judgement. Antibiotic discovery is a useful test because the search space is enormous, the cost of a false lead is high and a promising prediction still has to survive chemistry, biology and time.</p>
+          <p>That distinction matters. A model can make a candidate look plausible without making it useful. The meaningful progress begins when researchers can move from a generated structure to a synthesised compound, then feed the result back into the next round of search. The model is not replacing intuition. It is giving intuition somewhere new to look.</p>
+          <blockquote>The model is not replacing intuition. It is giving intuition somewhere new to look.</blockquote>
+
+        </section>
+
+        <section>
+          <h2>The search space is the first bottleneck</h2>
+          <p>Researchers used a generative system to propose antibiotic candidates that did not appear in public databases. That is not the same as proving the compounds are effective, but it changes the starting point for the work. Instead of ranking only molecules that already have a familiar analogue, a system can explore combinations of chemical features that a conventional library search may never surface.</p>
+          <p>The value is partly mathematical and partly practical. There are far more possible molecules than a laboratory can make, test or even represent with a useful name. A model can narrow the field by learning relationships between structure and activity, then suggest a manageable set for people to inspect. The result is not an answer; it is a better queue for scarce experimental attention.</p>
+
+        </section>
+
+        <section>
+          <h2>The wet lab remains the quality filter</h2>
+          <p>Several candidates survived early synthesis and testing, creating a narrow but meaningful bridge between a latent map and the wet lab. Synthesis exposes a constraint that a screen cannot: some attractive structures are difficult to make, unstable outside a simulation or incompatible with the conditions required for a fair experiment.</p>
+          <p>Scientists still decide which questions justify the expensive, messy work of testing. They check whether an apparent effect is reproducible, whether a compound is toxic to healthy cells, whether resistance emerges quickly and whether the result is specific to one assay. Those judgements are not clerical steps after the model has finished. They define what success means.</p>
+
+        </section>
+
+        <section>
+          <h2>A better loop, not a magic molecule</h2>
+          <p>The most durable workflow looks less like a vending machine and more like a loop. A model proposes candidates, a chemist removes the impossible ones, a lab measures activity, and the next model run learns from both positive and negative results. Every stage changes the information available to the next stage.</p>
+          <p>That loop also makes provenance more important. Teams need to know which model version proposed a structure, which assumptions shaped the ranking, how a compound was prepared and which assay produced the result. Without that record, a striking candidate can become an isolated anecdote instead of a reusable research lead.</p>
+
+        </section>
+
+        <section>
+          <h2>Why this matters beyond medicine</h2>
+          <p>The pattern will recur wherever prediction meets a physical feedback loop: a pipette in biology, a robot arm in manufacturing or a production system in software. The durable advantage is not automation alone, but a more precise interface with reality. Systems that know how to ask for the next useful experiment will outperform systems that only produce more hypotheses.</p>
+          <p>For antibiotic research, the standard should therefore be modest and demanding at the same time. The question is not whether a model can claim novelty. It is whether a research team can repeatedly turn unusual suggestions into well-characterised candidates, publish the failures as well as the successes and shorten the path from search to evidence.</p>
+          <p>That is the difference between a compelling research story and a durable scientific capability. Novelty opens the door, but reproducibility determines whether anyone can keep using it.</p>
+
+        </section>
+
+        <section>
+          <h2>From prediction to evidence</h2>
+          <p>The next improvement will come from making the handoff measurable. Researchers can track how many generated candidates are chemically feasible, how many enter an assay, how often a result is reproducible and which parts of the model’s ranking were useful to the laboratory. Those measures keep the story grounded in throughput and evidence instead of novelty alone.</p>
+          <p>That discipline also makes the work easier to share. A candidate that fails for a documented reason can still teach the next search. A candidate that succeeds can be compared with the alternatives that were not tested. The real promise of AI-assisted discovery is therefore cumulative: each experiment should make the next decision more informed, whether the result is a new antibiotic or a clearer reason to stop pursuing one.</p>
+
+        </section>
+        <p><strong>What changes:</strong> Research teams can screen broader chemical spaces before committing scarce wet-lab time.</p>
+        <section class="sources"><h2>Sources</h2><ol><li id="source-1"><a href="https://www.nature.com/" target="_blank" rel="noopener noreferrer">[1] A generative deep learning approach to antibiotic discovery</a><p>Nature Chemical Biology · Accessed 2026-09-10</p></li><li id="source-2"><a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener noreferrer">[2] AI Index Report 2026</a><p>Stanford Institute for Human-Centered AI · Accessed 2026-10-02</p></li></ol></section>
         <div class="ad">NATIVE AD · CLEARLY LABELED INVENTORY</div>
       </article>
     </main>

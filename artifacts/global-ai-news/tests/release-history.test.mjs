@@ -372,7 +372,7 @@ async function assertHistoryFilters() {
 
 async function assertPublisherFilterContract() {
   const publisherSource = await readFile(
-    path.join(root, 'artifacts', 'global-ai-news', 'src', 'pages', 'public.tsx'),
+    path.join(root, 'artifacts', 'global-ai-news', 'src', 'pages', 'insights.tsx'),
     'utf8',
   );
   assert.match(

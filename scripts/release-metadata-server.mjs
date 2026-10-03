@@ -8,10 +8,10 @@ import {
   essays,
   evidenceSummaries,
   getEditorialSchedule,
-  getPublishedStories,
+  mergeEligiblePublishedStories,
   getReleaseWordCount,
   getStoryWordCount,
-  isPublicEditorialRelease,
+  isPublicArticle,
   indiaIndex,
   industryMap,
   scheduledStories,
@@ -55,12 +55,16 @@ async function getPublishedStoriesForBuild() {
       story.editorialSource === 'editor' || !maintainedStory
         ? getReleaseWordCount(story.dek, story.body)
         : getStoryWordCount(maintainedStory);
-    return isPublicEditorialRelease(row.status, row.publishAt, wordCount, now)
+    return isPublicArticle({
+      status: row.status,
+      publishAt: row.publishAt,
+      wordCount,
+    }, now)
       ? [scheduledStory]
       : [];
   });
   return {
-    stories: getPublishedStories(now, schedule),
+    stories: mergeEligiblePublishedStories(now, schedule),
     schedule: getEditorialSchedule(now, schedule),
     now,
   };

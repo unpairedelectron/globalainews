@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type ViteDevServer } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
-import { authors, getPublishedStories, sources, stories, type NewsroomContentSnapshot, type Story } from './src/content';
+import type { NewsroomContentSnapshot, Story } from './src/content';
 import { renderAmpArticleDocument } from './src/amp-html';
 import {
   getCanonicalUrl,
@@ -66,8 +66,8 @@ if (!basePath) {
 function writeAmpArticleDocument(
   outputDir: string,
   story: Story,
-  authorRecords: NewsroomContentSnapshot['authors'] = authors,
-  sourceRecords: NewsroomContentSnapshot['sources'] = sources,
+  authorRecords: NewsroomContentSnapshot['authors'],
+  sourceRecords: NewsroomContentSnapshot['sources'],
 ) {
   const outputPath = path.join(outputDir, 'amp', 'article', story.slug, 'index.html');
   mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -77,8 +77,8 @@ function writeAmpArticleDocument(
 function writeAmpArticleDocuments(
   outputDir: string,
   publishedStories: Story[],
-  authorRecords: NewsroomContentSnapshot['authors'] = authors,
-  sourceRecords: NewsroomContentSnapshot['sources'] = sources,
+  authorRecords: NewsroomContentSnapshot['authors'],
+  sourceRecords: NewsroomContentSnapshot['sources'],
 ) {
   for (const story of publishedStories) {
     if (!getSeoMetadata(`/article/${story.slug}`, publishedStories).ampPath) continue;
@@ -202,7 +202,7 @@ function validatePreviewAsset(outputPath: string, route: string, svg: string, ti
 
 function writeSocialPreviewAssets(
   outputDir: string,
-  sourceStories: readonly typeof stories = getPublishedStories(),
+  sourceStories: readonly Story[],
   metadataManifest?: SeoMetadataManifest,
 ) {
   mkdirSync(path.join(outputDir, 'social'), { recursive: true });
@@ -210,15 +210,7 @@ function writeSocialPreviewAssets(
   mkdirSync(outputSocialDir, { recursive: true });
   const generatedSlugs = new Set<string>();
   for (const story of sourceStories) {
-    const route = `/article/${story.slug}`;
-    const title = `${story.title} — Global AI News`;
-    const outputPath = path.join(outputDir, 'social', 'articles', `${story.slug}.png`);
-    const svg = renderSocialPreviewSvg(title, story.category, story.slug);
-    execFileSync('magick', ['svg:-', '-set', 'comment', title, outputPath], {
-      input: svg,
-      stdio: ['pipe', 'ignore', 'inherit'],
-    });
-    validatePreviewAsset(outputPath, route, svg, title);
+    writeSocialPreviewAsset(outputDir, story);
     generatedSlugs.add(story.slug);
   }
 
@@ -250,6 +242,19 @@ function writeSocialPreviewAssets(
     defaultSvg,
     defaultTitle,
   );
+}
+
+function writeSocialPreviewAsset(outputDir: string, story: Story) {
+  const route = `/article/${story.slug}`;
+  const title = `${story.title} — Global AI News`;
+  const outputPath = path.join(outputDir, 'social', 'articles', `${story.slug}.png`);
+  mkdirSync(path.dirname(outputPath), { recursive: true });
+  const svg = renderSocialPreviewSvg(title, story.category, story.slug);
+  execFileSync('magick', ['svg:-', '-set', 'comment', title, outputPath], {
+    input: svg,
+    stdio: ['pipe', 'ignore', 'inherit'],
+  });
+  validatePreviewAsset(outputPath, route, svg, title);
 }
 
 const socialPreviewPathPattern = /^\/social\/articles\/[^/]+\.png(?:\?.*)?$/;
@@ -478,7 +483,7 @@ async function loadBuildMetadataManifest(projectRoot: string): Promise<SeoMetada
     }
   }
 
-  for (const route of routePathsFromPublishedContent()) {
+  for (const route of routePathsFromPublishedContent(manifest)) {
     if (!routeMetadata.has(route)) {
       throw new Error(
         `Newsroom metadata manifest from ${manifestUrl} is missing published route "${route}".`,
@@ -489,12 +494,34 @@ async function loadBuildMetadataManifest(projectRoot: string): Promise<SeoMetada
   return manifest;
 }
 
+function socialPreviewStorySignature(story: Story): string {
+  return JSON.stringify([story.title, story.category]);
+}
+
 function socialPreviewAssetsPlugin() {
   const projectRoot = path.resolve(import.meta.dirname);
+  let previewSignatures = new Map<string, string>();
   return {
     name: 'global-ai-news-social-preview-assets',
-    configureServer(server: ViteDevServer) {
-      writeSocialPreviewAssets(path.join(projectRoot, 'public'));
+    async configureServer(server: ViteDevServer) {
+      // Content is also a transitive Vite-config dependency through SEO and AMP
+      // renderers. Keep it watched by the module graph for HMR, but don't restart
+      // the whole dev server and regenerate every preview when an editor changes it.
+      const contentPath = path.resolve(projectRoot, 'src', 'content.ts');
+      server.config.configFileDependencies = server.config.configFileDependencies.filter(
+        (dependency) => path.resolve(dependency) !== contentPath,
+      );
+      const content = await server.ssrLoadModule('/src/content.ts');
+      const currentStories = content.stories as Story[];
+      writeSocialPreviewAssets(
+        path.join(projectRoot, 'public'),
+        content.getPublishedStories() as Story[],
+      );
+      previewSignatures = new Map(
+        currentStories.map(
+          (story) => [story.slug, socialPreviewStorySignature(story)] as const,
+        ),
+      );
       server.middlewares.use((request, response, next) => {
         if (isSocialPreviewPath(request.url)) {
           response.setHeader('Cache-Control', 'no-cache');
@@ -505,7 +532,17 @@ function socialPreviewAssetsPlugin() {
     async handleHotUpdate({ file, server }: { file: string; server: ViteDevServer }) {
       if (file === path.join(projectRoot, 'src', 'content.ts')) {
         const refreshedContent = await server.ssrLoadModule('/src/content.ts');
-        writeSocialPreviewAssets(path.join(projectRoot, 'public'), refreshedContent.stories);
+        const refreshedStories = refreshedContent.stories as Story[];
+        for (const story of refreshedStories) {
+          if (previewSignatures.get(story.slug) !== socialPreviewStorySignature(story)) {
+            writeSocialPreviewAsset(path.join(projectRoot, 'public'), story);
+          }
+        }
+        previewSignatures = new Map(
+          refreshedStories.map(
+            (story) => [story.slug, socialPreviewStorySignature(story)] as const,
+          ),
+        );
       }
     },
   };
@@ -589,19 +626,27 @@ function ampArticlePlugin() {
         });
       });
     },
-    handleHotUpdate({ file }: { file: string }) {
+    async handleHotUpdate({ file, server }: { file: string; server: ViteDevServer }) {
       if (file === path.join(projectRoot, 'src', 'content.ts')) {
-        writeAmpArticleDocuments(path.join(projectRoot, 'public'), getPublishedStories());
+        const content = await server.ssrLoadModule('/src/content.ts');
+        writeAmpArticleDocuments(
+          path.join(projectRoot, 'public'),
+          content.getPublishedStories() as Story[],
+          content.authors,
+          content.sources,
+        );
       }
     },
   };
 }
 
 function routePathsFromPublishedContent(
-  metadataManifest?: SeoMetadataManifest,
+  metadataManifest: SeoMetadataManifest,
 ): string[] {
-  const sourceStoryPaths = getPublishedStories().map((story) => `/article/${story.slug}`);
-  const manifestPaths = metadataManifest?.routes.map((metadata) => metadata.path) ?? [];
+  const sourceStoryPaths = (metadataManifest.stories ?? []).map(
+    (story) => `/article/${story.slug}`,
+  );
+  const manifestPaths = metadataManifest.routes.map((metadata) => metadata.path);
   return [
     ...new Set(
       ['/', ...sourceStoryPaths, ...manifestPaths].map((route) => {
@@ -634,20 +679,25 @@ function routeMetadataPlugin() {
     async closeBundle() {
       const outputDir = buildOutputDir(projectRoot);
       const metadataManifest = await loadBuildMetadataManifest(projectRoot);
+      const contentSnapshot = metadataManifest.contentSnapshot;
+      const publishedStories = metadataManifest.stories;
+      if (!contentSnapshot || !publishedStories) {
+        throw new Error('Cannot generate publication assets without the API newsroom content snapshot.');
+      }
       const baseHtml = readFileSync(path.join(outputDir, 'index.html'), 'utf8');
       const serverOutputDir = path.resolve(outputDir, '..', 'server');
       mkdirSync(serverOutputDir, { recursive: true });
       writeFileSync(path.join(serverOutputDir, 'index.template.html'), baseHtml);
       writeSocialPreviewAssets(
         outputDir,
-        metadataManifest.stories ?? getPublishedStories(),
+        publishedStories,
         metadataManifest,
       );
       writeAmpArticleDocuments(
         outputDir,
-        metadataManifest.stories ?? getPublishedStories(),
-        metadataManifest.contentSnapshot?.authors ?? authors,
-        metadataManifest.contentSnapshot?.sources ?? sources,
+        publishedStories,
+        contentSnapshot.authors,
+        contentSnapshot.sources,
       );
       for (const route of routePathsFromPublishedContent(metadataManifest)) {
         const routeDirectory = route === '/' ? outputDir : path.join(outputDir, route.replace(/^\/|\/$/g, ''));

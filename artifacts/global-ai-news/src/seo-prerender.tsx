@@ -83,8 +83,7 @@ function AuthorityLinkList({
 }
 
 function entityRoute(kind: string, slug: string): string | undefined {
-  if (kind === 'person') return `/person/${slug}/`;
-  if (['company', 'lab', 'model', 'technology', 'policy'].includes(kind)) return `/${kind}/${slug}/`;
+  if (['company', 'lab', 'model', 'person', 'technology', 'institution', 'policy', 'dataset', 'infrastructure'].includes(kind)) return `/${kind}/${slug}/`;
   return undefined;
 }
 
@@ -219,7 +218,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
     );
   }
 
-  const entityMatch = route.match(/^\/(company|lab|model|technology|policy)\/([^/]+)\/?$/);
+  const entityMatch = route.match(/^\/(company|lab|model|technology|institution|policy|dataset|infrastructure)\/([^/]+)\/?$/);
   const entity = entityMatch
     ? entities.find((candidate) => candidate.kind === entityMatch[1] && candidate.slug === entityMatch[2])
     : undefined;
@@ -511,8 +510,47 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
   }
 
   const heading = metadata.title.replace(/\s+—\s+Global AI News$/, '');
+  if (route === '/topics') {
+    const topics = snapshot.topics
+      .filter((topic) => topic.indexable)
+      .map((topic) => ({
+        topic,
+        stories: topic.storySlugs.flatMap((slug) => {
+          const story = stories.find((item) => item.slug === slug);
+          return story ? [story] : [];
+        }),
+      }))
+      .filter(({ stories: linkedStories }) => linkedStories.length > 0)
+      .sort((left, right) => right.stories.length - left.stories.length || left.topic.label.localeCompare(right.topic.label));
+    return (
+      <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
+        <header className="flex items-center justify-between border-b border-foreground/20 py-5"><a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a><a href="/brief/" className="eyebrow text-primary">The Daily Brief</a></header>
+        <main className="mx-auto max-w-[1180px]">
+          <section className="border-b border-foreground/20 py-14 md:py-20">
+            <p className="eyebrow text-primary">Global AI News · Topic index</p>
+            <h1 className="mt-6 max-w-5xl font-serif text-7xl leading-[.84] md:text-[9rem]">Topics that<br /><em className="text-primary">connect the record.</em></h1>
+            <p className="mt-7 max-w-2xl text-lg leading-7 text-muted-foreground">Explore published reporting alongside its research, entities, sources, data and timeline.</p>
+          </section>
+          <section data-testid="topics-index" className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 py-10 md:grid-cols-2">
+            {topics.length ? topics.map(({ topic, stories: linkedStories }) => <article key={topic.slug} className="bg-background p-6 md:p-8">
+              <p className="eyebrow text-primary">Connected topic · {linkedStories.length} {linkedStories.length === 1 ? 'story' : 'stories'}</p>
+              <h2 className="mt-5 font-serif text-4xl leading-none"><a href={`${topic.route}/`} className="hover:text-primary">{topic.label} →</a></h2>
+              <p className="mt-4 text-sm leading-6 text-muted-foreground">{topic.description}</p>
+              {topic.importantDevelopments.length > 0 && <ul className="mt-5 border-t border-foreground/15 pt-4 text-sm leading-6">{topic.importantDevelopments.slice(0, 3).map((item) => <li key={item} className="border-b border-foreground/10 py-2">{item}</li>)}</ul>}
+              <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"><span>{topic.entitySlugs.length} entities</span><span>{topic.researchSlugs.length} research</span><span>{topic.dataProductSlugs.length} data products</span><span>{topic.timelineSlugs.length} timeline events</span></div>
+            </article>) : <p data-testid="topics-index-empty" className="bg-background p-8 text-sm text-muted-foreground">No indexable topic records with published reporting are available.</p>}
+          </section>
+        </main>
+      </div>
+    );
+  }
   if (route === '/reports') {
     const reports = stories.filter((story) => story.contentType === 'Report').sort((a, b) => b.date.localeCompare(a.date));
+    const researchRecords = snapshot.researchRecords.filter((record) => record.status === 'published').sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
+    const dataProducts = snapshot.dataProducts.filter((product) => product.status === 'published').sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
+    const topics = snapshot.topics.filter((topic) => topic.indexable);
+    const reportEntitySlugs = new Set(reports.flatMap((story) => story.entities));
+    const entities = snapshot.entities.filter((entity) => reportEntitySlugs.has(entity.slug) && ['company', 'lab', 'model', 'person', 'technology', 'institution', 'policy', 'dataset', 'infrastructure'].includes(entity.kind));
     return (
       <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
         <header className="flex items-center justify-between border-b border-foreground/20 py-5"><a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a><a href="/brief/" className="eyebrow text-primary">The Daily Brief</a></header>
@@ -523,7 +561,13 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
           </section>
           <section className="grid gap-10 py-10 md:grid-cols-[.55fr_1.45fr] md:py-14">
             <div><h2 className="eyebrow border-b border-foreground/15 pb-3 text-primary">The report index</h2><p className="mt-4 text-sm leading-6 text-muted-foreground">{reports.length} {reports.length === 1 ? 'maintained report' : 'maintained reports'}</p></div>
-            {reports.length ? <div className="border-t border-foreground/15">{reports.map((story, index) => <article key={story.slug} className="border-b border-foreground/15 py-6"><p className="eyebrow text-primary">Report · {story.category} · {story.readTime}</p><h2 className="mt-3 max-w-3xl font-serif text-3xl leading-[.95]"><a href={`/article/${story.slug}/`} className="hover:text-primary">{story.title}</a></h2><p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{story.dek}</p><p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"><time dateTime={story.date}>{formatEditorialDate(story.date)}</time>{' · '}{authors.find((author) => author.slug === story.author)?.name ?? 'Byline unavailable'}</p></article>)}</div> : <div className="border border-foreground/15 bg-surface-muted p-8"><h2 className="font-serif text-3xl">No reports are published yet.</h2><p className="mt-3 text-sm leading-6 text-muted-foreground">When a maintained report is published, it will appear here with its sources and connected context.</p></div>}
+            {reports.length ? <div className="border-t border-foreground/15">{reports.map((story) => <article key={story.slug} className="border-b border-foreground/15 py-6"><p className="eyebrow text-primary">Report · {story.category} · {story.readTime}</p><h2 className="mt-3 max-w-3xl font-serif text-3xl leading-[.95]"><a href={`/article/${story.slug}/`} className="hover:text-primary">{story.title}</a></h2><p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{story.dek}</p><p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"><time dateTime={story.date}>{formatEditorialDate(story.date)}</time>{' · '}{authors.find((author) => author.slug === story.author)?.name ?? 'Byline unavailable'}</p><p className="mt-2 text-xs text-muted-foreground">Updated <time dateTime={story.dateModified ?? story.date}>{formatEditorialDate(story.dateModified ?? story.date)}</time></p></article>)}</div> : <div className="border border-foreground/15 bg-surface-muted p-8"><h2 className="font-serif text-3xl">No reports are published yet.</h2><p className="mt-3 text-sm leading-6 text-muted-foreground">When a maintained report is published, it will appear here with its sources and connected context.</p></div>}
+          </section>
+          <section data-testid="reports-authority-network" className="grid gap-10 border-t border-foreground/15 py-12 md:grid-cols-2">
+            <div><h2 className="eyebrow border-b border-foreground/15 pb-3 text-primary">Research</h2>{researchRecords.length ? researchRecords.map((record) => <a key={record.slug} href={`/research/${record.slug}/`} className="block border-b border-foreground/10 py-4 hover:text-primary"><span className="block text-sm">{record.title}</span><span className="mt-1 block text-xs text-muted-foreground">{record.provenance.replaceAll('-', ' ')} · updated {formatEditorialDate(record.updatedAt)}</span></a>) : <p className="py-4 text-sm text-muted-foreground">No published research records.</p>}</div>
+            <div><h2 className="eyebrow border-b border-foreground/15 pb-3 text-primary">Data products</h2>{dataProducts.length ? dataProducts.map((product) => <a key={product.slug} href={`/data/${product.slug}/`} className="block border-b border-foreground/10 py-4 hover:text-primary"><span className="block text-sm">{product.title}</span><span className="mt-1 block text-xs text-muted-foreground">Updated {formatEditorialDate(product.updatedAt)} · {product.observations.length} dated observations</span></a>) : <p className="py-4 text-sm text-muted-foreground">No published data products.</p>}</div>
+            <div><h2 className="eyebrow border-b border-foreground/15 pb-3 text-primary">Topics</h2>{topics.length ? topics.map((topic) => <a key={topic.slug} href={`${topic.route}/`} className="block border-b border-foreground/10 py-4 hover:text-primary"><span className="block text-sm">{topic.label}</span><span className="mt-1 block text-xs text-muted-foreground">{topic.description}</span></a>) : <p className="py-4 text-sm text-muted-foreground">No published topic records.</p>}</div>
+            <div><h2 className="eyebrow border-b border-foreground/15 pb-3 text-primary">Entities</h2>{entities.length ? entities.map((entity) => <a key={entity.slug} href={`/${entity.kind}/${entity.slug}/`} className="block border-b border-foreground/10 py-4 hover:text-primary"><span className="block text-sm">{entity.name}</span><span className="mt-1 block text-xs text-muted-foreground">{entity.strapline ?? entity.kind}</span></a>) : <p className="py-4 text-sm text-muted-foreground">No connected entity records.</p>}</div>
           </section>
         </main>
       </div>
@@ -531,7 +575,6 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
   }
 
   const editorialInputTitles: Record<string, string> = {
-    '/topics': 'Topics',
     '/archive': 'Archive',
     '/about-us': 'About us',
     '/code-of-ethics': 'Code of ethics',

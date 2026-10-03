@@ -213,19 +213,47 @@ export function getPublicDateModified(
   return modifiedDate;
 }
 
+export interface PublicArticleEligibilityInput {
+  status?: string;
+  publishAt?: string | Date;
+  wordCount?: number;
+  date?: string | Date;
+}
+
+export function isPublicArticle(article: PublicArticleEligibilityInput, now = new Date()): boolean {
+  const hasReleaseLifecycle = article.status !== undefined
+    || article.publishAt !== undefined
+    || article.wordCount !== undefined;
+
+  if (hasReleaseLifecycle) {
+    if (
+      article.status !== 'scheduled' && article.status !== 'published'
+      || article.publishAt === undefined
+      || typeof article.wordCount !== 'number'
+    ) {
+      return false;
+    }
+    const publishTime = article.publishAt instanceof Date
+      ? article.publishAt.getTime()
+      : Date.parse(article.publishAt);
+    return Number.isFinite(publishTime)
+      && publishTime <= now.getTime()
+      && article.wordCount >= MINIMUM_STORY_WORDS;
+  }
+
+  const publicationTime = article.date instanceof Date
+    ? article.date.getTime()
+    : Date.parse(article.date ?? '');
+  return Number.isFinite(publicationTime) && publicationTime <= now.getTime();
+}
+
 export function isPublicEditorialRelease(
   status: string,
   publishAt: string | Date,
   wordCount: number,
   now = new Date(),
 ): boolean {
-  const publishTime = publishAt instanceof Date ? publishAt.getTime() : Date.parse(publishAt);
-  return (
-    (status === 'scheduled' || status === 'published') &&
-    Number.isFinite(publishTime) &&
-    publishTime <= now.getTime() &&
-    wordCount >= MINIMUM_STORY_WORDS
-  );
+  return isPublicArticle({ status, publishAt, wordCount }, now);
 }
 
 export function getEditorialLifecycleStatus(
@@ -238,7 +266,7 @@ export function getEditorialLifecycleStatus(
     return status;
   }
   if (status !== 'scheduled' && status !== 'published') return 'unpublished';
-  return isPublicEditorialRelease(status, publishAt, wordCount, now)
+  return isPublicArticle({ status, publishAt, wordCount }, now)
     ? 'published'
     : 'scheduled';
 }
@@ -1012,15 +1040,32 @@ export const scheduledStories: ScheduledStory[] = [
   },
 ];
 
-export function getPublishedStories(now = new Date(), schedule = scheduledStories): Story[] {
-  const publishedSlugs = new Set(stories.map((story) => story.slug));
-  const newlyPublished = schedule.filter(
-    (story) => !publishedSlugs.has(story.slug) && Date.parse(story.publishAt) <= now.getTime(),
-  );
-  return [...stories, ...newlyPublished].sort((left, right) => {
+/**
+ * Combine maintained articles with release records whose lifecycle and word
+ * count were already checked by the caller using isPublicArticle.
+ */
+export function mergeEligiblePublishedStories(now = new Date(), schedule: Story[] = []): Story[] {
+  const publishedStories = stories.filter((story) => isPublicArticle({ date: story.date }, now));
+  const publishedSlugs = new Set(publishedStories.map((story) => story.slug));
+  const eligibleReleases = schedule.filter((story) => !publishedSlugs.has(story.slug));
+  return [...publishedStories, ...eligibleReleases].sort((left, right) => {
     if (left.date !== right.date) return right.date.localeCompare(left.date);
     return left.slug.localeCompare(right.slug);
   });
+}
+
+export function getPublishedStories(now = new Date(), schedule = scheduledStories): Story[] {
+  const publishedStories = stories.filter((story) => isPublicArticle({ date: story.date }, now));
+  const publishedSlugs = new Set(publishedStories.map((story) => story.slug));
+  const newlyPublished = schedule.filter(
+    (story) => !publishedSlugs.has(story.slug)
+      && isPublicArticle({
+        status: 'scheduled',
+        publishAt: story.publishAt,
+        wordCount: getStoryWordCount(story),
+      }, now),
+  );
+  return mergeEligiblePublishedStories(now, newlyPublished);
 }
 
 export function getEditorialSchedule(now = new Date(), schedule = scheduledStories): EditorialScheduleItem[] {

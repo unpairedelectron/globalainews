@@ -1,23 +1,21 @@
 {
   "mission": "Global AI News autonomous end-to-end delivery",
-  "updatedAt": "2026-10-03",
+  "updatedAt": "2026-10-04",
   "source": {
     "branch": "main",
-    "revision": "290eb8530edec72be6cd6aee71b7fbe046169fcb+source-sha256:41a4ffc49dcbe608c1239f5fa6920181e054cad266e12d85d1e75eb067ca45ac",
-    "webArtifactRevision": "web-sha256:fe42d22f6320cbdbb0f8eae803c4df6773099e555cc659c37fbc2d650738c469",
-    "apiArtifactRevision": "api-sha256:705ef28902243e4fc83ab30ce6465b290e41947fe539b7e26f1f55109383b36b"
+    "revision": "69283d30a906b48ba210fe2e96dff92d6b678301+source-sha256:75730aa7fb4e854b0568077ed015ae0a2bee0a7b6596bfda5c80bd1c84edf729",
+    "webArtifactRevision": "web-sha256:181241e3a1b5121398423b79dd574d09a3d500b36c7ba26abe4384e0bb9e5a98",
+    "apiArtifactRevision": "api-sha256:1d8ef79e443a206a1d6195bb05dbb7e6f3de479ac69426de73279be77402d63b"
   },
   "deployment": {
     "target": "autoscale",
-    "isDeployed": true,
-    "hasSuccessfulBuild": true,
-    "primaryUrl": "https://www.globalainews.in",
-    "additionalUrls": [
-      "https://global-ai-media.replit.app"
-    ],
-    "deployedWebRevision": "unverified",
-    "deployedApiRevision": "unverified",
-    "publicationState": "held",
+    "isDeployed": false,
+    "hasSuccessfulBuild": false,
+    "primaryUrl": null,
+    "additionalUrls": [],
+    "deployedWebRevision": null,
+    "deployedApiRevision": null,
+    "publicationState": "ready_for_human_publish",
     "productionEditorialWritesByAgent": 0,
     "productionAutomationRunsByAgent": 0
   },
@@ -50,60 +48,60 @@
     "cleanApiBuild": "pass",
     "cleanWebBuild": "pass",
     "articleAmpPairs": "11/11 pass",
-    "fingerprintHeaders": "pass in local artifact tests",
-    "apiHealth": "local API checks pass; read-only production /api/healthz returned 200 and protected release/automation status routes returned 401; production X-GAN headers and scheduler runtime remain unverified",
-    "fullSmokeSuite": "pass: pnpm --filter @workspace/global-ai-news run test:smoke; 49 desktop routes, 8 mobile routes, 11 AMP pages, RSS, article/report first-response, link audit, themes, publication fixture, and content/research/authority/SEO checks",
+    "fingerprintHeaders": "pass: restarted local API health response emitted source, Web, and API revisions matching the current fingerprint table",
+    "apiHealth": "local /api/healthz returned 200 with matching X-GAN-* revisions; latest deployment metadata reports no active deployment, so no current production health or fingerprint checks were performed",
+    "fullSmokeSuite": "pass: pnpm --filter @workspace/global-ai-news run test:smoke; 58 desktop routes, 8 mobile routes, 11 AMP pages, RSS, article/report first-response, 104-route/465-reference link audit with 0 issues, themes, publication fixture, content/research/authority/SEO checks, and preview HMR without Vite restart",
     "apiSecurityTests": "pass: 6 production/development dependency-chain depth-defense tests",
     "securityScans": "dependency audit: 1 high braces advisory remains; SAST: 0 findings; privacy scan: 0 findings"
   },
   "knownProductionState": {
-    "lastKnownAmpCoverage": "7/10 on the last production check; local coverage is now 11/11",
-    "currentRuntimeFingerprint": "unverified",
-    "lastKnownIssue": "production artifacts have not been checked against the local report and AMP build",
-    "note": "Read-only production checks confirmed root and API health but did not expose X-GAN fingerprints. Local 11/11 AMP coverage does not establish production parity; publication remains held."
+    "lastKnownAmpCoverage": "7/10 on the 2026-10-03 check, before the deployment went offline; current local coverage is 11/11",
+    "currentRuntimeFingerprint": "unavailable: no active deployment",
+    "lastKnownIssue": "current production artifacts cannot be compared while the deployment is offline",
+    "note": "The latest available deployment metadata reports no active deployment, no successful build, and no URLs; the previous process-owned scheduler is stopped. No newsroom, feed, or sitemap routes were probed after the deployment went offline. Local coverage does not establish production parity."
   },
   "externalActionRequired": [
     {
-      "action": "If the old scheduler must be stopped before replacement, use Publishing -> Unpublish to stop the current Autoscale deployment, then tell the agent it is offline.",
-      "consequence": "This takes the public Web and API offline until a new deployment is published.",
-      "state": "not authorized; publication remains held"
+      "action": "A human must Publish the reviewed current workspace, then perform only the safe post-publish health, authentication, robots, and fingerprint checks in docs/production-cutover-checklist.md.",
+      "consequence": "Publishing restores the public Web and API; the agent must not publish or invoke editorial automation.",
+      "state": "awaiting human Publish"
     }
   ],
   "failingTests": [],
   "workstreams": [
-    { "id": 0, "name": "Architecture discovery and map", "status": "in_progress", "evidence": "Architecture map updated with report routes, shared source-snapshot rendering, current local fingerprints, mobile performance evidence, read-only production checks, and release gates." },
-    { "id": 1, "name": "Deployment provenance", "status": "partial", "evidence": "Final local source/Web/API fingerprints and response headers match; read-only production root and API health responses exposed no X-GAN headers, so parity remains unverified." },
-    { "id": 2, "name": "Legacy API automation cutover", "status": "blocked_external", "evidence": "New API automation is disabled; old deployed timer remains active until unpublish or promotion." },
+    { "id": 0, "name": "Architecture discovery and map", "status": "complete", "evidence": "Architecture and cutover documents now contain current local fingerprints, route ownership, smoke evidence, mobile measurements, and the latest offline deployment state." },
+    { "id": 1, "name": "Deployment provenance", "status": "partial", "evidence": "Current local source/Web/API fingerprints are recorded; no deployment is active, so production revisions and parity are unavailable until after human Publish." },
+    { "id": 2, "name": "Legacy API automation cutover", "status": "blocked_external", "evidence": "The previous deployment is offline and its process-owned timer is stopped; the new API keeps EDITORIAL_AUTOMATION_ENABLED=false. Human Publish is the remaining external action." },
     { "id": 3, "name": "API security", "status": "partial", "evidence": "Editor routes use authorization and explicit public projection; regression coverage still needs a full audit." },
-    { "id": 4, "name": "Single publication eligibility source", "status": "partial", "evidence": "Canonical helper exists, but all public paths need verification against it." },
-    { "id": 5, "name": "RSS and sitemap ownership", "status": "partial", "evidence": "Web root proxies to API XML routes; parity and single-owner tests still need verification." },
+    { "id": 4, "name": "Single publication eligibility source", "status": "complete", "evidence": "The canonical eligibility rule is covered by date-stability, release metadata, publication fixture, first-response, and public-route checks." },
+    { "id": 5, "name": "RSS and sitemap ownership", "status": "partial", "evidence": "Local smoke verifies API-owned feed and sitemap routes plus Web proxy behavior; production parity is unavailable while unpublished." },
     { "id": 6, "name": "AMP coverage and parity", "status": "partial", "evidence": "Current local smoke passes 11/11 AMP pages, including report citations and sources; last production check was 7/10 and parity remains unverified." },
     { "id": 7, "name": "Article 404 and SEO", "status": "partial", "evidence": "Unknown article/AMP handlers return noindex; full production regression remains." },
     { "id": 8, "name": "Trust routes", "status": "partial", "evidence": "Trust placeholders and /contact redirect exist; approved page content and production verification remain." },
-    { "id": 9, "name": "Safe publication fixture", "status": "not_verified", "evidence": "Existing smoke fixture needs a side-effect and cleanup audit." },
+    { "id": 9, "name": "Safe publication fixture", "status": "complete", "evidence": "In-memory publication fixture passes, reaches article/homepage/RSS/sitemap without a rebuild, and confirms built assets remain unchanged." },
     { "id": 10, "name": "Editorial content taxonomy", "status": "partial", "evidence": "Existing story classifications differ from the requested controlled taxonomy." },
     { "id": 11, "name": "Source registry", "status": "partial", "evidence": "The India compute report sources now carry dated provenance and scope details where supported; older source records still have metadata gaps." },
     { "id": 12, "name": "Research system", "status": "partial", "evidence": "The flagship report has maintained source records, research notes, and a Markdown mirror; a repeatable research pipeline is not yet verified." },
     { "id": 13, "name": "Data products", "status": "partial", "evidence": "Static India metrics exist; every value needs exact source and methodology validation." },
-    { "id": 14, "name": "Entity system", "status": "partial", "evidence": "Static entity records exist but the requested entity kinds, relations, and update metadata are incomplete." },
-    { "id": 15, "name": "Topic system", "status": "partial", "evidence": "Topic route is a placeholder; substantive topic records and pages remain." },
-    { "id": 16, "name": "Knowledge graph", "status": "partial", "evidence": "Some article/entity/timeline slug links exist; typed reciprocal relationships remain." },
+    { "id": 14, "name": "Entity system", "status": "partial", "evidence": "Client and prerender entity routes now share the API snapshot; the broader entity taxonomy, relations, and update metadata still need evidence-backed completion." },
+    { "id": 15, "name": "Topic system", "status": "partial", "evidence": "The connected topic index and topic routes use the API-backed snapshot; broader substantive topic coverage remains." },
+    { "id": 16, "name": "Knowledge graph", "status": "partial", "evidence": "The flagship report's reciprocal links across research, data, sources, entities, topics, timeline, and articles pass registry tests; broader cluster coverage remains." },
     { "id": 17, "name": "AI Compute in India flagship", "status": "complete", "evidence": "A 4,202-word report with 18 ordered citations and a dated quantitative evidence audit is available through the API-backed Reports index, article, and AMP routes; incompatible GPU-status counts and unknown schedulable capacity remain explicit." },
     { "id": 18, "name": "Original research pipeline", "status": "not_started", "evidence": "Methodology and repeatable research workflow remain." },
     { "id": 19, "name": "Second authority cluster", "status": "not_started", "evidence": "Small-model/efficient-AI cluster architecture remains." },
     { "id": 20, "name": "Timeline system", "status": "partial", "evidence": "Static timeline events exist; source provenance and reusable record requirements remain." },
-    { "id": 21, "name": "Internal linking", "status": "partial", "evidence": "Some current story links exist; graph-aware coverage and orphan audit remain." },
+    { "id": 21, "name": "Internal linking", "status": "partial", "evidence": "The latest audit covered 104 routes and 465 internal references with 0 issues; broader graph-aware coverage remains." },
     { "id": 22, "name": "Author and editorial trust", "status": "partial", "evidence": "Author records exist; identity and biography claims need verification." },
     { "id": 23, "name": "E-E-A-T and editorial quality", "status": "partial", "evidence": "Story evidence and quality fields exist; consistent publication requirements remain." },
-    { "id": 24, "name": "SEO infrastructure", "status": "partial", "evidence": "The full local smoke passes route metadata, structured data, feeds, sitemap, article first-response, and AMP checks; production parity remains unverified." },
-    { "id": 25, "name": "Performance", "status": "partial", "evidence": "Latest local 402×874, 4× CPU, 150 ms RTT sample: LCP home 2,984 ms, article 6,604 ms, reports 2,324 ms, India topic 4,392 ms, OpenAI 2,176 ms, author 3,748 ms. Public JS entry fell to 575,108 bytes (170,551 gzip); Clerk route chunk is 105,294 bytes (26,575 gzip) and deferred. CLS ≤0.001; local transfer totals are uncompressed and production/CDN performance is unverified. See docs/mobile-performance-audit.md." },
+    { "id": 24, "name": "SEO infrastructure", "status": "partial", "evidence": "The full local smoke passes route metadata, structured data, feeds, sitemap, article first-response, and AMP checks; production parity remains unverified while the deployment is offline." },
+    { "id": 25, "name": "Performance", "status": "partial", "evidence": "Latest local 402×874, 4× CPU, 150 ms RTT sample: LCP home 3,044 ms, article 3,292 ms, reports 2,496 ms, India topic 3,984 ms, OpenAI 2,424 ms, author 3,636 ms. Public JS entry is 588,045 bytes (171,280 gzip); Clerk route chunk is 146,770 bytes (36,890 gzip) and deferred. CLS ≤0.001; local transfer totals are uncompressed and production/CDN performance is unverified. See docs/mobile-performance-audit.md." },
     { "id": 26, "name": "Privacy-conscious analytics", "status": "partial", "evidence": "Existing analytics integration is present; requested event coverage and privacy checks remain." },
     { "id": 27, "name": "Newsletter and recirculation", "status": "partial", "evidence": "Newsletter persistence and CTA exist; provider delivery and broader return-reader paths remain." },
     { "id": 28, "name": "Authority-led content strategy", "status": "not_verified", "evidence": "Priority rules need to be reflected in editorial tooling and publication gates." },
     { "id": 29, "name": "Security", "status": "in_progress", "evidence": "Fresh dependency audit reports one high braces@3.0.3 advisory with no upstream patch; local depth-defense tests pass 6/6, SAST and privacy scans report no findings." },
-    { "id": 30, "name": "Regression suite", "status": "complete", "evidence": "The configured full smoke command passes, including content/research/authority/SEO checks, publication fixture cleanup, first-response pages, public routes, AMP, RSS, responsive checks, release history, Clerk themes, and link audit." },
-    { "id": 31, "name": "Deployment safety", "status": "blocked_external", "evidence": "No deployment while the old scheduler may execute; safe cutover also needs final parity checks." },
-    { "id": 32, "name": "Autonomous progress loop", "status": "in_progress", "evidence": "Updated local fingerprints, lazy Clerk-route bundle evidence, mobile performance sample, full smoke evidence, and read-only deployment checks; scheduler, dependency advisory, and production parity gates remain." }
+    { "id": 30, "name": "Regression suite", "status": "complete", "evidence": "The configured full smoke command passes, including content/research/authority/SEO checks, publication fixture cleanup, first-response pages, 58 desktop and 8 mobile routes, 11 AMP pages, RSS, responsive checks, release history, Clerk themes, link audit, and preview HMR." },
+    { "id": 31, "name": "Deployment safety", "status": "blocked_external", "evidence": "The previous deployment is offline and its scheduler is stopped. Human Publish is the remaining external action; current production parity can only be checked afterward." },
+    { "id": 32, "name": "Autonomous progress loop", "status": "awaiting_human_publish", "evidence": "Local fingerprints and full smoke evidence are updated; new API automation remains disabled and the prior scheduler is stopped. Production headers and parity require safe checks after human Publish." }
   ],
-  "finalGate": "blocked"
+  "finalGate": "awaiting_human_publish"
 }

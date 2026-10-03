@@ -47,9 +47,8 @@ const staticMetadata: Record<string, SeoMetadata> = {
   },
   '/topics': {
     title: 'Topics — Global AI News',
-    description: 'Editorial input is required before this route is published.',
+    description: 'Explore connected topic records linking published reporting, research, data, sources and timelines.',
     path: '/topics',
-    indexable: false,
   },
   '/archive': {
     title: 'Archive — Global AI News',
@@ -343,7 +342,7 @@ export function getSeoMetadata(
     }
   }
 
-  const entityMatch = cleanPath.match(/^\/(company|lab|model|technology|policy|person)\/([^/]+)$/);
+  const entityMatch = cleanPath.match(/^\/(company|lab|model|technology|institution|policy|dataset|infrastructure|person)\/([^/]+)$/);
   if (entityMatch) {
     const [, kind, slug] = entityMatch;
     const person = kind === 'person' ? authors.find((author) => author.slug === slug) : undefined;

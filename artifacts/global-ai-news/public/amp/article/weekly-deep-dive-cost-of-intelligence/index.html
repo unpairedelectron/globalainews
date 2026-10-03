@@ -1,0 +1,116 @@
+<!doctype html>
+<html amp lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+    <link rel="canonical" href="https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/" />
+    <title>The cost of intelligence is becoming a design constraint</title>
+    <meta name="description" content="Every AI product now has to decide where capability is worth the energy, latency and margin it consumes." />
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <style amp-boilerplate>
+      body { visibility: hidden }
+    </style>
+    <noscript><style amp-boilerplate>body { visibility: visible }</style></noscript>
+    <style amp-custom>
+      :root { --ink: #132632; --paper: #f4f1ea; --teal: #1f8584; --coral: #dc654f; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, sans-serif; }
+      header, main, footer { max-width: 760px; margin: auto; padding: 24px; }
+      header { border-bottom: 1px solid rgba(19,38,50,.2); }
+      .brand { color: var(--teal); font-size: 12px; letter-spacing: .18em; font-weight: 700; }
+      .kicker { color: var(--coral); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; margin-top: 52px; }
+      h1 { font-family: Georgia, serif; font-size: clamp(42px, 9vw, 76px); font-weight: 400; line-height: .94; margin: 16px 0; }
+      .dek { font-size: 20px; line-height: 1.5; color: rgba(19,38,50,.7); }
+      .citation { color: var(--teal); font-size: .7em; vertical-align: super; margin: 0 2px; }
+      .citation-missing { color: #9b2c20; font: 12px Arial, sans-serif; }
+      .byline { border-block: 1px solid rgba(19,38,50,.2); padding: 16px 0; margin: 24px 0 40px; font-size: 13px; }
+      .hero { background: #193b3e; color: white; padding: 42px 24px; border-radius: 16px; font-family: Georgia, serif; font-size: 34px; }
+      article { font-family: Georgia, serif; font-size: 20px; line-height: 1.7; }
+      article h2 { font-size: 34px; line-height: 1; font-weight: 400; margin-top: 52px; }
+      blockquote { border-left: 3px solid var(--coral); padding-left: 20px; margin: 36px 0; font-size: 25px; }
+      .table-scroll { overflow-x: auto; margin: 28px 0; font: 14px/1.5 Arial, sans-serif; }
+      table { border-collapse: collapse; min-width: 680px; width: 100%; }
+      th, td { border: 1px solid rgba(19,38,50,.2); padding: 10px; text-align: left; vertical-align: top; }
+      th, caption { font-weight: 700; }
+      caption { padding: 12px; text-align: left; }
+      .sources { font: 14px/1.55 Arial, sans-serif; }
+      .sources li { border-bottom: 1px solid rgba(19,38,50,.2); padding: 14px 0; }
+      .sources p { margin: 6px 0 0; font-size: 12px; }
+      .ad { border: 1px dashed rgba(19,38,50,.35); padding: 24px; margin: 42px 0; text-align: center; font: 11px Arial, sans-serif; letter-spacing: .15em; }
+      footer { border-top: 1px solid rgba(19,38,50,.2); color: rgba(19,38,50,.65); font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <header><div class="brand">GLOBAL AI NEWS</div></header>
+    <main>
+      <div class="kicker">Infrastructure · 10 min read</div>
+      <h1>The cost of intelligence is becoming a design constraint</h1>
+      <p class="dek">Every AI product now has to decide where capability is worth the energy, latency and margin it consumes.</p>
+      <div class="byline"><strong>David Okafor</strong> · Infrastructure editor · 28 Sept 2026</div>
+      <div class="hero">Capability is only useful when its operating cost fits the job.</div>
+      <article>
+        <p><strong>The next generation of AI products will be designed around an explicit budget for intelligence.</strong></p>
+        <p>Energy, latency and margin will determine which model capabilities become ordinary parts of software.</p>
+        <section><h2>Key takeaways</h2><ul><li>Token price is only one part of the cost.</li><li>Routing is a product decision.</li><li>Regional infrastructure changes what is feasible.</li></ul></section>
+        
+        <section>
+          <h2>The price is not just per token</h2>
+          <p>The real cost of an AI feature includes retrieval, evaluation, latency, monitoring, storage and the human work required when an answer is wrong. A per-token price is easy to compare, but it describes only one line in a system that may call several services before a user sees a result.</p>
+          <p>That wider cost changes the product decision. A feature that looks inexpensive in a prototype can become unprofitable when context grows, retries multiply and every uncertain answer needs review. Teams need a way to connect model usage to the business outcome it supports, not just to a dashboard of requests.</p>
+          
+          
+        </section>
+
+        <section>
+          <h2>Capability has an operating budget</h2>
+          <p>Every product now has to decide where capability is worth the energy, latency and margin it consumes. A frontier model may be the right choice for a complex research task, but wasteful for classification, extraction or a repeated answer that can be cached. A smaller model may be the right choice even when it scores lower on a general benchmark.</p>
+          <p>Making that decision requires a budget. The team can set limits for response time, cost per successful outcome and the amount of human review a workflow can support. The budget is not a restriction applied after the product is built; it is part of the product definition.</p>
+          
+          
+        </section>
+
+        <section>
+          <h2>Route the work, not the brand</h2>
+          <p>The best teams route simple work to small models, reserve frontier capability for high-value decisions and make the tradeoff visible to the people building the product. Routing can use the request type, confidence, context length or consequence of an error. It should also have a fallback when the preferred model is unavailable.</p>
+          <p>The point is not to create a complicated maze of providers. It is to make the system’s choices measurable. Teams should know how often a request escalates, how much quality improves after escalation and whether users notice the difference. If a larger model adds cost without changing the outcome, the route is not earning its place.</p>
+          
+          
+        </section>
+
+        <section>
+          <h2>Regional infrastructure changes the design</h2>
+          <p>Energy, latency and margin will determine which model capabilities become ordinary parts of software. A service that depends on a distant region may have a different user experience from one that can serve routine requests closer to the customer. Data residency, network reliability and local capacity can turn a technical architecture decision into a market decision.</p>
+          <p>This is why infrastructure planning belongs in product conversations. A feature cannot promise instant, cheap intelligence without accounting for where the compute runs, how it scales during demand spikes and what happens when a region is constrained. The operating budget is physical as well as financial.</p>
+          
+          
+        </section>
+
+        <section>
+          <h2>Design for the constraint</h2>
+          <p>The next generation of AI products will be designed around an explicit budget for intelligence. Token price is only one part of the cost, routing is a product decision and regional infrastructure changes what is feasible.</p>
+          <p>Product teams will treat model selection as an operating-budget decision, not a one-time engineering choice. The result should be less wasteful and more honest: use more capability where it changes the answer, use less where a focused system is enough and show people when the tradeoff affects the experience.</p>
+          
+          
+        </section>
+
+        <section>
+          <h2>The budget protects ambition</h2>
+          <p>An explicit budget is not an argument for smaller ambition. It is a way to protect the work that deserves expensive capability. If routine requests are handled efficiently, teams can spend more on the research, analysis and high-consequence decisions where a stronger model genuinely changes what the product can do.</p>
+          <p>That is the design constraint ahead: make intelligence useful enough to matter, measurable enough to manage and economical enough to remain available. The products that solve all three will be easier to scale than products that confuse maximum capability with maximum value.</p>
+          <p>The discipline is especially important as model access becomes ordinary. When the capability is available everywhere, the scarce resource is not imagination; it is the attention, power and margin required to use that capability responsibly.</p>
+          <p>A clear budget also gives teams permission to say no to features that consume more intelligence than their users can benefit from, which is a useful form of product focus.</p>
+          <p>The constraint becomes a design tool: it helps teams spend capability where it creates a visible difference.</p>
+          <p>It turns a vague ambition into a decision the team can revisit as the product and the market change.</p>
+          <p>That repeatable decision is what keeps the economics connected to the editorial and product value the system is meant to create.</p>
+          <p>It keeps the system useful.</p>
+          
+          
+        </section>
+        <p><strong>What changes:</strong> Product teams will treat model selection as an operating-budget decision, not a one-time engineering choice.</p>
+        <section class="sources"><h2>Sources</h2><ol><li id="source-1"><a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener noreferrer">[1] Energy and AI: data centre demand</a><p>International Energy Agency · Accessed 2026-10-01</p></li><li id="source-2"><a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener noreferrer">[2] AI Index Report 2026</a><p>Stanford Institute for Human-Centered AI · Accessed 2026-10-02</p></li></ol></section>
+        <div class="ad">NATIVE AD · CLEARLY LABELED INVENTORY</div>
+      </article>
+    </main>
+    <footer>Independent newsroom · No noise by design · <a href="https://www.globalainews.in/">Return to Global AI News</a></footer>
+  </body>
+</html>

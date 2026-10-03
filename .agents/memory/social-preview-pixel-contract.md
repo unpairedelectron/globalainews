@@ -8,3 +8,9 @@ Build-time validation and smoke coverage should use the same renderer-owned titl
 **Why:** Estimated text width does not catch low-contrast raster output or clipping introduced by font and palette changes. ImageMagick’s whole-card mean can also classify a short synthetic headline as blank even when its pixels are valid.
 
 **How to apply:** Keep pixel checks focused on the rendered headline region, report the article route and visual condition, and make each size-tier fixture long enough to exercise the existing whole-card readability guard.
+
+When preview generation is triggered by editable story content, keep that data module watched for HMR but exclude it from Vite's config-restart dependencies. Reload the updated module through Vite's SSR loader and regenerate only the changed preview; keep a regression check for both the refreshed image and the absence of a server restart.
+
+**Why:** Vite also restarts for transitive config dependencies. A full restart raced social-image generation and could expose a truncated PNG while the server was coming back up.
+
+**How to apply:** Use the dev server's config dependency list to suppress only the content module's restart trigger, leaving the normal module watcher active. Verify the edit/restore cycle updates the preview and produces no Vite restart log.

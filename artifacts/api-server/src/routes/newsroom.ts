@@ -41,7 +41,8 @@ import {
   getReleaseDraftWordCount,
   getReleaseWordCount,
   getPublishedStories,
-  isPublicEditorialRelease,
+  mergeEligiblePublishedStories,
+  isPublicArticle,
   getStoryWordCount,
   MINIMUM_STORY_WORDS,
   indiaIndex,
@@ -272,16 +273,15 @@ async function getPublishedStoriesFromDatabase(): Promise<Story[]> {
   const now = new Date();
   const schedule = rows.flatMap((row) => {
     const story = toScheduledStory(row);
-    return isPublicEditorialRelease(
-      row.status,
-      story.publishAt,
-      releaseWordCount(story, row.slug),
-      now,
-    )
+    return isPublicArticle({
+      status: row.status,
+      publishAt: story.publishAt,
+      wordCount: releaseWordCount(story, row.slug),
+    }, now)
       ? [story]
       : [];
   });
-  return getPublishedStories(now, schedule);
+  return mergeEligiblePublishedStories(now, schedule);
 }
 
 function rejectShortRelease(
