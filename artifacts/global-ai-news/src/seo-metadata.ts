@@ -1,4 +1,5 @@
-import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, timelineEvents, type Author, type NewsroomContentSnapshot, type Story } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, sources, timelineEvents, type Author, type NewsroomContentSnapshot, type Source, type Story } from './content';
+import { dataProductRecords, researchRecords, topicRecords } from './authority/registry';
 
 export const SITE_URL = 'https://www.globalainews.in';
 
@@ -204,8 +205,112 @@ export function getArticleSeoMetadata(
   };
 }
 
-export function getSeoMetadata(route: string, publishedStories = getPublishedStories()): SeoMetadata {
+export function getSeoMetadata(
+  route: string,
+  publishedStories = getPublishedStories(),
+  sourceRecords: Source[] = sources,
+): SeoMetadata {
   const cleanPath = cleanRoute(route);
+  const publishedStorySlugs = new Set(publishedStories.map((story) => story.slug));
+
+  if (cleanPath === '/research') {
+    return {
+      ...staticMetadata['/research'],
+      indexable: researchRecords.some(
+        (record) => record.status === 'published' && publishedStorySlugs.has(record.storySlug),
+      ),
+    };
+  }
+
+  const researchMatch = cleanPath.match(/^\/research\/([^/]+)$/);
+  if (researchMatch) {
+    const record = researchRecords.find(
+      (candidate) =>
+        candidate.slug === researchMatch[1] &&
+        candidate.status === 'published' &&
+        publishedStorySlugs.has(candidate.storySlug),
+    );
+    if (record) {
+      return {
+        title: articleTitle(record.title),
+        description: getArticleDescription({ dek: record.researchQuestion }),
+        path: `/research/${record.slug}`,
+        lastmod: record.updatedAt,
+      };
+    }
+    return {
+      title: 'Research record not found — Global AI News',
+      description: 'No published research record exists at this URL.',
+      path: cleanPath,
+      indexable: false,
+    };
+  }
+
+  const dataMatch = cleanPath.match(/^\/data\/([^/]+)$/);
+  if (dataMatch) {
+    const product = dataProductRecords.find(
+      (candidate) =>
+        candidate.slug === dataMatch[1] &&
+        candidate.status === 'published' &&
+        candidate.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
+    );
+    if (product) {
+      return {
+        title: articleTitle(product.title),
+        description: getArticleDescription({ dek: product.description }),
+        path: `/data/${product.slug}`,
+        lastmod: product.updatedAt,
+      };
+    }
+    return {
+      title: 'Data product not found — Global AI News',
+      description: 'No published data product exists at this URL.',
+      path: cleanPath,
+      indexable: false,
+    };
+  }
+
+  const sourceMatch = cleanPath.match(/^\/source\/([^/]+)$/);
+  if (sourceMatch) {
+    const source = sourceRecords.find((candidate) => candidate.slug === sourceMatch[1]);
+    if (source) {
+      return {
+        title: `${source.name} — Citation record — Global AI News`,
+        description: getArticleDescription({
+          dek: source.relevance ?? source.scopeNote ?? `Citation details for ${source.name}.`,
+        }),
+        path: `/source/${source.slug}`,
+        lastmod: source.accessed,
+        indexable: false,
+      };
+    }
+    return {
+      title: 'Source record not found — Global AI News',
+      description: 'No cited source record exists at this URL.',
+      path: cleanPath,
+      indexable: false,
+    };
+  }
+
+  const topicMatch = cleanPath.match(/^\/topic\/([^/]+)$/);
+  if (topicMatch) {
+    const topic = topicRecords.find((candidate) => candidate.slug === topicMatch[1]);
+    if (topic) {
+      const visibleStorySlugs = topic.storySlugs.filter((slug) => publishedStorySlugs.has(slug));
+      const label = topic.slug === 'india'
+        ? 'India Watch'
+        : topic.slug === 'ai'
+          ? 'Artificial intelligence'
+          : topic.label;
+      return {
+        title: `${label} — Global AI News`,
+        description: getArticleDescription({ dek: topic.description }),
+        path: topic.route,
+        indexable: topic.indexable && visibleStorySlugs.length > 0,
+      };
+    }
+  }
+
   const articleMatch = cleanPath.match(/^\/article\/([^/]+)$/);
   if (articleMatch) {
     const story = publishedStories.find((candidate) => candidate.slug === articleMatch[1]);
@@ -276,17 +381,42 @@ export function getCanonicalUrl(route: string): string {
 export function getSeoMetadataManifest(
   publishedStories: Story[] = getPublishedStories(),
   generatedAt = new Date().toISOString(),
+  sourceRecords: Source[] = sources,
 ): SeoMetadataManifest {
+  const publishedStorySlugs = new Set(publishedStories.map((story) => story.slug));
+  const visibleResearch = researchRecords.filter(
+    (record) => record.status === 'published' && publishedStorySlugs.has(record.storySlug),
+  );
+  const visibleDataProducts = dataProductRecords.filter(
+    (record) =>
+      record.status === 'published' &&
+      record.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
+  );
+  const citedSourceSlugs = new Set([
+    ...publishedStories.flatMap((story) => story.sources),
+    ...visibleResearch.flatMap((record) => record.sourceSlugs),
+    ...visibleDataProducts.flatMap((record) => record.sourceSlugs),
+    ...topicRecords
+      .filter((topic) => topic.indexable && topic.storySlugs.some((slug) => publishedStorySlugs.has(slug)))
+      .flatMap((topic) => topic.sourceSlugs),
+  ]);
+  const visibleSources = sourceRecords.filter((source) => citedSourceSlugs.has(source.slug));
   const dynamicPaths = [
     ...publishedStories.map((story) => `/article/${story.slug}`),
     ...timelineEvents.map((event) => `/timeline/${event.slug}`),
     ...entities.map((entity) => `/${entity.kind}/${entity.slug}`),
     ...authors.map((author) => `/person/${author.slug}`),
+    ...visibleResearch.map((record) => `/research/${record.slug}`),
+    ...visibleDataProducts.map((product) => `/data/${product.slug}`),
+    ...visibleSources.map((source) => `/source/${source.slug}`),
+    ...topicRecords
+      .filter((topic) => topic.indexable && topic.storySlugs.some((slug) => publishedStorySlugs.has(slug)))
+      .map((topic) => topic.route),
   ];
   const generatedDate = generatedAt.slice(0, 10);
   const routes = [...new Set([...Object.keys(staticMetadata), ...dynamicPaths])]
     .map((path) => {
-      const metadata = getSeoMetadata(path, publishedStories);
+      const metadata = getSeoMetadata(path, publishedStories, visibleSources);
       return {
         ...metadata,
         lastmod: metadata.lastmod ?? (metadata.article ? undefined : generatedDate),
@@ -304,6 +434,7 @@ export function getStructuredData(
   metadata: SeoMetadata,
   publishedStories = getPublishedStories(),
   authorRecords: Author[] = authors,
+  authoritySnapshot?: Pick<NewsroomContentSnapshot, 'researchRecords' | 'dataProducts' | 'topics' | 'sources'>,
 ): string {
   const canonical = getCanonicalUrl(metadata.path);
   const articleSlug = metadata.path.match(/^\/article\/([^/]+)$/)?.[1];
@@ -315,6 +446,26 @@ export function getStructuredData(
   const profileAuthor = authorSlug
     ? authorRecords.find((author) => author.slug === authorSlug)
     : undefined;
+  const researchSlug = metadata.path.match(/^\/research\/([^/]+)$/)?.[1];
+  const researchRecord = researchSlug
+    ? (authoritySnapshot?.researchRecords ?? researchRecords).find(
+        (record) => record.slug === researchSlug && record.status === 'published',
+      )
+    : undefined;
+  const productSlug = metadata.path.match(/^\/data\/([^/]+)$/)?.[1];
+  const dataProduct = productSlug
+    ? (authoritySnapshot?.dataProducts ?? dataProductRecords).find(
+        (product) => product.slug === productSlug && product.status === 'published',
+      )
+    : undefined;
+  const topicSlug = metadata.path.match(/^\/topic\/([^/]+)$/)?.[1];
+  const topic = topicSlug
+    ? (authoritySnapshot?.topics ?? topicRecords).find((item) => item.slug === topicSlug)
+    : undefined;
+  const sourceSlug = metadata.path.match(/^\/source\/([^/]+)$/)?.[1];
+  const source = sourceSlug
+    ? (authoritySnapshot?.sources ?? sources).find((item) => item.slug === sourceSlug)
+    : undefined;
   const articleDateModified = articleStory ? getPublicDateModified(articleStory) : undefined;
   const publisher = {
     '@type': 'Organization',
@@ -325,68 +476,161 @@ export function getStructuredData(
       url: `${SITE_URL}/logo.svg`,
     },
   };
-  return JSON.stringify({
-    '@context': 'https://schema.org',
-    '@graph': [
-      metadata.article
+  const primaryEntity = metadata.article
+    ? {
+        '@type': 'NewsArticle',
+        headline: articleStory?.title ?? metadata.title,
+        description: metadata.description,
+        url: canonical,
+        ...(metadata.imagePath ? { image: `${SITE_URL}${metadata.imagePath}` } : {}),
+        ...(articleStory
+          ? {
+              articleSection: articleStory.category,
+              datePublished: articleStory.date,
+              ...(articleDateModified ? { dateModified: articleDateModified } : {}),
+            }
+          : {}),
+        ...(articleAuthor
+          ? {
+              author: {
+                '@type': 'Person',
+                name: articleAuthor.name,
+                url: getCanonicalUrl(`/person/${articleAuthor.slug}`),
+              },
+            }
+          : {}),
+        publisher,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+      }
+    : profileAuthor
+      ? {
+          '@type': 'ProfilePage',
+          mainEntity: {
+            '@type': 'Person',
+            name: profileAuthor.name,
+            description: profileAuthor.bio,
+            jobTitle: profileAuthor.role,
+            url: getCanonicalUrl(`/person/${profileAuthor.slug}`),
+          },
+          url: canonical,
+        }
+      : researchRecord
         ? {
-            '@type': 'NewsArticle',
-            headline: articleStory?.title ?? metadata.title,
+            '@type': 'Report',
+            name: researchRecord.title,
             description: metadata.description,
             url: canonical,
-            ...(metadata.imagePath ? { image: `${SITE_URL}${metadata.imagePath}` } : {}),
-            ...(articleStory
+            datePublished: researchRecord.date,
+            dateModified: researchRecord.updatedAt,
+            ...(authorRecords.find((author) => author.slug === researchRecord.authorSlug)
               ? {
-                  articleSection: articleStory.category,
-                  datePublished: articleStory.date,
-                    ...(articleDateModified ? { dateModified: articleDateModified } : {}),
+                  author: {
+                    '@type': 'Person',
+                    name: authorRecords.find((author) => author.slug === researchRecord.authorSlug)?.name,
+                  },
                 }
-              : {}),
-            ...(articleAuthor
-              ? { author: {
-                  '@type': 'Person',
-                  name: articleAuthor.name,
-                  url: getCanonicalUrl(`/person/${articleAuthor.slug}`),
-                } }
               : {}),
             publisher,
             mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
           }
-        : profileAuthor
-        ? {
-            '@type': 'ProfilePage',
-            mainEntity: {
-              '@type': 'Person',
-              name: profileAuthor.name,
-              description: profileAuthor.bio,
-              jobTitle: profileAuthor.role,
-              url: getCanonicalUrl(`/person/${profileAuthor.slug}`),
-            },
-            url: canonical,
-          }
-        : {
-            '@type': 'WebSite',
-            name: 'Global AI News',
-            url: SITE_URL,
-        potentialAction: {
-              '@type': 'SearchAction',
-            target: `${SITE_URL}/search?q={search_term_string}`,
-            },
-          },
+        : dataProduct
+          ? {
+              '@type': 'Dataset',
+              name: dataProduct.title,
+              description: dataProduct.description,
+              url: canonical,
+              dateModified: dataProduct.updatedAt,
+              measurementTechnique: dataProduct.methodology,
+              variableMeasured: dataProduct.unit,
+              citation: (authoritySnapshot?.sources ?? sources)
+                .filter((item) => dataProduct.sourceSlugs.includes(item.slug))
+                .map((item) => item.url),
+              publisher,
+            }
+          : topic
+            ? {
+                '@type': 'CollectionPage',
+                name: topic.label,
+                description: topic.description,
+                url: canonical,
+                mainEntity: {
+                  '@type': 'ItemList',
+                  itemListElement: topic.storySlugs
+                    .map((slug) => publishedStories.find((story) => story.slug === slug))
+                    .filter((story): story is Story => Boolean(story))
+                    .map((story, index) => ({
+                      '@type': 'ListItem',
+                      position: index + 1,
+                      url: getCanonicalUrl(`/article/${story.slug}`),
+                      name: story.title,
+                    })),
+                },
+              }
+            : source
+              ? {
+                  '@type': 'WebPage',
+                  name: source.name,
+                  description: metadata.description,
+                  url: canonical,
+                  isPartOf: { '@type': 'WebSite', name: 'Global AI News', url: SITE_URL },
+                }
+              : {
+                  '@type': 'WebSite',
+                  name: 'Global AI News',
+                  url: SITE_URL,
+                  potentialAction: {
+                    '@type': 'SearchAction',
+                    target: `${SITE_URL}/search?q={search_term_string}`,
+                  },
+                };
+  const breadcrumbItems = articleStory
+    ? [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: articleStory.contentType === 'Report' ? 'Reports' : 'Research',
+          item: getCanonicalUrl(articleStory.contentType === 'Report' ? '/reports' : '/research'),
+        },
+        { '@type': 'ListItem', position: 3, name: articleStory.category },
+        { '@type': 'ListItem', position: 4, name: articleStory.title, item: canonical },
+      ]
+    : researchRecord
+      ? [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: 'Research', item: getCanonicalUrl('/research') },
+          { '@type': 'ListItem', position: 3, name: researchRecord.title, item: canonical },
+        ]
+      : dataProduct
+        ? [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+            { '@type': 'ListItem', position: 2, name: 'Research', item: getCanonicalUrl('/research') },
+            { '@type': 'ListItem', position: 3, name: 'Data product' },
+            { '@type': 'ListItem', position: 4, name: dataProduct.title, item: canonical },
+          ]
+        : topic
+          ? [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+              { '@type': 'ListItem', position: 2, name: 'Topics' },
+              { '@type': 'ListItem', position: 3, name: topic.label, item: canonical },
+            ]
+          : source
+            ? [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+                { '@type': 'ListItem', position: 2, name: 'Citation record', item: canonical },
+              ]
+            : [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+                { '@type': 'ListItem', position: 2, name: metadata.title, item: canonical },
+              ];
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      primaryEntity,
       publisher,
       {
         '@type': 'BreadcrumbList',
-        itemListElement: articleStory
-          ? [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-              { '@type': 'ListItem', position: 2, name: 'Research', item: getCanonicalUrl('/research') },
-              { '@type': 'ListItem', position: 3, name: articleStory.category },
-              { '@type': 'ListItem', position: 4, name: articleStory.title, item: canonical },
-            ]
-          : [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-              { '@type': 'ListItem', position: 2, name: metadata.title, item: canonical },
-            ],
+        itemListElement: breadcrumbItems,
       },
     ],
   });

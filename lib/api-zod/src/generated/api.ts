@@ -28,6 +28,12 @@ export const getNewsroomContentResponseTimelineEventsItemDateRegExp = new RegExp
 export const getNewsroomContentResponseStoriesItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseStoriesItemDateModifiedRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseEssaysItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseResearchRecordsItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseResearchRecordsItemUpdatedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseResearchRecordsItemUpdateHistoryItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseDataProductsItemUpdatedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseDataProductsItemUpdateHistoryItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseDataProductsItemObservationsItemReportedOnRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseAskGlobalAnswersItemAsOfRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 
 
@@ -46,14 +52,19 @@ export const GetNewsroomContentResponse = zod.object({
   "sources": zod.array(zod.object({
   "slug": zod.string(),
   "name": zod.string(),
+  "title": zod.string().optional(),
   "publisher": zod.string(),
   "kind": zod.enum(['primary', 'independent', 'dataset', 'filing', 'interview']),
+  "sourceType": zod.enum(['government-record', 'government-portal', 'parliamentary-record', 'news-report', 'industry-report', 'research-report', 'academic-paper', 'dataset', 'filing', 'interview', 'technical-document', 'other']).optional(),
+  "classification": zod.enum(['primary', 'secondary']).optional(),
   "url": zod.string().url(),
   "accessed": zod.string().regex(getNewsroomContentResponseSourcesItemAccessedRegExp),
   "publicationDate": zod.string().regex(getNewsroomContentResponseSourcesItemPublicationDateRegExp).optional(),
   "tier": zod.union([zod.literal(1),zod.literal(2),zod.literal(3)]).optional(),
   "evidenceType": zod.enum(['full-page', 'portal-capture', 'snippet-only']).optional(),
-  "scopeNote": zod.string().optional()
+  "scopeNote": zod.string().optional(),
+  "relevance": zod.string().optional(),
+  "notes": zod.array(zod.string()).optional()
 })),
   "evidenceSummaries": zod.record(zod.string(), zod.object({
   "primarySources": zod.number().int(),
@@ -64,7 +75,7 @@ export const GetNewsroomContentResponse = zod.object({
   "entities": zod.array(zod.object({
   "slug": zod.string(),
   "name": zod.string(),
-  "kind": zod.enum(['company', 'lab', 'model', 'person', 'technology', 'policy']),
+  "kind": zod.enum(['company', 'lab', 'model', 'person', 'technology', 'institution', 'policy', 'dataset', 'infrastructure']),
   "strapline": zod.string(),
   "overview": zod.string(),
   "headquarters": zod.string().optional(),
@@ -86,7 +97,12 @@ export const GetNewsroomContentResponse = zod.object({
   "title": zod.string(),
   "description": zod.string(),
   "entities": zod.array(zod.string()),
-  "story": zod.string().optional()
+  "story": zod.string().optional(),
+  "sourceSlugs": zod.array(zod.string()).optional(),
+  "topicSlugs": zod.array(zod.string()).optional(),
+  "researchSlugs": zod.array(zod.string()).optional(),
+  "reportSlugs": zod.array(zod.string()).optional(),
+  "dataProductSlugs": zod.array(zod.string()).optional()
 })),
   "stories": zod.array(zod.object({
   "slug": zod.string(),
@@ -117,7 +133,7 @@ export const GetNewsroomContentResponse = zod.object({
   "note": zod.string()
 }),
   "classification": zod.enum(['reported', 'analysis', 'opinion', 'synthesis']),
-  "contentType": zod.enum(['Report']).optional(),
+  "contentType": zod.enum(['Brief', 'Analysis', 'Explainer', 'Research', 'Report', 'Comparison', 'Essay']).optional(),
   "entities": zod.array(zod.string()),
   "timeline": zod.array(zod.string()),
   "relatedStories": zod.array(zod.string()),
@@ -184,6 +200,97 @@ export const GetNewsroomContentResponse = zod.object({
 }))
 }).optional()
 }))
+})),
+  "researchRecords": zod.array(zod.object({
+  "slug": zod.string(),
+  "title": zod.string(),
+  "date": zod.string().regex(getNewsroomContentResponseResearchRecordsItemDateRegExp),
+  "updatedAt": zod.string().regex(getNewsroomContentResponseResearchRecordsItemUpdatedAtRegExp),
+  "status": zod.enum(['published', 'in-progress', 'superseded']),
+  "provenance": zod.enum(['external-reporting', 'original-analysis', 'original-research']),
+  "researchQuestion": zod.string(),
+  "authorSlug": zod.string(),
+  "storySlug": zod.string(),
+  "topicSlugs": zod.array(zod.string()),
+  "entitySlugs": zod.array(zod.string()),
+  "timelineSlugs": zod.array(zod.string()),
+  "sourceSlugs": zod.array(zod.string()),
+  "dataProductSlugs": zod.array(zod.string()),
+  "relatedStorySlugs": zod.array(zod.string()),
+  "methodology": zod.string(),
+  "datasetDescription": zod.string(),
+  "findings": zod.array(zod.string()),
+  "limitations": zod.array(zod.string()),
+  "updateHistory": zod.array(zod.object({
+  "date": zod.string().regex(getNewsroomContentResponseResearchRecordsItemUpdateHistoryItemDateRegExp),
+  "summary": zod.string()
+}))
+})),
+  "dataProducts": zod.array(zod.object({
+  "slug": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "updatedAt": zod.string().regex(getNewsroomContentResponseDataProductsItemUpdatedAtRegExp),
+  "status": zod.enum(['published', 'in-progress']),
+  "evidenceType": zod.enum(['dated-public-source-claims']),
+  "unit": zod.string(),
+  "topicSlugs": zod.array(zod.string()),
+  "entitySlugs": zod.array(zod.string()),
+  "storySlugs": zod.array(zod.string()),
+  "researchSlugs": zod.array(zod.string()),
+  "timelineSlugs": zod.array(zod.string()),
+  "sourceSlugs": zod.array(zod.string()),
+  "methodology": zod.string(),
+  "limitations": zod.array(zod.string()),
+  "updateHistory": zod.array(zod.object({
+  "date": zod.string().regex(getNewsroomContentResponseDataProductsItemUpdateHistoryItemDateRegExp),
+  "summary": zod.string()
+})),
+  "observations": zod.array(zod.object({
+  "id": zod.string(),
+  "reportedOn": zod.string().regex(getNewsroomContentResponseDataProductsItemObservationsItemReportedOnRegExp),
+  "asOf": zod.string().nullable(),
+  "quantity": zod.number().int(),
+  "quantityLabel": zod.string(),
+  "qualifier": zod.enum(['exact', 'about', 'more-than']),
+  "unit": zod.enum(['GPUs']),
+  "status": zod.enum(['mission-target', 'initial-capacity-reported', 'additional-capacity-announced', 'empanelled-plus-additional-reported', 'onboarded', 'shared-capacity-reported', 'access-reported']),
+  "sourceSlug": zod.string(),
+  "sourceKind": zod.enum(['primary', 'independent']),
+  "geography": zod.string(),
+  "organization": zod.string().optional(),
+  "facility": zod.string().optional(),
+  "location": zod.string().optional(),
+  "acceleratorType": zod.string(),
+  "providerCount": zod.number().int().optional(),
+  "installed": zod.enum(['established', 'reported', 'not-established']),
+  "deployed": zod.enum(['established', 'reported', 'not-established']),
+  "accessible": zod.enum(['established', 'reported', 'not-established']),
+  "schedulable": zod.enum(['established', 'reported', 'not-established']),
+  "limitation": zod.string()
+}))
+})),
+  "topics": zod.array(zod.object({
+  "slug": zod.string(),
+  "label": zod.string(),
+  "route": zod.string(),
+  "description": zod.string(),
+  "importantDevelopments": zod.array(zod.string()),
+  "storySlugs": zod.array(zod.string()),
+  "entitySlugs": zod.array(zod.string()),
+  "sourceSlugs": zod.array(zod.string()),
+  "timelineSlugs": zod.array(zod.string()),
+  "researchSlugs": zod.array(zod.string()),
+  "reportSlugs": zod.array(zod.string()),
+  "dataProductSlugs": zod.array(zod.string()),
+  "indexable": zod.boolean()
+})),
+  "authorityEdges": zod.array(zod.object({
+  "fromType": zod.enum(['article', 'report', 'source', 'entity', 'topic', 'research', 'data-product', 'timeline']),
+  "fromSlug": zod.string(),
+  "toType": zod.enum(['article', 'report', 'source', 'entity', 'topic', 'research', 'data-product', 'timeline']),
+  "toSlug": zod.string(),
+  "relationship": zod.enum(['cites', 'covers', 'about', 'chronicles', 'related'])
 })),
   "askGlobalAnswers": zod.array(zod.object({
   "slug": zod.string(),

@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { authorityClusters, researchRecords, topicRecords, validateAuthorityRegistry } from '../src/authority/registry';
+import {
+  authorityClusters,
+  buildAuthorityGraph,
+  dataProductRecords,
+  researchRecords,
+  topicRecords,
+  validateAuthorityRegistry,
+} from '../src/authority/registry';
 import { sources, stories } from '../src/content';
 import { indiaAiComputeObservations } from '../src/data/indiaai-compute-observations';
 
@@ -21,6 +28,14 @@ test('authority registry resolves the report across topics, entities, sources, t
   assert.ok(research.sourceSlugs.every((slug) => sources.some((source) => source.slug === slug)));
   assert.ok(research.entitySlugs.every((slug) => report.entities.includes(slug)));
   assert.ok(research.timelineSlugs.every((slug) => report.timeline.includes(slug)));
+  assert.equal(research.provenance, 'original-analysis');
+  assert.equal(research.status, 'published');
+  assert.ok(research.researchQuestion.length > 40);
+  assert.ok(research.methodology.length > 40);
+  assert.ok(research.findings.length >= 3);
+  assert.ok(research.limitations.length >= 3);
+  assert.equal(research.updatedAt, report.dateModified);
+  assert.ok(research.updateHistory.some((entry) => entry.date === report.date));
 });
 
 test('the next authority cluster has reusable structure but is not an indexable empty page', () => {
@@ -30,6 +45,7 @@ test('the next authority cluster has reusable structure but is not an indexable 
   assert.equal(cluster.indexable, false);
   assert.ok(cluster.storySlugs.length >= 2);
   assert.ok(cluster.sourceSlugs.length > 0);
+  assert.deepEqual(cluster.dataProductSlugs, []);
 });
 
 test('compute observations preserve dated source wording without inventing schedulable capacity', () => {
@@ -51,4 +67,51 @@ test('compute observations preserve dated source wording without inventing sched
     item.acceleratorType === 'not specified by source' &&
     item.installed !== 'established' &&
     item.deployed !== 'established'));
+});
+
+test('sources expose reusable provenance metadata without guessing missing publication dates', () => {
+  const official = sources.find((source) => source.slug === 'pib-capacity-and-use-factsheet-2026');
+  const secondary = sources.find((source) => source.slug === 'ettech-indiaai-recalibration-2026');
+  const portal = sources.find((source) => source.slug === 'indiaai-compute-portal');
+
+  assert.ok(official && secondary && portal);
+  assert.equal(official.sourceType, 'government-record');
+  assert.equal(official.classification, 'primary');
+  assert.equal(official.publicationDate, '2026-08-13');
+  assert.equal(secondary.sourceType, 'news-report');
+  assert.equal(secondary.classification, 'secondary');
+  assert.equal(portal.sourceType, 'government-portal');
+  assert.equal(portal.publicationDate, undefined);
+  assert.ok(official.scopeNote);
+  assert.ok([official, secondary, portal].every((source) => /^https?:\/\//.test(source.url)));
+});
+
+test('data product keeps dated observations, provenance, limitations, and updates together', () => {
+  const dataProduct = dataProductRecords.find((record) => record.slug === 'india-ai-compute-snapshots');
+  const india = topicRecords.find((topic) => topic.slug === 'india');
+  assert.ok(dataProduct && india);
+  assert.equal(dataProduct.evidenceType, 'dated-public-source-claims');
+  assert.equal(dataProduct.observations.length, 7);
+  assert.equal(dataProduct.updatedAt, '2026-10-03');
+  assert.ok(dataProduct.sourceSlugs.length >= 6);
+  assert.ok(dataProduct.methodology.length > 40);
+  assert.ok(dataProduct.limitations.length >= 3);
+  assert.ok(dataProduct.updateHistory.length > 0);
+  assert.ok(india.researchSlugs.includes('india-ai-compute-2026'));
+  assert.ok(india.reportSlugs.includes('india-ai-compute-access-2026'));
+  assert.ok(india.dataProductSlugs.includes(dataProduct.slug));
+});
+
+test('authority graph is reciprocal and connects the report through research, data, sources, entities, topics, and history', () => {
+  const graph = buildAuthorityGraph();
+  const hasEdge = (fromType: string, fromSlug: string, toType: string, toSlug: string) =>
+    graph.some((edge) => edge.fromType === fromType && edge.fromSlug === fromSlug && edge.toType === toType && edge.toSlug === toSlug);
+
+  assert.ok(hasEdge('report', 'india-ai-compute-access-2026', 'research', 'india-ai-compute-2026'));
+  assert.ok(hasEdge('report', 'india-ai-compute-access-2026', 'data-product', 'india-ai-compute-snapshots'));
+  assert.ok(hasEdge('research', 'india-ai-compute-2026', 'source', 'pib-capacity-and-use-factsheet-2026'));
+  assert.ok(hasEdge('report', 'india-ai-compute-access-2026', 'entity', 'indiaai-mission'));
+  assert.ok(hasEdge('report', 'india-ai-compute-access-2026', 'topic', 'india'));
+  assert.ok(hasEdge('report', 'india-ai-compute-access-2026', 'timeline', 'indiaai-compute-shared-capacity-2026'));
+  assert.ok(graph.every((edge) => hasEdge(edge.toType, edge.toSlug, edge.fromType, edge.fromSlug)));
 });

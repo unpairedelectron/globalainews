@@ -428,6 +428,10 @@ async function testRawArticleResponses() {
       'indiaIndex',
       'essays',
       'askGlobalAnswers',
+      'researchRecords',
+      'dataProducts',
+      'topics',
+      'authorityEdges',
     ].sort(),
   );
   assert.equal(Object.hasOwn(publicContent, 'schedule'), false);
@@ -451,7 +455,17 @@ async function testRawArticleResponses() {
   const assertNoEditorialFields = (value, path = '') => {
     if (!value || typeof value !== 'object') return;
     for (const [key, nested] of Object.entries(value)) {
-      assert.equal(forbiddenFields.has(key), false, `private newsroom field leaked at ${path}/${key}`);
+      const publicAuthorityField =
+        (key === 'updatedAt' && /^\/(?:researchRecords|dataProducts)\/\d+$/.test(path)) ||
+        (key === 'status' &&
+          (/^\/researchRecords\/\d+$/.test(path) ||
+            /^\/dataProducts\/\d+$/.test(path) ||
+            /^\/dataProducts\/\d+\/observations\/\d+$/.test(path)));
+      assert.equal(
+        forbiddenFields.has(key) && !publicAuthorityField,
+        false,
+        `private newsroom field leaked at ${path}/${key}`,
+      );
       assertNoEditorialFields(nested, `${path}/${key}`);
     }
   };
@@ -462,7 +476,12 @@ async function testRawArticleResponses() {
       `${story.slug} exposes dateModified before datePublished`,
     );
   }
-  const citedSourceSlugs = new Set(publicContent.stories.flatMap((story) => story.sources));
+  const citedSourceSlugs = new Set([
+    ...publicContent.stories.flatMap((story) => story.sources),
+    ...publicContent.researchRecords.flatMap((record) => record.sourceSlugs),
+    ...publicContent.dataProducts.flatMap((product) => product.sourceSlugs),
+    ...publicContent.topics.flatMap((topic) => topic.sourceSlugs),
+  ]);
   const returnedSourceSlugs = new Set(publicContent.sources.map((source) => source.slug));
   assert.deepEqual(
     [...returnedSourceSlugs].sort(),
@@ -470,8 +489,8 @@ async function testRawArticleResponses() {
     'public sources must be limited to sources cited by published articles',
   );
   const allowedSourceFields = new Set([
-    'accessed', 'evidenceType', 'kind', 'name', 'publicationDate',
-    'publisher', 'scopeNote', 'slug', 'tier', 'url',
+    'accessed', 'classification', 'evidenceType', 'kind', 'name', 'publicationDate',
+    'publisher', 'relevance', 'scopeNote', 'slug', 'sourceType', 'tier', 'title', 'url',
   ]);
   for (const source of publicContent.sources) {
     for (const field of Object.keys(source)) {

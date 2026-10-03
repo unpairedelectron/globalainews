@@ -12,10 +12,69 @@ export type StoryCategory =
   | 'Field Notes'
   | 'Infrastructure'
   | 'Policy';
-export type EntityKind = 'company' | 'lab' | 'model' | 'person' | 'technology' | 'policy';
+export type EditorialContentType =
+  | 'Brief'
+  | 'Analysis'
+  | 'Explainer'
+  | 'Research'
+  | 'Report'
+  | 'Comparison'
+  | 'Essay';
+export type EntityKind =
+  | 'company'
+  | 'lab'
+  | 'model'
+  | 'person'
+  | 'technology'
+  | 'institution'
+  | 'policy'
+  | 'dataset'
+  | 'infrastructure';
 export type EvidenceQuality = 'high' | 'medium' | 'developing';
 export type SignalDirection = 'up' | 'down' | 'steady';
 export type SignalImpact = 'low' | 'medium' | 'high';
+export type SourceType =
+  | 'government-record'
+  | 'government-portal'
+  | 'parliamentary-record'
+  | 'news-report'
+  | 'industry-report'
+  | 'research-report'
+  | 'academic-paper'
+  | 'dataset'
+  | 'filing'
+  | 'interview'
+  | 'technical-document'
+  | 'other';
+export type SourceClassification = 'primary' | 'secondary';
+
+/**
+ * Resolve older editorial relationship keys at the public boundary. Canonical
+ * article slugs remain the stored route identifiers and production records are
+ * not rewritten by this mapping.
+ */
+export const storySlugAliases: Record<string, string> = {
+  antibiotic: 'ai-models-antibiotic-discovery',
+  founders: 'founders-first-million-model-calls',
+  'small-models': 'small-models-serious-workflows',
+  'india-stack': 'indias-public-ai-stack',
+  infrastructure: 'new-geography-of-compute',
+  watermarking: 'quiet-race-watermark-everything-ai-makes',
+};
+
+export function canonicalStorySlug(slug: string): string {
+  return storySlugAliases[slug] ?? slug;
+}
+
+export const editorialContentTypePurposes: Record<EditorialContentType, string> = {
+  Brief: 'A concise, source-led account of a material development.',
+  Analysis: 'An interpretation of evidence that explains implications without claiming new empirical research.',
+  Explainer: 'A durable guide that defines a system, process, or contested term.',
+  Research: 'A documented investigation with an explicit question, method, findings, and limitations.',
+  Report: 'A substantial, maintained reference asset that synthesizes evidence across a topic.',
+  Comparison: 'A like-for-like evaluation that discloses criteria, evidence, and non-comparable measures.',
+  Essay: 'A clearly attributed argument or reflection, distinct from reported fact and research findings.',
+};
 
 export interface Author {
   slug: string;
@@ -28,14 +87,19 @@ export interface Author {
 export interface Source {
   slug: string;
   name: string;
+  title?: string;
   publisher: string;
   kind: 'primary' | 'independent' | 'dataset' | 'filing' | 'interview';
+  sourceType?: SourceType;
+  classification?: SourceClassification;
   url: string;
   accessed: string;
   publicationDate?: string;
   tier?: 1 | 2 | 3;
   evidenceType?: 'full-page' | 'portal-capture' | 'snippet-only';
   scopeNote?: string;
+  relevance?: string;
+  notes?: string[];
 }
 export interface EvidenceSummary {
   primarySources: number;
@@ -66,6 +130,11 @@ export interface TimelineEvent {
   description: string;
   entities: string[];
   story?: string;
+  sourceSlugs?: string[];
+  topicSlugs?: string[];
+  researchSlugs?: string[];
+  reportSlugs?: string[];
+  dataProductSlugs?: string[];
 }
 export interface Entity {
   slug: string;
@@ -96,7 +165,7 @@ export interface Story {
   evidence: string;
   evidenceSummary: EvidenceSummary;
   classification: 'reported' | 'analysis' | 'opinion' | 'synthesis';
-  contentType?: 'Report';
+  contentType?: EditorialContentType;
   entities: string[];
   timeline: string[];
   relatedStories: string[];
@@ -290,30 +359,30 @@ export let sources: Source[] = [
   { slug: 'nature-antibiotic-study', name: 'A generative deep learning approach to antibiotic discovery', publisher: 'Nature Chemical Biology', kind: 'primary', url: 'https://www.nature.com/', accessed: '2026-09-10' },
   { slug: 'open-a7f1c833c9a1e5c0', name: 'How a Cooperative-Override Circuit Suppresses Nash Play in Large Language Models', publisher: 'arXiv AI', kind: 'primary', url: 'https://arxiv.org/abs/2604.27167', accessed: '2026-10-02' },
   { slug: 'uspto-ai-inventorship', name: 'Guidance on AI-assisted inventions', publisher: 'United States Patent and Trademark Office', kind: 'primary', url: 'https://www.uspto.gov/sites/default/files/documents/ai-inventorship-memo.pdf', accessed: '2026-10-02' },
-  { slug: 'indiaai-mission', name: 'IndiaAI Mission', publisher: 'Ministry of Electronics and Information Technology', kind: 'primary', url: 'https://indiaai.gov.in/', accessed: '2026-09-08' },
+  { slug: 'indiaai-mission', name: 'IndiaAI Mission', publisher: 'Ministry of Electronics and Information Technology', kind: 'primary', sourceType: 'government-portal', classification: 'primary', url: 'https://indiaai.gov.in/', accessed: '2026-09-08' },
   { slug: 'stanford-ai-index-2026', name: 'AI Index Report 2026', publisher: 'Stanford Institute for Human-Centered AI', kind: 'dataset', url: 'https://hai.stanford.edu/ai-index/2026-ai-index-report', accessed: '2026-10-02' },
   { slug: 'iea-data-centres', name: 'Energy and AI: data centre demand', publisher: 'International Energy Agency', kind: 'dataset', url: 'https://www.iea.org/reports/energy-and-ai', accessed: '2026-10-01' },
   { slug: 'eu-ai-act-code', name: 'Code of practice for general-purpose AI', publisher: 'European Commission', kind: 'primary', url: 'https://digital-strategy.ec.europa.eu/en/policies/ai-code-practice', accessed: '2026-10-02' },
   { slug: 'mistral-model-card', name: 'Mistral Small 4 model card', publisher: 'Mistral AI', kind: 'primary', url: 'https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03', accessed: '2026-10-02' },
-  { slug: 'indiaai-cabinet-approval-2024', name: 'Cabinet approves the IndiaAI Mission', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2012355', accessed: '2026-10-03', publicationDate: '2024-03-07', tier: 1, evidenceType: 'full-page', scopeNote: 'Programme authorization and target; not proof of delivered capacity.' },
-  { slug: 'pib-initial-compute-2025', name: 'With robust and high-end common computing facility in place, India all set to launch its own AI model', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2097709', accessed: '2026-10-03', publicationDate: '2025-01-30', tier: 1, evidenceType: 'full-page', scopeNote: 'Describes an initial facility and further GPUs to be added; does not establish that all planned GPUs were live.' },
-  { slug: 'pib-common-compute-34000-2025', name: 'India’s Common Compute Capacity Crosses 34,000 GPUs', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2132817&lang=1&reg=3', accessed: '2026-10-03', publicationDate: '2025-05-30', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports 34,333 GPUs, including empanelled and additional capacity; status is not defined as installed or live.' },
-  { slug: 'pib-compute-onboarded-2026', name: 'Government supporting organisations and consortia to develop sovereign foundational models', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2245063', accessed: '2026-10-03', publicationDate: '2026-03-25', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports 38,231 GPUs onboarded from 14 providers; retain the government’s “onboarded” wording.' },
-  { slug: 'pib-data-centre-capacity-2026', name: 'Data centre capacity in the country has increased from about 375 MW in 2020 to around 1,500 MW by 2025', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2239616&lang=1&reg=3', accessed: '2026-10-03', publicationDate: '2026-03-13', tier: 1, evidenceType: 'full-page', scopeNote: 'This release labels 13.56 GW as projected data-centre electricity demand; a 2026-03-30 Rajya Sabha answer labels the same figure projected data-centre capacity. Official definitions conflict; neither is GPU supply.' },
-  { slug: 'pib-capacity-and-use-factsheet-2026', name: 'Semiconductor and AI Revolution', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/FactsheetDetails.aspx?Id=150860&lang=1&reg=48', accessed: '2026-10-03', publicationDate: '2026-08-13', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports 45,000+ shared GPUs and 93.18 lakh GPU-hours; the hours are not defined as metered consumption.' },
-  { slug: 'indiaai-portal-eligibility', name: 'IndiaAI Compute Portal: eligibility criteria', publisher: 'IndiaAI Compute Portal', kind: 'primary', url: 'https://compute.indiaai.gov.in/eligibilitycriteria', accessed: '2026-10-03', tier: 1, evidenceType: 'portal-capture', scopeNote: 'Live programme guidance; recheck before treating criteria as current.' },
-  { slug: 'indiaai-compute-portal', name: 'IndiaAI Compute Portal', publisher: 'IndiaAI Compute Portal', kind: 'primary', url: 'https://www.compute.indiaai.gov.in/', accessed: '2026-10-03', tier: 1, evidenceType: 'portal-capture', scopeNote: 'Shows application, provider and allocation process; not a dated utilization ledger.' },
-  { slug: 'indiaai-compute-price-calculator', name: 'IndiaAI Compute Portal price calculator', publisher: 'IndiaAI Compute Portal', kind: 'primary', url: 'https://compute.indiaai.gov.in/indiaaipricecalculator', accessed: '2026-10-03', tier: 1, evidenceType: 'portal-capture', scopeNote: 'Portal rate-card capture has no explicit update date and is not directly comparable with the PIB programme-wide average.' },
-  { slug: 'sansad-power-data-centres-2026', name: 'Data Centres Power and Water Infrastructure Crisis, Rajya Sabha Unstarred Question No. 4151', publisher: 'Rajya Sabha, Ministry of Power', kind: 'primary', url: 'https://sansad.in/getFile/annex/270/AU4151_DoYAWR.pdf?source=pqars', accessed: '2026-10-03', publicationDate: '2026-03-30', tier: 1, evidenceType: 'full-page', scopeNote: 'National generation adequacy does not measure local grid connections or facility-level draw.' },
-  { slug: 'ceew-data-centre-footprint', name: 'Land, water, and energy footprint of India’s data centres', publisher: 'Council on Energy, Environment and Water', kind: 'independent', url: 'https://www.ceew.in/sites/default/files/ceew-data-centre-study-web-ready-final.pdf', accessed: '2026-10-03', tier: 2, evidenceType: 'full-page', scopeNote: 'National energy and water estimates rely on underlying third-party sources, not a government meter-based inventory.' },
-  { slug: 'jll-india-data-centres-2026', name: 'India data centre 2026 mid-year report', publisher: 'JLL', kind: 'independent', url: 'https://www.jll.com/en-in/insights/market-dynamics/india-data-centers', accessed: '2026-10-03', publicationDate: '2026-08-31', tier: 2, evidenceType: 'full-page', scopeNote: 'Industry estimates distinguish delivered stock, absorption, pre-commitments and projected pipeline.' },
-  { slug: 'hbl-knight-frank-data-centre-pipeline-2026', name: 'India’s data centre pipeline reaches 8.33 GW on AI and cloud demand surge', publisher: 'The Hindu BusinessLine, reporting Knight Frank India', kind: 'independent', url: 'https://www.thehindubusinessline.com/info-tech/indias-data-centre-capacity-pipeline-hits-833-gw-amid-ai-and-cloud-boom/article71125654.ece', accessed: '2026-10-03', publicationDate: '2026-06-20', tier: 2, evidenceType: 'full-page', scopeNote: 'Reports live, under-construction, committed and early-stage capacity as different stages.' },
-  { slug: 'knight-frank-india-data-centre-market-2025', name: 'India Data Centre Market Update 2025', publisher: 'Knight Frank Research', kind: 'independent', url: 'https://content.knightfrank.com/research/3111/documents/en/india-data-centre-market-update-2025-12895.pdf', accessed: '2026-10-03', tier: 2, evidenceType: 'full-page', scopeNote: 'Year-end 2025 market estimates; under-construction, committed and early-stage pipeline are not operating stock.' },
-  { slug: 'ettech-indiaai-recalibration-2026', name: 'IndiaAI Mission likely to rewire after GPU glitch', publisher: 'ETtech, The Economic Times', kind: 'independent', url: 'https://m.economictimes.com/tech/technology/indiaai-mission-likely-to-rewire-after-gpu-glitch/amp_articleshow/134600368.cms', accessed: '2026-10-03', publicationDate: '2026-10-01', tier: 2, evidenceType: 'full-page', scopeNote: 'Reports access to about 30,000 GPUs against a commitment of 45,000; this is not a government-reconciled inventory.' },
-  { slug: 'pib-ai-models-datasets-2026', name: 'AI models developed under IndiaAI Mission represent important progress in building India’s own AI capabilities', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2239614&lang=1&reg=3', accessed: '2026-10-03', publicationDate: '2026-03-13', tier: 1, evidenceType: 'full-page', scopeNote: 'Government programme-output claims do not independently establish model quality, adoption or public-service impact.' },
-  { slug: 'cbre-india-data-centre-market-2025', name: 'India’s Data Centre Market in a New Era', publisher: 'CBRE India Research', kind: 'independent', url: 'https://www.cbre.co.in/insights/reports/india-s-data-centre-market-in-a-new-era', accessed: '2026-10-03', publicationDate: '2025-11-12', tier: 2, evidenceType: 'full-page', scopeNote: 'Estimates 1,530 MW of operational stock in January–September 2025.' },
-  { slug: 'ieefa-india-data-centre-power', name: 'India’s power-hungry data centre sector at a crossroads', publisher: 'Institute for Energy Economics and Financial Analysis', kind: 'independent', url: 'https://ieefa.org/resources/indias-power-hungry-data-centre-sector-crossroads', accessed: '2026-10-03', tier: 2, evidenceType: 'full-page', scopeNote: 'Attribute current and projected values to IEEFA; projections are not measured official totals.' },
-  { slug: 'pib-data-centre-water-response-2026', name: 'Government response on data-centre water consumption and cooling', publisher: 'Press Information Bureau, Government of India', kind: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2246886&lang=1&reg=6', accessed: '2026-10-03', publicationDate: '2026-03-30', tier: 1, evidenceType: 'full-page', scopeNote: '“No concerns received” is not a measured national water-use inventory.' },
+  { slug: 'indiaai-cabinet-approval-2024', name: 'Cabinet approves the IndiaAI Mission', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2012355', accessed: '2026-10-03', publicationDate: '2024-03-07', tier: 1, evidenceType: 'full-page', scopeNote: 'Programme authorization and target; not proof of delivered capacity.' },
+  { slug: 'pib-initial-compute-2025', name: 'With robust and high-end common computing facility in place, India all set to launch its own AI model', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2097709', accessed: '2026-10-03', publicationDate: '2025-01-30', tier: 1, evidenceType: 'full-page', scopeNote: 'Describes an initial facility and further GPUs to be added; does not establish that all planned GPUs were live.' },
+  { slug: 'pib-common-compute-34000-2025', name: 'India’s Common Compute Capacity Crosses 34,000 GPUs', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2132817&lang=1&reg=3', accessed: '2026-10-03', publicationDate: '2025-05-30', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports 34,333 GPUs, including empanelled and additional capacity; status is not defined as installed or live.' },
+  { slug: 'pib-compute-onboarded-2026', name: 'Government supporting organisations and consortia to develop sovereign foundational models', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2245063', accessed: '2026-10-03', publicationDate: '2026-03-25', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports 38,231 GPUs onboarded from 14 providers; retain the government’s “onboarded” wording.' },
+  { slug: 'pib-data-centre-capacity-2026', name: 'Data centre capacity in the country has increased from about 375 MW in 2020 to around 1,500 MW by 2025', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2239616&lang=1&reg=3', accessed: '2026-10-03', publicationDate: '2026-03-13', tier: 1, evidenceType: 'full-page', scopeNote: 'This release labels 13.56 GW as projected data-centre electricity demand; a 2026-03-30 Rajya Sabha answer labels the same figure projected data-centre capacity. Official definitions conflict; neither is GPU supply.' },
+  { slug: 'pib-capacity-and-use-factsheet-2026', name: 'Semiconductor and AI Revolution', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://www.pib.gov.in/FactsheetDetails.aspx?Id=150860&lang=1&reg=48', accessed: '2026-10-03', publicationDate: '2026-08-13', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports 45,000+ shared GPUs and 93.18 lakh GPU-hours; the hours are not defined as metered consumption.' },
+  { slug: 'indiaai-portal-eligibility', name: 'IndiaAI Compute Portal: eligibility criteria', publisher: 'IndiaAI Compute Portal', kind: 'primary', sourceType: 'government-portal', classification: 'primary', url: 'https://compute.indiaai.gov.in/eligibilitycriteria', accessed: '2026-10-03', tier: 1, evidenceType: 'portal-capture', scopeNote: 'Live programme guidance; recheck before treating criteria as current.' },
+  { slug: 'indiaai-compute-portal', name: 'IndiaAI Compute Portal', publisher: 'IndiaAI Compute Portal', kind: 'primary', sourceType: 'government-portal', classification: 'primary', url: 'https://www.compute.indiaai.gov.in/', accessed: '2026-10-03', tier: 1, evidenceType: 'portal-capture', scopeNote: 'Shows application, provider and allocation process; not a dated utilization ledger.' },
+  { slug: 'indiaai-compute-price-calculator', name: 'IndiaAI Compute Portal price calculator', publisher: 'IndiaAI Compute Portal', kind: 'primary', sourceType: 'government-portal', classification: 'primary', url: 'https://compute.indiaai.gov.in/indiaaipricecalculator', accessed: '2026-10-03', tier: 1, evidenceType: 'portal-capture', scopeNote: 'Portal rate-card capture has no explicit update date and is not directly comparable with the PIB programme-wide average.' },
+  { slug: 'sansad-power-data-centres-2026', name: 'Data Centres Power and Water Infrastructure Crisis, Rajya Sabha Unstarred Question No. 4151', publisher: 'Rajya Sabha, Ministry of Power', kind: 'primary', sourceType: 'parliamentary-record', classification: 'primary', url: 'https://sansad.in/getFile/annex/270/AU4151_DoYAWR.pdf?source=pqars', accessed: '2026-10-03', publicationDate: '2026-03-30', tier: 1, evidenceType: 'full-page', scopeNote: 'National generation adequacy does not measure local grid connections or facility-level draw.' },
+  { slug: 'ceew-data-centre-footprint', name: 'Land, water, and energy footprint of India’s data centres', publisher: 'Council on Energy, Environment and Water', kind: 'independent', sourceType: 'research-report', classification: 'secondary', url: 'https://www.ceew.in/sites/default/files/ceew-data-centre-study-web-ready-final.pdf', accessed: '2026-10-03', tier: 2, evidenceType: 'full-page', scopeNote: 'National energy and water estimates rely on underlying third-party sources, not a government meter-based inventory.' },
+  { slug: 'jll-india-data-centres-2026', name: 'India data centre 2026 mid-year report', publisher: 'JLL', kind: 'independent', sourceType: 'industry-report', classification: 'secondary', url: 'https://www.jll.com/en-in/insights/market-dynamics/india-data-centers', accessed: '2026-10-03', publicationDate: '2026-08-31', tier: 2, evidenceType: 'full-page', scopeNote: 'Industry estimates distinguish delivered stock, absorption, pre-commitments and projected pipeline.' },
+  { slug: 'hbl-knight-frank-data-centre-pipeline-2026', name: 'India’s data centre pipeline reaches 8.33 GW on AI and cloud demand surge', publisher: 'The Hindu BusinessLine, reporting Knight Frank India', kind: 'independent', sourceType: 'news-report', classification: 'secondary', url: 'https://www.thehindubusinessline.com/info-tech/indias-data-centre-capacity-pipeline-hits-833-gw-amid-ai-and-cloud-boom/article71125654.ece', accessed: '2026-10-03', publicationDate: '2026-06-20', tier: 2, evidenceType: 'full-page', scopeNote: 'Reports live, under-construction, committed and early-stage capacity as different stages.' },
+  { slug: 'knight-frank-india-data-centre-market-2025', name: 'India Data Centre Market Update 2025', publisher: 'Knight Frank Research', kind: 'independent', sourceType: 'industry-report', classification: 'secondary', url: 'https://content.knightfrank.com/research/3111/documents/en/india-data-centre-market-update-2025-12895.pdf', accessed: '2026-10-03', tier: 2, evidenceType: 'full-page', scopeNote: 'Year-end 2025 market estimates; under-construction, committed and early-stage pipeline are not operating stock.' },
+  { slug: 'ettech-indiaai-recalibration-2026', name: 'IndiaAI Mission likely to rewire after GPU glitch', publisher: 'ETtech, The Economic Times', kind: 'independent', sourceType: 'news-report', classification: 'secondary', url: 'https://m.economictimes.com/tech/technology/indiaai-mission-likely-to-rewire-after-gpu-glitch/amp_articleshow/134600368.cms', accessed: '2026-10-03', publicationDate: '2026-10-01', tier: 2, evidenceType: 'full-page', scopeNote: 'Reports access to about 30,000 GPUs against a commitment of 45,000; this is not a government-reconciled inventory.' },
+  { slug: 'pib-ai-models-datasets-2026', name: 'AI models developed under IndiaAI Mission represent important progress in building India’s own AI capabilities', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2239614&lang=1&reg=3', accessed: '2026-10-03', publicationDate: '2026-03-13', tier: 1, evidenceType: 'full-page', scopeNote: 'Government programme-output claims do not independently establish model quality, adoption or public-service impact.' },
+  { slug: 'cbre-india-data-centre-market-2025', name: 'India’s Data Centre Market in a New Era', publisher: 'CBRE India Research', kind: 'independent', sourceType: 'industry-report', classification: 'secondary', url: 'https://www.cbre.co.in/insights/reports/india-s-data-centre-market-in-a-new-era', accessed: '2026-10-03', publicationDate: '2025-11-12', tier: 2, evidenceType: 'full-page', scopeNote: 'Estimates 1,530 MW of operational stock in January–September 2025.' },
+  { slug: 'ieefa-india-data-centre-power', name: 'India’s power-hungry data centre sector at a crossroads', publisher: 'Institute for Energy Economics and Financial Analysis', kind: 'independent', sourceType: 'research-report', classification: 'secondary', url: 'https://ieefa.org/resources/indias-power-hungry-data-centre-sector-crossroads', accessed: '2026-10-03', tier: 2, evidenceType: 'full-page', scopeNote: 'Attribute current and projected values to IEEFA; projections are not measured official totals.' },
+  { slug: 'pib-data-centre-water-response-2026', name: 'Government response on data-centre water consumption and cooling', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2246886&lang=1&reg=6', accessed: '2026-10-03', publicationDate: '2026-03-30', tier: 1, evidenceType: 'full-page', scopeNote: '“No concerns received” is not a measured national water-use inventory.' },
 ];
 
 export const evidenceSummaries: Record<string, EvidenceSummary> = {
@@ -339,6 +408,12 @@ export let entities: Entity[] = [
 ];
 
 export let timelineEvents: TimelineEvent[] = [
+  { slug: 'indiaai-compute-target-2024', date: '2024-03-07', title: 'IndiaAI Mission sets a common-compute target', description: 'The Cabinet approval sets a target of more than 10,000 GPUs; it is a programme target, not evidence of delivered capacity.', entities: ['indiaai-mission'], story: 'india-ai-compute-access-2026', sourceSlugs: ['indiaai-cabinet-approval-2024'], topicSlugs: ['india'], researchSlugs: ['india-ai-compute-2026'], reportSlugs: ['india-ai-compute-access-2026'], dataProductSlugs: ['india-ai-compute-snapshots'] },
+  { slug: 'indiaai-compute-initial-capacity-2025', date: '2025-01-30', title: 'IndiaAI describes initial compute and a planned addition', description: 'A government release describes about 10,000 initial GPUs and 8,693 more to be added; the planned addition is not confirmed as live capacity.', entities: ['indiaai-mission'], story: 'india-ai-compute-access-2026', sourceSlugs: ['pib-initial-compute-2025'], topicSlugs: ['india'], researchSlugs: ['india-ai-compute-2026'], reportSlugs: ['india-ai-compute-access-2026'], dataProductSlugs: ['india-ai-compute-snapshots'] },
+  { slug: 'indiaai-compute-34333-2025', date: '2025-05-30', title: 'Government reports 34,333 GPUs in the common-compute pool', description: 'The reported total combines empanelled and additional capacity; the release does not define it as installed or schedulable.', entities: ['indiaai-mission'], story: 'india-ai-compute-access-2026', sourceSlugs: ['pib-common-compute-34000-2025'], topicSlugs: ['india'], researchSlugs: ['india-ai-compute-2026'], reportSlugs: ['india-ai-compute-access-2026'], dataProductSlugs: ['india-ai-compute-snapshots'] },
+  { slug: 'indiaai-compute-onboarded-2026', date: '2026-03-25', title: 'Government reports 38,231 GPUs onboarded', description: 'The release attributes the reported count to 14 providers. It does not supply a provider-level live inventory.', entities: ['indiaai-mission'], story: 'india-ai-compute-access-2026', sourceSlugs: ['pib-compute-onboarded-2026'], topicSlugs: ['india'], researchSlugs: ['india-ai-compute-2026'], reportSlugs: ['india-ai-compute-access-2026'], dataProductSlugs: ['india-ai-compute-snapshots'] },
+  { slug: 'indiaai-compute-shared-capacity-2026', date: '2026-08-13', title: 'Factsheet reports more than 45,000 shared GPUs', description: 'The published factsheet says shared capacity exceeded 45,000 GPUs as of June 2026; it does not reconcile that figure with earlier snapshots.', entities: ['indiaai-mission'], story: 'india-ai-compute-access-2026', sourceSlugs: ['pib-capacity-and-use-factsheet-2026'], topicSlugs: ['india'], researchSlugs: ['india-ai-compute-2026'], reportSlugs: ['india-ai-compute-access-2026'], dataProductSlugs: ['india-ai-compute-snapshots'] },
+  { slug: 'indiaai-compute-access-reported-2026', date: '2026-10-01', title: 'Independent reporting puts access near 30,000 GPUs', description: 'ETtech reports access to about 30,000 GPUs against a 45,000 commitment. The report is not a reconciled government inventory.', entities: ['indiaai-mission'], story: 'india-ai-compute-access-2026', sourceSlugs: ['ettech-indiaai-recalibration-2026'], topicSlugs: ['india'], researchSlugs: ['india-ai-compute-2026'], reportSlugs: ['india-ai-compute-access-2026'], dataProductSlugs: ['india-ai-compute-snapshots'] },
   { slug: 'antibiotic-candidates', date: '2026-01-18', title: 'AI-proposed antibiotic candidates enter testing', description: 'A research team reports molecules generated outside public antibiotic databases and advances them to laboratory testing.', entities: ['antibiotic-discovery', 'google-deepmind'], story: 'antibiotic' },
   { slug: 'openai-agent-platform', date: '2026-08-21', title: 'OpenAI opens a longer-running agent platform', description: 'Developers receive tools for agents that can plan, call software and return evidence alongside an answer.', entities: ['openai'], story: 'founders' },
   { slug: 'gpt-5-release', date: '2026-08-28', title: 'GPT-5 release raises the cost of being “model agnostic”', description: 'The release shifts enterprise evaluation toward tool use, reliability and total workflow cost.', entities: ['openai', 'gpt-5'], story: 'small-models' },
@@ -1012,6 +1087,10 @@ export interface NewsroomContentSnapshot {
   entities: Entity[];
   timelineEvents: TimelineEvent[];
   stories: Story[];
+  researchRecords: import('./authority/registry').ResearchRecord[];
+  dataProducts: import('./authority/registry').DataProductRecord[];
+  topics: import('./authority/registry').TopicRecord[];
+  authorityEdges: import('./authority/registry').AuthorityEdge[];
   signals: Signal[];
   industryMap: IndustryMapNode[];
   indiaIndex: IndiaIndexMetric[];
@@ -1032,15 +1111,7 @@ export function hydrateContent(snapshot: NewsroomContentSnapshot): void {
   askGlobalAnswers = snapshot.askGlobalAnswers;
 }
 
-const storyAliases: Record<string, string> = {
-  antibiotic: 'ai-models-antibiotic-discovery',
-  watermarking: 'quiet-race-watermark-everything-ai-makes',
-  'india-stack': 'indias-public-ai-stack',
-  'small-models': 'small-models-serious-workflows',
-  founders: 'founders-first-million-model-calls',
-  infrastructure: 'new-geography-of-compute',
-};
-export const findStory = (slug: string): Story | undefined => stories.find((story) => story.slug === (storyAliases[slug] ?? slug));
+export const findStory = (slug: string): Story | undefined => stories.find((story) => story.slug === canonicalStorySlug(slug));
 export const findEntity = (slug: string): Entity | undefined => entities.find((entity) => entity.slug === slug);
 export const findTimeline = (slug: string): TimelineEvent | undefined => timelineEvents.find((event) => event.slug === slug);
 export const filterSignals = (topic?: string): Signal[] =>

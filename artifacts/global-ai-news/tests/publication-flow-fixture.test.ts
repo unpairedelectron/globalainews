@@ -27,6 +27,12 @@ import {
   askGlobalAnswers,
   type Story,
 } from '../src/content';
+import {
+  buildAuthorityGraph,
+  dataProductRecords,
+  researchRecords,
+  topicRecords,
+} from '../src/authority/registry';
 import { getCanonicalUrl, getSeoMetadataManifest } from '../src/seo-metadata';
 
 const execFileAsync = promisify(execFile);
@@ -334,7 +340,24 @@ function newFixtureStory(slug: string, now: Date): Story {
 }
 
 function makeSnapshot(publicStories: Story[]) {
-  const citedSources = new Set(publicStories.flatMap((story) => story.sources));
+  const publishedStorySlugs = new Set(publicStories.map((story) => story.slug));
+  const publicResearchRecords = researchRecords.filter(
+    (record) => record.status === 'published' && publishedStorySlugs.has(record.storySlug),
+  );
+  const publicDataProducts = dataProductRecords.filter(
+    (record) =>
+      record.status === 'published' &&
+      record.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
+  );
+  const publicTopics = topicRecords.filter(
+    (record) => record.indexable && record.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
+  );
+  const citedSources = new Set([
+    ...publicStories.flatMap((story) => story.sources),
+    ...publicResearchRecords.flatMap((record) => record.sourceSlugs),
+    ...publicDataProducts.flatMap((record) => record.sourceSlugs),
+    ...publicTopics.flatMap((record) => record.sourceSlugs),
+  ]);
   return GetNewsroomContentResponse.parse({
     generatedAt: new Date().toISOString(),
     source: 'maintained-editorial-source',
@@ -345,6 +368,10 @@ function makeSnapshot(publicStories: Story[]) {
     entities,
     timelineEvents,
     stories: publicStories.map(({ updatedAt: _updatedAt, ...story }) => story),
+    researchRecords: publicResearchRecords,
+    dataProducts: publicDataProducts,
+    topics: publicTopics,
+    authorityEdges: buildAuthorityGraph(publicStories),
     signals,
     industryMap,
     indiaIndex,
@@ -357,12 +384,13 @@ function createInMemoryApi(getStories: () => Story[]): Server {
   return createServer((request, response) => {
     const route = request.url ?? '/';
     const publicStories = getStories();
-    const metadata = getSeoMetadataManifest(publicStories);
+    const snapshot = makeSnapshot(publicStories);
+    const metadata = getSeoMetadataManifest(publicStories, snapshot.generatedAt, snapshot.sources);
     if (route === '/api/healthz') {
       response.writeHead(200, { 'content-type': 'application/json' }).end('{"ok":true}');
     } else if (route === '/api/newsroom/content') {
       response.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' })
-        .end(JSON.stringify(makeSnapshot(publicStories)));
+        .end(JSON.stringify(snapshot));
     } else if (route === '/api/newsroom/metadata') {
       response.writeHead(200, { 'content-type': 'application/json' }).end(JSON.stringify(metadata));
     } else if (route === '/api/newsroom/feed.xml') {

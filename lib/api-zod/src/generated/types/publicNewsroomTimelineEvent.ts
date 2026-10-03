@@ -14,4 +14,9 @@ export interface PublicNewsroomTimelineEvent {
   description: string;
   entities: string[];
   story?: string;
+  sourceSlugs?: string[];
+  topicSlugs?: string[];
+  researchSlugs?: string[];
+  reportSlugs?: string[];
+  dataProductSlugs?: string[];
 }

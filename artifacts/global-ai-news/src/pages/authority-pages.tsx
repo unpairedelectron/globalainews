@@ -1,0 +1,187 @@
+import { ArrowUpRight, BookOpenText, Database, ShieldCheck } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { Link } from '@/components/canonical-link';
+import { Footer, Header, SectionLabel, SeoHead } from '@/components/site';
+import { useNewsroomSnapshot } from '@/newsroom';
+import { formatEditorialDate } from '@/editorial-date';
+import { useParams } from 'wouter';
+import NotFound from '@/pages/not-found';
+
+const container = 'editorial-page mx-auto max-w-[1440px] px-5 md:px-10';
+const shell = ({ children }: { children: ReactNode }) => <><Header />{children}<Footer /></>;
+const date = (value?: string | null) => value ? formatEditorialDate(value) : 'Date not stated';
+
+function TitleBlock({ eyebrow, title, dek }: { eyebrow: string; title: string; dek?: string }) {
+  return <header className="border-b border-foreground/20 py-14 md:py-20">
+    <p className="eyebrow text-primary">{eyebrow}</p>
+    <h1 className="mt-6 max-w-5xl font-serif text-6xl leading-[.88] tracking-[-.035em] md:text-8xl">{title}</h1>
+    {dek && <p className="mt-7 max-w-3xl text-lg leading-8 text-muted-foreground">{dek}</p>}
+  </header>;
+}
+
+function LinkList({ title, links }: { title: string; links: { href: string; label: string; detail?: string }[] }) {
+  if (!links.length) return null;
+  return <section className="mt-8">
+    <SectionLabel>{title}</SectionLabel>
+    <div className="border-t border-foreground/15">
+      {links.map((item) => <Link key={`${item.href}-${item.label}`} href={item.href} className="group flex items-start justify-between gap-4 border-b border-foreground/15 py-4 hover:text-primary">
+        <span><span className="block text-sm">{item.label}</span>{item.detail && <span className="mt-1 block text-xs leading-5 text-muted-foreground">{item.detail}</span>}</span>
+        <ArrowUpRight aria-hidden="true" size={15} className="mt-1 shrink-0" />
+      </Link>)}
+    </div>
+  </section>;
+}
+
+function entityHref(snapshot: ReturnType<typeof useNewsroomSnapshot>, slug: string) {
+  const entity = snapshot.entities.find((item) => item.slug === slug);
+  if (!entity) return undefined;
+  const routeKinds = ['company', 'lab', 'model', 'person', 'technology', 'policy'];
+  return routeKinds.includes(entity.kind) ? { href: `/${entity.kind}/${slug}`, label: entity.name, detail: entity.strapline } : undefined;
+}
+function topicLinks(snapshot: ReturnType<typeof useNewsroomSnapshot>, slugs: string[]) {
+  return slugs.flatMap((slug) => {
+    const topic = snapshot.topics.find((item) => item.slug === slug);
+    return topic ? [{ href: topic.route, label: topic.label, detail: topic.description }] : [];
+  });
+}
+function storyLinks(snapshot: ReturnType<typeof useNewsroomSnapshot>, slugs: string[]) {
+  return slugs.flatMap((slug) => {
+    const story = snapshot.stories.find((item) => item.slug === slug);
+    return story ? [{ href: `/article/${story.slug}`, label: story.title, detail: `${story.contentType ?? story.category} · ${date(story.date)}` }] : [];
+  });
+}
+function timelineLinks(snapshot: ReturnType<typeof useNewsroomSnapshot>, slugs: string[]) {
+  return slugs.flatMap((slug) => {
+    const event = snapshot.timelineEvents.find((item) => item.slug === slug);
+    return event ? [{ href: `/timeline/${slug}`, label: event.title, detail: `${date(event.date)} · ${event.description}` }] : [];
+  });
+}
+function sourceLinks(snapshot: ReturnType<typeof useNewsroomSnapshot>, slugs: string[]) {
+  return slugs.flatMap((slug) => {
+    const source = snapshot.sources.find((item) => item.slug === slug);
+    return source ? [{ href: `/source/${slug}`, label: source.name, detail: `${source.publisher}${source.publicationDate ? ` · ${date(source.publicationDate)}` : ''}` }] : [];
+  });
+}
+function researchLinks(snapshot: ReturnType<typeof useNewsroomSnapshot>, slugs: string[]) {
+  return slugs.flatMap((slug) => {
+    const record = snapshot.researchRecords.find((item) => item.slug === slug && item.status === 'published');
+    return record ? [{ href: `/research/${slug}`, label: record.title, detail: `Research record · updated ${date(record.updatedAt)}` }] : [];
+  });
+}
+function productLinks(snapshot: ReturnType<typeof useNewsroomSnapshot>, slugs: string[]) {
+  return slugs.flatMap((slug) => {
+    const product = snapshot.dataProducts.find((item) => item.slug === slug && item.status === 'published');
+    return product ? [{ href: `/data/${slug}`, label: product.title, detail: `Data product · updated ${date(product.updatedAt)}` }] : [];
+  });
+}
+
+export function ResearchIndexPage() {
+  const snapshot = useNewsroomSnapshot();
+  const records = snapshot.researchRecords.filter((record) => record.status === 'published').sort((a, b) => b.date.localeCompare(a.date));
+  return <>{shell({ children: <><SeoHead title="Research — Global AI News" description="Published research records with methodology, findings, limitations and source trails." path="/research" />
+    <main className={container}>
+      <TitleBlock eyebrow="Global AI News · Research register" title="Research, made traceable." dek="Published research records show the question, method, evidence and limits behind our work. Follow the record into the reporting, data and sources." />
+      <section className="grid gap-10 py-12 md:grid-cols-[.55fr_1.45fr] md:py-16">
+        <aside><SectionLabel aside={`${records.length} published`}>The register</SectionLabel><p className="max-w-sm text-sm leading-7 text-muted-foreground">Research is presented as a documented record, not a detached conclusion. Status and dates travel with every entry.</p><div className="mt-8 border-l-2 border-primary/40 pl-4 text-xs leading-6 text-muted-foreground"><p className="eyebrow text-primary">Reading the record</p><p className="mt-2">Each entry distinguishes what the evidence supports from what remains unknown.</p></div></aside>
+        <div aria-live="polite">{records.length ? records.map((record, index) => <article key={record.slug} data-testid={`card-research-${record.slug}`} className="grid grid-cols-[2.6rem_1fr] gap-4 border-t border-foreground/15 py-7 sm:grid-cols-[3.5rem_1fr]">
+          <span className="font-serif text-3xl text-primary/65">{String(index + 1).padStart(2, '0')}</span>
+          <div><p className="eyebrow text-primary">{record.provenance.replaceAll('-', ' ')} · published {date(record.date)}</p><Link href={`/research/${record.slug}`} className="mt-3 block max-w-3xl font-serif text-3xl leading-[.96] hover:text-primary sm:text-4xl">{record.title}</Link>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{record.researchQuestion}</p><p className="mt-4 text-xs text-muted-foreground">Updated {date(record.updatedAt)} · {record.findings.length} findings · {record.limitations.length} stated limitations</p>
+          </div>
+        </article>) : <div className="border border-dashed border-foreground/20 bg-surface-muted/50 p-8"><BookOpenText className="text-primary" size={22} /><h2 className="mt-5 font-serif text-3xl">No published research records yet.</h2><p className="mt-3 max-w-lg text-sm leading-6 text-muted-foreground">The index only includes records marked published in the newsroom snapshot.</p></div>}</div>
+      </section>
+    </main>
+  </> })}</>;
+}
+
+export function ResearchRecordPage() {
+  const { slug = '' } = useParams<{ slug: string }>();
+  const snapshot = useNewsroomSnapshot();
+  const record = snapshot.researchRecords.find((item) => item.slug === slug && item.status === 'published');
+  if (!record) return <NotFound />;
+  const stories = [...new Set([record.storySlug, ...record.relatedStorySlugs])];
+  return <>{shell({ children: <><SeoHead title={`${record.title} — Global AI News Research`} description={record.researchQuestion} path={`/research/${record.slug}`} />
+    <main className={`${container} max-w-[1240px]`}><nav aria-label="Breadcrumb" className="pt-8 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"><Link href="/research" className="hover:text-primary">Research</Link><span className="mx-2">/</span><span aria-current="page">{record.slug}</span></nav>
+      <TitleBlock eyebrow={`Research record · ${record.provenance.replaceAll('-', ' ')} · ${record.status}`} title={record.title} dek={record.researchQuestion} />
+      <div className="grid gap-12 py-12 md:grid-cols-[minmax(0,1fr)_340px]">
+        <article className="space-y-10">
+          <section className="grid gap-5 border-b border-foreground/15 pb-7 sm:grid-cols-3"><div><p className="eyebrow text-muted-foreground">Published</p><p className="mt-2 text-sm">{date(record.date)}</p></div><div><p className="eyebrow text-muted-foreground">Last reviewed</p><p className="mt-2 text-sm">{date(record.updatedAt)}</p></div><div><p className="eyebrow text-muted-foreground">Author</p><p className="mt-2 text-sm">{snapshot.authors.find((a) => a.slug === record.authorSlug)?.name ?? 'Byline unavailable'}</p></div></section>
+          <section><SectionLabel>Findings</SectionLabel><ol className="grid gap-0">{record.findings.map((finding, index) => <li key={finding} className="grid grid-cols-[2.5rem_1fr] gap-3 border-b border-foreground/10 py-5"><span className="font-mono text-xs text-primary">{String(index + 1).padStart(2, '0')}</span><p className="max-w-3xl text-base leading-7">{finding}</p></li>)}</ol></section>
+          <section className="grid gap-8 border-y border-foreground/15 py-7 sm:grid-cols-2"><div><SectionLabel>Methodology</SectionLabel><p className="text-sm leading-7 text-muted-foreground">{record.methodology}</p></div><div><SectionLabel>Dataset description</SectionLabel><p className="text-sm leading-7 text-muted-foreground">{record.datasetDescription}</p></div></section>
+          <section><SectionLabel>Limitations</SectionLabel><ul className="grid gap-3">{record.limitations.map((limitation) => <li key={limitation} className="border-l-2 border-accent pl-4 text-sm leading-6 text-muted-foreground">{limitation}</li>)}</ul></section>
+          <section><SectionLabel>Update history</SectionLabel>{record.updateHistory.length ? record.updateHistory.map((update) => <div key={`${update.date}-${update.summary}`} className="grid gap-2 border-t border-foreground/15 py-4 sm:grid-cols-[120px_1fr]"><time dateTime={update.date} className="font-mono text-[10px] text-primary">{date(update.date)}</time><p className="text-sm leading-6">{update.summary}</p></div>) : <p className="text-sm text-muted-foreground">No update history is recorded.</p>}</section>
+        </article>
+        <aside className="space-y-8 md:border-l md:border-foreground/15 md:pl-8">
+          <LinkList title="Reporting & related stories" links={storyLinks(snapshot, stories)} />
+          <LinkList title="Topics" links={topicLinks(snapshot, record.topicSlugs)} />
+          <LinkList title="Entities" links={record.entitySlugs.flatMap((slug) => { const item = entityHref(snapshot, slug); return item ? [item] : []; })} />
+          <LinkList title="Data products" links={productLinks(snapshot, record.dataProductSlugs)} />
+          <LinkList title="Timeline" links={timelineLinks(snapshot, record.timelineSlugs)} />
+          <LinkList title="Sources" links={sourceLinks(snapshot, record.sourceSlugs)} />
+        </aside>
+      </div>
+    </main>
+  </> })}</>;
+}
+
+function ObservationStatus({ label, value }: { label: string; value: string }) {
+  return <div className="border-t border-foreground/10 pt-3"><p className="eyebrow text-muted-foreground">{label}</p><p className="mt-2 text-sm capitalize">{value.replaceAll('-', ' ')}</p></div>;
+}
+
+export function DataProductPage() {
+  const { slug = '' } = useParams<{ slug: string }>();
+  const snapshot = useNewsroomSnapshot();
+  const product = snapshot.dataProducts.find((item) => item.slug === slug && item.status === 'published');
+  if (!product) return <NotFound />;
+  return <>{shell({ children: <><SeoHead title={`${product.title} — Global AI News Data`} description={product.description} path={`/data/${product.slug}`} />
+    <main className={`${container} max-w-[1320px]`}><nav aria-label="Breadcrumb" className="pt-8 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"><Link href="/research" className="hover:text-primary">Research</Link><span className="mx-2">/</span><span aria-current="page">Data product</span></nav>
+      <TitleBlock eyebrow={`Data product · ${product.evidenceType.replaceAll('-', ' ')}`} title={product.title} dek={product.description} />
+      <section className="grid gap-6 border-b border-foreground/15 py-7 sm:grid-cols-3"><div><p className="eyebrow text-muted-foreground">Last updated</p><p className="mt-2 text-sm">{date(product.updatedAt)}</p></div><div><p className="eyebrow text-muted-foreground">Observation unit</p><p className="mt-2 text-sm">{product.unit}</p></div><div><p className="eyebrow text-muted-foreground">Evidence framing</p><p className="mt-2 text-sm">Dated public-source claims</p></div></section>
+      <section className="py-10"><div className="flex flex-wrap items-end justify-between gap-4"><div><SectionLabel aside={`${product.observations.length} observations`}>Recorded observations</SectionLabel><p className="max-w-2xl text-sm leading-6 text-muted-foreground">These are dated claims, not a live inventory. Stages are kept distinct; announcement does not establish installation, deployment, access or scheduling.</p></div><Database className="mb-1 text-primary" size={24} strokeWidth={1.4} /></div>
+        {product.observations.length ? <div className="mt-6 grid gap-px border border-foreground/15 bg-foreground/15 md:grid-cols-2">
+          {product.observations.map((item) => <article key={item.id} data-testid={`observation-${item.id}`} className="bg-background p-6 md:p-8">
+            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-foreground/15 pb-5"><div><p className="eyebrow text-primary">{item.status.replaceAll('-', ' ')}</p><h2 className="mt-3 font-serif text-4xl leading-none">{item.quantityLabel}</h2></div><span className="border border-foreground/15 px-2 py-1 font-mono text-[10px] uppercase tracking-widest">{item.qualifier}</span></div>
+            <p className="mt-4 text-sm">{[item.organization, item.facility, item.location, item.geography].filter(Boolean).join(' · ')}</p>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">{item.acceleratorType}{item.providerCount !== undefined ? ` · ${item.providerCount} providers` : ''}</p>
+            <div className="mt-6 grid grid-cols-2 gap-x-5 gap-y-4"><ObservationStatus label="Installed" value={item.installed} /><ObservationStatus label="Deployed" value={item.deployed} /><ObservationStatus label="Accessible" value={item.accessible} /><ObservationStatus label="Schedulable" value={item.schedulable} /></div>
+            <div className="mt-6 border-l-2 border-accent pl-4"><p className="eyebrow text-muted-foreground">Scope limitation</p><p className="mt-2 text-xs leading-5 text-muted-foreground">{item.limitation}</p></div>
+            <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Reported {date(item.reportedOn)}{item.asOf ? ` · as of ${date(item.asOf)}` : ''} · {item.sourceKind} source</p>
+            <Link href={`/source/${item.sourceSlug}`} className="mt-4 inline-flex items-center gap-2 border-b border-primary/40 pb-1 text-xs text-primary">Open citation record <ArrowUpRight size={13} /></Link>
+          </article>)}
+        </div> : <div className="mt-5 border border-dashed border-foreground/20 p-7 text-sm text-muted-foreground">No observations are recorded in this published product.</div>}
+      </section>
+      <div className="grid gap-10 border-t border-foreground/15 py-10 md:grid-cols-[1fr_1fr]"><div><SectionLabel>Methodology</SectionLabel><p className="text-sm leading-7 text-muted-foreground">{product.methodology}</p><div className="mt-8"><SectionLabel>Limitations</SectionLabel><ul className="grid gap-3">{product.limitations.map((limitation) => <li key={limitation} className="border-l-2 border-accent pl-4 text-sm leading-6 text-muted-foreground">{limitation}</li>)}</ul></div></div><aside className="space-y-7"><LinkList title="Research records" links={researchLinks(snapshot, product.researchSlugs)} /><LinkList title="Reporting" links={storyLinks(snapshot, product.storySlugs)} /><LinkList title="Topics" links={topicLinks(snapshot, product.topicSlugs)} /><LinkList title="Entities" links={product.entitySlugs.flatMap((entitySlug) => { const item = entityHref(snapshot, entitySlug); return item ? [item] : []; })} /><LinkList title="Timeline" links={timelineLinks(snapshot, product.timelineSlugs)} /><LinkList title="Sources" links={sourceLinks(snapshot, product.sourceSlugs)} /></aside></div>
+      <section className="border-t border-foreground/15 py-8"><SectionLabel>Update history</SectionLabel>{product.updateHistory.map((entry) => <p key={`${entry.date}-${entry.summary}`} className="border-t border-foreground/10 py-4 text-sm leading-6"><time dateTime={entry.date} className="mr-4 font-mono text-[10px] text-primary">{date(entry.date)}</time>{entry.summary}</p>)}</section>
+    </main>
+  </> })}</>;
+}
+
+export function SourceRecordPage() {
+  const { slug = '' } = useParams<{ slug: string }>();
+  const snapshot = useNewsroomSnapshot();
+  const source = snapshot.sources.find((item) => item.slug === slug);
+  if (!source) return <NotFound />;
+  const citingStories = snapshot.stories.filter((story) => story.sources.includes(slug));
+  const research = snapshot.researchRecords.filter((record) => record.status === 'published' && record.sourceSlugs.includes(slug));
+  const products = snapshot.dataProducts.filter((record) => record.status === 'published' && record.sourceSlugs.includes(slug));
+  const timelines = snapshot.timelineEvents.filter((event) => event.sourceSlugs?.includes(slug));
+  return <>{shell({ children: <><SeoHead title={`${source.name} — Source record | Global AI News`} description={source.relevance ?? source.scopeNote ?? `Citation details for ${source.name}.`} path={`/source/${source.slug}`} indexable={false} />
+    <main className={`${container} max-w-[1180px]`}><nav aria-label="Breadcrumb" className="pt-8 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"><Link href="/research" className="hover:text-primary">Research</Link><span className="mx-2">/</span><span aria-current="page">Source record</span></nav>
+      <TitleBlock eyebrow="Citation record · not an endorsement" title={source.name} dek={source.title ?? source.relevance ?? source.scopeNote} />
+      <section className="grid gap-10 py-10 md:grid-cols-[1fr_320px]"><article><SectionLabel>Source details</SectionLabel><dl className="grid gap-0 sm:grid-cols-2">{([
+        ['Publisher', source.publisher], ['Source kind', source.kind], ['Source type', source.sourceType?.replaceAll('-', ' ')], ['Classification', source.classification], ['Evidence captured', source.evidenceType?.replaceAll('-', ' ')], ['Tier', source.tier ? `Tier ${source.tier}` : undefined], ['Published', date(source.publicationDate)], ['Accessed', date(source.accessed)],
+      ] as [string, string | undefined][]).filter(([, value]) => value).map(([label, value]) => <div key={label} className="border-t border-foreground/15 py-4"><dt className="eyebrow text-muted-foreground">{label}</dt><dd className="mt-2 text-sm capitalize">{value}</dd></div>)}</dl>
+        {source.scopeNote && <div className="mt-7 border-l-2 border-accent pl-5"><p className="eyebrow text-muted-foreground">Scope note</p><p className="mt-2 text-sm leading-7">{source.scopeNote}</p></div>}
+        {source.notes?.length ? <div className="mt-8"><SectionLabel>Editorial notes</SectionLabel><ul className="grid gap-3">{source.notes.map((note) => <li key={note} className="text-sm leading-6 text-muted-foreground">{note}</li>)}</ul></div> : null}
+        <a href={source.url} target="_blank" rel="noreferrer" className="mt-8 inline-flex items-center gap-2 border border-primary px-4 py-3 text-sm text-primary hover:bg-primary hover:text-primary-foreground">Visit original source <ArrowUpRight size={15} /></a>
+        <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground"><ShieldCheck size={14} />This citation record is useful for readers, but is not indexed as a standalone landing page.</p>
+      </article><aside className="space-y-8">
+        <LinkList title="Cited by reporting" links={storyLinks(snapshot, citingStories.map((story) => story.slug))} />
+        <LinkList title="Research records" links={researchLinks(snapshot, research.map((record) => record.slug))} />
+        <LinkList title="Data products" links={productLinks(snapshot, products.map((record) => record.slug))} />
+        <LinkList title="Timeline" links={timelineLinks(snapshot, timelines.map((event) => event.slug))} />
+        <LinkList title="Topics" links={topicLinks(snapshot, [...new Set([...research.flatMap((r) => r.topicSlugs), ...products.flatMap((p) => p.topicSlugs), ...timelines.flatMap((e) => e.topicSlugs ?? [])])])} />
+      </aside></section>
+    </main>
+  </> })}</>;
+}

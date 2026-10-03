@@ -2475,6 +2475,15 @@ async function startApiServer() {
   throw new Error('The smoke test API server did not become ready within 60 seconds.');
 }
 
+function expectedPrimaryType(route, article) {
+  if (route.startsWith('/person/')) return 'ProfilePage';
+  if (article) return 'NewsArticle';
+  if (route.startsWith('/research/')) return 'Report';
+  if (route.startsWith('/data/')) return 'Dataset';
+  if (route.startsWith('/topic/')) return 'CollectionPage';
+  return 'WebSite';
+}
+
 function assertSeoDocument(document, route, { article = false, stories = [], authors = [], ampPath = '' } = {}) {
   const title = htmlText(tagContent(document, 'title'));
   const description = metaContent(document, 'name', 'description');
@@ -2496,11 +2505,7 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
   const structuredData = JSON.parse(structuredDataText);
   assert.equal(structuredData['@context'], 'https://schema.org', `${route}: JSON-LD context is invalid`);
   assert.ok(Array.isArray(structuredData['@graph']), `${route}: JSON-LD graph is missing`);
-  const primaryType = route.startsWith('/person/')
-    ? 'ProfilePage'
-    : article
-      ? 'NewsArticle'
-      : 'WebSite';
+  const primaryType = expectedPrimaryType(route, article);
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === primaryType), `${route}: expected primary JSON-LD type is missing`);
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === 'BreadcrumbList'), `${route}: breadcrumb JSON-LD is missing`);
 
@@ -2573,11 +2578,7 @@ function assertInitialSeoDocument(document, route, { article = false, ampPath = 
   assert.ok(structuredDataText, `${route}: initial JSON-LD is missing`);
   const structuredData = JSON.parse(structuredDataText);
   assert.equal(structuredData['@context'], 'https://schema.org', `${route}: initial JSON-LD context is invalid`);
-  const primaryType = route.startsWith('/person/')
-    ? 'ProfilePage'
-    : article
-      ? 'NewsArticle'
-      : 'WebSite';
+  const primaryType = expectedPrimaryType(route, article);
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === primaryType), `${route}: initial primary JSON-LD type is missing`);
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === 'BreadcrumbList'), `${route}: initial breadcrumb JSON-LD is missing`);
 
@@ -2778,6 +2779,49 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.match(reportsBody, /<h1[^>]*>Reports/, 'Reports index is missing its prerendered heading');
   assert.match(reportsBody, /india-ai-compute-access-2026/, 'Reports index does not link to the maintained flagship report');
   assert.doesNotMatch(reportsBody, /name="robots" content="noindex,follow"/, 'Reports index must not ship with a noindex directive');
+  const publishedResearch = newsroomContent.researchRecords.find((record) => record.status === 'published');
+  const publishedDataProduct = newsroomContent.dataProducts.find((product) => product.status === 'published');
+  assert.ok(publishedResearch, 'newsroom snapshot is missing its published research record');
+  assert.ok(publishedDataProduct, 'newsroom snapshot is missing its published data product');
+  for (const route of [
+    '/research',
+    `/research/${publishedResearch.slug}`,
+    `/data/${publishedDataProduct.slug}`,
+  ]) {
+    assert.notEqual(
+      metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
+      false,
+      `${route}: published authority page must be indexable`,
+    );
+    assert.ok(routes.includes(route), `${route}: published authority page is missing from the sitemap`);
+    const { response, body } = await fetchText(route);
+    assert.equal(response.status, 200, `${route}: direct first response is not reachable`);
+    assert.match(body, /<h1\b/, `${route}: first response is missing its prerendered heading`);
+    assert.match(body, /id="global-ai-prerender"/, `${route}: first response is missing the hydration marker`);
+    assert.doesNotMatch(body, /name="robots" content="noindex,follow"/, `${route}: published authority page must not be noindex`);
+  }
+  const researchBody = (await fetchText(`/research/${publishedResearch.slug}`)).body;
+  assert.match(researchBody, /Research record/, 'research detail first response is missing its record context');
+  assert.match(researchBody, /Methodology/, 'research detail first response is missing methodology');
+  assert.match(researchBody, /"@type":"Report"/, 'research detail first response is missing Report structured data');
+  const dataBody = (await fetchText(`/data/${publishedDataProduct.slug}`)).body;
+  assert.match(dataBody, /Dated public-source claims/, 'data product first response is missing its evidence framing');
+  assert.match(dataBody, /Schedulable/, 'data product first response is missing the separate operational status fields');
+  assert.match(dataBody, /"@type":"Dataset"/, 'data product first response is missing Dataset structured data');
+  const citedSourceSlug = publishedResearch.sourceSlugs.find((slug) =>
+    newsroomContent.sources.some((source) => source.slug === slug),
+  );
+  assert.ok(citedSourceSlug, 'published research is missing a public source record');
+  const sourceRoute = `/source/${citedSourceSlug}`;
+  assert.equal(
+    metadataManifest.routes.find((metadata) => metadata.path === sourceRoute)?.indexable,
+    false,
+    `${sourceRoute}: citation records must be non-indexable`,
+  );
+  assert.ok(!routes.includes(sourceRoute), `${sourceRoute}: citation record must not appear in the sitemap`);
+  const { response: sourceResponse, body: sourceBody } = await fetchText(sourceRoute);
+  assert.equal(sourceResponse.status, 200, `${sourceRoute}: direct citation record route is not reachable`);
+  assert.match(sourceBody, /<meta name="robots" content="noindex,follow"/, `${sourceRoute}: first response must explicitly prevent indexing`);
   const articleRoutes = newsroomContent.stories.map((story) => `/article/${story.slug}`);
   assert.equal(
     articleRoutes.length,

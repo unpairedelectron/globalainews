@@ -485,11 +485,31 @@ components:
           type: string
         name:
           type: string
+        title:
+          type: string
         publisher:
           type: string
         kind:
           type: string
           enum: [primary, independent, dataset, filing, interview]
+        sourceType:
+          type: string
+          enum:
+            - government-record
+            - government-portal
+            - parliamentary-record
+            - news-report
+            - industry-report
+            - research-report
+            - academic-paper
+            - dataset
+            - filing
+            - interview
+            - technical-document
+            - other
+        classification:
+          type: string
+          enum: [primary, secondary]
         url:
           type: string
           format: uri
@@ -507,6 +527,12 @@ components:
           enum: [full-page, portal-capture, snippet-only]
         scopeNote:
           type: string
+        relevance:
+          type: string
+        notes:
+          type: array
+          items:
+            type: string
       required: [slug, name, publisher, kind, url, accessed]
     PublicNewsroomEvidenceSummary:
       type: object
@@ -594,6 +620,26 @@ components:
             type: string
         story:
           type: string
+        sourceSlugs:
+          type: array
+          items:
+            type: string
+        topicSlugs:
+          type: array
+          items:
+            type: string
+        researchSlugs:
+          type: array
+          items:
+            type: string
+        reportSlugs:
+          type: array
+          items:
+            type: string
+        dataProductSlugs:
+          type: array
+          items:
+            type: string
       required: [slug, date, title, description, entities]
     PublicNewsroomEntity:
       type: object
@@ -605,7 +651,7 @@ components:
           type: string
         kind:
           type: string
-          enum: [company, lab, model, person, technology, policy]
+          enum: [company, lab, model, person, technology, institution, policy, dataset, infrastructure]
         strapline:
           type: string
         overview:
@@ -695,7 +741,7 @@ components:
           enum: [reported, analysis, opinion, synthesis]
         contentType:
           type: string
-          enum: [Report]
+          enum: [Brief, Analysis, Explainer, Research, Report, Comparison, Essay]
         entities:
           type: array
           items:
@@ -846,6 +892,338 @@ components:
           items:
             $ref: "#/components/schemas/PublicNewsroomBodySection"
       required: [slug, title, dek, author, date, readTime, themes, body]
+    PublicNewsroomUpdateHistoryEntry:
+      type: object
+      additionalProperties: false
+      properties:
+        date:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        summary:
+          type: string
+      required: [date, summary]
+    PublicNewsroomResearchRecord:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        date:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        updatedAt:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        status:
+          type: string
+          enum: [published, in-progress, superseded]
+        provenance:
+          type: string
+          enum: [external-reporting, original-analysis, original-research]
+        researchQuestion:
+          type: string
+        authorSlug:
+          type: string
+        storySlug:
+          type: string
+        topicSlugs:
+          type: array
+          items:
+            type: string
+        entitySlugs:
+          type: array
+          items:
+            type: string
+        timelineSlugs:
+          type: array
+          items:
+            type: string
+        sourceSlugs:
+          type: array
+          items:
+            type: string
+        dataProductSlugs:
+          type: array
+          items:
+            type: string
+        relatedStorySlugs:
+          type: array
+          items:
+            type: string
+        methodology:
+          type: string
+        datasetDescription:
+          type: string
+        findings:
+          type: array
+          items:
+            type: string
+        limitations:
+          type: array
+          items:
+            type: string
+        updateHistory:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicNewsroomUpdateHistoryEntry"
+      required:
+        - slug
+        - title
+        - date
+        - updatedAt
+        - status
+        - provenance
+        - researchQuestion
+        - authorSlug
+        - storySlug
+        - topicSlugs
+        - entitySlugs
+        - timelineSlugs
+        - sourceSlugs
+        - dataProductSlugs
+        - relatedStorySlugs
+        - methodology
+        - datasetDescription
+        - findings
+        - limitations
+        - updateHistory
+    PublicNewsroomComputeObservation:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+        reportedOn:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        asOf:
+          type: ["string", "null"]
+        quantity:
+          type: integer
+        quantityLabel:
+          type: string
+        qualifier:
+          type: string
+          enum: [exact, about, more-than]
+        unit:
+          type: string
+          enum: [GPUs]
+        status:
+          type: string
+          enum:
+            - mission-target
+            - initial-capacity-reported
+            - additional-capacity-announced
+            - empanelled-plus-additional-reported
+            - onboarded
+            - shared-capacity-reported
+            - access-reported
+        sourceSlug:
+          type: string
+        sourceKind:
+          type: string
+          enum: [primary, independent]
+        geography:
+          type: string
+        organization:
+          type: string
+        facility:
+          type: string
+        location:
+          type: string
+        acceleratorType:
+          type: string
+        providerCount:
+          type: integer
+        installed:
+          type: string
+          enum: [established, reported, not-established]
+        deployed:
+          type: string
+          enum: [established, reported, not-established]
+        accessible:
+          type: string
+          enum: [established, reported, not-established]
+        schedulable:
+          type: string
+          enum: [established, reported, not-established]
+        limitation:
+          type: string
+      required:
+        - id
+        - reportedOn
+        - asOf
+        - quantity
+        - quantityLabel
+        - qualifier
+        - unit
+        - status
+        - sourceSlug
+        - sourceKind
+        - geography
+        - acceleratorType
+        - installed
+        - deployed
+        - accessible
+        - schedulable
+        - limitation
+    PublicNewsroomDataProduct:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        updatedAt:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        status:
+          type: string
+          enum: [published, in-progress]
+        evidenceType:
+          type: string
+          enum: [dated-public-source-claims]
+        unit:
+          type: string
+        topicSlugs:
+          type: array
+          items:
+            type: string
+        entitySlugs:
+          type: array
+          items:
+            type: string
+        storySlugs:
+          type: array
+          items:
+            type: string
+        researchSlugs:
+          type: array
+          items:
+            type: string
+        timelineSlugs:
+          type: array
+          items:
+            type: string
+        sourceSlugs:
+          type: array
+          items:
+            type: string
+        methodology:
+          type: string
+        limitations:
+          type: array
+          items:
+            type: string
+        updateHistory:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicNewsroomUpdateHistoryEntry"
+        observations:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicNewsroomComputeObservation"
+      required:
+        - slug
+        - title
+        - description
+        - updatedAt
+        - status
+        - evidenceType
+        - unit
+        - topicSlugs
+        - entitySlugs
+        - storySlugs
+        - researchSlugs
+        - timelineSlugs
+        - sourceSlugs
+        - methodology
+        - limitations
+        - updateHistory
+        - observations
+    PublicNewsroomTopicRecord:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        label:
+          type: string
+        route:
+          type: string
+        description:
+          type: string
+        importantDevelopments:
+          type: array
+          items:
+            type: string
+        storySlugs:
+          type: array
+          items:
+            type: string
+        entitySlugs:
+          type: array
+          items:
+            type: string
+        sourceSlugs:
+          type: array
+          items:
+            type: string
+        timelineSlugs:
+          type: array
+          items:
+            type: string
+        researchSlugs:
+          type: array
+          items:
+            type: string
+        reportSlugs:
+          type: array
+          items:
+            type: string
+        dataProductSlugs:
+          type: array
+          items:
+            type: string
+        indexable:
+          type: boolean
+      required:
+        - slug
+        - label
+        - route
+        - description
+        - importantDevelopments
+        - storySlugs
+        - entitySlugs
+        - sourceSlugs
+        - timelineSlugs
+        - researchSlugs
+        - reportSlugs
+        - dataProductSlugs
+        - indexable
+    PublicNewsroomAuthorityEdge:
+      type: object
+      additionalProperties: false
+      properties:
+        fromType:
+          type: string
+          enum: [article, report, source, entity, topic, research, data-product, timeline]
+        fromSlug:
+          type: string
+        toType:
+          type: string
+          enum: [article, report, source, entity, topic, research, data-product, timeline]
+        toSlug:
+          type: string
+        relationship:
+          type: string
+          enum: [cites, covers, about, chronicles, related]
+      required: [fromType, fromSlug, toType, toSlug, relationship]
     PublicNewsroomAskGlobalAnswer:
       type: object
       additionalProperties: false
@@ -927,6 +1305,22 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PublicNewsroomEssay"
+        researchRecords:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicNewsroomResearchRecord"
+        dataProducts:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicNewsroomDataProduct"
+        topics:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicNewsroomTopicRecord"
+        authorityEdges:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicNewsroomAuthorityEdge"
         askGlobalAnswers:
           type: array
           items:
@@ -945,6 +1339,10 @@ components:
         - industryMap
         - indiaIndex
         - essays
+        - researchRecords
+        - dataProducts
+        - topics
+        - authorityEdges
         - askGlobalAnswers
     EditorialAutomationStatus:
       type: object

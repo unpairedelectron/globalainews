@@ -32,6 +32,7 @@ import {
 import {
   askGlobalAnswers,
   authors,
+  canonicalStorySlug,
   entities,
   essays,
   evidenceSummaries,
@@ -51,10 +52,17 @@ import {
   stories,
   timelineEvents,
   type EditorialCadence,
+  type Source,
   type ScheduledStory,
   type Story,
   type StoryCategory,
 } from "../../../global-ai-news/src/content";
+import {
+  buildAuthorityGraph,
+  dataProductRecords,
+  researchRecords,
+  topicRecords,
+} from "../../../global-ai-news/src/authority/registry";
 import {
   getCanonicalUrl,
   getSeoMetadataManifest,
@@ -106,7 +114,7 @@ function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
     ...(story.contentType ? { contentType: story.contentType } : {}),
     entities: story.entities,
     timeline: story.timeline,
-    relatedStories: story.relatedStories,
+    relatedStories: story.relatedStories.map(canonicalStorySlug),
     imageTreatment: story.imageTreatment,
     topic: story.topic,
     sources: story.sources,
@@ -517,18 +525,45 @@ router.get("/newsroom/social/articles/:slug.svg", async (req, res): Promise<void
 router.get("/newsroom/content", async (_req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
-    const citedSourceSlugs = new Set(
-      publishedStories.flatMap((story) => story.sources),
+    const publishedStorySlugs = new Set(publishedStories.map((story) => story.slug));
+    const publicResearchRecords = researchRecords.filter(
+      (record) => record.status === "published" && publishedStorySlugs.has(record.storySlug),
     );
+    const publicDataProducts = dataProductRecords.filter(
+      (record) => record.status === "published" && record.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
+    );
+    const publicTopics = topicRecords.filter(
+      (record) => record.indexable && record.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
+    );
+    const citedSourceSlugs = new Set([
+      ...publishedStories.flatMap((story) => story.sources),
+      ...publicResearchRecords.flatMap((record) => record.sourceSlugs),
+      ...publicDataProducts.flatMap((record) => record.sourceSlugs),
+      ...publicTopics.flatMap((record) => record.sourceSlugs),
+    ]);
     const dynamicSources = (await getDynamicSourceRecords()).filter((source) =>
       citedSourceSlugs.has(source.slug),
     );
-    const publicSources = [
+    const sourceRecords: Source[] = [
       ...maintainedSources.filter((source) => citedSourceSlugs.has(source.slug)),
       ...dynamicSources.filter(
         (source) => !maintainedSources.some((existing) => existing.slug === source.slug),
       ),
     ];
+    const publicSources = sourceRecords.map((source) => ({
+      ...source,
+      title: source.title ?? source.name,
+      ...(source.classification
+        ? { classification: source.classification }
+        : source.kind === "primary"
+          ? { classification: "primary" as const }
+          : source.kind === "independent"
+            ? { classification: "secondary" as const }
+            : {}),
+      ...((source.relevance ?? source.scopeNote)
+        ? { relevance: source.relevance ?? source.scopeNote }
+        : {}),
+    }));
     const resolvedSourceSlugs = new Set(publicSources.map((source) => source.slug));
     const unresolvedSourceSlugs = [...citedSourceSlugs].filter(
       (slug) => !resolvedSourceSlugs.has(slug),
@@ -552,9 +587,19 @@ router.get("/newsroom/content", async (_req, res): Promise<void> => {
       authors,
       sources: publicSources,
       evidenceSummaries,
-      entities,
-      timelineEvents,
+      entities: entities.map((entity) => ({
+        ...entity,
+        recentStories: entity.recentStories.map(canonicalStorySlug),
+      })),
+      timelineEvents: timelineEvents.map((event) => ({
+        ...event,
+        ...(event.story ? { story: canonicalStorySlug(event.story) } : {}),
+      })),
       stories: publishedStories.map(toPublicStory),
+      researchRecords: publicResearchRecords,
+      dataProducts: publicDataProducts,
+      topics: publicTopics,
+      authorityEdges: buildAuthorityGraph(publishedStories),
       signals,
       industryMap,
       indiaIndex,
@@ -573,11 +618,18 @@ router.get("/newsroom/content", async (_req, res): Promise<void> => {
 router.get("/newsroom/metadata", async (req, res): Promise<void> => {
   try {
     const publishedStories = await getPublishedStoriesFromDatabase();
+    const dynamicSources = await getDynamicSourceRecords();
+    const sourceRecords: Source[] = [
+      ...maintainedSources,
+      ...dynamicSources.filter(
+        (source) => !maintainedSources.some((existing) => existing.slug === source.slug),
+      ),
+    ];
     res.setHeader("Cache-Control", "no-store");
     res.setHeader("X-Robots-Tag", "noindex");
     res.json(
       GetNewsroomMetadataResponse.parse(
-        getSeoMetadataManifest(publishedStories),
+        getSeoMetadataManifest(publishedStories, new Date().toISOString(), sourceRecords),
       ),
     );
   } catch (error) {

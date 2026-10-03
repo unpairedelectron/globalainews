@@ -19,6 +19,12 @@ import {
   sources as maintainedSources,
   timelineEvents,
 } from '../artifacts/global-ai-news/src/content.ts';
+import {
+  buildAuthorityGraph,
+  dataProductRecords,
+  researchRecords,
+  topicRecords,
+} from '../artifacts/global-ai-news/src/authority/registry.ts';
 import { getSeoMetadataManifest } from '../artifacts/global-ai-news/src/seo-metadata.ts';
 import { getDynamicSourceRecords } from '../artifacts/api-server/src/editorial/automation.ts';
 
@@ -65,6 +71,45 @@ async function getNewsroomContentForBuild() {
     getPublishedStoriesForBuild(),
     getDynamicSourceRecords(),
   ]);
+  const publishedStorySlugs = new Set(stories.map((story) => story.slug));
+  const publicResearchRecords = researchRecords.filter(
+    (record) => record.status === 'published' && publishedStorySlugs.has(record.storySlug),
+  );
+  const publicDataProducts = dataProductRecords.filter(
+    (record) =>
+      record.status === 'published' &&
+      record.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
+  );
+  const publicTopics = topicRecords.filter(
+    (record) => record.indexable && record.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
+  );
+  const citedSourceSlugs = new Set([
+    ...stories.flatMap((story) => story.sources),
+    ...publicResearchRecords.flatMap((record) => record.sourceSlugs),
+    ...publicDataProducts.flatMap((record) => record.sourceSlugs),
+    ...publicTopics.flatMap((record) => record.sourceSlugs),
+  ]);
+  const sourceRecords = [
+    ...maintainedSources.filter((source) => citedSourceSlugs.has(source.slug)),
+    ...dynamicSources.filter(
+      (source) =>
+        citedSourceSlugs.has(source.slug) &&
+        !maintainedSources.some((existing) => existing.slug === source.slug),
+    ),
+  ].map((source) => ({
+    ...source,
+    title: source.title ?? source.name,
+    ...(source.classification
+      ? { classification: source.classification }
+      : source.kind === 'primary'
+        ? { classification: 'primary' }
+        : source.kind === 'independent'
+          ? { classification: 'secondary' }
+          : {}),
+    ...((source.relevance ?? source.scopeNote)
+      ? { relevance: source.relevance ?? source.scopeNote }
+      : {}),
+  }));
   const latestPublishedAt = stories.reduce(
     (latest, story) => (story.date > latest ? story.date : latest),
     '',
@@ -78,16 +123,15 @@ async function getNewsroomContentForBuild() {
     source: 'maintained-editorial-source',
     stale,
     authors,
-    sources: [
-      ...maintainedSources,
-      ...dynamicSources.filter(
-        (source) => !maintainedSources.some((existing) => existing.slug === source.slug),
-      ),
-    ],
+    sources: sourceRecords,
     evidenceSummaries,
     entities,
     timelineEvents,
     stories,
+    researchRecords: publicResearchRecords,
+    dataProducts: publicDataProducts,
+    topics: publicTopics,
+    authorityEdges: buildAuthorityGraph(stories),
     signals,
     industryMap,
     indiaIndex,
@@ -116,7 +160,7 @@ const server = createServer(async (request, response) => {
       return;
     }
     response.end(JSON.stringify({
-      ...getSeoMetadataManifest(content.stories),
+      ...getSeoMetadataManifest(content.stories, content.generatedAt, content.sources),
       stories: content.stories,
     }));
   } catch (error) {

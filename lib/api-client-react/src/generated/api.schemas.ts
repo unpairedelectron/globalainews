@@ -55,6 +55,32 @@ export const PublicNewsroomSourceKind = {
   interview: 'interview',
 } as const;
 
+export type PublicNewsroomSourceSourceType = typeof PublicNewsroomSourceSourceType[keyof typeof PublicNewsroomSourceSourceType];
+
+
+export const PublicNewsroomSourceSourceType = {
+  'government-record': 'government-record',
+  'government-portal': 'government-portal',
+  'parliamentary-record': 'parliamentary-record',
+  'news-report': 'news-report',
+  'industry-report': 'industry-report',
+  'research-report': 'research-report',
+  'academic-paper': 'academic-paper',
+  dataset: 'dataset',
+  filing: 'filing',
+  interview: 'interview',
+  'technical-document': 'technical-document',
+  other: 'other',
+} as const;
+
+export type PublicNewsroomSourceClassification = typeof PublicNewsroomSourceClassification[keyof typeof PublicNewsroomSourceClassification];
+
+
+export const PublicNewsroomSourceClassification = {
+  primary: 'primary',
+  secondary: 'secondary',
+} as const;
+
 export type PublicNewsroomSourceTier = typeof PublicNewsroomSourceTier[keyof typeof PublicNewsroomSourceTier];
 
 
@@ -76,8 +102,11 @@ export const PublicNewsroomSourceEvidenceType = {
 export interface PublicNewsroomSource {
   slug: string;
   name: string;
+  title?: string;
   publisher: string;
   kind: PublicNewsroomSourceKind;
+  sourceType?: PublicNewsroomSourceSourceType;
+  classification?: PublicNewsroomSourceClassification;
   url: string;
   /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
   accessed: string;
@@ -86,6 +115,8 @@ export interface PublicNewsroomSource {
   tier?: PublicNewsroomSourceTier;
   evidenceType?: PublicNewsroomSourceEvidenceType;
   scopeNote?: string;
+  relevance?: string;
+  notes?: string[];
 }
 
 export type PublicNewsroomEvidenceSummaryConfidence = typeof PublicNewsroomEvidenceSummaryConfidence[keyof typeof PublicNewsroomEvidenceSummaryConfidence];
@@ -146,6 +177,11 @@ export interface PublicNewsroomTimelineEvent {
   description: string;
   entities: string[];
   story?: string;
+  sourceSlugs?: string[];
+  topicSlugs?: string[];
+  researchSlugs?: string[];
+  reportSlugs?: string[];
+  dataProductSlugs?: string[];
 }
 
 export type PublicNewsroomEntityKind = typeof PublicNewsroomEntityKind[keyof typeof PublicNewsroomEntityKind];
@@ -157,7 +193,10 @@ export const PublicNewsroomEntityKind = {
   model: 'model',
   person: 'person',
   technology: 'technology',
+  institution: 'institution',
   policy: 'policy',
+  dataset: 'dataset',
+  infrastructure: 'infrastructure',
 } as const;
 
 export type PublicNewsroomEntityKeyMetricsItem = {
@@ -209,7 +248,13 @@ export type PublicNewsroomStoryContentType = typeof PublicNewsroomStoryContentTy
 
 
 export const PublicNewsroomStoryContentType = {
+  Brief: 'Brief',
+  Analysis: 'Analysis',
+  Explainer: 'Explainer',
+  Research: 'Research',
   Report: 'Report',
+  Comparison: 'Comparison',
+  Essay: 'Essay',
 } as const;
 
 export interface PublicNewsroomStory {
@@ -316,6 +361,253 @@ export interface PublicNewsroomEssay {
   body: PublicNewsroomBodySection[];
 }
 
+export interface PublicNewsroomUpdateHistoryEntry {
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  date: string;
+  summary: string;
+}
+
+export type PublicNewsroomResearchRecordStatus = typeof PublicNewsroomResearchRecordStatus[keyof typeof PublicNewsroomResearchRecordStatus];
+
+
+export const PublicNewsroomResearchRecordStatus = {
+  published: 'published',
+  'in-progress': 'in-progress',
+  superseded: 'superseded',
+} as const;
+
+export type PublicNewsroomResearchRecordProvenance = typeof PublicNewsroomResearchRecordProvenance[keyof typeof PublicNewsroomResearchRecordProvenance];
+
+
+export const PublicNewsroomResearchRecordProvenance = {
+  'external-reporting': 'external-reporting',
+  'original-analysis': 'original-analysis',
+  'original-research': 'original-research',
+} as const;
+
+export interface PublicNewsroomResearchRecord {
+  slug: string;
+  title: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  date: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  updatedAt: string;
+  status: PublicNewsroomResearchRecordStatus;
+  provenance: PublicNewsroomResearchRecordProvenance;
+  researchQuestion: string;
+  authorSlug: string;
+  storySlug: string;
+  topicSlugs: string[];
+  entitySlugs: string[];
+  timelineSlugs: string[];
+  sourceSlugs: string[];
+  dataProductSlugs: string[];
+  relatedStorySlugs: string[];
+  methodology: string;
+  datasetDescription: string;
+  findings: string[];
+  limitations: string[];
+  updateHistory: PublicNewsroomUpdateHistoryEntry[];
+}
+
+export type PublicNewsroomComputeObservationQualifier = typeof PublicNewsroomComputeObservationQualifier[keyof typeof PublicNewsroomComputeObservationQualifier];
+
+
+export const PublicNewsroomComputeObservationQualifier = {
+  exact: 'exact',
+  about: 'about',
+  'more-than': 'more-than',
+} as const;
+
+export type PublicNewsroomComputeObservationUnit = typeof PublicNewsroomComputeObservationUnit[keyof typeof PublicNewsroomComputeObservationUnit];
+
+
+export const PublicNewsroomComputeObservationUnit = {
+  GPUs: 'GPUs',
+} as const;
+
+export type PublicNewsroomComputeObservationStatus = typeof PublicNewsroomComputeObservationStatus[keyof typeof PublicNewsroomComputeObservationStatus];
+
+
+export const PublicNewsroomComputeObservationStatus = {
+  'mission-target': 'mission-target',
+  'initial-capacity-reported': 'initial-capacity-reported',
+  'additional-capacity-announced': 'additional-capacity-announced',
+  'empanelled-plus-additional-reported': 'empanelled-plus-additional-reported',
+  onboarded: 'onboarded',
+  'shared-capacity-reported': 'shared-capacity-reported',
+  'access-reported': 'access-reported',
+} as const;
+
+export type PublicNewsroomComputeObservationSourceKind = typeof PublicNewsroomComputeObservationSourceKind[keyof typeof PublicNewsroomComputeObservationSourceKind];
+
+
+export const PublicNewsroomComputeObservationSourceKind = {
+  primary: 'primary',
+  independent: 'independent',
+} as const;
+
+export type PublicNewsroomComputeObservationInstalled = typeof PublicNewsroomComputeObservationInstalled[keyof typeof PublicNewsroomComputeObservationInstalled];
+
+
+export const PublicNewsroomComputeObservationInstalled = {
+  established: 'established',
+  reported: 'reported',
+  'not-established': 'not-established',
+} as const;
+
+export type PublicNewsroomComputeObservationDeployed = typeof PublicNewsroomComputeObservationDeployed[keyof typeof PublicNewsroomComputeObservationDeployed];
+
+
+export const PublicNewsroomComputeObservationDeployed = {
+  established: 'established',
+  reported: 'reported',
+  'not-established': 'not-established',
+} as const;
+
+export type PublicNewsroomComputeObservationAccessible = typeof PublicNewsroomComputeObservationAccessible[keyof typeof PublicNewsroomComputeObservationAccessible];
+
+
+export const PublicNewsroomComputeObservationAccessible = {
+  established: 'established',
+  reported: 'reported',
+  'not-established': 'not-established',
+} as const;
+
+export type PublicNewsroomComputeObservationSchedulable = typeof PublicNewsroomComputeObservationSchedulable[keyof typeof PublicNewsroomComputeObservationSchedulable];
+
+
+export const PublicNewsroomComputeObservationSchedulable = {
+  established: 'established',
+  reported: 'reported',
+  'not-established': 'not-established',
+} as const;
+
+export interface PublicNewsroomComputeObservation {
+  id: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  reportedOn: string;
+  /** @nullable */
+  asOf: string | null;
+  quantity: number;
+  quantityLabel: string;
+  qualifier: PublicNewsroomComputeObservationQualifier;
+  unit: PublicNewsroomComputeObservationUnit;
+  status: PublicNewsroomComputeObservationStatus;
+  sourceSlug: string;
+  sourceKind: PublicNewsroomComputeObservationSourceKind;
+  geography: string;
+  organization?: string;
+  facility?: string;
+  location?: string;
+  acceleratorType: string;
+  providerCount?: number;
+  installed: PublicNewsroomComputeObservationInstalled;
+  deployed: PublicNewsroomComputeObservationDeployed;
+  accessible: PublicNewsroomComputeObservationAccessible;
+  schedulable: PublicNewsroomComputeObservationSchedulable;
+  limitation: string;
+}
+
+export type PublicNewsroomDataProductStatus = typeof PublicNewsroomDataProductStatus[keyof typeof PublicNewsroomDataProductStatus];
+
+
+export const PublicNewsroomDataProductStatus = {
+  published: 'published',
+  'in-progress': 'in-progress',
+} as const;
+
+export type PublicNewsroomDataProductEvidenceType = typeof PublicNewsroomDataProductEvidenceType[keyof typeof PublicNewsroomDataProductEvidenceType];
+
+
+export const PublicNewsroomDataProductEvidenceType = {
+  'dated-public-source-claims': 'dated-public-source-claims',
+} as const;
+
+export interface PublicNewsroomDataProduct {
+  slug: string;
+  title: string;
+  description: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  updatedAt: string;
+  status: PublicNewsroomDataProductStatus;
+  evidenceType: PublicNewsroomDataProductEvidenceType;
+  unit: string;
+  topicSlugs: string[];
+  entitySlugs: string[];
+  storySlugs: string[];
+  researchSlugs: string[];
+  timelineSlugs: string[];
+  sourceSlugs: string[];
+  methodology: string;
+  limitations: string[];
+  updateHistory: PublicNewsroomUpdateHistoryEntry[];
+  observations: PublicNewsroomComputeObservation[];
+}
+
+export interface PublicNewsroomTopicRecord {
+  slug: string;
+  label: string;
+  route: string;
+  description: string;
+  importantDevelopments: string[];
+  storySlugs: string[];
+  entitySlugs: string[];
+  sourceSlugs: string[];
+  timelineSlugs: string[];
+  researchSlugs: string[];
+  reportSlugs: string[];
+  dataProductSlugs: string[];
+  indexable: boolean;
+}
+
+export type PublicNewsroomAuthorityEdgeFromType = typeof PublicNewsroomAuthorityEdgeFromType[keyof typeof PublicNewsroomAuthorityEdgeFromType];
+
+
+export const PublicNewsroomAuthorityEdgeFromType = {
+  article: 'article',
+  report: 'report',
+  source: 'source',
+  entity: 'entity',
+  topic: 'topic',
+  research: 'research',
+  'data-product': 'data-product',
+  timeline: 'timeline',
+} as const;
+
+export type PublicNewsroomAuthorityEdgeToType = typeof PublicNewsroomAuthorityEdgeToType[keyof typeof PublicNewsroomAuthorityEdgeToType];
+
+
+export const PublicNewsroomAuthorityEdgeToType = {
+  article: 'article',
+  report: 'report',
+  source: 'source',
+  entity: 'entity',
+  topic: 'topic',
+  research: 'research',
+  'data-product': 'data-product',
+  timeline: 'timeline',
+} as const;
+
+export type PublicNewsroomAuthorityEdgeRelationship = typeof PublicNewsroomAuthorityEdgeRelationship[keyof typeof PublicNewsroomAuthorityEdgeRelationship];
+
+
+export const PublicNewsroomAuthorityEdgeRelationship = {
+  cites: 'cites',
+  covers: 'covers',
+  about: 'about',
+  chronicles: 'chronicles',
+  related: 'related',
+} as const;
+
+export interface PublicNewsroomAuthorityEdge {
+  fromType: PublicNewsroomAuthorityEdgeFromType;
+  fromSlug: string;
+  toType: PublicNewsroomAuthorityEdgeToType;
+  toSlug: string;
+  relationship: PublicNewsroomAuthorityEdgeRelationship;
+}
+
 export interface PublicNewsroomAskGlobalAnswer {
   slug: string;
   question: string;
@@ -345,6 +637,10 @@ export interface NewsroomContent {
   industryMap: PublicNewsroomIndustryMapNode[];
   indiaIndex: PublicNewsroomIndiaIndexMetric[];
   essays: PublicNewsroomEssay[];
+  researchRecords: PublicNewsroomResearchRecord[];
+  dataProducts: PublicNewsroomDataProduct[];
+  topics: PublicNewsroomTopicRecord[];
+  authorityEdges: PublicNewsroomAuthorityEdge[];
   askGlobalAnswers: PublicNewsroomAskGlobalAnswer[];
 }
 

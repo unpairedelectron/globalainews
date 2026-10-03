@@ -13,7 +13,7 @@ import { trackEvent } from '@/analytics';
 
 export const SITE = SITE_URL;
 
-export function SeoHead({ title, description, path, article = false }: { title: string; description: string; path: string; article?: boolean }) {
+export function SeoHead({ title, description, path, article = false, indexable = true }: { title: string; description: string; path: string; article?: boolean; indexable?: boolean }) {
   const [currentLocation] = useLocation();
   const snapshot = useNewsroomSnapshot();
   const routeMetadata = path.startsWith('/amp/')
@@ -35,7 +35,7 @@ export function SeoHead({ title, description, path, article = false }: { title: 
   const currentQuery = new URLSearchParams(currentLocation.split('?')[1] ?? '');
   const routePath = path.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
   const isSearchResults = ['/brief', '/search'].includes(routePath) && currentQuery.has('q');
-  const resolvedIndexable = routeMetadata?.indexable !== false && !isSearchResults;
+  const resolvedIndexable = indexable && routeMetadata?.indexable !== false && !isSearchResults;
 
   useEffect(() => {
     document.title = resolvedTitle;
@@ -159,7 +159,7 @@ export function SeoHead({ title, description, path, article = false }: { title: 
       article: resolvedArticle,
       imagePath: structuredImagePath,
       imageAlt: routeMetadata?.imageAlt,
-    }, snapshot.stories, snapshot.authors);
+    }, snapshot.stories, snapshot.authors, snapshot);
 
     const publicDateModified = resolvedStory
       ? getPublicDateModified(resolvedStory)

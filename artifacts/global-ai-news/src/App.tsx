@@ -25,6 +25,7 @@ import {
   TopicPage,
 } from '@/pages/public';
 import { ReportsIndexPage } from '@/pages/reports-index';
+import { DataProductPage, ResearchIndexPage, ResearchRecordPage, SourceRecordPage } from '@/pages/authority-pages';
 
 const queryClient = new QueryClient();
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -58,7 +59,10 @@ function AppRoutes() {
     <Route path="/brief" component={BriefPage} />
     <Route path="/search" component={SearchPage} />
     <Route path="/signals" component={SignalsPage} />
-    <Route path="/research"><ResearchPage /></Route>
+    <Route path="/research"><ResearchIndexPage /></Route>
+    <Route path="/research/:slug" component={ResearchRecordPage} />
+    <Route path="/data/:slug" component={DataProductPage} />
+    <Route path="/source/:slug" component={SourceRecordPage} />
     <Route path="/essays"><ResearchPage essay /></Route>
     <Route path="/industry" component={IndustryPage} />
     <Route path="/models"><FocusIndexPage kind="models" /></Route>

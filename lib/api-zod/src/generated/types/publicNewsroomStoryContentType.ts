@@ -10,5 +10,11 @@ export type PublicNewsroomStoryContentType = typeof PublicNewsroomStoryContentTy
 
 
 export const PublicNewsroomStoryContentType = {
+  Brief: 'Brief',
+  Analysis: 'Analysis',
+  Explainer: 'Explainer',
+  Research: 'Research',
   Report: 'Report',
+  Comparison: 'Comparison',
+  Essay: 'Essay',
 } as const;

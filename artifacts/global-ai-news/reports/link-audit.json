@@ -1304,6 +1304,166 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/data/india-ai-compute-snapshots",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/data/india-ai-compute-snapshots/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
+    "indexability": "noindex",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "indexability": "noindex",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-common-compute-34000-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-common-compute-34000-2025/",
+    "indexability": "noindex",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "indexability": "noindex",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
+    "indexability": "noindex",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
+    "indexability": "noindex",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/research/india-ai-compute-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/india-ai-compute-2026/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/topic/india/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/topic/india/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/policy/indiaai-mission/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/policy/indiaai-mission/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-target-2024/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-target-2024/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-initial-capacity-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-initial-capacity-2025/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-34333-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-34333-2025/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-shared-capacity-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-shared-capacity-2026/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-access-reported-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-access-reported-2026/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/essays",
     "status": "200",
     "canonical": "https://www.globalainews.in/essays/",
@@ -2704,11 +2864,51 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/research/india-ai-compute-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/india-ai-compute-2026/",
+    "indexability": "indexable",
+    "linkSource": "/research",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/research/india-ai-compute-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/india-ai-compute-2026/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/research/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/research/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
     "indexability": "indexable",
-    "linkSource": "/research",
+    "linkSource": "/research/india-ai-compute-2026",
     "issue": ""
   },
   {
@@ -2716,95 +2916,7 @@
     "status": "200",
     "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/david-okafor/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/david-okafor/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/lena-hoff/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/lena-hoff/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/study-finds-word-cues-can-override-game-theory-choices-in-llms/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/study-finds-word-cues-can-override-game-theory-choices-in-llms/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ishaan-mehta/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ishaan-mehta/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/mira-patel/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/mira-patel/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/jonas-rhee/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/jonas-rhee/",
-    "indexability": "indexable",
-    "linkSource": "/research",
+    "linkSource": "/research/india-ai-compute-2026",
     "issue": ""
   },
   {
@@ -2812,23 +2924,7 @@
     "status": "200",
     "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
     "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/research",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/research",
+    "linkSource": "/research/india-ai-compute-2026",
     "issue": ""
   },
   {
@@ -2836,7 +2932,223 @@
     "status": "200",
     "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
-    "linkSource": "/research",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/data/india-ai-compute-snapshots/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/data/india-ai-compute-snapshots/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/topic/india/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/topic/india/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/policy/indiaai-mission/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/policy/indiaai-mission/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-target-2024/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-target-2024/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-initial-capacity-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-initial-capacity-2025/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-34333-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-34333-2025/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-shared-capacity-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-shared-capacity-2026/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-access-reported-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-access-reported-2026/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-compute-portal/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-compute-portal/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-portal-eligibility/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-portal-eligibility/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-common-compute-34000-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-common-compute-34000-2025/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-data-centre-capacity-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-data-centre-capacity-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/cbre-india-data-centre-market-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/cbre-india-data-centre-market-2025/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/hbl-knight-frank-data-centre-pipeline-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/hbl-knight-frank-data-centre-pipeline-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/sansad-power-data-centres-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/sansad-power-data-centres-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ceew-data-centre-footprint/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ceew-data-centre-footprint/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ieefa-india-data-centre-power/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ieefa-india-data-centre-power/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-ai-models-datasets-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-ai-models-datasets-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/jll-india-data-centres-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/jll-india-data-centres-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/knight-frank-india-data-centre-market-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/knight-frank-india-data-centre-market-2025/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-data-centre-water-response-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-data-centre-water-response-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
     "issue": ""
   },
   {
@@ -3040,6 +3352,214 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/source/cbre-india-data-centre-market-2025",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/cbre-india-data-centre-market-2025/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ceew-data-centre-footprint",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ceew-data-centre-footprint/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/eu-ai-act-code",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/eu-ai-act-code/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/hbl-knight-frank-data-centre-pipeline-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/hbl-knight-frank-data-centre-pipeline-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/iea-data-centres",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/iea-data-centres/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ieefa-india-data-centre-power",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ieefa-india-data-centre-power/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-compute-portal",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-compute-portal/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-mission",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-mission/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-portal-eligibility",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-portal-eligibility/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/jll-india-data-centres-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/jll-india-data-centres-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/knight-frank-india-data-centre-market-2025",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/knight-frank-india-data-centre-market-2025/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/mistral-model-card",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/mistral-model-card/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/nature-antibiotic-study",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/nature-antibiotic-study/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/open-a7f1c833c9a1e5c0",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/open-a7f1c833c9a1e5c0/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-ai-models-datasets-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-ai-models-datasets-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-common-compute-34000-2025",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-common-compute-34000-2025/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-compute-onboarded-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-data-centre-capacity-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-data-centre-capacity-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-data-centre-water-response-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-data-centre-water-response-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-initial-compute-2025",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/sansad-power-data-centres-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/sansad-power-data-centres-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/stanford-ai-index-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/stanford-ai-index-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/uspto-ai-inventorship",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/uspto-ai-inventorship/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/technology/antibiotic-discovery",
     "status": "200",
     "canonical": "https://www.globalainews.in/technology/antibiotic-discovery/",
@@ -3208,6 +3728,246 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-34333-2025",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-34333-2025/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-34333-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-34333-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-34333-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-34333-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-access-reported-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-access-reported-2026/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-access-reported-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-access-reported-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-access-reported-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-access-reported-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-initial-capacity-2025",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-initial-capacity-2025/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-initial-capacity-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-initial-capacity-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-initial-capacity-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-initial-capacity-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-onboarded-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-onboarded-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-onboarded-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-onboarded-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-shared-capacity-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-shared-capacity-2026/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-shared-capacity-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-shared-capacity-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-shared-capacity-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-shared-capacity-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-target-2024",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-target-2024/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-target-2024",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-target-2024",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-target-2024",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-target-2024",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/timeline/indiaai-compute-tender",
     "status": "200",
     "canonical": "https://www.globalainews.in/timeline/indiaai-compute-tender/",
@@ -3328,78 +4088,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ananya-rao/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ananya-rao/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/david-okafor/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/david-okafor/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/lena-hoff/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/lena-hoff/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/study-finds-word-cues-can-override-game-theory-choices-in-llms/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/study-finds-word-cues-can-override-game-theory-choices-in-llms/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/ishaan-mehta/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/ishaan-mehta/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
@@ -3416,30 +4104,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/person/jonas-rhee/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/person/jonas-rhee/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
@@ -3448,18 +4112,74 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
+    "url": "https://www.globalainews.in/person/ishaan-mehta/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
+    "canonical": "https://www.globalainews.in/person/ishaan-mehta/",
     "indexability": "indexable",
     "linkSource": "/topic/ai",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "url": "https://www.globalainews.in/technology/antibiotic-discovery/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "canonical": "https://www.globalainews.in/technology/antibiotic-discovery/",
     "indexability": "indexable",
+    "linkSource": "/topic/ai",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/lab/google-deepmind/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/lab/google-deepmind/",
+    "indexability": "indexable",
+    "linkSource": "/topic/ai",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/model/gpt-5/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/model/gpt-5/",
+    "indexability": "indexable",
+    "linkSource": "/topic/ai",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/model/claude-4/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/model/claude-4/",
+    "indexability": "indexable",
+    "linkSource": "/topic/ai",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/company/sarvam-ai/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/company/sarvam-ai/",
+    "indexability": "indexable",
+    "linkSource": "/topic/ai",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/nature-antibiotic-study/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/nature-antibiotic-study/",
+    "indexability": "noindex",
+    "linkSource": "/topic/ai",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/stanford-ai-index-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/stanford-ai-index-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/ai",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/mistral-model-card/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/mistral-model-card/",
+    "indexability": "noindex",
     "linkSource": "/topic/ai",
     "issue": ""
   },
@@ -3488,9 +4208,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
@@ -3504,121 +4224,249 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/person/david-okafor/",
+    "url": "https://www.globalainews.in/research/india-ai-compute-2026/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/person/david-okafor/",
+    "canonical": "https://www.globalainews.in/research/india-ai-compute-2026/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "url": "https://www.globalainews.in/data/india-ai-compute-snapshots/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "canonical": "https://www.globalainews.in/data/india-ai-compute-snapshots/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
+    "url": "https://www.globalainews.in/policy/indiaai-mission/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
+    "canonical": "https://www.globalainews.in/policy/indiaai-mission/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/person/lena-hoff/",
+    "url": "https://www.globalainews.in/company/sarvam-ai/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/person/lena-hoff/",
+    "canonical": "https://www.globalainews.in/company/sarvam-ai/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/study-finds-word-cues-can-override-game-theory-choices-in-llms/",
+    "url": "https://www.globalainews.in/source/indiaai-mission/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/study-finds-word-cues-can-override-game-theory-choices-in-llms/",
+    "canonical": "https://www.globalainews.in/source/indiaai-mission/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/stanford-ai-index-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/stanford-ai-index-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-compute-portal/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-compute-portal/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-portal-eligibility/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-portal-eligibility/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-common-compute-34000-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-common-compute-34000-2025/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-data-centre-capacity-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-data-centre-capacity-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/cbre-india-data-centre-market-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/cbre-india-data-centre-market-2025/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/hbl-knight-frank-data-centre-pipeline-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/hbl-knight-frank-data-centre-pipeline-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/sansad-power-data-centres-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/sansad-power-data-centres-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ceew-data-centre-footprint/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ceew-data-centre-footprint/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ieefa-india-data-centre-power/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ieefa-india-data-centre-power/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-ai-models-datasets-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-ai-models-datasets-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/jll-india-data-centres-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/jll-india-data-centres-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/knight-frank-india-data-centre-market-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/knight-frank-india-data-centre-market-2025/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-data-centre-water-response-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-data-centre-water-response-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-target-2024/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-target-2024/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/person/ishaan-mehta/",
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-initial-capacity-2025/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/person/ishaan-mehta/",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-initial-capacity-2025/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-34333-2025/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-34333-2025/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/person/mira-patel/",
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/person/mira-patel/",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-shared-capacity-2026/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-shared-capacity-2026/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/person/jonas-rhee/",
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-access-reported-2026/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/person/jonas-rhee/",
-    "indexability": "indexable",
-    "linkSource": "/topic/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/topic/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/topic/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/topic/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-access-reported-2026/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""

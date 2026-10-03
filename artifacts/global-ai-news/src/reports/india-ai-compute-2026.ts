@@ -19,7 +19,14 @@ export const indiaAiComputeReport: Story = {
   },
   classification: 'synthesis',
   entities: ['indiaai-mission'],
-  timeline: ['indiaai-compute-tender'],
+  timeline: [
+    'indiaai-compute-target-2024',
+    'indiaai-compute-initial-capacity-2025',
+    'indiaai-compute-34333-2025',
+    'indiaai-compute-onboarded-2026',
+    'indiaai-compute-shared-capacity-2026',
+    'indiaai-compute-access-reported-2026',
+  ],
   relatedStories: ['indias-public-ai-stack', 'new-geography-of-compute'],
   imageTreatment: {
     type: 'data-graphic',

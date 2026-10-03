@@ -89,7 +89,7 @@ export function renderSeoRouteHtml(
     ? `\n    <link rel="amphtml" href="${escapeHtml(`${SITE_URL}${metadata.ampPath}`)}" />`
     : '';
   const structuredData = safeJsonLd(
-    getStructuredData(metadata, contentSnapshot.stories, contentSnapshot.authors),
+    getStructuredData(metadata, contentSnapshot.stories, contentSnapshot.authors, contentSnapshot),
   );
   const headMetadata = `    <title>${title}</title>
     <meta name="description" content="${description}" />

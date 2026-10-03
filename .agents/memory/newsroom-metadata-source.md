@@ -20,3 +20,9 @@ Production route checks must distinguish Replit Static Deployment from the Vite 
 **Why:** The preview's status code does not establish how a missing path behaves in production.
 
 **How to apply:** Confirm the artifact's production `serve` mode and rewrite rules, and test release output separately from Vite preview before making HTTP-status claims.
+
+Initial-response and app-served SEO checks should share one route-aware primary structured-data expectation. Research, data, and topic routes use their own primary schema types; social-preview images and AMP relationships remain article-specific.
+
+**Why:** The raw-HTML and hydrated-route smoke paths had separate expectations, and authority pages inheriting a linked article's preview image violated the existing article-only metadata contract.
+
+**How to apply:** Reuse the same route-type helper for both SEO checks, and keep article-only image and AMP assertions scoped to article routes.

@@ -15,5 +15,8 @@ export const PublicNewsroomEntityKind = {
   model: 'model',
   person: 'person',
   technology: 'technology',
+  institution: 'institution',
   policy: 'policy',
+  dataset: 'dataset',
+  infrastructure: 'infrastructure',
 } as const;

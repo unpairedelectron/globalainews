@@ -26,6 +26,9 @@ export interface IndiaAiComputeObservation {
   sourceSlug: string;
   sourceKind: 'primary' | 'independent';
   geography: 'India-wide programme';
+  organization?: string;
+  facility?: string;
+  location?: string;
   acceleratorType: 'not specified by source';
   providerCount?: number;
   installed: EvidenceState;

@@ -8,14 +8,18 @@
 import type { NewsroomContentEvidenceSummaries } from './newsroomContentEvidenceSummaries';
 import type { PublicNewsroomAskGlobalAnswer } from './publicNewsroomAskGlobalAnswer';
 import type { PublicNewsroomAuthor } from './publicNewsroomAuthor';
+import type { PublicNewsroomAuthorityEdge } from './publicNewsroomAuthorityEdge';
+import type { PublicNewsroomDataProduct } from './publicNewsroomDataProduct';
 import type { PublicNewsroomEntity } from './publicNewsroomEntity';
 import type { PublicNewsroomEssay } from './publicNewsroomEssay';
 import type { PublicNewsroomIndiaIndexMetric } from './publicNewsroomIndiaIndexMetric';
 import type { PublicNewsroomIndustryMapNode } from './publicNewsroomIndustryMapNode';
+import type { PublicNewsroomResearchRecord } from './publicNewsroomResearchRecord';
 import type { PublicNewsroomSignal } from './publicNewsroomSignal';
 import type { PublicNewsroomSource } from './publicNewsroomSource';
 import type { PublicNewsroomStory } from './publicNewsroomStory';
 import type { PublicNewsroomTimelineEvent } from './publicNewsroomTimelineEvent';
+import type { PublicNewsroomTopicRecord } from './publicNewsroomTopicRecord';
 
 export interface NewsroomContent {
   /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]+)?Z$ */
@@ -32,5 +36,9 @@ export interface NewsroomContent {
   industryMap: PublicNewsroomIndustryMapNode[];
   indiaIndex: PublicNewsroomIndiaIndexMetric[];
   essays: PublicNewsroomEssay[];
+  researchRecords: PublicNewsroomResearchRecord[];
+  dataProducts: PublicNewsroomDataProduct[];
+  topics: PublicNewsroomTopicRecord[];
+  authorityEdges: PublicNewsroomAuthorityEdge[];
   askGlobalAnswers: PublicNewsroomAskGlobalAnswer[];
 }
