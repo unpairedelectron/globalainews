@@ -1,4 +1,4 @@
-import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, stories, timelineEvents, type Author, type NewsroomContentSnapshot, type Story } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, timelineEvents, type Author, type NewsroomContentSnapshot, type Story } from './content';
 
 export const SITE_URL = 'https://www.globalainews.in';
 
@@ -152,7 +152,6 @@ const staticMetadata: Record<string, SeoMetadata> = {
 };
 
 let activeManifest: SeoMetadataManifest | undefined;
-const maintainedArticleSlugs = new Set(stories.map((story) => story.slug));
 
 function cleanRoute(route: string): string {
   if (!route || route === '/') return '/';
@@ -194,14 +193,13 @@ export function getArticleSeoMetadata(
   imagePath = `/social/articles/${story.slug}.png`,
   imageAlt = `${story.title} — Global AI News editorial preview`,
 ): SeoMetadata {
-  const isMaintainedStory = maintainedArticleSlugs.has(story.slug);
   return {
     title: articleTitle(story.title),
     description: getArticleDescription(story),
     path: `/article/${story.slug}`,
     lastmod: getPublicDateModified(story),
     article: true,
-    ...(isMaintainedStory ? { ampPath: `/amp/article/${story.slug}/` } : {}),
+    ampPath: `/amp/article/${story.slug}/`,
     imagePath,
     imageAlt,
   };

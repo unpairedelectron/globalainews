@@ -534,6 +534,23 @@ async function testRawArticleResponses() {
 
   const story = publicContent.stories.find((candidate) => candidate.slug === slugs.published);
   assert.ok(story, 'newly published release is missing from the public newsroom snapshot');
+  const ampLinkTag = html.match(/<link\b[^>]*\brel=["']amphtml["'][^>]*>/i)?.[0];
+  assert.ok(ampLinkTag, 'newly published article is missing its AMP link');
+  const ampHref = htmlAttribute(ampLinkTag, 'href');
+  assert.ok(ampHref, 'newly published article AMP link has no href');
+  const ampPath = new URL(ampHref, 'https://www.globalainews.in').pathname;
+  assert.equal(ampPath, `/amp/article/${story.slug}/`, 'new article AMP link must be derived from its own slug');
+  const ampResponse = await fetch(`${webOrigin}${ampPath}`);
+  const ampHtml = await ampResponse.text();
+  assert.equal(ampResponse.status, 200, 'newly published article AMP route must resolve after the build snapshot');
+  const ampCanonicalTag = ampHtml.match(/<link\b[^>]*\brel=["']canonical["'][^>]*>/i)?.[0];
+  assert.equal(
+    htmlAttribute(ampCanonicalTag, 'href'),
+    `https://www.globalainews.in/article/${story.slug}/`,
+  );
+  assert.equal(ampHtml.match(/<title>([\s\S]*?)<\/title>/i)?.[1], story.title);
+  assert.equal(ampHtml.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1], story.title);
+
   assert.match(
     html,
     new RegExp(`<a href="/person/${escapeRegExp(story.author)}/"[^>]*>`),
@@ -611,6 +628,11 @@ async function testRawArticleResponses() {
   await assertNotPublic(slugs.unpublished, 'unpublished article');
   await assertNotPublic(slugs.archived, 'archived article');
   await assertNotPublic(`missing-article-${fixtureToken}`, 'missing article');
+  const unknownAmpResponse = await fetch(`${webOrigin}/amp/article/missing-article-${fixtureToken}/`);
+  const unknownAmpHtml = await unknownAmpResponse.text();
+  assert.equal(unknownAmpResponse.status, 404, 'unknown AMP article must return HTTP 404');
+  assert.equal(unknownAmpResponse.headers.get('x-robots-tag'), 'noindex');
+  assert.doesNotMatch(unknownAmpHtml, new RegExp(`<h1[^>]*>${escapeRegExp(story.title)}</h1>`));
   await assertPublishedOnlyFeeds();
 }
 

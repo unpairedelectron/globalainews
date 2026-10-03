@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import express, { type Request, type Response } from 'express';
 
+import { renderAmpArticleDocument } from './amp-html';
 import { fetchNewsroomContentSnapshot, renderArticleHtml } from './server/article-html';
 import { getSeoMetadata } from './seo-metadata';
 import { renderSeoRouteHtml } from './seo-html';
@@ -149,6 +150,53 @@ app.get(pendingEditorialRoutes, async (request, response): Promise<void> => {
 });
 
 app.use(express.static(publicDirectory, { fallthrough: true }));
+
+app.get('/amp/article/:slug', (request, response) => {
+  const slug = request.params.slug;
+  if (!slug || slug.includes('/') || slug.includes('\\')) {
+    response.status(404);
+    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('X-Robots-Tag', 'noindex');
+    response.type('html').send(
+      '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
+    );
+    return;
+  }
+
+  void (async () => {
+    const snapshot = await fetchNewsroomContentSnapshot(process.env.NEWSROOM_API_ORIGIN);
+    const story = snapshot.stories.find((candidate) => candidate.slug === slug);
+    if (!story) {
+      response.status(404);
+      response.setHeader('Cache-Control', 'no-store');
+      response.setHeader('X-Robots-Tag', 'noindex');
+      response.type('html').send(
+        '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
+      );
+      return;
+    }
+
+    response.status(200);
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.setHeader('Cache-Control', 'no-store');
+    response.send(renderAmpArticleDocument(story, snapshot.authors));
+  })().catch((error: unknown) => {
+    process.stderr.write(
+      `AMP article rendering failed: ${error instanceof Error ? error.message : 'unknown error'}\n`,
+    );
+    if (response.headersSent) {
+      response.destroy();
+      return;
+    }
+    response.status(503);
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('X-Robots-Tag', 'noindex');
+    response.send(
+      '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>AMP article temporarily unavailable — Global AI News</title></head><body><main><h1>AMP article temporarily unavailable</h1></main></body></html>',
+    );
+  });
+});
 
 app.use((request, response) => {
   const pathname = new URL(request.originalUrl, 'http://localhost').pathname;

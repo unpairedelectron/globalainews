@@ -26,3 +26,9 @@ Smoke setup should probe the Vite root route for server readiness, not request a
 **Why:** The preview plugin performs synchronous ImageMagick work, so using a generated image as a readiness probe can time out cold starts and cascade one setup failure across the whole suite.
 
 **How to apply:** Use a bounded HTTP check against the app shell to confirm Vite is listening, then test dynamic preview generation separately with its own timeout and diagnostics.
+
+Do not rely on an active Vite watcher during a production release build that rewrites the story snapshot and generated preview assets; finish the build, then restart the web workflow before preview verification.
+
+**Why:** A concurrent hot reload can run ImageMagick while a generated PNG is being replaced, causing a transient invalid-header error and leaving the preview server unavailable even though the finished asset is valid.
+
+**How to apply:** Run the production build to completion before restarting or capturing the dev preview, then confirm the Vite root and changed route respond.

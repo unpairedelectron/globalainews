@@ -2771,12 +2771,23 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     }
   }
   const articleRoutes = newsroomContent.stories.map((story) => `/article/${story.slug}`);
+  assert.equal(
+    newsroomContent.stories.length,
+    10,
+    'AMP regression coverage must include all 10 currently public articles',
+  );
   const entries = sitemapEntries(sitemap);
   for (const articleRoute of articleRoutes) {
     const entry = entries.find((candidate) => candidate.route === articleRoute);
     const slug = articleRoute.split('/')[2];
     const story = newsroomContent.stories.find((candidate) => candidate.slug === slug);
     const metadata = metadataManifest.routes.find((candidate) => candidate.path === articleRoute);
+    assert.ok(story, `${articleRoute}: published story is missing from the newsroom snapshot`);
+    assert.equal(
+      metadata?.ampPath,
+      `/amp/article/${story.slug}/`,
+      `${articleRoute}: metadata must point to this story's own AMP route`,
+    );
     const expectedLastmod =
       story?.dateModified && story.dateModified >= story.date
         ? story.dateModified
@@ -2814,6 +2825,11 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
         const story = newsroomContent.stories.find((candidate) => candidate.slug === slug);
         const author = newsroomContent.authors.find((candidate) => candidate.slug === story?.author);
         assert.ok(story, `${route}: published story is missing from the newsroom content snapshot`);
+        assert.equal(
+          linkHref(body, 'amphtml'),
+          `${site}/amp/article/${story.slug}/`,
+          `${route}: initial HTML must link to its own AMP page`,
+        );
         assert.ok(body.includes(story.title.replaceAll('&', '&amp;')), `${route}: initial HTML is missing the article headline`);
         assert.ok(body.includes(story.body[0].paragraphs[0].slice(0, 40)), `${route}: initial HTML is missing article body copy`);
         assert.match(body, /aria-label="Breadcrumb"/, `${route}: visible breadcrumb is missing`);
@@ -2976,21 +2992,21 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.equal(metaContent(devAmpDocument, 'name', 'description'), ampStory.dek, 'development AMP description drifted from the newsroom snapshot');
   assert.equal(tagContent(devAmpDocument, 'h1'), ampStory.title, 'development AMP headline drifted from the newsroom snapshot');
 
-  const ampStories = newsroomSnapshot.stories.filter((story) =>
-    Boolean(metadataManifest.routes.find((metadata) => metadata.path === `/article/${story.slug}`)?.ampPath),
-  );
-  const ampTargets = ampStories.map((story) =>
-    metadataManifest.routes.find((metadata) => metadata.path === `/article/${story.slug}`).ampPath,
-  );
+  const ampStories = newsroomSnapshot.stories;
+  assert.equal(ampStories.length, 10, 'AMP regression coverage must include all 10 currently public articles');
+  const ampTargets = ampStories.map((story) => {
+    const metadata = metadataManifest.routes.find((candidate) => candidate.path === `/article/${story.slug}`);
+    assert.equal(metadata?.ampPath, `/amp/article/${story.slug}/`, `${story.slug}: AMP URL must derive from its slug`);
+    return `/amp/article/${story.slug}/`;
+  });
   assert.equal(new Set(ampTargets).size, ampTargets.length, 'published article AMP targets must be unique');
-  for (const story of ampStories) {
-    const storyAmpPath = metadataManifest.routes.find(
-      (metadata) => metadata.path === `/article/${story.slug}`,
-    ).ampPath;
+  for (const [index, story] of ampStories.entries()) {
+    const storyAmpPath = ampTargets[index];
     const { response, body } = await fetchText(storyAmpPath);
     assert.equal(response.status, 200, `${story.slug}: AMP target is not reachable`);
     assert.equal(linkHref(body, 'canonical'), `${site}/article/${story.slug}/`, `${story.slug}: AMP canonical is incorrect`);
     assert.equal(tagContent(body, 'title'), story.title, `${story.slug}: AMP title does not match its article`);
+    assert.equal(metaContent(body, 'name', 'description'), story.dek, `${story.slug}: AMP description does not match its article`);
     assert.equal(tagContent(body, 'h1'), story.title, `${story.slug}: AMP heading does not match its article`);
     const { response: devResponse, body: devBody } = await fetch(`${devBaseUrl}${storyAmpPath}`).then(async (response) => ({
       response,
@@ -2998,8 +3014,13 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     }));
     assert.equal(devResponse.status, 200, `${story.slug}: development AMP target is not reachable`);
     assert.equal(linkHref(devBody, 'canonical'), `${site}/article/${story.slug}/`, `${story.slug}: development AMP canonical is incorrect`);
+    assert.equal(tagContent(devBody, 'title'), story.title, `${story.slug}: development AMP title does not match its article`);
     assert.equal(tagContent(devBody, 'h1'), story.title, `${story.slug}: development AMP heading does not match its article`);
   }
+  const unknownAmpPath = '/amp/article/unknown-amp-story-for-regression/';
+  const unknownDevAmpResponse = await fetch(`${devBaseUrl}${unknownAmpPath}`);
+  assert.equal(unknownDevAmpResponse.status, 404, 'unknown AMP slug must not resolve to a published article');
+  assert.equal(unknownDevAmpResponse.headers.get('x-robots-tag'), 'noindex');
 
   console.log(`Smoke checked ${new Set(staticRoutes).size} public routes at desktop, ${mobileRoutes.length} at mobile, plus ${ampStories.length} AMP pages and RSS.`);
 });

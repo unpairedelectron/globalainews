@@ -88,6 +88,22 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/amp/article/public-compute-needs-public-metrics",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/amp/article/quiet-race-watermark-everything-ai-makes",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
@@ -101,6 +117,22 @@
     "canonical": "https://www.globalainews.in/",
     "indexability": "indexable",
     "linkSource": "/amp/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/reliability-is-the-new-ai-moat",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/reliability-is-the-new-ai-moat",
     "issue": ""
   },
   {
@@ -133,6 +165,22 @@
     "canonical": "https://www.globalainews.in/",
     "indexability": "indexable",
     "linkSource": "/amp/article/study-finds-word-cues-can-override-game-theory-choices-in-llms",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/weekly-deep-dive-cost-of-intelligence",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/weekly-deep-dive-cost-of-intelligence",
     "issue": ""
   },
   {

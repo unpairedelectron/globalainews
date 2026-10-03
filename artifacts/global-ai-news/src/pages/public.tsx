@@ -653,7 +653,7 @@ export function TopicPage({ kind }: { kind: 'ai' | 'india' }) {
 export function AmpArticlePage() {
   const { slug = '' } = useParams();
   const { stories: newsroomStories } = useNewsroomSnapshot();
-  const story = newsroomStories.find((candidate) => candidate.slug === slug) ?? findStory(slug);
+  const story = newsroomStories.find((candidate) => candidate.slug === slug);
   if (!story) {
     return <main className="mx-auto max-w-2xl px-5 py-10"><h1 className="font-serif text-4xl">AMP article not found</h1></main>;
   }
