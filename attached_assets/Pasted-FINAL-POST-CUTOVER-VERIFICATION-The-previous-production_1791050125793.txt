@@ -1,0 +1,105 @@
+FINAL POST-CUTOVER VERIFICATION
+
+The previous production deployment has been successfully unpublished.
+The current workspace is now being published.
+
+Do not make code changes during verification.
+Do not modify production editorial data.
+Do not invoke editorial automation.
+
+Verify BOTH:
+
+https://www.globalainews.in
+https://global-ai-media.replit.app
+
+FIRST:
+Confirm the new deployment is active and identify the deployed Web/API
+revision or build fingerprint if available.
+
+Then verify:
+
+1. API SECURITY
+- /api/newsroom/releases = 401
+- /api/newsroom/releases/history = 401
+- /api/newsroom/automation/status = 401
+- /api/newsroom/automation/runs = 401
+- protected mutations remain 401
+- no internal editorial fields in public content
+
+2. ARTICLES
+All 10 article routes = 200.
+Verify first-response:
+- title
+- description
+- canonical
+- Open Graph
+- JSON-LD
+- author
+- publication date
+- body
+
+3. AMP
+ALL 10 articles must have:
+- rel="amphtml"
+- correct ampPath
+- AMP = 200
+- matching title
+- matching H1
+- matching canonical
+
+Explicitly verify:
+weekly-deep-dive-cost-of-intelligence
+public-compute-needs-public-metrics
+reliability-is-the-new-ai-moat
+
+Unknown AMP = 404 + noindex.
+
+4. RSS
+/feed.xml = 200
+/api/newsroom/feed.xml = 200
+Both contain the same 10 eligible stories.
+
+5. SITEMAP
+/sitemap.xml = 200
+/api/newsroom/sitemap.xml = 200
+Both represent the same 47 URLs.
+
+6. TRUST
+/about-us = 200 + noindex
+/code-of-ethics = 200 + noindex
+/corrections = 200 + noindex
+/contact-us = 200 + noindex
+/contact → /contact-us with 308
+/privacy = 404
+/terms = 404
+
+7. UNKNOWN ARTICLE
+Guaranteed nonexistent article:
+404 + noindex
+
+8. ROBOTS
+Canonical domain remains crawlable.
+Replit alias does not compete with canonical indexing.
+
+9. AUTOMATION
+Do NOT execute automation.
+Confirm the new API automation remains disabled.
+
+10. PUBLICATION FIXTURE
+Do not write production editorial/test data.
+If a safe isolated deployed fixture exists, use it.
+Otherwise report:
+SAFE DEPLOYED FIXTURE = NOT VERIFIED
+
+FINAL RESULT:
+
+If everything above passes:
+
+FOUNDATION READY — AUTHORITY ENGINE MAY BEGIN
+
+If something fails:
+
+FOUNDATION NOT READY — <exact production failure>
+
+Do not start another workspace implementation cycle unless an actual
+regression is found.
