@@ -1,0 +1,1429 @@
+GLOBAL AI NEWS — AUTONOMOUS END-TO-END DELIVERY
+================================================
+
+MISSION
+
+Take Global AI News from the current workspace state to a completed,
+production-ready, authority-focused AI publication.
+
+Do not work in short isolated cycles.
+Do not stop after discovering the first blocker.
+Do not repeatedly ask me whether to continue routine work.
+
+Work continuously through ALL workstreams below.
+
+Run independent workstreams in parallel where safe.
+Serialize only operations that can conflict, especially deployment,
+database migrations, production configuration, and production data.
+
+Continue iterating until:
+
+1. production foundation is verified,
+2. deployment/runtime provenance is correct,
+3. security is verified,
+4. publication surfaces are consistent,
+5. SEO/indexability infrastructure is correct,
+6. AMP coverage is complete,
+7. safe publication testing exists,
+8. Authority Engine architecture is implemented,
+9. AI Compute in India flagship report is implemented,
+10. source/research/data/entity/topic systems are implemented,
+11. internal linking architecture is implemented,
+12. performance budgets are met,
+13. regression tests protect the entire system,
+14. production deployment is verified,
+15. final Definition of Done is satisfied.
+
+Do not declare completion merely because local tests pass.
+
+================================================
+OPERATING PRINCIPLES
+================================================
+
+1. CURRENT WORKSPACE IS SOURCE OF TRUTH
+---------------------------------------
+Use the current workspace revision as the intended production source.
+
+Never assume that a successful deployment means the correct revision
+is serving production.
+
+Always verify deployed behavior.
+
+2. FIX ROOT CAUSES
+------------------
+Do not repeatedly patch symptoms.
+
+When production behavior disagrees with workspace behavior:
+
+- inspect deployment topology
+- inspect build source
+- inspect artifact provenance
+- inspect routing ownership
+- inspect environment configuration
+- inspect caches/static artifacts
+- identify the actual serving process
+- identify the exact stale layer
+
+Then fix the root cause.
+
+3. NO PRODUCTION DATA POLLUTION
+-------------------------------
+Do not create permanent test stories, releases, audit rows, or editorial
+records in production.
+
+Never run production automation merely to test authorization.
+
+Use:
+
+- isolated fixture
+- staging database
+- test schema
+- in-memory adapter
+- dry-run/mocked execution
+
+wherever possible.
+
+4. NO FABRICATION
+-----------------
+Never invent:
+
+- sources
+- citations
+- URLs
+- data
+- research findings
+- legal text
+- editorial claims
+- publication dates
+- author information
+- methodology
+- statistics
+
+When information is unavailable, represent it as unavailable.
+
+5. PRESERVE EXISTING GOOD BEHAVIOR
+----------------------------------
+Do not unnecessarily rewrite components that have already passed production
+verification.
+
+Every change must preserve previously passing checks.
+
+6. NO DOORWAY SEO
+-----------------
+Do not create:
+
+- mass-generated thin pages
+- empty entity pages
+- empty topic pages
+- keyword-doorway pages
+- duplicated news rewrites
+- fake research
+- fake data assets
+
+Build a real publication, not a page-count machine.
+
+================================================
+CURRENT KNOWN STATE
+================================================
+
+The following foundation areas have already been verified successfully
+in production and must not regress:
+
+- 10 public stories
+- public content projection contains no checked internal editorial fields
+- anonymous editor-read endpoints return 401
+- unauthenticated release mutations return 401
+- root RSS matches API RSS
+- root sitemap matches API sitemap
+- 47 sitemap URLs
+- 10 article routes return 200
+- first-response article metadata works
+- trust routes work
+- /contact redirects to /contact-us
+- unknown article returns 404/noindex
+- privacy and terms remain intentionally unavailable
+- canonical robots behavior works
+- web-to-API production connection works
+
+Current historical issue:
+
+Only 7/10 articles previously had AMP coverage in production,
+while the workspace repair supports all 10.
+
+Current task is to permanently guarantee AMP completeness and prevent
+stale artifact regression.
+
+There is also a production cutover concern:
+
+OLD API:
+- contains legacy automation timer
+- may execute editorial automation until replaced/paused
+
+NEW API:
+- automation disabled
+
+Do not knowingly create a cutover window where the old API can execute
+uncontrolled automation.
+
+================================================
+WORKSTREAM 0 — DISCOVER AND DOCUMENT THE ARCHITECTURE
+================================================
+
+Before major changes, build a concise architecture map.
+
+Identify:
+
+WEB SERVICE
+API SERVICE
+DATABASE
+PUBLIC DOMAIN
+ALIAS DOMAIN
+INTERNAL SERVICE URLS
+ENVIRONMENT VARIABLES
+BUILD COMMANDS
+START COMMANDS
+DEPLOYMENT SOURCE
+DEPLOYMENT BRANCH
+DEPLOYMENT ARTIFACTS
+STATIC ASSETS
+CACHE LAYERS
+ROUTE OWNERSHIP
+CRON/SCHEDULER OWNERSHIP
+
+Document which service owns:
+
+/
+/article/*
+/amp/*
+/feed.xml
+/sitemap.xml
+/api/*
+/about-us
+/code-of-ethics
+/corrections
+/contact-us
+/contact
+404 handling
+
+Do not allow competing owners for the same root route.
+
+================================================
+WORKSTREAM 1 — DEPLOYMENT PROVENANCE
+================================================
+
+Solve the previously observed stale-deployment problem permanently.
+
+Determine:
+
+- source revision built
+- Git commit
+- Web artifact revision
+- API artifact revision
+- build directory
+- runtime artifact
+- deployment target
+
+If deployment metadata does not expose a reliable build ID,
+introduce a minimal safe build fingerprint.
+
+Acceptable:
+
+- response header
+- build identifier endpoint
+- server startup log
+- harmless HTML metadata/comment
+
+Never expose secrets.
+
+Ensure:
+
+WEB artifact
+and
+API artifact
+
+are both built from the intended CURRENT workspace revision.
+
+Ensure production actually serves those artifacts.
+
+Prevent old artifacts from being selected accidentally.
+
+Do not accept:
+
+"build successful"
+
+as proof of deployment parity.
+
+================================================
+WORKSTREAM 2 — LEGACY API AUTOMATION CUTOVER
+================================================
+
+Safely eliminate the old API scheduler before production cutover.
+
+Find the actual runtime owning the old 30-minute scheduler.
+
+Determine whether it is:
+
+- process scheduler
+- cron
+- deployment task
+- background worker
+- startup hook
+- external scheduled process
+
+Stop/disable the OLD scheduler through the correct deployment/runtime
+mechanism.
+
+The NEW API must have automation disabled during this foundation phase.
+
+Do not invoke production automation manually.
+
+Verify:
+
+OLD scheduler = stopped
+NEW scheduler = disabled
+
+Only then perform a production API replacement/cutover.
+
+If a human-only privileged control is required, clearly identify that exact
+external action instead of taking an unsafe shortcut.
+
+================================================
+WORKSTREAM 3 — API SECURITY
+================================================
+
+Private endpoints must require editor authorization.
+
+Anonymous access must return 401 for:
+
+GET /api/newsroom/releases
+GET /api/newsroom/releases/history
+GET /api/newsroom/automation/status
+GET /api/newsroom/automation/runs
+
+All create/update/delete/reorder/run operations must also be protected.
+
+Never rely on UI hiding.
+
+Public content must use explicit DTO/projection schemas.
+
+Never expose:
+
+schedule
+status
+position
+cadence
+publishAt
+updatedAt
+release data
+queue data
+readiness
+internal word-count fields
+editorial provenance
+automation data
+audit information
+internal release metadata
+
+Add permanent regression tests.
+
+================================================
+WORKSTREAM 4 — SINGLE PUBLICATION SOURCE OF TRUTH
+================================================
+
+Implement ONE canonical publication eligibility function.
+
+Example conceptual contract:
+
+isPublicArticle(article, now)
+
+Every public surface must use the same logic:
+
+- homepage
+- article routing
+- metadata
+- sitemap
+- RSS API
+- root RSS
+- topic pages
+- entity pages
+- related content
+- reports
+- research
+
+Do not duplicate eligibility logic.
+
+Do not change historical dates unless explicitly required by a verified
+data error.
+
+Do not expose internal lifecycle state.
+
+================================================
+WORKSTREAM 5 — RSS + SITEMAP
+================================================
+
+There must be one canonical RSS generator.
+
+Root:
+
+/feed.xml
+
+must use the same canonical feed logic/data as the API feed.
+
+There must be no stale checked-in root XML snapshot.
+
+Root:
+
+/sitemap.xml
+
+must use the canonical sitemap data.
+
+Prevent static XML files from reappearing.
+
+Add build checks preventing duplicate root XML ownership.
+
+Regression requirements:
+
+root RSS = API RSS
+root sitemap = API sitemap
+
+Every public article appearing in RSS must satisfy publication eligibility.
+
+Every sitemap article URL must be publicly reachable.
+
+================================================
+WORKSTREAM 6 — AMP
+================================================
+
+AMP path MUST derive from the article slug.
+
+Expected pattern:
+
+/article/<slug>
+/amp/article/<slug>
+
+For every public article:
+
+- rel="amphtml" exists
+- ampPath exists
+- AMP route returns 200
+- AMP title matches
+- AMP H1 matches
+- AMP canonical points to its own normal article
+- AMP never points to another article
+
+Currently verify all 10 stories.
+
+Explicitly test the historical three:
+
+weekly-deep-dive-cost-of-intelligence
+public-compute-needs-public-metrics
+reliability-is-the-new-ai-moat
+
+Unknown AMP slugs:
+
+404 + noindex
+
+Build regression tests that enumerate every public article and verify
+AMP parity.
+
+No hard-coded fallback AMP article.
+
+================================================
+WORKSTREAM 7 — ARTICLE 404 / SEO
+================================================
+
+Unknown article routes must return:
+
+404
+
+and:
+
+X-Robots-Tag: noindex
+
+or equivalent robots meta.
+
+Do not return generic infrastructure pages when the application can provide
+an article-aware SEO 404.
+
+Test unknown articles and unknown AMP routes.
+
+================================================
+WORKSTREAM 8 — TRUST ROUTES
+================================================
+
+Implement/deploy:
+
+/about-us
+/code-of-ethics
+/corrections
+/contact-us
+
+Pending editorial pages:
+
+200
+noindex
+
+/contact
+
+must redirect to:
+
+/contact-us
+
+/privacy
+/terms
+
+must remain unavailable unless owner-approved authoritative legal copy exists.
+
+Never invent legal language.
+
+Ensure unavailable routes are not linked in navigation.
+
+================================================
+WORKSTREAM 9 — SAFE PUBLICATION TESTING
+================================================
+
+Replace the current production-writing fixture.
+
+Current fixture is unsafe because it can write release/audit rows.
+
+Create a genuinely safe publication fixture.
+
+Preferred:
+
+isolated staging database/schema.
+
+Alternative:
+
+in-memory/test data adapter.
+
+Test:
+
+draft
+→ eligible
+→ publication
+→ article first response
+→ homepage
+→ RSS API
+→ root RSS
+→ sitemap
+→ root sitemap
+
+Also verify publication appears without rebuilding/redeploying if the
+architecture is designed for request-time publication.
+
+This test must be repeatable and must clean itself up.
+
+================================================
+WORKSTREAM 10 — CONTENT MODEL
+================================================
+
+Implement a controlled editorial content taxonomy:
+
+Brief
+Analysis
+Explainer
+Research
+Report
+Comparison
+Essay
+
+Every type must have a clear editorial purpose.
+
+Do not create seven nearly identical templates.
+
+Favor semantic structure and editorial intent.
+
+================================================
+WORKSTREAM 11 — SOURCE REGISTRY
+================================================
+
+Implement reusable Source records:
+
+- source title
+- publisher
+- exact URL
+- publication date
+- source type
+- primary/secondary
+- accessed date
+- notes
+- relevance/context
+
+Never automatically replace a source with a guessed URL.
+
+Important claims should use direct source URLs where the exact destination
+is known.
+
+================================================
+WORKSTREAM 12 — RESEARCH SYSTEM
+================================================
+
+Implement Research records:
+
+- research question
+- methodology
+- dataset/data sources
+- findings
+- limitations
+- sources
+- update history
+- author/analyst
+- status
+
+Clearly distinguish:
+
+EXTERNAL REPORTING
+
+from:
+
+ORIGINAL ANALYSIS
+
+from:
+
+ORIGINAL RESEARCH
+
+Never label rewritten reporting as original research.
+
+================================================
+WORKSTREAM 13 — DATA PRODUCTS
+================================================
+
+Create reusable structures for data-backed editorial products.
+
+Support:
+
+- data tables
+- source-backed measurements
+- historical observations
+- methodology
+- update timestamps
+- notes/limitations
+- downloadable/exportable representation where appropriate
+
+Every data point must have traceable provenance.
+
+================================================
+WORKSTREAM 14 — ENTITY SYSTEM
+================================================
+
+Support entities:
+
+Company
+Lab
+Model
+Technology
+Person
+Institution
+Policy
+Dataset
+Infrastructure
+
+Entities must support:
+
+- description
+- source references
+- related articles
+- related topics
+- related research
+- related reports
+- update metadata
+
+Do not generate pages simply because an entity exists.
+
+A page should have meaningful content.
+
+================================================
+WORKSTREAM 15 — TOPIC SYSTEM
+================================================
+
+Create controlled topics.
+
+A topic page requires substantive material.
+
+Support:
+
+- topic description
+- key developments
+- related articles
+- entities
+- research
+- reports
+- timeline
+- sources
+
+Avoid thin category pages.
+
+================================================
+WORKSTREAM 16 — KNOWLEDGE GRAPH
+================================================
+
+Implement relationship architecture:
+
+Article
+→ Topic
+→ Entity
+→ Source
+→ Research
+→ Report
+→ Data
+→ Timeline
+
+And reciprocal relationships where editorially useful.
+
+The objective is for readers to move from:
+
+what happened?
+
+to:
+
+why it matters
+→ evidence
+→ entity
+→ history
+→ research
+→ report
+→ data
+
+================================================
+WORKSTREAM 17 — FIRST AUTHORITY CLUSTER
+================================================
+
+Build:
+
+/reports/ai-compute-india/
+
+This is the first flagship authority asset.
+
+It must be substantially more useful than a normal AI news article.
+
+Include:
+
+1. Executive summary
+2. Current compute landscape
+3. Infrastructure
+4. Accelerator/GPU availability
+5. Public/private initiatives
+6. Geographic distribution
+7. Capacity/access
+8. Economics
+9. Energy/infrastructure implications
+10. Policy/program context
+11. Major organizations/entities
+12. Historical development
+13. Current open questions
+14. Data tables
+15. Source register
+16. Methodology
+17. Limitations
+18. Last updated
+19. Update history
+20. Related reporting
+21. Related research
+22. Related entities
+23. Related topics
+
+Separate factual reporting from analysis.
+
+Every important factual claim should trace to a source.
+
+Use primary government, institutional, company, research-paper, or
+first-party sources wherever available.
+
+Do not fabricate missing numbers.
+
+================================================
+WORKSTREAM 18 — ORIGINAL RESEARCH PIPELINE
+================================================
+
+Create reusable research workflows capable of producing:
+
+- methodology-driven comparisons
+- data analysis
+- historical trend analysis
+- structured evaluations
+- source-backed investigations
+
+The initial research cluster should support AI compute in India.
+
+Build the infrastructure first.
+
+Do not mass-produce research pages.
+
+================================================
+WORKSTREAM 19 — SECOND AUTHORITY CLUSTER
+================================================
+
+After the AI Compute in India cluster is structurally complete,
+
+build the next cluster around:
+
+SMALL MODELS / EFFICIENT AI / SERIOUS WORKFLOWS
+
+Support:
+
+- small-model comparisons
+- inference economics
+- workflow suitability
+- latency/cost tradeoffs
+- hardware implications
+- real-world use cases
+- source-backed benchmarking
+
+Do not fabricate benchmarks.
+
+================================================
+WORKSTREAM 20 — TIMELINE SYSTEM
+================================================
+
+Support meaningful timelines for substantive topics/entities/reports.
+
+Timeline records should contain:
+
+- date
+- event
+- explanation
+- source
+- related entity/topic/report
+
+Do not generate generic date lists.
+
+================================================
+WORKSTREAM 21 — INTERNAL LINKING
+================================================
+
+Every substantive article should link where appropriate to:
+
+- relevant topic
+- relevant entities
+- related articles
+- research
+- report
+- timeline
+
+Reports and research should link back to supporting reporting.
+
+Do not add links merely for SEO volume.
+
+Measure orphan content.
+
+================================================
+WORKSTREAM 22 — AUTHOR / EDITORIAL TRUST
+================================================
+
+Author pages must provide meaningful information where available.
+
+Avoid raw machine metadata such as:
+
+2026-09-23
+ananya-rao
+
+Use human-readable publication metadata.
+
+Maintain:
+
+- byline
+- author identity
+- editorial role where known
+- article history
+- methodology disclosure where appropriate
+
+Do not invent author biographies.
+
+================================================
+WORKSTREAM 23 — E-E-A-T / EDITORIAL QUALITY
+================================================
+
+Create reusable editorial-quality requirements.
+
+For substantive articles:
+
+- clear lead
+- what happened
+- evidence
+- why it matters
+- context
+- India relevance where genuinely relevant
+- what could change next
+- source transparency
+- related deeper material
+
+Do not force India relevance into unrelated stories.
+
+================================================
+WORKSTREAM 24 — SEO
+================================================
+
+Implement and verify:
+
+- canonical URLs
+- title metadata
+- descriptions
+- Open Graph
+- Twitter/social metadata
+- JSON-LD
+- Article schema
+- Breadcrumb schema where appropriate
+- sitemap
+- robots
+- RSS
+- AMP
+- 404/noindex
+
+Do not create unnecessary indexable pages.
+
+Search/editorial tooling pages should not be indexable unless intentionally
+designed as public content.
+
+================================================
+WORKSTREAM 25 — PERFORMANCE
+================================================
+
+Preserve server-rendered first response.
+
+Target:
+
+mobile LCP < 2.5s
+
+Avoid unnecessarily large client bundles.
+
+Investigate:
+
+- oversized JS
+- blocking scripts
+- unnecessary hydration
+- large hero payloads
+- image sizing
+- third-party scripts
+- ad-loading impact
+- API latency
+- server rendering waterfalls
+
+Set explicit budgets where practical.
+
+Suggested budgets:
+
+- main JS bundle: keep materially below current ~600KB largest bundle
+- total initial page payload: reduce materially below ~1.4–2MB
+- first response should contain meaningful article content
+- avoid avoidable TTFB > 1s
+
+Do not sacrifice editorial functionality for arbitrary micro-optimizations.
+
+================================================
+WORKSTREAM 26 — ANALYTICS / RETURN READER LOOP
+================================================
+
+Build a privacy-conscious analytics/event foundation for:
+
+- article view
+- report view
+- research view
+- source interaction
+- related-content click
+- newsletter signup
+- topic navigation
+- entity navigation
+
+Do not add invasive tracking.
+
+Build the architecture so future analysis can answer:
+
+Which reports bring readers?
+Which topics retain readers?
+Which research assets get revisits?
+Which internal links are useful?
+
+================================================
+WORKSTREAM 27 — NEWSLETTER / RECIRCULATION
+================================================
+
+Strengthen return-reader mechanics.
+
+Support:
+
+- newsletter CTA
+- related articles
+- topic follow/navigation
+- research/report discovery
+- article continuation paths
+
+Avoid intrusive popups.
+
+================================================
+WORKSTREAM 28 — CONTENT STRATEGY
+================================================
+
+Do NOT respond to the audit by simply publishing more articles.
+
+Use the following priority:
+
+1. authority assets
+2. original research
+3. data products
+4. deeply reported analysis
+5. useful explainers
+6. high-quality briefs
+
+Every new article should fit into an authority cluster.
+
+================================================
+WORKSTREAM 29 — SECURITY
+================================================
+
+Run:
+
+- dependency audit
+- SAST
+- application security checks
+- auth tests
+- public/private DTO tests
+
+For dependency findings:
+
+1. identify exact chain
+2. determine runtime vs development dependency
+3. find safe patched version
+4. make minimal compatible change
+5. rerun tests
+
+Do not perform broad dependency upgrades.
+
+================================================
+WORKSTREAM 30 — REGRESSION SUITE
+================================================
+
+Create permanent tests for:
+
+API authorization
+public projections
+publication eligibility
+article routes
+article first response
+metadata
+JSON-LD
+AMP
+AMP parity
+404/noindex
+trust routes
+contact redirect
+RSS
+root RSS
+sitemap
+root sitemap
+article/sitemap parity
+RSS/article parity
+safe publication fixture
+deployment fingerprint
+web/API connectivity
+entity pages
+topic pages
+research pages
+report pages
+internal links
+
+Run the full suite after every significant architecture change.
+
+================================================
+WORKSTREAM 31 — DEPLOYMENT SAFETY
+================================================
+
+Never knowingly deploy:
+
+- active legacy scheduler race
+- stale API artifact
+- stale Web artifact
+- competing root XML owner
+- broken web→API origin
+- public editor endpoints
+- public internal editorial fields
+- invalid AMP mappings
+- indexable 404 article pages
+
+Before every production deployment:
+
+1. build
+2. test
+3. inspect artifact
+4. verify revision
+5. verify Web/API versions
+6. verify environment configuration
+7. verify scheduler state
+8. deploy
+9. verify actual production runtime
+
+================================================
+WORKSTREAM 32 — CONTINUOUS AUTONOMOUS LOOP
+================================================
+
+Do NOT use this process:
+
+find issue
+→ report issue
+→ stop
+
+Use this:
+
+discover
+→ diagnose
+→ implement
+→ test
+→ deploy if safe
+→ verify
+→ detect regression
+→ repair
+→ retest
+→ continue
+
+When one workstream is blocked by production deployment,
+continue all independent workspace workstreams.
+
+When one workstream fails locally,
+fix it and continue.
+
+When a production verification finds a defect,
+fix the defect and rerun the smallest affected test set plus final
+regression.
+
+Do not restart the entire project from scratch.
+
+Maintain a machine-readable progress/checkpoint file containing:
+
+- completed workstreams
+- remaining workstreams
+- current revision
+- current deployment revision
+- failing tests
+- blocked external actions
+- production deployment state
+- final gate state
+
+This prevents losing progress across agent sessions.
+
+================================================
+WORKSTREAM EXECUTION ORDER
+================================================
+
+Run these in parallel where there are no dependencies:
+
+PARALLEL GROUP A:
+- deployment architecture
+- safe fixture
+- content model
+- source registry
+- research system
+- entity model
+- topic model
+- timeline model
+- internal linking model
+- performance audit
+- analytics foundation
+
+PARALLEL GROUP B:
+- AI Compute in India report architecture
+- AI Compute data model
+- research methodology framework
+- report UI
+- source UI
+- entity/topic UI
+- SEO infrastructure
+- regression test expansion
+
+PARALLEL GROUP C:
+- deployment provenance diagnosis
+- legacy scheduler diagnosis
+- Web/API artifact validation
+- AMP regression tests
+- RSS/sitemap ownership tests
+- 404/noindex tests
+- security tests
+
+Only serialize:
+
+- production database migration
+- production configuration mutation
+- production deployment
+- scheduler cutover
+- public production data changes
+
+================================================
+PRODUCTION CUTOVER GATE
+================================================
+
+Before production deployment:
+
+OLD API AUTOMATION:
+STOPPED
+
+NEW API AUTOMATION:
+DISABLED
+
+WEB/API SOURCE REVISION:
+CURRENT
+
+WEB/API ARTIFACTS:
+CURRENT
+
+DEPLOYMENT:
+CURRENT REVISION
+
+ROOT XML:
+SINGLE OWNER
+
+WEB → API:
+HEALTHY
+
+PUBLIC API:
+SECURE
+
+Only then deploy.
+
+================================================
+FINAL PRODUCTION VERIFICATION
+================================================
+
+Verify BOTH:
+
+https://www.globalainews.in
+https://global-ai-media.replit.app
+
+Check:
+
+10 public stories
+
+API security
+
+public data projection
+
+10 article routes
+
+10 AMP routes
+
+AMP/article parity
+
+RSS/API parity
+
+sitemap/API parity
+
+trust routes
+
+contact redirect
+
+404/noindex
+
+robots
+
+canonical
+
+JSON-LD
+
+first-response metadata
+
+source rendering
+
+topic/entity/report/research routes
+
+performance smoke
+
+No production automation should be triggered during verification.
+
+================================================
+SAFE PUBLICATION GATE
+================================================
+
+A safe fixture must exist before claiming publication-flow verification.
+
+It must prove:
+
+new publication
+→ article
+→ metadata
+→ homepage
+→ sitemap
+→ RSS
+→ root RSS
+
+without writing production editorial data.
+
+================================================
+AUTHORITY ENGINE DEFINITION OF DONE
+================================================
+
+The Authority Engine is NOT complete merely because routes exist.
+
+It is complete only when:
+
+- content taxonomy exists
+- source registry exists
+- research system exists
+- report system exists
+- data products exist
+- entity system exists
+- topic system exists
+- timeline system exists
+- relationships work
+- internal linking works
+- first flagship report works
+- report has substantive evidence
+- methodology exists
+- data provenance exists
+- update process exists
+- SEO works
+- first-response HTML works
+- performance is acceptable
+- regression tests pass
+
+================================================
+AI COMPUTE IN INDIA DEFINITION OF DONE
+================================================
+
+/reports/ai-compute-india/
+
+must be:
+
+- substantive
+- source-backed
+- updateable
+- methodology-driven
+- data-backed
+- internally linked
+- connected to entities/topics/research
+- understandable without another article
+- useful as a reference destination
+
+Do not publish filler to make the report longer.
+
+================================================
+FINAL PROJECT DEFINITION OF DONE
+================================================
+
+Do not declare success until ALL of the following are true:
+
+[ ] Production deployment serves current Web revision
+[ ] Production deployment serves current API revision
+[ ] Old scheduler safely stopped/replaced
+[ ] New automation remains disabled until intentionally enabled
+[ ] Private editor API routes return 401
+[ ] Public responses contain no internal editorial fields
+[ ] One publication eligibility function powers all public surfaces
+[ ] Root RSS matches API RSS
+[ ] Root sitemap matches API sitemap
+[ ] All public articles have correct AMP
+[ ] All AMP pages map to the correct article
+[ ] Unknown article = 404/noindex
+[ ] Trust routes work
+[ ] /contact redirect works
+[ ] Safe publication fixture exists
+[ ] Content taxonomy exists
+[ ] Source registry exists
+[ ] Research system exists
+[ ] Data product system exists
+[ ] Entity system exists
+[ ] Topic system exists
+[ ] Timeline system exists
+[ ] Knowledge graph relationships work
+[ ] Internal linking works
+[ ] AI Compute in India report exists
+[ ] AI Compute report is source-backed
+[ ] AI Compute report has methodology
+[ ] AI Compute report has update structure
+[ ] Second authority-cluster architecture exists
+[ ] SEO regression suite passes
+[ ] Security suite passes
+[ ] Build passes
+[ ] Typecheck passes
+[ ] Smoke suite passes
+[ ] Link audit = 0 issues
+[ ] Production verification passes
+[ ] No known stale deployment artifact remains
+[ ] No known critical blocker remains
+
+================================================
+FINAL RESPONSE FORMAT
+================================================
+
+At the end, report:
+
+PROJECT STATUS:
+COMPLETE / BLOCKED
+
+CURRENT SOURCE REVISION:
+<revision>
+
+DEPLOYED WEB REVISION:
+<revision>
+
+DEPLOYED API REVISION:
+<revision>
+
+PRODUCTION STATUS:
+<summary>
+
+FOUNDATION:
+PASS / FAIL
+
+AUTHORITY ENGINE:
+PASS / FAIL
+
+AI COMPUTE INDIA:
+PASS / FAIL
+
+SAFE PUBLICATION FLOW:
+PASS / NOT VERIFIED
+
+SECURITY:
+PASS / FAIL
+
+PERFORMANCE:
+PASS / FAIL
+
+REGRESSION:
+PASS / FAIL
+
+REMAINING BLOCKERS:
+Only list genuine unresolved blockers.
+
+If a human-only action is required, list it separately as:
+
+EXTERNAL ACTION REQUIRED:
+<exact action>
+
+Do not report a blocker that can be solved within the workspace as
+"waiting for user."
+
+================================================
+CRITICAL STOP CONDITION
+================================================
+
+DO NOT stop simply because:
+
+- one test failed
+- one deployment verification failed
+- one workstream is blocked
+- one feature needs revision
+- production is temporarily frozen
+
+Fix the issue, rerun the affected tests, and continue.
+
+STOP ONLY WHEN:
+
+A. ALL DEFINITION-OF-DONE CHECKS PASS
+
+OR
+
+B. A genuinely external dependency cannot be controlled by the agent,
+in which case continue all other work and report ONLY that external
+dependency.
+
+================================================
+MISSION
+================================================
+
+FIX THE PLATFORM.
+BUILD THE AUTHORITY ENGINE.
+BUILD THE RESEARCH/DATA SYSTEM.
+BUILD AI COMPUTE INDIA.
+TEST EVERYTHING.
+DEPLOY SAFELY.
+VERIFY PRODUCTION.
+DO NOT LEAVE HALF-FINISHED ARCHITECTURE.
+
+CONTINUE UNTIL THE DEFINITION OF DONE IS SATISFIED.
