@@ -1,0 +1,253 @@
+FINAL PRE-CUTOVER HARDENING — NO PRODUCTION CHANGE
+
+Production remains live and publication remains held.
+
+Do NOT:
+
+- Unpublish
+- Publish
+- invoke production automation
+- write production editorial data
+- modify production configuration
+
+Finish every workspace-solvable item now so that the eventual production
+cutover happens ONCE.
+
+==================================================
+1. DEPLOYMENT FINGERPRINT
+==================================================
+
+Ensure Web and API builds expose a safe revision/build fingerprint.
+
+The fingerprint must identify the exact workspace source revision used.
+
+Prefer an existing deployment/version mechanism.
+
+Otherwise use a harmless response header or equivalent.
+
+Do not expose secrets.
+
+Verify locally that:
+
+Web revision = current workspace revision
+API revision = current workspace revision
+
+==================================================
+2. LEGACY SCHEDULER CUTOVER PREPARATION
+==================================================
+
+Do NOT stop the legacy scheduler now.
+
+Document the exact production cutover sequence required because the only
+known stop mechanism is:
+
+Publishing → Unpublish
+
+and Unpublish takes the site offline.
+
+Produce a precise maintenance-window procedure:
+
+1. confirm current production state
+2. unpublish old deployment
+3. confirm old API is offline and scheduler cannot execute
+4. publish current Web + API artifacts
+5. confirm new API automation remains disabled
+6. verify new Web/API fingerprints
+7. verify production routes
+8. verify AMP
+9. verify RSS/sitemap
+10. verify API security
+11. verify trust/404/robots
+12. confirm site is fully restored
+
+Do not execute this sequence yet.
+
+==================================================
+3. JAVASCRIPT PERFORMANCE
+==================================================
+
+Investigate the current:
+
+678.49 kB minified
+196.03 kB gzip
+
+largest client bundle.
+
+Identify exactly what contributes to the chunk.
+
+Prioritize:
+
+- unnecessary client components
+- excessive hydration
+- shared libraries pulled into public routes
+- report/article components that can be server-rendered
+- unnecessary UI libraries
+- code that can be lazy-loaded
+- admin/editor code accidentally entering public bundles
+
+Make only safe, measurable optimizations.
+
+Do NOT optimize purely for the warning message.
+
+Re-run:
+
+typecheck
+build
+smoke
+link audit
+
+Do not regress server-rendered article/report content.
+
+==================================================
+4. SECURITY ADVISORY
+==================================================
+
+Investigate:
+
+braces@3.0.3 — HIGH advisory
+
+Determine:
+
+- exact dependency chain
+- development vs production/runtime dependency
+- affected functionality
+- available patched versions
+- whether the advisory is actually exploitable in production
+
+If a safe minimal update exists:
+
+apply it.
+
+If no upstream patch exists:
+
+document the finding and mitigation.
+
+Do NOT perform broad dependency upgrades.
+
+Re-run security/build/smoke tests.
+
+==================================================
+5. ROBOTS PARITY
+==================================================
+
+Determine why the canonical domain and .replit.app alias have different
+robots behavior.
+
+The intended production behavior must be explicit:
+
+Canonical:
+www.globalainews.in
+
+Alias:
+global-ai-media.replit.app
+
+Verify that search-engine directives are intentional.
+
+Do not accidentally make the canonical site non-crawlable.
+
+Do not make the alias compete with the canonical site.
+
+Implement/fix only in workspace.
+
+==================================================
+6. SAFE PUBLICATION FIXTURE
+==================================================
+
+Keep the existing production-writing fixture disabled.
+
+Implement the safest possible isolated fixture.
+
+Preferred:
+
+isolated test database/schema
+
+or:
+
+in-memory publication adapter
+
+It must verify:
+
+eligible publication
+→ article
+→ first response
+→ homepage
+→ RSS
+→ root RSS
+→ sitemap
+→ root sitemap
+
+No production writes.
+
+==================================================
+7. FINAL WORKSPACE REGRESSION
+==================================================
+
+Run the complete suite:
+
+- typecheck
+- production build
+- smoke
+- desktop routes
+- mobile routes
+- AMP
+- RSS
+- sitemap
+- article first response
+- report first response
+- JSON-LD
+- metadata
+- API auth
+- public projections
+- trust routes
+- redirects
+- 404/noindex
+- link audit
+- security audit
+
+Record final build fingerprint.
+
+==================================================
+8. PRE-CUTOVER CHECKLIST
+==================================================
+
+Create:
+
+docs/production-cutover-checklist.md
+
+It must contain:
+
+- current workspace revision
+- Web fingerprint
+- API fingerprint
+- current production URLs
+- old scheduler risk
+- exact unpublish step
+- exact publish step
+- verification commands/routes
+- rollback/recovery procedure if supported
+- expected final state
+
+==================================================
+FINAL STATUS
+==================================================
+
+Do NOT publish.
+
+Do NOT unpublish.
+
+When complete, report:
+
+WORKSPACE READY FOR FINAL PRODUCTION CUTOVER
+
+and provide:
+
+1. exact workspace revision
+2. Web fingerprint
+3. API fingerprint
+4. security status
+5. final bundle size
+6. final test status
+7. exact maintenance-window cutover sequence
+8. any genuinely external action required
+
+Do not start another foundation audit.
