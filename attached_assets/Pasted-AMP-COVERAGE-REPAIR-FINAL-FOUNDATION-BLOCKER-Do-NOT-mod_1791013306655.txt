@@ -1,0 +1,129 @@
+AMP COVERAGE REPAIR — FINAL FOUNDATION BLOCKER
+
+Do NOT modify:
+
+- publication eligibility
+- editorial data
+- API authentication
+- public API projections
+- RSS generation
+- sitemap generation
+- web-to-API configuration
+- trust routes
+- article content
+- historical dates
+
+The production foundation is now passing all previously identified checks except AMP coverage.
+
+==================================================
+AFFECTED ARTICLES
+==================================================
+
+The following three public articles currently have:
+
+- no rel="amphtml" link
+- expected AMP route returns 404
+
+1. weekly-deep-dive-cost-of-intelligence
+2. public-compute-needs-public-metrics
+3. reliability-is-the-new-ai-moat
+
+The other seven AMP routes currently return 200 and correctly point their canonical to the corresponding article.
+
+==================================================
+OBJECTIVE
+==================================================
+
+Fix the AMP implementation so that each of the three affected articles:
+
+1. exposes its own rel="amphtml" link
+2. has its own AMP route
+3. returns HTTP 200
+4. has an AMP title matching the article
+5. has an AMP H1 matching the article
+6. has an AMP canonical pointing to the corresponding normal article
+7. does not point to another article's AMP page
+8. follows the same AMP implementation used by the seven working articles
+
+Do NOT create article-specific hacks.
+
+Find the shared routing/generation issue causing these three articles to miss AMP coverage.
+
+==================================================
+ROUTING
+==================================================
+
+The expected pattern is:
+
+/article/<slug>
+
+/amp/article/<same-slug>
+
+Use the project's existing canonical AMP URL convention if it differs.
+
+The AMP resolver must derive the URL from the article slug.
+
+There must be no generic fallback such as:
+
+/amp/article/ai-models-antibiotic-discovery/
+
+for unrelated articles.
+
+==================================================
+REGRESSION PROTECTION
+==================================================
+
+Add/update automated tests so that every currently public article satisfies:
+
+normal article route → rel="amphtml"
+rel="amphtml" → HTTP 200
+AMP canonical → corresponding normal article
+
+Explicitly test all 10 current articles.
+
+Also test that an unknown article does not resolve to another article's AMP page.
+
+==================================================
+VERIFICATION
+==================================================
+
+Run:
+
+- typecheck
+- build
+- smoke tests
+- AMP tests
+- article metadata tests
+- link audit
+
+Then deploy.
+
+After deployment verify BOTH:
+
+https://www.globalainews.in
+https://global-ai-media.replit.app
+
+For all 10 articles verify:
+
+normal article = 200
+rel="amphtml" exists
+AMP route = 200
+AMP title matches article
+AMP H1 matches article
+AMP canonical matches normal article
+
+Do not modify production editorial data.
+
+==================================================
+FINAL FOUNDATION DECISION
+==================================================
+
+If all 10 AMP routes pass and all previously passing production checks remain intact:
+
+FOUNDATION READY — AUTHORITY ENGINE MAY BEGIN
+
+Do NOT create another foundation blocker unless a previously passing production check actually regresses.
+
+If one of the three AMP routes still fails, report the exact route and implementation cause.
+
+After FOUNDATION READY, stop foundation work and begin the Authority Engine.
