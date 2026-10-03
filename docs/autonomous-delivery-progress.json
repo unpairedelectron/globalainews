@@ -3,9 +3,9 @@
   "updatedAt": "2026-10-03",
   "source": {
     "branch": "main",
-    "revision": "afa6dc1d4787f0a8c36242c93912e8c1c07d66fc+source-sha256:d062f3231815675205e08578860eed8b377c2c8f27605d4f5922451499190d6e",
-    "webArtifactRevision": "web-sha256:3a899d5a149efd259827ec47aa9db511c1f3cefd11a4de3a9388e52037dd95fc",
-    "apiArtifactRevision": "api-sha256:a74ea655a35891a4911bc234f87ae30161ba7c9386c5ab028b263aa91c65cc52"
+    "revision": "da35e36d96a78187824537acb2017d1fff613275+source-sha256:0aec0ee34a24e4dd594d951f718c2a4b66f56d53bf26f37e7c236cdb2a030bc9",
+    "webArtifactRevision": "web-sha256:803f920af2dc2aa71ed804e29cc4e9ab23e9c905f03cfa7b74fbbe5e51ee6c7a",
+    "apiArtifactRevision": "api-sha256:f2c8b29819a48b3fb8d51d96c950e656d8cbd6bdf86f183d9a4f546c3317588d"
   },
   "deployment": {
     "target": "autoscale",
@@ -52,7 +52,7 @@
     "articleAmpPairs": "11/11 pass",
     "fingerprintHeaders": "pass in local artifact tests",
     "apiHealth": "pass in local API checks; production runtime and scheduler remain unverified",
-    "fullSmokeSuite": "pass: pnpm --filter @workspace/global-ai-news run test:smoke; 49 desktop routes, 8 mobile routes, 11 AMP pages, RSS, article first-response, link audit, release history, and themes"
+    "fullSmokeSuite": "pass: NODE_ENV=test pnpm --filter @workspace/global-ai-news run test:smoke against the development database; release-history fixtures clean up their temporary rows; 49 desktop routes, 8 mobile routes, 11 AMP pages, RSS, article first-response, link audit, themes, and content/research/authority/SEO checks"
   },
   "knownProductionState": {
     "lastKnownAmpCoverage": "7/10 on the last production check; local coverage is now 11/11",
@@ -69,7 +69,7 @@
   ],
   "failingTests": [],
   "workstreams": [
-    { "id": 0, "name": "Architecture discovery and map", "status": "in_progress", "evidence": "Architecture map updated with report routes, shared source-snapshot rendering, current local fingerprints, verification, and release gates." },
+    { "id": 0, "name": "Architecture discovery and map", "status": "in_progress", "evidence": "Architecture map updated with report routes, shared source-snapshot rendering, current local fingerprints, mobile performance evidence, verification, and release gates." },
     { "id": 1, "name": "Deployment provenance", "status": "partial", "evidence": "Local source/Web/API fingerprints and response headers are implemented; production parity remains unverified." },
     { "id": 2, "name": "Legacy API automation cutover", "status": "blocked_external", "evidence": "New API automation is disabled; old deployed timer remains active until unpublish or promotion." },
     { "id": 3, "name": "API security", "status": "partial", "evidence": "Editor routes use authorization and explicit public projection; regression coverage still needs a full audit." },
@@ -86,7 +86,7 @@
     { "id": 14, "name": "Entity system", "status": "partial", "evidence": "Static entity records exist but the requested entity kinds, relations, and update metadata are incomplete." },
     { "id": 15, "name": "Topic system", "status": "partial", "evidence": "Topic route is a placeholder; substantive topic records and pages remain." },
     { "id": 16, "name": "Knowledge graph", "status": "partial", "evidence": "Some article/entity/timeline slug links exist; typed reciprocal relationships remain." },
-    { "id": 17, "name": "AI Compute in India flagship", "status": "complete", "evidence": "A 4,185-word report with 18 ordered citations is available through the API-backed Reports index, article, and AMP routes; unresolved GPU-status counts are stated as limitations." },
+    { "id": 17, "name": "AI Compute in India flagship", "status": "complete", "evidence": "A 4,202-word report with 18 ordered citations and a dated quantitative evidence audit is available through the API-backed Reports index, article, and AMP routes; incompatible GPU-status counts and unknown schedulable capacity remain explicit." },
     { "id": 18, "name": "Original research pipeline", "status": "not_started", "evidence": "Methodology and repeatable research workflow remain." },
     { "id": 19, "name": "Second authority cluster", "status": "not_started", "evidence": "Small-model/efficient-AI cluster architecture remains." },
     { "id": 20, "name": "Timeline system", "status": "partial", "evidence": "Static timeline events exist; source provenance and reusable record requirements remain." },
@@ -94,14 +94,14 @@
     { "id": 22, "name": "Author and editorial trust", "status": "partial", "evidence": "Author records exist; identity and biography claims need verification." },
     { "id": 23, "name": "E-E-A-T and editorial quality", "status": "partial", "evidence": "Story evidence and quality fields exist; consistent publication requirements remain." },
     { "id": 24, "name": "SEO infrastructure", "status": "partial", "evidence": "The full local smoke passes route metadata, structured data, feeds, sitemap, article first-response, and AMP checks; production parity remains unverified." },
-    { "id": 25, "name": "Performance", "status": "not_verified", "evidence": "Main JS is about 624 kB minified; mobile LCP and initial payload budgets are unverified." },
+    { "id": 25, "name": "Performance", "status": "partial", "evidence": "Local 402×874, 4× CPU, 150 ms RTT sample: LCP home 3,068 ms, article 7,056 ms, reports 2,328 ms, India topic 4,416 ms, OpenAI 2,404 ms, author 3,572 ms; reports improved from 6,540 ms. All public captures had no third-party script origins and CLS ≤0.001. Local transfer totals are uncompressed; production/CDN performance is unverified. See docs/mobile-performance-audit.md." },
     { "id": 26, "name": "Privacy-conscious analytics", "status": "partial", "evidence": "Existing analytics integration is present; requested event coverage and privacy checks remain." },
     { "id": 27, "name": "Newsletter and recirculation", "status": "partial", "evidence": "Newsletter persistence and CTA exist; provider delivery and broader return-reader paths remain." },
     { "id": 28, "name": "Authority-led content strategy", "status": "not_verified", "evidence": "Priority rules need to be reflected in editorial tooling and publication gates." },
     { "id": 29, "name": "Security", "status": "in_progress", "evidence": "SAST and privacy scans pass; one high dependency advisory remains." },
-    { "id": 30, "name": "Regression suite", "status": "complete", "evidence": "The configured full local smoke command passes, including content/report integrity, public routes, AMP, RSS, responsive checks, release history, themes, and link audit." },
+    { "id": 30, "name": "Regression suite", "status": "complete", "evidence": "The configured full smoke command passes with NODE_ENV=test against the development database, including content/research/authority/SEO checks, publication fixture cleanup, public routes, AMP, RSS, responsive checks, release history, themes, and link audit." },
     { "id": 31, "name": "Deployment safety", "status": "blocked_external", "evidence": "No deployment while the old scheduler may execute; safe cutover also needs final parity checks." },
-    { "id": 32, "name": "Autonomous progress loop", "status": "in_progress", "evidence": "Updated architecture map, local fingerprints, full smoke evidence, and report status; scheduler and production parity gates remain blocked." }
+    { "id": 32, "name": "Autonomous progress loop", "status": "in_progress", "evidence": "Updated architecture map, local fingerprints, mobile performance audit, full smoke evidence, and report status; scheduler, security advisory, and production parity gates remain." }
   ],
   "finalGate": "blocked"
 }

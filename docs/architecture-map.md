@@ -2,7 +2,7 @@
 
 **Current as of:** 2026-10-03  
 **Source branch:** `main`  
-**Current source fingerprint:** `afa6dc1d4787f0a8c36242c93912e8c1c07d66fc+source-sha256:d062f3231815675205e08578860eed8b377c2c8f27605d4f5922451499190d6e`
+**Current source fingerprint:** `da35e36d96a78187824537acb2017d1fff613275+source-sha256:0aec0ee34a24e4dd594d951f718c2a4b66f56d53bf26f37e7c236cdb2a030bc9`
 
 ## Deployment topology
 
@@ -50,6 +50,7 @@ The API mounts its routers under `/api`. Public newsroom content and metadata ar
 - Web static inputs live under `artifacts/global-ai-news/public`; production output is under `artifacts/global-ai-news/dist/public` and `dist/server`. Report routes are included in the SEO manifest and generated public pages. AMP documents receive the same source records as the report article.
 - Root RSS and sitemap are runtime proxies to the API rather than independent static XML files. Social-preview assets have a one-day cache policy; article HTML, AMP, and XML proxies use `no-store` unless the upstream XML endpoint provides a cache policy. Hashed build assets are static.
 - The workspace exposes the API through the shared path proxy at `/api`; development Web-to-API requests use the configured local proxy origin, while the production Web artifact uses `NEWSROOM_API_ORIGIN=https://www.globalainews.in`.
+- DM Sans, DM Mono, and Instrument Serif are served from licensed app-local font files; DM Sans and Instrument Serif are preloaded. The Clerk provider is limited to editor sign-in, sign-up, and insights routes.
 - The deployment edge/cache behavior has not yet been fully compared with direct origin responses for both published URLs.
 
 ## Environment configuration
@@ -69,9 +70,9 @@ No production automation has been invoked manually. Publication remains held. Be
 
 ## Current gaps and release gates
 
-- The latest local full smoke run passes 49 public routes at desktop, 8 at mobile, 11 AMP pages, and RSS. The last known production AMP check was 7/10, and production Web/API fingerprint parity remains unverified.
+- The latest local full smoke run passes 49 public routes at desktop, 8 at mobile, 11 AMP pages, RSS, release-history recovery, theme checks, and the internal-link audit. Public route captures show no third-party script origins. The last known production AMP check was 7/10, and production Web/API fingerprint parity remains unverified.
 - Publication remains held because the previously deployed API may still run its automation timer. The old process cannot be independently stopped without taking the whole Autoscale site offline; see scheduler ownership and cutover above.
 - The report distinguishes GPU targets, shared/onboarded supply, access, availability, and reported GPU-hours. Public evidence does not yet reconcile the dated counts or establish a current schedulable inventory.
 - Existing source, entity, timeline, metric, and story data are code-managed and have varying provenance detail; do not present an unverified value as an evidenced fact.
 - The dependency audit found a high-severity `braces@3.0.3` advisory through production `http-proxy-middleware` and development `fast-glob`. The published advisory reports no patched upstream release as of this check.
-- The main client bundle measures 678.12 kB minified (195.92 kB gzip) in the latest local production build; performance budgets remain unverified.
+- The main client bundle measures 678.49 kB minified (196.03 kB gzip); CSS is 145.55 kB (22.96 kB gzip). Local mobile measurements and their compression/production caveats are recorded in `docs/mobile-performance-audit.md`; the reports route improved materially, while the article LCP remains high. The Vite large-chunk warning remains.

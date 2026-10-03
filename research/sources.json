@@ -62,7 +62,7 @@
         "research/sources/datacentres-01-operational-capacity.md"
       ],
       "evidenceType": "full-page",
-      "caveat": "The 13.56 GW figure is a data-centre capacity projection for 2031–32, not a measure of AI-only capacity or current electricity demand."
+      "caveat": "This release labels 13.56 GW as projected data-centre electricity demand by 2031–32; the 30 March 2026 Rajya Sabha answer labels the same figure projected data-centre capacity. The official descriptions conflict."
     },
     {
       "key": "pib-capacity-and-use-factsheet-2026",

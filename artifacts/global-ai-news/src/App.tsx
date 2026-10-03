@@ -384,7 +384,11 @@ function SignUpPage() {
 
 function AppRoutes() {
   const [location] = useLocation();
-  return <ErrorBoundary resetKey={location}><Switch>
+  const pathname = location.split(/[?#]/, 1)[0];
+  const needsClerk = pathname === '/insights'
+    || pathname.startsWith('/sign-in')
+    || pathname.startsWith('/sign-up');
+  const routes = <Switch>
     <Route path="/sign-in/*?" component={SignInPage} />
     <Route path="/sign-up/*?" component={SignUpPage} />
     <Route path="/" component={HomePage} />
@@ -418,7 +422,10 @@ function AppRoutes() {
     <Route path="/corrections"><EditorialInputPage title="Corrections" path="/corrections" /></Route>
     <Route path="/contact-us"><EditorialInputPage title="Contact us" path="/contact-us" /></Route>
     <Route component={NotFound} />
-  </Switch></ErrorBoundary>;
+  </Switch>;
+  return <ErrorBoundary resetKey={location}>
+    {needsClerk ? <ClerkProviderWithRoutes>{routes}</ClerkProviderWithRoutes> : routes}
+  </ErrorBoundary>;
 }
 
 function ClerkProviderWithRoutes({ children }: { children: ReactNode }) {
@@ -452,7 +459,7 @@ function ClerkProviderWithRoutes({ children }: { children: ReactNode }) {
 }
 
 function App({ initialTheme }: { initialTheme: Theme }) {
-  return <QueryClientProvider client={queryClient}><ThemeProvider initialTheme={initialTheme}><Router base={basePath}><ClerkProviderWithRoutes><NewsroomProvider><AppRoutes /></NewsroomProvider><Toaster /></ClerkProviderWithRoutes></Router></ThemeProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><ThemeProvider initialTheme={initialTheme}><Router base={basePath}><NewsroomProvider><AppRoutes /><Toaster /></NewsroomProvider></Router></ThemeProvider></QueryClientProvider>;
 }
 
 export default App;
