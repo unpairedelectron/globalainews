@@ -4,11 +4,13 @@ import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
 
-const [themeSource, headerSource, cssSource, appSource] = await Promise.all([
+const [themeSource, headerSource, cssSource, appSource, clerkSource, publicSource] = await Promise.all([
   readFile(path.join(root, 'src', 'theme.tsx'), 'utf8'),
   readFile(path.join(root, 'src', 'components', 'site.tsx'), 'utf8'),
   readFile(path.join(root, 'src', 'index.css'), 'utf8'),
   readFile(path.join(root, 'src', 'App.tsx'), 'utf8'),
+  readFile(path.join(root, 'src', 'clerk-routes.tsx'), 'utf8'),
+  readFile(path.join(root, 'src', 'pages', 'public.tsx'), 'utf8'),
 ]);
 
 assert.match(themeSource, /global-ai-news-theme/, 'theme persistence key is missing');
@@ -29,7 +31,10 @@ assert.match(cssSource, /:root\s*\{[\s\S]*--background:/, 'light palette variabl
 assert.match(cssSource, /:focus-visible\s*\{[\s\S]*--ring/, 'keyboard focus styling is missing');
 assert.match(cssSource, /transition: background-color/, 'theme transitions are missing');
 
-assert.match(appSource, /getClerkAppearance\(theme\)/, 'Clerk appearance is not synchronized with the active theme');
+assert.match(clerkSource, /getClerkAppearance\(theme\)/, 'Clerk appearance is not synchronized with the active theme');
+assert.match(appSource, /lazy\(\(\) => import\('\.\/clerk-routes'\)/, 'Clerk routes are not loaded lazily');
+assert.doesNotMatch(appSource, /from ['"]@clerk\/react/, 'the public app entry statically imports Clerk');
+assert.doesNotMatch(publicSource, /from ['"]@clerk\/react/, 'public pages statically import Clerk');
 assert.match(appSource, /<ThemeProvider initialTheme=\{initialTheme\}>/, 'the app is not wrapped in the theme provider');
 
 console.log('Theme contract confirmed for persistence, toggle semantics, palettes, focus, and Clerk styling.');

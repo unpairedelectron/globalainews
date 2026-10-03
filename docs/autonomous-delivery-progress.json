@@ -3,9 +3,9 @@
   "updatedAt": "2026-10-03",
   "source": {
     "branch": "main",
-    "revision": "da35e36d96a78187824537acb2017d1fff613275+source-sha256:0aec0ee34a24e4dd594d951f718c2a4b66f56d53bf26f37e7c236cdb2a030bc9",
-    "webArtifactRevision": "web-sha256:803f920af2dc2aa71ed804e29cc4e9ab23e9c905f03cfa7b74fbbe5e51ee6c7a",
-    "apiArtifactRevision": "api-sha256:f2c8b29819a48b3fb8d51d96c950e656d8cbd6bdf86f183d9a4f546c3317588d"
+    "revision": "290eb8530edec72be6cd6aee71b7fbe046169fcb+source-sha256:41a4ffc49dcbe608c1239f5fa6920181e054cad266e12d85d1e75eb067ca45ac",
+    "webArtifactRevision": "web-sha256:fe42d22f6320cbdbb0f8eae803c4df6773099e555cc659c37fbc2d650738c469",
+    "apiArtifactRevision": "api-sha256:705ef28902243e4fc83ab30ce6465b290e41947fe539b7e26f1f55109383b36b"
   },
   "deployment": {
     "target": "autoscale",
@@ -26,7 +26,7 @@
       "status": "finding",
       "high": 1,
       "critical": 0,
-      "advisory": "CVE-2026-93687",
+      "advisory": "GHSA-vfj7-8cjw-p6xm / CVE-2026-93687",
       "package": "braces@3.0.3",
       "paths": [
         "@workspace/api-server -> http-proxy-middleware -> micromatch -> braces",
@@ -51,14 +51,16 @@
     "cleanWebBuild": "pass",
     "articleAmpPairs": "11/11 pass",
     "fingerprintHeaders": "pass in local artifact tests",
-    "apiHealth": "pass in local API checks; production runtime and scheduler remain unverified",
-    "fullSmokeSuite": "pass: NODE_ENV=test pnpm --filter @workspace/global-ai-news run test:smoke against the development database; release-history fixtures clean up their temporary rows; 49 desktop routes, 8 mobile routes, 11 AMP pages, RSS, article first-response, link audit, themes, and content/research/authority/SEO checks"
+    "apiHealth": "local API checks pass; read-only production /api/healthz returned 200 and protected release/automation status routes returned 401; production X-GAN headers and scheduler runtime remain unverified",
+    "fullSmokeSuite": "pass: pnpm --filter @workspace/global-ai-news run test:smoke; 49 desktop routes, 8 mobile routes, 11 AMP pages, RSS, article/report first-response, link audit, themes, publication fixture, and content/research/authority/SEO checks",
+    "apiSecurityTests": "pass: 6 production/development dependency-chain depth-defense tests",
+    "securityScans": "dependency audit: 1 high braces advisory remains; SAST: 0 findings; privacy scan: 0 findings"
   },
   "knownProductionState": {
     "lastKnownAmpCoverage": "7/10 on the last production check; local coverage is now 11/11",
     "currentRuntimeFingerprint": "unverified",
     "lastKnownIssue": "production artifacts have not been checked against the local report and AMP build",
-    "note": "Local 11/11 AMP coverage does not establish production parity; publication remains held."
+    "note": "Read-only production checks confirmed root and API health but did not expose X-GAN fingerprints. Local 11/11 AMP coverage does not establish production parity; publication remains held."
   },
   "externalActionRequired": [
     {
@@ -69,8 +71,8 @@
   ],
   "failingTests": [],
   "workstreams": [
-    { "id": 0, "name": "Architecture discovery and map", "status": "in_progress", "evidence": "Architecture map updated with report routes, shared source-snapshot rendering, current local fingerprints, mobile performance evidence, verification, and release gates." },
-    { "id": 1, "name": "Deployment provenance", "status": "partial", "evidence": "Local source/Web/API fingerprints and response headers are implemented; production parity remains unverified." },
+    { "id": 0, "name": "Architecture discovery and map", "status": "in_progress", "evidence": "Architecture map updated with report routes, shared source-snapshot rendering, current local fingerprints, mobile performance evidence, read-only production checks, and release gates." },
+    { "id": 1, "name": "Deployment provenance", "status": "partial", "evidence": "Final local source/Web/API fingerprints and response headers match; read-only production root and API health responses exposed no X-GAN headers, so parity remains unverified." },
     { "id": 2, "name": "Legacy API automation cutover", "status": "blocked_external", "evidence": "New API automation is disabled; old deployed timer remains active until unpublish or promotion." },
     { "id": 3, "name": "API security", "status": "partial", "evidence": "Editor routes use authorization and explicit public projection; regression coverage still needs a full audit." },
     { "id": 4, "name": "Single publication eligibility source", "status": "partial", "evidence": "Canonical helper exists, but all public paths need verification against it." },
@@ -94,14 +96,14 @@
     { "id": 22, "name": "Author and editorial trust", "status": "partial", "evidence": "Author records exist; identity and biography claims need verification." },
     { "id": 23, "name": "E-E-A-T and editorial quality", "status": "partial", "evidence": "Story evidence and quality fields exist; consistent publication requirements remain." },
     { "id": 24, "name": "SEO infrastructure", "status": "partial", "evidence": "The full local smoke passes route metadata, structured data, feeds, sitemap, article first-response, and AMP checks; production parity remains unverified." },
-    { "id": 25, "name": "Performance", "status": "partial", "evidence": "Local 402×874, 4× CPU, 150 ms RTT sample: LCP home 3,068 ms, article 7,056 ms, reports 2,328 ms, India topic 4,416 ms, OpenAI 2,404 ms, author 3,572 ms; reports improved from 6,540 ms. All public captures had no third-party script origins and CLS ≤0.001. Local transfer totals are uncompressed; production/CDN performance is unverified. See docs/mobile-performance-audit.md." },
+    { "id": 25, "name": "Performance", "status": "partial", "evidence": "Latest local 402×874, 4× CPU, 150 ms RTT sample: LCP home 2,984 ms, article 6,604 ms, reports 2,324 ms, India topic 4,392 ms, OpenAI 2,176 ms, author 3,748 ms. Public JS entry fell to 575,108 bytes (170,551 gzip); Clerk route chunk is 105,294 bytes (26,575 gzip) and deferred. CLS ≤0.001; local transfer totals are uncompressed and production/CDN performance is unverified. See docs/mobile-performance-audit.md." },
     { "id": 26, "name": "Privacy-conscious analytics", "status": "partial", "evidence": "Existing analytics integration is present; requested event coverage and privacy checks remain." },
     { "id": 27, "name": "Newsletter and recirculation", "status": "partial", "evidence": "Newsletter persistence and CTA exist; provider delivery and broader return-reader paths remain." },
     { "id": 28, "name": "Authority-led content strategy", "status": "not_verified", "evidence": "Priority rules need to be reflected in editorial tooling and publication gates." },
-    { "id": 29, "name": "Security", "status": "in_progress", "evidence": "SAST and privacy scans pass; one high dependency advisory remains." },
-    { "id": 30, "name": "Regression suite", "status": "complete", "evidence": "The configured full smoke command passes with NODE_ENV=test against the development database, including content/research/authority/SEO checks, publication fixture cleanup, public routes, AMP, RSS, responsive checks, release history, themes, and link audit." },
+    { "id": 29, "name": "Security", "status": "in_progress", "evidence": "Fresh dependency audit reports one high braces@3.0.3 advisory with no upstream patch; local depth-defense tests pass 6/6, SAST and privacy scans report no findings." },
+    { "id": 30, "name": "Regression suite", "status": "complete", "evidence": "The configured full smoke command passes, including content/research/authority/SEO checks, publication fixture cleanup, first-response pages, public routes, AMP, RSS, responsive checks, release history, Clerk themes, and link audit." },
     { "id": 31, "name": "Deployment safety", "status": "blocked_external", "evidence": "No deployment while the old scheduler may execute; safe cutover also needs final parity checks." },
-    { "id": 32, "name": "Autonomous progress loop", "status": "in_progress", "evidence": "Updated architecture map, local fingerprints, mobile performance audit, full smoke evidence, and report status; scheduler, security advisory, and production parity gates remain." }
+    { "id": 32, "name": "Autonomous progress loop", "status": "in_progress", "evidence": "Updated local fingerprints, lazy Clerk-route bundle evidence, mobile performance sample, full smoke evidence, and read-only deployment checks; scheduler, dependency advisory, and production parity gates remain." }
   ],
   "finalGate": "blocked"
 }

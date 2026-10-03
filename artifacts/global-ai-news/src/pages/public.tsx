@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ArrowDown, ArrowUp, ArrowUpRight, Pencil, Plus, RefreshCw, Search, Share2, X } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useAuth, useClerk, useUser } from '@clerk/react';
 import { useLocation, useParams, useSearch } from 'wouter';
 import { Link } from '@/components/canonical-link';
 import { askGlobalAnswers, authors, entities, essays, filterSignals, findEntity, findStory, findTimeline, getPublicDateModified, getReaderFacingContentType, getReleaseDraftWordCount, indiaIndex, industryMap, MINIMUM_STORY_WORDS, signals, sources, stories, timelineEvents, type Story } from '@/content';
@@ -33,8 +32,6 @@ import {
   type EditorialReleaseInput,
   type EditorialReleaseUpdate,
 } from '@workspace/api-client-react';
-
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const container = 'editorial-page mx-auto max-w-[1440px] px-5 md:px-10';
 const RELEASE_QUEUE_REFRESH_INTERVAL = 60_000;
@@ -338,11 +335,8 @@ function releaseError(error: unknown): string {
   return 'The release could not be saved. Check the fields and try again.';
 }
 
-function EditorSessionBar() {
-  const { user } = useUser();
-  const { signOut } = useClerk();
-  const label = user?.primaryEmailAddress?.emailAddress ?? user?.fullName ?? 'Signed-in editor';
-  return <div data-testid="editor-session" className="mb-8 flex flex-wrap items-center justify-between gap-3 border border-primary/25 bg-primary/5 px-4 py-3 text-sm"><span>Signed in as <strong>{label}</strong></span><button type="button" onClick={() => void signOut({ redirectUrl: `${basePath || ''}/insights` })} className="border-b border-primary pb-1 font-mono text-[10px] uppercase tracking-widest text-primary">Sign out</button></div>;
+function EditorSessionBar({ userLabel, onSignOut }: { userLabel: string; onSignOut: () => void }) {
+  return <div data-testid="editor-session" className="mb-8 flex flex-wrap items-center justify-between gap-3 border border-primary/25 bg-primary/5 px-4 py-3 text-sm"><span>Signed in as <strong>{userLabel}</strong></span><button type="button" onClick={onSignOut} className="border-b border-primary pb-1 font-mono text-[10px] uppercase tracking-widest text-primary">Sign out</button></div>;
 }
 
 function ReleaseEditor({
@@ -482,11 +476,16 @@ function AutomationAudit() {
   </section>;
 }
 
-export function InsightsPage() {
-  const { isSignedIn } = useAuth();
+export type InsightsEditorAuth = {
+  isSignedIn?: boolean;
+  userLabel: string;
+  onSignOut: () => void;
+};
+
+export function InsightsPage({ editorAuth }: { editorAuth?: InsightsEditorAuth }) {
   const smokeEditorSession = window.location.hostname === '127.0.0.1'
     && new URLSearchParams(window.location.search).get('smoke-editor') === '1';
-  const editorSessionActive = smokeEditorSession || isSignedIn;
+  const editorSessionActive = smokeEditorSession || editorAuth?.isSignedIn;
   const { stories: newsroomStories } = useNewsroomSnapshot();
   const [previewSlug, setPreviewSlug] = useState(newsroomStories[0]?.slug ?? '');
   const previewStory = newsroomStories.find((story) => story.slug === previewSlug) ?? newsroomStories[0];
@@ -621,7 +620,7 @@ export function InsightsPage() {
     <section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Internal editorial surface</p><h1 className="mt-6 max-w-5xl font-serif text-7xl leading-[.84] md:text-[9rem]">The room<br /><em className="text-primary">is reading.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A calm view of audience attention, the publishing calendar and the questions worth following next.</p></section>
     <section className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 sm:grid-cols-2 lg:grid-cols-4">{[['42,806', 'Daily brief subscribers', '+8.4%'], ['18,492', 'Readers right now', '+12.1%'], ['63%', 'Returning readers', '+4.6%'], ['7m 42s', 'Average depth', '+0:38']].map(([value, label, delta]) => <div data-testid={`metric-${label.toLowerCase().replace(/\s/g, '-')}`} key={label} className="bg-background p-6"><p className="eyebrow text-muted-foreground">{label}</p><p className="mt-7 font-serif text-4xl">{value}</p><p className="mt-2 text-xs text-primary">{delta} today</p></div>)}</section>
      {!editorSessionActive && <section data-testid="editor-signed-out-state" className="border-b border-foreground/20 py-10"><div className="border border-primary/25 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8"><div><p className="eyebrow text-primary">Editor access</p><h2 className="mt-3 font-serif text-3xl leading-none">Sign in before changing the release desk.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">Public stories stay open to every reader. Release creation, sequencing, edits and cancellations require an authenticated editor session.</p></div><Link href="/sign-in" className="mt-6 inline-flex shrink-0 items-center gap-2 bg-foreground px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-background md:mt-0">Sign in as editor <ArrowUpRight size={14} /></Link></div></section>}
-     {editorSessionActive && <><EditorSessionBar /><section data-testid="editorial-queue" className="border-b border-foreground/20 py-14">
+      {editorSessionActive && <><EditorSessionBar userLabel={editorAuth?.userLabel ?? 'Signed-in editor'} onSignOut={editorAuth?.onSignOut ?? (() => undefined)} /><section data-testid="editorial-queue" className="border-b border-foreground/20 py-14">
        <div className="flex flex-wrap items-end justify-between gap-5"><div><SectionLabel>Durable release desk</SectionLabel><h2 className="mt-3 max-w-xl font-serif text-5xl leading-[.9]">Prepare the next edition.</h2><p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground">Create, sequence and reschedule prepared articles without changing the publication build.</p></div><div className="flex flex-wrap items-center justify-end gap-2"><span data-testid="release-queue-refresh-status" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{releasesQuery.isFetching ? 'Updating readiness…' : 'Readiness updates automatically'}</span><button data-testid="button-refresh-releases" type="button" onClick={() => { void releasesQuery.refetch(); void historyQuery.refetch(); }} className="inline-flex items-center gap-2 border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary"><RefreshCw size={13} />Refresh</button><button data-testid="button-new-release" type="button" onClick={openCreate} className="inline-flex items-center gap-2 bg-foreground px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-background"><Plus size={14} />New release</button></div></div>
       {editor && <div className="mt-8"><ReleaseEditor key={editor.release?.slug ?? 'new-release'} initialValue={editor.value} editing={Boolean(editor.release)} categories={Array.from(new Set([...categories, editor.value.category]))} onCancel={() => setEditor(null)} onSubmit={saveRelease} saving={busy === 'create' || Boolean(editor.release && busy === `save-${editor.release.slug}`)} /></div>}
       {actionError && <div role="alert" className="mt-5 flex items-center justify-between gap-4 border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm"><span>{actionError}</span><button type="button" onClick={() => setActionError(null)} aria-label="Dismiss release error"><X size={15} /></button></div>}
