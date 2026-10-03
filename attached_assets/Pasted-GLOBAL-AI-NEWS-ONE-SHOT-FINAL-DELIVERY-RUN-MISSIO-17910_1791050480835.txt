@@ -1,0 +1,839 @@
+GLOBAL AI NEWS — ONE-SHOT FINAL DELIVERY RUN
+============================================
+
+MISSION
+
+Complete ALL remaining work end-to-end in one continuous execution.
+
+Do not stop after finding a blocker.
+Do not ask me routine confirmation questions.
+Do not return intermediate status reports.
+Do not create another planning cycle.
+Do not repeatedly re-audit the same problem.
+
+Work continuously until everything that can be completed in the workspace,
+deployment configuration, build artifacts, and tests is complete.
+
+ONLY after all requirements below are satisfied, return exactly:
+
+PUBLISH NOW
+
+If a genuinely external action is required that cannot be performed by the
+agent, continue completing every other possible task and then return:
+
+PUBLISH NOW
+
+Do not return "foundation blocked" merely because a human must click Publish.
+
+==================================================
+RULE 1 — PRODUCTION SAFETY
+==================================================
+
+Production is currently unpublished/offline.
+
+Do NOT:
+
+- create production editorial test records
+- run editorial automation
+- invoke the automation scheduler manually
+- invent production content
+- alter historical article dates
+- weaken API authentication
+- expose internal newsroom data
+
+The new API must remain automation-disabled.
+
+The old scheduler must remain stopped.
+
+==================================================
+RULE 2 — COMPLETE ALL WORKSTREAMS IN PARALLEL
+==================================================
+
+Run independent workstreams simultaneously where safe.
+
+Workstreams:
+
+A. deployment provenance
+B. Web/API artifact parity
+C. API security
+D. publication lifecycle
+E. RSS
+F. sitemap
+G. AMP
+H. article metadata
+I. 404/noindex
+J. trust routes
+K. robots/canonical
+L. safe publication fixture
+M. authority engine
+N. research
+O. reports
+P. source registry
+Q. data products
+R. entities
+S. topics
+T. timelines
+U. internal linking
+V. performance
+W. dependency security
+X. regression tests
+Y. documentation
+
+Only serialize:
+- production deployment
+- production database mutations
+- production configuration changes
+- scheduler cutover
+
+==================================================
+A — DEPLOYMENT TOPOLOGY
+==================================================
+
+Determine exactly:
+
+- Web service
+- API service
+- database
+- deployment source
+- Git branch
+- current workspace revision
+- Web artifact
+- API artifact
+- build directory
+- runtime directory
+- static assets
+- route ownership
+- environment variables
+- internal Web→API target
+- production public URLs
+
+Prevent competing ownership of:
+
+/feed.xml
+/sitemap.xml
+/article/*
+/amp/*
+/api/*
+
+The Web artifact owns public Web routes.
+
+The API artifact owns /api/*.
+
+Root XML routes must be owned by Web and use the live API.
+
+==================================================
+B — DEPLOYMENT PROVENANCE
+==================================================
+
+Make it possible to prove which revision is deployed.
+
+Use:
+
+- existing platform deployment ID if available
+- otherwise safe build fingerprints
+
+Fingerprint:
+
+- source revision
+- Web revision
+- API revision
+
+No secrets.
+
+Ensure current workspace revision → current Web artifact + current API artifact.
+
+Do not accept "successful build" as proof of parity.
+
+==================================================
+C — LEGACY SCHEDULER
+==================================================
+
+The old API scheduler was the reason publication was previously held.
+
+Confirm:
+
+OLD API scheduler = STOPPED
+NEW API automation = DISABLED
+
+Do not restart or invoke the old scheduler.
+
+Document the actual cutover state.
+
+If the platform requires an external Publish action, do not substitute a
+fake verification.
+
+==================================================
+D — API SECURITY
+==================================================
+
+Anonymous requests MUST return 401:
+
+GET /api/newsroom/releases
+GET /api/newsroom/releases/history
+GET /api/newsroom/automation/status
+GET /api/newsroom/automation/runs
+
+All release mutations and automation execution endpoints must remain
+protected.
+
+Public API responses must NOT contain:
+
+schedule
+status
+position
+cadence
+publishAt
+updatedAt
+release metadata
+queue metadata
+readiness
+word-count internals
+editorial provenance
+automation data
+audit data
+
+Use explicit public DTO projections.
+
+==================================================
+E — PUBLICATION SOURCE OF TRUTH
+==================================================
+
+Implement ONE canonical function for public eligibility.
+
+Conceptually:
+
+isPublicArticle(article, now)
+
+Use it everywhere:
+
+- homepage
+- article route
+- metadata
+- RSS API
+- root RSS
+- sitemap API
+- root sitemap
+- reports
+- topics
+- entities
+- related content
+
+Never duplicate publication-state rules.
+
+==================================================
+F — RSS
+==================================================
+
+One canonical feed-generation implementation only.
+
+Root:
+
+/feed.xml
+
+must use the same live eligible article set as:
+
+/api/newsroom/feed.xml
+
+No static stale feed.
+
+Expected current set:
+
+10 public stories.
+
+Verify IDs/slugs, not merely item count.
+
+==================================================
+G — SITEMAP
+==================================================
+
+Root:
+
+/sitemap.xml
+
+must use the same canonical data as:
+
+/api/newsroom/sitemap.xml
+
+Expected:
+
+47 URLs total
+10 article URLs
+
+Every article sitemap URL must resolve publicly.
+
+==================================================
+H — AMP
+==================================================
+
+AMP path is always article-specific:
+
+/article/<slug>
+/amp/article/<same-slug>
+
+For ALL public articles:
+
+- rel="amphtml" exists
+- ampPath exists
+- AMP route returns 200
+- title matches
+- H1 matches
+- canonical matches normal article
+- no article points to another article's AMP
+
+Explicitly verify:
+
+weekly-deep-dive-cost-of-intelligence
+public-compute-needs-public-metrics
+reliability-is-the-new-ai-moat
+
+Unknown AMP:
+
+404 + noindex
+
+==================================================
+I — ARTICLE FIRST RESPONSE
+==================================================
+
+For all public article routes verify first-response HTML includes:
+
+- title
+- description
+- canonical
+- Open Graph
+- JSON-LD
+- author
+- publication date
+- body
+
+No client-only dependency for critical article metadata/content.
+
+==================================================
+J — TRUST ROUTES
+==================================================
+
+/about-us
+/code-of-ethics
+/corrections
+/contact-us
+
+must return:
+
+200
+pending editorial content
+noindex
+
+/contact
+
+must redirect:
+
+/contact → /contact-us
+
+/privacy
+/terms
+
+remain unavailable unless authoritative owner-approved copy exists.
+
+Do not invent legal copy.
+
+==================================================
+K — 404 / SEO
+==================================================
+
+Unknown article:
+
+404 + noindex
+
+Unknown AMP:
+
+404 + noindex
+
+==================================================
+L — ROBOTS / CANONICAL
+==================================================
+
+Canonical:
+
+https://www.globalainews.in
+
+must remain crawlable.
+
+global-ai-media.replit.app must not compete in search.
+
+Use the appropriate canonical/noindex/robots strategy.
+
+Verify sitemap reference in canonical robots.txt.
+
+==================================================
+M — SAFE PUBLICATION FIXTURE
+==================================================
+
+Create or complete a genuinely isolated publication test mechanism.
+
+Preferred:
+
+isolated schema/database
+
+Alternative:
+
+in-memory/test adapter
+
+Must prove:
+
+eligible content
+→ article
+→ first response
+→ homepage
+→ RSS API
+→ root RSS
+→ sitemap API
+→ root sitemap
+
+No production editorial writes.
+
+No permanent test records.
+
+==================================================
+N — AUTHORITY ENGINE
+==================================================
+
+The Authority Engine must be production-quality, not merely route-complete.
+
+Support:
+
+Brief
+Analysis
+Explainer
+Research
+Report
+Comparison
+Essay
+
+==================================================
+O — SOURCE REGISTRY
+==================================================
+
+Reusable Source model:
+
+- title
+- publisher
+- exact URL
+- publication date
+- source type
+- primary/secondary
+- accessed date
+- relevance
+- notes
+
+Never invent URLs.
+
+==================================================
+P — RESEARCH SYSTEM
+==================================================
+
+Research model supports:
+
+- question
+- methodology
+- datasets/data sources
+- findings
+- limitations
+- sources
+- author/analyst
+- status
+- update history
+
+Clearly distinguish:
+
+external reporting
+original analysis
+original research
+
+==================================================
+Q — DATA SYSTEM
+==================================================
+
+Support:
+
+- tables
+- observations
+- historical snapshots
+- source provenance
+- methodology
+- limitations
+- update dates
+
+Do not present historical figures as current availability.
+
+==================================================
+R — ENTITY SYSTEM
+==================================================
+
+Support:
+
+Company
+Lab
+Model
+Technology
+Person
+Institution
+Policy
+Dataset
+Infrastructure
+
+Meaningful entity pages only.
+
+==================================================
+S — TOPIC SYSTEM
+==================================================
+
+Support:
+
+description
+developments
+articles
+entities
+research
+reports
+timeline
+sources
+
+No thin topic pages.
+
+==================================================
+T — TIMELINE
+==================================================
+
+Support:
+
+date
+event
+explanation
+source
+related entity/topic/report
+
+==================================================
+U — KNOWLEDGE GRAPH
+==================================================
+
+Relationships:
+
+Article
+→ Topic
+→ Entity
+→ Source
+→ Research
+→ Report
+→ Data
+→ Timeline
+
+Enable meaningful reciprocal navigation.
+
+==================================================
+V — AI COMPUTE INDIA FLAGSHIP
+==================================================
+
+Complete:
+
+/reports/ai-compute-india/
+
+Use the existing ~4,200-word report as the base.
+
+The final report must include:
+
+- executive summary
+- compute definition
+- landscape
+- infrastructure
+- accelerator/GPU landscape
+- geography
+- capacity
+- access models
+- public/private initiatives
+- economics
+- energy/infrastructure
+- policy/programs
+- organizations
+- history
+- current evidence
+- open questions
+- data tables
+- methodology
+- limitations
+- sources
+- update history
+- related research
+- related entities
+- related topics
+- related reporting
+
+Quantitative claims must clearly distinguish:
+
+ANNOUNCED
+ONBOARDED
+INSTALLED
+DEPLOYED
+ACCESSIBLE
+SCHEDULABLE
+
+Never claim schedulable availability without evidence.
+
+==================================================
+W — INDIA COMPUTE DATASET
+==================================================
+
+Investigate a dated public inventory.
+
+Use only reliable evidence.
+
+Fields may include:
+
+date
+organization
+facility
+location
+accelerator
+reported quantity
+evidence type
+status
+source
+source date
+limitations
+
+Do not fabricate current capacity.
+
+==================================================
+X — SECOND AUTHORITY CLUSTER
+==================================================
+
+Build reusable architecture for:
+
+SMALL MODELS / EFFICIENT AI / SERIOUS WORKFLOWS
+
+Support future:
+
+cost
+latency
+memory
+hardware
+workflow
+benchmark
+use-case
+
+Do not invent benchmarks.
+
+Do not mass-publish thin content.
+
+==================================================
+Y — REPORTS HUB
+==================================================
+
+Make /reports a substantive destination.
+
+Support:
+
+- featured reports
+- research
+- data products
+- update dates
+- topics
+- entities
+
+==================================================
+Z — INTERNAL LINKING
+==================================================
+
+Substantive content should connect:
+
+article
+↔ topic
+↔ entity
+↔ research
+↔ report
+↔ timeline
+
+No artificial link spam.
+
+==================================================
+PERFORMANCE
+==================================================
+
+Current bundle was reduced substantially.
+
+Continue safe optimization.
+
+Keep editor/admin code out of public bundles.
+
+Prefer:
+
+SSR
+minimal hydration
+lazy loading
+server-side data
+
+Measure:
+
+TTFB
+LCP
+CLS
+JS payload
+image payload
+
+Do not break functionality for arbitrary bundle targets.
+
+==================================================
+SECURITY
+==================================================
+
+Investigate:
+
+braces@3.0.3 HIGH advisory
+
+Determine:
+
+- dependency path
+- runtime vs development
+- production impact
+- safe mitigation
+
+If no patch exists:
+
+document mitigation and rationale.
+
+Do not broad-upgrade dependencies.
+
+==================================================
+REGRESSION
+==================================================
+
+Run everything:
+
+- typecheck
+- production build
+- full smoke
+- desktop
+- mobile
+- AMP
+- RSS
+- sitemap
+- article first response
+- report first response
+- JSON-LD
+- metadata
+- API auth
+- public DTO projection
+- trust routes
+- redirects
+- 404/noindex
+- robots
+- link audit
+- research
+- reports
+- entities
+- topics
+- timelines
+- publication fixture
+- security
+- performance
+
+Resolve failures before completion.
+
+==================================================
+DOCUMENTATION
+==================================================
+
+Maintain:
+
+docs/architecture-map.md
+docs/autonomous-delivery-progress.json
+docs/production-cutover-checklist.md
+docs/authority-engine.md
+
+Checkpoint current:
+
+- source revision
+- artifact revision
+- build fingerprint
+- deployment state
+- scheduler state
+- completed workstreams
+- remaining external actions
+
+==================================================
+FINAL CUTOVER READINESS
+==================================================
+
+Before requesting/performing publication, confirm:
+
+[ ] old scheduler stopped
+[ ] new automation disabled
+[ ] current Web source revision
+[ ] current API source revision
+[ ] Web artifact current
+[ ] API artifact current
+[ ] deployment provenance available
+[ ] API auth passes
+[ ] public DTO clean
+[ ] RSS canonical
+[ ] sitemap canonical
+[ ] AMP 10/10
+[ ] article first responses pass
+[ ] trust routes pass
+[ ] 404/noindex passes
+[ ] robots/canonical pass
+[ ] safe publication fixture exists
+[ ] Authority Engine complete
+[ ] AI Compute India complete
+[ ] research/source/data systems complete
+[ ] entity/topic/timeline systems complete
+[ ] internal linking complete
+[ ] security status documented
+[ ] performance measured
+[ ] full regression suite passes
+
+==================================================
+EXECUTION BEHAVIOR
+==================================================
+
+DO NOT STOP because one task is blocked.
+
+If production is unavailable:
+
+continue workspace work.
+
+If a test fails:
+
+fix it and rerun.
+
+If deployment parity fails:
+
+trace source → artifact → deployment → runtime.
+
+If a production-only action requires the platform UI:
+
+record it as an external action and continue all other work.
+
+Do NOT ask me:
+
+"Should I continue?"
+
+Do NOT ask me:
+
+"Would you like me to fix X?"
+
+Do NOT ask me to approve routine implementation decisions.
+
+Make reasonable decisions and continue.
+
+==================================================
+FINAL RESPONSE
+==================================================
+
+When EVERYTHING that can be completed has been completed, all tests pass,
+the current deployment artifacts are ready, the legacy scheduler is stopped,
+and the only remaining human action is clicking Publishing → Publish:
+
+RETURN EXACTLY:
+
+PUBLISH NOW
+
+Nothing else.
