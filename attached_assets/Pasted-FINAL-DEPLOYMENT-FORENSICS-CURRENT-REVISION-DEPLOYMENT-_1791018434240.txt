@@ -1,0 +1,250 @@
+FINAL DEPLOYMENT FORENSICS + CURRENT-REVISION DEPLOYMENT
+
+We are NOT doing another application-level AMP repair.
+
+The workspace AMP implementation is already correct and verified:
+
+- typecheck PASS
+- production build PASS
+- smoke suite PASS
+- link audit PASS
+- all 10 articles generate article-specific AMP paths
+- all 10 AMP pages work locally
+- unknown AMP slugs return 404
+
+Production still serves the OLD 7-article AMP implementation.
+
+The evidence shows:
+
+- both production hosts are the same active autoscale deployment
+- production API metadata exposes ampPath for only 7 articles
+- production Web artifact omits AMP links for the same 3 articles
+- production AMP routes for those 3 articles are absent
+- other current foundation fixes ARE present
+
+Therefore the remaining problem is deployment/source/artifact provenance.
+
+DO NOT make another local AMP implementation.
+DO NOT change editorial data.
+DO NOT change publication eligibility.
+DO NOT change API auth.
+DO NOT change RSS/sitemap/trust/404 logic.
+DO NOT create production editorial content.
+DO NOT invoke automation.
+
+============================================================
+1. IDENTIFY EXACT SOURCE REVISION USED BY DEPLOYMENT
+============================================================
+
+Inspect the deployment configuration and determine exactly what source is being built and served.
+
+Compare:
+
+A. current workspace source revision
+B. current Git HEAD / commit if applicable
+C. Web artifact source/revision
+D. API artifact source/revision
+E. deployment build configuration
+F. deployment start/run commands
+G. build output directories
+H. any separate Web/API service roots
+I. any generated/static artifacts copied into the deployment
+J. any cached build/image/artifact mechanism used by the deployment platform
+
+Do not assume the currently open workspace is the deployed source.
+
+Explicitly determine whether:
+
+- deployment uses the current branch
+- deployment uses a different branch
+- deployment uses a different working directory
+- Web and API build from different source roots
+- generated artifacts are copied from an old directory
+- a stale build cache/container is being reused
+- deployment configuration references an old artifact
+- an old deployment remains active despite a successful publish
+
+============================================================
+2. PROVE THE AMP FIX EXISTS IN THE DEPLOYMENT INPUT
+============================================================
+
+Locate the exact workspace code responsible for:
+
+- ampPath generation
+- rel="amphtml"
+- AMP article route generation
+
+Identify a distinctive implementation marker/string from that code.
+
+Then inspect the actual production build input/output, if accessible.
+
+The goal is to answer:
+
+"Does the artifact that was deployed actually contain the current AMP implementation?"
+
+Do not infer this from deployment status.
+
+============================================================
+3. ADD A TEMPORARY BUILD FINGERPRINT IF NECESSARY
+============================================================
+
+If the deployment platform exposes no reliable revision/build identifier, add the smallest possible non-editorial build fingerprint.
+
+Preferred options:
+
+- response header on Web/API
+- existing build/version endpoint if one already exists
+- server startup log with commit/build identifier
+- HTML comment or metadata that does not affect indexing
+
+The fingerprint must identify:
+
+- source commit/revision
+- Web artifact revision
+- API artifact revision
+
+Do not expose secrets or internal credentials.
+
+This is a diagnostic mechanism, not a product feature.
+
+============================================================
+4. RECONCILE WEB + API ARTIFACTS
+============================================================
+
+Both artifacts must be built from the intended CURRENT workspace revision.
+
+Verify that:
+
+Web contains:
+- current AMP resolver
+- current AMP route implementation
+- current trust routes
+- current 404/noindex behavior
+
+API contains:
+- current public projection
+- current ampPath generation
+- current auth boundaries
+
+If Web and API are separately deployed, they must each be rebuilt from the current source revision.
+
+============================================================
+5. FORCE A CLEAN CURRENT-REVISION BUILD
+============================================================
+
+If the deployment process supports a clean/no-cache rebuild, use it.
+
+If a stale generated artifact or cached build directory is discovered:
+
+- remove/replace the stale artifact
+- ensure it is generated from the current source
+- ensure the stale artifact cannot be selected again
+
+If the deployment configuration points at the wrong source directory/branch/artifact:
+
+- correct it
+- preserve the intended production architecture
+
+Do NOT perform broad infrastructure changes.
+
+============================================================
+6. DEPLOY ONCE
+============================================================
+
+Deploy the CURRENT verified Web and API artifacts.
+
+Do not create a second unrelated deployment.
+
+Do not leave an older deployment serving production traffic.
+
+Verify the deployment that receives production traffic is the one just built.
+
+============================================================
+7. IMMEDIATELY VERIFY BOTH HOSTS
+============================================================
+
+Test:
+
+https://www.globalainews.in
+https://global-ai-media.replit.app
+
+First verify the build fingerprint/revision if added.
+
+Then verify the three missing articles:
+
+/article/weekly-deep-dive-cost-of-intelligence/
+/article/public-compute-needs-public-metrics/
+/article/reliability-is-the-new-ai-moat/
+
+For each:
+
+- article = 200
+- rel="amphtml" exists
+- ampPath exists
+- ampPath uses same article slug
+- AMP = 200
+- AMP title matches
+- AMP H1 matches
+- AMP canonical matches normal article
+
+Then verify all 10 articles.
+
+============================================================
+8. VERIFY FOUNDATION REGRESSION
+============================================================
+
+Only after AMP succeeds, perform a compact regression check:
+
+- public stories = 10
+- public API has no internal editorial fields
+- editor reads = 401
+- release mutations = 401
+- root RSS = API RSS = 10
+- root sitemap = API sitemap = 47
+- trust pages = 200 + noindex
+- /contact → /contact-us
+- unknown article = 404 + noindex
+- unknown AMP = 404 + noindex
+
+Do not invoke automation.
+
+============================================================
+9. SAFE PUBLICATION FIXTURE
+============================================================
+
+The existing fixture writes production release/audit rows and therefore MUST NOT be used.
+
+Do not block the deployment on this.
+
+Record:
+
+NOT VERIFIED — SAFE DEPLOYED FIXTURE UNAVAILABLE
+
+unless a genuinely non-writing deployed fixture already exists.
+
+A safe publication fixture can be designed later.
+
+============================================================
+10. FINAL DECISION
+============================================================
+
+If the deployed Web + API artifacts are proven to come from the current workspace revision and all 10 AMP routes pass:
+
+FOUNDATION READY — AUTHORITY ENGINE MAY BEGIN
+
+If AMP still shows 7/10:
+
+FOUNDATION NOT READY — DEPLOYMENT REVISION MISMATCH
+
+In that case report:
+
+- workspace revision
+- deployed Web revision
+- deployed API revision
+- deployment source
+- build output/artifact source
+- exact point where the stale revision entered the deployment
+
+Do NOT perform another application-code AMP rewrite.
+
+Do NOT start the Authority Engine until the active production artifact is proven to contain the current revision.
