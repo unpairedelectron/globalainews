@@ -1,0 +1,792 @@
+GLOBAL AI NEWS — AUTHORITY ENGINE EXECUTION
+================================================
+
+START THE REAL PRODUCT WORK NOW.
+
+PRODUCTION REMAINS ON HOLD.
+
+Do NOT unpublish.
+Do NOT publish.
+Do NOT execute production automation.
+Do NOT modify production editorial data.
+Do NOT spend another cycle re-auditing already-passing foundation areas.
+
+The remaining production cutover issues are a separate workstream.
+
+Everything that can be completed safely in the workspace MUST continue now.
+
+================================================
+PRIMARY MISSION
+================================================
+
+Transform Global AI News from a conventional AI news site into a
+research-driven AI publication.
+
+Build three layers:
+
+1. NEWS / BRIEFING
+2. ORIGINAL INTELLIGENCE / RESEARCH
+3. DATA + REFERENCE PRODUCTS
+
+The site should answer:
+
+WHAT HAPPENED?
+WHY DOES IT MATTER?
+WHAT DOES THE EVIDENCE SHOW?
+WHO/WHAT IS INVOLVED?
+WHAT CHANGED OVER TIME?
+WHAT DATA EXISTS?
+WHERE ARE THE SOURCES?
+WHAT SHOULD THE READER EXPLORE NEXT?
+
+================================================
+EXECUTION RULE
+================================================
+
+Do NOT stop after completing one feature.
+
+Work in parallel wherever dependencies permit.
+
+Use this execution loop:
+
+DISCOVER
+→ DESIGN
+→ IMPLEMENT
+→ TEST
+→ INTEGRATE
+→ REGRESS
+→ CONTINUE
+
+Only stop for genuine external dependencies.
+
+Do not ask for confirmation for routine engineering decisions.
+
+Make reasonable implementation decisions consistent with the existing
+architecture.
+
+================================================
+TRACK A — AUTHORITY ENGINE CORE
+================================================
+
+Implement reusable support for:
+
+Brief
+Analysis
+Explainer
+Research
+Report
+Comparison
+Essay
+
+Each content type must have a clear editorial purpose.
+
+Do not create seven superficial templates.
+
+================================================
+TRACK B — SOURCE REGISTRY
+================================================
+
+Create a reusable Source system.
+
+Fields should support:
+
+- title
+- publisher
+- exact URL
+- publication date
+- source type
+- primary/secondary
+- accessed date
+- relevance/context
+- notes
+
+Sources must be reusable across:
+
+articles
+research
+reports
+datasets
+entities
+timelines
+
+Never invent source URLs.
+
+================================================
+TRACK C — RESEARCH SYSTEM
+================================================
+
+Create Research entities/pages with:
+
+- research question
+- methodology
+- dataset/data sources
+- findings
+- limitations
+- sources
+- analyst/author
+- status
+- update history
+
+Clearly distinguish:
+
+EXTERNAL REPORTING
+ORIGINAL ANALYSIS
+ORIGINAL RESEARCH
+
+Never label rewritten reporting as original research.
+
+================================================
+TRACK D — DATA PRODUCT SYSTEM
+================================================
+
+Build reusable data structures/components for:
+
+- tables
+- observations
+- historical snapshots
+- source attribution
+- methodology
+- limitations
+- update dates
+- evidence type
+
+Support future data products without creating one-off code.
+
+================================================
+TRACK E — ENTITY GRAPH
+================================================
+
+Support:
+
+Company
+Lab
+Model
+Technology
+Person
+Institution
+Policy
+Dataset
+Infrastructure
+
+Each substantive entity can connect to:
+
+- articles
+- topics
+- reports
+- research
+- sources
+- timelines
+
+Do NOT generate empty entity pages.
+
+Only create indexable entity pages when meaningful content exists.
+
+================================================
+TRACK F — TOPIC SYSTEM
+================================================
+
+Create controlled topic structures.
+
+A topic can contain:
+
+- description
+- important developments
+- articles
+- entities
+- research
+- reports
+- timeline
+- sources
+
+Do not mass-generate topic pages.
+
+================================================
+TRACK G — TIMELINES
+================================================
+
+Create reusable timeline infrastructure.
+
+Timeline event:
+
+- date
+- title
+- explanation
+- source
+- related entity/topic/report
+
+Timelines must represent meaningful developments, not arbitrary dates.
+
+================================================
+TRACK H — KNOWLEDGE GRAPH
+================================================
+
+Implement relationships:
+
+Article
+→ Topic
+→ Entity
+→ Source
+→ Research
+→ Report
+→ Data
+→ Timeline
+
+Also provide useful reciprocal relationships.
+
+The graph must be navigable by readers.
+
+Example:
+
+Article
+→ Company
+→ Related research
+→ Report
+→ Historical timeline
+→ Source
+
+================================================
+TRACK I — FLAGSHIP REPORT
+================================================
+
+Make this the first major authority asset:
+
+/reports/ai-compute-india/
+
+The existing report is approximately 4,200 words and already contains
+18 citations and evidence limitations.
+
+Do NOT throw it away.
+
+Upgrade it into a durable reference product.
+
+Structure it around:
+
+1. Executive summary
+2. Definition of AI compute
+3. Current landscape
+4. Infrastructure
+5. Accelerator/GPU landscape
+6. Geographic distribution
+7. Capacity
+8. Access models
+9. Public/private initiatives
+10. Economics
+11. Energy/infrastructure constraints
+12. Policy/program landscape
+13. Major organizations
+14. Historical development
+15. Current evidence
+16. Open questions
+17. Data tables
+18. Methodology
+19. Limitations
+20. Sources
+21. Update history
+22. Related research
+23. Related entities
+24. Related topics
+25. Related reporting
+
+Every significant quantitative claim must distinguish where evidence allows:
+
+ANNOUNCED
+ONBOARDED
+INSTALLED
+DEPLOYED
+ACCESSIBLE
+SCHEDULABLE
+
+Never equate them.
+
+Do not manufacture a current GPU-access figure.
+
+================================================
+TRACK J — INDIA COMPUTE DATA ASSET
+================================================
+
+Investigate and build a reusable dated inventory where evidence supports it.
+
+Possible fields:
+
+date
+organization
+facility
+location
+accelerator
+reported quantity
+capacity/evidence
+status
+source
+source date
+limitations
+
+Use historical snapshots where appropriate.
+
+Clearly label the date.
+
+Do not present historical inventory as current availability.
+
+If reliable evidence does not exist, document the limitation rather than
+inventing values.
+
+================================================
+TRACK K — RESEARCH SERIES
+================================================
+
+Create the infrastructure for a repeatable AI Compute in India research series.
+
+Potential research formats:
+
+- infrastructure landscape
+- regional distribution
+- public/private access
+- economics
+- energy requirements
+- policy tracking
+- accelerator availability
+- utilization/access models
+
+Each piece needs:
+
+question
+methodology
+sources
+analysis
+limitations
+findings
+
+================================================
+TRACK L — SECOND CLUSTER
+================================================
+
+Prepare the second authority cluster:
+
+SMALL MODELS / EFFICIENT AI / SERIOUS WORKFLOWS
+
+Build the architecture for:
+
+- model comparisons
+- inference cost
+- latency
+- memory requirements
+- hardware implications
+- workflow suitability
+- real-world use cases
+- evidence-backed evaluation
+
+Do not invent benchmarks.
+
+Do not mass-publish yet.
+
+================================================
+TRACK M — REPORTS INDEX
+================================================
+
+Make /reports a real editorial destination.
+
+It should show:
+
+- featured reports
+- research
+- data products
+- update dates
+- topic relationships
+- entity relationships
+
+Avoid turning it into a grid of empty cards.
+
+================================================
+TRACK N — ARTICLE INTEGRATION
+================================================
+
+Every substantive article should be able to connect to:
+
+- topic
+- entities
+- sources
+- research
+- report
+- timeline
+
+Add meaningful “Explore deeper” pathways.
+
+Example:
+
+News article
+→ analysis
+→ research
+→ report
+→ data
+
+This is the recirculation engine.
+
+================================================
+TRACK O — TRUST + PROVENANCE
+================================================
+
+Research/report pages should visibly communicate:
+
+- methodology
+- source provenance
+- update date
+- limitations
+- what the evidence establishes
+- what it does not establish
+
+Do not overstate certainty.
+
+================================================
+TRACK P — CONTENT QUALITY ENGINE
+================================================
+
+Create reusable editorial guidance/components for:
+
+LEAD
+→ WHAT HAPPENED
+→ EVIDENCE
+→ CONTEXT
+→ WHY IT MATTERS
+→ WHAT CHANGES NEXT
+→ RELATED MATERIAL
+
+Where appropriate.
+
+Do not mechanically force the structure into every article.
+
+================================================
+TRACK Q — SEO ARCHITECTURE
+================================================
+
+Ensure authority pages support:
+
+- canonical
+- title
+- description
+- Open Graph
+- JSON-LD
+- breadcrumbs
+- sitemap inclusion
+- correct indexability
+- first-response HTML
+
+Reports/research/data pages must be designed for search discovery.
+
+Do not create SEO pages solely for keywords.
+
+================================================
+TRACK R — PERFORMANCE
+================================================
+
+Continue reducing public client JavaScript where practical.
+
+Current largest client bundle:
+
+575,108 bytes
+170,551 gzip
+
+Do NOT sacrifice functionality blindly.
+
+Keep editor/admin functionality out of public bundles.
+
+Public pages should prefer:
+
+server rendering
+request-time data
+minimal hydration
+lazy loading
+
+Do not introduce client-side architecture unnecessarily.
+
+================================================
+TRACK S — ANALYTICS
+================================================
+
+Create a lightweight event model for:
+
+article view
+report view
+research view
+entity click
+topic click
+source click
+related-content click
+newsletter signup
+
+Use privacy-conscious instrumentation.
+
+Design it so later we can understand which authority assets attract
+and retain readers.
+
+================================================
+TRACK T — NEWSLETTER / RETURN READER LOOP
+================================================
+
+Make substantive content lead naturally to:
+
+related reporting
+topic exploration
+entity exploration
+research
+reports
+newsletter
+
+Avoid aggressive popups.
+
+================================================
+TRACK U — TESTING
+================================================
+
+Add regression tests for:
+
+content types
+source registry
+research pages
+report pages
+data tables
+entity relationships
+topic relationships
+timelines
+article→research
+article→report
+article→entity
+report→research
+report→data
+report→entity
+
+Also retain all existing foundation regression tests.
+
+================================================
+TRACK V — QUALITY GATE FOR AUTHORITY ASSETS
+================================================
+
+A report/research asset is NOT complete merely because the route exists.
+
+Before marking complete, verify:
+
+[ ] substantive content
+[ ] source provenance
+[ ] methodology
+[ ] limitations
+[ ] update metadata
+[ ] structured data
+[ ] internal linking
+[ ] entity connections
+[ ] topic connections
+[ ] related reporting
+[ ] first-response HTML
+[ ] mobile rendering
+[ ] no fabricated data
+[ ] no fabricated sources
+
+================================================
+TRACK W — CONTENT ARCHITECTURE
+================================================
+
+Build the publication around:
+
+NEWS
+│
+├── Briefs
+├── Analysis
+└── Explainers
+
+INTELLIGENCE
+│
+├── Research
+├── Reports
+└── Comparisons
+
+DATA
+│
+├── Datasets
+├── Tables
+├── Historical snapshots
+└── Trackers
+
+REFERENCE
+│
+├── Topics
+├── Entities
+└── Timelines
+
+These should reinforce each other.
+
+================================================
+TRACK X — EDITORIAL DASHBOARD
+================================================
+
+Where the existing CMS/editor system allows it, add support for:
+
+content type
+topic
+entity
+source
+research relationship
+report relationship
+publication status
+
+Do not expose internal workflow fields through public APIs.
+
+================================================
+TRACK Y — DOCUMENTATION
+================================================
+
+Keep these updated:
+
+docs/architecture-map.md
+docs/autonomous-delivery-progress.json
+docs/authority-engine.md
+
+Document:
+
+- data model
+- relationships
+- publication architecture
+- source model
+- research model
+- report model
+- entity model
+- topic model
+- timeline model
+- future extension points
+
+================================================
+TRACK Z — DEPLOYMENT HOLD
+================================================
+
+Production remains untouched until the production cutover is explicitly
+safe.
+
+While production is held:
+
+CONTINUE ALL WORKSPACE DEVELOPMENT.
+
+Do not use production as a test environment.
+
+Do not create production editorial fixtures.
+
+Do not invoke production automation.
+
+================================================
+EXECUTION PRIORITY
+================================================
+
+Priority 1:
+
+Authority Engine data model
+Source registry
+Research system
+Report system
+Entity system
+Topic system
+
+Priority 2:
+
+AI Compute India report
+AI Compute data asset
+Research series
+
+Priority 3:
+
+Knowledge graph
+Internal linking
+Reports hub
+Entity/topic UI
+
+Priority 4:
+
+Second-cluster infrastructure
+Analytics
+Newsletter/recirculation
+
+Priority 5:
+
+Performance/security refinements
+
+Do independent tracks in parallel.
+
+================================================
+COMPLETION LOOP
+================================================
+
+After each significant implementation:
+
+typecheck
+→ targeted tests
+→ smoke
+→ build
+→ continue
+
+Do not stop simply because one independent track is blocked.
+
+================================================
+FINAL WORKSPACE DEFINITION OF DONE
+================================================
+
+Do not report completion until:
+
+[ ] Authority Engine core exists
+[ ] Source registry exists
+[ ] Research system exists
+[ ] Report system exists
+[ ] Data system exists
+[ ] Entity system exists
+[ ] Topic system exists
+[ ] Timeline system exists
+[ ] Knowledge graph works
+[ ] AI Compute India report is fully integrated
+[ ] AI Compute India report has source-backed evidence
+[ ] AI Compute India report has methodology
+[ ] AI Compute India report has limitations
+[ ] AI Compute India report has update architecture
+[ ] India compute data asset exists where evidence supports it
+[ ] Second authority cluster architecture exists
+[ ] Internal linking works
+[ ] Reports hub works
+[ ] First-response rendering works
+[ ] SEO works
+[ ] Mobile rendering works
+[ ] Performance has been materially improved or measured honestly
+[ ] Security findings are documented/remediated where possible
+[ ] Regression suite passes
+[ ] No fake data/sources/content
+[ ] Documentation is updated
+
+Then report:
+
+AUTHORITY ENGINE WORKSPACE STATUS:
+COMPLETE
+
+or:
+
+BLOCKED
+
+For BLOCKED, list only genuine blockers.
+
+Do NOT declare production complete until the separate production
+cutover is performed and verified.
+
+================================================
+MISSION
+================================================
+
+BUILD THE PUBLICATION.
+
+Not another news template.
+
+Not another SEO-page generator.
+
+Build a system where:
+
+NEWS
+→ EVIDENCE
+→ RESEARCH
+→ DATA
+→ ENTITIES
+→ TOPICS
+→ REPORTS
+→ HISTORY
+
+all reinforce each other.
+
+Continue until the workspace Definition of Done is satisfied.
