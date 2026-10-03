@@ -28,6 +28,22 @@ if (!Number.isInteger(port) || port <= 0 || port > 65_535) {
 const app = express();
 app.disable('x-powered-by');
 
+app.use((_request, response, next) => {
+  response.setHeader(
+    'X-GAN-Source-Revision',
+    process.env.GAN_BUILD_SOURCE_REVISION ?? 'unavailable',
+  );
+  response.setHeader(
+    'X-GAN-Web-Artifact-Revision',
+    process.env.GAN_BUILD_WEB_ARTIFACT_REVISION ?? 'unavailable',
+  );
+  response.setHeader(
+    'X-GAN-API-Artifact-Revision',
+    process.env.GAN_BUILD_API_ARTIFACT_REVISION ?? 'unavailable',
+  );
+  next();
+});
+
 function proxyNewsroomXmlDocument(apiPath: string, defaultContentType: string) {
   return async (_request: Request, response: Response): Promise<void> => {
     const configuredOrigin = process.env.NEWSROOM_API_ORIGIN;

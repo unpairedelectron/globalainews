@@ -1,6 +1,7 @@
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 import { build as esbuild } from "esbuild";
 import esbuildPluginPino from "esbuild-plugin-pino";
 import { rm } from "node:fs/promises";
@@ -9,10 +10,21 @@ import { rm } from "node:fs/promises";
 globalThis.require = createRequire(import.meta.url);
 
 const artifactDir = path.dirname(fileURLToPath(import.meta.url));
+const workspaceRoot = path.resolve(artifactDir, "../..");
+
+function getBuildFingerprint() {
+  const fingerprintPath = path.join(workspaceRoot, "scripts/build-fingerprint.mjs");
+  const output = execFileSync(process.execPath, [fingerprintPath], {
+    cwd: workspaceRoot,
+    encoding: "utf8",
+  });
+  return JSON.parse(output);
+}
 
 async function buildAll() {
   const distDir = path.resolve(artifactDir, "dist");
   await rm(distDir, { recursive: true, force: true });
+  const fingerprint = getBuildFingerprint();
 
   await esbuild({
     entryPoints: [
@@ -25,6 +37,15 @@ async function buildAll() {
     outdir: distDir,
     outExtension: { ".js": ".mjs" },
     logLevel: "info",
+    define: {
+      "process.env.GAN_BUILD_SOURCE_REVISION": JSON.stringify(fingerprint.sourceRevision),
+      "process.env.GAN_BUILD_WEB_ARTIFACT_REVISION": JSON.stringify(
+        fingerprint.webArtifactRevision,
+      ),
+      "process.env.GAN_BUILD_API_ARTIFACT_REVISION": JSON.stringify(
+        fingerprint.apiArtifactRevision,
+      ),
+    },
     // Some packages may not be bundleable, so we externalize them, we can add more here as needed.
     // Some of the packages below may not be imported or installed, but we're adding them in case they are in the future.
     // Examples of unbundleable packages:

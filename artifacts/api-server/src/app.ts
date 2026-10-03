@@ -13,6 +13,22 @@ import {
 
 const app: Express = express();
 
+app.use((_request, response, next) => {
+  response.setHeader(
+    "X-GAN-Source-Revision",
+    process.env.GAN_BUILD_SOURCE_REVISION ?? "unavailable",
+  );
+  response.setHeader(
+    "X-GAN-Web-Artifact-Revision",
+    process.env.GAN_BUILD_WEB_ARTIFACT_REVISION ?? "unavailable",
+  );
+  response.setHeader(
+    "X-GAN-API-Artifact-Revision",
+    process.env.GAN_BUILD_API_ARTIFACT_REVISION ?? "unavailable",
+  );
+  next();
+});
+
 app.use(
   pinoHttp({
     logger,
