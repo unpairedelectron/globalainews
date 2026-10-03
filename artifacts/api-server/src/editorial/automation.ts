@@ -31,6 +31,13 @@ const SOURCE_LOOKBACK_MS = 14 * 24 * 60 * 60 * 1000;
 const DRAFT_MODEL = process.env.EDITORIAL_DRAFT_MODEL ?? "gpt-5-mini";
 const VERIFICATION_MODEL = process.env.EDITORIAL_VERIFICATION_MODEL ?? "gpt-5.6-terra";
 
+function isEditorialAutomationEnabled(): boolean {
+  const configuredValue = process.env.EDITORIAL_AUTOMATION_ENABLED;
+  if (configuredValue === "true") return true;
+  if (configuredValue === "false") return false;
+  return process.env.NODE_ENV === "production";
+}
+
 export const editorialModelConfiguration = Object.freeze({
   draftModel: DRAFT_MODEL,
   verificationModel: VERIFICATION_MODEL,
@@ -589,7 +596,7 @@ export async function getAutomationStatus(): Promise<Record<string, unknown>> {
     .orderBy(desc(editorialAutomationRunsTable.startedAt))
     .limit(1);
   return {
-    enabled: process.env.NODE_ENV === "production" || process.env.EDITORIAL_AUTOMATION_ENABLED === "true",
+    enabled: isEditorialAutomationEnabled(),
     intervalMinutes: AUTOMATION_INTERVAL_MS / 60_000,
     dailySlotUtc: `${String(DAILY_UTC_HOUR).padStart(2, "0")}:${String(DAILY_UTC_MINUTE).padStart(2, "0")}`,
     ...editorialModelConfiguration,
@@ -707,8 +714,7 @@ export async function getAutomationRuns(limit = 50, filters: AutomationRunFilter
 }
 
 export function startEditorialAutomation(): void {
-  const enabled = process.env.NODE_ENV === "production" || process.env.EDITORIAL_AUTOMATION_ENABLED === "true";
-  if (!enabled || scheduler) return;
+  if (!isEditorialAutomationEnabled() || scheduler) return;
   scheduler = setInterval(() => {
     void runEditorialAutomation("scheduled");
   }, AUTOMATION_INTERVAL_MS);
