@@ -67,11 +67,11 @@ Coverage included 58 desktop routes, 8 mobile routes, 11 AMP pages, RSS, first-r
 
 The latest local security scan results available for this handoff reported:
 
-- Dependency audit: **1 high** finding, `GHSA-vfj7-8cjw-p6xm` / `CVE-2026-93687`, `braces@3.0.3`; no upstream patch is available.
+- Dependency audit: **1 high** finding, `GHSA-vfj7-8cjw-p6xm` / `CVE-2026-93687`, `braces@3.0.3`. The upstream security-fix PR (`micromatch/braces#72`) merged on 2026-10-03, but the npm package and GitHub advisory still list no patched release as of 2026-10-04.
 - SAST: **0** findings.
 - Privacy/dataflow scan: **0** findings.
 
-The repository's depth guard and six regression tests are defense-in-depth, not a clean audit. Code inspection found no user-controlled `micromatch` pattern in the current Clerk proxy configuration; this narrows the apparent request path but does not resolve the advisory or prove the package unreachable.
+The repository carries a local `pnpm` patch with bounded input and recursive AST depth checks, matching the core mitigation in the merged upstream change. Six regression cases exercise the installed production and development dependency chains, including over-deep brace/parenthesis patterns and ordinary expansion. Both `pnpm audit --prod` and `pnpm audit -D` still report the high advisory because the resolved package version remains `3.0.3`; the local patch is a reviewed mitigation, not a clean audit or a released upstream fix. Code inspection found no user-controlled `micromatch` pattern in the current Clerk proxy configuration; this narrows the apparent request path but does not resolve the advisory or prove the package unreachable.
 
 The public JavaScript entry is `588,045` bytes (`171,280` gzip). The Clerk route chunk is deferred and measures `146,770` bytes (`36,890` gzip). CSS is `147,507` bytes (`23,190` gzip). The public entry still triggers Vite's 500 kB chunk warning. These are local build measurements, not production payload measurements.
 

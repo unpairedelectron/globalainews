@@ -30,7 +30,10 @@
         "@workspace/api-server -> http-proxy-middleware -> micromatch -> braces",
         "@workspace/mockup-sandbox -> fast-glob -> micromatch -> braces"
       ],
-      "upstreamPatchAvailable": false
+      "upstreamFixPullRequest": "micromatch/braces#72 merged 2026-10-03",
+      "upstreamPatchedReleaseAvailable": false,
+      "lastChecked": "2026-10-04",
+      "localMitigation": "pnpm patch caps parser and recursive AST depth; six API security cases verify production and development dependency chains. Both audit scopes still report the advisory because the resolved release remains 3.0.3."
     },
     "sast": {
       "status": "pass",
@@ -52,7 +55,7 @@
     "apiHealth": "local /api/healthz returned 200 with matching X-GAN-* revisions; latest deployment metadata reports no active deployment, so no current production health or fingerprint checks were performed",
     "fullSmokeSuite": "pass: pnpm --filter @workspace/global-ai-news run test:smoke; 58 desktop routes, 8 mobile routes, 11 AMP pages, RSS, article/report first-response, 104-route/465-reference link audit with 0 issues, themes, publication fixture, content/research/authority/SEO checks, and preview HMR without Vite restart",
     "apiSecurityTests": "pass: 6 production/development dependency-chain depth-defense tests",
-    "securityScans": "dependency audit: 1 high braces advisory remains; SAST: 0 findings; privacy scan: 0 findings"
+    "securityScans": "production and development dependency audits each report 1 high braces advisory; local depth-guard mitigation and 6 API security cases pass; SAST: 0 findings; privacy scan: 0 findings"
   },
   "knownProductionState": {
     "lastKnownAmpCoverage": "7/10 on the 2026-10-03 check, before the deployment went offline; current local coverage is 11/11",
@@ -98,7 +101,7 @@
     { "id": 26, "name": "Privacy-conscious analytics", "status": "partial", "evidence": "Existing analytics integration is present; requested event coverage and privacy checks remain." },
     { "id": 27, "name": "Newsletter and recirculation", "status": "partial", "evidence": "Newsletter persistence and CTA exist; provider delivery and broader return-reader paths remain." },
     { "id": 28, "name": "Authority-led content strategy", "status": "not_verified", "evidence": "Priority rules need to be reflected in editorial tooling and publication gates." },
-    { "id": 29, "name": "Security", "status": "in_progress", "evidence": "Fresh dependency audit reports one high braces@3.0.3 advisory with no upstream patch; local depth-defense tests pass 6/6, SAST and privacy scans report no findings." },
+    { "id": 29, "name": "Security", "status": "in_progress", "evidence": "Production and development audits still report one high braces@3.0.3 advisory. Upstream security PR #72 merged, but no patched npm release is available; the local bounded-depth patch and dependency-chain tests pass 6/6." },
     { "id": 30, "name": "Regression suite", "status": "complete", "evidence": "The configured full smoke command passes, including content/research/authority/SEO checks, publication fixture cleanup, first-response pages, 58 desktop and 8 mobile routes, 11 AMP pages, RSS, responsive checks, release history, Clerk themes, link audit, and preview HMR." },
     { "id": 31, "name": "Deployment safety", "status": "blocked_external", "evidence": "The previous deployment is offline and its scheduler is stopped. Human Publish is the remaining external action; current production parity can only be checked afterward." },
     { "id": 32, "name": "Autonomous progress loop", "status": "awaiting_human_publish", "evidence": "Local fingerprints and full smoke evidence are updated; new API automation remains disabled and the prior scheduler is stopped. Production headers and parity require safe checks after human Publish." }
