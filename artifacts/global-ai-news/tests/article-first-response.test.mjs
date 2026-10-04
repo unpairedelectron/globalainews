@@ -39,8 +39,10 @@ const storyPayload = {
 
 let apiProcess;
 let webProcess;
+let devWebProcess;
 let apiOrigin;
 let webOrigin;
+let devWebOrigin;
 
 async function findFreePort() {
   return new Promise((resolve, reject) => {
@@ -126,6 +128,37 @@ async function startWeb() {
     stdio: ['ignore', 'ignore', 'inherit'],
   });
   await waitForHttp(`${webOrigin}/`, webProcess);
+}
+
+async function startDevWeb() {
+  const port = await findFreePort();
+  devWebOrigin = `http://127.0.0.1:${port}`;
+  devWebProcess = spawn(
+    'pnpm',
+    [
+      '--filter',
+      '@workspace/global-ai-news',
+      'run',
+      'dev',
+      '--',
+      '--port',
+      String(port),
+      '--strictPort',
+    ],
+    {
+      cwd: root,
+      detached: true,
+      env: {
+        ...process.env,
+        BASE_PATH: process.env.BASE_PATH ?? '/',
+        NODE_ENV: 'development',
+        NEWSROOM_API_ORIGIN: apiOrigin,
+        PORT: String(port),
+      },
+      stdio: ['ignore', 'ignore', 'inherit'],
+    },
+  );
+  await waitForHttp(`${devWebOrigin}/`, devWebProcess);
 }
 
 async function requestApi(route, options = {}) {
@@ -242,7 +275,15 @@ function seoFingerprint(html) {
 }
 
 async function getArticle(slug, userAgent = 'Mozilla/5.0 (compatible; FirstResponseTest/1.0)') {
-  return fetch(`${webOrigin}/article/${slug}`, {
+  return getArticleFrom(webOrigin, slug, userAgent);
+}
+
+async function getArticleFrom(
+  origin,
+  slug,
+  userAgent = 'Mozilla/5.0 (compatible; FirstResponseTest/1.0)',
+) {
+  return fetch(`${origin}/article/${slug}`, {
     headers: { 'user-agent': userAgent },
   });
 }
@@ -557,6 +598,13 @@ async function testRawArticleResponses() {
     preRenderedHtml,
     'existing pre-rendered article metadata and content must remain unchanged',
   );
+  const devPreRenderedResponse = await getArticleFrom(devWebOrigin, preRenderedStory.slug);
+  assert.equal(devPreRenderedResponse.status, 200);
+  assert.equal(
+    await devPreRenderedResponse.text(),
+    preRenderedHtml,
+    'Vite development must preserve existing pre-rendered article metadata and content unchanged',
+  );
 
   const canonical = `https://www.globalainews.in/article/${slugs.published}/`;
   const response = await getArticle(slugs.published);
@@ -594,6 +642,32 @@ async function testRawArticleResponses() {
     `https://www.globalainews.in${dynamicImagePath}`,
   );
   assert.ok(existsSync(path.join(webDist, 'public', 'social', 'global-ai-news-default.png')));
+
+  const devResponse = await getArticleFrom(devWebOrigin, slugs.published);
+  const devHtml = await devResponse.text();
+  assert.equal(devResponse.status, 200, 'Vite development must render the post-build article');
+  assert.equal(devResponse.headers.get('cache-control'), 'no-store');
+  assert.equal(
+    devHtml.match(/<title>([\s\S]*?)<\/title>/i)?.[1],
+    `${publishedTitle} — Global AI News`,
+    'Vite development article title must come from the live API snapshot',
+  );
+  assert.equal(metaValue(devHtml, 'description', 'name'), publishedDek);
+  assert.equal(
+    devHtml.match(/<link\b[^>]*rel=["']canonical["'][^>]*>/i)?.[0],
+    `<link rel="canonical" href="${canonical}" />`,
+  );
+  assert.equal(metaValue(devHtml, 'og:title'), `${publishedTitle} — Global AI News`);
+  assert.equal(metaValue(devHtml, 'og:description'), publishedDek);
+  assert.equal(metaValue(devHtml, 'og:url'), canonical);
+  assert.equal(metaValue(devHtml, 'og:type'), 'article');
+  const devArticleSchema = articleJsonLd(devHtml)['@graph']
+    .find((item) => item['@type'] === 'NewsArticle');
+  assert.ok(devArticleSchema, 'Vite development first-response JSON-LD must contain a NewsArticle');
+  assert.equal(devArticleSchema.headline, publishedTitle);
+  assert.equal(devArticleSchema.description, publishedDek);
+  assert.match(devHtml, new RegExp(`<h1[^>]*>${escapeRegExp(publishedTitle)}<\\/h1>`));
+  assert.match(devHtml, /The temporary newsroom article contains enough editorial copy/);
 
   const story = publicContent.stories.find((candidate) => candidate.slug === slugs.published);
   assert.ok(story, 'newly published release is missing from the public newsroom snapshot');
@@ -740,10 +814,12 @@ async function main() {
     await setReleaseStates();
 
     await startWeb();
+    await startDevWeb();
     await testRawArticleResponses();
     await assertContactAlias();
-    process.stdout.write('PASS: article first-response raw HTML, publication gates, and crawler parity\n');
+    process.stdout.write('PASS: article first-response raw HTML in production and Vite development, publication gates, and crawler parity\n');
   } finally {
+    await stopProcess(devWebProcess);
     await stopProcess(webProcess);
     await stopProcess(apiProcess);
     await cleanupFixtures();

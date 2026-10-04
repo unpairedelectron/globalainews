@@ -15,21 +15,21 @@ export interface ArticleHtmlResponse {
   metadata: SeoMetadata;
 }
 
-export function hasPrerenderedArticleHtml(
+export function getPrerenderedArticleHtmlPath(
   pathname: string,
   publicDir: string,
-): boolean {
+): string | undefined {
   const route = pathname.replace(/\/+$/, '') || '/';
   const match = route.match(/^\/article\/([^/]+)$/);
-  if (!match) return false;
+  if (!match) return undefined;
 
   let slug: string;
   try {
     slug = decodeURIComponent(match[1]);
   } catch {
-    return false;
+    return undefined;
   }
-  if (!slug || slug.includes('/') || slug.includes('\\')) return false;
+  if (!slug || slug.includes('/') || slug.includes('\\')) return undefined;
 
   const articleRoot = path.resolve(publicDir, 'article');
   const articleHtml = path.resolve(articleRoot, slug, 'index.html');
@@ -38,9 +38,16 @@ export function hasPrerenderedArticleHtml(
     relativePath.startsWith('..') ||
     path.isAbsolute(relativePath)
   ) {
-    return false;
+    return undefined;
   }
-  return existsSync(articleHtml);
+  return existsSync(articleHtml) ? articleHtml : undefined;
+}
+
+export function hasPrerenderedArticleHtml(
+  pathname: string,
+  publicDir: string,
+): boolean {
+  return getPrerenderedArticleHtmlPath(pathname, publicDir) !== undefined;
 }
 
 function articleImageMetadata(

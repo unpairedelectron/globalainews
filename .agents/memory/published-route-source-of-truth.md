@@ -3,11 +3,11 @@ name: Published route source of truth
 description: Static publishing files and newsroom metadata must agree on every public article route.
 ---
 
-The root sitemap and RSS feed should be served from the live API so they reflect newly published releases without a web rebuild. Static article HTML and route metadata remain build-time snapshots; keep an article-only missing-file fallback so a post-build slug can load the SPA without shadowing existing pre-rendered articles.
+The root sitemap and RSS feed should be served from the live API so they reflect newly published releases without a web rebuild. Static article HTML and route metadata remain build-time snapshots. Production and Vite development must preserve existing pre-rendered article HTML unchanged; only missing article files use API-backed first-response rendering so post-build slugs load without shadowing prior releases.
 
-**Why:** Replit static rewrites preserve an existing matching file and only rewrite missing paths. The fallback lets readers open a newly published route, but its first HTML response still carries generic build-time metadata until browser JavaScript runs; social crawlers and non-JavaScript clients may not see the article-specific title, canonical, or structured data.
+**Why:** Replit static rewrites preserve an existing matching file and only rewrite missing paths. Vite's source public directory does not contain the built release articles, so development must also consult the publication output or it can render over a pre-rendered route. The missing-file fallback lets readers open a newly published route, but its first HTML response still carries generic build-time metadata until browser JavaScript runs; social crawlers and non-JavaScript clients may not see the article-specific title, canonical, or structured data.
 
-**How to apply:** Keep the public API snapshot free of editorial scheduling data and use it for hydrated article content, the root sitemap, and RSS. If first-response SEO is required for post-build releases, add request-time rendering or metadata injection within the existing Express/Vite architecture and verify the raw HTTP response without executing JavaScript.
+**How to apply:** Keep the public API snapshot free of editorial scheduling data and use it for hydrated article content, the root sitemap, and RSS. Preserve existing release HTML before applying request-time rendering in both Express and Vite, and verify new and pre-rendered routes over raw HTTP without executing JavaScript.
 
 After publishing a change that spans the web and API artifacts, a successful-build status alone does not prove that every live route is running the current workspace revision. Compare the public routes directly on the production URLs.
 

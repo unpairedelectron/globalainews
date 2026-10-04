@@ -16,6 +16,7 @@ import {
   type SeoMetadataManifest,
 } from './src/seo-metadata';
 import {
+  getPrerenderedArticleHtmlPath,
   fetchNewsroomContentSnapshot,
   hasPrerenderedArticleHtml,
   renderArticleHtml,
@@ -733,6 +734,18 @@ function articleResponsePlugin() {
         }
         if (hasPrerenderedArticleHtml(pathname, path.join(projectRoot, 'public'))) {
           next();
+          return;
+        }
+        const prerenderedArticlePath = getPrerenderedArticleHtmlPath(
+          pathname,
+          buildOutputDir(projectRoot),
+        );
+        if (prerenderedArticlePath) {
+          response.statusCode = 200;
+          response.setHeader('Content-Type', 'text/html; charset=utf-8');
+          response.end(
+            request.method === 'HEAD' ? undefined : readFileSync(prerenderedArticlePath),
+          );
           return;
         }
 
