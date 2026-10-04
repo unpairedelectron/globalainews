@@ -15,6 +15,34 @@ export interface ArticleHtmlResponse {
   metadata: SeoMetadata;
 }
 
+export function hasPrerenderedArticleHtml(
+  pathname: string,
+  publicDir: string,
+): boolean {
+  const route = pathname.replace(/\/+$/, '') || '/';
+  const match = route.match(/^\/article\/([^/]+)$/);
+  if (!match) return false;
+
+  let slug: string;
+  try {
+    slug = decodeURIComponent(match[1]);
+  } catch {
+    return false;
+  }
+  if (!slug || slug.includes('/') || slug.includes('\\')) return false;
+
+  const articleRoot = path.resolve(publicDir, 'article');
+  const articleHtml = path.resolve(articleRoot, slug, 'index.html');
+  const relativePath = path.relative(articleRoot, articleHtml);
+  if (
+    relativePath.startsWith('..') ||
+    path.isAbsolute(relativePath)
+  ) {
+    return false;
+  }
+  return existsSync(articleHtml);
+}
+
 function articleImageMetadata(
   story: NewsroomContentSnapshot['stories'][number],
   publicDir: string,

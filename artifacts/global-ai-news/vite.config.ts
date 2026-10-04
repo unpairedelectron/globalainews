@@ -15,7 +15,11 @@ import {
   setSeoMetadataManifest,
   type SeoMetadataManifest,
 } from './src/seo-metadata';
-import { fetchNewsroomContentSnapshot, renderArticleHtml } from './src/server/article-html';
+import {
+  fetchNewsroomContentSnapshot,
+  hasPrerenderedArticleHtml,
+  renderArticleHtml,
+} from './src/server/article-html';
 import { renderSeoRouteHtml } from './src/seo-html';
 import {
   layoutPreviewTitle,
@@ -724,6 +728,10 @@ function articleResponsePlugin() {
           return;
         }
         if (request.method !== 'GET' && request.method !== 'HEAD') {
+          next();
+          return;
+        }
+        if (hasPrerenderedArticleHtml(pathname, path.join(projectRoot, 'public'))) {
           next();
           return;
         }

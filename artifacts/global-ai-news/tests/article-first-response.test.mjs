@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { execFile, spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { promisify } from 'node:util';
 import path from 'node:path';
 import { once } from 'node:events';
@@ -528,6 +528,26 @@ async function testRawArticleResponses() {
   assert.ok(oneSourceStory, 'public snapshot needs a published article with one source');
   assert.ok(multiSourceStory, 'public snapshot needs a published article with multiple sources');
   assert.ok(relatedStory, 'public snapshot needs a published article with a related story');
+
+  const preRenderedStory = existingStories.find((candidate) =>
+    existsSync(path.join(webDist, 'public', 'article', candidate.slug, 'index.html')),
+  );
+  assert.ok(preRenderedStory, 'publication build must include at least one pre-rendered article fixture');
+  const preRenderedPath = path.join(
+    webDist,
+    'public',
+    'article',
+    preRenderedStory.slug,
+    'index.html',
+  );
+  const preRenderedHtml = readFileSync(preRenderedPath, 'utf8');
+  const preRenderedResponse = await getArticle(preRenderedStory.slug);
+  assert.equal(preRenderedResponse.status, 200);
+  assert.equal(
+    await preRenderedResponse.text(),
+    preRenderedHtml,
+    'existing pre-rendered article metadata and content must remain unchanged',
+  );
 
   const canonical = `https://www.globalainews.in/article/${slugs.published}/`;
   const response = await getArticle(slugs.published);

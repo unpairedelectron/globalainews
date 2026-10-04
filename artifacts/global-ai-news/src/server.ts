@@ -5,7 +5,11 @@ import { fileURLToPath } from 'node:url';
 import express, { type Request, type Response } from 'express';
 
 import { renderAmpArticleDocument } from './amp-html';
-import { fetchNewsroomContentSnapshot, renderArticleHtml } from './server/article-html';
+import {
+  fetchNewsroomContentSnapshot,
+  hasPrerenderedArticleHtml,
+  renderArticleHtml,
+} from './server/article-html';
 import { getSeoMetadata } from './seo-metadata';
 import { renderSeoRouteHtml } from './seo-html';
 
@@ -100,6 +104,10 @@ app.use((request, response, next) => {
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     response.setHeader('Allow', 'GET, HEAD');
     response.status(405).end();
+    return;
+  }
+  if (hasPrerenderedArticleHtml(pathname, publicDirectory)) {
+    next();
     return;
   }
 
