@@ -1,0 +1,745 @@
+GLOBAL AI NEWS — 70-ARTICLE FINALIZATION + PUBLICATION READINESS
+================================================================
+
+The 70-article portfolio has now been drafted.
+
+Essays 61–70 are complete in:
+
+research/70-article-launch/essays-01-10.md
+
+with:
+
+research/70-article-launch/essay-source-map.md
+
+The full 70-article portfolio is currently PROVISIONAL / RESEARCH-ONLY.
+
+DO NOT publish.
+DO NOT stage the 70 articles yet.
+DO NOT modify production editorial data.
+DO NOT trigger editorial automation.
+
+Now complete the ENTIRE article-finalization pipeline in one continuous run.
+
+Do not stop after one validation category.
+
+==================================================
+PRIMARY OBJECTIVE
+==================================================
+
+Transform all 70 provisional drafts into:
+
+PUBLICATION-READY AUTHORITY CONTENT
+
+The final portfolio must contain:
+
+10 Briefs
+10 Analyses
+10 Explainers
+10 Research
+10 Reports
+10 Comparisons
+10 Essays
+
+Every article must pass:
+
+CONTENT
+SOURCE
+SEO
+STRUCTURE
+AUTHORITY GRAPH
+INTERNAL LINKING
+TECHNICAL
+MOBILE
+AMP
+INDEXABILITY
+QUALITY
+
+Only after ALL 70 pass should they be staged for the next human Publish.
+
+==================================================
+PHASE 1 — INVENTORY AUDIT
+==================================================
+
+Read the complete 70-article inventory and classify every piece by:
+
+- segment
+- title
+- slug
+- primary topic
+- secondary topics
+- primary entity
+- supporting entities
+- search intent
+- freshness
+- originality angle
+- source coverage
+- intended internal links
+
+Detect:
+
+- duplicate topics
+- duplicate search intent
+- near-identical titles
+- redundant arguments
+- weak authority value
+- unsupported concepts
+
+Where two articles substantially overlap:
+
+KEEP THE STRONGER ONE.
+
+Replace the weaker concept with a more useful topic rather than publishing
+two variants of the same article.
+
+Maintain exactly 10 strong pieces per segment.
+
+==================================================
+PHASE 2 — SOURCE VERIFICATION
+==================================================
+
+For EVERY article:
+
+Verify every citation key.
+
+Verify every source supports the associated claim.
+
+Verify:
+
+- exact source
+- publisher
+- source type
+- publication date
+- primary/secondary
+- relevance
+
+Prefer:
+
+government
+official institution
+original research
+first-party organization
+authoritative dataset
+reputable journalism
+
+Do not use homepage URLs when an exact underlying source is available.
+
+Never invent URLs.
+
+Never invent citations.
+
+Never retain a claim whose source does not actually support it.
+
+If evidence is insufficient:
+
+rewrite or remove the claim.
+
+==================================================
+PHASE 3 — FACT VS ANALYSIS
+==================================================
+
+For every article identify:
+
+FACT
+SOURCE-BACKED SYNTHESIS
+ORIGINAL ANALYSIS
+OPINION / INTERPRETATION
+
+Make the distinction clear in the writing.
+
+Do not state speculation as fact.
+
+Do not call synthesized reporting "original research."
+
+For Research pieces:
+
+explicitly identify methodology, evidence, findings and limitations.
+
+==================================================
+PHASE 4 — RESEARCH QUALITY
+==================================================
+
+For the 10 Research pieces verify:
+
+- research question
+- methodology
+- data sources
+- analytical process
+- findings
+- limitations
+- source provenance
+- update information
+
+A Research article must contain actual analytical value.
+
+Reject:
+
+- article summaries disguised as research
+- unsupported conclusions
+- fabricated experiments
+- invented benchmarks
+- invented datasets
+- invented survey results
+
+==================================================
+PHASE 5 — REPORT QUALITY
+==================================================
+
+For the 10 Reports verify:
+
+- executive summary
+- context
+- current state
+- evidence
+- data where available
+- methodology
+- limitations
+- findings
+- open questions
+- source registry
+- update history
+- related entities
+- related topics
+- related reporting
+- research links
+
+Reports must function as durable reference assets.
+
+==================================================
+PHASE 6 — COMPARISON QUALITY
+==================================================
+
+For every Comparison:
+
+Define the decision being supported.
+
+Use appropriate dimensions such as:
+
+- capability
+- cost
+- latency
+- memory
+- deployment
+- hardware
+- reliability
+- workflow fit
+- enterprise suitability
+
+Do not invent benchmarks.
+
+If evidence is not directly comparable:
+
+say so explicitly.
+
+Do not force a winner.
+
+==================================================
+PHASE 7 — BRIEF / ANALYSIS / EXPLAINER / ESSAY
+==================================================
+
+Briefs:
+
+fast, factual, useful, source-backed.
+
+Analyses:
+
+evidence + synthesis + implications.
+
+Explainers:
+
+evergreen, technically accurate, conceptually clear.
+
+Essays:
+
+distinctive thinking with factual evidence clearly separated from
+interpretation.
+
+No filler.
+
+==================================================
+PHASE 8 — SEO FINALIZATION
+==================================================
+
+For ALL 70 articles determine:
+
+- primary search intent
+- secondary query intent
+- target keyword family
+- semantic entities
+- related questions
+
+Create/validate:
+
+- title
+- slug
+- meta description
+- social title
+- social description
+- canonical
+- JSON-LD
+- breadcrumbs
+- author
+- publication date
+- update date where appropriate
+- AMP metadata
+
+SEO requirements:
+
+- accurate title
+- compelling but not clickbait
+- no keyword stuffing
+- no repetitive title patterns
+- no doorway intent
+- no unnecessary indexable pages
+
+Titles must reflect actual article content.
+
+==================================================
+PHASE 9 — INFORMATION ARCHITECTURE
+==================================================
+
+Connect every article to appropriate:
+
+TOPIC
+ENTITY
+SOURCE
+RESEARCH
+REPORT
+TIMELINE
+
+Use the existing Authority Engine relationships.
+
+No empty relationship objects.
+
+==================================================
+PHASE 10 — INTERNAL LINKING
+==================================================
+
+Create deliberate links between the 70 articles and existing assets.
+
+Where relevant:
+
+Brief
+→ Analysis
+→ Explainer
+→ Research
+→ Report
+→ Entity
+→ Topic
+→ Timeline
+
+Also link:
+
+Report
+→ supporting Research
+→ supporting Articles
+→ Entities
+→ Topics
+
+Research
+→ Report
+→ Evidence
+→ Source
+
+Avoid artificial link density.
+
+The objective is reader navigation and topical authority.
+
+==================================================
+PHASE 11 — AUTHORITY CLUSTERS
+==================================================
+
+Organize the 70 articles into substantive clusters.
+
+Priority:
+
+1. AI Compute in India
+2. Small Models / Efficient AI
+3. AI Infrastructure
+4. AI Agents
+5. AI Economics
+6. AI Policy / Regulation
+7. AI Safety / Reliability
+8. AI Research
+9. Enterprise AI
+10. AI Hardware
+
+Do not force an article into a cluster when the relationship is weak.
+
+==================================================
+PHASE 12 — AI COMPUTE INDIA
+==================================================
+
+Strengthen the existing flagship:
+
+/reports/ai-compute-india/
+
+Treat it as the anchor asset.
+
+Connect relevant articles from the 70-piece portfolio to it.
+
+Ensure the report connects to:
+
+- source records
+- research
+- data
+- entities
+- topics
+- timeline
+- supporting articles
+
+For compute numbers distinguish:
+
+ANNOUNCED
+ONBOARDED
+INSTALLED
+DEPLOYED
+ACCESSIBLE
+SCHEDULABLE
+
+Never convert historical or announced figures into current availability.
+
+==================================================
+PHASE 13 — SMALL-MODEL CLUSTER
+==================================================
+
+Build the second major cluster around:
+
+SMALL MODELS
+EFFICIENT AI
+SERIOUS WORKFLOWS
+
+Connect:
+
+- comparisons
+- explainers
+- analyses
+- research
+- reports
+- relevant entities
+
+No fabricated benchmark numbers.
+
+==================================================
+PHASE 14 — SOURCE / RESEARCH / DATA GRAPH
+==================================================
+
+Verify the graph:
+
+Article
+→ Source
+→ Topic
+→ Entity
+→ Research
+→ Report
+→ Data
+→ Timeline
+
+Make the relationships discoverable through the UI.
+
+Avoid creating pages without substantive content.
+
+==================================================
+PHASE 15 — PAGE EXPERIENCE
+==================================================
+
+Every article must render as a serious editorial product.
+
+Use where useful:
+
+- pull quotes
+- key findings
+- tables
+- timelines
+- evidence blocks
+- methodology blocks
+- source sections
+- related research
+- related reports
+- related entities
+
+Do not add decorative components with no informational value.
+
+==================================================
+PHASE 16 — MOBILE + TECHNICAL
+==================================================
+
+Verify every article on mobile.
+
+Check:
+
+- layout
+- typography
+- tables
+- image sizing
+- metadata
+- first response
+- AMP
+- CLS
+- usability
+
+Ensure public content remains primarily server-rendered.
+
+Keep admin/editor functionality out of public bundles.
+
+==================================================
+PHASE 17 — INDEXABILITY
+==================================================
+
+For every finished article verify:
+
+- indexable
+- canonical
+- sitemap inclusion
+- correct robots behavior
+- JSON-LD
+- AMP
+- internal links
+
+Drafts must remain non-indexable.
+
+Only final content should be eligible for staging.
+
+==================================================
+PHASE 18 — DUPLICATION / THIN-CONTENT AUDIT
+==================================================
+
+Audit ALL 70 against each other and against existing site content.
+
+Reject or rewrite:
+
+- duplicate intent
+- near-duplicate content
+- thin pages
+- generic AI summaries
+- press-release rewrites
+- obvious SEO filler
+- repetitive listicles
+- unsupported opinion pieces
+
+Do not publish an article simply to preserve the quota.
+
+The final portfolio must contain 70 pieces worth having.
+
+==================================================
+PHASE 19 — CONTENT QUALITY SCORE
+==================================================
+
+Score each article internally on:
+
+1. Originality
+2. Evidence
+3. Search intent
+4. Information density
+5. Accuracy
+6. Clarity
+7. Authority value
+8. Internal connectivity
+9. SEO completeness
+10. Reader usefulness
+
+Any article with a materially weak score must be revised.
+
+Do not publish weak articles to hit 70.
+
+==================================================
+PHASE 20 — FINAL TECHNICAL REGRESSION
+==================================================
+
+Run:
+
+pnpm -w run typecheck
+
+production build
+
+full smoke suite
+
+desktop routes
+
+mobile routes
+
+AMP
+
+RSS
+
+sitemap
+
+first-response checks
+
+structured-data checks
+
+link audit
+
+SEO checks
+
+security checks
+
+publication-fixture checks
+
+research/report/authority checks
+
+No critical failure may remain.
+
+==================================================
+PHASE 21 — SAFE STAGING
+==================================================
+
+Only AFTER all 70 pass every quality gate:
+
+Stage the completed 70 as public content for the NEXT HUMAN PUBLISH.
+
+Do NOT publish automatically.
+
+Do NOT trigger automation.
+
+Do NOT write unverified content.
+
+Do NOT stage drafts that failed validation.
+
+The staged set must contain exactly:
+
+10 Briefs
+10 Analyses
+10 Explainers
+10 Research
+10 Reports
+10 Comparisons
+10 Essays
+
+==================================================
+PHASE 22 — FINAL PORTFOLIO AUDIT
+==================================================
+
+Produce an internal final matrix:
+
+ARTICLE
+SEGMENT
+TOPIC
+ENTITY
+SEARCH INTENT
+PRIMARY SOURCE
+SOURCE COUNT
+ORIGINALITY ANGLE
+WORD COUNT
+INTERNAL LINKS
+RESEARCH LINK
+REPORT LINK
+SEO STATUS
+AMP STATUS
+STRUCTURED DATA
+MOBILE
+QUALITY STATUS
+STAGING STATUS
+
+Verify no article is missing required fields.
+
+==================================================
+PHASE 23 — DO NOT STOP EARLY
+==================================================
+
+Do NOT stop with:
+
+"drafts are ready"
+
+Do NOT stop with:
+
+"SEO still needs work"
+
+Do NOT stop with:
+
+"internal linking remains"
+
+Do NOT stop with:
+
+"technical gates remain"
+
+Those are precisely the tasks this run must complete.
+
+Work through them.
+
+If an article fails:
+
+fix it.
+
+If a source fails:
+
+replace/rewrite.
+
+If two articles overlap:
+
+differentiate/replace.
+
+If a topic is weak:
+
+choose a stronger one.
+
+If a technical test fails:
+
+repair it.
+
+Then continue.
+
+==================================================
+FINAL DEFINITION OF DONE
+==================================================
+
+70 articles must be:
+
+[ ] fully written
+[ ] source verified
+[ ] fact checked against sources
+[ ] differentiated
+[ ] search-intent aligned
+[ ] SEO optimized
+[ ] structured-data complete
+[ ] canonical correct
+[ ] AMP correct
+[ ] mobile verified
+[ ] indexability correct
+[ ] internally linked
+[ ] topic-linked
+[ ] entity-linked
+[ ] research-linked
+[ ] report-linked
+[ ] source-linked
+[ ] timeline-linked where appropriate
+[ ] no thin content
+[ ] no duplicated intent
+[ ] no fabricated claims
+[ ] no fabricated sources
+[ ] no fake research
+[ ] no fake benchmarks
+[ ] no unsupported GPU availability claims
+[ ] regression-tested
+[ ] staging-ready
+
+==================================================
+FINAL ACTION
+==================================================
+
+After ALL 70 pass:
+
+STAGE the complete publication-ready portfolio for the next HUMAN Publish.
+
+Do NOT publish automatically.
+
+Do NOT trigger automation.
+
+Then return:
+
+70 ARTICLES — PUBLICATION READY
+
+with a concise summary of:
+
+- 70 total
+- 10 per segment
+- strongest authority clusters
+- source coverage
+- research/report count
+- internal-link coverage
+- SEO status
+- technical status
+- staging status
+
+The final line must be:
+
+READY FOR HUMAN PUBLISH
