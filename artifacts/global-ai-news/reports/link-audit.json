@@ -3152,6 +3152,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/source/indiaai-provider-accelerator-table-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-provider-accelerator-table-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/source/indiaai-compute-portal/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/indiaai-compute-portal/",
@@ -3571,6 +3579,14 @@
     "url": "https://www.globalainews.in/source/indiaai-portal-eligibility",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/indiaai-portal-eligibility/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-provider-accelerator-table-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-provider-accelerator-table-2026/",
     "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
@@ -4547,6 +4563,14 @@
     "url": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-provider-accelerator-table-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-provider-accelerator-table-2026/",
     "indexability": "noindex",
     "linkSource": "/topic/india",
     "issue": ""

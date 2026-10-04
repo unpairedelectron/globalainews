@@ -124,6 +124,17 @@
       "caveat": "The page exposes dated project-allocation rows, not a complete hardware inventory; it does not establish delivery, installation, start of service, active reservations, or current schedulability."
     },
     {
+      "key": "indiaai-provider-accelerator-table-2026",
+      "title": "IndiaAI Compute Portal: provider and accelerator-category table",
+      "publisher": "IndiaAI Compute Portal",
+      "url": "https://compute.indiaai.gov.in/files/empanelled-gpus.pdf",
+      "publishedDate": null,
+      "tier": 1,
+      "evidencePath": "research/sources/access-08-indiaai-provider-accelerator-table.md",
+      "evidenceType": "full-page",
+      "caveat": "PDF metadata records creation on 2026-09-02, but the document gives no publication/as-of date or definition of its counts. Its 45,081 total includes NVIDIA/AMD GPU models and Intel, AWS, and Google accelerator categories; it is not a live or schedulable inventory."
+    },
+    {
       "key": "indiaai-compute-price-calculator",
       "title": "IndiaAI Compute Portal price calculator",
       "publisher": "IndiaAI Compute Portal",
