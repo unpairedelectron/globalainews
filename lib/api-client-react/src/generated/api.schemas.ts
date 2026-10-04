@@ -417,6 +417,7 @@ export const PublicNewsroomComputeObservationQualifier = {
   exact: 'exact',
   about: 'about',
   'more-than': 'more-than',
+  nearly: 'nearly',
 } as const;
 
 export type PublicNewsroomComputeObservationUnit = typeof PublicNewsroomComputeObservationUnit[keyof typeof PublicNewsroomComputeObservationUnit];
@@ -434,6 +435,7 @@ export const PublicNewsroomComputeObservationStatus = {
   'initial-capacity-reported': 'initial-capacity-reported',
   'additional-capacity-announced': 'additional-capacity-announced',
   'empanelled-plus-additional-reported': 'empanelled-plus-additional-reported',
+  'installed-reported': 'installed-reported',
   onboarded: 'onboarded',
   'shared-capacity-reported': 'shared-capacity-reported',
   'access-reported': 'access-reported',

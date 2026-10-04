@@ -8,6 +8,7 @@ export type CapacityObservationStatus =
   | 'initial-capacity-reported'
   | 'additional-capacity-announced'
   | 'empanelled-plus-additional-reported'
+  | 'installed-reported'
   | 'onboarded'
   | 'shared-capacity-reported'
   | 'access-reported';
@@ -20,7 +21,7 @@ export interface IndiaAiComputeObservation {
   asOf: string | null;
   quantity: number;
   quantityLabel: string;
-  qualifier: 'exact' | 'about' | 'more-than';
+  qualifier: 'exact' | 'about' | 'more-than' | 'nearly';
   unit: 'GPUs';
   status: CapacityObservationStatus;
   sourceSlug: string;
@@ -116,6 +117,25 @@ export const indiaAiComputeObservations: IndiaAiComputeObservation[] = [
     limitation: 'The release combines 18,417 empanelled and 15,916 additional GPUs without defining live or schedulable status.',
   },
   {
+    id: 'installed-reported-2025',
+    reportedOn: '2025-06-24',
+    asOf: '2025-06-16',
+    quantity: 17_300,
+    quantityLabel: 'a little over 17,300 installed',
+    qualifier: 'more-than',
+    unit: 'GPUs',
+    status: 'installed-reported',
+    sourceSlug: 'ettech-indiaai-installed-2025',
+    sourceKind: 'independent',
+    geography: 'India-wide programme',
+    acceleratorType: 'not specified by source',
+    installed: 'reported',
+    deployed: 'not-established',
+    accessible: 'not-established',
+    schedulable: 'not-established',
+    limitation: 'Secondary reporting attributes this early-rollout figure to a 16 June provider review; it is not a current inventory.',
+  },
+  {
     id: 'onboarded-2026',
     reportedOn: '2026-03-25',
     asOf: '2026-03-25',
@@ -134,6 +154,25 @@ export const indiaAiComputeObservations: IndiaAiComputeObservation[] = [
     accessible: 'not-established',
     schedulable: 'not-established',
     limitation: 'The government reports onboarding from 14 providers; no per-provider live inventory is supplied.',
+  },
+  {
+    id: 'onboarded-nearly-38000-july-2026',
+    reportedOn: '2026-07-29',
+    asOf: null,
+    quantity: 38_000,
+    quantityLabel: 'nearly 38,000 onboarded',
+    qualifier: 'nearly',
+    unit: 'GPUs',
+    status: 'onboarded',
+    sourceSlug: 'pib-onboarded-nearly-38000-2026',
+    sourceKind: 'primary',
+    geography: 'India-wide programme',
+    acceleratorType: 'not specified by source',
+    installed: 'not-established',
+    deployed: 'not-established',
+    accessible: 'not-established',
+    schedulable: 'not-established',
+    limitation: 'A later PIB release repeats a rounded onboarded figure without a new exact count, provider list, or status crosswalk.',
   },
   {
     id: 'shared-capacity-june-2026',

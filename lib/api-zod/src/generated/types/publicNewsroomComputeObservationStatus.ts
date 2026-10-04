@@ -14,6 +14,7 @@ export const PublicNewsroomComputeObservationStatus = {
   'initial-capacity-reported': 'initial-capacity-reported',
   'additional-capacity-announced': 'additional-capacity-announced',
   'empanelled-plus-additional-reported': 'empanelled-plus-additional-reported',
+  'installed-reported': 'installed-reported',
   onboarded: 'onboarded',
   'shared-capacity-reported': 'shared-capacity-reported',
   'access-reported': 'access-reported',

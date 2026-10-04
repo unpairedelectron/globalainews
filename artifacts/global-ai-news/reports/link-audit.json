@@ -1360,9 +1360,25 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/source/ettech-indiaai-installed-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ettech-indiaai-installed-2025/",
+    "indexability": "noindex",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "indexability": "noindex",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-onboarded-nearly-38000-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-onboarded-nearly-38000-2026/",
     "indexability": "noindex",
     "linkSource": "/data/india-ai-compute-snapshots",
     "issue": ""
@@ -1440,9 +1456,25 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-installed-reported-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-installed-reported-2025/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-nearly-38000-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-nearly-38000-2026/",
     "indexability": "indexable",
     "linkSource": "/data/india-ai-compute-snapshots",
     "issue": ""
@@ -1460,6 +1492,14 @@
     "status": "200",
     "canonical": "https://www.globalainews.in/timeline/indiaai-compute-access-reported-2026/",
     "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-compute-allocation-register-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-compute-allocation-register-2026/",
+    "indexability": "noindex",
     "linkSource": "/data/india-ai-compute-snapshots",
     "issue": ""
   },
@@ -3024,9 +3064,25 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-installed-reported-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-installed-reported-2025/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-nearly-38000-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-nearly-38000-2026/",
     "indexability": "indexable",
     "linkSource": "/research/india-ai-compute-2026",
     "issue": ""
@@ -3048,6 +3104,38 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/source/indiaai-compute-allocation-register-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-compute-allocation-register-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ettech-indiaai-installed-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ettech-indiaai-installed-2025/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-onboarded-nearly-38000-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-onboarded-nearly-38000-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
@@ -3059,14 +3147,6 @@
     "url": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
-    "indexability": "noindex",
-    "linkSource": "/research/india-ai-compute-2026",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
     "indexability": "noindex",
     "linkSource": "/research/india-ai-compute-2026",
     "issue": ""
@@ -3091,14 +3171,6 @@
     "url": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
-    "indexability": "noindex",
-    "linkSource": "/research/india-ai-compute-2026",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/source/pib-initial-compute-2025/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/source/pib-initial-compute-2025/",
     "indexability": "noindex",
     "linkSource": "/research/india-ai-compute-2026",
     "issue": ""
@@ -3163,6 +3235,14 @@
     "url": "https://www.globalainews.in/source/pib-ai-models-datasets-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/pib-ai-models-datasets-2026/",
+    "indexability": "noindex",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-initial-compute-2025/",
     "indexability": "noindex",
     "linkSource": "/research/india-ai-compute-2026",
     "issue": ""
@@ -3408,6 +3488,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/source/ettech-indiaai-installed-2025",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ettech-indiaai-installed-2025/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
@@ -3451,6 +3539,14 @@
     "url": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-compute-allocation-register-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-compute-allocation-register-2026/",
     "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
@@ -3571,6 +3667,14 @@
     "url": "https://www.globalainews.in/source/pib-initial-compute-2025",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-onboarded-nearly-38000-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-onboarded-nearly-38000-2026/",
     "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
@@ -3888,6 +3992,46 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-installed-reported-2025",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-installed-reported-2025/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-installed-reported-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-installed-reported-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-installed-reported-2025",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-installed-reported-2025",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026",
     "status": "200",
     "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
@@ -3925,6 +4069,46 @@
     "canonical": "https://www.globalainews.in/person/ananya-rao/",
     "indexability": "indexable",
     "linkSource": "/timeline/indiaai-compute-onboarded-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-nearly-38000-2026",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-nearly-38000-2026/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-onboarded-nearly-38000-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-onboarded-nearly-38000-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-onboarded-nearly-38000-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/person/ananya-rao/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/person/ananya-rao/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/indiaai-compute-onboarded-nearly-38000-2026",
     "issue": ""
   },
   {
@@ -4320,6 +4504,38 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/source/indiaai-compute-allocation-register-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-compute-allocation-register-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/ettech-indiaai-installed-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/ettech-indiaai-installed-2025/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/pib-onboarded-nearly-38000-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-onboarded-nearly-38000-2026/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/pib-capacity-and-use-factsheet-2026/",
@@ -4331,14 +4547,6 @@
     "url": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/ettech-indiaai-recalibration-2026/",
-    "indexability": "noindex",
-    "linkSource": "/topic/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/source/pib-compute-onboarded-2026/",
     "indexability": "noindex",
     "linkSource": "/topic/india",
     "issue": ""
@@ -4363,14 +4571,6 @@
     "url": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/indiaai-cabinet-approval-2024/",
-    "indexability": "noindex",
-    "linkSource": "/topic/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/source/pib-initial-compute-2025/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/source/pib-initial-compute-2025/",
     "indexability": "noindex",
     "linkSource": "/topic/india",
     "issue": ""
@@ -4440,6 +4640,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/pib-initial-compute-2025/",
+    "indexability": "noindex",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/source/jll-india-data-centres-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/source/jll-india-data-centres-2026/",
@@ -4488,9 +4696,25 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-installed-reported-2025/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-installed-reported-2025/",
+    "indexability": "indexable",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-2026/",
+    "indexability": "indexable",
+    "linkSource": "/topic/india",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-nearly-38000-2026/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-onboarded-nearly-38000-2026/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""

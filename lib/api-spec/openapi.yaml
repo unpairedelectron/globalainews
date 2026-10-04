@@ -1006,7 +1006,7 @@ components:
           type: string
         qualifier:
           type: string
-          enum: [exact, about, more-than]
+          enum: [exact, about, more-than, nearly]
         unit:
           type: string
           enum: [GPUs]
@@ -1017,6 +1017,7 @@ components:
             - initial-capacity-reported
             - additional-capacity-announced
             - empanelled-plus-additional-reported
+            - installed-reported
             - onboarded
             - shared-capacity-reported
             - access-reported

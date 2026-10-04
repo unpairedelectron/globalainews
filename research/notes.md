@@ -2,14 +2,14 @@
 
 **Status:** drafting  
 **Depth:** Standard  
-**Research date:** 2026-10-03  
+**Research date:** 2026-10-04
 **Audience:** Readers who need to distinguish public commitments, enrolled capacity, and compute that people can actually use.  
 **Deliverable:** A 3,500–5,000 word flagship report for Global AI News, with verified inline citations, transparent definitions, and an explicit limitations section.
 
 ## Plan
 
 - **Question:** How much AI compute is actually accessible in India, what is being built, and which constraints determine whether public policy becomes reliable capacity through 2026?
-- **Scope:** IndiaAI Mission compute access, physical data-centre capacity, power and network constraints, public datasets/models, and evidence of real use. Separate funded targets, empanelled supply, installed capacity, live service, and consumed GPU-hours. Do not present estimates as measured facts.
+- **Scope:** IndiaAI Mission compute access, physical data-centre capacity, power and network constraints, public datasets/models, and evidence of real use. Keep target, empanelled, onboarded, installed, schedulable, reserved, and metered use distinct. Do not present estimates as measured facts.
 - **Out of scope:** Unverified forecasts, unsupported rankings, and claims about national AI “sovereignty” that cannot be tied to observable capacity or access.
 - **Evidence rule:** Each major claim needs three supporting sources, including at least two Tier 1 or Tier 2 sources. Company and government promotional statements must be identified as such and cross-checked.
 
@@ -26,13 +26,13 @@
 ## Coverage Checklist
 
 - [x] What did the IndiaAI Mission authorize, fund, and procure, and over what period? The Cabinet approved ₹10,371.92 crore over five years and a compute infrastructure target of 10,000+ GPUs; this is programme design, not proof of delivery. [@indiaai-cabinet-approval-2024]
-- [x] What do current GPU counts measure: empanelment, contracted supply, installed hardware, portal listings, or usable service? Releases move from an initial facility to empanelled/onboarded GPUs and then “shared capacity”; the labels are not a reconciled inventory. [@pib-initial-compute-2025] [@pib-common-compute-34000-2025] [@pib-compute-onboarded-2026] [@pib-capacity-and-use-factsheet-2026]
-- [x] How many projects and GPU-hours have actually used subsidized compute, as of a clearly dated official release? The August 2026 factsheet reports 237 projects and 93.18 lakh GPU-hours “accessed” or “covering”; it does not define those hours as consumed. [@pib-capacity-and-use-factsheet-2026]
+- [x] What do GPU counts measure: target, empanelment, onboarding, installation, portal allocations, or usable service? A primary IndiaAI page lists dated project-level allocations; a June 2025 secondary report gives an early installed count; PIB later repeats “nearly 38,000 onboarded” before its 45,000+ shared-capacity factsheet. These records still do not form a current hardware inventory or status crosswalk. [@indiaai-compute-allocation-register-2026] [@ettech-indiaai-installed-2025] [@pib-common-compute-34000-2025] [@pib-compute-onboarded-2026] [@pib-onboarded-nearly-38000-2026] [@pib-capacity-and-use-factsheet-2026]
+- [x] What does the public record establish about allocations and metered use? The August 2026 factsheet reports 237 projects and 93.18 lakh GPU-hours; neither “accessed” nor “covering” is defined as reserved or metered consumption, and the dated allocation rows do not say whether users started. [@pib-capacity-and-use-factsheet-2026] [@indiaai-compute-allocation-register-2026]
 - [x] Who is eligible, what published rates apply, and what evidence exists about application approval, wait times, and utilization? The portal describes user categories and review steps, but the captured pages do not publish wait-time or utilization metrics. [@indiaai-portal-eligibility] [@indiaai-compute-portal] [@indiaai-compute-price-calculator]
 - [x] What is operational data-centre capacity versus announced or under-construction capacity, and how are these figures defined? Government and market sources put live stock around 1.5–1.6 GW; Knight Frank separates 0.32 GW under construction from 2.92 GW committed and 5.41 GW early-stage pipeline. [@pib-data-centre-capacity-2026] [@cbre-india-data-centre-market-2025] [@hbl-knight-frank-data-centre-pipeline-2026] [@knight-frank-india-data-centre-market-2025]
 - [x] Which power, grid, cooling, and location constraints are documented rather than inferred? National generation adequacy is not local interconnection evidence; independent work describes clustered loads and cooling/water exposure, while public site-level demand remains undisclosed. [@sansad-power-data-centres-2026] [@ceew-data-centre-footprint] [@ieefa-india-data-centre-power] [@pib-data-centre-water-response-2026]
 - [x] What verified evidence links public compute and language-data programmes to research, models, startups, or public-service outcomes? Government reports proposal, dataset, prototype and deployment counts, but the reviewed documents do not independently evaluate model quality or resulting user outcomes. [@pib-ai-models-datasets-2026] [@pib-capacity-and-use-factsheet-2026] [@indiaai-compute-portal]
-- [x] Which conclusions remain unmeasurable because public utilisation or performance data is not disclosed? Live and schedulable GPUs by model/provider, queue times, approval/rejection rates, metered consumption, service reliability, site-level power/water use and independent outcomes move to Limitations. [@pib-capacity-and-use-factsheet-2026] [@indiaai-compute-portal] [@ettech-indiaai-recalibration-2026]
+- [x] Which conclusions remain unmeasurable because public utilisation or performance data is not disclosed? Current schedulable GPUs by model/provider, active reservations, metered consumption, queue times, approvals/rejections, service reliability, site-level power/water use and independent outcomes move to Limitations. [@pib-capacity-and-use-factsheet-2026] [@indiaai-compute-allocation-register-2026] [@indiaai-compute-portal]
 
 ## Findings Log
 
@@ -42,7 +42,10 @@ _[@key] markers reference the source registry in `research/sources.json`; they w
 
 - The March 2024 Cabinet release authorized ₹10,371.92 crore over five years and compute infrastructure of 10,000+ GPUs; neither figure is a delivery measure. [@indiaai-cabinet-approval-2024]
 - January 2025 PIB described roughly 10,000 GPUs in the initial facility and 8,693 additional GPUs to be added; May 2025 PIB then described 34,333 GPUs, including empanelled and additional capacity. The terms are not directly comparable. [@pib-initial-compute-2025] [@pib-common-compute-34000-2025]
+- The IndiaAI hub page exposes dated user-allocation rows (visible dates span 23 April–30 May 2025) with GPU count/type, provider, project duration and a required start-by date. It does not state whether jobs started or whether allocated GPUs remain active, and it is not a complete installed or schedulable inventory. [@indiaai-compute-allocation-register-2026]
+- ET reported a little over 17,300 GPUs successfully installed at a 16 June 2025 review, citing people aware of the meeting and provider progress. This is secondary reporting on an earlier rollout, not an official or current status count. [@ettech-indiaai-installed-2025]
 - A 2026 PIB release reports 38,231 GPUs onboarded from 14 empanelled providers and an average rate near ₹65 per GPU-hour, excluding selected high-end GPUs. [@pib-compute-onboarded-2026]
+- A 29 July 2026 PIB release again says “nearly 38,000” GPUs had been onboarded; it provides no exact update or definition connecting onboarded devices to the factsheet’s separate “shared capacity” stage. [@pib-onboarded-nearly-38000-2026] [@pib-capacity-and-use-factsheet-2026]
 - The PIB factsheet says shared compute capacity exceeded 45,000 GPUs as of June 2026; by August it reports 237 projects and 93.18 lakh GPU-hours. “Accessed” does not establish metered consumption. [@pib-capacity-and-use-factsheet-2026]
 - ETtech reported access to about 30,000 GPUs against a 45,000 commitment and possible recalibration on 1 October 2026. This is an attributed report, not a government-reconciled count. [@ettech-indiaai-recalibration-2026]
 
@@ -66,12 +69,13 @@ _[@key] markers reference the source registry in `research/sources.json`; they w
 
 ## Conflicts & Open Questions
 
-- Public counts range from 18,693 in an early rollout description to 34,333, 38,231 onboarded and 45,000+ shared GPUs. They are dated snapshots with different labels, not one verified installed/live series. [@pib-initial-compute-2025] [@pib-common-compute-34000-2025] [@pib-compute-onboarded-2026] [@pib-capacity-and-use-factsheet-2026]
-- ETtech’s reported access to about 30,000 GPUs against a 45,000 commitment does not reconcile with the government’s later “shared capacity” phrase; present both with attribution and stage labels. [@ettech-indiaai-recalibration-2026] [@pib-capacity-and-use-factsheet-2026]
+- Public counts include 34,333 empanelled-plus-additional, 17,300+ reportedly installed in June 2025, 38,231 onboarded in March 2026, nearly 38,000 onboarded in a July 2026 PIB release, and 45,000+ shared as of June 2026. These are distinct dated stages, not a verified installed/live series. [@pib-common-compute-34000-2025] [@ettech-indiaai-installed-2025] [@pib-compute-onboarded-2026] [@pib-onboarded-nearly-38000-2026] [@pib-capacity-and-use-factsheet-2026]
+- The primary portal allocation register establishes dated project-level allocation records but does not bridge them to hardware delivery, installation, current active reservations, or currently schedulable supply. [@indiaai-compute-allocation-register-2026]
+- ETtech’s reported access to about 30,000 GPUs against a 45,000 commitment does not reconcile with the government’s “shared capacity” or “onboarded” statements; present all with attribution and stage labels. [@ettech-indiaai-recalibration-2026] [@pib-capacity-and-use-factsheet-2026] [@pib-onboarded-nearly-38000-2026]
 - Knight Frank’s June 2026 article gives an 8.33 GW pipeline headline, but its listed 0.32, 2.92 and 5.41 GW stages sum to 8.65 GW. Do not silently reconcile the source’s arithmetic; preserve the headline and components with a caveat. [@hbl-knight-frank-data-centre-pipeline-2026]
-- “93.18 lakh GPU-hours” is reported for 237 projects, but neither the factsheet nor portal capture defines whether those hours are reserved, provisioned, approved or consumed. [@pib-capacity-and-use-factsheet-2026] [@indiaai-compute-portal]
+- “93.18 lakh GPU-hours” is reported for 237 projects, but no reviewed source defines the hours as reserved, provisioned, approved, metered, or consumed. The allocation table is project-level GPU assignment evidence, not a time-use ledger. [@pib-capacity-and-use-factsheet-2026] [@indiaai-compute-allocation-register-2026] [@indiaai-compute-portal]
 - Operational data-centre estimates cluster around 1.5–1.6 GW, but source dates and definitions differ; future pipeline totals include projects that are not operating. These are all-workload totals, not IndiaAI GPU capacity. [@pib-data-centre-capacity-2026] [@cbre-india-data-centre-market-2025] [@hbl-knight-frank-data-centre-pipeline-2026] [@knight-frank-india-data-centre-market-2025]
 
 ## Gaps
 
-- **Moved to Limitations after targeted checks:** live/schedulable GPU count by accelerator and provider; queue times, approvals and rejections; whether GPU-hours are metered consumption; service-level reliability; site-level grid, power and water use; independent model or public-service outcome evaluations. Do not infer these from empanelment, portal listings, programme targets, or aggregate project counts.
+- **Moved to Limitations after targeted checks:** current live/schedulable GPU count by provider and accelerator; the relationship among empanelled, onboarded, installed and shared totals; active reserved capacity; whether reported GPU-hours are metered consumption; queue times, approvals/rejections, service reliability; site-level grid, power and water use; independent model or public-service outcome evaluations. Do not infer these from targets, allocations, or aggregate project counts.

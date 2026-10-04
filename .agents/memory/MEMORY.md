@@ -17,3 +17,4 @@
 - [API smoke environment](api-smoke-environment.md) — preserve NODE_ENV=test so synthetic editor auth and deterministic fixtures remain isolated.
 - [Published route source of truth](published-route-source-of-truth.md) — live feeds reflect releases, while static article fallbacks still lack first-response SEO for new slugs.
 - [Editorial release word counts](editorial-release-word-counts.md) — validate editor copy by provenance while maintained records use the complete story snapshot.
+- [IndiaAI compute observation contract](indiaai-compute-observation-contract.md) — new GPU stages and quantity qualifiers must be added to the public API contract before publication.

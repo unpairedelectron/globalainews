@@ -24,7 +24,7 @@ test('authority registry resolves the report across topics, entities, sources, t
   assert.ok(cluster.storySlugs.includes(report.slug));
   assert.ok(cluster.storySlugs.some((slug) => slug !== report.slug));
   assert.deepEqual(research.sourceSlugs, report.sources);
-  assert.equal(research.sourceSlugs.length, 18);
+  assert.equal(research.sourceSlugs.length, 21);
   assert.ok(research.sourceSlugs.every((slug) => sources.some((source) => source.slug === slug)));
   assert.ok(research.entitySlugs.every((slug) => report.entities.includes(slug)));
   assert.ok(research.timelineSlugs.every((slug) => report.timeline.includes(slug)));
@@ -49,13 +49,15 @@ test('the next authority cluster has reusable structure but is not an indexable 
 });
 
 test('compute observations preserve dated source wording without inventing schedulable capacity', () => {
-  assert.equal(indiaAiComputeObservations.length, 7);
+  assert.equal(indiaAiComputeObservations.length, 9);
   assert.ok(indiaAiComputeObservations.every((item) => /^\d{4}-\d{2}-\d{2}$/.test(item.reportedOn)));
   assert.ok(indiaAiComputeObservations.every((item) => sources.some((source) => source.slug === item.sourceSlug)));
   assert.ok(indiaAiComputeObservations.every((item) => item.schedulable === 'not-established'));
 
   const shared = indiaAiComputeObservations.find((item) => item.status === 'shared-capacity-reported');
   const access = indiaAiComputeObservations.find((item) => item.status === 'access-reported');
+  const installed = indiaAiComputeObservations.find((item) => item.status === 'installed-reported');
+  const julyOnboarded = indiaAiComputeObservations.find((item) => item.id === 'onboarded-nearly-38000-july-2026');
   assert.equal(shared?.accessible, 'not-established');
   assert.equal(shared?.asOf, '2026-06');
   assert.equal(shared?.qualifier, 'more-than');
@@ -63,6 +65,12 @@ test('compute observations preserve dated source wording without inventing sched
   assert.equal(access?.asOf, null);
   assert.equal(access?.qualifier, 'about');
   assert.equal(access?.sourceKind, 'independent');
+  assert.equal(installed?.installed, 'reported');
+  assert.equal(installed?.schedulable, 'not-established');
+  assert.equal(installed?.asOf, '2025-06-16');
+  assert.equal(julyOnboarded?.quantityLabel, 'nearly 38,000 onboarded');
+  assert.equal(julyOnboarded?.qualifier, 'nearly');
+  assert.equal(julyOnboarded?.schedulable, 'not-established');
   assert.ok(indiaAiComputeObservations.every((item) =>
     item.acceleratorType === 'not specified by source' &&
     item.installed !== 'established' &&
@@ -73,8 +81,9 @@ test('sources expose reusable provenance metadata without guessing missing publi
   const official = sources.find((source) => source.slug === 'pib-capacity-and-use-factsheet-2026');
   const secondary = sources.find((source) => source.slug === 'ettech-indiaai-recalibration-2026');
   const portal = sources.find((source) => source.slug === 'indiaai-compute-portal');
+  const allocations = sources.find((source) => source.slug === 'indiaai-compute-allocation-register-2026');
 
-  assert.ok(official && secondary && portal);
+  assert.ok(official && secondary && portal && allocations);
   assert.equal(official.sourceType, 'government-record');
   assert.equal(official.classification, 'primary');
   assert.equal(official.publicationDate, '2026-08-13');
@@ -82,8 +91,10 @@ test('sources expose reusable provenance metadata without guessing missing publi
   assert.equal(secondary.classification, 'secondary');
   assert.equal(portal.sourceType, 'government-portal');
   assert.equal(portal.publicationDate, undefined);
+  assert.equal(allocations.publicationDate, undefined);
+  assert.match(allocations.scopeNote ?? '', /project-level/i);
   assert.ok(official.scopeNote);
-  assert.ok([official, secondary, portal].every((source) => /^https?:\/\//.test(source.url)));
+  assert.ok([official, secondary, portal, allocations].every((source) => /^https?:\/\//.test(source.url)));
 });
 
 test('data product keeps dated observations, provenance, limitations, and updates together', () => {
@@ -91,8 +102,8 @@ test('data product keeps dated observations, provenance, limitations, and update
   const india = topicRecords.find((topic) => topic.slug === 'india');
   assert.ok(dataProduct && india);
   assert.equal(dataProduct.evidenceType, 'dated-public-source-claims');
-  assert.equal(dataProduct.observations.length, 7);
-  assert.equal(dataProduct.updatedAt, '2026-10-03');
+  assert.equal(dataProduct.observations.length, 9);
+  assert.equal(dataProduct.updatedAt, '2026-10-04');
   assert.ok(dataProduct.sourceSlugs.length >= 6);
   assert.ok(dataProduct.methodology.length > 40);
   assert.ok(dataProduct.limitations.length >= 3);

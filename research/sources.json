@@ -1,6 +1,6 @@
 {
   "researchSlug": "india-ai-compute-access-2026",
-  "researchDate": "2026-10-03",
+  "researchDate": "2026-10-04",
   "deduplication": "Canonical source URLs; language and tracking query parameters are normalized when they identify the same document.",
   "sources": [
     {
@@ -49,6 +49,17 @@
       "evidencePath": "research/sources/access-03-pib-onboarded.md",
       "evidenceType": "full-page",
       "caveat": "Reports 38,231 GPUs onboarded from 14 empanelled providers and an average rate near ₹65 per GPU-hour except selected high-end GPUs; retain the release’s own wording."
+    },
+    {
+      "key": "pib-onboarded-nearly-38000-2026",
+      "title": "Innovation, Startups, MSMEs and Quality Manufacturing are Pillars of India's Future Growth",
+      "publisher": "Press Information Bureau, Ministry of Commerce and Industry",
+      "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2291450&lang=1&reg=3",
+      "publishedDate": "2026-07-29",
+      "tier": 1,
+      "evidencePath": "research/sources/access-06-pib-july-onboarded.md",
+      "evidenceType": "full-page",
+      "caveat": "Repeats the rounded phrase “nearly 38,000 GPUs onboarded”; it supplies no provider-level inventory or crosswalk to the separate shared-capacity claim."
     },
     {
       "key": "pib-data-centre-capacity-2026",
@@ -100,6 +111,17 @@
       "evidencePath": "research/sources/datacentres-02-indiaai-compute-portal.md",
       "evidenceType": "captured-portal",
       "caveat": "Describes application, approval, provider and allocation processes; the capture is not a dated utilisation ledger."
+    },
+    {
+      "key": "indiaai-compute-allocation-register-2026",
+      "title": "IndiaAI Compute Capacity: GPU Compute Allocation",
+      "publisher": "IndiaAI Portal",
+      "url": "https://indiaai.gov.in/hub/indiaai-compute-capacity",
+      "publishedDate": null,
+      "tier": 1,
+      "evidencePath": "research/sources/access-05-indiaai-allocation-register.md",
+      "evidenceType": "captured-portal",
+      "caveat": "The page exposes dated project-allocation rows, not a complete hardware inventory; it does not establish delivery, installation, start of service, active reservations, or current schedulability."
     },
     {
       "key": "indiaai-compute-price-calculator",
@@ -177,6 +199,17 @@
       "evidencePath": "research/sources/policy-04-oct-2026-reporting.md",
       "evidenceType": "full-page",
       "caveat": "Reports access to about 30,000 GPUs against a 45,000 commitment and possible recalibration; these are reported terms, not a government-reconciled inventory."
+    },
+    {
+      "key": "ettech-indiaai-installed-2025",
+      "title": "IndiaAI plan moves forward with over 17,000 GPUs successfully installed",
+      "publisher": "ETtech, The Economic Times",
+      "url": "https://m.economictimes.com/tech/artificial-intelligence/indiaai-plan-moves-forward-with-over-17000-gpus-successfully-installed/articleshow/122031788.cms",
+      "publishedDate": "2025-06-24",
+      "tier": 2,
+      "evidencePath": "research/sources/access-07-ettech-installed-2025.md",
+      "evidenceType": "full-page",
+      "caveat": "Secondary reporting of a little over 17,300 installed GPUs at a 16 June 2025 review; it is not a current or government-published schedulable inventory."
     },
     {
       "key": "pib-ai-models-datasets-2026",

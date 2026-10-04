@@ -13,4 +13,5 @@ export const PublicNewsroomComputeObservationQualifier = {
   exact: 'exact',
   about: 'about',
   'more-than': 'more-than',
+  nearly: 'nearly',
 } as const;
