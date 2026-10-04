@@ -1,6 +1,11 @@
 Source: https://openai.github.io/openai-agents-python/human_in_the_loop/
 Title: Human-in-the-loop - OpenAI Agents SDK
+Publisher: OpenAI
+Publication date: Not stated in captured page
 Fetched: 2026-10-04T09:35:19.360Z
+Source type: Agents SDK documentation
+Evidence class: Primary product documentation
+Claim relevance: Tool-approval interruptions, run-state resumption, and application responsibilities for approver identity and serialized-state integrity.
 
 [Skip to content](https://openai.github.io/openai-agents-python/human_in_the_loop/#human-in-the-loop)
 

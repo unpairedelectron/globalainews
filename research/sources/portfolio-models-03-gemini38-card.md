@@ -1,6 +1,11 @@
 Source: https://deepmind.google/models/model-cards/gemini-3-8-flash
 Title: Gemini 3.8 Flash - Model Card — Google DeepMind
+Publisher: Google DeepMind
+Publication date: 2026-09-02
 Fetched: 2026-10-04T08:15:44.002Z
+Source type: Model card (web page)
+Evidence class: Primary (provider-authored)
+Claim relevance: Card sections, evaluation disclosure, and links to Gemini 3.7 material for inherited details.
 
 [Skip to main content](https://deepmind.google/models/model-cards/gemini-3-8-flash/#page-content)
 

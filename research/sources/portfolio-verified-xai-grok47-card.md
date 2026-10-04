@@ -1,6 +1,11 @@
 Source: https://media.x.ai/v1/website/4p7card-5eccc980.pdf
-Title: 
+Title: ModelCard: Grok4.7
+Publisher: xAI
+Publication date: 2026-09-21
 Fetched: 2026-10-04T08:24:21.586Z
+Source type: Model card (PDF)
+Evidence class: Primary (provider-authored)
+Claim relevance: Capability and safety sections, including the final-deployed-checkpoint convention.
 
 # ModelCard: Grok4.7
 

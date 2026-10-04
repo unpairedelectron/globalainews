@@ -73,7 +73,7 @@
 | Draft key | Captured source | Evidence role |
 |---|---|---|
 | `xai-grok47-api-docs` | `research/sources/portfolio-brief-xai-grok47-api.md` | xAI model ID, context, direct API pricing and regional endpoint |
-| `aws-grok47-bedrock-2026` | `research/sources/portfolio-brief-aws-grok47.md` | Bedrock model ID, routing profiles, interfaces, and integration features |
+| `aws-grok47-bedrock-2026` | `research/sources/portfolio-brief-aws-grok47.md` | Bedrock model ID, routing profiles, interfaces, and integration features; publication date not visible in captured page |
 
 ## Comparison 60 — Image provenance and detection controls
 
@@ -81,5 +81,5 @@
 |---|---|---|
 | `c2pa-spec-24` | `research/sources/research-c2pa-24-spec.md` | C2PA 2.4 standard; provenance claims and watermark terminology |
 | `c2pa-deployment-guidance-2026` | `research/sources/report-c2pa-deployment-guidance-2026.md` | Publisher workflow and credential status display |
-| `c2pa-independent-security-study-2026` | `research/sources/report-c2pa-independent-security-study-2026.md` | Independent analysis of validator, timestamp, and certificate issues |
+| `c2pa-independent-security-study-2026` | `research/sources/report-c2pa-independent-security-study-2026.md` | Independent arXiv preprint analyzing validator, timestamp, and certificate issues |
 | `iclr-image-detectors-2024` | `research/sources/comparison-ai-image-detectors-iclr2024.md` | ICLR 2024 experiments on watermark and classifier detector robustness |

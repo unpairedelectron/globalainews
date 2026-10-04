@@ -1,6 +1,11 @@
 Source: https://ai.google.dev/gemma/docs/core/model_card_4?hl=en
 Title: Gemma 4 model card  |  Google AI for Developers
+Publisher: Google
+Publication date: Not stated in captured page
 Fetched: 2026-10-04T08:15:38.003Z
+Source type: Model card (web page)
+Evidence class: Primary (provider-authored)
+Claim relevance: Card sections for training data, evaluation, intended use, limitations, ethics and safety.
 
 [Skip to main content](https://ai.google.dev/gemma/docs/core/model_card_4?hl=en#main-content)
 

@@ -1,5 +1,10 @@
 Source: https://www.cushmanwakefield.com/en/india/news/2026/09/india-data-centre-h1-2026-update
 Title: India Data Centre H1 2026 Updates  | IN | Cushman & Wakefield
+Publisher: Cushman & Wakefield
+Publication date: 2026-09-23 (author byline shows 23/09/2026)
+Source type: India data-centre market update
+Evidence class: Primary publisher report; not an independent market measurement
+Claim relevance: Top-seven-market operational-capacity and upcoming-supply totals and project-stage labels
 Fetched: 2026-10-04T08:15:48.628Z
 
 [Skip to main content](https://www.cushmanwakefield.com/en/india/news/2026/09/india-data-centre-h1-2026-update#main-content)

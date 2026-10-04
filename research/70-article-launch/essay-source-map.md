@@ -85,7 +85,7 @@
 |---|---|---|
 | `c2pa-spec-24` | `research/sources/research-c2pa-24-spec.md` | C2PA 2.4 provenance claims, bindings, and watermark support |
 | `c2pa-deployment-guidance-2026` | `research/sources/report-c2pa-deployment-guidance-2026.md` | Publisher workflows and user-facing credential states |
-| `c2pa-independent-security-study-2026` | `research/sources/report-c2pa-independent-security-study-2026.md` | Independent implementation/specification findings, bounded to tested versions |
+| `c2pa-independent-security-study-2026` | `research/sources/report-c2pa-independent-security-study-2026.md` | Independent arXiv preprint with implementation/specification findings, bounded to tested versions |
 | `iclr-image-detectors-2024` | `research/sources/comparison-ai-image-detectors-iclr2024.md` | One study of detector and watermark robustness under tested conditions |
 
 ## Essay 70 — Public model-release evidence trail
@@ -96,7 +96,7 @@
 | `anthropic-sonnet55-system-card-2026` | `research/sources/portfolio-verified-anthropic-sonnet55-card.md` | Anthropic system-card scope and limitations |
 | `gemini38-flash-card-2026` | `research/sources/portfolio-models-03-gemini38-card.md` | Google model-card and availability documentation |
 | `grok47-model-card-2026` | `research/sources/portfolio-verified-xai-grok47-card.md` | xAI model-card evaluations and version notes |
-| `aws-grok47-bedrock-2026` | `research/sources/portfolio-brief-aws-grok47.md` | AWS Bedrock availability record; not an independent model evaluation |
+| `aws-grok47-bedrock-2026` | `research/sources/portfolio-brief-aws-grok47.md` | AWS Bedrock availability record; publication date not visible in the captured page; not an independent model evaluation |
 | `reuters-sonnet55-2026` | `research/sources/portfolio-brief-reuters-sonnet55.md` | Independent launch and pricing reporting; model claims remain attributed |
 | `reuters-gpt6-sol-luna-2026` | `research/sources/portfolio-brief-reuters-openai-sol-luna.md` | Independent launch reporting; not an independent benchmark |
 | `decrypt-grok47-2026` | `research/sources/portfolio-brief-decrypt-grok47.md` | Independent launch reporting; not an independent benchmark |

@@ -442,21 +442,23 @@ The practical standard is conditional. If two models were tested on the same ben
 
 **Slug:** `india-capacity-definition-gap`  
 **Topic:** India data-centre infrastructure  
-**Proposed dek:** Cushman & Wakefield reports 1,789 MW of operational capacity across India’s top seven data-centre markets in H1 2026. A PIB factsheet gives a lower, undated “current” national figure of about 1,575 MW. The public pages do not provide a common definition to reconcile them.
+**Proposed dek:** Cushman & Wakefield reports 1,789 MW of operational capacity across India’s top seven data-centre markets in H1 2026. A PIB factsheet page dated 13 August 2026 gives a lower “current” national figure of about 1,575 MW, but no separate measurement cutoff. The public pages do not provide a common definition to reconcile them.
 
 ### Similar units do not guarantee the same measure
 
 Cushman & Wakefield’s September 2026 update says India’s top seven data-centre markets added 178 MW in the first half of 2026, bringing their operational capacity to 1,789 MW as of H1. The same update forecasts another 3,860 MW of supply by 2030, split into 509 MW under construction and 3,351 MW in the planning stage. The report labels these categories separately: the pipeline is not operating capacity. [@cw-india-dc-h1-2026]
 
-A PIB factsheet gives a different snapshot, saying installed data-centre capacity has grown from 375 MW in 2020 to about 1,575 MW “currently.” The capacity line itself does not state an observation date or explain how installed capacity is measured. A separate Rajya Sabha reply published in March 2026 says national capacity reached around 1,500 MW by 2025. These government figures are close in scale, but their wording and reference periods are not identical either. [@pib-india-dc-capacity-factsheet-2026] [@pib-india-dc-rajya-sabha-mar2026]
+A PIB factsheet entry dated 13 August 2026 says installed data-centre capacity grew from 375 MW in 2020 to about 1,575 MW “currently.” The page-entry date is visible, but the capacity sentence does not state a separate observation date or explain how installed capacity is measured. A PIB release posted 13 March 2026 separately reports capacity of around 1,500 MW by 2025 and estimates electricity demand from data centres at 13.56 GW by 2031–32. [@pib-india-dc-capacity-factsheet-2026] [@pib-data-centre-demand-2026-03-13]
 
-The apparent mismatch is worth investigating: a report about seven major markets gives a higher number than the PIB factsheet’s undated national total. But the sources do not provide a shared table of included sites, measurement definitions or cutoff dates. It would be premature to call one number wrong without knowing whether “operational,” “installed” and “capacity” include the same facility types and measurement boundary.
+The 30 March 2026 Rajya Sabha answer to Unstarred Question 4151 also says national capacity reached around 1,500 MW by 2025, but places 13.56 GW by 2031–32 in a sentence about projected data-centre capacity. This is a parliamentary answer, distinct from the 13 March PIB release. [@rajya-sabha-data-centre-capacity-2026-03-30]
+
+The apparent mismatch is worth investigating: a report about seven major markets gives a higher number than the PIB factsheet’s “current” national figure. The factsheet page is dated, but the metric’s observation date is not; neither source provides a shared table of included sites or measurement definitions. It would be premature to call one number wrong without knowing whether “operational,” “installed” and “capacity” include the same facility types and measurement boundary. [@cw-india-dc-h1-2026] [@pib-india-dc-capacity-factsheet-2026]
 
 ### Keep live capacity separate from the pipeline
 
 The C&W report’s 3,860 MW through 2030 combines projects in construction with those still at the planning stage. Only the 509 MW under construction is in that category; the 3,351 MW planned portion is further from operation. Adding the entire pipeline to a current capacity figure would turn prospective supply into live capacity. Conversely, planned projects can change or be delayed, so the full amount is not guaranteed to arrive by 2030. [@cw-india-dc-h1-2026]
 
-Another number sometimes appearing beside data-centre capacity is the government’s 13.56 GW estimate of electricity demand from data centres by 2031–32. That is a future power-demand estimate, not a report of installed IT load or data-centre capacity today. It cannot be added to a current MW capacity total or used as a cross-check without knowing the demand model and what loads it includes. [@pib-india-dc-rajya-sabha-mar2026]
+A separate 13.56-GW projection also appears in two March 2026 records. The 13 March PIB release calls it electricity demand from data centres; the 30 March Rajya Sabha answer places the same value in a sentence about projected data-centre capacity. Neither wording makes it a measure of current installed capacity. It cannot be added to a current MW total or used as a cross-check without knowing the demand or capacity model and what loads it includes. [@pib-data-centre-demand-2026-03-13] [@rajya-sabha-data-centre-capacity-2026-03-30]
 
 GPU counts describe a different layer again. The PIB factsheet says shared IndiaAI compute capacity had grown to more than 45,000 GPUs by June 2026. This is a programme-level count of onboarded accelerators, not a national data-centre MW total. Converting GPUs into megawatts would require details such as device mix, server configuration, power usage, utilization and what facility overhead is included. [@pib-india-dc-capacity-factsheet-2026]
 
@@ -464,13 +466,13 @@ GPU counts describe a different layer again. The PIB factsheet says shared India
 
 The Tribune and Economic Times articles captured for this research both repeat the C&W report’s 3,860-MW pipeline and investment figures. They are useful as evidence of how the report was covered, but they do not provide a second independent measurement of operational capacity. Treating three pages that repeat one consultancy estimate as three confirmations would exaggerate the evidence base.
 
-The more defensible reading is a set of dated snapshots with unresolved definitions: a market report measuring the top seven cities at H1 2026, a PIB national fact-sheet line with an unspecified “current” date, and a March reply summarizing capacity by 2025. The numerical difference points to a need for methodology and coverage notes; it does not prove that national capacity is exactly either 1,575 MW or 1,789 MW.
+The more defensible reading is a set of dated snapshots with unresolved definitions: a market report for seven named markets in H1 2026; a PIB factsheet entry dated 13 August whose “current” capacity line lacks a metric-specific cutoff; and March records that report national capacity around 1,500 MW by 2025. The numerical difference points to a need for methodology and coverage notes; it does not prove that national capacity is exactly either 1,575 MW or 1,789 MW. [@cw-india-dc-h1-2026] [@pib-india-dc-capacity-factsheet-2026] [@pib-data-centre-demand-2026-03-13] [@rajya-sabha-data-centre-capacity-2026-03-30]
 
 ### What a reconciled series should disclose
 
 A comparable national series would name the reference date, geographic coverage, operational-status threshold and capacity measure. It should distinguish IT load from utility power demand, count only facilities that are operating in the current total, and separately report announced, planned and under-construction projects. If the series includes only major markets, it should say which cities and providers are covered.
 
-Until those details are aligned, readers should keep the numbers attached to their sources and labels. C&W’s H1 2026 seven-market estimate is useful for understanding leading-market growth; PIB’s figure is a government snapshot with an unclear as-of date; the March reply gives an approximate 2025 national value. None on its own settles a single, reconciled national total. [@cw-india-dc-h1-2026] [@pib-india-dc-capacity-factsheet-2026] [@pib-india-dc-rajya-sabha-mar2026]
+Until those details are aligned, readers should keep the numbers attached to their sources and labels. C&W’s H1 2026 seven-market estimate is useful for understanding leading-market growth; the PIB factsheet page is dated 13 August, but its 1,575-MW “current” line has no metric-specific cutoff; and the 13 March PIB release and 30 March Rajya Sabha answer both report around 1,500 MW by 2025. None on its own settles a single, reconciled national total. [@cw-india-dc-h1-2026] [@pib-india-dc-capacity-factsheet-2026] [@pib-data-centre-demand-2026-03-13] [@rajya-sabha-data-centre-capacity-2026-03-30]
 
 Readers can audit each later update as a change in coverage, operating status or measurement definition, rather than assuming that the difference represents newly built capacity.
 
@@ -480,7 +482,7 @@ Readers can audit each later update as a change in coverage, operating status or
 
 **Key takeaways:**
 - C&W reports 1,789 MW of operating capacity across seven markets in H1 2026.
-- PIB reports about 1,575 MW of current installed capacity without a dated reference point in the cited sentence.
+- The PIB factsheet page is dated 13 August 2026, but its “current” 1,575-MW line has no separate measurement cutoff. [@pib-india-dc-capacity-factsheet-2026]
 - C&W’s 3,860-MW pipeline and IndiaAI’s 45,000-plus GPUs are not current national capacity.
 
 **What changes:** Every published total should include its date, geography, operational threshold and definition of capacity.

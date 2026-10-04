@@ -337,7 +337,7 @@ The SWE-bench Verified page illustrates this at the agent level. Its bash-only l
 
 A new result can improve because a model changed, because an agent harness improved, or because a benchmark’s tasks or scoring changed. Those are all real forms of progress, but they answer different questions. A model comparison holds the harness and conditions steady; a system comparison allows the full stack to differ; a benchmark update may improve task quality while breaking direct comparability with an earlier release.
 
-The τ-bench pass^k metric offers another reason to preserve trial history. It estimates the chance that all k independent attempts for a task succeed, averaged across tasks. That is not interchangeable with a single pass@1 score. If a leaderboard reports only one percentage and omits attempts, it may hide whether the system is consistent or merely capable of a successful run. [@tau-bench-2024]
+The τ-bench pass^k metric offers another reason to preserve trial history. It estimates the chance that all k independent attempts for a task succeed, averaged across tasks. That is not interchangeable with a single-run task-success rate. If a leaderboard reports only one percentage and omits attempts, it may hide whether the system is consistent or merely capable of a successful run. [@tau-bench-2024]
 
 Provider cards also show the need for version labels. xAI’s Grok 4.7 card notes that CursorBench 4.0 adds longer-horizon tasks and that its scores are not comparable with CursorBench 3.2. The result is not invalid; it belongs to a changed test. A release record should describe the break and preserve both versions rather than chart them as a continuous series. [@grok47-model-card-2026]
 
@@ -364,7 +364,7 @@ A public score series can keep all results visible while drawing a break wheneve
 **Key takeaways:**
 - Preserve task set, model, scaffold, budget, grader, and trial details.
 - Mark benchmark and harness revisions that break direct comparability.
-- Distinguish pass@1 from repeated-run metrics such as pass^k.
+- Distinguish single-run task success from repeated-run metrics such as pass^k.
 - Treat contamination as a documented validity risk, not an accusation without evidence.
 - Keep older results available so changes can be audited.
 
@@ -447,7 +447,7 @@ The EU KIDS Act proposal, presented by the European Commission in September 2026
 
 Current law is a separate record. Article 28 of the Digital Services Act requires online platforms accessible to minors to take appropriate and proportionate measures for minors’ privacy, safety, and security, and restricts profiling-based advertising when the provider knows with reasonable certainty that the recipient is a minor. Its scope is online platforms accessible to minors; it should not be summarized as a universal rule for every chatbot or device. [@eu-dsa-article-28]
 
-The Commission proposal would add provisions for specified service classes and design features. It includes delayed access for certain social networking and video-sharing services, as well as safety-by-design requirements for named categories that include AI companions and general conversational chatbots. The proposal itself recognizes that services can support expression and access to information as well as create risks, and it describes exceptions and design conditions. That balance belongs in public debate, not only in a legal footnote. [@eu-kids-act-proposal-2026]
+The Commission proposal would add provisions for specified service classes and design features. It would limit autonomous account creation below age 15 on specified social networking and video-sharing services; the proposal also describes limited-functionality accounts from age 13 and strict parental-supervision rules for very young children. Separate safety-by-design requirements cover named categories that include AI companions and general conversational chatbots. The proposal itself recognizes that services can support expression and access to information as well as create risks, and it describes exceptions and design conditions. That balance belongs in public debate, not only in a legal footnote. [@eu-kids-act-proposal-2026]
 
 ### Safety evidence and rights are not interchangeable
 
@@ -508,9 +508,9 @@ C2PA’s 2.4 specification defines a way to associate a signed manifest and asse
 
 ### Verification itself has an implementation history
 
-The C2PA specification does not remove the need to assess validators and trust policy. A 2026 independent security study reports that its tests found issues involving altered timestamps, revoked or compromised credentials, and disagreement among validators. Those findings are specific to the versions and implementations examined. They support the practical claim that a green check should be explained, not treated as an infallible verdict. [@c2pa-independent-security-study-2026]
+The C2PA specification does not remove the need to assess validators and trust policy. A 2026 independent arXiv preprint reports issues involving altered timestamps, revoked or compromised credentials, and disagreement among validators in the versions and implementations it examined. Those findings support the practical claim that a green check should be explained, not treated as an infallible verdict. [@c2pa-independent-security-study-2026]
 
-Other signals have their own limits. A 2024 ICLR paper evaluates AI-image detectors and watermarks under attacks and transformations, demonstrating why a detector output depends on the method and test conditions. A watermark can be difficult to detect after image changes; a classifier can make errors outside its evaluation distribution. Neither result should be generalized to every current product, but both argue against collapsing all signals into “authentic” or “fake.” [@iclr-image-detectors-2024]
+Other signals have their own limits. A 2024 ICLR paper reports that diffusion purification can remove tested low-perturbation watermarks, while a separate attack targets high-perturbation methods; it also describes a robustness–reliability trade-off for classifier-based detectors. Those results are bounded to the methods and conditions examined, but argue against collapsing all signals into “authentic” or “fake.” [@iclr-image-detectors-2024]
 
 An absent credential is especially easy to misread. A creator may not have used a compatible tool; a platform may have stripped metadata; an image may be an older file; or the record may not have been preserved. “No credential found” describes what the verifier returned. It does not establish that the image is false or synthetic. Likewise, a valid signature shows that a signed statement passed a verification process; it does not confirm every statement inside it.
 
@@ -545,7 +545,7 @@ The verification note should also name the claim that was checked and whether th
 
 **What changes:** Publishers should describe provenance states narrowly and attach them to a wider verification record.
 
-**Evidence note:** The essay uses C2PA 2.4, deployment guidance, one 2026 security study, and one 2024 detector study. It does not claim every current implementation is vulnerable.
+**Evidence note:** The essay uses C2PA 2.4, deployment guidance, one 2026 arXiv security preprint, and one 2024 detector study. It does not claim every current implementation is vulnerable.
 
 **Related coverage:** Explainer 28; Report 49; Comparison 60.
 
@@ -559,7 +559,7 @@ The verification note should also name the claim that was checked and whether th
 
 Model releases now travel through several documents: an announcement, a technical card, API documentation, product access pages, and cloud or partner listings. These pages answer different questions and may be updated at different times. A durable public record should connect them without pretending that they are the same source or that availability proves performance.
 
-The September 2026 model archive in this project shows why. OpenAI’s GPT-6 Sol/Luna release page describes product positioning and provider-run benchmarks. Anthropic’s Sonnet 5.5 system card records evaluation coverage and omissions. Google’s Gemini 3.8 Flash card documents modalities and context. xAI’s Grok 4.7 card names external evaluators for selected tests and notes benchmark-version changes. AWS’s Bedrock notice records a hosting path for Grok 4.7, not an independent model evaluation. Each document is useful for a different part of the release. [@openai-gpt6-sol-luna-2026] [@anthropic-sonnet55-system-card-2026] [@gemini38-flash-card-2026] [@grok47-model-card-2026] [@aws-grok47-bedrock-2026]
+The September 2026 model archive in this project shows why. OpenAI’s GPT-6 Sol/Luna release page describes product positioning and provider-run benchmarks. Anthropic’s Sonnet 5.5 system card records evaluation coverage and omissions. Google’s Gemini 3.8 Flash card documents modalities and context. xAI’s Grok 4.7 card names external evaluators for selected tests and notes benchmark-version changes. AWS’s captured Bedrock page lists Grok 4.7 availability, but its publication date is not visible; it records a hosting path, not an independent model evaluation. Each document is useful for a different part of the release. [@openai-gpt6-sol-luna-2026] [@anthropic-sonnet55-system-card-2026] [@gemini38-flash-card-2026] [@grok47-model-card-2026] [@aws-grok47-bedrock-2026]
 
 | Record element | What should be kept | Why |
 |---|---|---|

@@ -51,7 +51,7 @@ Each capture begins with the exact source URL, title when available, and fetch t
 |---|---|---|
 | `xai-grok47-release` | `research/sources/portfolio-brief-xai-grok47-official.md` | xAI primary release and company-reported claims |
 | `xai-grok47-model-card` | `research/sources/portfolio-verified-xai-grok47-card.md` | xAI primary model card |
-| `aws-grok47-bedrock-2026` | `research/sources/portfolio-brief-aws-grok47.md` | AWS availability record; not an independent model evaluation |
+| `aws-grok47-bedrock-2026` | `research/sources/portfolio-brief-aws-grok47.md` | AWS availability record; publication date is not visible in the captured page; not an independent model evaluation |
 | `decrypt-grok47-2026` | `research/sources/portfolio-brief-decrypt-grok47.md` | Independent launch coverage, syndicated through Yahoo Tech |
 | `xai-grok47-api-docs` | `research/sources/portfolio-brief-xai-grok47-api.md` | xAI API documentation and published interface specifications |
 

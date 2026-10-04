@@ -13,25 +13,28 @@
 
 ### Start with the source, date, geography, and stage
 
-India data-centre capacity is often summarized with a single megawatt figure. The public records reviewed here describe several different quantities: operational capacity in selected markets, upcoming supply at different development stages, a separate national capacity statement, and a future electricity-demand projection. They are not one continuous series. This reference preserves the source’s date and labels so readers can use each number without converting it into another measure. [@cw-india-dc-h1-2026] [@pib-india-dc-1575-and-demand] [@rajya-sabha-india-dc-capacity]
+India data-centre capacity is often summarized with a single megawatt figure. The public records reviewed here describe several different quantities: operational capacity in selected markets, upcoming supply at different development stages, separate national capacity statements, and a future electricity-demand projection. They are not one continuous series. This reference preserves each source’s date and labels so readers can use each number without converting it into another measure. [@cw-india-dc-h1-2026] [@pib-india-dc-capacity-factsheet-2026] [@pib-data-centre-demand-2026-03-13] [@rajya-sabha-data-centre-capacity-2026-03-30]
 
 Cushman & Wakefield’s India Data Centre H1 2026 update, published on 23 September 2026, gives operational-capacity and upcoming-supply values for seven markets. Its top-line figures are 1,789 MW operational and 3,860 MW of supply expected by 2030; the upcoming total is divided into 509 MW under construction and 3,351 MW in planning. These stages describe different points in a project’s development, and planned supply is not capacity that users can access today. Research 32 separately audits the seven displayed market rows and their arithmetic. This report uses the publisher’s top-line values only as one dated, seven-market reference. [@cw-india-dc-h1-2026]
 
 ### Keep national records separate from the market report
 
-The Press Information Bureau’s March 2026 release gives a separate current data-centre capacity figure of 1,575 MW and discusses a projected 13.56 GW figure for 2031–32. In the same record, the 13.56-GW number is described as electricity demand from data centres. A Rajya Sabha answer dated 30 March gives a different sentence-level label: it describes capacity as rising from about 375 MW in 2020 to around 1,500 MW by 2025 and reaching 13.56 GW by 2031–32. It later discusses electricity demand in the context of transmission planning. [@pib-india-dc-1575-and-demand] [@rajya-sabha-india-dc-capacity]
+The Press Information Bureau’s factsheet entry dated 13 August 2026 says installed data-centre capacity grew from 375 MW in 2020 to about 1,575 MW “currently.” The page-entry date is known, but the capacity sentence gives no separate measurement cutoff. A separate PIB release posted 13 March 2026 says capacity was around 1,500 MW by 2025 and estimates data-centre electricity demand at 13.56 GW by 2031–32. [@pib-india-dc-capacity-factsheet-2026] [@pib-data-centre-demand-2026-03-13]
+
+A Rajya Sabha answer dated 30 March 2026 gives the same approximate 375-to-1,500-MW-by-2025 history and describes 13.56 GW by 2031–32 as data-centre capacity. The answer later discusses electricity demand in transmission planning. [@rajya-sabha-data-centre-capacity-2026-03-30]
 
 | Record | Date and stated scope | Published value | How to preserve it |
 |---|---|---:|---|
-| Cushman & Wakefield H1 update | 23 September 2026; seven named markets | 1,789 MW operational; 3,860 MW upcoming by 2030 | Attribute to C&W; keep the market scope and project-stage language; see Research 32 for the row audit |
-| PIB release | 13 March 2026; national public statement | 1,575 MW described as current capacity; 13.56 GW described as 2031–32 electricity demand | Retain both labels and the release date |
-| Rajya Sabha answer | 30 March 2026; answer to Unstarred Question 4151 | About 1,500 MW by 2025; 13.56 GW described as 2031–32 capacity | Identify the question and ministry; do not silently relabel the projection |
+| Cushman & Wakefield H1 update | 23 September 2026; seven named markets | 1,789 MW operational; 3,860 MW upcoming by 2030 | Attribute to C&W; keep the market scope and project-stage language; see Research 32 for the row audit. [@cw-india-dc-h1-2026] |
+| PIB factsheet | Page entry dated 13 August 2026; national installed-capacity statement | About 1,575 MW “currently,” after 375 MW in 2020; no separate measurement cutoff is stated | Retain “current” as the source’s wording; do not treat the page-entry date as the metric’s cutoff. [@pib-india-dc-capacity-factsheet-2026] |
+| PIB release | Posted 13 March 2026; national statement reporting a ministerial submission in Rajya Sabha | About 1,500 MW by 2025; 13.56 GW described as 2031–32 electricity demand | Attribute this to the PIB release and retain “by 2025” and the demand label. [@pib-data-centre-demand-2026-03-13] |
+| Rajya Sabha answer | 30 March 2026; answer to Unstarred Question 4151 | About 1,500 MW by 2025; 13.56 GW described as 2031–32 capacity | Identify the question and ministry; do not silently relabel the projection. [@rajya-sabha-data-centre-capacity-2026-03-30] |
 
-The 1,575-MW PIB figure and C&W’s 1,789-MW top-seven-market total cannot be reconciled from the records reviewed. They differ in date, source, stated geography, and potentially in the definition of capacity. The documents do not provide a common facility list, cut-off date, or calculation. The correct reporting choice is to show the figures with their source and scope, not to declare one wrong or treat them as like-for-like national totals. The same caution applies to the 13.56-GW statements: one record calls it electricity demand and another capacity. [@pib-india-dc-1575-and-demand] [@rajya-sabha-india-dc-capacity] [@cw-india-dc-h1-2026]
+The PIB factsheet’s about-1,575-MW “current” figure and C&W’s 1,789-MW H1 2026 top-seven-market total cannot be reconciled from the records reviewed. The factsheet page is dated 13 August, but its capacity line gives no separate observation cutoff; C&W states an H1 2026 period and names seven markets. The sources do not provide a common facility list or calculation. The correct reporting choice is to show each number with its source and scope, not to declare one wrong or treat them as like-for-like national totals. The same caution applies to 13.56 GW: the 13 March PIB release calls it electricity demand, while the 30 March Rajya Sabha answer calls it data-centre capacity. [@pib-india-dc-capacity-factsheet-2026] [@cw-india-dc-h1-2026] [@pib-data-centre-demand-2026-03-13] [@rajya-sabha-data-centre-capacity-2026-03-30]
 
 ### What these records do not measure
 
-Megawatts describe power or capacity, not annual electricity consumption. A value in MW cannot be converted directly into terawatt-hours without assumptions about operating time and utilization. It also cannot be translated into a count of GPUs: facilities differ in power allocated to IT equipment, cooling, backup, networking, and other services, while accelerator systems differ in power draw and configuration. None of the records above provides a common method for such conversions. [@cw-india-dc-h1-2026] [@pib-india-dc-1575-and-demand]
+Megawatts describe power or capacity, not annual electricity consumption. A value in MW cannot be converted directly into terawatt-hours without assumptions about operating time and utilization. It also cannot be translated into a count of GPUs: facilities differ in power allocated to IT equipment, cooling, backup, networking, and other services, while accelerator systems differ in power draw and configuration. None of the records above provides a common method for such conversions. [@cw-india-dc-h1-2026] [@pib-india-dc-capacity-factsheet-2026] [@pib-data-centre-demand-2026-03-13] [@rajya-sabha-data-centre-capacity-2026-03-30]
 
 “Operational” is different from “under construction” and “planning.” An operational market estimate may still contain capacity that is not available to every customer, while announced or planned supply can change before it is commissioned. For a capacity reference, each entry should carry at least the reporting date, geography, stage, unit, source, and any definition the source provides. When a publisher reports an aggregate plus city rows, the table should also preserve whether the rows reproduce the headline total.
 
@@ -39,7 +42,7 @@ Megawatts describe power or capacity, not annual electricity consumption. A valu
 
 For each new market update, record the publication date and source, the geographic universe, operational values, and future supply broken down by project stage. Keep the publisher’s stated scope visible and link to a separate row-level audit when figures are recalculated. Do not merge a national government statement with a private-market estimate merely because both use MW, and do not substitute a recomputed value for a publisher’s total without an explicit method.
 
-For government figures, preserve the exact wording and identify whether the statement refers to current capacity, planned capacity, electricity demand, or another quantity. A later answer that repeats the same number is not independent measurement unless it documents a separate dataset and method. The reviewed official statements do not establish that the C&W market totals and national figures use one shared definition. [@pib-india-dc-1575-and-demand] [@rajya-sabha-india-dc-capacity]
+For government figures, preserve the exact wording and identify whether the statement refers to current capacity, planned capacity, electricity demand, or another quantity. A later answer that repeats the same number is not independent measurement unless it documents a separate dataset and method. The reviewed official statements do not establish that the C&W market totals and national figures use one shared definition. [@pib-india-dc-capacity-factsheet-2026] [@pib-data-centre-demand-2026-03-13] [@rajya-sabha-data-centre-capacity-2026-03-30]
 
 This report is a dated reference, not an industry census. It does not estimate facilities outside the named markets, verify project status, or forecast which planned sites will be commissioned. Future editions should replace the snapshot only after checking the new source’s date, geographic coverage, project stages, and arithmetic. Until then, the safest use is to quote each figure with those boundaries attached.
 
@@ -50,7 +53,7 @@ This report is a dated reference, not an industry census. It does not estimate f
 **Key takeaways:**
 - C&W reports 1,789 MW operational and 3,860 MW upcoming across its H1 2026 update.
 - The 509-MW construction and 3,351-MW planning categories are stages of upcoming supply, not current operational capacity.
-- PIB and Parliament records use different wording for a 13.56-GW 2031–32 figure.
+- The PIB factsheet’s “current” 1,575-MW figure has no separate measurement cutoff; the March PIB release and Parliament answer use different labels for 13.56 GW.
 - MW figures do not, without additional assumptions, establish annual energy use or GPU availability.
 - Research 32 contains the separate arithmetic check of C&W’s seven displayed market rows.
 
@@ -70,7 +73,7 @@ This report is a dated reference, not an industry census. It does not estimate f
 
 ### Two dated totals are not a growth series
 
-AIKosh is a public catalog of datasets, models and other resources related to artificial intelligence in India. A July 2026 PIB release reports more than 14,000 datasets and 331 models; a February 2026 DD News report gives 7,541 datasets and 273 models. Those are two dated institutional statements about the catalog, not a verified time series. [@aikosh-pib-july-snapshot] [@aikosh-ddnews-february-snapshot]
+AIKosh is a public catalog of datasets, models and other resources related to artificial intelligence in India. A PIB factsheet entry dated 13 August 2026 reports more than 14,000 datasets and 331 models as of July 2026; a DD News report published 10 February 2026 gives 7,541 datasets and 273 models as of February. Those are two dated institutional statements about the catalog, not a verified time series. [@aikosh-pib-july-snapshot] [@aikosh-ddnews-february-snapshot]
 
 It is tempting to subtract the earlier totals from the later ones and describe the difference as growth. The sources reviewed do not provide a shared counting method or say whether they count listings, unique datasets, model versions, duplicate records, withdrawn entries, or resources that remain accessible. The dates and numbers are clear; their comparability is not. This report therefore preserves each figure with its source and date and does not calculate a growth rate.
 
@@ -96,7 +99,7 @@ If a historical snapshot is not available, a future report should say so and avo
 
 ### Findings, limitations, and open questions
 
-The evidence reviewed supports a bounded finding: public sources reported 7,541 datasets and 273 models in February, and more than 14,000 datasets and 331 models in July. The report compared those statements and checked the platform’s general Terms of Use; it did not query an API, reconstruct historical records, or independently count the catalog. [@aikosh-pib-july-snapshot] [@aikosh-ddnews-february-snapshot] [@aikosh-terms]
+The evidence reviewed supports a bounded finding: DD News reported 7,541 datasets and 273 models as of February, while a PIB factsheet entry dated 13 August reported more than 14,000 datasets and 331 models as of July. The report compared those statements and checked the platform’s general Terms of Use; it did not query an API, reconstruct historical records, or independently count the catalog. [@aikosh-pib-july-snapshot] [@aikosh-ddnews-february-snapshot] [@aikosh-terms]
 
 The missing information is specific: what entity each source counted, whether both used the same inclusion rules, how they handled model and dataset versions, and whether the totals can be reproduced from archived catalog records. Until those points are answered, the two totals should be quoted separately with their dates and publisher attribution.
 
@@ -112,7 +115,7 @@ Until those definitions are available, AIKosh totals should be reported as dated
 
 **Key takeaways:**
 - The February 2026 DD News report gives 7,541 datasets and 273 models.
-- The July 2026 PIB release reports more than 14,000 datasets and 331 models.
+- The PIB factsheet entry dated 13 August 2026 reports more than 14,000 datasets and 331 models as of July. [@aikosh-pib-july-snapshot]
 - Neither count passage supplies a shared unit, deduplication rule, or version policy.
 - The comparison reviewed published statements; it did not recalculate catalog records.
 
@@ -120,7 +123,7 @@ Until those definitions are available, AIKosh totals should be reported as dated
 
 **Methodology:** Compare the two dated count statements and the platform-level Terms of Use. No API query, historical catalog export, or independent item count was available; no growth rate is calculated.
 
-**Evidence note:** This report uses the February DD News and July PIB count statements as dated evidence, and the AIKosh Terms of Use for platform context. The item-level sample and reuse checklist are covered separately in Research 31.
+**Evidence note:** This report uses the February DD News count statement and the PIB factsheet entry dated 13 August 2026, which labels its AIKosh totals as of July, plus the AIKosh Terms of Use for platform context. The item-level sample and reuse checklist are covered separately in Research 31.
 
 **Related coverage:** Research 31; Analysis 12; Brief 2.
 
@@ -150,6 +153,8 @@ Before testing, write down the workflow, the user’s intended outcome, the tool
 An agent can produce a plausible final answer after using the wrong tool, making an unauthorized attempt, or receiving substantial human correction. Capture the action trace and intermediate decisions where the platform permits. Score the final result, but also inspect tool selection, arguments, permission checks, rejected actions, retries, and handoffs. A trace makes the pilot’s evidence reviewable; it does not replace task scoring or a security review.
 
 Public benchmarks can show how researchers test tasks, but their scores should not become local acceptance thresholds by default. Compare the benchmark’s task shape, tool set, environment, scoring rules, data access, and recovery requirements with the pilot before treating it as relevant. This field guide does not adopt a benchmark score as a target: a local result is meaningful only when the task records and operating conditions are disclosed.
+
+AgentFloor provides one bounded example: its 2026 preprint describes a deterministic 30-task benchmark organized as a six-tier capability ladder. That design illustrates one test setup; it is not a default enterprise threshold. [@agentfloor-2026]
 
 For each metric, specify the denominator and scoring method. “Success rate” needs a definition of success. “Tool accuracy” should identify whether a correct tool call is enough or whether the action must also be authorized and useful. “Reliability” should include repeat runs and failure handling. If human reviewers score outputs, publish the rubric and the process for resolving disagreements. If an automated judge is used, compare it with a sample of human decisions instead of assuming it is unbiased.
 
@@ -264,13 +269,13 @@ Model documentation is useful only if readers can find the exact record that sup
 
 | Publisher and record | Document type | Date shown in captured record | Archive note |
 |---|---|---|---|
-| Google AI for Developers — Gemma 4 | Model card | No publication date visible in the captured page; captured 4 October 2026 | The card contains model variants, intended-use and limitation sections, evaluation data, and parameter details. Its fields should not be compared directly with a provider’s system-card rubric. |
-| Google DeepMind — Gemini 3.8 Flash | Model card | Published 2 September 2026 | The card says it may be updated as the model changes; it reports provider-run evaluations and lists known limitations, including hallucinations and occasional timeout or slowness. |
-| Anthropic — Claude Sonnet 5.5 | System card | 28 September 2026 | The card documents evaluation scope and limitations, including assessments it says are costly or labor-intensive; the listed results remain Anthropic’s own disclosures. |
-| xAI — Grok 4.7 | Model card | 21 September 2026 | The card reports benchmark results and says some benchmark versions changed; comparisons across versions may therefore be invalid. |
-| OpenAI — GPT-6 Sol and Luna | Release page, not a standalone model card | 22 September 2026 | Keep it in a companion release index so its document type is not mistaken for a model card. Its evaluations and comparisons are OpenAI-reported. |
+| Google AI for Developers — Gemma 4 | Model card | No publication date visible in the captured page; captured 4 October 2026 | The card contains model variants, intended-use and limitation sections, evaluation data, and parameter details. Its fields should not be compared directly with a provider’s system-card rubric. [@gemma4-model-card] |
+| Google DeepMind — Gemini 3.8 Flash | Model card | Published 2 September 2026 | The card says it may be updated as the model changes; it reports provider-run evaluations and lists known limitations, including hallucinations and occasional timeout or slowness. [@gemini38-flash-card] |
+| Anthropic — Claude Sonnet 5.5 | System card | 28 September 2026 | The card documents evaluation scope and limitations, including assessments it says are costly or labor-intensive; the listed results remain Anthropic’s own disclosures. [@claude-sonnet55-system-card] |
+| xAI — Grok 4.7 | Model card | 21 September 2026 | The card reports benchmark results and says some benchmark versions changed; comparisons across versions may therefore be invalid. [@grok47-model-card] |
+| OpenAI — GPT-6 Sol and Luna | Release page, not a standalone model card | No publication date visible in the captured page; a 29 September 2026 update points to GPT-6.1 Sol | Keep it in a companion release index so its document type is not mistaken for a model card. Its evaluations and comparisons are OpenAI-reported. [@openai-gpt6-sol-luna-release] |
 
-The dates above describe the date shown in each captured record, not a shared standard for when a model was released or became available. A card may be published after an announcement; a product or API may arrive on a different date. Report 50 tracks those events as a timeline. This archive instead points readers back to the underlying documentation and records what kind of evidence it contains. [@gemini38-flash-card] [@claude-sonnet55-system-card] [@grok47-model-card] [@openai-gpt6-sol-luna-release]
+The dates above are publication dates only where the captured record shows one; the Gemma 4 card and OpenAI release page do not expose a publication date in the captured pages. The OpenAI page does show a separate 29 September update notice. These dates are not a shared standard for when a model was released or became available. A card may be published after an announcement; a product or API may arrive on a different date. Report 50 tracks those events as a timeline. This archive instead points readers back to the underlying documentation and records what kind of evidence it contains. [@gemma4-model-card] [@gemini38-flash-card] [@claude-sonnet55-system-card] [@grok47-model-card] [@openai-gpt6-sol-luna-release]
 
 ### Keep the fields that make a card findable
 
@@ -323,14 +328,16 @@ The EU AI Act is a regulation with staged application dates. The consolidated te
 
 | Status item | Date or stage stated in official material | How to describe it |
 |---|---|---|
-| Chapters I and II, with stated exceptions | 2 February 2025; specified Article 5 provisions have a later 2 December 2026 date | A staged application date, not the start date for every obligation |
-| Chapter V and other provisions listed in Article 113 | 2 August 2025, with exceptions including Article 101 | Apply the exact provision and exception when describing GPAI provider obligations |
-| General application date | 2 August 2026 | The regulation’s broad application date, subject to Article 113’s earlier and later stages |
-| Certain high-risk AI systems under Annex III | 2 December 2027 in the consolidated text reviewed | A later application date for the specified category |
-| Certain high-risk systems under Annex I | 2 August 2028 in the consolidated text reviewed | A later date for systems classified under Article 6(1); keep it separate from the Annex III date |
-| EU KIDS Act | Proposal presented in September 2026 | Proposed legislation, not an enacted requirement |
+| Chapters I and II, with stated exceptions | 2 February 2025; specified Article 5 provisions have a later 2 December 2026 date | A staged application date, not the start date for every obligation. [@eu-aiact-article-113] |
+| Chapter III, Section 4; Chapters V, VII and XII; Article 78 | 2 August 2025; Article 101 is excepted from this stage | Apply the exact provision and exception when describing GPAI provider obligations. [@eu-aiact-article-113] |
+| Article 101, fines for GPAI-model providers | 2 August 2026 under the general application date; excluded from the 2 August 2025 stage | Keep this provision separate from the earlier GPAI obligations date. [@eu-aiact-article-113] [@eu-gpai-obligations] |
+| Articles 102–110 | 27 July 2026 | A separate application date for the specified articles, not the general date. [@eu-aiact-article-113] |
+| General application date | 2 August 2026 | The regulation’s broad application date, subject to Article 113’s earlier and later stages. [@eu-aiact-article-113] |
+| Certain high-risk AI systems under Annex III | 2 December 2027 in the consolidated text reviewed | A later application date for the specified category. [@eu-aiact-article-113] |
+| Certain high-risk systems under Annex I | 2 August 2028 in the consolidated text reviewed | A later date for systems classified under Article 6(1); keep it separate from the Annex III date. [@eu-aiact-article-113] |
+| EU KIDS Act | Proposal presented in September 2026 | Proposed legislation, not an enacted requirement. [@eu-kids-act-proposal-2026] |
 
-The table is a navigation aid rather than a substitute for reading the relevant articles. Article 113 is the controlling source for staged dates; the Commission’s GPAI page explains obligations for providers and distinguishes the application timetable from the Commission’s enforcement function. The Commission said its GPAI enforcement powers begin on 2 August 2026, while providers of models placed on the market before 2 August 2025 have until 2 August 2027 to comply with the relevant GPAI obligations. Those are different transitions: one concerns the Commission’s role, the other a transition for pre-existing models. [@eu-aiact-article-113] [@eu-gpai-obligations] [@eu-commission-enforcement-2026]
+The table is a navigation aid rather than a substitute for reading the relevant articles. Article 113 is the controlling source for staged dates; the Commission’s GPAI page explains obligations for providers and distinguishes the application timetable from the Commission’s enforcement function. The Commission said its GPAI enforcement powers begin on 2 August 2026, while providers of models placed on the market before 2 August 2025 have until 2 August 2027 to comply with the relevant GPAI obligations. Those are different transitions: one concerns the Commission’s role, the other a transition for pre-existing models. [@eu-aiact-article-113] [@eu-gpai-obligations] [@eu-gpai-guidelines] [@eu-commission-enforcement-2026]
 
 ### Guidance is not the same as the regulation
 
@@ -381,14 +388,14 @@ Indian data-centre reporting brings together capacity statements, secondary esti
 
 | Source | Geography and period | Figure in the source | Evidence type and limit |
 |---|---|---|---|
-| CEEW data-centre study | India, 2024 | About 0.5% of national electricity and about 150 billion litres of water | CEEW cites external estimates for these figures; not direct national metering by CEEW |
-| IEEFA India analysis | India, source-relative baseline to 2030 | Cites capacity rising from 1.4 GW (called “last year” in the source) to 9 GW and a 3% electricity-use estimate for 2030 | Figures are attributed to other reports and forecasts; the relative baseline date is not converted into a current-year figure |
+| CEEW data-centre study | India, 2024 | About 0.5% of national electricity and about 150 billion litres of water | CEEW cites external estimates for these figures; not direct national metering by CEEW. [@ceew-india-data-centre-resource-study] |
+| IEEFA India analysis | India; “last year” in an article dated 6 June 2025 (2024 baseline), with forecasts to 2030 | IEEFA cites 1.4 GW for the 2024 baseline, 9 GW for 2030, and a 3% electricity-use estimate for 2030 | Figures are attributed to other reports and forecasts; the 3% is not measured use. [@ieefa-india-data-centre-grid-analysis] |
 
 The CEEW and IEEFA figures should not be added or treated as one measured series. The electricity share, water estimate, capacity baseline, future capacity, and projected electricity share come from different underlying reports and use different units and dates. Attribution and evidence labels are part of the record, not optional footnotes. [@ceew-india-data-centre-resource-study] [@ieefa-india-data-centre-grid-analysis]
 
 ### Separate sector growth from AI attribution
 
-The same discipline is needed for India. CEEW’s report places data-centre growth in the context of power, water, land, and state policy. It says that its 2024 electricity and water figures come from external studies and that both could more than double by 2030. That is an attributed estimate and projection, not a national meter reading or a measurement of AI facilities alone. IEEFA’s page uses the relative phrase “last year” for a 1.4-GW capacity baseline, cites 9 GW for 2030, and points to a forecast that data centres could use around 3% of India’s electricity by then. Because the captured page does not provide a publication date next to that sentence, keep “last year” as the source’s wording rather than converting it into a current-year claim. These numbers describe forecasts with dependencies; they should not be presented as observed outcomes. [@ceew-india-data-centre-resource-study] [@ieefa-india-data-centre-grid-analysis]
+The same discipline is needed for India. CEEW’s report places data-centre growth in the context of power, water, land, and state policy. It says that its 2024 electricity and water figures come from external studies and that both could more than double by 2030. That is an attributed estimate and projection, not a national meter reading or a measurement of AI facilities alone. IEEFA’s article, dated 6 June 2025, uses the relative phrase “last year” for a 1.4-GW capacity baseline, which places that source’s baseline in 2024; it cites 9 GW for 2030 and points to a forecast that data centres could use around 3% of India’s electricity by then. Preserve the source’s wording alongside the inferred year when reusing the figure. These numbers describe forecasts with dependencies; they should not be presented as observed outcomes. [@ceew-india-data-centre-resource-study] [@ieefa-india-data-centre-grid-analysis]
 
 Capacity and electricity use are related, but they are not interchangeable. A capacity value in GW describes a power level; annual consumption in TWh depends on load and operating time. A data-centre capacity forecast cannot be turned into annual energy without assumptions about utilization, facility efficiency, and what power boundary the source counts. Likewise, a water-use estimate should state whether it includes on-site cooling, indirect water associated with electricity generation, or both.
 
@@ -457,7 +464,7 @@ Weights are only one component of inference memory. vLLM’s GPU memory document
 
 The published context limits also differ: the Gemma overview lists 128K for E2B and E4B and 256K for its medium variants; Mistral Small 4 lists a 256K context. A context maximum is not a guarantee that a particular GPU can serve the maximum with a chosen batch size. Local tests should set a realistic prompt and output length, then measure memory under the expected concurrency rather than testing one short prompt. [@gemma4-deployment-overview] [@mistral-small4-official-doc] [@vllm-gpu-memory]
 
-Power and physical constraints matter too. NVIDIA lists 575 W total graphics power for the RTX 5090 and recommends a 1,000 W system power supply. A workstation plan should include cooling, sustained load, available connectors, and the power envelope of the whole system, not just VRAM. These are hardware specifications, not a model-specific speed result. [@nvidia-rtx5090-spec]
+Power and physical constraints matter too. NVIDIA lists 575 W total graphics power and 1,000 W required system power for the RTX 5090. A workstation plan should include cooling, sustained load, available connectors, and the power envelope of the whole system, not just VRAM. These are hardware specifications, not a model-specific speed result. [@nvidia-rtx5090-spec]
 
 ### Quantization needs a quality check
 
@@ -502,7 +509,7 @@ Keep privacy and locality claims separate from these measurements. Running a mod
 
 ### Treat provenance as a record, not a truth score
 
-C2PA provides a technical format for recording claims about digital content and binding a manifest to an asset. The current specification reviewed for this guide is version 2.4. A valid credential can help a reader inspect a signed provenance record; it does not prove that the depicted event is factual, that every edit is disclosed, or that the asset is trustworthy for every use. Absence of a credential is likewise not evidence that a file is fake. [@c2pa-spec-24]
+C2PA provides a technical format for recording claims about digital content and binding a manifest to an asset. The current specification reviewed for this guide is version 2.4. A valid credential can help a reader inspect a signed provenance record; it does not prove that the depicted event is factual, that every edit is disclosed, or that the asset is trustworthy for every use. [@c2pa-spec-24] [@c2pa-independent-security-study-2026] Absence of a credential is likewise not evidence that a file is fake; credentials can be absent or stripped during handling. [@c2pa-deployment-guidance-2026]
 
 Publishers should plan the complete asset lifecycle: capture or ingest, editing, signing, export, hosting, display, verification, and preservation. If the production system strips metadata or transforms an image after signing, the manifest may no longer bind as expected. If a later edit is legitimate, the workflow should produce a new, linked record rather than silently implying that the original signature covers the altered file. [@c2pa-deployment-guidance-2026]
 
@@ -516,7 +523,7 @@ Keep signing keys under controlled access and define how certificates are issued
 
 Use tools that maintain compatible manifests when cropping, color-correcting, transcoding, or exporting a new version. Maintain the relationship between the source asset and the published derivative. If the CMS resizes images, the publisher should test whether the selected pipeline preserves or re-establishes the credential after the transformation.
 
-The official deployment guidance recommends applying credentials automatically where possible, maintaining the provenance chain through compatible tools, and making credentials visible to users. It also describes durable credentials, where a manifest can be retrieved through supported mechanisms when an embedded credential is not available. The publisher should document which mechanism its production tools use and what happens when the repository or embedded record cannot be reached. [@c2pa-deployment-guidance-2026]
+The official deployment guidance recommends applying credentials automatically where possible, maintaining the provenance chain through compatible tools, and making credentials visible to users. It also describes Durable Content Credentials as a layered approach that can combine embedded credentials, watermarks, and fingerprints. A watermark can preserve a signal associated with a credential if embedded information is lost; fingerprinting can attempt to match content back to a provenance record. The guidance cautions that watermarks can be defeated and fingerprint matching is probabilistic rather than exact, so publishers should document the mechanisms they use and the failure cases they handle rather than promise recovery. [@c2pa-deployment-guidance-2026]
 
 The open-source `c2patool` can read manifest information, produce reports, and add a manifest to a file. It is useful for testing a pipeline and inspecting a sample asset, but the tool’s ability to sign or read a claim is not proof that the underlying editorial statement is true. Run the same asset through the intended publication and verification path, not only through a command-line demonstration. [@c2pa-c2patool-docs-2026]
 
@@ -526,7 +533,7 @@ At the point of publication and receipt, test at least four states: a valid trus
 
 Security testing belongs in the workflow. The Content Authenticity Security Tool can generate malicious manifests and files for testing parser handling, including XSS and injection cases. Its documentation says the tool creates test artifacts but does not automatically determine whether an attack succeeded; teams must run the tests against their own parsers and validate the result. [@c2pa-security-test-tool-2026]
 
-A 2026 independent analysis examines C2PA specification versions 2.2 through 2.4 and real-world implementations. It reports concerns around timestamp manipulation, certificate revocation checks, and validator consistency. These are the authors’ security findings, not proof that every signed file is compromised. They are a reason to pin the specification and validator versions, test trust and revocation behavior, and follow subsequent corrections and independent review. [@c2pa-independent-security-study-2026]
+A 2026 arXiv preprint examines C2PA specification versions 2.2 through 2.4 and real-world implementations. Its authors report concerns around timestamp manipulation, certificate revocation checks, and validator consistency. These are the authors’ security findings, not proof that every signed file is compromised. They are a reason to pin the specification and validator versions, test trust and revocation behavior, and follow subsequent corrections and independent review. [@c2pa-independent-security-study-2026]
 
 ### A publisher rollout checklist
 
@@ -552,7 +559,7 @@ A 2026 independent analysis examines C2PA specification versions 2.2 through 2.4
 
 **What changes:** Maintain a versioned signing/verification profile, test corpus, status-display policy, and key-compromise response plan.
 
-**Evidence note:** The guide uses the C2PA 2.4 specification, July 2026 deployment guidance, official tools, a security-testing utility, and one independent 2026 analysis. It does not test a publisher’s production implementation.
+**Evidence note:** The guide uses the C2PA 2.4 specification, July 2026 deployment guidance, official tools, a security-testing utility, and one 2026 arXiv preprint. It does not test a publisher’s production implementation.
 
 ## 50. September 2026 AI model-release timeline and source archive
 
@@ -564,19 +571,19 @@ A 2026 independent analysis examines C2PA specification versions 2.2 through 2.4
 
 This timeline covers five September 2026 model announcements or documentation events from Google DeepMind, xAI, OpenAI, and Anthropic. It is a dated snapshot checked through 4 October 2026, not a complete list of every model release. The archive separates the announcement, model or system card, and third-party availability dates so that a later report can tell what changed and when. [@google-gemini-38-audio-card] [@xai-grok47-release] [@openai-gpt6-sol-luna-2026] [@anthropic-sonnet55-system-card] [@openai-gpt61-sol-release]
 
-| Date | Provider and event | Documentation event | Availability or distribution evidence | What this record establishes |
+| Date | Provider and event | Documentation event | Related reporting or availability record | What this record establishes |
 |---|---|---|---|---|
-| 15 September | Google DeepMind publishes Gemini 3.8 Audio model cards | Card date and evaluation snapshot are stated in the first-party card | The card lists supported product/API surfaces; this is not an independent capability test | A dated model-card publication and provider-stated access surfaces |
-| 21 September | xAI releases Grok 4.7 | Release page and model card are dated 21 September | AWS Bedrock announced availability on 28 September | Release and card dates are distinct from a later cloud-hosting date |
-| 22 September | OpenAI introduces GPT-6 Sol and Luna | First-party launch page describes the models; no standalone card is included in this archive | Access details are those stated on the launch page | The announcement is verified; a separate model-card date is not established |
-| 28 September | Anthropic releases Claude Sonnet 5.5 | System card is dated 28 September | Release reporting and card are same-date records in the captured set | A system-card publication, not independent validation of Anthropic’s results |
-| 29 September | OpenAI releases GPT-6.1 Sol | First-party release page provides the date and availability description | Microsoft Foundry has a separate availability record | Launch and platform distribution should remain separate events |
+| 15 September | Google DeepMind publishes Gemini 3.8 Audio model cards | The first-party card is dated 15 September and reports provider-run evaluations | The card lists product/API surfaces; TechTarget also reports a 15 September Live launch | A dated model-card publication and provider-stated access surfaces, not an independent capability test. [@google-gemini-38-audio-card] [@techtarget-gemini-38-live-2026] |
+| 21 September | xAI releases Grok 4.7 | xAI’s release page and model card are both dated 21 September | AWS’s page says Grok 4.7 is available on Bedrock, but the captured page has no visible publication date | A dated xAI release and card; the AWS distribution record is present but undated in this capture. [@xai-grok47-release] [@xai-grok47-model-card] [@aws-grok47-bedrock-2026] |
+| 22 September | OpenAI introduces GPT-6 Sol and Luna | The captured first-party launch page describes the models but does not show a publication date; no standalone card is included | Reuters reports the announcement on 22 September; OpenAI’s page provides its own access details | Reuters establishes the reported announcement date; the first-party page documents product and access claims. [@openai-gpt6-sol-luna-2026] [@reuters-gpt6-sol-luna-2026] |
+| 28 September | Anthropic releases Claude Sonnet 5.5 | The system card is dated 28 September | Reuters also reports the release on 28 September; no separate hosting date is asserted | A system-card publication and reported release, not independent validation of Anthropic’s results. [@anthropic-sonnet55-system-card] [@reuters-sonnet55-2026] |
+| 29 September | OpenAI announces GPT-6.1 Sol | The captured first-party page says “available starting today” but does not show a publication date; it is not a model card | The Hindu reports the unveiling on 29 September; Microsoft Foundry has a separate availability record | The reported announcement date, product/access details, and platform distribution are distinct evidence types. [@openai-gpt61-sol-release] [@hindu-gpt61-sol-2026] [@microsoft-foundry-gpt61-sol-2026] |
 
 The Google record is specifically about Gemini 3.8 Audio cards, not a new general-purpose text model. The card describes four audio variants and its stated limitations. The timeline therefore labels it a documentation and availability record and does not claim an independent benchmark. [@google-gemini-38-audio-card] [@techtarget-gemini-38-live-2026]
 
-The Grok entry shows why a provider release and third-party distribution should be separate. xAI’s release and card are dated 21 September; AWS’s Bedrock record is dated 28 September. Decrypt coverage, syndicated through Yahoo Tech, adds independent launch reporting but does not validate xAI’s performance results. [@xai-grok47-release] [@xai-grok47-model-card] [@aws-grok47-bedrock-2026] [@decrypt-grok47-2026]
+The Grok entry shows why a provider release and third-party distribution should be separate. xAI’s release and card are dated 21 September. AWS’s Bedrock page says the model is available, but the captured page does not show when it was posted, so this timeline does not assign the AWS event a date. Decrypt coverage, syndicated through Yahoo Tech, adds independent launch reporting but does not validate xAI’s performance results. [@xai-grok47-release] [@xai-grok47-model-card] [@aws-grok47-bedrock-2026] [@decrypt-grok47-2026]
 
-OpenAI’s GPT-6 Sol/Luna page and GPT-6.1 Sol page are first-party release records. Reuters’ Sol/Luna report and The Hindu’s GPT-6.1 coverage corroborate that the announcements were reported on those dates; they do not independently test the models. Microsoft Foundry’s GPT-6.1 availability entry is a distribution record, not a model evaluation. [@openai-gpt6-sol-luna-2026] [@reuters-gpt6-sol-luna-2026] [@openai-gpt61-sol-release] [@hindu-gpt61-sol-2026] [@microsoft-foundry-gpt61-sol-2026]
+OpenAI’s GPT-6 Sol/Luna and GPT-6.1 Sol pages provide first-party product and access details, but their captured copies do not show publication dates. Reuters reports the Sol/Luna announcement on 22 September, while The Hindu reports the GPT-6.1 unveiling on 29 September; neither report independently tests the models. Microsoft Foundry’s GPT-6.1 availability entry is a distribution record, not a model evaluation. [@openai-gpt6-sol-luna-2026] [@reuters-gpt6-sol-luna-2026] [@openai-gpt61-sol-release] [@hindu-gpt61-sol-2026] [@microsoft-foundry-gpt61-sol-2026]
 
 Anthropic’s system card and Reuters’ 28 September coverage support the release date. The performance, speed, and token-efficiency claims remain attributed to Anthropic. The card documents evaluation scope and limitations; it does not convert provider measurements into independent comparative tests. [@anthropic-sonnet55-system-card] [@reuters-sonnet55-2026]
 
@@ -600,7 +607,7 @@ This timeline does not rank the models, validate vendor benchmark claims, or inf
 
 **Key takeaways:**
 - Gemini 3.8 Audio’s September event is a model-card publication.
-- Grok 4.7’s AWS availability date follows its 21 September release and card.
+- AWS’s Bedrock page provides a separate Grok 4.7 availability record, but its captured copy does not state a date.
 - OpenAI’s launch pages are not treated as model cards in this archive.
 - Anthropic’s provider evaluation claims remain attributed, even when reporting confirms the launch date.
 - Hosting records corroborate distribution, not model quality.

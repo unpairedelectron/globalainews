@@ -1,6 +1,11 @@
 Source: https://www-cdn.anthropic.com/870c8f525702625d2c62fc6dd04c857e3250bec1/Claude%20Sonnet%205.5%20System%20Card.pdf
 Title: Claude Sonnet 5.5 System Card
+Publisher: Anthropic
+Publication date: 2026-09-28
 Fetched: 2026-10-04T08:24:39.756Z
+Source type: System card (PDF)
+Evidence class: Primary (provider-authored)
+Claim relevance: Pre-deployment evaluations, external testing, stated omissions, and numerical-results emphasis.
 Truncated: continue from startIndex 250000
 
 ANTHROP\C

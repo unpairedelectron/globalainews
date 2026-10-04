@@ -1,6 +1,12 @@
 Source: https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/audit-logging
 Title: Agent Platform audit logging information  |  Gemini Enterprise Agent Platform  |  Google Cloud Documentation
+Publisher: Google Cloud
+Publication date: Not stated in captured page
+Page updated: 2026-10-01 UTC
 Fetched: 2026-10-04T09:35:23.413Z
+Source type: Official cloud product documentation
+Evidence class: Primary product documentation
+Claim relevance: Agent Platform audit-log types, user-data coverage, and default enablement for Data Access logs.
 
 [Skip to main content](https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/audit-logging#main-content)
 

@@ -1,6 +1,11 @@
 Source: https://spec.c2pa.org/specifications/specifications/2.4/specs/C2PA_Specification.html
 Title: Content Credentials : C2PA Technical Specification :: C2PA Specifications
+Publisher: Coalition for Content Provenance and Authenticity (C2PA)
+Publication date: Not stated; version history dates 2.4 to April 2026
 Fetched: 2026-10-04T09:35:13.844Z
+Source type: Technical specification
+Evidence class: Primary normative specification and version history
+Claim relevance: Version 2.4 change record, including new assertions, JSON serialization, embedding support, live-video changes, and versioning.
 Truncated: continue from startIndex 250000
 
 2.4

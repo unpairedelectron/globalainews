@@ -8,15 +8,15 @@
 
 **Slug:** `grok-47-platform-availability`  
 **Topic:** Models  
-**Proposed dek:** xAI announced Grok 4.7 on 21 September and AWS added it to Bedrock a week later. The announcements broaden distribution; they do not independently establish the model’s benchmark performance.
+**Proposed dek:** xAI announced Grok 4.7 on 21 September; AWS’s captured page lists it as available on Bedrock but does not date that listing. Neither record independently establishes the model’s benchmark performance.
 
 ### Release and distribution are two separate developments
 
 xAI announced Grok 4.7 on 21 September 2026, describing it as its strongest model to date for coding and knowledge work. The company says the model is served at the same price and speed as Grok 4.6 and presents improvements across coding, engineering and office tasks. Those are xAI’s claims, drawn from the company’s own release page and model card. [@xai-grok47-release] [@xai-grok47-model-card]
 
-The next week brought a separate development: Amazon Web Services announced that Grok 4.7 was available through Amazon Bedrock on 28 September. The Bedrock announcement identifies the model’s intended use and points readers to xAI’s launch material for capability and training details. That makes AWS a relevant source for the hosting change, not an independent evaluator of the model. [@aws-grok47-bedrock-2026]
+Amazon Web Services’ captured Bedrock page says Grok 4.7 is available through the service, but no publication date is visible in the captured page. It confirms the hosting route, not how soon after xAI’s announcement AWS access began or how the model performs independently. [@aws-grok47-bedrock-2026]
 
-For developers, the practical news is that the model can be accessed through more than one route. xAI’s materials list its API and coding-oriented products, while the cloud announcement adds a managed Bedrock pathway. Independent reports also covered the release and pricing, but the performance data in those articles largely trace back to xAI’s benchmarks and product statements. [@xai-grok47-release] [@aws-grok47-bedrock-2026] [@decrypt-grok47-2026]
+For developers, the practical news is that the model can be accessed through more than one route. xAI’s materials list its API and coding-oriented products, while the captured AWS page documents a managed Bedrock pathway. Independent reports also covered the release and pricing, but the performance data in those articles largely trace back to xAI’s benchmarks and product statements. [@xai-grok47-release] [@aws-grok47-bedrock-2026] [@decrypt-grok47-2026]
 
 ### Context length is a specification, not a result
 
@@ -38,11 +38,11 @@ A route comparison can also log request IDs, timeouts, returned errors and billi
 
 ### What the announcement establishes
 
-The dated record is clear: xAI released Grok 4.7 on 21 September, and AWS announced Bedrock availability on 28 September. The model card and release page document xAI’s specifications and evaluation claims. Independent launch coverage confirms the product announcement and examines its pricing context, but does not independently validate the company’s performance numbers. [@xai-grok47-release] [@aws-grok47-bedrock-2026] [@decrypt-grok47-2026]
+The dated record is clear for xAI: it announced Grok 4.7 on 21 September. AWS’s captured page says the model is available through Bedrock, but does not display a publication date, so it does not establish when AWS availability began. The model card and release page document xAI’s specifications and evaluation claims. Independent launch coverage confirms the product announcement and examines its pricing context, but does not independently validate the company’s performance numbers. [@xai-grok47-release] [@aws-grok47-bedrock-2026] [@decrypt-grok47-2026]
 
 Teams comparing Grok 4.7 with another model should run the same tasks, constraints and tools against both. They should track quality, latency, tokens consumed, retries, cost per successful result and policy failures. A new cloud endpoint makes that test easier to run for some customers. It is not the result of the test.
 
-**Evidence note:** xAI is the primary source for release, specification and benchmark claims. AWS is the primary source for Bedrock availability. Independent news coverage is useful for release context, not independent validation of performance.
+**Evidence note:** xAI is the primary source for release, specification and benchmark claims. AWS is the primary source for Bedrock availability; no publication date is visible in the captured page. Independent news coverage is useful for release context, not independent validation of performance.
 
 ## 7. Anthropic releases Sonnet 5.5 with a new system card
 

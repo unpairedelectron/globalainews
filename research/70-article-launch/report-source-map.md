@@ -9,15 +9,16 @@
 | Draft key | Captured source | Evidence role |
 |---|---|---|
 | `cw-india-dc-h1-2026` | `research/sources/portfolio-india-03-market-capacity.md` | C&W’s 23 September 2026 market table, aggregates and project-stage terms |
-| `pib-india-dc-1575-and-demand` | `research/sources/power-01-indiaai-capacity.md` | PIB’s separate current-capacity statement and 2031–32 demand wording |
-| `rajya-sabha-india-dc-capacity` | `research/sources/power-02-parliament-constraints.md` | 30 March 2026 parliamentary answer; capacity wording and projection |
+| `pib-india-dc-capacity-factsheet-2026` | `research/sources/policy-03-pib-2026-capacity-factsheet.md` | PIB factsheet entry dated 13 August 2026; “current” 1,575-MW capacity statement without a separate metric cutoff |
+| `pib-data-centre-demand-2026-03-13` | `research/sources/power-01-indiaai-capacity.md` | 13 March 2026 PIB release; about 1,500 MW by 2025 and 13.56-GW electricity-demand estimate |
+| `rajya-sabha-data-centre-capacity-2026-03-30` | `research/sources/power-02-parliament-constraints.md` | 30 March 2026 parliamentary answer; capacity wording and projection |
 
 ## Report 42 — AIKosh catalog guide
 
 | Draft key | Captured source | Evidence role |
 |---|---|---|
 | `aikosh-terms` | `research/sources/aikosh-platform-terms-2026.md` | Platform-level Terms of Use; does not replace item-specific permissions |
-| `aikosh-pib-july-snapshot` | `research/sources/portfolio-brief-pib-aikosh-july.md` | July 2026 PIB count snapshot |
+| `aikosh-pib-july-snapshot` | `research/sources/portfolio-brief-pib-aikosh-july.md` | PIB factsheet entry dated 13 August 2026; AIKosh totals explicitly stated as of July |
 | `aikosh-ddnews-february-snapshot` | `research/sources/portfolio-brief-ddnews-aikosh-february.md` | February 2026 DD News count snapshot; not an independent catalog census |
 
 ## Report 43 — Agent evaluation field guide
@@ -64,8 +65,6 @@
 
 | Draft key | Captured source | Evidence role |
 |---|---|---|
-| `iea-global-energy-review-2026` | `research/sources/portfolio-infrastructure-01-iea-electricity-demand.md` | Global 2025 data-centre electricity increase; not an AI-only total |
-| `lbnl-us-data-centre-energy-2024` | `research/sources/portfolio-infrastructure-05-lbnl-us-data-center-energy-usage-2024.md` | U.S. historical estimate and 2028 modeled scenarios |
 | `ceew-india-data-centre-resource-study` | `research/sources/power-03-ceew-water-energy.md` | India-focused power, water and policy study; selected figures attributed to external estimates |
 | `ieefa-india-data-centre-grid-analysis` | `research/sources/power-04-ieefa-grid-analysis.md` | India capacity and grid discussion; numerical forecasts attributed to other reports |
 
@@ -87,7 +86,7 @@
 | `c2pa-deployment-guidance-2026` | `research/sources/report-c2pa-deployment-guidance-2026.md` | July 2026 publisher deployment guidance and status display |
 | `c2pa-c2patool-docs-2026` | `research/sources/report-c2pa-c2patool-docs-2026.md` | Official command-line tool for reading reports and adding manifests |
 | `c2pa-security-test-tool-2026` | `research/sources/report-c2pa-security-tool-2026.md` | Content Authenticity Security Tool; creates test artifacts but does not decide attack success |
-| `c2pa-independent-security-study-2026` | `research/sources/report-c2pa-independent-security-study-2026.md` | 2026 independent analysis of versions 2.2–2.4 and real-world implementations |
+| `c2pa-independent-security-study-2026` | `research/sources/report-c2pa-independent-security-study-2026.md` | 2026 independent arXiv preprint analyzing versions 2.2–2.4 and real-world implementations |
 
 ## Report 50 — September 2026 release timeline
 
@@ -97,12 +96,12 @@
 | `techtarget-gemini-38-live-2026` | `research/sources/portfolio-brief-techtarget-gemini-audio.md` | Independent product reporting |
 | `xai-grok47-release` | `research/sources/portfolio-brief-xai-grok47-official.md` | xAI release page and 21 September launch |
 | `xai-grok47-model-card` | `research/sources/portfolio-verified-xai-grok47-card.md` | xAI card dated 21 September |
-| `aws-grok47-bedrock-2026` | `research/sources/portfolio-brief-aws-grok47.md` | AWS Bedrock availability dated 28 September; not a model evaluation |
+| `aws-grok47-bedrock-2026` | `research/sources/portfolio-brief-aws-grok47.md` | AWS Bedrock availability notice; publication date is not visible in the captured page; not a model evaluation |
 | `decrypt-grok47-2026` | `research/sources/portfolio-brief-decrypt-grok47.md` | Independent launch coverage syndicated through Yahoo Tech |
-| `openai-gpt6-sol-luna-2026` | `research/sources/portfolio-verified-openai-gpt6-sol-luna.md` | OpenAI primary launch page dated 22 September |
+| `openai-gpt6-sol-luna-2026` | `research/sources/portfolio-verified-openai-gpt6-sol-luna.md` | OpenAI first-party launch page; publication date is not visible in the captured copy |
 | `reuters-gpt6-sol-luna-2026` | `research/sources/portfolio-brief-reuters-openai-sol-luna.md` | Independent launch reporting; provider claims remain attributed |
 | `anthropic-sonnet55-system-card` | `research/sources/portfolio-verified-anthropic-sonnet55-card.md` | Anthropic system card dated 28 September |
 | `reuters-sonnet55-2026` | `research/sources/portfolio-brief-reuters-sonnet55.md` | Independent launch reporting |
-| `openai-gpt61-sol-release` | `research/sources/portfolio-brief-openai-gpt61-official.md` | OpenAI primary release page dated 29 September |
+| `openai-gpt61-sol-release` | `research/sources/portfolio-brief-openai-gpt61-official.md` | OpenAI first-party release page with product and access details; publication date is not visible in the captured copy |
 | `hindu-gpt61-sol-2026` | `research/sources/portfolio-brief-hindu-gpt61.md` | Independent launch coverage |
 | `microsoft-foundry-gpt61-sol-2026` | `research/sources/portfolio-brief-microsoft-foundry-gpt61-sol.md` | Microsoft Foundry availability record; not a model evaluation |

@@ -1,6 +1,11 @@
 Source: https://www.pib.gov.in/PressReleasePage.aspx?PRID=2239616&lang=1&reg=3
-Title: 
-	Press Release Page | Press Information Bureau
+Title: Data centre capacity in the country has increased from about 375 MW in 2020 to around 1500 MW by 2025
+Page title: Press Release Page | Press Information Bureau
+Publisher: Press Information Bureau, Ministry of Electronics & IT
+Publication date: 2026-03-13 (posted 13 MAR 2026 at 4:15 PM)
+Source type: Government press release
+Evidence class: Primary ministry statement; reports official figures rather than an independent measurement
+Claim relevance: Approximate national capacity in 2020 and by 2025, plus the Ministry of Power’s 2031–32 data-centre electricity-demand estimate
 
 Fetched: 2026-10-03T10:58:57.460Z
 

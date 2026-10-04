@@ -1,7 +1,11 @@
 Source: https://genai.owasp.org/resource/agent-control-standard-acs/
 Title: Agent Control Standard (ACS)
-Published: 2026-09-01
+Publisher: OWASP GenAI Security Project
+Publication date: 2026-09-01
 Fetched: 2026-10-04 via webFetch
+Source type: Project standard page
+Evidence class: Primary project documentation; does not establish adoption or regulatory status
+Claim relevance: ACS scope for middleware hooks and runtime policy enforcement, and the project's stated implementation boundary.
 
 ## Relevant evidence
 

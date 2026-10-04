@@ -50,7 +50,6 @@
 
 | Draft key | Captured source | Evidence role |
 |---|---|---|
-| `owasp-agent-control-standard-2026` | `research/sources/analysis-agent-control-standard-2026.md` | OWASP project guidance for controlling agent behavior; not regulation |
 | `owasp-agentic-top10-announcement-2025` | `research/sources/portfolio-agents-03-owasp-security.md` | Threat categories including tool misuse and identity/privilege abuse |
 | `langsmith-fleet-access-oversight` | `research/sources/portfolio-agents-02-platform-oversight.md` | One platform's documented roles, tool access and trace controls; not a universal implementation |
 

@@ -1,6 +1,7 @@
 Source: https://aws.amazon.com/blogs/machine-learning/grok-4-7-is-now-available-on-amazon-bedrock/
 Title: Grok 4.7 is now available on Amazon Bedrock | Artificial Intelligence
 Fetched: 2026-10-04T08:40:22.770Z
+Publication date: Not visible in the captured page
 
 ## Select your cookie preferences
 

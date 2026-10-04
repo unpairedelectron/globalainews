@@ -1,6 +1,13 @@
 Source: https://arxiv.org/html/2507.21504v1
 Title: Evaluation and Benchmarking of LLM Agents: A Survey
+Publisher: arXiv (source repository; proceedings publisher not stated in capture)
+Publication date: 2025 (KDD ’25 proceedings; exact publication day not stated in capture)
+arXiv v1 date: 2025-07-29
+Conference dates: 2025-08-03 to 2025-08-07
 Fetched: 2026-10-04T08:15:30.717Z
+Source type: Scholarly survey paper (arXiv HTML; KDD ’25 proceedings details listed)
+Evidence class: Survey synthesis; primary for the authors’ proposed taxonomy
+Claim relevance: Objective/process taxonomy and stated enterprise-evaluation gaps.
 
 Title:
 

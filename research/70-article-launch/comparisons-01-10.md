@@ -149,7 +149,7 @@ Gemini 3.8 Flash is presented through a provider-operated API and downstream ser
 |---|---|---|---|
 | Basic access | Provider API and supported downstream services | Downloadable weights and supported runtimes | Open weights; the captured model card labels the license Apache 2.0 |
 | License/terms | Service terms apply; API tier affects data handling | Model card states Apache 2.0; check the exact artifact and license | Model page states Apache 2.0; check any separate service terms if using a hosted endpoint |
-| Hardware responsibility | Provider runs the model for the API caller | Operator chooses supported device and runtime | Operator must plan for the full 119B parameter set if self-hosting; 6.5B active is not a memory estimate |
+| Hardware responsibility | Provider runs the model for the API caller | Operator selects a supported device and runtime | Operator selects hardware, precision, and runtime; active count is not a memory estimate |
 | Published context | Card lists up to 1M tokens | Sizes and context limits vary by variant | Card lists 256K tokens |
 | What this table cannot compare | Output quality, actual latency, or total workflow cost | Same | Same |
 
@@ -159,11 +159,11 @@ The Gemini 3.8 Flash card says the model accepts text, images, audio, and video,
 
 With an open-weight deployment, the team can select the runtime, quantization, hardware, network boundary, update process, and logging. That flexibility comes with responsibility for installation, patching, performance monitoring, backup, capacity, access control, and incident response. An open license is permission to use or adapt under stated terms; it does not promise a model is accurate, safe for a specific task, or inexpensive to operate.
 
-Mistral Small 4 is an instructive naming example. Its model card lists 119 billion total parameters and 6.5 billion active parameters. The active count describes conditional computation, not the complete weight storage needed by every runtime. Teams should size from the exact artifact, quantization, and runtime rather than infer hardware fit from the word “Small” or the active-parameter count. [@mistral-small4-card-2026]
+Mistral Small 4 is an instructive naming example. Its model card lists 119 billion total parameters and 6.5 billion active parameters. These counts distinguish the full model from the parameters activated in a given computation; the 6.5B figure is not a standalone storage or memory estimate for a local runtime. Teams should size from the exact artifact, precision, context, and runtime rather than infer hardware fit from the word “Small” or the active-parameter count. [@mistral-small4-card-2026]
 
 ### A hosted API also has multiple terms layers
 
-The Gemini API Additional Terms effective 23 March 2026 distinguish unpaid from paid services. For unpaid services, Google may use prompts and responses to provide, improve, and develop products and may involve human review; its terms advise against submitting sensitive or confidential content. For paid services, the terms say prompts and responses are not used to improve products, while limited logging may occur for safety, security, or legal reasons. This comparison is specific to those Gemini API service terms and should not be generalized to other Google products, other providers, or every deployment route. [@gemini-api-terms-2026]
+The Gemini API Additional Terms effective 23 March 2026 distinguish unpaid from paid services. For unpaid services, Google may use prompts and responses to provide, improve, and develop products, and human reviewers may read and process API input and output; the terms say not to submit sensitive, confidential, or personal information. The terms also state that the paid-services data-use rules apply to all services, including those offered free, for users in the European Economic Area, Switzerland, and the United Kingdom. For paid services, prompts and responses are not used to improve products, while logs are kept for a limited period for prohibited-use enforcement, service safety and security, and required legal or regulatory disclosures. This comparison is specific to those Gemini API service terms and should not be generalized to other Google products, other providers, or every deployment route. [@gemini-api-terms-2026]
 
 Before procurement, compare the exact service tier, endpoint, license, model revision, region, logging, support, and data-processing terms. A model can be open-weight but still be consumed through a hosted API with its own data contract. Conversely, a hosted model offered through a cloud platform may inherit that platform’s security and billing controls without giving the customer control of model weights.
 
@@ -218,7 +218,7 @@ A private workflow may contain personal, customer, commercial, legal, or interna
 
 ### What the terms can and cannot answer
 
-Google’s Gemini API Additional Terms illustrate why “hosted” is too broad a category. The current terms distinguish unpaid and paid API service. They say unpaid inputs and outputs may be used to improve products and may be reviewed by humans; paid service prompts and responses are not used for that purpose, although limited logging for safety, security, or legal needs may occur. This is a useful concrete example, not a universal statement about every Gemini service or every provider. [@gemini-api-terms-2026]
+Google’s Gemini API Additional Terms illustrate why “hosted” is too broad a category. For unpaid services, Google may use prompts and responses to improve products and human reviewers may process API input and output; the terms say not to submit sensitive, confidential, or personal information. For users in the European Economic Area, Switzerland, and the United Kingdom, the paid-services data-use terms apply to all services, including those offered free. For paid services, prompts and responses are not used to improve products, although limited-period logging may occur for prohibited-use enforcement, service safety and security, and required legal or regulatory disclosures. This is a concrete example, not a universal statement about every Gemini service or every provider. [@gemini-api-terms-2026]
 
 The NIST Generative AI Profile offers a risk-management structure rather than a data-processing contract. Its functions encourage organizations to govern, map, measure, and manage risks, including those involving third-party resources. It does not tell a team what a particular endpoint retains or whether its terms satisfy a particular legal obligation. Those answers require the current service terms, product configuration, and the organization’s own legal and security review. [@nist-genai-profile]
 
@@ -274,11 +274,11 @@ Reassess when retrieval, tool, or telemetry integrations change, not only when t
 
 ### Three measures, three questions
 
-Agent evaluations often compress a complex run into a percentage. Before comparing results, identify what the percentage counts. A task-success score asks how often a run met its acceptance condition. The pass^k metric asks how often all k repeated trials of a task succeed. A trajectory or action trace records what the agent did along the way—tools, arguments, approvals, and recovery steps. No one measure covers all three concerns. [@agent-evaluation-survey-2025] [@tau-bench-2024]
+Agent evaluations often compress a complex run into a percentage. Before comparing results, identify what the percentage counts. A task-success score asks how often a run met its acceptance condition. τ-bench’s pass^k estimates how often all k independently sampled trials for a task succeed; its paper distinguishes this from pass@k, which in code-generation literature counts whether at least one of k trials succeeds. A trajectory or action trace records what the agent did along the way—tools, arguments, approvals, and recovery steps. No one measure covers all three concerns. [@agent-evaluation-survey-2025] [@tau-bench-2024]
 
 | Evidence | Question answered | Example use | Blind spot |
 |---|---|---|---|
-| One-run task success (pass@1) | Did this attempt meet the grader? | Capability snapshot on a defined task set | A single success may hide inconsistency |
+| One-run task success | Did this attempt meet the grader? | Capability snapshot on a defined task set | A single success may hide inconsistency |
 | Repeated-run pass^k | Did every one of k trials for a task succeed? | Reliability-sensitive workflows | Depends on trial design, independence, and task mix |
 | Action trace / trajectory review | What tools, decisions, and recoveries led to the result? | Safety, policy compliance, and debugging | Requires a rubric; a longer trace is not automatically better |
 
@@ -286,7 +286,7 @@ Agent evaluations often compress a complex run into a percentage. Before compari
 
 ### Why one-run success is not reliability
 
-If a system succeeds on a task in one run, pass@1 records that attempt as a success. It does not say whether the next run will follow the same path. In a simplified illustration—not an observed benchmark result—an agent with an 80% independent per-run success probability would have a 32.8% probability of succeeding on all five runs (0.8⁵). That gap shows why repeated success is a stricter requirement for workflows where every attempt must be correct.
+If a system succeeds on a task in one run, the single-run score records that attempt as a success. It does not say whether the next run will follow the same path. In a simplified illustration—not an observed benchmark result—an agent with an 80% independent per-run success probability would have a 32.8% probability of succeeding on all five runs (0.8⁵). That gap shows why repeated success is a stricter requirement for workflows where every attempt must be correct.
 
 The independence assumption is important. Real runs may share prompts, model versions, tools, outages, or systematic errors, so results are not necessarily independent draws. An evaluator should publish k, the number of trials per task, how tasks were selected, and whether failures share a likely cause. Report the per-task or distributional information when possible rather than presenting one average without a denominator. [@tau-bench-2024]
 
@@ -302,7 +302,7 @@ Terminal-Bench 2.0 illustrates a benchmark built around outcome verification: ea
 
 For a reversible drafting task, a one-run completion rate plus reviewer quality score may be adequate for an initial comparison. For a workflow that sends customer messages or changes records, repeated-run success, unauthorized-action attempts, duplicate-write checks, and audit-trace review matter more. For a long-horizon agent, record interruptions, handoffs, retries, partial completion, and recovery cost as well as final success.
 
-Do not compare pass@1 from one benchmark to pass^k from another, or turn a trace rubric into a model ranking unless the task, agent, and grader are controlled. Choose the metric before the run, state the denominator and threshold, and report the environment and number of trials.
+Do not compare a one-run success rate from one benchmark to pass^k from another, or turn a trace rubric into a model ranking unless the task, agent, and grader are controlled. Choose the metric before the run, state the denominator and threshold, and report the environment and number of trials.
 
 A decision report should separate “can perform” from “is safe to delegate.” Set an outcome threshold and any repeated-run requirement in advance, plus a distinct criterion for disallowed actions. Review traces when a successful final state could conceal an unsafe intermediate step. If one dimension misses its threshold, do not average it away with a strong result on another. Recording the decision rule before a run prevents the team from changing its weighting after seeing the scores.
 
@@ -457,7 +457,7 @@ Keep the two tracks current for different reasons. A change in the product, inte
 
 ### Compare the access path, not unlike GPU prices
 
-The IndiaAI Compute Portal and a commercial cloud service can both provide GPU-backed infrastructure, but their access models differ. IndiaAI’s portal is designed for approved user categories and reviewed project requests. An Amazon EC2 On-Demand instance is procured through an AWS account and billed while it runs. Neither route guarantees that a requested accelerator is available at a particular time, and the public records do not define a like-for-like price comparison across the two systems. [@indiaai-compute-portal-guidance-2026] [@aws-ondemand-access]
+The IndiaAI Compute Portal and a commercial cloud service can both provide GPU-backed infrastructure, but their access models differ. IndiaAI’s portal is designed for approved user categories and reviewed project requests. An Amazon EC2 On-Demand instance is procured through an AWS account and billed while it runs. The cited records do not establish whether a particular accelerator is schedulable at a given time, and they do not define a like-for-like price comparison across the two systems. [@indiaai-compute-portal-guidance-2026] [@aws-ondemand-access]
 
 | Dimension | IndiaAI shared compute portal | Commercial cloud On-Demand example |
 |---|---|---|
@@ -466,19 +466,19 @@ The IndiaAI Compute Portal and a commercial cloud service can both provide GPU-b
 | Approval | Portal says requests under 5,000 GPU-hours are auto-approved; requests above that go to PMEC review | No project-level committee in the described purchase flow; quotas and service availability still apply |
 | Timing | Portal request window and approval validity apply; listed approvals are valid for 30 calendar days | Billed from the instance’s running state, with a 60-second minimum |
 | Subsidy | Approved projects may receive subsidy and still bear costs beyond it | Standard commercial billing; this comparison does not estimate a subsidy-equivalent price |
-| Availability evidence | Portal approval is not proof of a particular GPU is schedulable now | On-Demand purchase terms do not guarantee a specific GPU’s capacity |
+| Availability evidence | The dated portal records are not a live schedule | The cited EC2 page gives billing and quota rules, not a live capacity check for a specific GPU |
 
-The IndiaAI portal lists application evidence and approval steps, including a project description, requested GPU hours, and estimated bill of materials. Requests are submitted from the first to the twenty-fifth of the month according to the captured policy. It states that requests below 5,000 GPU-hours are auto-approved and larger requests are reviewed by the PMEC. Approval is valid for 30 calendar days, and the approved user must begin using services within that period. These are portal rules, not a live allocation guarantee. [@indiaai-compute-portal-guidance-2026]
+The IndiaAI portal lists application evidence and approval steps, including a project description, requested GPU hours, and estimated bill of materials. Requests are submitted from the first to the twenty-fifth of the month according to the captured policy. It states that requests below 5,000 GPU-hours are auto-approved and requests above 5,000 GPU-hours are reviewed by the PMEC; the captured guidance does not specify how a request for exactly 5,000 GPU-hours is handled. Approval is valid for 30 calendar days, and the approved user must begin using services within that period. These are portal rules, not a live allocation guarantee. [@indiaai-compute-portal-guidance-2026]
 
 The portal also says IndiaAI subsidizes approved projects, while users pay additional costs beyond the subsidy to the service provider according to its billing cycle. The exact available service, GPU type, subsidy, and bill depend on the application and provider. A dated allocation register can show previously visible entries, but it is not a real-time queue or a census of available capacity. [@indiaai-compute-portal-guidance-2026] [@indiaai-allocation-register-2026]
 
-Amazon EC2’s On-Demand documentation describes per-second billing with a 60-second minimum while an instance is running and no long-term commitment. It also documents instance quotas that may need adjustment. The page does not guarantee that a particular accelerator is available in the selected region. A user still has to choose a region, instance family, image, storage, networking, and any required account permissions. [@aws-ondemand-access]
+Amazon EC2’s On-Demand documentation describes per-second billing with a 60-second minimum while an instance is running and no long-term commitment. It also documents instance quotas that may need adjustment. The cited page gives quota rules but does not provide a live check of accelerator availability in a selected region. A user still has to choose a region, instance family, image, storage, networking, and any required account permissions. [@aws-ondemand-access]
 
 ### Which route fits which constraint?
 
 IndiaAI may be a better starting point for an eligible academic, startup, research, or public-sector user who can prepare a project request and values the possibility of subsidy. The route involves eligibility verification, a review schedule, and an approval window. Teams should budget time for those steps and confirm which actual service provider and accelerator the approval covers.
 
-Commercial cloud may suit a team that needs direct self-service or an existing cloud account with established billing and access controls. It shifts more responsibility to the user to choose instances, quotas, region, software, and spend limits. Availability is still subject to cloud capacity, and the bill depends on selected hardware and runtime.
+Commercial cloud may suit a team that needs direct self-service or an existing cloud account with established billing and access controls. It shifts more responsibility to the user to choose instances, quotas, region, software, and spend limits. The cited page does not establish current capacity for a specific accelerator; the bill also depends on selected hardware and runtime.
 
 Do not compare an IndiaAI portal rate to an AWS GPU-hour rate unless the accelerator model, memory, region, storage, networking, support, term, and subsidies match. A discounted allocation is not a commercial on-demand offer, and an on-demand instance is not the same thing as a reviewed research allocation. This article makes no claim that either route is cheaper or faster.
 
@@ -522,11 +522,11 @@ xAI offers Grok 4.7 directly through its API. Amazon Bedrock lists the model as 
 | Model ID | `grok-4.7` | `xai.grok-4.7`; inference profiles include `us.xai.grok-4.7` and `global.xai.grok-4.7` |
 | Published context | 500K tokens | 500K tokens |
 | Input and tools | Text and image input; text output; reasoning-effort settings | Image input, tool calling, and four reasoning-effort levels are described in the Bedrock integration |
-| Regional option | US regional endpoint; xAI documents a 10% premium for this route | US geographic or Global cross-Region profile; Global can route across supported commercial AWS Regions |
+| Regional option | US regional endpoint; the captured xAI docs do not state a separate regional price | US geographic or Global cross-Region profile; Global can route across supported commercial AWS Regions |
 | Billing path | xAI API token pricing and xAI account | Bedrock pricing, account, identity, service quotas, and selected inference profile |
 | Integration | xAI API interface and model-specific response fields | Bedrock Responses, Chat Completions, and Converse options, plus AWS integration features |
 
-The direct xAI documentation lists different token rates below and above a 200,000-token prompt threshold, including separate input, cached-input, and output rates. It also states that the US regional endpoint costs 10% more than the standard route. The Bedrock launch material points users to AWS pricing and describes service tiers and inference profiles. These are not enough to calculate a fair cost winner without matching prompt length, cache behavior, service tier, region, tool use, and any cross-region route. [@xai-grok47-api-docs] [@aws-grok47-bedrock-2026]
+The direct xAI documentation lists different token rates below and above a 200,000-token prompt threshold, including separate input, cached-input, and output rates. It documents a US regional endpoint, but the captured xAI page does not state whether that route carries a separate premium. The Bedrock launch material points users to AWS pricing and describes service tiers and inference profiles. These are not enough to calculate a fair cost winner without matching prompt length, cache behavior, service tier, region, tool use, and any cross-region route. [@xai-grok47-api-docs] [@aws-grok47-bedrock-2026]
 
 ### Regional routing is a decision, not a guarantee from the model name
 
@@ -589,11 +589,11 @@ C2PA is not simply another watermark. The 2.4 specification discusses invisible 
 
 ### Robustness is an empirical question
 
-An ICLR 2024 study tested AI-image detection methods, including watermarking and classifier-based detectors, under perturbations and attacks. It reports a tradeoff between false acceptance and false rejection for watermark detectors under a diffusion-purification attack, and evaluates other attacks against classifier-based methods. These findings are bounded to the methods and experimental conditions in that paper; they do not establish that every current watermark or detector fails in the same way. [@iclr-image-detectors-2024]
+A 2024 ICLR study reports a tradeoff between evasion error (watermarked images detected as non-watermarked) and spoofing error (non-watermarked images detected as watermarked) for low-perturbation watermark methods under diffusion purification. In its experiments, purification removed low-perturbation watermarks but did not defeat the tested high-perturbation methods; the paper tests a separate model-substitution attack against those. It analyzes a robustness–reliability tradeoff for classifier-based deepfake detectors separately. These findings are bounded to the methods and experimental conditions in that paper; they do not establish that every current watermark or detector fails in the same way. [@iclr-image-detectors-2024]
 
 The comparison also cannot be treated as a single head-to-head scorecard. A watermarking experiment asks whether a signal can be detected after a transformation; a classifier evaluation asks whether an image is categorized correctly against a dataset; a provenance verifier checks a manifest and signer according to its implementation and trust policy. Different tasks, datasets, thresholds, and threat models mean their published error rates cannot be placed in one shared table without a common test corpus.
 
-C2PA’s own standard should also be paired with implementation testing. A 2026 independent security analysis reports issues involving timestamp alteration, revoked or compromised certificates, and validator disagreement in specifications 2.2–2.4 and real-world implementations. The authors’ findings are a reason to check verifier behavior and trust policies; they are not evidence that every C2PA-signed asset is compromised. [@c2pa-independent-security-study-2026]
+C2PA’s own standard should also be paired with implementation testing. A 2026 independent arXiv preprint reports issues involving timestamp alteration, revoked or compromised certificates, and validator disagreement in specifications 2.2–2.4 and real-world implementations. The authors’ findings are a reason to check verifier behavior and trust policies; they are not evidence that every C2PA-signed asset is compromised. [@c2pa-independent-security-study-2026]
 
 ### Choose controls by the question
 
@@ -628,6 +628,6 @@ If the signals disagree, report the disagreement rather than selecting the most 
 
 **What changes:** Record the method, verifier or detector version, threshold, transformation history, and what the result actually means.
 
-**Evidence note:** The comparison uses C2PA 2.4, deployment guidance, one independent security analysis, and one ICLR 2024 robustness study; it is not a head-to-head product test.
+**Evidence note:** The comparison uses C2PA 2.4, deployment guidance, one independent arXiv security preprint, and one ICLR 2024 robustness study; it is not a head-to-head product test.
 
 **Related coverage:** Explainer 28; Report 49; existing watermarking story.

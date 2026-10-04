@@ -1,6 +1,11 @@
 Source: https://docs.anthropic.com/en/docs/claude-code/permissions
 Title: Configure permissions - Claude Code Docs
+Publisher: Anthropic
+Publication date: Not stated in captured page
 Fetched: 2026-10-04T09:35:29.014Z
+Source type: Claude Code permissions documentation
+Evidence class: Primary product documentation
+Claim relevance: Permission modes, allow/ask/deny rule precedence, managed settings, and operating-system sandbox boundaries.
 
 > ## Documentation Index
 >

@@ -39,19 +39,19 @@
 
 | Draft key | Captured source | Evidence role |
 |---|---|---|
-| `gemma4-model-card` | `research/sources/portfolio-models-01-gemma4-card.md` | Google AI model-card structure, dataset, evaluation, use and limitations |
-| `gemini38-flash-card` | `research/sources/portfolio-models-03-gemini38-card.md` | Google DeepMind model card; inherited information and evaluation sections |
-| `claude-sonnet55-system-card` | `research/sources/portfolio-verified-anthropic-sonnet55-card.md` | System-card evaluation scope, external testing and explicit omissions |
-| `openai-gpt6-sol-luna-release` | `research/sources/portfolio-verified-openai-gpt6-sol-luna.md` | Launch-page format and provider-labeled evaluation claims |
-| `grok47-model-card` | `research/sources/portfolio-verified-xai-grok47-card.md` | Model-card domains and deployed-checkpoint note |
-| `mistral-small4-card-extract` | `research/sources/explainer-mistral-small4-card-2026.md` | Limited official card excerpt; use only stated specifications and caveats |
+| `gemma4-model-card` | `research/sources/portfolio-models-01-gemma4-card.md` | Primary Google model card; sections for training data, evaluation, intended use, limitations, ethics and safety |
+| `gemini38-flash-card` | `research/sources/portfolio-models-03-gemini38-card.md` | Primary Google DeepMind card; release-specific sections and links to Gemini 3.7 materials for inherited details |
+| `claude-sonnet55-system-card` | `research/sources/portfolio-verified-anthropic-sonnet55-card.md` | Primary Anthropic system card; pre-deployment scope, external testing, omissions and numerical-results emphasis |
+| `openai-gpt6-sol-luna-release` | `research/sources/portfolio-verified-openai-gpt6-sol-luna.md` | Primary OpenAI launch page; availability, provider benchmark claims and internally labeled factuality evaluation |
+| `grok47-model-card` | `research/sources/portfolio-verified-xai-grok47-card.md` | Primary xAI model card; capability/safety domains and final-deployed-checkpoint convention |
+| `mistral-small4-card-extract` | `research/sources/explainer-mistral-small4-card-2026.md` | Primary Mistral model-card page, captured as a limited excerpt; supports only visible specification and license fields |
 
 ## Research 36 — Agent evaluation taxonomy
 
 | Draft key | Captured source | Evidence role |
 |---|---|---|
-| `agent-evaluation-survey-2025` | `research/sources/portfolio-agents-01-evaluation-survey.md` | Survey taxonomy separates objectives from evaluation process |
-| `agentfloor-2026` | `research/sources/portfolio-models-02-agentfloor-study.md` | 2026 preprint example of a bounded, tiered tool-use and planning benchmark |
+| `agent-evaluation-survey-2025` | `research/sources/portfolio-agents-01-evaluation-survey.md` | Scholarly survey synthesis; primary for its proposed objective/process taxonomy and stated enterprise-evaluation gaps |
+| `agentfloor-2026` | `research/sources/portfolio-models-02-agentfloor-study.md` | Primary author study in a 2026 arXiv preprint; one bounded tiered benchmark, not production-performance evidence |
 
 ## Research 37 — Safety-evaluation disclosure audit
 
@@ -61,7 +61,7 @@
 | `gemini38-flash-card` | `research/sources/portfolio-models-03-gemini38-card.md` | Automated evaluation, multilingual result, human red-team distinction |
 | `claude-sonnet55-system-card` | `research/sources/portfolio-verified-anthropic-sonnet55-card.md` | Domain evaluations, external testing, and omitted labor-intensive assessments |
 | `grok47-model-card` | `research/sources/portfolio-verified-xai-grok47-card.md` | Safety domains and final-deployed-checkpoint convention |
-| `model-cards-paper-2019` | `research/sources/explainer-model-cards-mitchell-2019.md` | Academic rationale for documenting evaluation context and limitations |
+| `model-cards-paper-2019` | `research/sources/explainer-model-cards-mitchell-2019.md` | ACM framework proposal; supports intended-use, application-condition performance, evaluation-procedure and suitability-context disclosures, not safety certification |
 
 ## Research 38 — Agent platform oversight-document audit
 

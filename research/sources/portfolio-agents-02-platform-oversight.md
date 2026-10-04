@@ -1,6 +1,11 @@
 Source: https://docs.langchain.com/langsmith/fleet/access-and-oversight
 Title: Access & oversight - Docs by LangChain
+Publisher: LangChain
+Publication date: Not stated in captured page
 Fetched: 2026-10-04T08:15:34.630Z
+Source type: LangSmith Fleet product documentation
+Evidence class: Primary product documentation; not a deployment security assessment
+Claim relevance: Fixed and user-specific credentials, role/attribute permissions, human approval, and audit-trail features.
 
 > ## Documentation Index
 >

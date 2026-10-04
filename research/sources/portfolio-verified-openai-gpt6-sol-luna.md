@@ -1,6 +1,12 @@
 Source: https://openai.com/index/introducing-gpt-6-sol-and-luna
 Title: Introducing GPT-6 Sol and Luna | OpenAI
+Publisher: OpenAI
+Publication date: Not stated in captured page
+Page update noted: 2026-09-29 (links to GPT-6.1 Sol announcement)
 Fetched: 2026-10-04T08:24:16.463Z
+Source type: Product launch page
+Evidence class: Primary (provider-authored)
+Claim relevance: Availability, provider benchmark claims, and the internally labeled factuality evaluation.
 
 Introducing GPT-6 Sol and Luna \| OpenAI
 

@@ -50,7 +50,6 @@
 | Draft key | Captured source | Evidence role |
 |---|---|---|
 | `agent-evaluation-survey-2025` | `research/sources/portfolio-agents-01-evaluation-survey.md` | Survey taxonomy and limitations of task-completion metrics |
-| `agentfloor-2026-preprint` | `research/sources/portfolio-models-02-agentfloor-study.md` | 30-task, six-tier benchmark with 16 open-weight models and GPT-5; preprint findings are bounded to its benchmark |
 
 ## Analysis 16 — Agent security controls
 
@@ -58,7 +57,6 @@
 |---|---|---|
 | `owasp-agentic-top10-announcement-2025` | `research/sources/portfolio-agents-03-owasp-security.md` | OWASP announcement highlighting behavior hijacking, tool misuse and identity/privilege abuse |
 | `owasp-agent-control-standard-2026` | `research/sources/analysis-agent-control-standard-2026.md` | OWASP project summary of ACS goals, published September 2026 |
-| `langsmith-fleet-access-oversight` | `research/sources/portfolio-agents-02-platform-oversight.md` | One platform’s documented RBAC/ABAC, tool-access and trace controls; not a universal implementation |
 
 ## Analysis 19 — Model-card benchmark interpretation
 
@@ -75,7 +73,8 @@
 | Draft key | Captured source | Evidence role |
 |---|---|---|
 | `cw-india-dc-h1-2026` | `research/sources/portfolio-india-03-market-capacity.md` | C&W’s H1 2026 top-seven-market operational figure and separately labeled pipeline |
-| `pib-india-dc-capacity-factsheet-2026` | `research/sources/policy-03-pib-2026-capacity-factsheet.md` | PIB factsheet’s undated “current” 1,575-MW statement and IndiaAI GPU snapshot |
-| `pib-india-dc-rajya-sabha-mar2026` | `research/sources/datacentres-01-operational-capacity.md` | March 2026 parliamentary reply with approximate 2025 national capacity and later power-demand estimate |
+| `pib-india-dc-capacity-factsheet-2026` | `research/sources/policy-03-pib-2026-capacity-factsheet.md` | PIB factsheet entry dated 13 August 2026; “current” 1,575-MW line has no separate metric cutoff |
+| `pib-data-centre-demand-2026-03-13` | `research/sources/power-01-indiaai-capacity.md` | PIB release posted 13 March 2026; about 1,500 MW by 2025 and 13.56-GW electricity-demand estimate |
+| `rajya-sabha-data-centre-capacity-2026-03-30` | `research/sources/power-02-parliament-constraints.md` | 30 March 2026 answer to Unstarred Question 4151; about 1,500 MW by 2025 and 13.56-GW capacity wording |
 
 **Scope note:** The AIKosh article compares what two dated communications report. It does not calculate a growth rate or assert that the catalogue lacks metadata; it identifies definitions absent from the specific count passages reviewed.
