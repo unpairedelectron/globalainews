@@ -1,6 +1,9 @@
 Source: https://sansad.in/getFile/annex/270/AU4151_DoYAWR.pdf?source=pqars
-Title: 
+Title: Rajya Sabha Unstarred Question No. 4151: Data Centres Power and Water Infrastructure Crisis
+Publisher: Ministry of Power, Government of India
+Answer date: 2026-03-30 (printed in the document)
 Fetched: 2026-10-03T10:59:04.854Z
+Source type: Parliamentary written answer
 
 # GOVERNMENT OF INDIA
 

@@ -25,7 +25,7 @@ The portal states that requests for fewer than 5,000 GPU hours are auto-approved
 
 That wording gives prospective users a useful planning signal, but it should be quoted precisely. The captured guidance uses “less than 5,000” and “greater than 5,000”; it does not specify how a request of exactly 5,000 GPU hours is handled. Nor does the page state an approval rate, the median time from submission to service, or the proportion of auto-approved requests that begin running.
 
-An “auto-approved” request is not the same as evidence that an applicant’s entire project has been provisioned. The same guidance places approval after successful registration and eligibility verification. It also says allocation depends on eligibility, requested GPU hours and whether the applicant seeks a subsidy. The page does not define a service-level guarantee or state that an approved request will find an immediately available accelerator of the requested type. [@indiaai-compute-portal-guidance-2026]
+An “auto-approved” request is not the same as evidence that an applicant’s entire project has been provisioned. The same guidance places approval after successful registration and eligibility verification. It also says allocation depends on eligibility, requested GPU hours and whether the applicant seeks a subsidy. The captured page says PMEC approvals follow “SLAs,” but does not provide the SLA terms in the displayed guidance or state that an approved request will find an immediately available accelerator of the requested type. [@indiaai-compute-portal-guidance-2026]
 
 ### Approval has a clock, but availability is still unmeasured
 

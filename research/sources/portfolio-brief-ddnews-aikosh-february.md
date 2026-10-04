@@ -1,5 +1,7 @@
 Source: https://ddnews.gov.in/en/democratising-ai-in-india-expanding-access-to-technology-and-skills/
 Title: India ‘AI Impact Summit 2026’ to focus on democratisation of AI | DD News
+Publisher: DD News
+Published: 2026-02-10 (page header shows `10/02/26`; URL path contains `/2026/02/`)
 Fetched: 2026-10-04T08:31:55.861Z
 
 10/02/26 \| 5:19 pm \| [India AI Impact Summit](https://ddnews.gov.in/en/tag/india-ai-impact-summit/ "India AI Impact Summit")

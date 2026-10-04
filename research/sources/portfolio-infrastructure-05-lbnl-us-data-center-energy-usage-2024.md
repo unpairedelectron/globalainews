@@ -1,6 +1,9 @@
 Source: https://eta-publications.lbl.gov/sites/default/files/2024-12/lbnl-2024-united-states-data-center-energy-usage-report_1.pdf
-Title: 
+Title: 2024 United States Data Center Energy Usage Report
+Publisher: Lawrence Berkeley National Laboratory (Berkeley Lab)
+Published: December 2024
 Fetched: 2026-10-04T08:16:54.008Z
+Source type: National laboratory report
 
 BERKELEY LAB
 Energy Analysis & Environmental Impacts Division

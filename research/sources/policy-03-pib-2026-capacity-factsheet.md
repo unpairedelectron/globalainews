@@ -1,6 +1,7 @@
 Source: https://www.pib.gov.in/FactsheetDetails.aspx?Id=150860&reg=48&lang=2
-Title: 
-	Factsheet Details:Factsheet Details | PIB
+Title: Semiconductor and AI Revolution; featured heading: “From Chips to AI: Building India’s Technology Leadership”
+Publisher: Press Information Bureau (PIB)
+Page publication/as-of date: 2026-08-13 (entry date shown on page; not a cutoff date for every metric)
 
 Fetched: 2026-10-03T10:59:32.036Z
 

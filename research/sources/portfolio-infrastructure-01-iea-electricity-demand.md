@@ -1,5 +1,6 @@
 Source: https://www.iea.org/reports/global-energy-review-2026/electricity-demand
 Title: Electricity demand – Global Energy Review 2026 – Analysis - IEA
+Publisher: International Energy Agency (IEA)
 Fetched: 2026-10-04T08:15:47.762Z
 
 [IEA](https://www.iea.org/)
