@@ -69,6 +69,7 @@ import {
   getSeoMetadataManifest,
 } from "../../../global-ai-news/src/seo-metadata";
 import { renderSocialPreviewSvg } from "../../../global-ai-news/src/social-preview";
+import { renderSocialPreviewPng } from "../lib/social-preview-png";
 import {
   getAutomationStatus,
   getAutomationRuns,
@@ -518,6 +519,25 @@ router.get("/newsroom/social/articles/:slug.svg", async (req, res): Promise<void
     res.setHeader("Cache-Control", "public, max-age=300");
     res.type("image/svg+xml").send(renderSocialPreviewSvg(story.title, story.category, story.slug));
   } catch (error) {
+    res.status(500).type("text/plain").send("Social preview unavailable.");
+  }
+});
+
+router.get("/newsroom/social/articles/:slug.png", async (req, res): Promise<void> => {
+  try {
+    const publishedStories = await getPublishedStoriesFromDatabase();
+    const story = publishedStories.find((candidate) => candidate.slug === req.params.slug);
+    if (!story) {
+      res.status(404).type("text/plain").send("Social preview not found.");
+      return;
+    }
+    const png = await renderSocialPreviewPng(story.title, story.category, story.slug);
+    res
+      .set("Cache-Control", "public, max-age=300")
+      .type("image/png")
+      .send(png);
+  } catch (error) {
+    req.log.error({ err: error, slug: req.params.slug }, "Social preview rendering failed");
     res.status(500).type("text/plain").send("Social preview unavailable.");
   }
 });

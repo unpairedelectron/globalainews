@@ -19,3 +19,4 @@
 - [Editorial release word counts](editorial-release-word-counts.md) — validate editor copy by provenance while maintained records use the complete story snapshot.
 - [IndiaAI compute observation contract](indiaai-compute-observation-contract.md) — new GPU stages and quantity qualifiers must be added to the public API contract before publication.
 - [Source capture evidence](source-capture-evidence.md) — confirm a fetched page’s body supports the cited claim; a title or successful fetch alone is not evidence.
+- [Dynamic social preview images](dynamic-social-preview-images.md) — post-build stories need a public PNG renderer; preserve existing build-time image URLs.

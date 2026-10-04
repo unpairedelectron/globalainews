@@ -544,6 +544,15 @@ async function testRawArticleResponses() {
   const preRenderedResponse = await getArticle(preRenderedStory.slug);
   assert.equal(preRenderedResponse.status, 200);
   assert.equal(
+    metaValue(preRenderedHtml, 'og:image'),
+    `https://www.globalainews.in/social/articles/${preRenderedStory.slug}.png`,
+    'existing pre-rendered article image URLs must remain unchanged',
+  );
+  assert.ok(
+    existsSync(path.join(webDist, 'public', 'social', 'articles', `${preRenderedStory.slug}.png`)),
+    'existing pre-rendered article image must remain available',
+  );
+  assert.equal(
     await preRenderedResponse.text(),
     preRenderedHtml,
     'existing pre-rendered article metadata and content must remain unchanged',
@@ -572,21 +581,42 @@ async function testRawArticleResponses() {
   assert.equal(metaValue(html, 'og:url'), canonical);
   assert.equal(metaValue(html, 'og:type'), 'article');
   assert.equal(metaValue(html, 'og:site_name'), 'Global AI News');
+  const dynamicImagePath = `/api/newsroom/social/articles/${slugs.published}.png`;
   assert.equal(
     metaValue(html, 'og:image'),
-    'https://www.globalainews.in/social/global-ai-news-default.png',
+    `https://www.globalainews.in${dynamicImagePath}`,
   );
   assert.equal(metaValue(html, 'twitter:card', 'name'), 'summary_large_image');
   assert.equal(metaValue(html, 'twitter:title', 'name'), `${publishedTitle} — Global AI News`);
   assert.equal(metaValue(html, 'twitter:description', 'name'), publishedDek);
   assert.equal(
     metaValue(html, 'twitter:image', 'name'),
-    'https://www.globalainews.in/social/global-ai-news-default.png',
+    `https://www.globalainews.in${dynamicImagePath}`,
   );
   assert.ok(existsSync(path.join(webDist, 'public', 'social', 'global-ai-news-default.png')));
 
   const story = publicContent.stories.find((candidate) => candidate.slug === slugs.published);
   assert.ok(story, 'newly published release is missing from the public newsroom snapshot');
+  const socialImageResponse = await fetch(`${apiOrigin}${dynamicImagePath}`);
+  assert.equal(socialImageResponse.status, 200, 'newly published story image must be publicly fetchable');
+  assert.match(socialImageResponse.headers.get('content-type') ?? '', /^image\/png\b/i);
+  assert.match(socialImageResponse.headers.get('cache-control') ?? '', /public/);
+  const socialImage = Buffer.from(await socialImageResponse.arrayBuffer());
+  assert.deepEqual(
+    [...socialImage.subarray(0, 8)],
+    [137, 80, 78, 71, 13, 10, 26, 10],
+    'social preview endpoint must return a PNG image',
+  );
+  assert.equal(socialImage.readUInt32BE(16), 1200, 'social preview width must be 1200px');
+  assert.equal(socialImage.readUInt32BE(20), 630, 'social preview height must be 630px');
+  assert.ok(
+    socialImage.includes(Buffer.from(`${publishedTitle} — Global AI News`)),
+    'social preview PNG must include its story-specific title metadata',
+  );
+  const unpublishedSocialImageResponse = await fetch(
+    `${apiOrigin}/api/newsroom/social/articles/${slugs.scheduled}.png`,
+  );
+  assert.equal(unpublishedSocialImageResponse.status, 404, 'scheduled story image must not be public');
   const ampLinkTag = html.match(/<link\b[^>]*\brel=["']amphtml["'][^>]*>/i)?.[0];
   assert.ok(ampLinkTag, 'newly published article is missing its AMP link');
   const ampHref = htmlAttribute(ampLinkTag, 'href');

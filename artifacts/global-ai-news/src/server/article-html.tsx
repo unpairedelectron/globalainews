@@ -69,13 +69,9 @@ function articleImageMetadata(
     };
   }
 
-  const defaultImageFile = path.resolve(publicDir, 'social', 'global-ai-news-default.png');
-  if (!existsSync(defaultImageFile)) {
-    throw new Error('The Global AI News default social image is missing or invalid.');
-  }
   return {
-    imagePath: '/social/global-ai-news-default.png',
-    imageAlt: 'Global AI News publication preview',
+    imagePath: `/api/newsroom/social/articles/${story.slug}.png`,
+    imageAlt: `${story.title} — Global AI News editorial preview`,
   };
 }
 
