@@ -18,3 +18,4 @@
 - [Published route source of truth](published-route-source-of-truth.md) — live feeds reflect releases, while static article fallbacks still lack first-response SEO for new slugs.
 - [Editorial release word counts](editorial-release-word-counts.md) — validate editor copy by provenance while maintained records use the complete story snapshot.
 - [IndiaAI compute observation contract](indiaai-compute-observation-contract.md) — new GPU stages and quantity qualifiers must be added to the public API contract before publication.
+- [Source capture evidence](source-capture-evidence.md) — confirm a fetched page’s body supports the cited claim; a title or successful fetch alone is not evidence.

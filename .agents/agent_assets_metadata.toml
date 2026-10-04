@@ -42,3 +42,17 @@ mtime_ms = 1791025053876
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/52340e16-710d-4fec-934d-7fbd1e0c9f04/4a53d4b7-a936-4cbc-8ca1-2ed26033f895"
 storage_version_token = "1791025061157595"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "GLXahtW_2j0Jw1S9fVc1O"
+uri = "file://research/70-article-launch/notes.md"
+type = "text"
+title = "70-Article Launch Research Notes"
+description = "The staged research plan and evidence gates for the Global AI News portfolio."
+logical_id = "7e20b1bb-eecd-48ba-9853-657fd92feb6c"
+content_hash = "sha256:d2e073733d65a362caa59bc1ff21bff9de159efc40370e36fa153e483d92527c"
+size = 4167
+mtime_ms = 1791101623123
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/7e20b1bb-eecd-48ba-9853-657fd92feb6c/46b91650-184e-47a5-84d3-ec49343e239b"
+storage_version_token = "1791101630460688"
+content_type = "text/markdown"
