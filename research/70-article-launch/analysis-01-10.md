@@ -133,6 +133,8 @@ Before comparing quotes, a buyer should align the accelerator type, region, numb
 
 The useful analysis is narrow. AWS is publishing a scheduled change for one reservation product, not a cross-cloud price index and not a claim that every AI workload will become more expensive. The page establishes the current buying rules and the rate schedule AWS says will apply from 7 October. Readers evaluating the market should keep the old table, new schedule and pricing model attached to their respective dates, then recheck the current page before using any amount in a budget. [@aws-capacity-block-pricing-2026]
 
+For a reservation decision, separate the hourly quote from expected use of the block. Record the planned start, duration and work that must be ready to run; a rate can be accurate while unused reserved time still changes the cost per completed job.
+
 **Bottom line:** AWS’s Capacity Block rate is a time-stamped reservation price, not a universal GPU cost or a complete workload bill.
 
 **Why it matters:** Teams can misbudget compute if they compare per-accelerator prices without matching the purchase date, instance size and reservation terms.
@@ -203,7 +205,7 @@ The useful conclusion is therefore not that large context windows are ineffectiv
 
 **Slug:** `agent-evaluation-task-map`  
 **Topic:** AI-agent evaluation  
-**Proposed dek:** A success rate says how often an agent reached a goal in one benchmark. It does not show which task tiers it handled, how it failed, or whether it followed the right permissions along the way.
+**Proposed dek:** A success rate says how often an agent reached a goal in one benchmark. It does not show where failures concentrate, how tasks are weighted, or whether the score reflects the work a team needs.
 
 ### A pass rate is useful, but it is only one measure
 
@@ -211,17 +213,17 @@ Task completion is a standard way to evaluate an AI agent: did it reach the spec
 
 That distinction matters because an agent can reach a goal by taking a brittle route, or fail after performing most of the work correctly. An aggregate success percentage does not reveal whether a failure came from choosing the wrong tool, losing an earlier constraint, mishandling a transient error, or acting outside its authority. Those are different risks and call for different remedies.
 
-### AgentFloor shows why task mix changes the result
+### Aggregates hide where failures concentrate
 
-The 2026 AgentFloor preprint makes task scope visible through a benchmark of 30 tasks organized into six capability tiers, from instruction following and tool use to multi-step coordination and long-horizon planning. The authors report 16,542 scored runs across 16 open-weight models and GPT-5. In their results, small and mid-sized open-weight models were sufficient for much of the short-horizon structured work; the strongest open-weight model matched GPT-5 in aggregate on this benchmark. The authors report a clearer gap on long-horizon planning, where neither group achieved strong reliability. [@agentfloor-2026-preprint]
+An average compresses unlike tasks into one number. Consider a hypothetical benchmark with many short, low-risk actions and a small number of long workflows: a high overall score could coexist with poor results on the long workflows if the short tasks dominate the denominator. This is an illustration of weighting, not a claim about a particular published benchmark. Whether that average is useful depends on whether the benchmark’s task mix resembles the work a buyer needs.
 
-The result is not that open-weight models match frontier models generally, or that every routine workflow can be routed to a small model. AgentFloor is one deterministic task suite with a stated set of models and conditions. Its value for buyers is that it reports performance by a capability ladder rather than asking readers to infer every workflow from one undifferentiated number. The paper also reports that targeted interventions had model-specific effects, a reminder that a technique that helps one system may not transfer to another. [@agentfloor-2026-preprint]
+The distribution matters as much as the mean. A team should ask for success by task family, task difficulty, and risk level, then inspect whether the tasks that matter most are numerous enough to affect the aggregate. If a benchmark gives equal weight to every task, one short task may count as much as a multi-step workflow; if it weights by category, the chosen weights encode a view of importance. The headline rate does not disclose those choices by itself.
 
 ### Ask what is inside the score
 
 Before comparing agent percentages, a buyer should inspect the tasks and their weights. A benchmark dominated by short tool calls will favor different behavior from one dominated by long plans that must preserve constraints across many steps. If the suite reports one average, ask for its per-tier results and how much each task contributes. A high aggregate score can coexist with a weak result on the exact workflow a buyer needs.
 
-The execution environment matters too. A simulated browser, a fixed API and a live business system impose different failure modes. The survey treats evaluation context, dataset, interaction mode and metrics as separate dimensions. It also distinguishes static tests from interactive assessments. These choices affect what a score means; two “success rates” are not comparable unless the tasks, environment, success criteria and scoring method are sufficiently aligned. [@agent-evaluation-survey-2025]
+The execution environment matters too. A simulated browser, a fixed API and a live business system impose different failure modes. Two “success rates” are not comparable unless the tasks, tools, environment, success criteria and scoring method are sufficiently aligned. The survey notes that task-completion measures are common while offering limited diagnostic detail about why an agent failed. [@agent-evaluation-survey-2025]
 
 The benchmark should record more than the final answer. Tool choice, tool arguments, intermediate state, retries, recovery after an error, and policy compliance help explain how the agent reached—or missed—the goal. A task can be marked successful while still revealing an unsafe or unnecessarily expensive path. Conversely, an agent may fail because an external service was unavailable, not because its planning was wrong. A trace makes the distinction inspectable.
 
@@ -231,7 +233,7 @@ For a real deployment, teams can report overall goal completion beside per-task 
 
 Repeated runs matter because agent behavior can vary. A single successful run demonstrates possibility, not dependable performance. Teams should state the number of trials, whether tasks were held out from prompt development, what tools were enabled, and how success was judged. If an LLM judge is used, its rubric and calibration should also be reported; if success is mechanically verified, the desired state should be explicit.
 
-The evaluation survey provides a useful organizing principle: measure the outcome, the capabilities needed to produce it, the system’s reliability, and its safety in the evaluation context. AgentFloor’s tiered results show how that kind of decomposition can change the interpretation of a headline comparison. A pass rate remains valuable, but only when readers can see what passed, under which conditions, and what failures the aggregate may conceal. [@agent-evaluation-survey-2025] [@agentfloor-2026-preprint]
+The evaluation survey’s discussion of pass rates supports a limited conclusion: an outcome measure should be accompanied by enough task-level evidence to interpret it. This analysis does not propose a universal reliability score. It argues that buyers should treat the aggregate as an entry point, then ask what work was counted, which failures were hidden by averaging, and whether the denominator reflects their own use case. [@agent-evaluation-survey-2025]
 
 **Bottom line:** An agent’s overall success rate is not a complete reliability profile; it needs task-level results and an account of how the system acted.
 
@@ -239,12 +241,12 @@ The evaluation survey provides a useful organizing principle: measure the outcom
 
 **Key takeaways:**
 - Agent benchmarks measure different task mixes, environments and success criteria.
-- AgentFloor reports distinct results across short-horizon and long-horizon task tiers.
+- A high aggregate can hide weak performance on a smaller, higher-risk task group.
 - Repeated runs, traces and policy checks help explain what an aggregate pass rate leaves out.
 
 **What changes:** Procurement scorecards should publish per-tier outcomes, trial counts, failure categories and the evaluation environment.
 
-**Evidence note:** The survey synthesizes evaluation methods; AgentFloor is a 2026 preprint and its findings are limited to its benchmark and tested models.
+**Evidence note:** The 2025 survey describes common evaluation measures and their diagnostic limits. The weighting example is illustrative, not an empirical benchmark result.
 
 ## 16. Enterprise agent security begins at the tool boundary
 
@@ -266,19 +268,21 @@ That is a design direction, not proof that all frameworks implement the same con
 
 A practical control design starts with identity. The trace should make clear which user or service the agent acts for, which credentials are in use, and which permissions were granted. Tool access should be limited to the job: read-only access where possible, narrow resource scopes, and separate permissions for actions that write, send or delete. High-impact actions can require a human confirmation or a second approval, but the approval step should be explicit and enforceable rather than a request embedded in the model’s prompt.
 
-### Logs help explain; policy must prevent
+### Enforce authority before tool execution
 
-LangSmith’s Fleet documentation offers one example of how a platform can expose controls: it documents role-based and attribute-based access policies for tools and integrations, as well as structured traces of tool calls, decisions and outputs. The docs say traces can be inspected and exported alongside agent identity and permissions. This is a vendor-specific implementation example, not evidence that every agent platform has equivalent features or that any one product satisfies every enterprise requirement. [@langsmith-fleet-access-oversight]
+The important architectural question is where a proposed action becomes an enforceable decision. A control plane should receive the acting principal, requested operation, target resource and relevant policy state before the tool creates a side effect. Middleware hooks can make that boundary inspectable, but the application still has to define the policy and ensure every consequential tool path passes through it. This is an implication of OWASP’s runtime-control guidance, not a description of a universal implementation. [@owasp-agent-control-standard-2026]
 
-The distinction between prevention and investigation is important. An audit trail can help answer who acted, with which permissions and what result followed. It cannot undo a message already sent or data already exposed. A deployment therefore needs both runtime authorization and traceability. Where an action is reversible, the system should preserve a clear undo path; where it is not, the approval threshold should reflect that consequence.
+### Pair enforcement with traceability
 
-Tool boundaries also require testing. Security teams can simulate malicious instructions in retrieved documents, a tool returning unexpected content, an expired credential, and an agent trying to use a tool outside its assigned task. Tests should confirm not only that the model says “I can’t,” but that the tool call is blocked, the reason is logged, and the operator can identify the event. OWASP’s risk list is a prompt to examine those failure paths, not a substitute for a threat model tailored to the deployment. [@owasp-agentic-top10-announcement-2025]
+A trace and a permission check solve different problems. A trace can explain which identity requested an operation and what followed; it cannot reverse a message already sent or data already exposed. Conversely, a deny rule without a decision record leaves operators unable to explain why a valid workflow stopped. The architectural objective is to join pre-action policy enforcement with enough observability to account for the result, while tailoring the boundary to the deployment’s risks. [@owasp-agent-control-standard-2026]
+
+The control plane also needs a defined failure mode. If a policy service is unavailable, a high-impact action should not proceed on the strength of the model’s own assurance. If approval is required, the decision should apply to the specific operation and resource rather than to a vague request to “continue.” These are design questions for the system boundary; OWASP’s risk list helps identify threat categories but does not prescribe a deployment-specific policy. [@owasp-agent-control-standard-2026] [@owasp-agentic-top10-announcement-2025]
 
 ### Keep standards separate from guarantees
 
 The new OWASP ACS and Agentic Top 10 add useful vocabulary for platform builders and security teams. They do not establish that an agent is safe simply because it uses a compatible framework, nor do they verify an individual deployment’s access policy. Organizations still need to inventory agents and tools, assign least authority, protect credentials, test controls under adversarial inputs, and review traces when actions matter.
 
-The core design principle is straightforward: the model may propose an action, but a trusted control layer must decide whether that action is authorized. Prompts help guide behavior; scoped credentials, runtime checks and observable execution limit what happens when guidance fails. [@owasp-agent-control-standard-2026] [@langsmith-fleet-access-oversight]
+The core design principle is straightforward: the model may propose an action, but a trusted control layer must decide whether that action is authorized. Prompts help guide behavior; scoped credentials, runtime checks and observable execution limit what happens when guidance fails. [@owasp-agent-control-standard-2026]
 
 **Bottom line:** Secure agents need authorization and runtime policy at the tool boundary; prompt instructions and audit logs alone cannot enforce access.
 
@@ -287,11 +291,11 @@ The core design principle is straightforward: the model may propose an action, b
 **Key takeaways:**
 - OWASP identifies tool misuse and identity or privilege abuse as agentic risks.
 - ACS emphasizes visibility and runtime controls, but it does not certify every platform or deployment.
-- One platform’s access and tracing features are examples, not an industry-wide guarantee.
+- Runtime-control guidance describes a design direction; it does not certify platform enforcement.
 
 **What changes:** Agent deployments should scope identity and tools, block unauthorized actions before execution, and keep traces that show who acted and why.
 
-**Evidence note:** OWASP pages describe project guidance; LangSmith docs describe one vendor’s features. Neither establishes universal implementation or compliance.
+**Evidence note:** OWASP pages describe project guidance. They do not establish universal implementation, deployment security, or regulatory compliance.
 
 ## 17. India’s data-centre water estimates are not a national meter
 
@@ -338,11 +342,11 @@ The current public record therefore supports a bounded conclusion: Indian resear
 
 **Evidence note:** CEEW’s figures are attributed estimates compiled from other sources; the PIB page is a parliamentary reply. Neither source independently measures water use across all Indian data centres.
 
-## 18. Why U.S. data-centre electricity forecasts span a wide range
+## 18. What drives LBNL’s 2028 U.S. data-centre scenario range
 
 **Slug:** `us-data-centre-energy-scenarios`  
 **Topic:** Infrastructure  
-**Proposed dek:** Lawrence Berkeley National Laboratory estimates U.S. data centres used 176 terawatt-hours in 2023, then models 325–580 TWh in 2028 under different equipment, utilization and cooling assumptions. The range is a scenario set, not a single observed number.
+**Proposed dek:** LBNL’s 325–580 TWh range for U.S. data-centre electricity in 2028 depends on equipment shipments, computing demand, utilization, and cooling assumptions. The endpoints describe scenarios, not a measured outcome.
 
 ### Separate the historical estimate from the scenarios
 
@@ -362,13 +366,15 @@ That means the range is not a statistical confidence interval around one measure
 
 The conversion to power demand is also conditional. LBNL says that, assuming average capacity utilization of 50%, the annual energy range would correspond to an estimated 74–132 GW of total data-centre power demand. That is a scenario-derived conversion, not a measured demand at a particular grid connection or a statement about peak use. It should remain attached to the utilization assumption whenever it is quoted. [@lbnl-us-data-centre-energy-2024]
 
-### Forecast disagreement is not automatically a factual dispute
+### Read the endpoints as conditional operating cases
 
-A wide range can look like uncertainty about a single forecast, but it may instead reflect different assumptions about GPUs, workload growth, utilization and cooling. To compare two data-centre estimates, a reader should first check the geography, base year, included equipment, treatment of accelerated servers and whether the figure is historical, forecast or scenario. A global estimate for actual 2025 use cannot be substituted for a U.S. 2028 scenario without explaining those differences.
+The difference between the low and high endpoints is not a dispute over one measured number. Each scenario reflects a different combination of hardware deployment and operation. A planning team should identify which assumptions drive its own exposure: accelerator availability, expected computational demand, average utilization, and the efficiency and type of cooling in the facility.
 
 The LBNL report is useful because it makes several of those assumptions explicit. It does not resolve how much of the future total will be attributable only to AI, how the mix of workloads will evolve, or where new load will connect to the grid. Those questions require more granular information about facility commissioning, server shipments, workload use and site-level power. The scenario range is a planning tool, not a precise claim about a future bill.
 
-For policymakers and utilities, the immediate implication is to plan for a range and update it as shipments and operating data arrive. For readers, the key is to retain the distinction between the historical estimate and the modeled future. The report’s central signal is not one fixed 2028 total: it is that data-centre demand can rise substantially, with the exact scale tied to decisions and supply conditions that remain changeable. [@lbnl-us-data-centre-energy-2024]
+For policymakers and utilities, the immediate implication is to plan against multiple operating cases and update them as shipments and facility data arrive. The report’s central signal is not one fixed 2028 total: it is that data-centre demand can rise substantially, with the exact scale tied to decisions and supply conditions that remain changeable. [@lbnl-us-data-centre-energy-2024]
+
+For a specific project, the useful exercise is to keep both a lower and higher case, state which assumptions drive each, and identify what new evidence would change the planning case. That does not predict where an individual facility will land; it makes the basis of a capacity request visible and revisable.
 
 **Bottom line:** LBNL’s 325–580 TWh figure is a U.S. 2028 scenario range driven by assumptions—not a measured outcome or an AI-only forecast.
 
@@ -465,6 +471,8 @@ The more defensible reading is a set of dated snapshots with unresolved definiti
 A comparable national series would name the reference date, geographic coverage, operational-status threshold and capacity measure. It should distinguish IT load from utility power demand, count only facilities that are operating in the current total, and separately report announced, planned and under-construction projects. If the series includes only major markets, it should say which cities and providers are covered.
 
 Until those details are aligned, readers should keep the numbers attached to their sources and labels. C&W’s H1 2026 seven-market estimate is useful for understanding leading-market growth; PIB’s figure is a government snapshot with an unclear as-of date; the March reply gives an approximate 2025 national value. None on its own settles a single, reconciled national total. [@cw-india-dc-h1-2026] [@pib-india-dc-capacity-factsheet-2026] [@pib-india-dc-rajya-sabha-mar2026]
+
+Readers can audit each later update as a change in coverage, operating status or measurement definition, rather than assuming that the difference represents newly built capacity.
 
 **Bottom line:** Published India data-centre capacity totals use different dates and labels; the sources reviewed do not support a reconciled national figure.
 

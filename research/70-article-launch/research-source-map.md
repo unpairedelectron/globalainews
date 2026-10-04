@@ -8,7 +8,11 @@
 
 | Draft key | Captured source | Evidence role |
 |---|---|---|
-| `aikosh-dataset-page-sample-2026-10-04` | `research/sources/aikosh-dataset-listing-sample-2026-10-04.md` | Five dated live listing pages; purposive sample, metadata audit only |
+| `aikosh-geochemical-record-2026-10-04` | `research/sources/aikosh-geochemical-record-2026-10-04.md` | AIKosh first-party detail page; primary for displayed record fields only |
+| `aikosh-bhasha-sft-aya-record-2026-10-04` | `research/sources/aikosh-bhasha-sft-aya-record-2026-10-04.md` | AIKosh first-party detail page; primary for displayed record fields only |
+| `aikosh-pdmc-record-2026-10-04` | `research/sources/aikosh-pdmc-record-2026-10-04.md` | AIKosh first-party detail page; primary for displayed record fields only |
+| `aikosh-repertory-grant-record-2026-10-04` | `research/sources/aikosh-repertory-grant-record-2026-10-04.md` | AIKosh first-party detail page; primary for displayed record fields only |
+| `aikosh-principal-commodity-import-record-2026-10-04` | `research/sources/aikosh-principal-commodity-import-record-2026-10-04.md` | AIKosh first-party detail page; primary for displayed record fields only |
 | `aikosh-platform-terms-2026` | `research/sources/aikosh-platform-terms-2026.md` | Platform-level Terms of Use; does not determine item-specific permissions |
 
 ## Research 32 — C&W seven-market row-sum audit

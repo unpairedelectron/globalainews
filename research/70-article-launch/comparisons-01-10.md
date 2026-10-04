@@ -48,6 +48,10 @@ A useful comparison run should:
 
 The released pages do not provide a same-conditions independent test of Sol versus Luna on a shared user-defined task set. This comparison therefore stops at published role, list price, and evidence type. It does not infer that Sol is universally better for complex work, that Luna is universally fast enough, or that the vendor’s benchmark results transfer to every application.
 
+A useful cost sheet should separately record uncached input, cached input, and output for each completed case. Multiply each by its published rate, then include retries, fallbacks, and tool or application costs before dividing by tasks accepted under the same quality rule. Otherwise a cheap failed attempt can look less expensive than an accepted answer. This calculation does not assume which model wins; it makes the break-even visible from the team’s own runs. [@openai-gpt6-sol-luna-2026]
+
+Report the cost separately by task family; one average can conceal where extra retries erase a price advantage or where a more capable model is unnecessary.
+
 **Bottom line:** Sol and Luna have sharply different listed token prices and provider-described roles, but workload performance must be tested locally.
 
 **Why it matters:** A model choice based only on a product label or per-token price can increase review effort or total cost if the selected model needs more retries.
@@ -105,6 +109,10 @@ Before comparing numbers, record:
 6. Whether the score uses one attempt or repeated trials.
 
 Do not calculate a “winner” from a score in one paper and a score in another unless the benchmark, harness, and conditions match. A paper may also use a version of SWE-bench or Terminal-Bench with a different agent scaffold or task subset. Cite the method and evaluation date with the score, and treat version changes as possible breaks in comparability. [@swebench-verified-methods] [@terminal-bench-2026-paper]
+
+Task count describes the size of a test set, not by itself its uncertainty or external validity. The 500 repository issues and 89 terminal tasks cover different work; the larger count is not automatically more representative, and the smaller count is not automatically less reliable. Check whether the source reports per-task outcomes, repeated runs, or a measure of run-to-run variation. If it publishes only an aggregate, treat a narrow score margin as unresolved rather than a dependable ordering. Use the benchmark to select local tasks, then rerun with the repository, tools, budget, and acceptance rule that matter to the deployment. [@swebench-verified-methods] [@terminal-bench-2026-paper]
+
+Even a strong benchmark result should prioritize local evaluation, not replace code review, security review, or clear human ownership of production changes. The benchmark’s grader determines a pass under its rules; it does not decide whether the resulting software is ready to deploy.
 
 ### Use both as evidence, not as certification
 
@@ -169,6 +177,12 @@ Before procurement, compare the exact service tier, endpoint, license, model rev
 6. Test a hosted endpoint and a self-hosted candidate with the same held-out tasks if both are plausible.
 7. Document which prompts, files, logs, and tool calls cross the boundary in each design.
 
+A total-cost comparison should use the same accepted-work target and request volume. For each route, estimate inference charges, then add the operator time for setup, updates, capacity monitoring, incidents, and recovery; include hardware and unused capacity for self-hosting, and API pricing and terms for a hosted service. A per-token quote and downloadable weights are not equivalent to a cost-free option. State assumptions about concurrency, context, and retries, and show how the estimate changes when utilization changes. This is a budgeting method, not a market-price claim. It also makes the decision order explicit: reject routes that fail a required data boundary before optimizing cost.
+
+For a hosted route, record the model revision and endpoint behavior; for a self-hosted route, retain the artifact identifier, quantization, and runtime. Treat a revision as a new candidate, rerun the evaluation, and update the rollback plan rather than assuming the original result still applies.
+
+Name the team responsible for capacity, updates, and incident recovery for each route; a route with no operating owner is not a complete deployment option.
+
 **Bottom line:** Gemini’s hosted API and the Gemma/Mistral open-weight routes differ in control and operating work; these records do not establish a model-quality winner.
 
 **Why it matters:** A team can choose a model that meets a license or deployment need yet still miss hardware, data-handling, or maintenance requirements.
@@ -229,6 +243,12 @@ Quality, latency, and price are separate questions. A smaller local model may re
 
 Before approval, record the data classes allowed, the endpoint and service tier, model version, geographic route, logging defaults, retention and deletion behavior, human review, connected tools, and incident contact. Recheck these fields after a provider changes its terms or the organization changes a model, application, or endpoint.
 
+Separate veto conditions from preferences in the risk matrix. If a data class is not permitted to leave a controlled network, external processing is a hard exclusion, not a score that can be outweighed by lower latency. After admissible routes are identified, compare quality, operating support, cost, and review load. If no option meets both the data boundary and task threshold, defer the automation or keep the human process rather than hiding the unresolved risk in an average score. Record who may approve exceptions and what changes trigger a new review.
+
+Tie each approval to the specific endpoint, data class, and fallback route; changing a region or logging service creates a new data flow to assess, not an exception to assume.
+
+Reassess when retrieval, tool, or telemetry integrations change, not only when the model provider changes.
+
 **Bottom line:** Choose an inference route only after tracing every data path and matching the actual terms and controls to the workflow’s risk.
 
 **Why it matters:** Sensitive data can leave through a retrieval, logging, or tool integration even when the model itself runs locally.
@@ -283,6 +303,10 @@ Terminal-Bench 2.0 illustrates a benchmark built around outcome verification: ea
 For a reversible drafting task, a one-run completion rate plus reviewer quality score may be adequate for an initial comparison. For a workflow that sends customer messages or changes records, repeated-run success, unauthorized-action attempts, duplicate-write checks, and audit-trace review matter more. For a long-horizon agent, record interruptions, handoffs, retries, partial completion, and recovery cost as well as final success.
 
 Do not compare pass@1 from one benchmark to pass^k from another, or turn a trace rubric into a model ranking unless the task, agent, and grader are controlled. Choose the metric before the run, state the denominator and threshold, and report the environment and number of trials.
+
+A decision report should separate “can perform” from “is safe to delegate.” Set an outcome threshold and any repeated-run requirement in advance, plus a distinct criterion for disallowed actions. Review traces when a successful final state could conceal an unsafe intermediate step. If one dimension misses its threshold, do not average it away with a strong result on another. Recording the decision rule before a run prevents the team from changing its weighting after seeing the scores.
+
+A scorecard should keep severe policy violations visible as counts, not bury them inside aggregate task success or an average quality score.
 
 **Bottom line:** One-run success measures a result, pass^k measures repeated consistency, and action traces expose the path; use more than one when risk requires it.
 
@@ -404,6 +428,10 @@ A checklist match between NIST actions and an AI Act requirement does not show t
 
 This comparison is informational, not legal advice. Teams should verify the current consolidated regulation, official guidance, and national implementation before making a compliance decision. The proposal for the EU KIDS Act is not included as a current legal obligation; Report 46 covers its proposal status separately. [@eu-aiact-article-113] [@eu-gpai-guidelines]
 
+A practical crosswalk can be tested with one change-control question. Create the legal row first: system, organizational role, applicable provision, date, required evidence, and accountable owner. In a separate NIST row, record the use context, risk, measurement, response, and evidence. Link a shared artifact only where it genuinely supports both records; the existence of a risk assessment does not establish that a statutory requirement has been met. Mark obligations with no NIST analogue, and NIST actions that do not map to a legal duty, rather than forcing a one-to-one match. Date the source versions and route unresolved scope questions to legal review. This preserves the framework’s usefulness without converting it into a substitute for law.
+
+Keep the two tracks current for different reasons. A change in the product, intended use, user population, provider/deployer role, or market can change the legal applicability analysis; a change in the system’s risk or operating context can change the NIST work. Record which event triggered each update and which owner approved it. Shared evidence may support both tracks, but each conclusion should retain its own source, status, and review date.
+
 **Bottom line:** The AI Act defines binding duties for in-scope actors, while NIST AI 600-1 is a voluntary way to organize generative-AI risk work.
 
 **Why it matters:** Treating guidance as law—or treating a risk checklist as proof of compliance—can leave both legal and operational gaps.
@@ -457,6 +485,10 @@ Do not compare an IndiaAI portal rate to an AWS GPU-hour rate unless the acceler
 ### Before submitting or launching
 
 For IndiaAI, confirm the eligibility category, required documents, request window, GPU-hour estimate, subsidy terms, provider, approval validity, and start date. For a cloud instance, confirm service quotas, region, instance availability, projected running time, storage charges, and shutdown rules. In either route, keep a record of the actual device and usage period; approval or account access alone does not prove that a workload ran.
+
+Compare the whole path from request to completed work. For a portal allocation, record submission, decision, approval expiry, offered device, actual start time, interruptions, hours used, and costs beyond any subsidy. For a cloud instance, record quota checks, launch time, actual running hours, storage and data-transfer charges, and teardown. Then compare completed jobs and realized usage rather than approved GPU-hours against a cloud list price. This is an accounting method, not a claim that either route has more capacity or provides better performance.
+
+If a deadline matters, treat access timing as a separate decision from nominal price. Ask when the exact accelerator can be scheduled, what happens if the requested region or provider cannot serve it, and whether the project can use another approved route without changing its data or software requirements. Keep any fallback, funding assumption, and latest availability check beside the schedule; do not treat a prior allocation or approval window as a promise of future supply.
 
 **Bottom line:** IndiaAI is an application-and-approval path that may subsidize approved compute; commercial On-Demand is self-service billing subject to quota and capacity.
 
@@ -515,6 +547,10 @@ This comparison does not establish a quality, latency, or privacy winner. The pa
 For the same prompt set, record model ID, date, API version, region/profile, context length, output tokens, reasoning setting, tools, cache state, and retry policy. Measure task success, structured-output validity, latency, and cost separately. Test a long-context request, an image input, a tool call, an interrupted request, and a malformed or denied action. Confirm the logging configuration and inspect the actual request path.
 
 Recheck the live pages before publishing. The captured xAI docs list future API changes with later effective dates; this report uses only the documentation available on 4 October 2026. Do not project later changes backward into the captured release state.
+
+Treat a route change as a deployment migration, not a model-name substitution. Start with approved low-risk or synthetic cases, preserve the current endpoint as the rollback path, and compare the exact output schema, error handling, latency, billing, and logs before moving production traffic. Confirm data terms and regional controls before sending sensitive inputs through the new route. If a result changes, inspect the route configuration and response metadata before attributing the difference to Grok 4.7 itself. Repeat the baseline after a material endpoint or profile change.
+
+Keep the pre-migration baseline and rollback decision with the endpoint test record; route compatibility matters as much as a matching model ID.
 
 **Bottom line:** xAI API and Bedrock expose the same named model through different endpoints and regional controls; compare current service settings, not just model labels.
 
@@ -576,6 +612,8 @@ For triage of images with no provenance record, a classifier can provide an addi
 5. Confirm the image’s surrounding context, date, location, and other independent evidence.
 6. Record transformations performed after capture and rerun checks on the published derivative.
 7. Keep the control results separate instead of compressing them into a single authenticity badge.
+
+If the signals disagree, report the disagreement rather than selecting the most reassuring result. A valid signature addresses the signed provenance claim; a classifier addresses its own image-pattern estimate. Preserve the original file, verifier and detector versions, and the exact status returned, then investigate the claim with independent context. A disagreement is a reason for review, not proof of deception or proof that one control is defective.
 
 **Bottom line:** Provenance, watermark detection, and image classification are different controls; use them together only with clear explanations of what each result supports.
 

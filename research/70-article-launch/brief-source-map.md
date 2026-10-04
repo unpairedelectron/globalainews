@@ -84,10 +84,11 @@ Each capture begins with the exact source URL, title when available, and fetch t
 
 | Draft key | Captured source | Evidence role |
 |---|---|---|
-| `aisi-gpt55-cyber-evaluation-2026` | `research/sources/portfolio-brief-aisi-gpt55-original.md` | AISI primary evaluation; reports 2/10 attempts on “The Last Ones” |
+| `aisi-gpt55-cyber-evaluation-2026` | `research/sources/portfolio-brief-aisi-gpt55-original.md` | AISI primary evaluation; reports 2/10 after manual adjudication corrected a grading issue |
 | `openai-gpt55-system-card-aisi` | `research/sources/portfolio-brief-openai-gpt55-aisi-card.md` | OpenAI’s 23 April system-card section; reports 1/10 attempts |
 | `ars-aisi-gpt55-2026` | `research/sources/portfolio-brief-ars-aisi-gpt55.md` | Independent reporting on the evaluation |
+| `aisi-gpt55-cyber-progress-may-2026` | `research/sources/portfolio-brief-aisi-gpt55-progress-may-2026.md` | AISI’s 13 May update; reports 3/10 for GPT-5.5 but does not explain the April count |
 
-**Unresolved source conflict:** AISI’s 30 April report says two successful attempts out of ten; OpenAI’s 23 April card says one out of ten. The reviewed documents do not explain the difference. The draft preserves both reports and does not infer a cause.
+**Count history:** OpenAI’s 23 April card reports 1/10 and separately says 3/10 was the highest result then recorded without naming the model. AISI’s 30 April report updates GPT-5.5 to 2/10 after manual review and correction of a grading issue in AISI’s setup. Its 13 May update reports 3/10 but does not explain the April-to-May change. Ars Technica also reports 3/10, citing AISI, and is not an independent test. Keep each dated result distinct; the April correction explains the difference from OpenAI’s earlier count, not AISI’s later change.
 
 **Excluded capture:** The fetched TechCrunch Sonnet 5.5 page returned a browser-check page rather than article text. It is not cited in the draft or this map.

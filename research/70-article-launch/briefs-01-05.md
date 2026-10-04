@@ -22,6 +22,8 @@ The update says the seven markets added 178 MW of capacity during the first half
 
 “Operational” is the most useful stage for readers asking how much capacity is in service. “Under construction” indicates projects that have progressed beyond planning, but it still does not mean their capacity can be purchased or scheduled. “Planning” is further from delivery. Combining those stages into a single total can make a future build-out look like present supply.
 
+The next report should be read as a stage transition, not as a new block to add to the existing total. The 509 MW under construction and 3,351 MW in planning are components of the 3,860 MW pipeline; they should not be added to the 1,789 MW operational base as if every project were deliverable at once. A useful update would show how much moved from planning to construction, from construction to operation, and how much was removed or revised, using the same market coverage and reporting date. That is a request for a consistent series, not a prediction that any specific project will progress. [@cw-india-h1-2026]
+
 The report’s 3,860 MW pipeline can be stated without obscuring the stages: 509 MW under construction plus 3,351 MW in planning. Those components add to the reported total, but they do not establish how much is financed, when each site will be energized, or how quickly customers can obtain capacity. The source does not provide a conversion from facility megawatts to a number of AI accelerators, model-training hours or inference requests. [@cw-india-h1-2026]
 
 That last omission matters because data-centre capacity and AI compute access are related but not interchangeable. A data centre may serve cloud, enterprise, storage, communications or other workloads. Even a facility designed for high-density computing still needs suitable power delivery, cooling, networking and equipment before a specific AI workload can run. The H1 update is a property-market snapshot; it is not an inventory of GPUs offered to researchers or startups.
@@ -59,6 +61,10 @@ The IEA’s accompanying announcement says demand from AI-focused data centres g
 Data centres run a mix of services: cloud applications, business software, storage, networking, search, streaming and AI workloads, among others. Their power use can rise because customers add more computing, because existing systems run more intensively, or because the mix of equipment and services changes. A sector-wide electricity figure captures the facility category, not a single application.
 
 That is why the IEA’s wording about AI-focused sites matters. It signals faster growth within that subset, but the reported 70 TWh increase is for data centres as a whole. The published summary does not provide a separate absolute number for AI-focused electricity consumption in the quoted comparison. Assigning the sector total to AI would overstate what the source measures.
+
+Any narrower estimate should make its allocation rule visible. Readers need to know whether it counts facility electricity or only IT equipment, whether it covers AI-focused sites or AI workloads inside mixed facilities, and how shared cooling and other infrastructure are assigned. It should also state the period and whether the value is metered, estimated or modeled. Those fields would not create a new AI total; they would show which denominator a source uses and make two claims comparable. If the allocation method is missing, keep the description at the level the evidence supports: data-centre electricity, not electricity used by AI alone.
+
+If no such allocation method is published, preserve the IEA’s sector-level label and avoid attaching the 17% growth rate to a particular company, country or model family.
 
 ### The denominator includes much more than computing
 
@@ -106,9 +112,13 @@ The proposed act is not the only EU instrument relevant to minors and AI. The Co
 
 For an AI companion provider, practical preparation can begin without pretending that the proposal is law. Teams can identify which users are minors, review how the product describes its social role, test whether it encourages dependence, and examine what age-assurance measures would be proportionate. Those steps are risk management, not a substitute for legal advice or a claim that a particular draft clause will survive unchanged.
 
+An interim product review can make those questions auditable. For each relevant feature, record which age groups can reach it, what the interface says about whether the interaction is with AI, what behavior the feature invites, and what reporting or escalation path is available. Separately note the age-assurance approach being considered and what user information it would require. Mark every item as current behavior, a proposed safeguard or an unresolved legal question; do not label a draft clause as a settled duty. Revisit the register when the Parliament and Council publish positions and again against the adopted wording, noting which clause or product decision changed. This is planning for uncertainty, not a compliance determination.
+
 ### What happens next
 
 The Commission’s policy page says the proposal will proceed through the EU legislative process and invites feedback through 26 November 2026. The text therefore has a long path between publication and any final, enforceable obligations. Readers should watch for the Parliament’s and Council’s positions, amendments to the proposal, and later implementation guidance. [@eu-kids-act-policy-page-2026]
+
+The feedback date is a consultation milestone, not an adoption or compliance date. A comment window can shape the public record without settling which provisions survive negotiation or when any final rule applies. News coverage should keep those milestones separate and update the description only when a later institutional document changes the proposal’s status or text. [@eu-kids-act-policy-page-2026]
 
 The immediate development is the proposal itself: Brussels has placed child safety for AI companions and other digital services into a formal legislative process. The practical stakes are real, but the legal status is still provisional. Until the text is adopted and its application dates arrive, the careful description is “proposed,” not “required.” [@eu-kids-act-proposal-2026] [@euractiv-kids-act-2026]
 
@@ -142,6 +152,8 @@ At launch, OpenAI said Sol and Luna were available in ChatGPT Work and Codex for
 
 For developers, prompt caching is another part of the cost story. OpenAI says cached input reads receive a 90% discount and describes controls for monitoring and optimizing cache use. The practical savings depend on whether an application reuses prefixes and how often those requests hit the cache. The feature can lower costs in a well-matched workflow; it does not reduce every token charge by 90%. [@openai-gpt6-sol-luna-2026]
 
+A budget should therefore keep uncached input, cached input and generated output as separate quantities. A workflow with a stable repeated prefix may have a different bill from one whose input changes on every call, while long generated responses remain exposed to the output rate. Compare those quantities on representative tasks and report the observed cache-hit rate rather than applying the maximum discount to every request. This is a calculation method based on the published rate structure, not a claim that either model will be cheaper for a particular customer. [@openai-gpt6-sol-luna-2026]
+
 ### What buyers should take from the release
 
 The launch establishes a product and pricing change: OpenAI added two GPT-6 tiers with sharply different API prices and a broader set of initial access points. It also provides the company’s own evaluation record and methods. It does not establish that Sol or Luna is the best choice for every workload, that headline benchmark rankings predict an organization’s tasks, or that the prices alone determine total cost.
@@ -161,6 +173,10 @@ Teams evaluating the models should record the task, prompt, tools, reasoning eff
 Google DeepMind published its Gemini 3.8 Audio model card on 15 September 2026. It lists Gemini 3.8 Live, Gemini 3.8 Live Extended Thinking, Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS. Grouping all four under “audio” is useful for finding the release, but the card describes different functions: real-time interactive models sit alongside text-to-speech variants. [@google-gemini-38-audio-card]
 
 The Live models are described as handling continuous streams of audio, video and text to produce spoken responses. The card also lists product and platform surfaces where different variants are available, including the Gemini API, AI Studio, the Gemini app and several Google products. Availability varies by model and surface, so the family-level list should not be read as every variant being available everywhere. [@google-gemini-38-audio-card]
+
+The card also separates input and output capacity by function. Live and Live Extended Thinking list audio, image, video and text input up to 128K tokens, and audio and text output up to 64K; the Live Avatar configuration lists video with audio and text output up to 24K. The two TTS variants accept text input up to 8K and return audio, with a 64K output limit. These are interface specifications, not evidence of intelligibility or response speed. [@google-gemini-38-audio-card]
+
+That split can guide a prototype before any quality comparison. A one-way narration or read-aloud feature maps to a text-to-speech path; an interaction that must accept streamed audio, video or text and answer in speech maps to the Live family. If an avatar is required, its modality and the card’s short-session limitation need to be considered separately. A fair test should compare variants on equivalent jobs rather than treating “audio” as one common task. First establish that the interface fits; then measure quality and failure modes for the product’s actual language and acoustic conditions.
 
 TechTarget reported the introduction of Gemini 3.8 Live and Live Extended Thinking on 16 September, describing the tools as a way to build voice agents that can reason and make calls while a conversation continues. That supports the release and intended product direction. The capability descriptions still originate with Google; the article does not supply a controlled independent benchmark of latency, language quality or task success. [@techtarget-gemini-38-live-2026]
 

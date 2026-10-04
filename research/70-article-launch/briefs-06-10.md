@@ -32,6 +32,10 @@ Availability through Bedrock may matter to organizations that already use AWS in
 
 The same is true for cybersecurity features. xAI says selected cybersecurity partners have invite-only access to red-team capabilities. That indicates a restricted access pathway, not a public security evaluation or a general guarantee about how the model will behave in every setting. Organizations should distinguish a model’s stated safeguards from the controls they need around tools, credentials and approval. [@xai-grok47-model-card]
 
+A buyer can split the decision into model fit and access-route fit. For model fit, test the same tasks and constraints; for route fit, record the exact endpoint and model identifier, region and account access, token billing, request limits, data terms and monitoring available. This is a due-diligence checklist, not a claim that the two routes differ in every area. Keep results from the xAI API and Bedrock separate unless the prompts, tools and response settings are aligned. Recheck both sets of documentation before rollout because the release record and the hosting record answer different questions.
+
+A route comparison can also log request IDs, timeouts, returned errors and billing records alongside answer quality. If results diverge, repeat the same input while holding prompts and settings steady before attributing the difference to the model. This helps separate an access-layer issue from a model capability claim; it is a test procedure, not evidence that either route currently behaves differently.
+
 ### What the announcement establishes
 
 The dated record is clear: xAI released Grok 4.7 on 21 September, and AWS announced Bedrock availability on 28 September. The model card and release page document xAI’s specifications and evaluation claims. Independent launch coverage confirms the product announcement and examines its pricing context, but does not independently validate the company’s performance numbers. [@xai-grok47-release] [@aws-grok47-bedrock-2026] [@decrypt-grok47-2026]
@@ -74,6 +78,10 @@ The confirmed development is that Anthropic released a new Sonnet model and publ
 
 The next useful evidence will come from repeatable independent tests and from deployment reports that disclose the workload, settings and cost per successful outcome. Until then, the card should be read as a structured disclosure by the model developer. It improves the public record, but it does not remove the need for buyers to validate the model in the environment where they plan to use it.
 
+The card can also be read as a versioned measurement record. For each evaluation, retain the objective, task or benchmark version, interface, tools, comparator, metric and stated caveat. Keep speed and token-use claims separate from accuracy and safety results; they answer different questions. If a later release changes the task, surface or scoring method, show it as a different measurement rather than calculating a trend from the headline numbers. A missing detail is an evidence gap, not proof of poor performance. This crosswalk helps buyers determine whether two published results are actually comparable before they use them to justify a switch. [@anthropic-sonnet55-system-card]
+
+A buyer’s notes should also label which findings are reported by Anthropic and which were reproduced locally. Keeping those records separate prevents a company-reported card result from being mistaken for evidence that the customer’s own configuration passed the same test.
+
 **Evidence note:** Release, pricing and speed claims are attributed to Anthropic. The system card is a first-party evaluation document; the independent reports establish the launch, not a separate benchmark result.
 
 ## 8. OpenAI releases GPT-6.1 Sol for production workflows
@@ -82,9 +90,9 @@ The next useful evidence will come from repeatable independent tests and from de
 **Topic:** Models  
 **Proposed dek:** GPT-6.1 Sol arrived on 29 September with a $2/$10 per-million-token API price and staged product availability. OpenAI says it brings stronger results at lower cost, but its benchmark comparisons remain company-reported.
 
-### A new Sol tier, four days after DevDay
+### A lower-cost tier joins the Sol family
 
-OpenAI announced GPT-6.1 Sol on 29 September 2026. The company describes it as a more capable Sol model across coding, professional work, computer use and scientific tasks. It lists API pricing of $2 per million input tokens, $0.10 per million cached input tokens and $10 per million output tokens. OpenAI’s page compares the model with GPT-6 Sol, GPT-6 Astra and other systems, but those comparisons are based on the company’s own reported tests. [@openai-gpt61-sol-release]
+OpenAI announced GPT-6.1 Sol on 29 September 2026. The company describes it as a more capable Sol model across coding, professional work, computer use and scientific tasks. It lists API pricing of $2 per million input tokens, $0.10 per million cached input tokens and $10 per million output tokens. OpenAI’s page compares the model with GPT-6 Sol, GPT-6 Astra and other systems, but those comparisons are based on the company’s own reported tests. The Hindu independently dates Sam Altman’s DevDay announcement to 29 September. [@openai-gpt61-sol-release] [@hindu-gpt61-sol-2026]
 
 The product arrived only a week after OpenAI announced GPT-6 Sol and Luna. That sequence suggests a rapidly changing model family, but it does not mean the names map to a simple ladder that stays fixed over time. Each launch page is a dated snapshot. Buyers should check current API documentation and product availability rather than assume that an earlier price or model role is still current. [@openai-gpt61-sol-release] [@openai-gpt6-sol-luna-2026]
 
@@ -103,6 +111,10 @@ The published price also does not answer the operating-cost question. A team may
 OpenAI says GPT-6.1 Sol is available through the API and in ChatGPT Work and Codex for Plus, Pro, Business, Enterprise and Edu customers. Its release page says the model was not yet available in ChatGPT at launch. The company’s rollout information is an important boundary: users should not assume that an API release means every consumer product surface has the model. [@openai-gpt61-sol-release]
 
 The Hindu’s account of the DevDay announcement provides an independent report of the launch event, while Microsoft’s Foundry post records availability through that platform. The additional distribution route can matter to organizations that already use Azure AI Foundry, but it does not change the evidence status of OpenAI’s performance claims. A cloud listing is a deployment record, not an external model evaluation. [@hindu-gpt61-sol-2026] [@microsoft-foundry-gpt61-sol-2026]
+
+For a pilot, keep results from the API, Foundry, ChatGPT Work and Codex as separate records. Save the date, model identifier, product surface, account tier, prompt and tool configuration, plus the task outcome and its cost. The release itself notes that system prompts and available tools can differ between research or API evaluations and ChatGPT. A model name alone is therefore not enough to reproduce a result across interfaces. If an endpoint or rollout changes, rerun the baseline at the surface intended for production instead of treating a new score as a direct continuation of the old one. [@openai-gpt61-sol-release]
+
+Record access failures separately from task failures. An account that has not received a staged rollout cannot reproduce a model evaluation; an endpoint error after access is available is a different operational outcome. Neither should be silently folded into the model’s benchmark score. [@openai-gpt61-sol-release]
 
 ### A useful release, not a buying verdict
 
@@ -140,6 +152,8 @@ The AI Act assigns obligations to different roles. A GPAI model provider is not 
 
 This is why a broad announcement can be important without answering every operational question. The Commission’s notice flags a change in enforcement and transparency. It does not replace the detailed analysis a provider needs for its model or system. Teams should document which obligations apply, the date relevant to each, whether a transition applies, and what evidence shows they have complied.
 
+An obligation register should use one row per model or system, not one date for the whole company. For each row, record the organization’s role, the product category, the relevant launch or market date, the cited article or guidance, the application or enforcement date, any transition and the evidence owner. A company that provides a model and also deploys a system using it may need to assess those roles separately; do not copy a model-level date onto every downstream product by default. Flag uncertain classifications for legal review and date-stamp the source version so later guidance does not silently replace the basis for an earlier decision. This makes tracking auditable, but it is not legal advice. [@eu-ai-act-article113] [@eu-ai-act-gpai-guidelines]
+
 ### A date map is safer than a countdown
 
 The most useful way to report the milestone is as a short timeline: GPAI provider obligations entered application on 2 August 2025; Commission enforcement powers apply from 2 August 2026; general application and certain transparency duties also reach that date; some pre-existing GPAI models have until 2 August 2027; and certain existing systems have a shorter transparency transition ending 2 December 2026. [@eu-ai-act-gpai-guidelines] [@eu-ai-act-article113] [@eu-ai-act-service-desk-faq]
@@ -148,19 +162,19 @@ Those dates are not legal advice, and the timeline does not cover every AI Act p
 
 **Evidence note:** Dates come from the Commission’s enforcement notice, official GPAI guidance and the AI Act Service Desk. Article 113 establishes staged application; do not summarize the whole Act as having one start date.
 
-## 10. AISI and OpenAI report different GPT-5.5 cyber-range counts
+## 10. GPT-5.5 cyber-range reports give three different counts
 
 **Slug:** `aisi-gpt55-cyber-evaluation`  
 **Topic:** Safety  
-**Proposed dek:** The UK AI Security Institute reports two successful attempts on a 32-step simulated range; OpenAI’s earlier system card reports one. Both say GPT-5.5 failed a separate seven-step range.
+**Proposed dek:** AISI reported two successful attempts in April and three in a May update; OpenAI’s earlier system card reports one. The sources do not explain the different counts.
 
 ### A bounded test, not a forecast
 
-The UK AI Security Institute published its GPT-5.5 cyber evaluation on 30 April 2026. AISI reports that the model performed strongly on a set of 95 capture-the-flag tasks spanning four difficulty tiers. The evaluation also used cyber ranges: simulated network environments designed to test whether a model can carry out a sequence of actions toward a defined objective. [@aisi-gpt55-cyber-evaluation-2026]
+The UK AI Security Institute published a detailed GPT-5.5 cyber evaluation on 30 April 2026. AISI reports that the model performed strongly on 95 capture-the-flag tasks spanning four difficulty tiers. The evaluation also used cyber ranges: simulated network environments designed to test whether a model can carry out a sequence of actions toward a defined objective. [@aisi-gpt55-cyber-evaluation-2026]
 
-The most notable result was mixed—and the public record contains a discrepancy. AISI’s 30 April post says GPT-5.5 completed “The Last Ones,” a 32-step simulated corporate-network attack, in two of ten attempts, using a 100-million-token budget per attempt. OpenAI’s system-card section, dated 23 April, reports one successful attempt out of ten for the same named range. Neither source reviewed here explains the difference. AISI also says GPT-5.5 did not solve “Cooling Tower,” a separate seven-step exercise, and that no model had done so at publication. The numbers show what happened in defined tests, not a general success rate for real-world cyberattacks. [@aisi-gpt55-cyber-evaluation-2026] [@openai-gpt55-system-card-aisi]
+The same range appears with different counts in the published record. AISI’s 30 April post says GPT-5.5 completed “The Last Ones,” a 32-step simulated corporate-network attack, in two of ten attempts, using a 100-million-token budget per attempt. OpenAI’s 23 April system-card section reports one successful attempt out of ten on the same named range and says 3/10 was the highest result then recorded; it does not identify which model achieved that earlier high. AISI’s footnote explains that its 2/10 result followed a grading issue in AISI’s own setup: after manual review and adjudication, AISI assessed that GPT-5.5 would have completed the final step and updated its result. That accounts for the April difference from OpenAI’s 1/10; it is not an unexplained cross-source conflict. AISI also says GPT-5.5 did not solve “Cooling Tower,” a separate seven-step exercise, and that no model had done so at publication. These are outcomes on defined tests, not a general success rate for real-world cyberattacks. [@aisi-gpt55-cyber-evaluation-2026] [@openai-gpt55-system-card-aisi]
 
-Ars Technica’s coverage described the evaluation and its task set, giving readers an independent report of the institute’s findings. OpenAI’s system card also references AISI’s work, but the evaluation itself was conducted by AISI. The two primary documents disagree on the exact success count. Because the card predates AISI’s report by a week, a different test snapshot is possible, but neither document identifies that as the reason. The safe account preserves both numbers and marks the discrepancy unresolved. [@ars-aisi-gpt55-2026] [@openai-gpt55-system-card-aisi]
+AISI’s 13 May update later says GPT-5.5 completed “The Last Ones” in three of ten attempts. It notes that AISI had obtained a newer Mythos Preview checkpoint, but does not say whether GPT-5.5’s checkpoint or test conditions changed, or explain the increase from AISI’s April 2/10. Ars Technica also reports 3/10 and links its account to AISI’s evaluation; that is secondary coverage, not a separate test run. The 1/10-to-2/10 difference has a documented AISI grading correction; the later 2/10-to-3/10 change remains unexplained in the reviewed records. [@aisi-gpt55-cyber-progress-may-2026] [@ars-aisi-gpt55-2026]
 
 ### What a cyber range tests
 
@@ -172,16 +186,16 @@ The 95 capture-the-flag tasks provide another kind of signal. They cover specifi
 
 ### Counts matter as much as the headline
 
-“Solved a cyber range” sounds binary, but attempt counts show variation. AISI reports two completions in ten tries; OpenAI’s earlier card reports one. Neither supports a claim that the model reliably finishes that exercise. The failed runs are part of the result, not noise to discard. A useful comparison should disclose the number of runs, task setup, tool access and success criteria.
+“Solved a cyber range” sounds binary, but attempt counts show variation. The dated record is OpenAI’s 1/10 report on 23 April, AISI’s revised 2/10 report on 30 April, and AISI’s 3/10 report on 13 May. AISI says its April figure followed manual review and correction of a grading issue; its May update does not explain the increase from 2/10 to 3/10. OpenAI’s separate statement that 3/10 was the highest result then recorded does not identify that result as GPT-5.5. Keep each result attached to its source and date rather than combining them into one settled figure. [@openai-gpt55-system-card-aisi] [@aisi-gpt55-cyber-evaluation-2026] [@aisi-gpt55-cyber-progress-may-2026]
 
 Likewise, failing “Cooling Tower” does not establish that the model lacks the capability in every environment. It establishes that the model did not complete that defined task under AISI’s tested conditions. The result can still be important because the task was designed to represent a multi-step operational challenge, but it should not be converted into a blanket safety claim.
 
 ### What the evidence supports
 
-The evidence supports a narrower conclusion: AISI reports that GPT-5.5 completed one 32-step simulated cyber range in two of ten attempts, while OpenAI’s earlier system-card section reports one of ten. AISI also reports that GPT-5.5 did not complete a separate seven-step range and performed strongly on a 95-task capture-the-flag suite. These results give security teams concrete evidence to discuss capabilities and test design, but they do not forecast real-world attack frequency or prove that the model can compromise a defended target. [@aisi-gpt55-cyber-evaluation-2026] [@openai-gpt55-system-card-aisi]
+The evidence supports a bounded conclusion: the available records place GPT-5.5’s result on this 32-step range at 1/10 in OpenAI’s 23 April card, 2/10 in AISI’s 30 April report, and 3/10 in AISI’s 13 May update. AISI attributes its April 2/10 to a grading correction after manual review; the reviewed records do not explain its later move to 3/10. AISI also reports that GPT-5.5 did not complete a separate seven-step range and performed strongly on a 95-task capture-the-flag suite. These results help security teams discuss capabilities and test design, but do not forecast real-world attack frequency or prove that the model can compromise a defended target. [@openai-gpt55-system-card-aisi] [@aisi-gpt55-cyber-evaluation-2026] [@aisi-gpt55-cyber-progress-may-2026]
 
 For a buyer or security team, the most useful follow-up is to ask how the evaluation maps to its own threat model. A controlled range can reveal risky capabilities before deployment, but an organization still needs to control tool permissions, credentials, network access, logging and human approval. Model capability and system exposure interact; neither can be inferred from a benchmark score alone.
 
-The lesson for readers is to keep the source and attempt-level evidence attached to the headline. “AISI reports two of ten; OpenAI’s earlier card reports one of ten” is more informative than a dramatic claim that a model can—or cannot—carry out a cyber operation. [@aisi-gpt55-cyber-evaluation-2026] [@openai-gpt55-system-card-aisi] [@ars-aisi-gpt55-2026]
+The lesson for readers is to keep each result attached to its source and date, including the grading note: “OpenAI reports one of ten; AISI’s April manual review updates that result to two of ten; AISI reports three of ten in May without explaining the later change.” That is more useful than a dramatic claim that a model can—or cannot—carry out a cyber operation. [@openai-gpt55-system-card-aisi] [@aisi-gpt55-cyber-evaluation-2026] [@aisi-gpt55-cyber-progress-may-2026] [@ars-aisi-gpt55-2026]
 
-**Evidence note:** AISI is the primary source for its evaluation protocol and 2/10 result; OpenAI’s 23 April system-card section reports 1/10. The discrepancy remains unexplained in the documents reviewed. Ars Technica provides independent reporting. The conclusion is limited to the specified tasks, environment and attempts.
+**Evidence note:** The primary records are OpenAI’s 23 April system-card section (1/10, with a separate “highest recorded” figure of 3/10), AISI’s 30 April evaluation (2/10 after a grading correction and manual adjudication), and AISI’s 13 May update (3/10). The April correction explains the difference from OpenAI’s earlier count; AISI does not explain the April-to-May change. Ars Technica reports 3/10 as secondary coverage, not as an independent evaluation. These results are limited to the specified tasks, environment and attempts.

@@ -20,7 +20,6 @@
 | `ddnews-aikosh-february-2026` | `research/sources/portfolio-brief-ddnews-aikosh-february.md` | February 2026 AIKosh count snapshot, as reported by DD News |
 | `pib-aikosh-july-2026` | `research/sources/portfolio-brief-pib-aikosh-july.md` | PIB’s July 2026 dataset and model counts |
 | `aikosh-platform-terms-2026` | `research/sources/aikosh-platform-terms-2026.md` | Platform-wide access and use terms, not item-specific permission |
-| `aikosh-dataset-page-sample-2026-10-04` | `research/sources/aikosh-dataset-listing-sample-2026-10-04.md` | Five purposively selected listing pages; not representative of the full catalog |
 | `w3c-dcat3-2024` | `research/sources/essay-62-dcat-v3.md` | DCAT 3 metadata interoperability; explicitly not a quality guarantee |
 | `datasheets-for-datasets-2021` | `research/sources/essay-62-datasheets-datasets-2021.md` | Dataset documentation proposal covering motivation, composition, collection, and uses |
 

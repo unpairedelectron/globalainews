@@ -16,7 +16,6 @@
 
 | Draft key | Captured source | Evidence role |
 |---|---|---|
-| `aikosh-sample-records` | `research/sources/aikosh-dataset-listing-sample-2026-10-04.md` | Five dated listing pages; examples of license, visibility, delivery, provenance and beta-score fields |
 | `aikosh-terms` | `research/sources/aikosh-platform-terms-2026.md` | Platform-level Terms of Use; does not replace item-specific permissions |
 | `aikosh-pib-july-snapshot` | `research/sources/portfolio-brief-pib-aikosh-july.md` | July 2026 PIB count snapshot |
 | `aikosh-ddnews-february-snapshot` | `research/sources/portfolio-brief-ddnews-aikosh-february.md` | February 2026 DD News count snapshot; not an independent catalog census |

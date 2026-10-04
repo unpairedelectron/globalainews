@@ -157,6 +157,8 @@ Use the document to build a test plan: select the intended task, define unaccept
 
 The practical value of a model card is that it makes questions easier to ask. It can narrow a shortlist, expose a mismatch between intended and actual use, and provide methods to reproduce. The final judgment still depends on your own evaluation, the complete terms and the way the system will be deployed.
 
+Archive the card version and access date alongside each test result so a later document update does not rewrite what the buyer originally reviewed.
+
 **Bottom line:** A model card is provider documentation that can guide evaluation; it does not replace independent testing or application-specific due diligence.
 
 **Why it matters:** Benchmark scores have meaning only when the model version, task and evaluation conditions are visible.
@@ -289,13 +291,13 @@ An agent is therefore not simply “a chatbot that thinks longer.” It is a sof
 
 **Slug:** `agent-permissions-explainer`  
 **Topic:** Enterprise security  
-**Proposed dek:** “Human in the loop” is not a permission model. A safer agent has its own identity, only the tools and records it needs, approval for consequential actions, and logs that let an operator reconstruct what happened.
+**Proposed dek:** Give an agent a distinct identity, scope each tool to the records and actions it needs, bind approval to consequential operations, and define what happens when access is denied.
 
 ### Give the agent its own narrow identity
 
 An agent should not inherit a broad administrator account simply because its user has one. Give each agent or service a distinct identity so that access can be limited, monitored and revoked without changing a person’s account. The exact identity mechanism depends on the platform, but the principle is to attribute tool calls to the system that made them.
 
-OWASP’s agent-security work identifies identity and privilege abuse, along with tool misuse, as relevant risks. Its Agent Control Standard is project guidance for controlling agent behavior, not regulation or a single required product configuration. Its value is to direct attention to the controls around the model rather than treating the model prompt as the security boundary. [@owasp-agentic-top10-announcement-2025] [@owasp-agent-control-standard-2026]
+Before granting the first tool, write down which principal the agent will use, which resources it can address, and whether each operation reads or changes data. OWASP’s risk list names identity and privilege abuse and tool misuse; treat those as prompts to include in a permission review, not as a configuration recipe. [@owasp-agentic-top10-announcement-2025]
 
 ### Separate reading from changing
 
@@ -311,7 +313,7 @@ Approval is most useful when it arrives before an action that is difficult to re
 
 Do not use a generic confirmation dialog as a substitute for a useful review. If the agent can change the action after approval, the system should bind approval to the actual operation and relevant parameters. The workflow should also define what happens if the approver rejects, edits or does not respond.
 
-Some low-impact actions can be automated once they are tested and bounded. The key is to make the boundary explicit: which operations are automatic, which require approval, and which are not available to the agent at all. OWASP’s control guidance and security categories can help teams frame these questions, but neither replaces a product-specific threat assessment. [@owasp-agent-control-standard-2026]
+Some low-impact actions can be automated once they are tested and bounded. Record which operations are automatic, which require approval, and which are not available to the agent at all. Revisit those choices whenever the task or its access changes.
 
 ### Limit time, scope and blast radius
 
@@ -559,6 +561,8 @@ Keep prompts, model versions and software settings fixed during each comparison.
 The best design may route different tasks to different models. A compact model can handle a predictable extraction or classification step; a larger model or human reviewer can take over when confidence is low, the request is unusual or the cost of error is high. The fallback should be tested, not assumed to be an improvement.
 
 Define what triggers escalation and how the handoff preserves context. If a model cannot complete the task, it should fail visibly rather than return an unsupported answer. Also plan for model unavailability, resource exhaustion and a new release that changes behavior.
+
+Set a stop rule as well as a pass threshold: when a failure could cause a high-cost outcome, route it to review rather than lowering the threshold simply to meet a latency or token budget.
 
 The right choice is therefore not the smallest model that can produce a plausible response once. It is the smallest model that repeatedly meets the required quality, privacy, speed and hardware limits on the work people actually need done—with a tested route for cases it cannot handle.
 

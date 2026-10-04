@@ -87,7 +87,7 @@ The dated AIKosh snapshots reviewed for this portfolio illustrate the difference
 | Dataset documentation | How collection, composition, processing, and intended uses are described | Whether the underlying content is high quality or safe for every use |
 | Reuse evidence | Whether people have accessed or used a dataset in a defined way | Whether use produced useful, fair, or beneficial outcomes |
 
-The platform’s terms and the five-record AIKosh listing audit can support a narrow examination of access and visible fields. That audit is purposive, not representative: it can identify what those selected pages displayed, but it cannot establish a catalog-wide defect or quality score. This distinction matters. A public evaluation should report its sampling method and separate an observed field gap from a conclusion about the full collection. [@aikosh-platform-terms-2026] [@aikosh-dataset-page-sample-2026-10-04]
+The platform’s Terms of Use frame reuse around specified licenses and end-use terms. Research 31 examines the displayed fields on five purposively selected AIKosh pages; that limited sample can identify what those pages showed, but it cannot establish a catalog-wide defect or quality score. A public evaluation should report its sampling method and separate an observed field gap from a conclusion about the full collection. [@aikosh-platform-terms-2026]
 
 ### Standards help describe a catalog; they do not certify its contents
 
@@ -173,6 +173,10 @@ The public norm should be simple: publish a launch page for users, and a researc
 
 That norm benefits providers too. A precise card can reduce misinterpretation, let researchers build on earlier results, and make a real improvement visible across releases. It also gives journalists and customers something more durable than a screenshot of a benchmark chart.
 
+For newsroom use, cite the dated card version that supports the specific evaluation claim, not simply the provider’s current documentation page. Keep the capture date and relevant section with the quotation or score. If the live page changes later, readers can still see which record informed the original coverage and whether the claim’s evidence was subsequently revised.
+
+An archive can attach later corrections without changing the citation in the original article.
+
 **Bottom line:** A model card is useful when it preserves methods, version, limits, and negative evidence alongside the model—not when it acts as another launch poster.
 
 **Why it matters:** A benchmark result detached from its setup can be repeated as a broader claim than the evidence supports.
@@ -223,6 +227,8 @@ The fallback should be visible in measurement. Record how often it was used, why
 Deployment is not a one-time inference. Models change, runtimes change, context grows, and applications accumulate edge cases. The maintenance cost includes updating weights, securing the runtime, handling new hardware, monitoring drift, and retaining the evaluation set. A hosted API shifts some infrastructure work to the provider but still requires version pinning, service monitoring, and data-term review.
 
 A small model becomes useful when it has a defined job, a bounded failure cost, a measured fallback, and an owner who can maintain it. That is more informative than a parameter-count competition. It also makes “small” a decision tied to work rather than a brand label.
+
+Set a review trigger as well as a launch threshold: rerun the held-out task set after a model, runtime, prompt, or workload change.
 
 **Bottom line:** Judge small models by accepted-work outcomes and total operating burden, not parameter count alone.
 
@@ -285,6 +291,8 @@ Begin in a read-only or draft-only mode. Collect representative cases and test r
 
 An organization should be able to answer: what can the agent do, on whose behalf, to which records, and how would we know if it did the wrong thing? If the answer is “whatever the model decides,” the system has granted authority without an operating policy.
 
+A permission record can make that boundary inspectable by naming the principal, operation, target resource, data scope, time window, and any limit on value or volume. Tie each field to a server-side check and an audit event, and deny the request when a required field is missing. This turns a broad objective into a policy that can be tested and reviewed when the agent, tool, or business process changes.
+
 **Bottom line:** Give the agent only the permissions its current task needs, and gate consequential actions at the system boundary.
 
 **Why it matters:** A model’s broad objective can exceed what a user intended to authorize.
@@ -345,6 +353,10 @@ A useful benchmark release would preserve the benchmark commit, model identifier
 
 This standard makes leaderboards more useful, not less readable. The headline can still show the score. A linked evidence record lets a reader answer the next question: what ran, under what conditions, and what changed? A benchmark with no history invites overclaiming; a benchmark with a history can support real comparison.
 
+When a new result arrives, label which part of the experiment changed: model checkpoint, harness, task set, grader, budget, or some combination. If only the model changes while the rest stays fixed, the result is closer to a model comparison; if the full stack changes, describe it as a system comparison. When multiple elements change together, do not assign the score difference to one cause. A bridge set can help connect two task versions, but it does not make the versions identical; publish what overlapped and what remains incomparable. Preserve the old and new records as separate entries so later readers can distinguish improvement in the system from a change in the measuring instrument. [@swebench-verified-methods] [@terminal-bench-2026-paper]
+
+A public score series can keep all results visible while drawing a break whenever the task set, harness, or grader changes. Connect values only when the stated protocol supports continuity; otherwise label them as separate series. This preserves a reader’s ability to see new results without implying that every movement measures model progress.
+
 **Bottom line:** Treat a leaderboard score as an entry in an evaluation history, not as a context-free measure of intelligence.
 
 **Why it matters:** Without method and version details, a change in the testing system can be mistaken for a change in model capability.
@@ -401,6 +413,10 @@ The LBNL report notes that estimates depend on facility and equipment assumption
 Accurate boundaries do not weaken a public-interest argument. They make it testable. A local utility can publish connection requests and actual consumption separately. A cloud provider can explain how it assigns energy to shared workloads. A research report can show a scenario range and name the assumptions. A journalist can state clearly that a number is for all data centres, not all AI systems.
 
 The proposal is to treat attribution as part of energy disclosure, not a technical footnote. If the AI share is unavailable, say so. If the source covers data centres, call it data-centre demand. If it covers one country, do not present it as a global result. Public confidence is better served by a bounded number than by a dramatic but mismatched label.
+
+A reproducible disclosure could publish the metered facility total beside any allocated AI estimate, then state the AI-workload definition, period, shared-infrastructure rule, method, and uncertainty range. It should also show how much demand remains unallocated instead of silently distributing every unit of site energy across named workloads. Researchers and readers could then distinguish direct measurement from a model-based allocation and compare like scopes without treating a facility meter as an AI meter.
+
+If the workload share cannot be directly metered, label it as an estimate and preserve the allocation assumptions. Do not subtract other categories and present the remainder as AI demand. Retain the facility-level measure beside any later estimate so revisions do not overwrite what was originally observed.
 
 **Bottom line:** Data-centre electricity data can inform AI infrastructure debates, but it is not automatically an AI-specific measure.
 
@@ -510,7 +526,11 @@ This does not make provenance useless. A consistent record can make some changes
 
 The public should be able to ask: What is signed? Who signed it? What trust policy was used? Which transformations are recorded? Which are unknown? What other evidence corroborates the claim? Those are more useful questions than whether an image is “authentic” in the abstract.
 
+An editorial verification record can preserve the original file, acquisition source, verifier and version, signer status, declared transformations, and the independent evidence used to check the depicted event. Keep the publication derivative linked to the original and record any crop or conversion. A later reviewer can then reproduce the technical check without mistaking that check for the separate reporting that established time, place, or context.
+
 An evidence chain can combine credentials, watermarks, detectors, and human reporting, with each result retained separately. The more consequential the publication, the less acceptable it is to let one automated check stand in for independent verification. A content credential is a record about a file; journalism still has to establish what happened.
+
+The verification note should also name the claim that was checked and whether the corroborating context supports or conflicts with the caption. That keeps technical validation separate from editorial judgment.
 
 **Bottom line:** Provenance supports traceability and accountability, not factual truth by itself.
 
@@ -571,6 +591,10 @@ This approach protects against two opposite mistakes. A reader should not treat 
 Researchers need to reproduce or challenge evaluations. Journalists need to verify dates and attribution. Customers need to know which model, terms, and region they are buying. Public agencies need a clear record of what vendors represented when a system was procured. Those are different use cases, but they all benefit from stable source links and dated changes.
 
 The proposal is modest: every model release should have a dated index page linking to the announcement, model or system card, API documentation, pricing and access terms, known limitations, independent evaluations, and a revision log. Each linked document should retain its publication date and prior versions. This does not certify the model. It preserves the evidence needed to judge it later.
+
+A change log should use separate dated entries for model revisions, evaluation updates, pricing or terms changes, and new access routes. Each entry should say whether it corrects an earlier statement or records a new event, link the affected document, and identify what changed. Keep announcement, publication, and availability dates intact when a page is updated; if a version or effective date is not stated, leave it unknown instead of inferring one from the latest page.
+
+The index should also show when each source was last retrieved and whether its details are confirmed, unknown, or superseded.
 
 **Bottom line:** A release should leave a connected, versioned evidence trail that separates product claims, evaluation, availability, and independent reporting.
 

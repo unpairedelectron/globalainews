@@ -15,7 +15,7 @@
 
 AIKosh presents datasets and other resources through public listing pages. A listing can help a prospective user find an item, but discovery alone does not answer whether it can be reused, whether access is restricted, where the file is hosted, or who supplied it. This review asks a narrower question than “How many datasets does AIKosh contain?”: what access and provenance fields are visible on a record before a user relies on it?
 
-On 4 October 2026, five detail pages were inspected: Geochemical data, bhasha-sft_aya_dataset, PDMC Dataset, Repertory Grant Scheme, and Principal Commodity 2022-23 Import. They were selected purposively to include different sectors and displayed states for license, visibility and hosting. This is a five-record qualitative sample, not a random draw. It cannot estimate how common any field value is across AIKosh. [@aikosh-dataset-page-sample-2026-10-04]
+On 4 October 2026, five detail pages were inspected: Geochemical data, bhasha-sft_aya_dataset, PDMC Dataset, Repertory Grant Scheme, and Principal Commodity 2022-23 Import. They were selected purposively to include different sectors and displayed states for license, visibility and hosting. This is a five-record qualitative sample, not a random draw. It cannot estimate how common any field value is across AIKosh. [@aikosh-geochemical-record-2026-10-04] [@aikosh-bhasha-sft-aya-record-2026-10-04] [@aikosh-pdmc-record-2026-10-04] [@aikosh-repertory-grant-record-2026-10-04] [@aikosh-principal-commodity-import-record-2026-10-04]
 
 The review codes only information displayed on the pages: license, visibility, hosted or redirected status, coverage, source attribution, dataset type, frequency and the presence of a beta quality score. It does not download the files, reproduce the quality score, test the data, or provide legal advice. The platform terms are read as general conditions, not as a replacement for item-specific permissions. [@aikosh-platform-terms-2026]
 
@@ -29,21 +29,21 @@ The review codes only information displayed on the pages: license, visibility, h
 | Repertory Grant Scheme | Open Government License, India | Open | Hosted | IndiaAI; structured, annual; no score displayed |
 | Principal Commodity 2022-23 Import | Open Government License, India | Open | Redirected | DGCIS is named as author; IndiaAI is listed as source organisation; structured, static |
 
-The table preserves the values printed on the captured pages. The details page for Geochemical data identifies GSI as the author and source organisation, gives Rajasthan coverage, and reports a beta score of 3. The Bhasha record names a commercial source organisation, indicates India-wide coverage, and displays CC BY 4.0. The PDMC page lists the agriculture department, a restricted visibility value and a monthly frequency. The Repertory record shows an Open Government License and annual frequency, while the Principal Commodity page carries the same license but sends the user to a redirected resource. [@aikosh-dataset-page-sample-2026-10-04]
+The table preserves the values printed on the captured pages. The details page for Geochemical data identifies GSI as the author and source organisation, gives Rajasthan coverage, and reports a beta score of 3. The Bhasha record names a commercial source organisation, indicates India-wide coverage, and displays CC BY 4.0. The PDMC page lists the agriculture department, a restricted visibility value and a monthly frequency. The Repertory record shows an Open Government License and annual frequency, while the Principal Commodity page carries the same license but sends the user to a redirected resource. [@aikosh-geochemical-record-2026-10-04] [@aikosh-bhasha-sft-aya-record-2026-10-04] [@aikosh-pdmc-record-2026-10-04] [@aikosh-repertory-grant-record-2026-10-04] [@aikosh-principal-commodity-import-record-2026-10-04]
 
 ### Visibility and license answer different questions
 
-The clearest contrast is between the two records whose license field says `NA`. Geochemical data is marked `Open`; the PDMC Dataset is marked `Restricted`. The sample therefore shows why a reader should record both fields instead of treating an access label as a reuse permission. “Open” describes the page's visibility setting; it does not, by itself, tell a user which copying, modification or redistribution rights apply. And `NA` is only the value displayed in the license field. This review does not reinterpret it as public domain, permission to reuse, or proof that a separate license does not exist.
+The clearest contrast is between the two records whose license field says `NA`. Geochemical data is marked `Open`; the PDMC Dataset is marked `Restricted`. The sample therefore shows why a reader should record both fields instead of treating an access label as a reuse permission. “Open” describes the page's visibility setting; it does not, by itself, tell a user which copying, modification or redistribution rights apply. And `NA` is only the value displayed in the license field. This review does not reinterpret it as public domain, permission to reuse, or proof that a separate license does not exist. [@aikosh-geochemical-record-2026-10-04] [@aikosh-pdmc-record-2026-10-04]
 
 The platform's Terms of Use describe artifacts as being made available under specified licenses and end-use terms. That points users toward item-level conditions, not toward one blanket permission for everything listed. A prospective user should open the record, inspect the license and any linked end-use conditions, and contact the contributor if the page leaves an essential term unclear. A visibility flag should not substitute for that check. [@aikosh-platform-terms-2026]
 
-The two records with Open Government License, India labels show another distinction: the license field is visible, but the delivery mode can still differ. Repertory Grant Scheme is marked hosted; Principal Commodity 2022-23 Import is marked redirected. A redirect means a user may need to inspect the destination, its file version, and any source-owner conditions before relying on a download link. The listing's declared license is relevant evidence, but this page audit did not follow every possible link or assess whether a destination copy remains current.
+The two records with Open Government License, India labels show another distinction: the license field is visible, but the delivery mode can still differ. Repertory Grant Scheme is marked hosted; Principal Commodity 2022-23 Import is marked redirected. A redirect means a user may need to inspect the destination, its file version, and any source-owner conditions before relying on a download link. The listing's declared license is relevant evidence, but this page audit did not follow every possible link or assess whether a destination copy remains current. [@aikosh-repertory-grant-record-2026-10-04] [@aikosh-principal-commodity-import-record-2026-10-04]
 
 ### Provenance and data-quality fields need interpretation
 
 The pages expose useful descriptive fields, but the labels are not uniform in how much they establish. Coverage, sector, author, source organisation and date can help someone identify whether a record fits a project. A source organisation may not be the same entity that hosts the file, and an uploader name does not necessarily establish who created or maintains the underlying data. The Principal Commodity listing, for example, names DGCIS as author, IndiaAI as source organisation, and marks the content as primary data while also showing a redirect. These are clues to follow up, not proof of a complete chain of custody.
 
-Three of the five sampled pages display a numeric beta quality score; two show no score. The details pages expose component categories such as integrity, consistency and documentation on some records. A visible score can help a user decide what questions to ask, but this review does not establish the scoring rubric, the assessors, the data used to calculate the score, or whether the rating was independently validated. The label “beta” is a reason to treat it as provisional platform metadata rather than a general certificate that a dataset is fit for a particular model or policy decision. [@aikosh-dataset-page-sample-2026-10-04]
+Three of the five sampled pages display a numeric beta quality score; two show no score. The details pages expose component categories such as integrity, consistency and documentation on some records. A visible score can help a user decide what questions to ask, but this review does not establish the scoring rubric, the assessors, the data used to calculate the score, or whether the rating was independently validated. The label “beta” is a reason to treat it as provisional platform metadata rather than a general certificate that a dataset is fit for a particular model or policy decision. [@aikosh-geochemical-record-2026-10-04] [@aikosh-bhasha-sft-aya-record-2026-10-04] [@aikosh-pdmc-record-2026-10-04] [@aikosh-repertory-grant-record-2026-10-04] [@aikosh-principal-commodity-import-record-2026-10-04]
 
 The same caution applies to a `Structured` or `Unstructured` label. It is a useful high-level description, not a substitute for opening a sample file, checking columns or schema, verifying units, and testing missingness. A monthly frequency says something about the listed update cadence; it does not prove that a new observation is available every month. The 2022-23 import record's `Static` frequency describes the page's stated status, not the accuracy of the underlying trade values.
 
@@ -220,33 +220,33 @@ The next useful disclosure would be a dated source table that names the responsi
 
 **Slug:** `research-data-centre-energy-attribution-audit`  
 **Topic:** Energy measurement  
-**Proposed dek:** The IEA’s global growth figure and LBNL’s U.S. estimate answer different questions. Neither is an AI-only electricity total.
+**Proposed dek:** A source audit separates annual increments, historical estimates, and scenarios by geography, boundary, and evidence status. None of the reviewed figures is a direct AI-only electricity total.
 
 ### Compare definitions before comparing numbers
 
-Public reporting often places data-centre electricity figures next to discussion of AI. That context can make a reader assume that a reported increase measures AI workloads alone. This source audit compares two widely cited research records to test that assumption: the IEA’s Global Energy Review 2026 and Lawrence Berkeley National Laboratory’s 2024 U.S. data-centre report.
+Public reporting often places data-centre electricity figures next to discussion of AI. That context can make a reader assume that a reported increase measures AI workloads alone. This source audit compares two widely cited records—the IEA’s Global Energy Review 2026 and Lawrence Berkeley National Laboratory’s 2024 U.S. data-centre report—to examine how their definitions affect comparison.
 
-The question is not which source is “right.” They cover different geographies and years, and they report different kinds of quantities. The IEA says electricity consumption by data centres increased by around 17% in 2025, a rise of about 70 terawatt-hours. LBNL estimates U.S. data-centre electricity use at 176 TWh in 2023 and models a 2028 range of about 325–580 TWh. The review codes each figure by geography, period, measure, evidence status and whether AI is isolated. [@iea-global-energy-review-2026] [@lbnl-us-data-centre-energy-2024]
+The research question is what must travel with a public energy claim before readers can compare or attribute it. The review codes each reported quantity by geography, period, measurement boundary, evidence status, and whether AI is separately identified. It is a source-definition crosswalk, not a new demand estimate or a comparison of forecast accuracy. [@iea-global-energy-review-2026] [@lbnl-us-data-centre-energy-2024]
 
-| Source and figure | Geography and period | What the figure represents | AI attribution |
+| Source entry | Geography and period | Measurement type | AI attribution and boundary |
 |---|---|---|---|
-| IEA: about 70 TWh, around 17% growth | Global, 2025 | Approximate increase in data-centre electricity consumption during the year | The figure is for data centres as a whole, not an isolated AI workload total |
-| LBNL: 176 TWh | United States, 2023 | Research estimate of annual data-centre electricity use | The total is broader than AI; it includes servers, storage, networking and infrastructure |
-| LBNL: about 325–580 TWh | United States, 2028 | Low-to-high modeled future range | Scenarios include GPU-related assumptions but do not turn the whole total into AI-only use |
+| IEA, Global Energy Review | Global, 2025 | Year-over-year increase in data-centre electricity consumption | Sector total; AI workloads are not isolated |
+| LBNL, historical series | United States, 2023 | Estimated annual electricity use | Broad data-centre system, not an AI-only measure |
+| LBNL, scenario analysis | United States, 2028 | Modeled range under alternative assumptions | Scenarios include accelerated-computing assumptions but retain the broader system boundary |
 
 ### An annual total and an annual increase are not the same metric
 
-The IEA’s 70 TWh is a change during 2025, not a statement that the sector consumed only 70 TWh worldwide that year. The LBNL 176 TWh figure is an estimate of the amount consumed by U.S. data centres over the full year 2023. One is a global year-over-year increase; the other is a national annual level two years earlier. Even though both use TWh, they cannot be compared as if they were matching totals.
+An annual increment is the difference between periods; an annual level describes use during a full period. A reader needs a baseline to interpret the first and a matching geography and boundary to compare either. Shared units do not make these categories interchangeable.
 
-That difference is easy to miss when numbers appear in the same story about demand. A 70-TWh increase could be compared with a compatible global baseline if the source provides one and the definitions line up. A U.S. annual estimate would need to be compared with a U.S. figure for the same period and boundary. The 2028 range, meanwhile, is a modelled future, not a measured continuation of the 2023 estimate.
+The LBNL scenario entry is a modeled future, not a continuation that can be read directly from its historical estimate. Comparing it with a year-over-year change requires aligning the time horizon, geography, and quantity first. Otherwise the comparison mixes a modeled endpoint, a historical level, and a change between periods.
 
 The IEA also compares the data-centre increase with total global electricity-demand growth, but that comparison does not identify how much of the added data-centre load came from AI. It locates the sector within a much larger change in electricity demand; it is not an attribution study of model training, inference or other digital workloads. [@iea-global-energy-review-2026]
 
-### The LBNL range is a scenario, not a forecast interval around one point
+### Evidence status changes what the number can support
 
-LBNL’s 176 TWh estimate is historical, though the report explains that its series uses previous studies and shipment data rather than a complete sum of utility-meter readings from every data centre. The report therefore treats it as a research estimate. The 2028 range answers a different question: what could future electricity use look like under different assumptions about equipment shipments, computational demand, utilization and cooling?
+LBNL’s historical series uses prior studies and shipment data rather than a complete sum of utility-meter readings from every data centre. The report therefore presents a research estimate. Its future range is a scenario analysis, not a probability interval with a stated likelihood that actual use will fall inside the endpoints.
 
-Those endpoints are not a probability interval with a stated likelihood that actual use will fall between them. They are scenario results shaped by assumptions. Quoting 580 TWh alone as the expected outcome, or averaging the endpoints without a method, would hide the reason the report gives a range. The broad total includes data-centre equipment and infrastructure; it should not be re-labelled as AI-only because GPU shipments appear in part of the scenario design. [@lbnl-us-data-centre-energy-2024]
+Quoting only one scenario endpoint as the expected outcome, or averaging the endpoints without a method, would erase the evidence status that the source supplies. The broad total includes data-centre equipment and infrastructure; accelerated-computing assumptions do not make the entire system boundary an AI-only measure. [@lbnl-us-data-centre-energy-2024]
 
 ### AI can be a driver without being a separate measured category
 
@@ -271,17 +271,17 @@ If a claim cannot answer these, preserve the source’s wording and label the ga
 
 ### What the public record can support
 
-These sources support a careful summary: the IEA reports that global data-centre electricity consumption grew by around 17%, or 70 TWh, in 2025; LBNL estimates U.S. data-centre electricity use at 176 TWh in 2023 and models a broad range of possible 2028 outcomes. They also support the conclusion that the public figures reviewed are not directly comparable and do not isolate AI as a standalone electricity category.
+These sources support a careful summary of evidence types: the IEA reports a global annual change, while LBNL provides a historical estimate and a future scenario range for the United States. Their figures have different geographies, periods, and evidence status, and do not isolate AI as a standalone electricity category.
 
 They do not establish a single global AI-electricity total, a forecast that will necessarily occur, or a consistent basis for ranking countries. The useful research output is the source-definition crosswalk itself. It shows why the headline numbers need their geography, period, boundary and evidence label whenever they are repeated.
 
-**Bottom line:** IEA and LBNL figures describe different data-centre energy quantities, and neither is a direct measurement of AI-only electricity use.
+**Bottom line:** Public data-centre energy claims need their geography, period, boundary, and evidence status; the reviewed sources do not provide an AI-only electricity total.
 
-**Why it matters:** A growth increment, a historical estimate and a future scenario can all use TWh while answering different questions.
+**Why it matters:** An annual increment, a historical estimate, and a future scenario can share units while answering different questions.
 
 **Key takeaways:**
-- The IEA’s 70 TWh is global year-over-year growth for 2025, not the sector’s full annual use.
-- LBNL’s 176 TWh is a U.S. 2023 historical estimate; its 2028 range is scenario-based.
+- The IEA entry is a global year-over-year change, not a full annual-use total.
+- LBNL’s entries distinguish a historical estimate from a future scenario range.
 - Both sources describe data-centre totals, not an independently measured AI-only share.
 - Keep geography, period, boundary and evidence status attached to every figure.
 
@@ -362,6 +362,8 @@ An “agent benchmark” can refer to a test of task completion, tool choice, pl
 
 A 2025 survey of LLM-agent evaluation proposes two axes: evaluation objectives and evaluation process. Its objective categories include agent behavior, capabilities, reliability, and safety or alignment. Its process categories include interaction mode, evaluation data, metrics, tooling, and context or environment. The survey notes that agent evaluation differs from static software tests because agents act across dynamic environments, and that enterprise needs such as access control, reliability, auditability, and long-running interaction are not consistently covered by existing work. [@agent-evaluation-survey-2025]
 
+This article uses a two-source qualitative crosswalk: it records the survey’s named dimensions, then maps one primary benchmark’s tasks and reported method against those dimensions. The unit of analysis is the evaluation design and its disclosures, not a model’s relative quality. This is an illustrative literature map, not a systematic review or a new benchmark.
+
 | Evaluation question | Objective dimension | Process dimension to record |
 |---|---|---|
 | Did the agent complete the user’s task? | Behavior and task completion | Goal definition, environment state, success metric |
@@ -436,6 +438,10 @@ A first-party card can report meaningful detail without enabling a valid cross-m
 Thresholds require the same care. A document may describe a named safety threshold for one capability or a comparison against an earlier model. That does not mean another document uses the same threshold, task, or decision rule. This audit therefore records whether a card identifies a method, test owner, model checkpoint, and limitation, while leaving raw scores in their original context. It does not normalize results or calculate a composite “safety score.”
 
 The strongest supported conclusion is about disclosure structure: these four cards expose different slices of the evaluation process. The source set is first-party and selected, so it cannot establish which provider has the safest product or whether unpublished tests exist. An independent comparison would need a common test suite, shared evaluation settings, clear threat boundaries, multiple runs where appropriate, and disclosure of failures as well as successes.
+
+For each published result, keep the denominator and tested checkpoint with the score, and mark undisclosed fields as “not reported” rather than treating them as zero or as a failed test. This preserves the boundary between absent documentation and negative evidence.
+
+When two cards use the same label, compare its definition before comparing the score. Keep each provider’s category and denominator intact; if either is missing, mark the comparison unresolved rather than translating both results into a shared “safe” or “pass” rating.
 
 **Bottom line:** Public safety cards describe different domains, test types, and caveats; their results should not be collapsed into a single cross-provider ranking.
 
@@ -539,6 +545,8 @@ This audit does not inspect browser, camera, editing, or publishing products. It
 The findings are also bounded by the documents selected. The 2.1 specification’s release notes and the 2.4 specification’s change record are primary evidence about their own text, but they are not an independent assessment of whether every change improves security or usability. The article makes no recommendation to upgrade without checking the intervening releases, implementation dependencies, and verifier behavior.
 
 For a practical version review, record the producer and validator versions, the manifest format, assertion names and versions, and the handling of unknown or deprecated items. Then test the same credential through both tools and preserve the validation result. This makes version support observable instead of assuming that a newer specification page guarantees compatible software.
+
+When writing a release note, tie each capability to its version and clause instead of describing the standard as one continuous feature set.
 
 **Bottom line:** C2PA 2.1 and 2.4 document changes across assertions, validation, formats, and serialization; adoption and compatibility require separate evidence.
 

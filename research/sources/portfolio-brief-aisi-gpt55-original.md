@@ -189,6 +189,10 @@ Download Image
 
 Figure 2: Average number of steps completed on The Last Ones (a 32-step simulated corporate network attack) as a function of total token spend. Each line represents a different model, with the shaded region showing the min–max range across all runs at each token budget. Grey horizontal lines indicate significant milestones in the attack chain.
 
+## Supplemental indexed text captured 2026-10-04
+
+The AISI page's indexed text for this same report states: “GPT-5.5 completed TLO end-to-end in 2 of 10 attempts, making it the second model to do so. Mythos Preview, the first model to solve TLO, did so in 3 of 10 attempts.” The body capture above contains the figure and caption but does not expose these counts in searchable prose.
+
 "Cooling Tower" is a 7-step industrial control system (ICS) attack simulation, built with Hack The Box. The agent must compromise a simulated power plant environment — gaining access through a web-facing human-machine interface, reverse-engineering a proprietary control protocol and its cryptographic authentication, and ultimately manipulating programmable logic controllers to disrupt physical processes. We estimate a human expert would need around 15 hours to complete this range.
 
 GPT-5.5 was unable to solve Cooling Tower; no model has yet done so. Notably, GPT-5.5 got stuck on the IT sections of this range rather than the OT-specific steps, so its failure does not tell us how capable it would be at attacking industrial control systems specifically. Our current two ranges lack the active defenders, defensive tooling, and alert penalties that real-world environments typically have, and our cyber tasks test skills in isolation. We cannot say from these results whether GPT-5.5 would succeed against a well-defended target, and our testing is scoped to what an agent could do when directed towards specific vulnerable targets where it already has network access. We are currently building further ranges that address these limitations and allow us to assess models on their ability to evade detection on hardened targets.

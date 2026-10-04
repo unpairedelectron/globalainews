@@ -15,21 +15,7 @@
 
 India data-centre capacity is often summarized with a single megawatt figure. The public records reviewed here describe several different quantities: operational capacity in selected markets, upcoming supply at different development stages, a separate national capacity statement, and a future electricity-demand projection. They are not one continuous series. This reference preserves the source’s date and labels so readers can use each number without converting it into another measure. [@cw-india-dc-h1-2026] [@pib-india-dc-1575-and-demand] [@rajya-sabha-india-dc-capacity]
 
-Cushman & Wakefield’s India Data Centre H1 2026 update, published on 23 September 2026, gives operational-capacity and upcoming-supply values for seven markets. The update reports 1,789 MW of operational capacity and 3,860 MW of supply expected by 2030. Its aggregate upcoming-supply figure is divided into 509 MW under construction and 3,351 MW in the planning stage. The stages describe different points in a project’s development; planned supply is not capacity that users can access today. [@cw-india-dc-h1-2026]
-
-| Market in C&W update | Operational capacity (MW) | Upcoming supply (MW) |
-|---|---:|---:|
-| Mumbai | 890 | 1,726 |
-| Hyderabad | 151 | 710 |
-| Chennai | 214 | 368 |
-| Delhi NCR | 183 | 387 |
-| Pune | 133 | 258 |
-| Bengaluru | 162 | 100 |
-| Kolkata | 22 | 84 |
-| **Sum of seven displayed rows** | **1,755** | **3,633** |
-| **C&W top-line total** | **1,789** | **3,860** |
-
-The seven operational rows add to 1,755 MW, 34 MW below the top-line total. The upcoming-supply rows add to 3,633 MW, 227 MW below the reported 3,860 MW. The aggregate stage split does add correctly: 509 MW under construction plus 3,351 MW in planning equals 3,860 MW. C&W’s public page does not reconcile the differences between the seven market rows and the two aggregates. This reference retains both the reported totals and the reproducible sums rather than assigning the residual to an assumed market or project. [@cw-india-dc-h1-2026]
+Cushman & Wakefield’s India Data Centre H1 2026 update, published on 23 September 2026, gives operational-capacity and upcoming-supply values for seven markets. Its top-line figures are 1,789 MW operational and 3,860 MW of supply expected by 2030; the upcoming total is divided into 509 MW under construction and 3,351 MW in planning. These stages describe different points in a project’s development, and planned supply is not capacity that users can access today. Research 32 separately audits the seven displayed market rows and their arithmetic. This report uses the publisher’s top-line values only as one dated, seven-market reference. [@cw-india-dc-h1-2026]
 
 ### Keep national records separate from the market report
 
@@ -37,7 +23,7 @@ The Press Information Bureau’s March 2026 release gives a separate current dat
 
 | Record | Date and stated scope | Published value | How to preserve it |
 |---|---|---:|---|
-| Cushman & Wakefield H1 update | 23 September 2026; seven named markets | 1,789 MW operational; 3,860 MW upcoming by 2030 | Attribute to C&W; retain market rows and project-stage language |
+| Cushman & Wakefield H1 update | 23 September 2026; seven named markets | 1,789 MW operational; 3,860 MW upcoming by 2030 | Attribute to C&W; keep the market scope and project-stage language; see Research 32 for the row audit |
 | PIB release | 13 March 2026; national public statement | 1,575 MW described as current capacity; 13.56 GW described as 2031–32 electricity demand | Retain both labels and the release date |
 | Rajya Sabha answer | 30 March 2026; answer to Unstarred Question 4151 | About 1,500 MW by 2025; 13.56 GW described as 2031–32 capacity | Identify the question and ministry; do not silently relabel the projection |
 
@@ -51,98 +37,90 @@ Megawatts describe power or capacity, not annual electricity consumption. A valu
 
 ### How to update this reference
 
-For each new market update, record the publication date and source, the geographic universe, operational values, and future supply broken down by project stage. Keep the publisher’s own total alongside any recomputed row sum. If the two differ, retain the difference in an explicit reconciliation note until the publisher supplies a method. Do not merge a national government statement with a private-market estimate merely because both use MW.
+For each new market update, record the publication date and source, the geographic universe, operational values, and future supply broken down by project stage. Keep the publisher’s stated scope visible and link to a separate row-level audit when figures are recalculated. Do not merge a national government statement with a private-market estimate merely because both use MW, and do not substitute a recomputed value for a publisher’s total without an explicit method.
 
 For government figures, preserve the exact wording and identify whether the statement refers to current capacity, planned capacity, electricity demand, or another quantity. A later answer that repeats the same number is not independent measurement unless it documents a separate dataset and method. The reviewed official statements do not establish that the C&W market totals and national figures use one shared definition. [@pib-india-dc-1575-and-demand] [@rajya-sabha-india-dc-capacity]
 
 This report is a dated reference, not an industry census. It does not estimate facilities outside the named markets, verify project status, or forecast which planned sites will be commissioned. Future editions should replace the snapshot only after checking the new source’s date, geographic coverage, project stages, and arithmetic. Until then, the safest use is to quote each figure with those boundaries attached.
 
-**Bottom line:** India’s public data-centre figures describe different scopes and stages; keep the C&W city table, national statements, and demand projection separate.
+**Bottom line:** India’s public data-centre figures describe different scopes and stages; keep private-market estimates, national statements, and demand projections separate.
 
 **Why it matters:** Combining incompatible MW figures can produce a false picture of usable capacity or future electricity demand.
 
 **Key takeaways:**
 - C&W reports 1,789 MW operational and 3,860 MW upcoming across its H1 2026 update.
-- The seven displayed market rows sum to 1,755 MW and 3,633 MW; the source does not reconcile those gaps.
-- The 509-MW construction and 3,351-MW planning categories sum to the reported upcoming total.
+- The 509-MW construction and 3,351-MW planning categories are stages of upcoming supply, not current operational capacity.
 - PIB and Parliament records use different wording for a 13.56-GW 2031–32 figure.
 - MW figures do not, without additional assumptions, establish annual energy use or GPU availability.
+- Research 32 contains the separate arithmetic check of C&W’s seven displayed market rows.
 
-**What changes:** Future updates should provide a consistent scope, project-stage table, and explicit reconciliation from city rows to aggregate totals.
+**What changes:** Future updates should state their geographic universe, keep project stages distinct, and explain how a market estimate relates to national capacity statements.
 
 **Evidence note:** The reference is built from one dated C&W market update and two official government records. It does not independently measure capacity or translate MW into GPUs.
 
 **Related coverage:** Brief 1; Research 32–33; India compute flagship.
 
-## 42. AIKosh: a guide to India’s public AI data catalog
+**Methodology:** Compare the scope and wording of one C&W market update and two government records. Research 32 separately audits the market-row arithmetic; this report does not independently count facilities.
+
+## 42. AIKosh catalog totals: what the public counts do—and do not—show
 
 **Slug:** `report-aikosh-catalog`  
 **Topic:** Public data reference  
-**Proposed dek:** Use AIKosh listings as discovery records, then verify permission, provenance, delivery, and the actual files before relying on a resource.
+**Proposed dek:** Two public snapshots report sharply different AIKosh catalog totals. Without stable counting rules, they show what was reported—not a measured rate of growth.
 
-### A catalog entry is a starting point
+### Two dated totals are not a growth series
 
-AIKosh presents datasets and other resources for people working on artificial intelligence in India. The portal can help a user discover a possible resource, but a catalog record is not itself proof that the underlying material is current, reusable, technically usable, or suitable for a model or policy decision. This guide separates those checks and records what the public pages reviewed for this launch can establish. [@aikosh-sample-records] [@aikosh-terms]
+AIKosh is a public catalog of datasets, models and other resources related to artificial intelligence in India. A July 2026 PIB release reports more than 14,000 datasets and 331 models; a February 2026 DD News report gives 7,541 datasets and 273 models. Those are two dated institutional statements about the catalog, not a verified time series. [@aikosh-pib-july-snapshot] [@aikosh-ddnews-february-snapshot]
 
-Published counts should be treated as dated snapshots, not as an automatic growth series. A July 2026 PIB release reports more than 14,000 datasets and 331 models on AIKosh; a February 2026 DD News report gives 7,541 datasets and 273 models. The public records reviewed do not define whether those totals count listings, distinct files, versions, or usable assets, nor do they explain status and deduplication rules. The values establish what the two sources reported on their respective dates, not a verified rate of catalog growth. [@aikosh-pib-july-snapshot] [@aikosh-ddnews-february-snapshot]
+It is tempting to subtract the earlier totals from the later ones and describe the difference as growth. The sources reviewed do not provide a shared counting method or say whether they count listings, unique datasets, model versions, duplicate records, withdrawn entries, or resources that remain accessible. The dates and numbers are clear; their comparability is not. This report therefore preserves each figure with its source and date and does not calculate a growth rate.
 
-### Read access, license, and delivery as separate fields
+### The denominator is an editorial decision
 
-Five detail pages captured on 4 October 2026 illustrate why a user should not reduce a record to a single “open or closed” label. The Geochemical data record shows `NA` for license and `Open` visibility; the PDMC Dataset also shows `NA` for license but is marked `Restricted`. A different listing, bhasha-sft_aya_dataset, displays CC BY 4.0 and `Open` visibility. These are page values, not legal interpretations of the underlying data. “Open” describes a visibility setting; it does not by itself grant a reuse license, while `NA` is not evidence of permission or public-domain status. [@aikosh-sample-records]
+“Dataset count” can refer to several different units. One page can describe a dataset, a collection can contain multiple files, and a dataset may have several versions or language variants. A catalog might also include records that are restricted, redirected, outdated, or incomplete. The published totals do not specify which of these cases are included or how duplicates are handled. These are questions for a future counting specification, not claims that any particular category is present in the reported totals.
 
-| Example listing | License shown | Visibility | Delivery | What to check next |
-|---|---|---|---|---|
-| Geochemical data | `NA` | Open | Hosted | Ask the contributor about reuse terms and inspect the linked file |
-| bhasha-sft_aya_dataset | CC BY 4.0 | Open | Hosted | Verify attribution requirements and whether the file matches the listing |
-| PDMC Dataset | `NA` | Restricted | Hosted | Confirm whether access is available and under what conditions |
-| Repertory Grant Scheme | Open Government License, India | Open | Hosted | Review the linked artifact and its version |
-| Principal Commodity 2022–23 Import | Open Government License, India | Open | Redirected | Follow the redirect and verify the destination’s owner and file |
+For a useful public metric, the unit needs to be named before the count is published. Separate totals for catalog records, distinct datasets, model families, and versioned models would answer different questions. A dated count should also state how it treats duplicates, superseded records, private or restricted entries, and resources whose destination is no longer available. Without those rules, a larger number can reflect a broader definition as easily as a change in the underlying catalog.
 
-The AIKosh Terms of Use describe use in relation to specified licenses and end-use terms. That is a reason to inspect the specific record and its referenced conditions, not to assume a single blanket permission for every catalog item. If a page does not identify the relevant license or the destination has different terms, pause and ask the data contributor or rights holder before reuse. This guide is not legal advice. [@aikosh-terms]
+### Catalog access and catalog scale are different questions
 
-Delivery also matters. A `Hosted` label and a `Redirected` label describe different paths to the material. With a redirect, the user may need to confirm that the destination still exists, names the expected owner, points to the intended version, and supplies its own terms. A working link does not prove data quality, and a redirect alone does not show that a record is less trustworthy. [@aikosh-sample-records]
+AIKosh’s Terms of Use describe datasets, models, tools and libraries as contributed resources and point users to specified licenses and end-use terms. That establishes a platform-level condition, not the permission or practical usability of every catalog item. A headline count measures neither how many resources a user can access nor how many are suitable for a specific research or deployment task. [@aikosh-terms]
 
-### Trace provenance and inspect the actual resource
+The distinction matters for public infrastructure. Catalog scale can signal the breadth of material listed, while useful access also depends on findability, currentness, documentation, rights and delivery. Those properties need separate evidence. This report addresses the published totals and how they could be compared; Research 31 examines a purposive sample of five item pages and the fields visible to a prospective user. The sample is not used here to estimate catalog-wide quality or access. [@aikosh-terms]
 
-Catalog fields such as author, source organisation, sector, coverage, data type, and update frequency help a user judge relevance. They should not be collapsed. The Principal Commodity 2022–23 Import page, for example, identifies DGCIS as author and IndiaAI as source organisation while also marking the resource as redirected. That combination gives a reader leads to follow, but it does not establish a complete chain of custody or prove that the destination copy is current. [@aikosh-sample-records]
+### A reproducible method for future snapshots
 
-The same rule applies to descriptive labels. `Structured` or `Unstructured` is a high-level summary, not an assessment of schema quality. A monthly frequency field does not guarantee that a new observation appears every month. Coverage labels do not prove that the downloadable file contains every expected region or time period. Users should compare the record with the file itself: inspect columns and units, check missingness, verify dates, and confirm that the file is the version described.
+Future catalog reports could make their totals comparable by publishing a short methods note with every snapshot. It should name the capture date, the record types included, the unit being counted, the rule for duplicates and versions, and how withdrawn or inaccessible records are treated. A stable record identifier and a public change log would let readers distinguish a new resource from a revised entry.
 
-Three of the five sample pages display a numeric beta quality score. Some pages expose component labels such as integrity, consistency, and documentation. The sample does not establish how the score is calculated, who assigns it, which file was rated, or whether the score was independently validated. Treat it as provisional platform metadata and a prompt for follow-up, not a certificate that the dataset is fit for a task. [@aikosh-sample-records]
+The calculation should preserve separate dataset and model totals instead of combining them into a single measure of “AI resources.” Where entries have versions, the report could show both the number of model families and the number of versioned records. Where the catalog has multiple visibility or access states, the count could publish those categories separately rather than implying that every listed item is equally available. These are recommendations for a transparent report, not descriptions of fields confirmed in the two count releases.
 
-### A practical check before reuse
+If a historical snapshot is not available, a future report should say so and avoid reconstructing a growth curve from press-release totals alone. A monthly archive of dated, machine-readable counts would make later changes auditable. It would also let researchers ask whether the catalog is expanding, becoming more accessible, or simply changing how it counts records—three different questions that a single headline total cannot answer.
 
-Before citing, downloading, or using a listed resource, a team can record:
+### Findings, limitations, and open questions
 
-1. **Identity:** title, contributor, source organisation, page date, version, and destination URL.
-2. **Access:** visibility status, authentication requirements, and whether the link is hosted or redirected.
-3. **Permission:** item-level license and end-use conditions; record `NA` or unclear terms as unresolved.
-4. **Provenance:** distinguish author, uploader, source organisation, host, and any downstream repository.
-5. **Fitness:** compare the described coverage, structure, dates, and units with the actual file and intended task.
-6. **Quality signals:** note any beta score and its components, without treating it as independent validation.
+The evidence reviewed supports a bounded finding: public sources reported 7,541 datasets and 273 models in February, and more than 14,000 datasets and 331 models in July. The report compared those statements and checked the platform’s general Terms of Use; it did not query an API, reconstruct historical records, or independently count the catalog. [@aikosh-pib-july-snapshot] [@aikosh-ddnews-february-snapshot] [@aikosh-terms]
 
-This checklist does not prove that a file is legally reusable or scientifically sound. It helps users identify which questions the listing answers and which need a direct check. The five-page sample is purposive and spans different displayed values; it cannot estimate how often any issue occurs across the full AIKosh catalog. [@aikosh-sample-records] [@aikosh-terms]
+The missing information is specific: what entity each source counted, whether both used the same inclusion rules, how they handled model and dataset versions, and whether the totals can be reproduced from archived catalog records. Until those points are answered, the two totals should be quoted separately with their dates and publisher attribution.
 
-### What a useful catalog update should preserve
+### What a useful catalog update should publish
 
-For future snapshots, publish the date and counting rules alongside dataset and model totals. For each record, maintain a stable identifier, version date, license, visibility, source attribution, delivery status, and change history. If a quality score is displayed, publish its rubric, inputs, assessor, and whether it is a beta or independently audited result. These details would help users distinguish discoverability from access and reuse, and would make dated catalog snapshots easier to compare.
+For each release, publish the total by resource type, the precise unit, the counting date, the inclusion and deduplication rules, and links to an archived snapshot or reproducible query. Include a change log for renamed, versioned, withdrawn or newly added entries. Item-level fields such as license and access state remain important to users, but they should not be mistaken for the aggregate counting method. A separate field audit is linked in Research 31.
 
-Until those definitions are available, AIKosh counts should be quoted with their publication date and attribution. A listing is a discovery aid. The license, source, destination, and data file still need their own review before a team builds on the resource.
+Until those definitions are available, AIKosh totals should be reported as dated statements from their publishers, not as a verified growth rate or a measure of usable public data.
 
-**Bottom line:** AIKosh helps users find candidate resources, but permission, provenance, file quality, and fitness remain separate checks.
+**Bottom line:** The February and July AIKosh totals are dated snapshots; the public sources reviewed do not establish a comparable growth rate.
 
-**Why it matters:** A visible listing can be easy to discover while leaving important reuse or data-quality questions unresolved.
+**Why it matters:** A catalog count can inform public reporting only when readers know what was counted, which records qualify, and how versions and duplicates were handled.
 
 **Key takeaways:**
-- Dated catalog totals do not establish comparable growth without common counting rules.
-- `Open` visibility and a reuse license answer different questions.
-- `NA` does not mean permission, and a redirect should be checked at its destination.
-- Beta quality scores and descriptive metadata are not independent file validation.
-- Inspect the actual resource before relying on it.
+- The February 2026 DD News report gives 7,541 datasets and 273 models.
+- The July 2026 PIB release reports more than 14,000 datasets and 331 models.
+- Neither count passage supplies a shared unit, deduplication rule, or version policy.
+- The comparison reviewed published statements; it did not recalculate catalog records.
 
-**What changes:** AIKosh snapshots should expose stable record identities, counting rules, version histories, item-level terms, and quality-score methods.
+**What changes:** Future snapshots should publish reproducible counting rules and archived, version-aware records so the totals can be compared over time.
 
-**Evidence note:** The guide uses two dated institutional count reports, the platform Terms of Use, and five captured listing pages. It does not download or test the underlying datasets.
+**Methodology:** Compare the two dated count statements and the platform-level Terms of Use. No API query, historical catalog export, or independent item count was available; no growth rate is calculated.
+
+**Evidence note:** This report uses the February DD News and July PIB count statements as dated evidence, and the AIKosh Terms of Use for platform context. The item-level sample and reuse checklist are covered separately in Research 31.
 
 **Related coverage:** Research 31; Analysis 12; Brief 2.
 
@@ -154,7 +132,7 @@ Until those definitions are available, AIKosh counts should be quoted with their
 
 ### Define what the pilot must prove
 
-An agent evaluation should begin with the work the system is expected to perform, not with whichever benchmark happens to be available. A 2025 survey organizes evaluation along two dimensions: the objective being tested—such as task completion, capability, reliability, or safety—and the process used, including interaction, data, metrics, tooling, and environment. It also notes that enterprise deployments introduce requirements such as secure system access, auditability, reliability, and long-running interactions. Those categories provide a useful structure for a pilot plan. [@agent-evaluation-survey-2025]
+An enterprise pilot must answer a local operational question: can this agent complete defined work within its access, approval, reliability, and cost boundaries? The checklist below turns that question into a versioned evaluation plan. Published research can help teams choose measures, but acceptance criteria must reflect the workflow, its users, and the consequences of failure. [@agent-evaluation-survey-2025]
 
 Before testing, write down the workflow, the user’s intended outcome, the tools available to the agent, the data it may access, and the actions it must not take. Convert those into a small, versioned task set. Include routine cases, edge cases, and examples likely to trigger a refusal, handoff, or approval. Preserve a set of tasks for later regression checks rather than tuning every prompt against the same examples.
 
@@ -169,9 +147,9 @@ Before testing, write down the workflow, the user’s intended outcome, the tool
 
 ### Test the process, not just the final answer
 
-An agent can produce a plausible final answer after using the wrong tool, making an unauthorized attempt, or receiving substantial human correction. For that reason, capture the action trace and intermediate decisions where the platform permits. Score the final result, but also inspect tool selection, arguments, permission checks, rejected actions, retries, and handoffs. The evaluation survey treats task outcomes and process-oriented capabilities as different targets and notes that reliability and safety require their own evidence. [@agent-evaluation-survey-2025]
+An agent can produce a plausible final answer after using the wrong tool, making an unauthorized attempt, or receiving substantial human correction. Capture the action trace and intermediate decisions where the platform permits. Score the final result, but also inspect tool selection, arguments, permission checks, rejected actions, retries, and handoffs. A trace makes the pilot’s evidence reviewable; it does not replace task scoring or a security review.
 
-AgentFloor offers one example of a structured test ladder. Its authors describe 30 deterministic tasks across six tiers, from instruction following and tool use to multi-step coordination and long-horizon planning. They report 16 open-weight models, GPT-5, and 16,542 scored runs. The authors say the strongest open-weight model matched GPT-5 in aggregate on the benchmark, while long-horizon planning remained difficult for both. This illustrates why a pilot should distinguish short, structured actions from sustained multi-step work. It does not predict how a specific enterprise workflow will perform. [@agentfloor-2026]
+Public benchmarks can show how researchers test tasks, but their scores should not become local acceptance thresholds by default. Compare the benchmark’s task shape, tool set, environment, scoring rules, data access, and recovery requirements with the pilot before treating it as relevant. This field guide does not adopt a benchmark score as a target: a local result is meaningful only when the task records and operating conditions are disclosed.
 
 For each metric, specify the denominator and scoring method. “Success rate” needs a definition of success. “Tool accuracy” should identify whether a correct tool call is enough or whether the action must also be authorized and useful. “Reliability” should include repeat runs and failure handling. If human reviewers score outputs, publish the rubric and the process for resolving disagreements. If an automated judge is used, compare it with a sample of human decisions instead of assuming it is unbiased.
 
@@ -191,7 +169,7 @@ The test plan should state the model and checkpoint, prompts, tools, permissions
 
 ### Limits of this guide
 
-The survey is a taxonomy, not a guarantee that every category is well measured. AgentFloor is a single preprint study with a defined benchmark and model set. The OpenAI and Google documentation describe specific platform capabilities, not a test of how a customer configured them. This guide provides acceptance questions; it does not prescribe universal thresholds or certify a system as safe.
+This guide is a planning template, not evidence of product performance. OpenAI and Google documentation describes specific platform capabilities, not how a customer configured them. No benchmark establishes that a local deployment has appropriate permissions, recovery behavior, or operating cost. Those questions require a local test with the actual tools, identity, data, and approval path.
 
 **Bottom line:** An enterprise pilot should evaluate task results, action traces, reliability, safety, permissions, and recovery as separate requirements.
 
@@ -206,7 +184,7 @@ The survey is a taxonomy, not a guarantee that every category is well measured. 
 
 **What changes:** Preserve a versioned evaluation suite and rerun it after model, tool, prompt, or permission changes.
 
-**Evidence note:** The guide combines a 2025 survey taxonomy, one 2026 preprint, and official platform documentation; it does not test an enterprise deployment.
+**Evidence note:** The survey informs evaluation categories; official platform documents describe particular capabilities. None of these sources validates a customer deployment or supplies universal acceptance thresholds.
 
 ## 44. AI agent security: controls at tools, identity, and approval
 
@@ -214,11 +192,9 @@ The survey is a taxonomy, not a guarantee that every category is well measured. 
 **Topic:** Security reference  
 **Proposed dek:** Review an agent’s identity, tool permissions, approvals, runtime boundaries, and audit trail as separate controls.
 
-### Start from the action an agent can take
+### Use the register to request evidence
 
-An agent’s security risk does not come only from the model’s text. It also depends on the identity used to access systems, the tools exposed to the agent, the data those tools can reach, and whether a consequential action can run without review. OWASP’s 2025 Top 10 for Agentic Applications highlights risks including agent behavior hijacking, tool misuse and exploitation, and identity and privilege abuse. The list is security guidance, not a regulation or proof that every agent has the same threat profile. [@owasp-agentic-top10-2025]
-
-The OWASP Agent Control Standard describes an open foundation for exposing middleware hooks and enforcing safety policies at runtime, with the goal of making agent systems inspectable, traceable, and instrumentable. The project explicitly presents the standard as guidance, not legal authority or evidence that a product implements it. Teams can use the ideas to ask where controls run, then verify the actual product and configuration. [@owasp-acs-2026]
+OWASP’s agent-risk guidance identifies categories such as tool misuse and identity or privilege abuse; its Agent Control Standard describes a project direction for runtime policy and observability. Neither source certifies a vendor or deployment. This register translates those topics into evidence a reviewer can request and test, rather than ranking products or prescribing a single architecture. [@owasp-agentic-top10-2025] [@owasp-acs-2026]
 
 | Risk area | Control to review | Evidence to request |
 |---|---|---|
@@ -229,29 +205,37 @@ The OWASP Agent Control Standard describes an open foundation for exposing middl
 | Audit and investigation | Record actor, action, time, target, decision, and result | Log categories, retention, access controls, and retrieval test |
 | Recovery | Stop, resume, or roll back safely after interruption or failure | Duplicate-action protection, state integrity, recovery test |
 
-### Identity and permission boundaries come first
+### Verify identity and permission evidence
 
-Shared credentials can make a team agent easy to configure, but they may not preserve the identity or access level of the person who requested an action. LangSmith Fleet documentation distinguishes fixed credentials from user credentials that act on behalf of the invoking user, and describes role-based and attribute-based tool access. The decision should depend on the task: a shared service identity may be appropriate for a team bot, while user-scoped credentials may better match individual access boundaries. In either case, document which identity is used and how it is revoked. [@langsmith-fleet-oversight]
+Ask the owner to identify the service or user principal, credential scope and expiry, delegation behavior, and revocation process. LangSmith Fleet documentation distinguishes fixed credentials from user credentials and describes role- and attribute-based tool access; Claude Code documents allow, ask, and deny rules for tools. These are product-specific capabilities, not proof that they are enabled or correctly configured in the system under review. The audit record should include the actual configuration and a test showing that an out-of-scope request is rejected. [@langsmith-fleet-oversight] [@anthropic-claude-code-permissions]
 
-Claude Code documents allow, ask, and deny rules for tools, with deny taking precedence, and describes workspace trust and sandboxing. Those mechanisms are concrete examples for a coding assistant, not a default property of every agent built with Claude. The broader security principle is to make the tool boundary explicit: list each tool, state what it can read or change, and test that an unapproved action is denied. [@anthropic-claude-code-permissions]
+### Confirm approval evidence
 
-### Approval must be bound to the right person and action
+The OpenAI Agents SDK documents a tool call pausing for approval and resuming after a decision; the application must authenticate and authorize the approver. Reviewers should confirm that the recorded decision identifies the approver and applies to the exact operation and arguments, then inspect rejection, timeout, stale-request, and replay behavior. A product’s approval feature does not show that a deployment has connected it to the right identity or policy. [@openai-agents-hitl-doc]
 
-The OpenAI Agents SDK documentation explains how a tool call can pause for approval, surface an interruption, and resume after a decision. It also states that the application must implement authentication and authorization for the person who approves. A robust deployment should bind the decision to the exact tool call and arguments, preserve the request securely, reject stale or replayed decisions, and record the result. A generic “human in the loop” label is not enough to establish those properties. [@openai-agents-hitl-doc]
+### Record logging configuration and retrieval
 
-### Logs support response; they do not prevent execution
+Google’s Gemini Enterprise Agent Platform documentation distinguishes Admin Activity and System Event logs, which are always enabled, from Data Access logs, which are disabled by default. Reviewers should record which event classes are enabled, who can retrieve them, their retention period, and whether a representative tool action appears in the expected log. A logging statement in a product guide is not evidence that the organization can retrieve the records it needs. [@google-agent-audit-logging]
 
-Google’s Gemini Enterprise Agent Platform audit documentation distinguishes Admin Activity and System Event logs, which are always enabled, from Data Access logs, which are disabled by default. The page describes logging as a way to answer who did what, where, and when. Logs can support review and incident response, but they do not themselves limit a tool, block an action, or obtain approval. Teams should verify that the relevant data-access events are enabled and retained for the required period. [@google-agent-audit-logging]
+### Inspect the runtime enforcement path
 
-### Put runtime policy outside the prompt
-
-Natural-language instructions can help shape behavior, but they are not the same as an enforced permission. The Agent Control Standard’s stated interest in middleware hooks and runtime policy offers a useful design question: where can a policy be checked before a tool executes, and what happens if that check fails? A secure design should fail closed for high-impact operations, restrict the agent’s network and filesystem access, and make the decision traceable. The standard does not establish that a particular platform exposes or enforces every such control. [@owasp-acs-2026]
+Request a map of where each tool call is authorized, which operations bypass that check, and what happens if the policy hook is unavailable. Inspect a denied-action trace and confirm that high-impact operations stop rather than proceed under a fallback permission. The Agent Control Standard describes runtime hooks as a design direction; the reviewer still needs evidence that the deployed control covers the tools and side effects in scope. [@owasp-acs-2026]
 
 ### A review sequence for an agent deployment
 
 Before launch, identify the agent’s service and user identities, tools, data scopes, and irreversible actions. Confirm that the minimum required privileges are used. Test approved, denied, and approval-required paths, including malformed inputs and untrusted content. Verify that logs capture the right actor and event, that sensitive data is not accidentally exposed in stored run state, and that interruptions cannot duplicate an action. Finally, document an owner and a rollback route for each high-impact workflow.
 
 This checklist is not a certification standard and does not replace a threat model or penetration test. The cited sources include a community threat list, a project standard, and product documentation. They support control questions, but they do not prove a customer configuration is secure or show comparative product effectiveness.
+
+### Keep an evidence packet for each workflow
+
+For one high-impact workflow, record its owner, requesting principal, data involved, tool set, target resources, and the side effects the agent can create. Attach the deployed permission configuration, approval policy, logging settings, and recovery procedure. Link each control claim to an artifact from the environment under review: a vendor page can show that a feature exists, but not that it is enabled or covers this workflow.
+
+Capture one authorized action, one denied request, one approval-required action, and one interrupted or failed run. For each, preserve the expected and observed result, the identity presented to the tool, the target and arguments, the approval decision, and a trace that a reviewer can retrieve. The failed test must stop at an enforcement point; a model saying “I can’t” does not show that a tool request was blocked. [@openai-agents-hitl-doc] [@google-agent-audit-logging]
+
+Classify each evidence gap as a missing control, a configuration gap, an unavailable trace, or an inconclusive test. Assign an owner and a retest date, and keep failed and remediated results together. This does not certify the workflow; it makes the remaining risk specific enough for an accountable review.
+
+Close a review item only after the retest passes and the trace can be retrieved; a configuration change without a retest leaves the evidence packet incomplete.
 
 **Bottom line:** Secure agent deployment requires separate, testable controls for identity, tools, approvals, runtime policy, audit, and recovery.
 
@@ -307,6 +291,8 @@ When a provider posts a revised card, add a new version entry or a dated update 
 Separate cards from adjacent records: announcement, API documentation, benchmark post, system card, and third-party test should have distinct types. A source map can then point from a story to the document that actually supports each claim. Independent testing should be listed separately, with its method and model version, rather than folded into the provider’s release materials.
 
 This snapshot contains five first-party records selected because they are relevant to September 2026 coverage. It is not a complete catalogue of all 2026 model documentation. Nor does it evaluate the models themselves. Its purpose is to give readers a stable path to the original evidence and a clear warning about what that evidence can and cannot establish.
+
+When a story cites the archive, its reference should point to the exact document row that supports the claim, not to the index as a general endorsement of the model.
 
 **Bottom line:** Archive primary model documents by exact name, type, date, and version; do not treat launch copy, model cards, system cards, and independent tests as equivalent.
 
@@ -364,6 +350,10 @@ For every update to this reference, check the current consolidated regulation, t
 
 Organizations should map these public dates to their own role and systems rather than assuming the same requirement applies to every provider, deployer, importer, or distributor. A general-purpose model provider, a deployer of a high-risk system, and an organization using a consumer-facing AI service may face different provisions. This report identifies public legal stages; it does not decide which category an individual organization falls into.
 
+Each internal entry should also preserve the date the source was checked and the exact provision it relies on. That makes it possible to distinguish a later change in official guidance from a change in the enacted regulation, and to revisit the classification without silently rewriting the earlier assessment.
+
+A published summary should show a “checked through” date beside each status, not only the date of the underlying law. If the current consolidated text was not reviewed, mark that limitation and recheck the status before reuse.
+
 **Bottom line:** As of 4 October 2026, the EU AI Act is in staged application, Commission guidance is distinct from the regulation, and the EU KIDS Act is still a proposal.
 
 **Why it matters:** Confusing a proposal, guidance document, and current legal duty can cause teams to misstate their obligations.
@@ -379,32 +369,30 @@ Organizations should map these public dates to their own role and systems rather
 
 **Evidence note:** The report uses the consolidated Article 113 text and Commission materials captured by 4 October 2026. It is a public-status reference, not legal advice.
 
-## 47. Data-centre energy evidence: demand, attribution, and limits
+## 47. India data-centre resource evidence: energy, water, and grid limits
 
 **Slug:** `report-data-centre-energy-evidence`  
 **Topic:** Energy and infrastructure reference  
-**Proposed dek:** Public estimates span a global annual increase, a U.S. scenario range, and India-specific secondary estimates; keep each figure attached to its source, geography, and method.
+**Proposed dek:** India’s data-centre power, water, capacity, and grid claims come from different sources and evidence types. Keep each estimate attached to its attribution, date, and measurement boundary.
 
 ### Build an evidence register, not a single forecast
 
-Data-centre energy numbers are often placed in stories about artificial intelligence, but the sources measure different things. One reports a global year-over-year electricity-consumption increase, another estimates U.S. annual use and models future scenarios, and Indian policy reports cite capacity, energy, water, and grid figures from several underlying studies. The useful output is an evidence register that retains those boundaries, not a universal estimate of “AI power.” [@iea-global-energy-review-2026] [@lbnl-us-data-centre-energy-2024] [@ceew-india-data-centre-resource-study] [@ieefa-india-data-centre-grid-analysis]
+Indian data-centre reporting brings together capacity statements, secondary estimates of electricity and water use, and discussion of grid constraints. These are not one consistent measurement series. This register focuses on the India-specific evidence and preserves each source’s attribution and limitations; it is not a national meter reading or an AI-only inventory. [@ceew-india-data-centre-resource-study] [@ieefa-india-data-centre-grid-analysis]
 
 | Source | Geography and period | Figure in the source | Evidence type and limit |
 |---|---|---|---|
-| IEA, Global Energy Review 2026 | Global, 2025 | Data-centre electricity consumption rose about 70 TWh, or around 17% | Annual increase for data centres as a whole; not an AI-only total |
-| Berkeley Lab, U.S. Data Center Energy Usage Report | United States, 2023 and 2028 | 176 TWh estimated for 2023; roughly 325–580 TWh modeled for 2028 | Research estimate plus scenario range; not a measured 2028 outcome |
 | CEEW data-centre study | India, 2024 | About 0.5% of national electricity and about 150 billion litres of water | CEEW cites external estimates for these figures; not direct national metering by CEEW |
 | IEEFA India analysis | India, source-relative baseline to 2030 | Cites capacity rising from 1.4 GW (called “last year” in the source) to 9 GW and a 3% electricity-use estimate for 2030 | Figures are attributed to other reports and forecasts; the relative baseline date is not converted into a current-year figure |
 
-The values should not be added or presented as a comparable country ranking. The IEA’s 70 TWh is a global increment during one year, while LBNL’s 176 TWh is a U.S. annual level. The 2028 LBNL range is modeled under different assumptions. India’s cited 0.5% share and 150-billion-litre water figure use still other sources and definitions. The evidence labels are part of the data, not optional footnotes. [@iea-global-energy-review-2026] [@lbnl-us-data-centre-energy-2024] [@ceew-india-data-centre-resource-study] [@ieefa-india-data-centre-grid-analysis]
+The CEEW and IEEFA figures should not be added or treated as one measured series. The electricity share, water estimate, capacity baseline, future capacity, and projected electricity share come from different underlying reports and use different units and dates. Attribution and evidence labels are part of the record, not optional footnotes. [@ceew-india-data-centre-resource-study] [@ieefa-india-data-centre-grid-analysis]
 
 ### Separate sector growth from AI attribution
-
-The IEA reports a rise in electricity consumption by data centres, not an isolated measurement of AI workloads. LBNL estimates a broader U.S. data-centre system, including servers, storage, networking, and infrastructure; its future scenarios include assumptions about accelerated computing, but the total is not equivalent to an AI-only forecast. Neither source assigns all data-centre electricity use to AI or isolates training from inference. [@iea-global-energy-review-2026] [@lbnl-us-data-centre-energy-2024]
 
 The same discipline is needed for India. CEEW’s report places data-centre growth in the context of power, water, land, and state policy. It says that its 2024 electricity and water figures come from external studies and that both could more than double by 2030. That is an attributed estimate and projection, not a national meter reading or a measurement of AI facilities alone. IEEFA’s page uses the relative phrase “last year” for a 1.4-GW capacity baseline, cites 9 GW for 2030, and points to a forecast that data centres could use around 3% of India’s electricity by then. Because the captured page does not provide a publication date next to that sentence, keep “last year” as the source’s wording rather than converting it into a current-year claim. These numbers describe forecasts with dependencies; they should not be presented as observed outcomes. [@ceew-india-data-centre-resource-study] [@ieefa-india-data-centre-grid-analysis]
 
 Capacity and electricity use are related, but they are not interchangeable. A capacity value in GW describes a power level; annual consumption in TWh depends on load and operating time. A data-centre capacity forecast cannot be turned into annual energy without assumptions about utilization, facility efficiency, and what power boundary the source counts. Likewise, a water-use estimate should state whether it includes on-site cooling, indirect water associated with electricity generation, or both.
+
+For a siting or sourcing decision, keep four evidence tracks separate: reported electricity share, water use, planned capacity, and grid access. They describe different questions, even when they concern the same sector. A value in one track does not validate the others; a national estimate cannot establish that a particular facility has a dependable connection or a measured water balance. Readers should request site-level records before applying sector claims to an operational decision.
 
 ### Grid access and resource use need their own evidence
 
@@ -418,22 +406,20 @@ For each new figure, retain the publisher, original data source, publication dat
 
 Do not convert GW to TWh without a stated utilization assumption. Do not convert a national percentage into AI’s share without workload-level allocation. Do not interpret an announced renewable contract as proof of 24/7 carbon-free supply. Do not treat a scenario’s high endpoint as the expected outcome. Where sources disagree, preserve both values and their methods until a comparable boundary is available.
 
-This report is broader than a two-source comparison: it includes the global IEA change, LBNL’s U.S. estimate and scenarios, and India-focused resource and grid reporting. It still does not provide a comprehensive national inventory, facility-level measurements, or an AI-specific global electricity total. The figures are a dated reference to public evidence, not a forecast assembled from incompatible series.
+This report is an India-focused reference, not a comprehensive national inventory. It does not provide facility-level measurements, a consistent time series, or an AI-specific electricity total. The figures are dated claims and attributed estimates that retain their underlying scope.
 
 **Bottom line:** Public data-centre energy evidence spans observed increases, estimates, scenarios, and attributed forecasts; each number needs its own source and scope.
 
 **Why it matters:** Combining different geographies and evidence types can make an uncertain forecast appear like a measured, AI-only total.
 
 **Key takeaways:**
-- The IEA’s 70-TWh figure is a global increase in data-centre use, not total use or AI-only use.
-- LBNL’s 2028 range is scenario-based and covers U.S. data centres broadly.
 - CEEW and IEEFA cite secondary Indian estimates and projections; they are not facility-level measurements.
 - Capacity, electricity consumption, renewable procurement, and water use require different units and boundaries.
 - Grid connection and water availability vary by site and cannot be inferred from a national total.
 
 **What changes:** A useful annual update should include source provenance, native units, geography, period, evidence type, and any AI-specific allocation method.
 
-**Evidence note:** The register combines IEA, Berkeley Lab, CEEW, and IEEFA materials. India figures retain their underlying attribution and are not treated as direct measurements.
+**Evidence note:** The register combines CEEW and IEEFA reporting and preserves their attribution to underlying estimates. It does not treat those figures as direct national measurements.
 
 ## 48. Small-model deployment: hardware, memory, and workflow fit
 
@@ -597,6 +583,14 @@ Anthropic’s system card and Reuters’ 28 September coverage support the relea
 ### How to maintain the timeline
 
 For each entry, preserve the original URL, publisher, publication date, document type, and retrieval date. Keep announcement date separate from card publication and API or hosting availability. If a source says “available now” without a separate dated record, quote that wording with the source date rather than inventing a platform date. Add later availability events as new rows so they do not overwrite the model’s original launch record.
+
+Treat each row as an event tied to one exact model name, not as a permanent summary of the product. A single model can have a provider announcement, a card publication, an API listing, a consumer-product rollout, and a third-party hosting record. Store the event type and date as the source states it. If the page gives only a publication date and says “available now,” keep that wording rather than converting it into a precise access date. This lets a reader sort the timeline by what changed without conflating launch, documentation and distribution.
+
+Attach evidence to the claim it supports. A provider release can establish the announcement and its own price or availability statements; a model or system card can establish the developer’s disclosed evaluation scope and limitations; a cloud record can establish a distribution route. A news report may independently confirm that an announcement occurred without independently testing the model. Benchmark results should link to the evaluation record that reports the task, conditions and metric, and be labeled as provider-reported or independently measured. Do not let a source that confirms a date appear to validate a performance claim in the same row.
+
+When a page changes, preserve the URL, retrieval timestamp, any explicit version label, and the sections that changed. Keep the earlier capture and add an update event instead of overwriting it. If a date, test condition or platform surface is absent, mark it “not stated in the source reviewed”; absence from one captured page is not proof that the event did not happen. If a page is removed or replaced, record that status and retain the prior source reference where the evidence policy allows.
+
+This structure makes the archive useful during a later story update. A writer can filter for announcement, evaluation, price or hosting evidence, check whether an independent test exists, and follow the exact record behind each statement. Repeated coverage of one vendor result should remain one performance source plus secondary reporting, not a count of independent confirmations. The timeline does not rank models or determine product quality; it helps keep chronology and evidence status auditable.
 
 This timeline does not rank the models, validate vendor benchmark claims, or infer product access from a news headline. Its job is to help readers locate the first-party record and determine whether a later article is about an announcement, evaluation document, or distribution change.
 
