@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
     <link rel="canonical" href="https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/" />
-    <title>The quiet race to watermark everything AI makes</title>
-    <meta name="description" content="Standards are taking shape while the internet learns to ask: who made this?" />
+    <title>C2PA provenance records do not prove content is true</title>
+    <meta name="description" content="EU disclosure obligations, a voluntary code and a contested provenance standard do different jobs." />
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <style amp-boilerplate>
       body { visibility: hidden }
@@ -45,66 +45,65 @@
   <body>
     <header><div class="brand">GLOBAL AI NEWS</div></header>
     <main>
-      <div class="kicker">Signals · 4 min read</div>
-      <h1>The quiet race to watermark everything AI makes</h1>
-      <p class="dek">Standards are taking shape while the internet learns to ask: who made this?</p>
+      <div class="kicker">Analysis · 4 min read</div>
+      <h1>C2PA provenance records do not prove content is true</h1>
+      <p class="dek">EU disclosure obligations, a voluntary code and a contested provenance standard do different jobs.</p>
       <div class="byline"><strong>Global AI News Editorial Desk</strong> · 10 Sept 2026<span class="byline-description">The Global AI News Editorial Desk publishes source-linked reporting, analysis, research and reference material on AI systems, infrastructure, policy and their economic effects.</span></div>
-      <div class="hero">Provenance is becoming an infrastructure question.</div>
+      <div class="hero">Provenance describes a file history, not whether the content is true.</div>
       <article>
-        <p><strong>The emerging standard is provenance that can be checked, rather than a magic mark that cannot be removed.</strong></p>
-        <p>Trust in generated media will depend on institutions making origin legible at scale.</p>
-        <section><h2>Key takeaways</h2><ul><li>Watermarks alone are easy to strip.</li><li>Signed content credentials can preserve an asset history.</li><li>Public procurement may drive adoption before consumer platforms do.</li></ul></section>
+        <p><strong>C2PA can record signed provenance, but it cannot establish that an image is true; one unreviewed preprint reports security limitations that should be investigated.</strong></p>
+        <p>A reader or buyer needs to distinguish legal disclosure, file provenance and verification of the underlying claim.</p>
+        <section><h2>Key takeaways</h2><ul><li>The EU Code of Practice is voluntary; applicable Article 50 obligations are legal requirements.</li><li>A valid provenance record is not proof of authenticity.</li><li>A single arXiv security study reports validator and specification weaknesses that remain to be independently tested.</li></ul></section>
         
         <section>
-          <h2>The quiet standard battle</h2>
-          <p>Content credentials are becoming a practical procurement question, even as no single watermark survives every transformation of a file. A visible mark can be cropped, compressed or removed. A hidden signal can be damaged by editing. The useful layer is provenance: a signed history that can travel with the asset and tell a viewer what happened before it arrived on a platform.</p>
-          <p>That history is not a declaration that an image is true. It is a record of origin and change. A camera, editing tool, publisher or generative system can attest to the part it played, while the person viewing the file can decide how much trust to place in the chain. The distinction prevents provenance from becoming a new label for certainty.</p>
+          <h2>A legal obligation and a voluntary code are different</h2>
+          <p>The European Commission says the AI Act transparency obligations for in-scope providers and deployers apply from 2 August 2026. The accompanying Code of Practice helps organizations demonstrate compliance, but adherence to the code itself is voluntary; the underlying Article 50 obligations are legal requirements. That distinction matters more than calling every disclosure tool a new law. <a class="citation" href="#source-1" aria-label="Source 1: Code of Practice on Transparency of AI-generated Content, jump to citation details">[1]</a></p>
+          <p>The Code addresses marking and detection of AI-generated or manipulated content, plus labels for deepfakes and certain AI-generated text. It does not require every image on the internet to carry one universal watermark. Its scope and duties depend on the relevant AI Act provisions and the role of the provider or deployer. <a class="citation" href="#source-1" aria-label="Source 1: Code of Practice on Transparency of AI-generated Content, jump to citation details">[1]</a></p>
           
           
         </section>
 
         <section>
-          <h2>What a durable credential can record</h2>
-          <p>A useful credential can identify the creator or organisation that first signed an asset, the tool that made a material change and the time at which that change occurred. It can preserve a relationship between an original photograph and a published crop, or between a source document and a generated illustration. The record is valuable because it gives downstream systems something more precise than a binary “AI” or “not AI” badge.</p>
-          <p>The hard part is keeping the record attached as a file moves. Publishers resize images, social platforms strip metadata and screenshots create copies with no original chain. A serious system therefore needs a recovery path: a visible way to inspect the credential, a server-side record when the file loses it and a clear explanation when provenance is unavailable rather than a guess that fills the gap.</p>
+          <h2>Provenance describes a file history, not the truth</h2>
+          <p>C2PA Content Credentials are signed assertions about an asset’s origin and edits. The specification describes a technical way for participating tools to attach and validate that history; it does not determine whether the scene in a photograph happened as shown. A valid provenance chain is evidence about handling, not a certificate that the content is authentic or true. <a class="citation" href="#source-2" aria-label="Source 2: C2PA Technical Specifications, version 2.4, jump to citation details">[2]</a></p>
+          <p>That boundary also shapes the meaning of a missing credential. The C2PA deployment guide warns that transformations such as screenshots or exports can remove embedded credentials. An unsigned file therefore cannot be treated as false, just as a signed file cannot replace ordinary verification of its claims. <a class="citation" href="#source-3" aria-label="Source 3: Content Credentials: Deployment Guidance, jump to citation details">[3]</a> <a class="citation" href="#source-2" aria-label="Source 2: C2PA Technical Specifications, version 2.4, jump to citation details">[2]</a></p>
           
           
         </section>
 
         <section>
-          <h2>Adoption is the hard part</h2>
-          <p>Publishers, platforms and public agencies are testing different combinations of metadata, signatures and visible marks. Their incentives are not identical. A newsroom wants readers to understand how a picture was prepared; a platform wants scalable moderation signals; a public buyer wants a requirement that vendors can meet across formats and suppliers.</p>
-          <p>The emerging consensus is less about one technical standard than about giving people a legible account of origin. That means the interface matters. If a credential is technically complete but hidden behind an opaque icon, it will not build trust. If it presents a long chain without explaining which step matters, it will overwhelm the person trying to make a quick judgement.</p>
+          <h2>One security preprint challenges current deployments</h2>
+          <p>A security paper posted to arXiv in April 2026 reports weaknesses in C2PA specifications versions 2.2–2.4, including cases where timestamps could be altered and validators disagreed about a credential. These are the authors’ findings from one preprint; they should be reported as a challenge to test, not as a settled verdict on every C2PA implementation. <a class="citation" href="#source-4" aria-label="Source 4: Verifying Provenance of Digital Media: Why the C2PA Specifications Fall Short, jump to citation details">[4]</a></p>
+          <p>The paper also makes the same important conceptual distinction: provenance is not authenticity. Its criticism is that users may over-trust a provenance signal when the standards or validators do not establish the guarantees they expect. Because this source set contains no independent replication of the reported exploits, the article attributes these claims rather than presenting them as consensus. <a class="citation" href="#source-4" aria-label="Source 4: Verifying Provenance of Digital Media: Why the C2PA Specifications Fall Short, jump to citation details">[4]</a></p>
           
           
         </section>
 
         <section>
-          <h2>Procurement may move before consumer habit</h2>
-          <p>Public-sector procurement is a likely early driver because buyers can specify record-keeping requirements before a universal consumer habit exists. A government media contract can require vendors to preserve provenance, expose an inspection endpoint and document what happens when a file is transformed. Similar requirements can then travel through agencies, broadcasters and archives.</p>
-          <p>That path has a weakness: compliance can become a checkbox. A vendor may attach a valid signature while the editorial or legal team never checks it. The better procurement question is operational: can the buyer retrieve the history, understand its limits, preserve it through the publishing workflow and explain exceptions to the public?</p>
+          <h2>Procurement should test the whole workflow</h2>
+          <p>C2PA’s deployment guidance asks buyers to test whether credentials are attached by default, survive the real editing and publishing path, and can be inspected by the tools downstream teams use. Those are more useful questions than whether a vendor can show a successful demo on a clean sample file. The guide is written by C2PA, so it explains implementation practice rather than independently measuring adoption. <a class="citation" href="#source-3" aria-label="Source 3: Content Credentials: Deployment Guidance, jump to citation details">[3]</a></p>
+          <p>A contract should also state what happens when the chain is missing or a validator reports a problem. The interface needs to distinguish “no credential found,” “credential present but not validated,” and “validated provenance” without turning any of those states into a verdict on the image’s truth. That is a product and editorial requirement, not just a cryptographic one. <a class="citation" href="#source-3" aria-label="Source 3: Content Credentials: Deployment Guidance, jump to citation details">[3]</a> <a class="citation" href="#source-4" aria-label="Source 4: Verifying Provenance of Digital Media: Why the C2PA Specifications Fall Short, jump to citation details">[4]</a></p>
           
           
         </section>
 
         <section>
-          <h2>Trust needs a layered approach</h2>
-          <p>No provenance system can decide whether a claim in an image is accurate. It can show who handled the asset, not whether the depicted event happened as described. Newsrooms still need source verification, captions and editorial review. The credential is a supporting record, not a replacement for reporting standards.</p>
-          <p>That is why the most credible approach is layered. Use signed credentials where they are available, visible labels where they help readers, ordinary verification for the underlying claim and an honest “unknown” state when the chain is missing. The quiet standard battle will be won by the system that makes uncertainty easier to describe, not by the mark that claims to eliminate it.</p>
-          <p>A system that admits what it cannot establish will earn more trust than one that turns a technical signature into an all-purpose guarantee. Provenance is strongest when it narrows uncertainty without pretending to remove it.</p>
+          <h2>Keep provenance inside a broader verification process</h2>
+          <p>For publishers, credentials can add a useful record to ordinary verification: who supplied the file, what edits were made, and whether the provenance signature validates in the chosen tool. Editors still need to check the source, caption and depicted event. Neither the C2PA specification nor the European Commission’s transparency code turns a metadata record into evidence that an underlying claim is true. <a class="citation" href="#source-2" aria-label="Source 2: C2PA Technical Specifications, version 2.4, jump to citation details">[2]</a> <a class="citation" href="#source-1" aria-label="Source 1: Code of Practice on Transparency of AI-generated Content, jump to citation details">[1]</a></p>
+          <p>The strongest policy and product language states exactly what a signal can establish and where it stops. A provenance record can narrow uncertainty about a file’s handling. It cannot eliminate uncertainty about the scene, and a missing record does not settle the question in the opposite direction. <a class="citation" href="#source-2" aria-label="Source 2: C2PA Technical Specifications, version 2.4, jump to citation details">[2]</a> <a class="citation" href="#source-4" aria-label="Source 4: Verifying Provenance of Digital Media: Why the C2PA Specifications Fall Short, jump to citation details">[4]</a></p>
           
           
         </section>
 
         <section>
-          <h2>The reader needs an honest interface</h2>
-          <p>A provenance panel should answer practical questions quickly. Was this asset captured by a camera, generated from a prompt or materially edited? Which organisation signed the record? What changed between the original and the published version? If the answer is unavailable, the interface should say so without implying that an unsigned file is automatically false.</p>
-          <p>That clarity is a design responsibility as much as a standards responsibility. Readers do not need a cryptographic lecture, but they do need enough context to judge an image in the situation where they encountered it. The winning systems will make the chain inspectable without making trust feel like a technical privilege reserved for people who know where to click.</p>
+          <h2>What readers should be told</h2>
+          <p>A reader-facing credential panel should name the signer, describe the recorded edits, and say whether the chosen verifier accepts the signature. If the record cannot be checked, the page should say that plainly. These design choices follow from the C2PA guide’s emphasis on verification and from the security preprint’s reported validator inconsistencies; they are not a guarantee that every deployment already handles them well. <a class="citation" href="#source-3" aria-label="Source 3: Content Credentials: Deployment Guidance, jump to citation details">[3]</a> <a class="citation" href="#source-4" aria-label="Source 4: Verifying Provenance of Digital Media: Why the C2PA Specifications Fall Short, jump to citation details">[4]</a></p>
+          <p>The practical race is not to watermark everything. It is to make disclosure, provenance and verification useful in the situations where they apply—while keeping the limits visible. That lets law, standards and newsroom checks do distinct jobs instead of asking one technical mark to provide certainty it was not designed to supply. <a class="citation" href="#source-1" aria-label="Source 1: Code of Practice on Transparency of AI-generated Content, jump to citation details">[1]</a> <a class="citation" href="#source-2" aria-label="Source 2: C2PA Technical Specifications, version 2.4, jump to citation details">[2]</a></p>
           
           
         </section>
-        <p><strong>What changes:</strong> Creators and platforms will increasingly be asked to disclose how an asset was made.</p>
-        <section class="sources"><h2>Sources</h2><ol><li id="source-1"><a href="https://digital-strategy.ec.europa.eu/en/policies/ai-code-practice" target="_blank" rel="noopener noreferrer">[1] Code of practice for general-purpose AI</a><p>European Commission · Accessed 2026-10-02</p></li><li id="source-2"><a href="https://www.uspto.gov/sites/default/files/documents/ai-inventorship-memo.pdf" target="_blank" rel="noopener noreferrer">[2] Guidance on AI-assisted inventions</a><p>United States Patent and Trademark Office · Accessed 2026-10-02</p></li></ol></section>
+        <p><strong>What changes:</strong> Procurement and newsroom workflows should test how credentials are attached, preserved, validated and explained when absent.</p>
+        <section class="sources"><h2>Sources</h2><ol><li id="source-1"><a href="https://digital-strategy.ec.europa.eu/en/policies/code-practice-ai-generated-content" target="_blank" rel="noopener noreferrer">[1] Code of Practice on Transparency of AI-generated Content</a><p>European Commission · Tier 1 · Published 2026-06-10 · Accessed 2026-10-05</p><p>The Code is a voluntary compliance tool; the Commission states that in-scope Article 50 transparency obligations apply from 2 August 2026.</p></li><li id="source-2"><a href="https://spec.c2pa.org/specifications/specifications/2.4/index.html" target="_blank" rel="noopener noreferrer">[2] C2PA Technical Specifications, version 2.4</a><p>Coalition for Content Provenance and Authenticity · Tier 1 · Accessed 2026-10-05</p><p>Technical standard for signed provenance assertions and asset history; it is not a determination that depicted content is true.</p></li><li id="source-3"><a href="https://c2pa.org/wp-content/uploads/sites/33/2026/07/Content-Credentials-Deployment-Guidance.pdf" target="_blank" rel="noopener noreferrer">[3] Content Credentials: Deployment Guidance</a><p>Coalition for Content Provenance and Authenticity · Tier 1 · Published 2026-07-08 · Accessed 2026-10-05</p><p>C2PA-authored implementation guidance; supports vendor and workflow questions, not independent proof of adoption or end-to-end preservation.</p></li><li id="source-4"><a href="https://arxiv.org/abs/2604.24890v1" target="_blank" rel="noopener noreferrer">[4] Verifying Provenance of Digital Media: Why the C2PA Specifications Fall Short</a><p>arXiv · Tier 2 · Published 2026-04-27 · Accessed 2026-10-05</p><p>Single arXiv security preprint analyzing C2PA versions 2.2–2.4; attribute its reported findings and do not present them as settled consensus.</p></li></ol></section>
         <div class="ad">NATIVE AD · CLEARLY LABELED INVENTORY</div>
       </article>
     </main>

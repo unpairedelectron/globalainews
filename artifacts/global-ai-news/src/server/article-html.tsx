@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { performance } from 'node:perf_hooks';
 
 import type { NewsroomContentSnapshot } from '../content';
 import {
@@ -13,6 +14,90 @@ export interface ArticleHtmlResponse {
   status: 200 | 404;
   html: string;
   metadata: SeoMetadata;
+}
+
+export interface NewsroomSnapshotDiagnosticEvent {
+  phase: string;
+  [key: string]: string | number | boolean | undefined;
+}
+
+export interface NewsroomSnapshotFetchOptions {
+  requestId?: string;
+  route?: string;
+  timeoutMs?: number;
+  onEvent?: (event: NewsroomSnapshotDiagnosticEvent) => void;
+}
+
+export class NewsroomSnapshotFetchError extends Error {
+  constructor(
+    readonly code: string,
+    readonly upstreamStatus?: number,
+  ) {
+    super(`Newsroom snapshot fetch failed: ${code}`);
+    this.name = 'NewsroomSnapshotFetchError';
+  }
+}
+
+const PUBLIC_SNAPSHOT_FRESH_MS = 1_000;
+const PUBLIC_SNAPSHOT_MAX_STALE_MS = 60_000;
+const DEFAULT_NEWSROOM_API_TIMEOUT_MS = 5_000;
+const MAX_NEWSROOM_SNAPSHOT_BYTES = 12 * 1024 * 1024;
+
+const publicSnapshotCache = new Map<
+  string,
+  { snapshot: NewsroomContentSnapshot; fetchedAt: number }
+>();
+const pendingSnapshotRequests = new Map<
+  string,
+  { promise: Promise<NewsroomContentSnapshot>; requestId?: string }
+>();
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isNewsroomContentSnapshot(value: unknown): value is NewsroomContentSnapshot {
+  if (!isRecord(value)) return false;
+  const requiredArrays = [
+    'stories',
+    'authors',
+    'sources',
+    'entities',
+    'timelineEvents',
+    'researchRecords',
+    'dataProducts',
+    'topics',
+    'authorityEdges',
+    'signals',
+    'industryMap',
+    'indiaIndex',
+    'essays',
+    'askGlobalAnswers',
+  ];
+
+  if (
+    typeof value.generatedAt !== 'string' ||
+    typeof value.source !== 'string' ||
+    typeof value.stale !== 'boolean' ||
+    !isRecord(value.evidenceSummaries) ||
+    requiredArrays.some((key) => !Array.isArray(value[key]))
+  ) {
+    return false;
+  }
+
+  return (value.stories as unknown[]).every((story) => {
+    if (!isRecord(story) || typeof story.slug !== 'string' || typeof story.title !== 'string') {
+      return false;
+    }
+    if (!Array.isArray(story.sources) || !Array.isArray(story.body)) return false;
+    return story.body.every(
+      (section) =>
+        isRecord(section) &&
+        typeof section.heading === 'string' &&
+        Array.isArray(section.paragraphs) &&
+        section.paragraphs.every((paragraph) => typeof paragraph === 'string'),
+    );
+  });
 }
 
 export function getPrerenderedArticleHtmlPath(
@@ -127,52 +212,178 @@ export function renderArticleHtml(
 
 export async function fetchNewsroomContentSnapshot(
   apiOrigin: string | undefined,
+  options: NewsroomSnapshotFetchOptions = {},
 ): Promise<NewsroomContentSnapshot> {
   if (!apiOrigin) {
-    throw new Error('NEWSROOM_API_ORIGIN must be configured for article rendering.');
+    throw new NewsroomSnapshotFetchError('missing_api_origin');
   }
 
   let contentUrl: URL;
   try {
     const origin = new URL(apiOrigin);
-    if (!['http:', 'https:'].includes(origin.protocol)) {
+    if (
+      !['http:', 'https:'].includes(origin.protocol) ||
+      origin.username ||
+      origin.password
+    ) {
       throw new Error('unsupported protocol');
     }
-    contentUrl = new URL('/api/newsroom/content', origin);
+    contentUrl = new URL('/api/newsroom/content', origin.origin);
   } catch {
-    throw new Error('NEWSROOM_API_ORIGIN must be a valid HTTP(S) service origin.');
+    throw new NewsroomSnapshotFetchError('invalid_api_origin');
   }
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5_000);
-  try {
-    const response = await fetch(contentUrl, {
-      signal: controller.signal,
-      cache: 'no-store',
-      headers: { accept: 'application/json' },
+  const cacheKey = contentUrl.origin;
+  const now = Date.now();
+  const cached = publicSnapshotCache.get(cacheKey);
+  const cachedAgeMs = cached ? Math.max(0, now - cached.fetchedAt) : undefined;
+  if (cached && cachedAgeMs !== undefined && cachedAgeMs <= PUBLIC_SNAPSHOT_FRESH_MS) {
+    options.onEvent?.({
+      phase: 'snapshot_cache_hit',
+      cacheState: 'fresh',
+      cacheAgeMs: cachedAgeMs,
+      storyCount: cached.snapshot.stories.length,
     });
-    if (!response.ok) {
-      throw new Error(`The public newsroom API returned HTTP ${response.status}.`);
+    return cached.snapshot;
+  }
+
+  const pending = pendingSnapshotRequests.get(cacheKey);
+  if (pending) {
+    options.onEvent?.({
+      phase: 'snapshot_request_joined',
+      sharedRequestId: pending.requestId,
+    });
+    return pending.promise;
+  }
+
+  const request = (async (): Promise<NewsroomContentSnapshot> => {
+  const controller = new AbortController();
+    const timeoutMs = options.timeoutMs ?? DEFAULT_NEWSROOM_API_TIMEOUT_MS;
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    const upstreamStartedAt = performance.now();
+    let responseStatus: number | undefined;
+    let bodyReadMs: number | undefined;
+    let bodyBytes: number | undefined;
+    let jsonParseMs: number | undefined;
+    let failureCode = 'fetch_failed';
+
+    options.onEvent?.({ phase: 'snapshot_fetch_start', timeoutMs });
+
+  try {
+      const response = await fetch(contentUrl, {
+        signal: controller.signal,
+        cache: 'no-store',
+        headers: {
+          accept: 'application/json',
+          ...(options.requestId ? { 'X-GAN-Request-ID': options.requestId } : {}),
+        },
+      });
+      responseStatus = response.status;
+      options.onEvent?.({
+        phase: 'snapshot_fetch_headers',
+        statusCode: response.status,
+        elapsedMs: Math.round(performance.now() - upstreamStartedAt),
+      });
+      if (!response.ok) {
+        failureCode = 'http_status';
+        throw new NewsroomSnapshotFetchError(failureCode, response.status);
+      }
+
+      const bodyStartedAt = performance.now();
+      const body = await response.text();
+      bodyReadMs = Math.round(performance.now() - bodyStartedAt);
+      bodyBytes = Buffer.byteLength(body, 'utf8');
+      if (bodyBytes > MAX_NEWSROOM_SNAPSHOT_BYTES) {
+        failureCode = 'snapshot_too_large';
+        throw new NewsroomSnapshotFetchError(failureCode, response.status);
+      }
+      options.onEvent?.({
+        phase: 'snapshot_body_received',
+        statusCode: response.status,
+        bodyBytes,
+        bodyReadMs,
+      });
+
+      let parsedSnapshot: unknown;
+      const jsonStartedAt = performance.now();
+      try {
+        parsedSnapshot = JSON.parse(body);
+      } catch {
+        failureCode = 'invalid_json';
+        throw new NewsroomSnapshotFetchError(failureCode, response.status);
+      }
+      jsonParseMs = Math.round(performance.now() - jsonStartedAt);
+      if (!isNewsroomContentSnapshot(parsedSnapshot)) {
+        failureCode = 'invalid_snapshot';
+        throw new NewsroomSnapshotFetchError(failureCode, response.status);
+      }
+
+      publicSnapshotCache.set(cacheKey, {
+        snapshot: parsedSnapshot,
+        fetchedAt: Date.now(),
+      });
+      options.onEvent?.({
+        phase: 'snapshot_validated',
+        statusCode: response.status,
+        bodyBytes,
+        bodyReadMs,
+        jsonParseMs,
+        storyCount: parsedSnapshot.stories.length,
+        totalFetchMs: Math.round(performance.now() - upstreamStartedAt),
+      });
+      return parsedSnapshot;
+    } catch (error) {
+      if (controller.signal.aborted) {
+        failureCode = 'timeout';
+      } else if (error instanceof NewsroomSnapshotFetchError) {
+        failureCode = error.code;
+      }
+
+      const failedAt = Date.now();
+      options.onEvent?.({
+        phase: 'snapshot_fetch_failed',
+        failureCode,
+        statusCode: responseStatus,
+        bodyReadMs,
+        bodyBytes,
+        jsonParseMs,
+        totalFetchMs: Math.round(performance.now() - upstreamStartedAt),
+      });
+
+      const lastKnownGood = publicSnapshotCache.get(cacheKey);
+      const staleAgeMs = lastKnownGood
+        ? Math.max(0, failedAt - lastKnownGood.fetchedAt)
+        : undefined;
+      if (
+        lastKnownGood &&
+        staleAgeMs !== undefined &&
+        staleAgeMs <= PUBLIC_SNAPSHOT_MAX_STALE_MS
+      ) {
+        options.onEvent?.({
+          phase: 'snapshot_last_known_good_fallback',
+          failureCode,
+          statusCode: responseStatus,
+          cacheAgeMs: staleAgeMs,
+          storyCount: lastKnownGood.snapshot.stories.length,
+        });
+        return lastKnownGood.snapshot;
+      }
+
+      throw new NewsroomSnapshotFetchError(failureCode, responseStatus);
+    } finally {
+      clearTimeout(timeout);
     }
-    const snapshot: unknown = await response.json();
-    if (
-      !snapshot ||
-      typeof snapshot !== 'object' ||
-      !('stories' in snapshot) ||
-      !Array.isArray(snapshot.stories) ||
-      !('authors' in snapshot) ||
-      !Array.isArray(snapshot.authors) ||
-      !('sources' in snapshot) ||
-      !Array.isArray(snapshot.sources) ||
-      !('entities' in snapshot) ||
-      !Array.isArray(snapshot.entities) ||
-      !('timelineEvents' in snapshot) ||
-      !Array.isArray(snapshot.timelineEvents)
-    ) {
-      throw new Error('The public newsroom API returned an invalid content snapshot.');
-    }
-    return snapshot as NewsroomContentSnapshot;
+  })();
+
+  pendingSnapshotRequests.set(cacheKey, {
+    promise: request,
+    requestId: options.requestId,
+  });
+  try {
+    return await request;
   } finally {
-    clearTimeout(timeout);
+    if (pendingSnapshotRequests.get(cacheKey)?.promise === request) {
+      pendingSnapshotRequests.delete(cacheKey);
+    }
   }
 }

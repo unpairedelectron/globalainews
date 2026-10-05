@@ -41,19 +41,13 @@ export function ReportsIndexPage() {
               Maintained reporting that follows the evidence beyond the headline — and maps what each finding changes across the AI industry.
             </p>
           </div>
-          <div className="relative overflow-hidden border border-foreground/15 bg-surface-muted p-5 md:p-7">
-            <div aria-hidden="true" className="absolute inset-5 border border-primary/15" />
-            <div aria-hidden="true" className="absolute left-[18%] top-[46%] h-px w-[62%] rotate-[-13deg] bg-primary/45" />
-            <div aria-hidden="true" className="absolute left-[23%] top-[56%] h-px w-[54%] rotate-[13deg] bg-primary/35" />
-            <div aria-hidden="true" className="absolute left-[19%] top-[45%] h-2 w-2 rounded-full bg-primary" />
-            <div aria-hidden="true" className="absolute left-[49%] top-[37%] h-2 w-2 rounded-full bg-accent" />
-            <div aria-hidden="true" className="absolute right-[18%] top-[59%] h-2 w-2 rounded-full bg-primary" />
-            <div className="relative flex min-h-36 flex-col justify-between">
-              <span className="eyebrow text-primary">Evidence / sources / context</span>
+          <div className="border border-foreground/15 bg-surface-muted p-5 md:p-7">
+            <div className="flex min-h-36 flex-col justify-between">
+              <span className="eyebrow text-primary">How to use this library</span>
               {featuredReport ? <div>
-                <p className="eyebrow text-muted-foreground">Featured report</p>
+                <p className="eyebrow text-muted-foreground">Latest maintained report</p>
                 <Link href={`/article/${featuredReport.slug}`} className="mt-3 block max-w-sm font-serif text-3xl leading-[.95] hover:text-primary">{featuredReport.title}<ArrowUpRight aria-hidden="true" size={17} className="ml-2 inline" /></Link>
-                <p className="mt-4 text-xs text-muted-foreground">Updated <time dateTime={featuredReport.dateModified ?? featuredReport.date}>{formatEditorialDate(featuredReport.dateModified ?? featuredReport.date)}</time></p>
+                <p className="mt-4 text-xs leading-5 text-muted-foreground">Published {formatEditorialDate(featuredReport.date)} · updated {formatEditorialDate(featuredReport.dateModified ?? featuredReport.date)} · {featuredReport.sources.length} cited source records</p>
               </div> : <p className="max-w-xs font-serif text-3xl leading-[.95]">Follow the connections, not just the claim.</p>}
             </div>
           </div>
@@ -96,7 +90,7 @@ export function ReportsIndexPage() {
                         </span>
                         <div>
                           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <span className="eyebrow text-primary">Maintained report</span>
+                            <span className="eyebrow text-primary">Report · published</span>
                             <span aria-hidden="true" className="h-1 w-1 rounded-full bg-accent" />
                             <span className="text-xs text-muted-foreground">{story.category}</span>
                             <span aria-hidden="true" className="h-1 w-1 rounded-full bg-foreground/30" />
@@ -111,10 +105,14 @@ export function ReportsIndexPage() {
                           </Link>
                           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{story.dek}</p>
                           <p className="mt-5 text-xs text-muted-foreground">
-                            {author ? `By ${author.name}` : 'Byline unavailable'} ·{' '}
+                            {author ? `By ${author.name}` : 'Byline unavailable'} · Published{' '}
                             <time dateTime={story.date}>{formatEditorialDate(story.date)}</time>
                           </p>
-                          <p className="mt-2 text-xs text-muted-foreground">Updated <time dateTime={story.dateModified ?? story.date}>{formatEditorialDate(story.dateModified ?? story.date)}</time></p>
+                          <p className="mt-2 text-xs text-muted-foreground">Updated <time dateTime={story.dateModified ?? story.date}>{formatEditorialDate(story.dateModified ?? story.date)}</time> · Source coverage: {story.sources.length} cited records</p>
+                          <div className="mt-5 grid gap-3 border-t border-foreground/10 pt-4 sm:grid-cols-2">
+                            <div><p className="eyebrow text-muted-foreground">Scope</p><p className="mt-2 text-xs leading-5 text-muted-foreground">{story.dek}</p></div>
+                            {storyResearch.length > 0 && <div><p className="eyebrow text-muted-foreground">Research method</p><p className="mt-2 text-xs leading-5 text-muted-foreground">{storyResearch[0].methodology}</p></div>}
+                          </div>
                           {(storyResearch.length > 0 || storyData.length > 0 || storyTopics.length > 0 || storyEntities.length > 0) && <div data-testid={`report-network-${story.slug}`} className="mt-6 grid gap-x-6 gap-y-5 border-t border-foreground/15 pt-5 sm:grid-cols-2">
                             {storyResearch.length > 0 && <div><p className="eyebrow text-primary">Research</p>{storyResearch.map((record) => <Link key={record.slug} href={`/research/${record.slug}`} className="mt-2 block text-sm hover:text-primary">{record.title}<span className="mt-1 block text-xs text-muted-foreground">Updated {formatEditorialDate(record.updatedAt)}</span></Link>)}</div>}
                             {storyData.length > 0 && <div><p className="eyebrow text-primary">Data products</p>{storyData.map((product) => <Link key={product.slug} href={`/data/${product.slug}`} className="mt-2 block text-sm hover:text-primary">{product.title}<span className="mt-1 block text-xs text-muted-foreground">Updated {formatEditorialDate(product.updatedAt)}</span></Link>)}</div>}
@@ -151,10 +149,10 @@ export function ReportsIndexPage() {
         </section>
         <section data-testid="reports-research-data" className="grid gap-10 border-t border-foreground/15 py-12 md:grid-cols-2">
           <div><SectionLabel aside={`${researchRecords.length} published`}>Research register</SectionLabel>
-            {researchRecords.length ? <div className="border-t border-foreground/15">{researchRecords.map((record) => <Link key={record.slug} href={`/research/${record.slug}`} className="block border-b border-foreground/15 py-4 hover:text-primary"><span className="block text-sm">{record.title}</span><span className="mt-1 block text-xs text-muted-foreground">{record.provenance.replaceAll('-', ' ')} · updated {formatEditorialDate(record.updatedAt)}</span></Link>)}</div> : <p className="border-t border-foreground/15 py-4 text-sm text-muted-foreground">No published research records are connected yet.</p>}
+            {researchRecords.length ? <div className="border-t border-foreground/15">{researchRecords.map((record) => <Link key={record.slug} href={`/research/${record.slug}`} className="block border-b border-foreground/15 py-4 hover:text-primary"><span className="eyebrow text-primary">Research · {record.status} · {record.provenance.replaceAll('-', ' ')}</span><span className="mt-2 block font-serif text-xl">{record.title}</span><span className="mt-2 block text-xs leading-5 text-muted-foreground">Scope: {record.researchQuestion}</span><span className="mt-2 block text-xs leading-5 text-muted-foreground">Method: {record.methodology}</span><span className="mt-2 block text-xs text-muted-foreground">{record.sourceSlugs.length} source records · Published {formatEditorialDate(record.date)} · Updated {formatEditorialDate(record.updatedAt)}</span></Link>)}</div> : <p className="border-t border-foreground/15 py-4 text-sm text-muted-foreground">No published research records are connected yet.</p>}
           </div>
           <div><SectionLabel aside={`${dataProducts.length} published`}>Data products</SectionLabel>
-            {dataProducts.length ? <div className="border-t border-foreground/15">{dataProducts.map((product) => <Link key={product.slug} href={`/data/${product.slug}`} className="block border-b border-foreground/15 py-4 hover:text-primary"><span className="block text-sm">{product.title}</span><span className="mt-1 block text-xs text-muted-foreground">Updated {formatEditorialDate(product.updatedAt)} · {product.observations.length} dated observations</span></Link>)}</div> : <p className="border-t border-foreground/15 py-4 text-sm text-muted-foreground">No published data products are connected yet.</p>}
+            {dataProducts.length ? <div className="border-t border-foreground/15">{dataProducts.map((product) => <Link key={product.slug} href={`/data/${product.slug}`} className="block border-b border-foreground/15 py-4 hover:text-primary"><span className="eyebrow text-primary">Data product · {product.status}</span><span className="mt-2 block font-serif text-xl">{product.title}</span><span className="mt-2 block text-xs leading-5 text-muted-foreground">Scope: {product.description}</span><span className="mt-2 block text-xs leading-5 text-muted-foreground">Method: {product.methodology}</span><span className="mt-2 block text-xs text-muted-foreground">{product.sourceSlugs.length} source records · {product.observations.length} dated observations · Updated {formatEditorialDate(product.updatedAt)}</span></Link>)}</div> : <p className="border-t border-foreground/15 py-4 text-sm text-muted-foreground">No published data products are connected yet.</p>}
           </div>
         </section>
         <section data-testid="reports-topic-index" className="grid gap-10 border-t border-foreground/15 py-12 md:grid-cols-2">

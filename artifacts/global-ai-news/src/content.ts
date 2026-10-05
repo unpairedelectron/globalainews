@@ -66,6 +66,16 @@ export function canonicalStorySlug(slug: string): string {
   return storySlugAliases[slug] ?? slug;
 }
 
+/**
+ * Maintained records withdrawn during the editorial rescue. Keep the records
+ * in source history, but never include them in public story collections.
+ */
+export const withdrawnStorySlugs = new Set([
+  'indias-public-ai-stack',
+  'founders-first-million-model-calls',
+  'new-geography-of-compute',
+]);
+
 export const editorialContentTypePurposes: Record<EditorialContentType, string> = {
   Brief: 'A concise, source-led account of a material development.',
   Analysis: 'An interpretation of evidence that explains implications without claiming new empirical research.',
@@ -436,14 +446,18 @@ export function getStoryAuthorIdentity(
 }
 
 export let sources: Source[] = [
-  { slug: 'nature-antibiotic-study', name: 'A generative deep learning approach to antibiotic discovery', publisher: 'Nature Chemical Biology', kind: 'primary', url: 'https://www.nature.com/', accessed: '2026-09-10' },
-  { slug: 'open-a7f1c833c9a1e5c0', name: 'How a Cooperative-Override Circuit Suppresses Nash Play in Large Language Models', publisher: 'arXiv AI', kind: 'primary', url: 'https://arxiv.org/abs/2604.27167', accessed: '2026-10-02' },
+  { slug: 'nature-antibiotic-study', name: 'A generative artificial intelligence approach for the discovery of antimicrobial peptides against multidrug-resistant bacteria', publisher: 'Nature Microbiology', kind: 'primary', sourceType: 'academic-paper', classification: 'primary', url: 'https://www.nature.com/articles/s41564-025-02114-4', accessed: '2026-10-05', publicationDate: '2025-10-03', tier: 1, evidenceType: 'full-page', scopeNote: 'ProteoGPT and specialized protein-language-model pipeline; findings are reported for in-vitro assays and mouse infection models, not human treatment.' },
+  { slug: 'open-a7f1c833c9a1e5c0', name: 'How a Cooperative-Override Circuit Suppresses Nash Play in Large Language Models (version 3)', publisher: 'arXiv', kind: 'primary', sourceType: 'academic-paper', classification: 'primary', url: 'https://arxiv.org/abs/2604.27167v3', accessed: '2026-10-05', publicationDate: '2026-09-18', tier: 1, evidenceType: 'full-page', scopeNote: 'Version 3 is a major revision; its claims concern the tested models, prompts, and game protocols and remain a preprint.' },
   { slug: 'uspto-ai-inventorship', name: 'Guidance on AI-assisted inventions', publisher: 'United States Patent and Trademark Office', kind: 'primary', url: 'https://www.uspto.gov/sites/default/files/documents/ai-inventorship-memo.pdf', accessed: '2026-10-02' },
   { slug: 'indiaai-mission', name: 'IndiaAI Mission', publisher: 'Ministry of Electronics and Information Technology', kind: 'primary', sourceType: 'government-portal', classification: 'primary', url: 'https://indiaai.gov.in/', accessed: '2026-09-08' },
   { slug: 'stanford-ai-index-2026', name: 'AI Index Report 2026', publisher: 'Stanford Institute for Human-Centered AI', kind: 'independent', sourceType: 'research-report', classification: 'secondary', url: 'https://hai.stanford.edu/ai-index/2026-ai-index-report', accessed: '2026-10-05', tier: 2, evidenceType: 'full-page', scopeNote: 'The report documents OSWorld task accuracy, its reported human baseline, and remaining agent failures; these benchmark results do not establish success rates for a specific production workflow.' },
   { slug: 'iea-data-centres', name: 'Energy and AI: data centre demand', publisher: 'International Energy Agency', kind: 'dataset', url: 'https://www.iea.org/reports/energy-and-ai', accessed: '2026-10-01' },
   { slug: 'iea-energy-ai-executive-summary', name: 'Energy and AI: Executive Summary', publisher: 'International Energy Agency', kind: 'primary', sourceType: 'research-report', classification: 'primary', url: 'https://www.iea.org/reports/energy-and-ai/executive-summary', accessed: '2026-10-05', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports global data-centre electricity use of 415 TWh in 2024 and projects about 945 TWh by 2030; AI is a leading growth driver alongside other digital services. These totals are not per-request energy measures or an AI-only inventory.' },
   { slug: 'eu-ai-act-code', name: 'Code of practice for general-purpose AI', publisher: 'European Commission', kind: 'primary', url: 'https://digital-strategy.ec.europa.eu/en/policies/ai-code-practice', accessed: '2026-10-02' },
+  { slug: 'eu-ai-act-content-transparency', name: 'Code of Practice on Transparency of AI-generated Content', publisher: 'European Commission', kind: 'primary', sourceType: 'government-portal', classification: 'primary', url: 'https://digital-strategy.ec.europa.eu/en/policies/code-practice-ai-generated-content', accessed: '2026-10-05', publicationDate: '2026-06-10', tier: 1, evidenceType: 'full-page', scopeNote: 'The Code is a voluntary compliance tool; the Commission states that in-scope Article 50 transparency obligations apply from 2 August 2026.' },
+  { slug: 'c2pa-specification-v2-4', name: 'C2PA Technical Specifications, version 2.4', publisher: 'Coalition for Content Provenance and Authenticity', kind: 'primary', sourceType: 'technical-document', classification: 'primary', url: 'https://spec.c2pa.org/specifications/specifications/2.4/index.html', accessed: '2026-10-05', tier: 1, evidenceType: 'full-page', scopeNote: 'Technical standard for signed provenance assertions and asset history; it is not a determination that depicted content is true.' },
+  { slug: 'c2pa-deployment-guidance-2026', name: 'Content Credentials: Deployment Guidance', publisher: 'Coalition for Content Provenance and Authenticity', kind: 'primary', sourceType: 'technical-document', classification: 'primary', url: 'https://c2pa.org/wp-content/uploads/sites/33/2026/07/Content-Credentials-Deployment-Guidance.pdf', accessed: '2026-10-05', publicationDate: '2026-07-08', tier: 1, evidenceType: 'full-page', scopeNote: 'C2PA-authored implementation guidance; supports vendor and workflow questions, not independent proof of adoption or end-to-end preservation.' },
+  { slug: 'c2pa-independent-security-preprint', name: 'Verifying Provenance of Digital Media: Why the C2PA Specifications Fall Short', publisher: 'arXiv', kind: 'independent', sourceType: 'academic-paper', classification: 'secondary', url: 'https://arxiv.org/abs/2604.24890v1', accessed: '2026-10-05', publicationDate: '2026-04-27', tier: 2, evidenceType: 'full-page', scopeNote: 'Single arXiv security preprint analyzing C2PA versions 2.2–2.4; attribute its reported findings and do not present them as settled consensus.' },
   { slug: 'mistral-model-card', name: 'Mistral Small 4 model card', publisher: 'Mistral AI', kind: 'primary', url: 'https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03', accessed: '2026-10-02' },
   { slug: 'indiaai-cabinet-approval-2024', name: 'Cabinet approves the IndiaAI Mission', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2012355', accessed: '2026-10-03', publicationDate: '2024-03-07', tier: 1, evidenceType: 'full-page', scopeNote: 'Programme authorization and target; not proof of delivered capacity.' },
   { slug: 'pib-initial-compute-2025', name: 'With robust and high-end common computing facility in place, India all set to launch its own AI model', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2097709', accessed: '2026-10-03', publicationDate: '2025-01-30', tier: 1, evidenceType: 'full-page', scopeNote: 'Describes an initial facility and further GPUs to be added; does not establish that all planned GPUs were live.' },
@@ -471,10 +485,10 @@ export let sources: Source[] = [
 ];
 
 export const evidenceSummaries: Record<string, EvidenceSummary> = {
-  antibiotic: { primarySources: 3, independentConfirmations: 5, confidence: 'HIGH', note: 'The study, laboratory record and two independent researchers align on the experimental result.' },
-  watermarking: { primarySources: 2, independentConfirmations: 4, confidence: 'MEDIUM', note: 'Standards work is public; adoption remains an open question.' },
+  antibiotic: { primarySources: 1, independentConfirmations: 0, confidence: 'DEVELOPING', note: 'One peer-reviewed primary study reports in-vitro and mouse-model findings; no independent replication is included in this source set.' },
+  watermarking: { primarySources: 3, independentConfirmations: 0, confidence: 'MEDIUM', note: 'EU policy and C2PA capabilities are supported by official records; security criticisms come from one attributed arXiv preprint.' },
   'india-stack': { primarySources: 4, independentConfirmations: 3, confidence: 'HIGH', note: 'Government programme documents are supported by procurement and company disclosures.' },
-  'small-models': { primarySources: 3, independentConfirmations: 4, confidence: 'HIGH', note: 'Model cards and deployment interviews point to the same edge-use pattern.' },
+  'small-models': { primarySources: 1, independentConfirmations: 0, confidence: 'DEVELOPING', note: 'One provider-authored model card supplies specifications; this source set contains no independent performance or hardware-fit measurements.' },
   founders: { primarySources: 2, independentConfirmations: 6, confidence: 'MEDIUM', note: 'The operating pattern recurs across interviews, but the sample is self-selecting.' },
   infrastructure: { primarySources: 4, independentConfirmations: 5, confidence: 'HIGH', note: 'Grid data, permitting records and operator announcements show regional concentration.' },
 };
@@ -515,92 +529,83 @@ export let timelineEvents: TimelineEvent[] = [
 const storyBodies: Record<string, BodySection[]> = {
   antibiotic: [
     {
-      heading: 'The bottom line',
+      heading: 'A protein model searches a vast sequence space',
       paragraphs: [
-        'The strongest signal in AI biology is not a model naming a molecule. It is a repeatable handoff between a model’s search and a laboratory’s judgement. Antibiotic discovery is a useful test because the search space is enormous, the cost of a false lead is high and a promising prediction still has to survive chemistry, biology and time.',
-        'That distinction matters. A model can make a candidate look plausible without making it useful. The meaningful progress begins when researchers can move from a generated structure to a synthesised compound, then feed the result back into the next round of search. The model is not replacing intuition. It is giving intuition somewhere new to look.',
+        'A 2025 Nature Microbiology paper describes ProteoGPT, a protein language model with more than 124 million parameters, alongside specialized models in a sequential pipeline for mining and generating antimicrobial peptides. The authors say their pipeline screens hundreds of millions of peptide sequences while filtering for antimicrobial activity and cytotoxic risk. This is a specific research system, not evidence that general-purpose chat models can discover antibiotics on their own. [@nature-antibiotic-study]',
+        'The paper’s target is antimicrobial peptides (AMPs), short chains of amino acids that can act against bacteria. The authors report testing both mined and generated candidates against ICU-derived carbapenem-resistant Acinetobacter baumannii and methicillin-resistant Staphylococcus aureus. Their study describes laboratory assays and animal experiments; it does not report a human treatment trial. [@nature-antibiotic-study]',
       ],
-      pullQuote: 'The model is not replacing intuition. It is giving intuition somewhere new to look.',
+      pullQuote: 'The reported result is a research pipeline with experimental checks, not a finished medicine.',
     },
     {
-      heading: 'The search space is the first bottleneck',
+      heading: 'The first result is in the laboratory',
       paragraphs: [
-        'Researchers used a generative system to propose antibiotic candidates that did not appear in public databases. That is not the same as proving the compounds are effective, but it changes the starting point for the work. Instead of ranking only molecules that already have a familiar analogue, a system can explore combinations of chemical features that a conventional library search may never surface.',
-        'The value is partly mathematical and partly practical. There are far more possible molecules than a laboratory can make, test or even represent with a useful name. A model can narrow the field by learning relationships between structure and activity, then suggest a manageable set for people to inspect. The result is not an answer; it is a better queue for scarce experimental attention.',
-      ],
-    },
-    {
-      heading: 'The wet lab remains the quality filter',
-      paragraphs: [
-        'Several candidates survived early synthesis and testing, creating a narrow but meaningful bridge between a latent map and the wet lab. Synthesis exposes a constraint that a screen cannot: some attractive structures are difficult to make, unstable outside a simulation or incompatible with the conditions required for a fair experiment.',
-        'Scientists still decide which questions justify the expensive, messy work of testing. They check whether an apparent effect is reproducible, whether a compound is toxic to healthy cells, whether resistance emerges quickly and whether the result is specific to one assay. Those judgements are not clerical steps after the model has finished. They define what success means.',
+        'In vitro, the authors report that both mined and generated AMPs showed activity against the two resistant bacteria and reduced susceptibility to resistance development under the study’s test conditions. Those words matter: a result in a defined assay is evidence about that assay, not proof that a candidate will work in a patient or remain effective in every clinical setting. [@nature-antibiotic-study]',
+        'The research also compares selected peptides in mouse thigh-infection models. The paper reports therapeutic efficacy comparable to or greater than clinical antibiotics in those experiments, and reports no organ damage or disruption of gut microbiota in the studied animals. These are the authors’ preclinical findings, not a clinical safety or efficacy result. [@nature-antibiotic-study]',
       ],
     },
     {
-      heading: 'A better loop, not a magic molecule',
+      heading: 'A mouse result is not a human treatment',
       paragraphs: [
-        'The most durable workflow looks less like a vending machine and more like a loop. A model proposes candidates, a chemist removes the impossible ones, a lab measures activity, and the next model run learns from both positive and negative results. Every stage changes the information available to the next stage.',
-        'That loop also makes provenance more important. Teams need to know which model version proposed a structure, which assumptions shaped the ranking, how a compound was prepared and which assay produced the result. Without that record, a striking candidate can become an isolated anecdote instead of a reusable research lead.',
+        'A drug candidate must pass many steps beyond an animal model, including reproducible testing, safety assessment and appropriately designed clinical studies. The Nature paper supports a narrower statement: its pipeline produced peptides that the authors tested in vitro and in mouse infection models. It does not establish a human dose, a clinical benefit, or approval for use. [@nature-antibiotic-study]',
+        'That boundary is not a reason to dismiss the result. It is how preclinical evidence should be described. The paper adds experimental evidence to a model-assisted search, while leaving the distance between a candidate and a usable medicine unresolved. Readers should not interpret “against multidrug-resistant bacteria” as meaning that a treatment is available for people with those infections. [@nature-antibiotic-study]',
       ],
     },
     {
-      heading: 'Why this matters beyond medicine',
+      heading: 'What the pipeline changes—and what it does not',
       paragraphs: [
-        'The pattern will recur wherever prediction meets a physical feedback loop: a pipette in biology, a robot arm in manufacturing or a production system in software. The durable advantage is not automation alone, but a more precise interface with reality. Systems that know how to ask for the next useful experiment will outperform systems that only produce more hypotheses.',
-        'For antibiotic research, the standard should therefore be modest and demanding at the same time. The question is not whether a model can claim novelty. It is whether a research team can repeatedly turn unusual suggestions into well-characterised candidates, publish the failures as well as the successes and shorten the path from search to evidence.',
-        'That is the difference between a compelling research story and a durable scientific capability. Novelty opens the door, but reproducibility determines whether anyone can keep using it.',
+        'The study’s contribution is a coordinated sequence of mining, generation and experimental testing. That can help researchers decide which peptide candidates merit laboratory attention. It does not remove the need to synthesize or test the candidates, and the paper does not show that the same pipeline will generalize to every pathogen or clinical problem. [@nature-antibiotic-study]',
+        'The central evaluation question is therefore not how many sequences a model can score. It is whether candidates selected by the pipeline reproduce across relevant assays, remain safe in further testing and justify the next research step. Those are questions for additional experiments, not conclusions supplied by the model’s scale or architecture. [@nature-antibiotic-study]',
       ],
     },
     {
-      heading: 'From prediction to evidence',
+      heading: 'The evidence boundary is the story',
       paragraphs: [
-        'The next improvement will come from making the handoff measurable. Researchers can track how many generated candidates are chemically feasible, how many enter an assay, how often a result is reproducible and which parts of the model’s ranking were useful to the laboratory. Those measures keep the story grounded in throughput and evidence instead of novelty alone.',
-        'That discipline also makes the work easier to share. A candidate that fails for a documented reason can still teach the next search. A candidate that succeeds can be compared with the alternatives that were not tested. The real promise of AI-assisted discovery is therefore cumulative: each experiment should make the next decision more informed, whether the result is a new antibiotic or a clearer reason to stop pursuing one.',
+        'The work is worth following because it connects a computational search with experiments against clinically important resistant bacteria. Its present status is still preclinical. The article describes one peer-reviewed primary study, and the source set used here contains no independent replication of its findings. [@nature-antibiotic-study]',
+        'A careful account can recognize both points at once: the authors report promising activity in specified laboratory and mouse models, and no one should treat that as proof of a new antibiotic for patients. Further validation is what would move the claim forward. Until then, the useful lesson is about a model-assisted research process, not a medicine ready for the clinic. [@nature-antibiotic-study]',
       ],
     },
   ],
   watermarking: [
     {
-      heading: 'The quiet standard battle',
+      heading: 'A legal obligation and a voluntary code are different',
       paragraphs: [
-        'Content credentials are becoming a practical procurement question, even as no single watermark survives every transformation of a file. A visible mark can be cropped, compressed or removed. A hidden signal can be damaged by editing. The useful layer is provenance: a signed history that can travel with the asset and tell a viewer what happened before it arrived on a platform.',
-        'That history is not a declaration that an image is true. It is a record of origin and change. A camera, editing tool, publisher or generative system can attest to the part it played, while the person viewing the file can decide how much trust to place in the chain. The distinction prevents provenance from becoming a new label for certainty.',
+        'The European Commission says the AI Act transparency obligations for in-scope providers and deployers apply from 2 August 2026. The accompanying Code of Practice helps organizations demonstrate compliance, but adherence to the code itself is voluntary; the underlying Article 50 obligations are legal requirements. That distinction matters more than calling every disclosure tool a new law. [@eu-ai-act-content-transparency]',
+        'The Code addresses marking and detection of AI-generated or manipulated content, plus labels for deepfakes and certain AI-generated text. It does not require every image on the internet to carry one universal watermark. Its scope and duties depend on the relevant AI Act provisions and the role of the provider or deployer. [@eu-ai-act-content-transparency]',
       ],
     },
     {
-      heading: 'What a durable credential can record',
+      heading: 'Provenance describes a file history, not the truth',
       paragraphs: [
-        'A useful credential can identify the creator or organisation that first signed an asset, the tool that made a material change and the time at which that change occurred. It can preserve a relationship between an original photograph and a published crop, or between a source document and a generated illustration. The record is valuable because it gives downstream systems something more precise than a binary “AI” or “not AI” badge.',
-        'The hard part is keeping the record attached as a file moves. Publishers resize images, social platforms strip metadata and screenshots create copies with no original chain. A serious system therefore needs a recovery path: a visible way to inspect the credential, a server-side record when the file loses it and a clear explanation when provenance is unavailable rather than a guess that fills the gap.',
+        'C2PA Content Credentials are signed assertions about an asset’s origin and edits. The specification describes a technical way for participating tools to attach and validate that history; it does not determine whether the scene in a photograph happened as shown. A valid provenance chain is evidence about handling, not a certificate that the content is authentic or true. [@c2pa-specification-v2-4]',
+        'That boundary also shapes the meaning of a missing credential. The C2PA deployment guide warns that transformations such as screenshots or exports can remove embedded credentials. An unsigned file therefore cannot be treated as false, just as a signed file cannot replace ordinary verification of its claims. [@c2pa-deployment-guidance-2026] [@c2pa-specification-v2-4]',
       ],
     },
     {
-      heading: 'Adoption is the hard part',
+      heading: 'One security preprint challenges current deployments',
       paragraphs: [
-        'Publishers, platforms and public agencies are testing different combinations of metadata, signatures and visible marks. Their incentives are not identical. A newsroom wants readers to understand how a picture was prepared; a platform wants scalable moderation signals; a public buyer wants a requirement that vendors can meet across formats and suppliers.',
-        'The emerging consensus is less about one technical standard than about giving people a legible account of origin. That means the interface matters. If a credential is technically complete but hidden behind an opaque icon, it will not build trust. If it presents a long chain without explaining which step matters, it will overwhelm the person trying to make a quick judgement.',
+        'A security paper posted to arXiv in April 2026 reports weaknesses in C2PA specifications versions 2.2–2.4, including cases where timestamps could be altered and validators disagreed about a credential. These are the authors’ findings from one preprint; they should be reported as a challenge to test, not as a settled verdict on every C2PA implementation. [@c2pa-independent-security-preprint]',
+        'The paper also makes the same important conceptual distinction: provenance is not authenticity. Its criticism is that users may over-trust a provenance signal when the standards or validators do not establish the guarantees they expect. Because this source set contains no independent replication of the reported exploits, the article attributes these claims rather than presenting them as consensus. [@c2pa-independent-security-preprint]',
       ],
     },
     {
-      heading: 'Procurement may move before consumer habit',
+      heading: 'Procurement should test the whole workflow',
       paragraphs: [
-        'Public-sector procurement is a likely early driver because buyers can specify record-keeping requirements before a universal consumer habit exists. A government media contract can require vendors to preserve provenance, expose an inspection endpoint and document what happens when a file is transformed. Similar requirements can then travel through agencies, broadcasters and archives.',
-        'That path has a weakness: compliance can become a checkbox. A vendor may attach a valid signature while the editorial or legal team never checks it. The better procurement question is operational: can the buyer retrieve the history, understand its limits, preserve it through the publishing workflow and explain exceptions to the public?',
+        'C2PA’s deployment guidance asks buyers to test whether credentials are attached by default, survive the real editing and publishing path, and can be inspected by the tools downstream teams use. Those are more useful questions than whether a vendor can show a successful demo on a clean sample file. The guide is written by C2PA, so it explains implementation practice rather than independently measuring adoption. [@c2pa-deployment-guidance-2026]',
+        'A contract should also state what happens when the chain is missing or a validator reports a problem. The interface needs to distinguish “no credential found,” “credential present but not validated,” and “validated provenance” without turning any of those states into a verdict on the image’s truth. That is a product and editorial requirement, not just a cryptographic one. [@c2pa-deployment-guidance-2026] [@c2pa-independent-security-preprint]',
       ],
     },
     {
-      heading: 'Trust needs a layered approach',
+      heading: 'Keep provenance inside a broader verification process',
       paragraphs: [
-        'No provenance system can decide whether a claim in an image is accurate. It can show who handled the asset, not whether the depicted event happened as described. Newsrooms still need source verification, captions and editorial review. The credential is a supporting record, not a replacement for reporting standards.',
-        'That is why the most credible approach is layered. Use signed credentials where they are available, visible labels where they help readers, ordinary verification for the underlying claim and an honest “unknown” state when the chain is missing. The quiet standard battle will be won by the system that makes uncertainty easier to describe, not by the mark that claims to eliminate it.',
-        'A system that admits what it cannot establish will earn more trust than one that turns a technical signature into an all-purpose guarantee. Provenance is strongest when it narrows uncertainty without pretending to remove it.',
+        'For publishers, credentials can add a useful record to ordinary verification: who supplied the file, what edits were made, and whether the provenance signature validates in the chosen tool. Editors still need to check the source, caption and depicted event. Neither the C2PA specification nor the European Commission’s transparency code turns a metadata record into evidence that an underlying claim is true. [@c2pa-specification-v2-4] [@eu-ai-act-content-transparency]',
+        'The strongest policy and product language states exactly what a signal can establish and where it stops. A provenance record can narrow uncertainty about a file’s handling. It cannot eliminate uncertainty about the scene, and a missing record does not settle the question in the opposite direction. [@c2pa-specification-v2-4] [@c2pa-independent-security-preprint]',
       ],
     },
     {
-      heading: 'The reader needs an honest interface',
+      heading: 'What readers should be told',
       paragraphs: [
-        'A provenance panel should answer practical questions quickly. Was this asset captured by a camera, generated from a prompt or materially edited? Which organisation signed the record? What changed between the original and the published version? If the answer is unavailable, the interface should say so without implying that an unsigned file is automatically false.',
-        'That clarity is a design responsibility as much as a standards responsibility. Readers do not need a cryptographic lecture, but they do need enough context to judge an image in the situation where they encountered it. The winning systems will make the chain inspectable without making trust feel like a technical privilege reserved for people who know where to click.',
+        'A reader-facing credential panel should name the signer, describe the recorded edits, and say whether the chosen verifier accepts the signature. If the record cannot be checked, the page should say that plainly. These design choices follow from the C2PA guide’s emphasis on verification and from the security preprint’s reported validator inconsistencies; they are not a guarantee that every deployment already handles them well. [@c2pa-deployment-guidance-2026] [@c2pa-independent-security-preprint]',
+        'The practical race is not to watermark everything. It is to make disclosure, provenance and verification useful in the situations where they apply—while keeping the limits visible. That lets law, standards and newsroom checks do distinct jobs instead of asking one technical mark to provide certainty it was not designed to supply. [@eu-ai-act-content-transparency] [@c2pa-specification-v2-4]',
       ],
     },
   ],
@@ -653,47 +658,38 @@ const storyBodies: Record<string, BodySection[]> = {
   ],
   'small-models': [
     {
-      heading: 'Useful beats impressive',
+      heading: 'What “Small 4” means in the model card',
       paragraphs: [
-        'The most useful model may be the one that never leaves a company’s laptop. Smaller systems reduce latency, keep sensitive data local and make a predictable cost possible. They also change the shape of a product: a feature can respond while offline, run beside a private document store and remain available when a central service is busy or expensive.',
-        'That does not make size irrelevant. A compact model may struggle with long documents, unusual requests or multi-step reasoning. The practical question is whether its limits line up with the job. If a model can classify, extract, draft or route reliably within a bounded workflow, a smaller footprint can be an advantage rather than a compromise.',
+        'Mistral AI’s model card lists Small 4 as an open-weights model under Apache 2.0, with 119 billion total parameters, 6.5 billion active parameters and a 256K context window. Those are provider-published specifications. They do not, on their own, show that the model fits on a laptop or that it is faster, cheaper or more accurate than another model. [@mistral-model-card]',
+        'The difference between total and active parameters matters. The active count describes a portion of the model used for a given inference path; it is not the complete stored weight set. Buyers should not use “6.5B active” as a substitute for checking the model’s full weights, runtime requirements and deployment configuration. [@mistral-model-card]',
       ],
     },
     {
-      heading: 'Where the local edge wins',
+      heading: 'Open weights do not prove local hardware fit',
       paragraphs: [
-        'Latency is often the first visible benefit. A local model can avoid a round trip to a remote service, which matters in voice interfaces, developer tools and systems that need to make a decision inside a larger interaction. Privacy is the second. Sensitive text can stay inside a device or controlled network instead of becoming another payload that must be governed after the fact.',
-        'There is also a resilience benefit. A product that depends on one remote endpoint inherits its outages, rate limits and price changes. A local or private deployment is not free of operational work, but it gives a team more control over the failure modes. That control can be worth more than a marginal improvement on a general benchmark.',
+        '“Open weights” describes access to model weights, not the amount of memory or infrastructure needed to use them. The model card’s total-parameter figure is more relevant to storage than the active-parameter figure alone, but an exact deployment budget also depends on implementation choices that this captured card excerpt does not specify. We therefore cannot infer a minimum device, memory requirement or local cost from these three headline numbers. [@mistral-model-card]',
+        'The same caution applies to privacy and latency. A team can evaluate a private or local deployment, but the model card does not provide independent measurements showing that Small 4 improves either outcome. Those are workload-level properties that should be tested in the actual serving setup, with the model, quantization, hardware and network path documented.',
       ],
     },
     {
-      heading: 'The new evaluation',
+      heading: 'A long context window is a specification, not a result',
       paragraphs: [
-        'Teams now measure a model against a workflow: retrieval quality, tool reliability, monitoring burden and the cost of a wrong answer. A leaderboard score is only the beginning. The useful test asks whether the model chooses the right document, follows the permission boundary, produces a structured result and makes uncertainty visible before a person acts on it.',
-        'That evaluation should include the boring cases. What happens when a document is missing, a user mixes languages, a tool times out or the input is deliberately ambiguous? A model that is slightly less fluent but fails clearly can be safer and cheaper than one that sounds confident while silently taking the wrong path.',
+        'The 256K context window is a model-card specification, not proof that every application can use the full window economically or with reliable results. Long-context behavior should be checked against representative documents, retrieval accuracy, truncation behavior, latency and the cost of processing the complete input. The provider’s stated limit is a useful starting point, not a workflow evaluation. [@mistral-model-card]',
+        'A comparison should keep the task and serving conditions constant. Measure whether the system finds the right passage, follows permissions, returns a usable answer and exposes uncertainty. Without those task-specific checks, a large context figure or a parameter count cannot establish product quality.',
       ],
     },
     {
-      heading: 'Routing is a product decision',
+      heading: 'Read the license and the product boundary separately',
       paragraphs: [
-        'Most serious deployments will not choose between one giant model and one tiny model. They will route. A compact model can handle triage, extraction and routine replies, while a stronger system receives only the tasks that need broader context or more complex reasoning. The router becomes a key part of quality because a bad handoff can erase the benefit of both models.',
-        'Routing also makes cost legible. A team can measure how many requests remain local, how often an escalation occurs, how much latency it adds and whether the escalation improves the outcome. Those measurements create a more useful operating conversation than asking which model is best in the abstract.',
+        'The card identifies the weights as Apache 2.0 and open-weight. That makes the published license an important source for use and redistribution terms, but it does not establish that a particular hosted service, derivative, data pipeline or product integration has the same terms. A buyer should review the actual license and the components included in the intended deployment. [@mistral-model-card]',
+        'Likewise, the name “Small” does not answer whether this model is small for a particular team. An evaluation should list the full model artifact, required serving stack, hardware, throughput, latency, quality thresholds and operational responsibilities. Those are deployment questions; the model card’s headline specifications cannot answer them by themselves.',
       ],
     },
     {
-      heading: 'Capability becomes a deployment choice',
+      heading: 'The evaluation checklist is more useful than the label',
       paragraphs: [
-        'Smaller models expand who can run capable systems. A regional business, a hospital team or a public-interest organisation may not be able to sustain frontier inference for every request, but it may be able to run a focused model with a narrow evaluation set and clear human review.',
-        'The result is not a rejection of frontier models. It is a more mature division of labour. Teams will route each task to the smallest model that can do it reliably, keep private work close to its data and reserve expensive capability for decisions where the additional quality changes the outcome.',
-        'The practical advantage is choice. A team can place different parts of a workflow where they make the most sense instead of sending every request through the same expensive and distant service.',
-        'That choice can also make experimentation safer: a team can test a narrow capability locally before it commits a sensitive workflow to a larger shared service.',
-      ],
-    },
-    {
-      heading: 'The local model still needs discipline',
-      paragraphs: [
-        'Local inference does not remove the need for updates, evaluation or access control. A model running on a laptop can still expose sensitive output, repeat a bad instruction or fail silently when its supporting data is stale. Teams need a small but explicit operating plan: version the model, test representative tasks, record important failures and define when a request must leave the local path.',
-        'That discipline is easier to sustain when the scope is clear. A compact model does not have to answer everything. It can handle a defined class of work, explain when it is outside that class and pass the rest to a stronger system or a person. The best edge deployments are not miniature copies of frontier systems; they are focused tools with honest boundaries.',
+        'Before selecting Small 4 for a workflow, teams can ask the vendor or deployment provider to identify the complete weight artifact and serving configuration, then measure memory, throughput, latency and cost on representative tasks. They should also test quality and failure behavior against a baseline that matters to users. These are recommended evaluation steps, not performance results claimed by the model card.',
+        'Mistral’s card makes the model’s published size, active-parameter count, context limit and license easier to inspect. It does not support the broader claim that small models are already winning serious workflows or that this model is a local-laptop model. The honest conclusion is narrower: its specifications justify a deployment evaluation, and that evaluation must measure the full system rather than rely on its name. [@mistral-model-card]',
       ],
     },
   ],
@@ -795,56 +791,58 @@ const storyBodies: Record<string, BodySection[]> = {
 const maintainedStudyStory: Story = {
   slug: 'study-finds-word-cues-can-override-game-theory-choices-in-llms',
   category: 'The Edge',
-  title: 'Study finds word cues can override game-theory choices in LLMs',
-  dek: 'A preprint reports that several larger instruction-tuned models favored cooperation in a Prisoner’s Dilemma because of a late, label-sensitive internal circuit.',
+  title: 'Preprint links cooperative game choices to familiar action labels',
+  dek: 'A revised arXiv preprint reports a label-sensitive circuit in tested models; its findings remain limited to specific prompts and game protocols.',
   body: [
     {
       heading: 'A late intervention in the network',
       paragraphs: [
-        'A new arXiv preprint examines how instruction-tuned language models respond to a directly prompted Prisoner’s Dilemma. The authors report that three larger models—Llama-3-70B, Qwen2.5-32B and Qwen2.5-72B—consistently selected cooperation, while Llama-3-8B produced choices closer to the Nash action. The result is interesting not because cooperation is automatically surprising, but because the models appeared to move away from the equilibrium action while still receiving a task that can be described in formal terms.',
-        'Using logit-lens analysis, the team found that intermediate model readouts leaned toward the Nash action through much of the network. Near the final layers, however, the models shifted sharply toward cooperation. The authors characterize this late shift as a distributed cooperative override. In other words, the final answer did not simply reflect a stable decision that was present from the beginning; the network appeared to revise the direction of the response close to the output.',
+        'Version 3 of an arXiv preprint examines instruction-tuned language models on a directly prompted Prisoner’s Dilemma. The authors report that Llama-3-70B, Qwen2.5-32B and Qwen2.5-72B selected full cooperation under the named prompt, while Llama-3-8B played near the Nash action. These findings describe the tested models and prompt, not a general cooperative preference in language models. [@open-a7f1c833c9a1e5c0]',
+        'The authors use logit-lens analysis to report that intermediate readouts lean toward the Nash action through much of the network, followed by a late shift toward cooperation. They call this pattern a distributed cooperative override. That is their interpretation of internal measurements from this experiment; it should not be treated as a universal explanation of model decisions. [@open-a7f1c833c9a1e5c0]',
       ],
     },
     {
       heading: 'A controllable but narrow signal',
       paragraphs: [
-        'In the 8B model, the researchers report isolating a single direction in the residual stream associated with the override. Steering that direction adjusted the decision, and clamping its contribution at one layer and position changed the choice monotonically while preserving fluent generation. That kind of intervention is useful because it turns a behavioural observation into a mechanism that can be probed, even if the mechanism is only one part of a much larger computation.',
-        'The paper links the scale of the final correction to chain-of-thought behaviour across the tested model families. But its central interpretation is narrower than a claim that the systems possess a general cooperative preference. The mechanism appeared tied to the language used to present the game, and a direction that changes one prompted choice does not by itself explain how a model would behave in a different strategic setting.',
+        'For Llama-3-8B, the authors report identifying a residual-stream direction associated with the override. Steering it changed the decision, and clamping its component at one layer and position moved the choice monotonically in their tests while generation remained fluent. The intervention makes the proposed mechanism probeable, but it concerns one model and a defined experimental setup. [@open-a7f1c833c9a1e5c0]',
+        'The preprint also reports that the effect disengaged when “Cooperate” and “Defect” were replaced with neutral labels. That result narrows the interpretation: wording appears to matter in the tested games. It does not establish how a model would act in a richer strategic environment or in a deployed workflow. [@open-a7f1c833c9a1e5c0]',
       ],
     },
     {
       heading: 'Neutral labels changed the result',
       paragraphs: [
-        'The reported effect persisted when player names were removed and when payoffs were rescaled. It disengaged when the action labels “Cooperate” and “Defect” were replaced with neutral terms, suggesting that the circuit was responding to learned lexical associations rather than the underlying payoff structure. That is the paper’s most practical warning: a benchmark can appear to test strategic reasoning while also testing the model’s learned associations with the words used to name each action.',
-        'Across 48 randomized-payoff games with neutral action surfaces, the authors report that none of the models consistently locked into cooperation on dilemmas or demonstrated general equilibrium competence. The neutral condition makes the result more specific, not less useful. It suggests that evaluation designers should vary names, labels and presentation order before treating a repeated output as evidence of a broad preference.',
+        'The authors report that the effect survived removing player names and rescaling payoffs, but weakened when the action labels became neutral. They interpret that as evidence of a lexical trigger rather than a stable response to the payoff structure. The practical caution is that a benchmark can test familiar wording as well as strategic reasoning. [@open-a7f1c833c9a1e5c0]',
+        'In 48 payoff-random games with neutral surfaces, the preprint reports that no tested model consistently chose cooperation on every dilemma or demonstrated general equilibrium competence. This is evidence about those protocols, not a broad score for every kind of strategic reasoning. Evaluation designers can use the finding as a reason to vary labels and presentation before assigning meaning to a repeated output. [@open-a7f1c833c9a1e5c0]',
       ],
     },
     {
       heading: 'What the mechanism does not prove',
       paragraphs: [
-        'The study does not establish that language models understand cooperation in the human sense, nor that they are incapable of identifying a Nash action. It reports a pattern in a defined family of prompted games and a set of interventions that changed the observed decision. The distinction matters because mechanistic interpretability can make a finding look more complete than it is: locating a direction in a residual stream is not the same as locating a single, universal cause of behaviour.',
-        'The sample also leaves open questions about scale, training data and task construction. Would the same effect appear in models with different instruction-tuning mixtures? Does it persist when the model must act repeatedly, explain a choice or face a payoff structure that changes over time? The answers would determine whether the override is a narrow lexical shortcut or one instance of a broader family of prompt-sensitive behaviours.',
+        'The study does not show that language models understand cooperation in the human sense, or that they are unable to identify a Nash action. It reports behavior in a defined set of prompted games and interventions. A controllable internal direction is useful evidence about those tests, but it is not a single universal cause of behavior. [@open-a7f1c833c9a1e5c0]',
+        'The preprint leaves questions about other model families, training mixtures and strategic tasks. Its results do not establish whether the same effect would persist in repeated interactions or changing payoff structures. Those are open research questions, not conclusions that can be filled in from the current experiment. [@open-a7f1c833c9a1e5c0]',
       ],
     },
     {
       heading: 'A better test for strategic behaviour',
       paragraphs: [
-        'The strongest lesson is methodological. Any evaluation that assigns meaning to a model’s choice should vary the surface form of the task, include neutral labels and separate fluent explanation from actual action selection. Researchers should also report the conditions under which the result disappears. A mechanism that is easy to turn off may still be important, but it should be described as conditional rather than as a stable trait.',
-        'The work points toward label-robust game-theory tests and mechanistic checks before treating prompted model behaviour as evidence of broad strategic competence or preference. For now, the preprint is best read as a precise warning about how language and decision-making can become entangled inside an instruction-tuned system.',
+        'A useful evaluation should vary task wording, include neutral labels and separate a model’s explanation from its action. Researchers should report not only where an effect appears but also the conditions where it disappears. Those are methodological recommendations drawn from the preprint’s label-sensitive result, not a claim that one test settles strategic competence. [@open-a7f1c833c9a1e5c0]',
+        'Version 3 is a major revision of the earlier preprint and adds a randomized-payoff experiment. It remains a single arXiv paper with no independent confirmation in this source set. The most defensible reading is therefore narrow: familiar action words changed choices in the reported tests, and label-robust evaluation is needed before broader claims are made. [@open-a7f1c833c9a1e5c0]',
       ],
     },
   ],
   date: '2026-09-21',
+  dateModified: '2026-10-05',
   readTime: '4 min read',
   author: 'ishaan-mehta',
-  evidence: 'High confidence · 1 primary source · 0 independent confirmations',
+  evidence: 'Developing evidence · 1 preprint · 0 independent confirmations',
   evidenceSummary: {
     primarySources: 1,
     independentConfirmations: 0,
-    confidence: 'HIGH',
-    note: 'Autonomous desk verification score 0.98 across 1 open-source publisher.',
+    confidence: 'DEVELOPING',
+    note: 'A single, substantially revised arXiv preprint supports the account; no independent replication is included in this source set.',
   },
-  classification: 'reported',
+  classification: 'synthesis',
+  contentType: 'Brief',
   entities: [],
   timeline: [],
   relatedStories: [],
@@ -856,22 +854,22 @@ const maintainedStudyStory: Story = {
   },
   topic: 'LLM interpretability and decision-making',
   sources: ['open-a7f1c833c9a1e5c0'],
-  bottomLine: 'The study argues that apparent cooperative behavior in tested language models was driven by a controllable response to familiar game labels, not a general inability to identify Nash behavior.',
-  whyItMatters: 'If validated, the findings show why behavioral evaluations should vary labels and task surfaces: a model can appear to display a stable preference while following a narrow lexical trigger.',
+  bottomLine: 'One preprint reports that familiar game-action labels changed choices in its tested models; the result is not evidence of a general cooperative preference.',
+  whyItMatters: 'The study is a reason to vary task wording before interpreting a prompted choice as evidence of broad strategic competence.',
   keyTakeaways: [
-    'Llama-3-70B, Qwen2.5-32B and Qwen2.5-72B reportedly chose full cooperation under direct prompting in the named Prisoner’s Dilemma, unlike Llama-3-8B.',
-    'The researchers found a late-layer shift toward cooperation and identified a residual-stream direction in the 8B model that could be manipulated to adjust the decision.',
-    'Replacing “Cooperate” and “Defect” with neutral labels removed the reported effect, and the models did not show general equilibrium competence across randomized-payoff games.',
+    'The preprint reports full cooperation under a named Prisoner’s Dilemma prompt for three larger tested models.',
+    'The authors report a late-layer shift and a steerable residual-stream direction in Llama-3-8B.',
+    'Neutral labels changed the result; the paper does not establish a general model trait.',
   ],
-  whatChanges: 'The work points toward label-robust game-theory tests and mechanistic checks before treating prompted model behavior as evidence of broad strategic competence or preference.',
+  whatChanges: 'Treat the result as a prompt- and protocol-specific preprint finding, and test strategic behavior under neutral labels before making broader claims.',
 };
 
 export let stories: Story[] = [
   maintainedStudyStory,
-  { slug: 'ai-models-antibiotic-discovery', category: 'Breakthroughs', title: 'AI models are accelerating the hunt for new antibiotics', dek: 'A new generation of models is moving beyond prediction — and into the wet lab.', body: storyBodies.antibiotic, date: '2026-09-11', readTime: '7 min read', author: 'mira-patel', evidence: 'High confidence · 3 primary sources · 5 independent confirmations', evidenceSummary: evidenceSummaries.antibiotic, classification: 'reported', entities: ['antibiotic-discovery', 'google-deepmind'], timeline: ['antibiotic-candidates', 'gemini-science-release'], relatedStories: ['small-models', 'founders'], imageTreatment: { type: 'editorial-abstract', alt: 'Abstract map of molecular structures and laboratory notes', palette: 'deep teal, chalk white, antibiotic amber', caption: 'The interface between a model’s search and the laboratory is becoming more precise.' }, topic: 'AI', sources: ['nature-antibiotic-study', 'stanford-ai-index-2026'], bottomLine: 'AI is making the search space for antibiotic candidates more legible, not removing the need for experiments.', whyItMatters: 'The same model-to-reality feedback loop could reshape materials, manufacturing and drug discovery.', keyTakeaways: ['Novel candidates still require synthesis and testing.', 'The useful breakthrough is the feedback loop, not a single prediction.', 'Scientific judgement remains central to deciding what to test.'], whatChanges: 'Research teams can screen broader chemical spaces before committing scarce wet-lab time.' },
-  { slug: 'quiet-race-watermark-everything-ai-makes', category: 'Signals', title: 'The quiet race to watermark everything AI makes', dek: 'Standards are taking shape while the internet learns to ask: who made this?', body: storyBodies.watermarking, date: '2026-09-10', readTime: '5 min read', author: 'jonas-rhee', evidence: 'Medium confidence · 2 primary sources · 4 independent confirmations', evidenceSummary: evidenceSummaries.watermarking, classification: 'analysis', entities: ['content-credentials'], timeline: ['watermarking-code'], relatedStories: ['india-stack'], imageTreatment: { type: 'data-graphic', alt: 'Layered provenance marks across a digital image', palette: 'warm white, cobalt, graphite', caption: 'Provenance is becoming an infrastructure question.' }, topic: 'Policy', sources: ['eu-ai-act-code', 'uspto-ai-inventorship'], bottomLine: 'The emerging standard is provenance that can be checked, rather than a magic mark that cannot be removed.', whyItMatters: 'Trust in generated media will depend on institutions making origin legible at scale.', keyTakeaways: ['Watermarks alone are easy to strip.', 'Signed content credentials can preserve an asset history.', 'Public procurement may drive adoption before consumer platforms do.'], whatChanges: 'Creators and platforms will increasingly be asked to disclose how an asset was made.' },
+  { slug: 'ai-models-antibiotic-discovery', category: 'Breakthroughs', title: 'ProteoGPT study reports peptide candidates for resistant bacteria', dek: 'One protein-language-model pipeline reports in-vitro and mouse-model results; the findings remain preclinical.', body: storyBodies.antibiotic, date: '2026-09-11', dateModified: '2026-10-05', readTime: '7 min read', author: 'mira-patel', evidence: 'Developing evidence · 1 peer-reviewed primary study · 0 independent confirmations', evidenceSummary: evidenceSummaries.antibiotic, classification: 'synthesis', contentType: 'Brief', entities: [], timeline: [], relatedStories: [], imageTreatment: { type: 'editorial-abstract', alt: 'Abstract map of peptide sequences and a laboratory assay', palette: 'deep teal, chalk white, antibiotic amber', caption: 'A model-assisted search still depends on experiments.' }, topic: 'AI in science', sources: ['nature-antibiotic-study'], bottomLine: 'A 2025 Nature Microbiology paper reports AMP activity in laboratory and mouse models; it does not establish a human treatment.', whyItMatters: 'The case shows why model-assisted drug discovery should be described through its experiments and evidence boundary, not the novelty of a prediction alone.', keyTakeaways: ['ProteoGPT is a specialized protein-language-model pipeline.', 'The reported evidence covers in-vitro assays and mouse infection models.', 'No human treatment result is reported in this study.'], whatChanges: 'Track which candidates reproduce in further preclinical work before making claims about clinical benefit.' },
+  { slug: 'quiet-race-watermark-everything-ai-makes', category: 'Policy', title: 'C2PA provenance records do not prove content is true', dek: 'EU disclosure obligations, a voluntary code and a contested provenance standard do different jobs.', body: storyBodies.watermarking, date: '2026-09-10', dateModified: '2026-10-05', readTime: '5 min read', author: 'jonas-rhee', evidence: 'Medium confidence · 3 official records · 1 attributed security preprint', evidenceSummary: evidenceSummaries.watermarking, classification: 'analysis', contentType: 'Analysis', entities: ['content-credentials'], timeline: ['watermarking-code'], relatedStories: [], imageTreatment: { type: 'data-graphic', alt: 'A signed provenance record shown beside an image, with its limits made explicit', palette: 'warm white, cobalt, graphite', caption: 'Provenance describes a file history, not whether the content is true.' }, topic: 'Policy', sources: ['eu-ai-act-content-transparency', 'c2pa-specification-v2-4', 'c2pa-deployment-guidance-2026', 'c2pa-independent-security-preprint'], bottomLine: 'C2PA can record signed provenance, but it cannot establish that an image is true; one unreviewed preprint reports security limitations that should be investigated.', whyItMatters: 'A reader or buyer needs to distinguish legal disclosure, file provenance and verification of the underlying claim.', keyTakeaways: ['The EU Code of Practice is voluntary; applicable Article 50 obligations are legal requirements.', 'A valid provenance record is not proof of authenticity.', 'A single arXiv security study reports validator and specification weaknesses that remain to be independently tested.'], whatChanges: 'Procurement and newsroom workflows should test how credentials are attached, preserved, validated and explained when absent.' },
   { slug: 'indias-public-ai-stack', category: 'India Watch', title: 'India’s public AI stack is being built in the open', dek: 'From language data to compute, a sovereign layer is becoming visible.', body: storyBodies['india-stack'], date: '2026-09-09', readTime: '6 min read', author: 'ananya-rao', evidence: 'High confidence · 4 primary sources · 3 independent confirmations', evidenceSummary: evidenceSummaries['india-stack'], classification: 'reported', entities: ['indiaai-mission', 'sarvam-ai'], timeline: ['indiaai-compute-tender', 'sarvam-public-model'], relatedStories: ['small-models', 'infrastructure'], imageTreatment: { type: 'field-photograph', alt: 'Bengaluru technology district at dusk', palette: 'saffron, indigo, concrete grey', caption: 'India is treating shared infrastructure as a competitive advantage.' }, topic: 'India', sources: ['indiaai-mission', 'stanford-ai-index-2026'], bottomLine: 'India is building a shared layer for language, compute and public-interest deployment.', whyItMatters: 'A public substrate could lower the cost of building products for hundreds of millions of users.', keyTakeaways: ['Compute access is moving beyond the largest companies.', 'Indic-language data is a strategic asset.', 'Procurement will determine whether infrastructure becomes useful.'], whatChanges: 'Startups can spend more effort on products and less on recreating basic AI infrastructure.' },
-  { slug: 'small-models-serious-workflows', category: 'The Edge', title: 'Small models are finding their way into serious workflows', dek: 'The most useful AI may be the one that never leaves your laptop.', body: storyBodies['small-models'], date: '2026-09-08', readTime: '4 min read', author: 'ishaan-mehta', evidence: 'High confidence · 3 primary sources · 4 independent confirmations', evidenceSummary: evidenceSummaries['small-models'], classification: 'reported', entities: ['gpt-5', 'claude-4', 'sarvam-ai'], timeline: ['gpt-5-release', 'claude-4-release', 'sarvam-public-model'], relatedStories: ['founders', 'infrastructure'], imageTreatment: { type: 'editorial-abstract', alt: 'Compact model running beside a laptop and local data', palette: 'slate, electric blue, paper white', caption: 'Capability is increasingly measured inside a workflow.' }, topic: 'AI', sources: ['mistral-model-card', 'stanford-ai-index-2026'], bottomLine: 'Local and compact models are winning where latency, privacy and predictable cost matter more than benchmark leadership.', whyItMatters: 'Deployment economics will decide which AI capabilities become routine.', keyTakeaways: ['Latency and privacy are product features.', 'Workflow evaluation matters more than a single leaderboard.', 'Smaller models expand who can run capable systems.'], whatChanges: 'Teams will route each task to the smallest model that can do it reliably.' },
+  { slug: 'small-models-serious-workflows', category: 'The Edge', title: 'Mistral Small 4’s active parameter count is not its full footprint', dek: 'Mistral lists 119 billion total parameters and 6.5 billion active parameters; its model card does not establish hardware fit or runtime performance.', body: storyBodies['small-models'], date: '2026-09-08', dateModified: '2026-10-05', readTime: '4 min read', author: 'ishaan-mehta', evidence: 'Developing evidence · 1 provider-authored model card · no independent deployment tests', evidenceSummary: evidenceSummaries['small-models'], classification: 'analysis', contentType: 'Analysis', entities: [], timeline: [], relatedStories: [], imageTreatment: { type: 'editorial-abstract', alt: 'Model specifications displayed beside a system deployment checklist', palette: 'slate, electric blue, paper white', caption: 'A model label is not a deployment measurement.' }, topic: 'Models', sources: ['mistral-model-card'], bottomLine: 'Mistral’s model card lists 119B total and 6.5B active parameters; active count alone does not establish storage, hardware fit or performance.', whyItMatters: 'Teams need the full model artifact and a workload test before treating a parameter label as a deployment claim.', keyTakeaways: ['The model card states 119B total parameters and 6.5B active parameters.', 'The 256K context window and Apache 2.0 label are provider specifications.', 'The source set has no independent hardware, latency or quality measurements.'], whatChanges: 'Evaluate the full serving configuration on representative tasks rather than infer deployment properties from the model name.' },
   { slug: 'founders-first-million-model-calls', category: 'Field Notes', title: 'What founders notice after their first million model calls', dek: 'The bottleneck is rarely the model. It is the operating system around it.', body: storyBodies.founders, date: '2026-09-07', readTime: '8 min read', author: 'lena-hoff', evidence: 'Medium confidence · 2 primary sources · 6 independent confirmations', evidenceSummary: evidenceSummaries.founders, classification: 'analysis', entities: ['openai', 'anthropic'], timeline: ['openai-agent-platform'], relatedStories: ['small-models', 'infrastructure'], imageTreatment: { type: 'portrait', alt: 'Founder reviewing an AI operations dashboard in a quiet office', palette: 'ink, copper, soft green', caption: 'Scale exposes the system around the model.' }, topic: 'Founders', sources: ['stanford-ai-index-2026'], bottomLine: 'At scale, reliability, permissions and feedback loops matter more than clever prompts.', whyItMatters: 'The next generation of AI companies will be built around operational discipline.', keyTakeaways: ['Exceptions are product feedback.', 'Human escalation is a feature, not a failure.', 'Unit economics include monitoring and wrong answers.'], whatChanges: 'Founders will treat evaluation and governance as core product infrastructure.' },
   { slug: 'new-geography-of-compute', category: 'Infrastructure', title: 'The new geography of compute is surprisingly regional', dek: 'Power, permits and proximity are redrawing the map of intelligence.', body: storyBodies.infrastructure, date: '2026-09-06', readTime: '9 min read', author: 'david-okafor', evidence: 'High confidence · 4 primary sources · 5 independent confirmations', evidenceSummary: evidenceSummaries.infrastructure, classification: 'analysis', entities: ['microsoft'], timeline: ['azure-inference-expansion'], relatedStories: ['indias-public-ai-stack', 'small-models'], imageTreatment: { type: 'data-graphic', alt: 'Map showing regional compute corridors and energy connections', palette: 'night blue, grid green, signal orange', caption: 'The infrastructure map follows power, fibre and permission.' }, topic: 'Technology', sources: ['iea-data-centres', 'stanford-ai-index-2026'], bottomLine: 'The AI cloud is becoming a network of regional corridors shaped by physical constraints.', whyItMatters: 'Energy and permitting will influence who can offer fast, affordable intelligence.', keyTakeaways: ['Inference is moving closer to users.', 'Training remains more concentrated than deployment.', 'Power availability is now a strategic differentiator.'], whatChanges: 'AI infrastructure planning will look increasingly like energy and telecom planning.' },
   indiaAiComputeReport,
@@ -1106,6 +1104,17 @@ export const scheduledStories: ScheduledStory[] = [
  * Combine maintained articles with release records whose lifecycle and word
  * count were already checked by the caller using isPublicArticle.
  */
+export function resolveMaintainedReleaseStory(
+  storedStory: Story,
+  maintainedStory: ScheduledStory | undefined,
+): Story {
+  if (!maintainedStory) return storedStory;
+  if ((storedStory as Story & { editorialSource?: string }).editorialSource === 'editor') {
+    return storedStory;
+  }
+  return { ...storedStory, ...maintainedStory };
+}
+
 export function mergeEligiblePublishedStories(now = new Date(), schedule: Story[] = []): Story[] {
   const publishedStories = stories.filter((story) => isPublicArticle({ date: story.date }, now));
   const publishedSlugs = new Set(publishedStories.map((story) => story.slug));

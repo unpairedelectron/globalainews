@@ -1,5 +1,7 @@
 import { readFileSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
 import path from 'node:path';
+import { performance } from 'node:perf_hooks';
 import { fileURLToPath } from 'node:url';
 
 import express, { type Request, type Response } from 'express';
@@ -8,6 +10,7 @@ import { renderAmpArticleDocument } from './amp-html';
 import {
   fetchNewsroomContentSnapshot,
   hasPrerenderedArticleHtml,
+  NewsroomSnapshotFetchError,
   renderArticleHtml,
 } from './server/article-html';
 import { getSeoMetadata } from './seo-metadata';
@@ -94,6 +97,12 @@ app.get('/contact', (_request, response) => {
   response.redirect(308, '/contact-us');
 });
 
+function writeStructuredRenderLog(event: string, fields: Record<string, unknown>): void {
+  process.stderr.write(
+    `${JSON.stringify({ timestamp: new Date().toISOString(), event, ...fields })}\n`,
+  );
+}
+
 app.use((request, response, next) => {
   const requestUrl = new URL(request.originalUrl, 'http://localhost');
   const pathname = requestUrl.pathname;
@@ -106,28 +115,82 @@ app.use((request, response, next) => {
     response.status(405).end();
     return;
   }
+
+  const requestId = randomUUID();
+  const startedAt = performance.now();
+  response.setHeader('X-GAN-Request-ID', requestId);
+
+  let snapshotLookupMs = 0;
+  let serverRenderMs = 0;
+  let renderSource = 'request_snapshot';
+  let routeStatus: number | undefined;
+  let completionLogged = false;
+  const logCompletion = (event: string): void => {
+    if (completionLogged) return;
+    completionLogged = true;
+    writeStructuredRenderLog(event, {
+      requestId,
+      route: pathname,
+      statusCode: routeStatus ?? response.statusCode,
+      totalRenderMs: Math.round(performance.now() - startedAt),
+      snapshotLookupMs,
+      serverRenderMs,
+      renderSource,
+    });
+  };
+  response.once('finish', () => logCompletion('article_render_complete'));
+  response.once('close', () => {
+    if (!response.writableFinished) logCompletion('article_render_connection_closed');
+  });
+
   if (hasPrerenderedArticleHtml(pathname, publicDirectory)) {
+    renderSource = 'prerendered_html';
     next();
     return;
   }
 
   void (async () => {
-    const snapshot = await fetchNewsroomContentSnapshot(process.env.NEWSROOM_API_ORIGIN);
+    const snapshotStartedAt = performance.now();
+    const snapshot = await fetchNewsroomContentSnapshot(
+      process.env.NEWSROOM_API_ORIGIN,
+      {
+        requestId,
+        route: pathname,
+        onEvent: (diagnostic) =>
+          writeStructuredRenderLog('article_snapshot_lookup', {
+            requestId,
+            route: pathname,
+            ...diagnostic,
+          }),
+      },
+    );
+    snapshotLookupMs = Math.round(performance.now() - snapshotStartedAt);
+    const renderStartedAt = performance.now();
     const result = renderArticleHtml(
       baseHtml,
       pathname,
       publicDirectory,
       snapshot,
     );
+    serverRenderMs = Math.round(performance.now() - renderStartedAt);
+    routeStatus = result.status;
     response.status(result.status);
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Cache-Control', 'no-store');
     if (result.status === 404) response.setHeader('X-Robots-Tag', 'noindex');
     response.send(result.html);
   })().catch((error: unknown) => {
-    process.stderr.write(
-      `Article first-response rendering failed: ${error instanceof Error ? error.message : 'unknown error'}\n`,
-    );
+    routeStatus = 503;
+    writeStructuredRenderLog('article_render_failed', {
+      requestId,
+      route: pathname,
+      statusCode: 503,
+      totalRenderMs: Math.round(performance.now() - startedAt),
+      snapshotLookupMs,
+      serverRenderMs,
+      failureCode:
+        error instanceof NewsroomSnapshotFetchError ? error.code : 'render_error',
+    });
     if (response.headersSent) {
       response.destroy();
       return;
@@ -246,4 +309,35 @@ app.use((request, response) => {
   );
 });
 
-app.listen(port, '0.0.0.0');
+app.listen(port, '0.0.0.0', () => {
+  const requestId = randomUUID();
+  const startedAt = performance.now();
+  const route = '<startup-snapshot-warmup>';
+  void fetchNewsroomContentSnapshot(process.env.NEWSROOM_API_ORIGIN, {
+    requestId,
+    route,
+    onEvent: (diagnostic) =>
+      writeStructuredRenderLog('article_snapshot_lookup', {
+        requestId,
+        route,
+        ...diagnostic,
+      }),
+  })
+    .then((snapshot) => {
+      writeStructuredRenderLog('article_snapshot_warmup_complete', {
+        requestId,
+        route,
+        elapsedMs: Math.round(performance.now() - startedAt),
+        storyCount: snapshot.stories.length,
+      });
+    })
+    .catch((error: unknown) => {
+      writeStructuredRenderLog('article_snapshot_warmup_failed', {
+        requestId,
+        route,
+        elapsedMs: Math.round(performance.now() - startedAt),
+        failureCode:
+          error instanceof NewsroomSnapshotFetchError ? error.code : 'render_error',
+      });
+    });
+});

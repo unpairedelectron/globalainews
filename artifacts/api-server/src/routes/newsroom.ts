@@ -7,6 +7,7 @@ import {
   type Response as ExpressResponse,
 } from "express";
 import { requireEditorAuth } from "../middlewares/requireEditorAuth";
+import { shouldSeedDefaultSchedule } from "../editorial/release-seeding";
 import {
   db,
   editorialAutomationRunsTable,
@@ -44,6 +45,7 @@ import {
   getPublishedStories,
   mergeEligiblePublishedStories,
   isPublicArticle,
+  resolveMaintainedReleaseStory,
   getStoryWordCount,
   MINIMUM_STORY_WORDS,
   indiaIndex,
@@ -84,6 +86,11 @@ const router: IRouter = Router();
 
 type ReleaseRow = typeof editorialReleasesTable.$inferSelect;
 type ReleaseHistoryInsert = typeof editorialReleaseHistoryTable.$inferInsert;
+type PublicNewsroomContentSnapshot = ReturnType<typeof GetNewsroomContentResponse.parse>;
+const NEWSROOM_CONTENT_CACHE_TTL_MS = 1_000;
+let publicNewsroomContentCache:
+  | { snapshot: PublicNewsroomContentSnapshot; cachedAt: number }
+  | undefined;
 type ReleaseInput = {
   slug: string;
   title: string;
@@ -217,7 +224,7 @@ async function ensureSeeded(): Promise<void> {
 }
 
 async function getReleaseRows(): Promise<ReleaseRow[]> {
-  await ensureSeeded();
+  if (shouldSeedDefaultSchedule()) await ensureSeeded();
   return db
     .select()
     .from(editorialReleasesTable)
@@ -225,16 +232,24 @@ async function getReleaseRows(): Promise<ReleaseRow[]> {
 }
 
 function toScheduledStory(row: ReleaseRow): EditorialReleaseStory {
-  const story = row.story as unknown as EditorialReleaseStory;
+  const storedStory = row.story as unknown as EditorialReleaseStory;
   const maintainedStory = scheduledStories.find((candidate) => candidate.slug === row.slug);
+  const useMaintainedStory =
+    Boolean(maintainedStory) && storedStory.editorialSource !== "editor";
+  const story = resolveMaintainedReleaseStory(
+    storedStory,
+    maintainedStory,
+  ) as EditorialReleaseStory;
   return {
     ...story,
     slug: row.slug,
-    title: row.title,
+    title: useMaintainedStory ? story.title : row.title,
     publishAt: row.publishAt.toISOString(),
     cadence: row.cadence as EditorialCadence,
     date: dateOnly(row.publishAt),
-    dateModified: story.dateModified ?? maintainedStory?.dateModified,
+    dateModified: useMaintainedStory
+      ? maintainedStory?.dateModified ?? storedStory.dateModified
+      : storedStory.dateModified,
     updatedAt: row.updatedAt.toISOString(),
   };
 }
@@ -260,7 +275,7 @@ function toReleaseResponse(row: ReleaseRow, now = new Date()) {
   return {
     id: row.id,
     slug: row.slug,
-    title: row.title,
+    title: story.title,
     dek: story.dek,
     publishAt: row.publishAt,
     cadence: row.cadence as EditorialCadence,
@@ -547,9 +562,49 @@ router.get("/newsroom/social/articles/:slug.png", async (req, res): Promise<void
   }
 });
 
-router.get("/newsroom/content", async (_req, res): Promise<void> => {
+router.get("/newsroom/content", async (req, res): Promise<void> => {
+  const startedAt = Date.now();
+  const requestIdHeader = req.get("X-GAN-Request-ID");
+  const safeWebRequestId =
+    requestIdHeader &&
+    /^[a-f\d]{8}-[a-f\d]{4}-[1-8][a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12}$/i.test(
+      requestIdHeader,
+    )
+      ? requestIdHeader
+      : undefined;
+  const cachedSnapshot = publicNewsroomContentCache;
+  const cacheAgeMs = cachedSnapshot ? startedAt - cachedSnapshot.cachedAt : undefined;
+  if (
+    cachedSnapshot &&
+    cacheAgeMs !== undefined &&
+    cacheAgeMs >= 0 &&
+    cacheAgeMs <= NEWSROOM_CONTENT_CACHE_TTL_MS
+  ) {
+    req.log.info(
+      {
+        event: "newsroom_content_snapshot_cache_hit",
+        route: "/api/newsroom/content",
+        webRequestId: safeWebRequestId,
+        elapsedMs: Date.now() - startedAt,
+        cacheAgeMs,
+        storyCount: cachedSnapshot.snapshot.stories.length,
+      },
+      "Served cached public newsroom snapshot",
+    );
+    res.setHeader("X-Robots-Tag", "noindex");
+    res.setHeader("Cache-Control", "no-store");
+    res.json(cachedSnapshot.snapshot);
+    return;
+  }
+
+  let phase = "published_stories";
+  let publishedStoriesMs = 0;
+  let dynamicSourcesMs = 0;
+  let snapshotValidationMs = 0;
   try {
+    const publishedStoriesStartedAt = Date.now();
     const publishedStories = await getPublishedStoriesFromDatabase();
+    publishedStoriesMs = Date.now() - publishedStoriesStartedAt;
     const publishedStorySlugs = new Set(publishedStories.map((story) => story.slug));
     const publicResearchRecords = researchRecords.filter(
       (record) => record.status === "published" && publishedStorySlugs.has(record.storySlug),
@@ -566,9 +621,12 @@ router.get("/newsroom/content", async (_req, res): Promise<void> => {
       ...publicDataProducts.flatMap((record) => record.sourceSlugs),
       ...publicTopics.flatMap((record) => record.sourceSlugs),
     ]);
+    phase = "dynamic_sources";
+    const dynamicSourcesStartedAt = Date.now();
     const dynamicSources = (await getDynamicSourceRecords()).filter((source) =>
       citedSourceSlugs.has(source.slug),
     );
+    dynamicSourcesMs = Date.now() - dynamicSourcesStartedAt;
     const sourceRecords: Source[] = [
       ...maintainedSources.filter((source) => citedSourceSlugs.has(source.slug)),
       ...dynamicSources.filter(
@@ -605,6 +663,8 @@ router.get("/newsroom/content", async (_req, res): Promise<void> => {
     const stale =
       latestPublishedAt.length > 0 &&
       Date.now() - Date.parse(`${latestPublishedAt}T23:59:59Z`) > 36 * 60 * 60 * 1000;
+    phase = "snapshot_validation";
+    const snapshotValidationStartedAt = Date.now();
     const snapshot = GetNewsroomContentResponse.parse({
       generatedAt: new Date().toISOString(),
       source: "maintained-editorial-source",
@@ -631,11 +691,46 @@ router.get("/newsroom/content", async (_req, res): Promise<void> => {
       essays,
       askGlobalAnswers,
     });
+    snapshotValidationMs = Date.now() - snapshotValidationStartedAt;
+    publicNewsroomContentCache = { snapshot, cachedAt: Date.now() };
 
     res.setHeader("X-Robots-Tag", "noindex");
     res.setHeader("Cache-Control", "no-store");
     res.json(snapshot);
+    req.log.info(
+      {
+        event: "newsroom_content_snapshot_generated",
+        route: "/api/newsroom/content",
+        webRequestId: safeWebRequestId,
+        statusCode: 200,
+        elapsedMs: Date.now() - startedAt,
+        publishedStoriesMs,
+        dynamicSourcesMs,
+        snapshotValidationMs,
+        storyCount: snapshot.stories.length,
+        sourceCount: snapshot.sources.length,
+        researchCount: snapshot.researchRecords.length,
+        dataProductCount: snapshot.dataProducts.length,
+        topicCount: snapshot.topics.length,
+      },
+      "Generated public newsroom snapshot",
+    );
   } catch (error) {
+    req.log.error(
+      {
+        event: "newsroom_content_snapshot_failed",
+        route: "/api/newsroom/content",
+        webRequestId: safeWebRequestId,
+        statusCode: 500,
+        phase,
+        elapsedMs: Date.now() - startedAt,
+        publishedStoriesMs,
+        dynamicSourcesMs,
+        snapshotValidationMs,
+        errorName: error instanceof Error ? error.name : "UnknownError",
+      },
+      "Failed to generate public newsroom snapshot",
+    );
     res.status(500).json({ error: "Newsroom content source unavailable." });
   }
 });
