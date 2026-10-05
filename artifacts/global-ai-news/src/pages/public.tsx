@@ -148,7 +148,7 @@ export function ArticlePage() {
       </header>
       <EditorialImage large treatment={story.imageTreatment.type} alt={story.imageTreatment.alt} caption={story.imageTreatment.caption} />
       <div className="grid gap-12 py-12 md:grid-cols-[minmax(0,740px)_280px]">
-        <article className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:font-normal prose-p:leading-8 prose-p:text-foreground/85">
+        <article className="prose prose-lg max-w-none min-w-0 prose-headings:font-serif prose-headings:font-normal prose-p:leading-8 prose-p:text-foreground/85">
           <section className="not-prose border-l-2 border-primary bg-secondary/50 p-6"><p className="eyebrow text-primary">The bottom line</p><p className="mt-3 font-serif text-3xl leading-none"><StoryCitedText text={story.bottomLine} story={story} sources={snapshot.sources} /></p></section>
           <section className="not-prose mt-10"><p className="eyebrow text-primary">Why this matters</p><p className="mt-3 text-lg leading-8"><StoryCitedText text={story.whyItMatters} story={story} sources={snapshot.sources} /></p></section>
           <section className="not-prose mt-10 border-y border-foreground/15 py-6"><p className="eyebrow text-primary">Key takeaways</p><ul className="mt-4 grid gap-3 text-sm">{story.keyTakeaways.map((item) => <li key={item} className="flex gap-3"><span className="text-primary">—</span><span><StoryCitedText text={item} story={story} sources={snapshot.sources} /></span></li>)}</ul></section>

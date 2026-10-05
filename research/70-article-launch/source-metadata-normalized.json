@@ -1,0 +1,2632 @@
+{
+  "generatedAt": "2026-10-05T00:00:00.000Z",
+  "source": "101 capture files referenced by the 253 draft source-map rows",
+  "unknownValue": "UNKNOWN / NOT AVAILABLE",
+  "coverage": {
+    "totalMappedCaptureFiles": 101,
+    "sourceUrlAvailable": 101,
+    "titleAvailable": 101,
+    "explicitTitleFieldAvailable": 94,
+    "pageTitleFieldAvailable": 0,
+    "capturedTitleFallbackAvailable": 7,
+    "titleUnavailable": 0,
+    "publisherAvailable": 31,
+    "publicationDateEvidenceAvailable": 32,
+    "publicationDateAvailable": 12,
+    "publicationDateEvidenceUnnormalized": 20,
+    "fetchDateEvidenceAvailable": 100,
+    "fetchDateAvailable": 100,
+    "sourceTypeAvailable": 25,
+    "evidenceClassAvailable": 18,
+    "primarySecondaryClassified": 31,
+    "relevanceAvailable": 18,
+    "crosswalkRolesAvailable": 101
+  },
+  "captures": [
+    {
+      "capturePath": "research/sources/access-05-indiaai-allocation-register.md",
+      "exactUrl": "https://indiaai.gov.in/hub/indiaai-compute-capacity",
+      "title": "IndiaAI Compute Capacity: GPU Compute Allocation",
+      "titleEvidence": "IndiaAI Compute Capacity: GPU Compute Allocation",
+      "titleEvidenceSource": "Title field",
+      "publisher": "IndiaAI Portal",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Dated project allocation rows; not a live inventory or schedulability record",
+        "Dated visible allocation records; not a live availability census",
+        "Dated visible project rows; not a live capacity or consumption record",
+        "Research capture of the official allocation page; visible 2025 rows are not an active supply census"
+      ],
+      "citationKeys": [
+        "indiaai-allocation-register-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/aikosh-bhasha-sft-aya-record-2026-10-04.md",
+      "exactUrl": "https://aikosh.indiaai.gov.in/home/datasets/details/bhasha_sft_aya_dataset.html",
+      "title": "bhasha-sft_aya_dataset",
+      "titleEvidence": "bhasha-sft_aya_dataset",
+      "titleEvidenceSource": "Title field",
+      "publisher": "AIKosh catalog; the captured detail page does not separately identify the catalog operator.",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "Not separately stated; page date displayed as `03/07/25`, with date order unspecified."
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04 via webFetch",
+      "sourceType": "First-party dataset-listing page",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "AIKosh first-party detail page; primary for displayed record fields only"
+      ],
+      "citationKeys": [
+        "aikosh-bhasha-sft-aya-record-2026-10-04"
+      ]
+    },
+    {
+      "capturePath": "research/sources/aikosh-geochemical-record-2026-10-04.md",
+      "exactUrl": "https://aikosh.indiaai.gov.in/home/datasets/details/geochemical_data.html",
+      "title": "Geochemical data",
+      "titleEvidence": "Geochemical data",
+      "titleEvidenceSource": "Title field",
+      "publisher": "AIKosh catalog; the captured detail page does not separately identify the catalog operator.",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "Not separately stated; page date displayed as 29 March 2025."
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04 via webFetch",
+      "sourceType": "First-party dataset-listing page",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "AIKosh first-party detail page; primary for displayed record fields only"
+      ],
+      "citationKeys": [
+        "aikosh-geochemical-record-2026-10-04"
+      ]
+    },
+    {
+      "capturePath": "research/sources/aikosh-pdmc-record-2026-10-04.md",
+      "exactUrl": "https://aikosh.indiaai.gov.in/home/datasets/details/pdmc_dataset.html",
+      "title": "PDMC Dataset",
+      "titleEvidence": "PDMC Dataset",
+      "titleEvidenceSource": "Title field",
+      "publisher": "AIKosh catalog; the captured detail page does not separately identify the catalog operator.",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "Not separately stated; page date displayed as `08/12/25`, with date order unspecified."
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04 via webFetch",
+      "sourceType": "First-party dataset-listing page",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "AIKosh first-party detail page; primary for displayed record fields only"
+      ],
+      "citationKeys": [
+        "aikosh-pdmc-record-2026-10-04"
+      ]
+    },
+    {
+      "capturePath": "research/sources/aikosh-platform-terms-2026.md",
+      "exactUrl": "** https://aikosh.indiaai.gov.in/home/terms-n-conditions",
+      "title": "AIKosh platform Terms of Use",
+      "titleEvidence": "AIKosh platform Terms of Use",
+      "titleEvidenceSource": "Captured document heading",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "UNKNOWN / NOT AVAILABLE",
+      "fetchedDateEvidence": "UNKNOWN / NOT AVAILABLE",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Platform-level Terms of Use; does not determine item-specific permissions",
+        "Platform-level Terms of Use; does not replace item-specific permissions",
+        "Platform-wide access and use terms, not item-specific permission"
+      ],
+      "citationKeys": [
+        "aikosh-platform-terms-2026",
+        "aikosh-terms"
+      ]
+    },
+    {
+      "capturePath": "research/sources/aikosh-principal-commodity-import-record-2026-10-04.md",
+      "exactUrl": "https://aikosh.indiaai.gov.in/home/datasets/details/principal_commodity_2022_23_import.html",
+      "title": "Principal Commodity 2022-23 Import",
+      "titleEvidence": "Principal Commodity 2022-23 Import",
+      "titleEvidenceSource": "Title field",
+      "publisher": "AIKosh catalog; the captured detail page does not separately identify the catalog operator.",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "Not separately stated; page date displayed as 15 May 2026."
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04 via webFetch",
+      "sourceType": "First-party dataset-listing page",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "AIKosh first-party detail page; primary for displayed record fields only"
+      ],
+      "citationKeys": [
+        "aikosh-principal-commodity-import-record-2026-10-04"
+      ]
+    },
+    {
+      "capturePath": "research/sources/aikosh-repertory-grant-record-2026-10-04.md",
+      "exactUrl": "https://aikosh.indiaai.gov.in/home/datasets/details/repertory_grant_scheme.html",
+      "title": "Repertory Grant Scheme",
+      "titleEvidence": "Repertory Grant Scheme",
+      "titleEvidenceSource": "Title field",
+      "publisher": "AIKosh catalog; the captured detail page does not separately identify the catalog operator.",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "Not separately stated; page date displayed as 25 June 2025."
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04 via webFetch",
+      "sourceType": "First-party dataset-listing page",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "AIKosh first-party detail page; primary for displayed record fields only"
+      ],
+      "citationKeys": [
+        "aikosh-repertory-grant-record-2026-10-04"
+      ]
+    },
+    {
+      "capturePath": "research/sources/analysis-agent-control-standard-2026.md",
+      "exactUrl": "https://genai.owasp.org/resource/agent-control-standard-acs/",
+      "title": "Agent Control Standard (ACS)",
+      "titleEvidence": "Agent Control Standard (ACS)",
+      "titleEvidenceSource": "Title field",
+      "publisher": "OWASP GenAI Security Project",
+      "publicationDate": "2026-09-01",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-09-01"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04 via webFetch",
+      "sourceType": "Project standard page",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary project documentation; does not establish adoption or regulatory status",
+      "relevanceContext": [
+        "ACS scope for middleware hooks and runtime policy enforcement, and the project's stated implementation boundary."
+      ],
+      "crosswalkRoles": [
+        "OWASP project standard’s stated scope; not regulation or implementation proof",
+        "OWASP project summary of ACS goals, published September 2026",
+        "OWASP project’s stated runtime-hook scope; not regulation or implementation evidence"
+      ],
+      "citationKeys": [
+        "owasp-acs-2026",
+        "owasp-agent-control-standard",
+        "owasp-agent-control-standard-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/analysis-context-lost-in-middle-2023.md",
+      "exactUrl": "https://arxiv.org/html/2307.03172",
+      "title": "Lost in the Middle: How Language Models Use Long Contexts",
+      "titleEvidence": "Lost in the Middle: How Language Models Use Long Contexts",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04 via webFetch",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent position-sensitivity evaluation; not a test of current 2026 products"
+      ],
+      "citationKeys": [
+        "lost-middle-context-2023"
+      ]
+    },
+    {
+      "capturePath": "research/sources/analysis-context-ruler-2024.md",
+      "exactUrl": "https://arxiv.org/html/2404.06654v1",
+      "title": "RULER: What’s the Real Context Size of Your Long-Context Language Models?",
+      "titleEvidence": "RULER: What’s the Real Context Size of Your Long-Context Language Models?",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04 via webFetch",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent 2024 benchmark design and results; not a test of current 2026 products"
+      ],
+      "citationKeys": [
+        "ruler-long-context-2024"
+      ]
+    },
+    {
+      "capturePath": "research/sources/comparison-ai-image-detectors-iclr2024.md",
+      "exactUrl": "https://proceedings.iclr.cc/paper_files/paper/2024/file/744e09d3213ee53de88f04164a9b06ab-Paper-Conference.pdf",
+      "title": "ROBUSTNESS OF AI-IMAGE DETECTORS: FUNDAMENTAL LIMITS AND PRACTICAL ATTACKS",
+      "titleEvidence": "ROBUSTNESS OF AI-IMAGE DETECTORS: FUNDAMENTAL LIMITS AND PRACTICAL ATTACKS",
+      "titleEvidenceSource": "Captured document heading",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:57:57.046Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "ICLR 2024 experiments on watermark and classifier detector robustness",
+        "One study of detector and watermark robustness under tested conditions"
+      ],
+      "citationKeys": [
+        "iclr-image-detectors-2024"
+      ]
+    },
+    {
+      "capturePath": "research/sources/comparison-aws-ondemand-access.md",
+      "exactUrl": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-on-demand-instances.html",
+      "title": "Purchasing On-Demand Instances for Amazon EC2 - Amazon Elastic Compute Cloud",
+      "titleEvidence": "Purchasing On-Demand Instances for Amazon EC2 - Amazon Elastic Compute Cloud",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:57:49.365Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "AWS On-Demand billing, quotas, and capacity limits; not a comparable IndiaAI price"
+      ],
+      "citationKeys": [
+        "aws-ondemand-access"
+      ]
+    },
+    {
+      "capturePath": "research/sources/comparison-gemini-api-terms-2026.md",
+      "exactUrl": "https://ai.google.dev/gemini-api/terms?hl=en",
+      "title": "Gemini API Additional Terms of Service  |  Google AI for Developers",
+      "titleEvidence": "Gemini API Additional Terms of Service  |  Google AI for Developers",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:57:46.027Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Current paid/unpaid Gemini API data-handling terms",
+        "One provider’s API-tier data handling, not a cross-provider policy"
+      ],
+      "citationKeys": [
+        "gemini-api-terms-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/comparison-nist-genai-profile-2024.md",
+      "exactUrl": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "title": "Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile",
+      "titleEvidence": "Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:57:39.746Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "NIST AI 600-1 scope and risk-management functions; not a binding EU obligation",
+        "Voluntary GenAI risk-management profile and third-party-resource context"
+      ],
+      "citationKeys": [
+        "nist-genai-profile"
+      ]
+    },
+    {
+      "capturePath": "research/sources/comparison-swebench-verified.md",
+      "exactUrl": "http://swebench.com/verified.html",
+      "title": "SWE-bench Verified",
+      "titleEvidence": "SWE-bench Verified",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:57:06.737Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "500-item human-validated repository-issue subset and evaluation-method notes",
+        "Verified subset, mini-SWE-Agent versions, and comparability caveats"
+      ],
+      "citationKeys": [
+        "swebench-verified-methods"
+      ]
+    },
+    {
+      "capturePath": "research/sources/comparison-tau-bench-2024.md",
+      "exactUrl": "https://arxiv.org/html/2406.12045v1",
+      "title": "𝜏-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains",
+      "titleEvidence": "𝜏-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:57:29.897Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "pass^k definition and bounded simulated tool-agent-user domains",
+        "pass^k definition and repeated-trial interpretation"
+      ],
+      "citationKeys": [
+        "tau-bench-2024"
+      ]
+    },
+    {
+      "capturePath": "research/sources/comparison-terminal-bench-2026.md",
+      "exactUrl": "https://arxiv.org/html/2601.11868v1",
+      "title": "Terminal-Bench: Benchmarking Agents on Hard, Realistic Tasks in Command Line Interfaces",
+      "titleEvidence": "Terminal-Bench: Benchmarking Agents on Hard, Realistic Tasks in Command Line Interfaces",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:57:15.257Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "89-task Terminal-Bench 2.0 design, containers, graders, and reproducibility limits",
+        "Outcome-tested terminal task design; not a universal trajectory metric",
+        "Task, container, grader, and reproducibility details"
+      ],
+      "citationKeys": [
+        "terminal-bench-2026-paper"
+      ]
+    },
+    {
+      "capturePath": "research/sources/datacentres-02-indiaai-compute-portal.md",
+      "exactUrl": "https://www.compute.indiaai.gov.in/",
+      "title": "India Al Cloud Computing Portal",
+      "titleEvidence": "India Al Cloud Computing Portal",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-03",
+      "fetchedDateEvidence": "2026-10-03T10:59:10.072Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Current portal access and allocation workflow; recheck before publication",
+        "Eligibility, request, review, subsidy, scheduling, and approval terms",
+        "IndiaAI eligibility, request, approval, subsidy, and validity rules",
+        "IndiaAI portal eligibility, request thresholds, monthly schedule and approval validity"
+      ],
+      "citationKeys": [
+        "indiaai-compute-portal-guidance-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/datacentres-03-jll-market-dynamics.md",
+      "exactUrl": "https://www.jll.com/en-in/insights/market-dynamics/india-data-centers",
+      "title": "India data centre 2026 mid-year report",
+      "titleEvidence": "India data centre 2026 mid-year report",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-03",
+      "fetchedDateEvidence": "2026-10-03T10:59:15.165Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent market-report terminology and date/geography context"
+      ],
+      "citationKeys": [
+        "jll-india-dc-market-dynamics"
+      ]
+    },
+    {
+      "capturePath": "research/sources/datacentres-04-knightfrank-pipeline-reporting.md",
+      "exactUrl": "https://www.thehindubusinessline.com/info-tech/indias-data-centre-capacity-pipeline-hits-833-gw-amid-ai-and-cloud-boom/article71125654.ece",
+      "title": "India’s data centre capacity pipeline hits 8.33 GW amid AI and cloud boom",
+      "titleEvidence": "India’s data centre capacity pipeline hits 8.33 GW amid AI and cloud boom",
+      "titleEvidenceSource": "Captured document heading",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-03",
+      "fetchedDateEvidence": "2026-10-03T11:03:49.099Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Example of pipeline and project-stage reporting; not a universal definition"
+      ],
+      "citationKeys": [
+        "knightfrank-pipeline-reporting"
+      ]
+    },
+    {
+      "capturePath": "research/sources/essay-62-datasheets-datasets-2021.md",
+      "exactUrl": "https://arxiv.org/abs/1803.09010",
+      "title": "[1803.09010] Datasheets for Datasets",
+      "titleEvidence": "[1803.09010] Datasheets for Datasets",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T10:07:08.065Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Dataset documentation proposal covering motivation, composition, collection, and uses"
+      ],
+      "citationKeys": [
+        "datasheets-for-datasets-2021"
+      ]
+    },
+    {
+      "capturePath": "research/sources/essay-62-dcat-v3.md",
+      "exactUrl": "https://www.w3.org/TR/vocab-dcat-3",
+      "title": "Data Catalog Vocabulary (DCAT) - Version 3",
+      "titleEvidence": "Data Catalog Vocabulary (DCAT) - Version 3",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T10:07:03.259Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "DCAT 3 metadata interoperability; explicitly not a quality guarantee"
+      ],
+      "citationKeys": [
+        "w3c-dcat3-2024"
+      ]
+    },
+    {
+      "capturePath": "research/sources/essay-68-common-sense-teens-2025.md",
+      "exactUrl": "https://www.commonsensemedia.org/sites/default/files/research/report/talk-trust-and-trade-offs_2025_web.pdf",
+      "title": "Talk, Trust and Trade-Offs: How and Why Teens Use AI Companions",
+      "titleEvidence": "Talk, Trust and Trade-Offs: How and Why Teens Use AI Companions",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T10:08:08.681Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "U.S. self-reported teen survey; sample and limitations disclosed"
+      ],
+      "citationKeys": [
+        "common-sense-teens-2025"
+      ]
+    },
+    {
+      "capturePath": "research/sources/essay-68-crc-general-comment-25-official.md",
+      "exactUrl": "https://www.ohchr.org/en/documents/general-comments-and-recommendations/general-comment-no-25-2021-childrens-rights-relation",
+      "title": "General comment No. 25 (2021) on children’s rights in relation to the digital environment | OHCHR",
+      "titleEvidence": "General comment No. 25 (2021) on children’s rights in relation to the digital environment | OHCHR",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T10:08:01.561Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "OHCHR record of General Comment No. 25 and consultation background"
+      ],
+      "citationKeys": [
+        "un-crc-general-comment-25-official"
+      ]
+    },
+    {
+      "capturePath": "research/sources/essay-68-dsa-article-28.md",
+      "exactUrl": "https://eur-lex.europa.eu/eli/reg/2022/2065",
+      "title": "Regulation - 2022/2065 - EN - DSA - EUR-Lex",
+      "titleEvidence": "Regulation - 2022/2065 - EN - DSA - EUR-Lex",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T10:09:39.973Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Enacted DSA Article 28 scope and obligations for platforms accessible to minors"
+      ],
+      "citationKeys": [
+        "eu-dsa-article-28"
+      ]
+    },
+    {
+      "capturePath": "research/sources/essay-68-ohchr-rights-overview.md",
+      "exactUrl": "https://www.ohchr.org/en/children/childrens-rights-digital-environment",
+      "title": "Children's rights in the digital environment | OHCHR",
+      "titleEvidence": "Children's rights in the digital environment | OHCHR",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T10:08:46.968Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "OHCHR overview of child rights in digital environments"
+      ],
+      "citationKeys": [
+        "ohchr-rights-overview"
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-ai-detector-bias-2023.md",
+      "exactUrl": "https://doi.org/10.1016/j.patter.2023.100779",
+      "title": "GPT detectors are biased against non-native English writers — Patterns",
+      "titleEvidence": "GPT detectors are biased against non-native English writers — Patterns",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "2023"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Peer-reviewed results for seven detector versions on two essay sets; not a current-product market-wide estimate"
+      ],
+      "citationKeys": [
+        "liang-detector-bias-2023"
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-anthropic-agent-autonomy-2026.md",
+      "exactUrl": "https://www.anthropic.com/news/measuring-agent-autonomy",
+      "title": "Measuring agent autonomy in practice — Anthropic",
+      "titleEvidence": "Measuring agent autonomy in practice — Anthropic",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "2026-02-18",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "2026-02-18"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Study-specific operational definition based on tools and actions"
+      ],
+      "citationKeys": [
+        "anthropic-agent-autonomy-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-anthropic-building-effective-agents.md",
+      "exactUrl": "https://www.anthropic.com/engineering/building-effective-agents",
+      "title": "Building effective agents — Anthropic",
+      "titleEvidence": "Building effective agents — Anthropic",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "2024-12-19",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "2024-12-19"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Provider description of retrieval, tools and memory as system augmentations",
+        "Provider distinction between fixed workflows and dynamically directed tool use"
+      ],
+      "citationKeys": [
+        "anthropic-building-effective-agents"
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-greengrid-wue-2011.md",
+      "exactUrl": "https://www.thegreengrid.org/system/files/store/WUE_v1.pdf",
+      "title": "Water Usage Effectiveness (WUE): A Green Grid Data Center Sustainability Metric",
+      "titleEvidence": "Water Usage Effectiveness (WUE): A Green Grid Data Center Sustainability Metric",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Historical site/source WUE ratios; use only to explain why categories matter"
+      ],
+      "citationKeys": [
+        "greengrid-wue-method-2011"
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-iso-pue-2026.md",
+      "exactUrl": "https://www.iso.org/standard/30134-2",
+      "title": "ISO/IEC 30134-2:2026 — Power usage effectiveness (PUE)",
+      "titleEvidence": "ISO/IEC 30134-2:2026 — Power usage effectiveness (PUE)",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Current PUE standard edition and measurement/reporting scope"
+      ],
+      "citationKeys": [
+        "iso-pue-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-iso-wue-2022.md",
+      "exactUrl": "https://www.iso.org/standard/77692.html",
+      "title": "ISO/IEC 30134-9:2022 — Water usage effectiveness (WUE)",
+      "titleEvidence": "ISO/IEC 30134-9:2022 — Water usage effectiveness (WUE)",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "WUE standard scope and measurement categories"
+      ],
+      "citationKeys": [
+        "iso-wue-2022"
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-mistral-small4-card-2026.md",
+      "exactUrl": "https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03",
+      "title": "Mistral Small 4 model card — Mistral AI",
+      "titleEvidence": "Mistral Small 4 model card — Mistral AI",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Mistral AI",
+      "publicationDate": "2026-03-16",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-03-16"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "Official model-card page (captured excerpt only)",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary (provider-authored; incomplete excerpt)",
+      "relevanceContext": [
+        "Model specifications, license, and context-window value visible in the saved excerpt."
+      ],
+      "crosswalkRoles": [
+        "Mistral Small 4 total/active parameter counts and context",
+        "Mistral Small 4 weight access, license, total/active parameters, and context",
+        "Primary Mistral model-card page, captured as a limited excerpt; supports only visible specification and license fields",
+        "Provider-described Apache 2.0 license and weight availability",
+        "Provider-stated total and active parameters, context window and license"
+      ],
+      "citationKeys": [
+        "mistral-small4-card-2026",
+        "mistral-small4-card-extract",
+        "mistral-small4-model-card"
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-model-cards-mitchell-2019.md",
+      "exactUrl": "https://dl.acm.org/doi/10.1145/3287560.3287596",
+      "title": "Model Cards for Model Reporting — ACM FAccT",
+      "titleEvidence": "Model Cards for Model Reporting — ACM FAccT",
+      "titleEvidenceSource": "Title field",
+      "publisher": "ACM",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2019 (exact publication day not stated in captured page)"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "FAccT conference paper (ACM Digital Library record)",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary for the model-card framework proposal",
+      "relevanceContext": [
+        "Intended-use cases, performance across application-relevant conditions, evaluation procedures, and context for judging suitability."
+      ],
+      "crosswalkRoles": [
+        "ACM framework proposal; supports intended-use, application-condition performance, evaluation-procedure and suitability-context disclosures, not safety certification",
+        "Documentation proposal and limits of cards as evidence",
+        "Model-card purpose, intended-use and evaluation disclosure proposal",
+        "Proposed purpose and fields of model cards"
+      ],
+      "citationKeys": [
+        "model-card-paper-2019",
+        "model-card-reporting-paper-2019",
+        "model-cards-paper-2019"
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-nist-rag-definition-2025.md",
+      "exactUrl": "https://csrc.nist.gov/glossary/term/retrieval_augmented_generation",
+      "title": "Retrieval-augmented generation — NIST CSRC Glossary",
+      "titleEvidence": "Retrieval-augmented generation — NIST CSRC Glossary",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "NIST definition of retrieval-augmented generation"
+      ],
+      "citationKeys": [
+        "nist-rag-definition-2025"
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-osi-open-source-ai-definition.md",
+      "exactUrl": "https://opensource.org/ai/open-source-ai-definition",
+      "title": "The Open Source AI Definition — 1.0",
+      "titleEvidence": "The Open Source AI Definition — 1.0",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "OSI's four freedoms and preferred-form requirements for data information, code and parameters"
+      ],
+      "citationKeys": [
+        "osi-open-source-ai-definition-1-0"
+      ]
+    },
+    {
+      "capturePath": "research/sources/policy-03-pib-2026-capacity-factsheet.md",
+      "exactUrl": "https://www.pib.gov.in/FactsheetDetails.aspx?Id=150860&reg=48&lang=2",
+      "title": "Semiconductor and AI Revolution; featured heading: “From Chips to AI: Building India’s Technology Leadership”",
+      "titleEvidence": "Semiconductor and AI Revolution; featured heading: “From Chips to AI: Building India’s Technology Leadership”",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Press Information Bureau (PIB)",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-03",
+      "fetchedDateEvidence": "2026-10-03T10:59:32.036Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Government-reported project and GPU-hour aggregate; unit is not defined as allocated, metered or consumed",
+        "PIB factsheet entry dated 13 August 2026; “current” 1,575-MW capacity statement without a separate metric cutoff",
+        "PIB factsheet entry dated 13 August 2026; “current” 1,575-MW line has no separate metric cutoff",
+        "PIB-reported 237 projects and 93.18 lakh GPU-hours by August 2026; the factsheet does not define whether hours were allocated, metered or consumed",
+        "PIB’s national data-centre and IndiaAI compute snapshot; units and usage stages require care"
+      ],
+      "citationKeys": [
+        "pib-india-dc-capacity-factsheet-2026",
+        "pib-indiaai-compute-usage-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-agents-01-evaluation-survey.md",
+      "exactUrl": "https://arxiv.org/html/2507.21504v1",
+      "title": "Evaluation and Benchmarking of LLM Agents: A Survey",
+      "titleEvidence": "Evaluation and Benchmarking of LLM Agents: A Survey",
+      "titleEvidenceSource": "Title field",
+      "publisher": "arXiv (source repository; proceedings publisher not stated in capture)",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2025 (KDD ’25 proceedings; exact publication day not stated in capture)"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:15:30.717Z",
+      "sourceType": "Scholarly survey paper (arXiv HTML; KDD ’25 proceedings details listed)",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Survey synthesis; primary for the authors’ proposed taxonomy",
+      "relevanceContext": [
+        "Objective/process taxonomy and stated enterprise-evaluation gaps."
+      ],
+      "crosswalkRoles": [
+        "Distinguishes evaluation objectives and measurement processes",
+        "Evaluation objective/process taxonomy and enterprise evaluation gaps",
+        "Independent context for task, metric, environment and evaluation-process dimensions",
+        "Independent taxonomy and evaluation dimensions; not a universal definition",
+        "Scholarly survey synthesis; primary for its proposed objective/process taxonomy and stated enterprise-evaluation gaps",
+        "Survey taxonomy and limitations of task-completion metrics"
+      ],
+      "citationKeys": [
+        "agent-evaluation-survey-2025"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-agents-02-platform-oversight.md",
+      "exactUrl": "https://docs.langchain.com/langsmith/fleet/access-and-oversight",
+      "title": "Access & oversight - Docs by LangChain",
+      "titleEvidence": "Access & oversight - Docs by LangChain",
+      "titleEvidenceSource": "Title field",
+      "publisher": "LangChain",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:15:34.630Z",
+      "sourceType": "LangSmith Fleet product documentation",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary product documentation; not a deployment security assessment",
+      "relevanceContext": [
+        "Fixed and user-specific credentials, role/attribute permissions, human approval, and audit-trail features."
+      ],
+      "crosswalkRoles": [
+        "Credential models, tool access, role-based and attribute-based permissions",
+        "LangSmith credential models, permissions and oversight claims",
+        "One platform's documented roles, tool access and trace controls; not a universal implementation",
+        "Workspace roles, agent access, integration controls, and audit features"
+      ],
+      "citationKeys": [
+        "langsmith-fleet-access-oversight",
+        "langsmith-fleet-oversight"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-agents-03-owasp-security.md",
+      "exactUrl": "https://genai.owasp.org/2025/12/09/owasp-genai-security-project-releases-top-10-risks-and-mitigations-for-agentic-ai-security/",
+      "title": "OWASP GenAI Security Project Releases Top 10 Risks and Mitigations for Agentic AI Security - OWASP Gen AI Security Project",
+      "titleEvidence": "OWASP GenAI Security Project Releases Top 10 Risks and Mitigations for Agentic AI Security - OWASP Gen AI Security Project",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:15:37.610Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Agent threat categories, including tool misuse and identity abuse",
+        "OWASP agentic risk categories, including tool misuse and identity abuse",
+        "OWASP announcement highlighting behavior hijacking, tool misuse and identity/privilege abuse",
+        "OWASP’s 2025 agent-risk framing and examples",
+        "Threat categories including tool misuse and identity/privilege abuse"
+      ],
+      "citationKeys": [
+        "owasp-agentic-top10-2025",
+        "owasp-agentic-top10-announcement-2025"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-ai-act-article113.md",
+      "exactUrl": "https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-113",
+      "title": "Article 113: Entry into force and application | AI Act Service Desk",
+      "titleEvidence": "Article 113: Entry into force and application | AI Act Service Desk",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:35:46.964Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Consolidated Article 113 with staged application dates",
+        "Enacted EU AI Act text with staged application dates",
+        "Official text and staged application dates"
+      ],
+      "citationKeys": [
+        "eu-ai-act-article113",
+        "eu-aiact-article-113"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-aisi-gpt55-original.md",
+      "exactUrl": "https://www.aisi.gov.uk/blog/our-evaluation-of-openais-gpt-5-5-cyber-capabilities",
+      "title": "Our evaluation of OpenAI's GPT-5.5 cyber capabilities | AISI Work",
+      "titleEvidence": "Our evaluation of OpenAI's GPT-5.5 cyber capabilities | AISI Work",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:36:05.184Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "AISI primary evaluation; reports 2/10 after manual adjudication corrected a grading issue"
+      ],
+      "citationKeys": [
+        "aisi-gpt55-cyber-evaluation-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-aisi-gpt55-progress-may-2026.md",
+      "exactUrl": "https://www.aisi.gov.uk/blog/how-fast-is-autonomous-ai-cyber-capability-advancing",
+      "title": "How fast is autonomous AI cyber capability advancing? | AISI Work",
+      "titleEvidence": "How fast is autonomous AI cyber capability advancing? | AISI Work",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UK AI Security Institute",
+      "publicationDate": "2026-05-13",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "2026-05-13"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04 via webFetch",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "AISI’s 13 May update; reports 3/10 for GPT-5.5 but does not explain the April count"
+      ],
+      "citationKeys": [
+        "aisi-gpt55-cyber-progress-may-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-ars-aisi-gpt55.md",
+      "exactUrl": "https://arstechnica.com/ai/2026/05/amid-mythos-hyped-cybersecurity-prowess-researchers-find-gpt-5-5-is-just-as-good/",
+      "title": "Amid Mythos' hyped cybersecurity prowess, researchers find GPT-5.5 is just as good - Ars Technica",
+      "titleEvidence": "Amid Mythos' hyped cybersecurity prowess, researchers find GPT-5.5 is just as good - Ars Technica",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:32:22.216Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "SECONDARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent reporting on the evaluation"
+      ],
+      "citationKeys": [
+        "ars-aisi-gpt55-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-aws-grok47.md",
+      "exactUrl": "https://aws.amazon.com/blogs/machine-learning/grok-4-7-is-now-available-on-amazon-bedrock/",
+      "title": "Grok 4.7 is now available on Amazon Bedrock | Artificial Intelligence",
+      "titleEvidence": "Grok 4.7 is now available on Amazon Bedrock | Artificial Intelligence",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not visible in the captured page"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:40:22.770Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "AWS Bedrock availability notice; publication date is not visible in the captured page; not a model evaluation",
+        "AWS Bedrock availability record; publication date not visible in the captured page; not an independent model evaluation",
+        "AWS availability record; publication date is not visible in the captured page; not an independent model evaluation",
+        "Bedrock model ID, routing profiles, interfaces, and integration features; publication date not visible in captured page"
+      ],
+      "citationKeys": [
+        "aws-grok47-bedrock-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-bloomberg-iea-2026.md",
+      "exactUrl": "https://www.bloomberg.com/news/articles/2026-04-20/global-2025-power-demand-rose-as-ev-data-centers-grew-iea-says",
+      "title": "Global 2025 Power Demand Rose as EV, Data Centers Grew, IEA Says - Bloomberg",
+      "titleEvidence": "Global 2025 Power Demand Rose as EV, Data Centers Grew, IEA Says - Bloomberg",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:35:34.889Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent report on IEA findings; retains IEA attribution"
+      ],
+      "citationKeys": [
+        "bloomberg-iea-ger-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-ddnews-aikosh-february.md",
+      "exactUrl": "https://ddnews.gov.in/en/democratising-ai-in-india-expanding-access-to-technology-and-skills/",
+      "title": "India ‘AI Impact Summit 2026’ to focus on democratisation of AI | DD News",
+      "titleEvidence": "India ‘AI Impact Summit 2026’ to focus on democratisation of AI | DD News",
+      "titleEvidenceSource": "Title field",
+      "publisher": "DD News",
+      "publicationDate": "2026-02-10",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "2026-02-10 (page header shows `10/02/26`; URL path contains `/2026/02/`)"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:31:55.861Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "February 2026 AIKosh count snapshot, as reported by DD News",
+        "February 2026 AIKosh counts and activity figures, as reported by DD News",
+        "February 2026 DD News count snapshot; not an independent catalog census"
+      ],
+      "citationKeys": [
+        "aikosh-ddnews-february-snapshot",
+        "ddnews-aikosh-feb-2026",
+        "ddnews-aikosh-february-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-decrypt-grok47.md",
+      "exactUrl": "https://tech.yahoo.com/ai/gemini/articles/xai-launches-grok-4-7-171603280.html",
+      "title": "xAI Launches Grok 4.7. It's Bigger, But Late to the AI Frontier Party",
+      "titleEvidence": "xAI Launches Grok 4.7. It's Bigger, But Late to the AI Frontier Party",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:40:25.291Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent launch coverage syndicated through Yahoo Tech",
+        "Independent launch coverage, syndicated through Yahoo Tech",
+        "Independent launch reporting; not an independent benchmark"
+      ],
+      "citationKeys": [
+        "decrypt-grok47-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-et-india-dc.md",
+      "exactUrl": "https://m.economictimes.com/industry/services/property-/-cstruction/indias-data-centre-capacity-set-to-surge-by-3860-mw-by-2030-fueling-digital-growth-and-investment-opportunities/amp_articleshow/134283064.cms",
+      "title": "India's Data Centre development pipeline through 2030 reaches 3,860 MW - The Economic Times",
+      "titleEvidence": "India's Data Centre development pipeline through 2030 reaches 3,860 MW - The Economic Times",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:31:33.027Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "ET Bureau report attributing figures to C&W"
+      ],
+      "citationKeys": [
+        "et-cw-india-dc-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-eu-ai-act-faq.md",
+      "exactUrl": "https://ai-act-service-desk.ec.europa.eu/en/faq",
+      "title": "Frequently Asked Questions | AI Act Service Desk",
+      "titleEvidence": "Frequently Asked Questions | AI Act Service Desk",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:36:45.407Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Official FAQ on transparency transitions and scope"
+      ],
+      "citationKeys": [
+        "eu-ai-act-service-desk-faq"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-eu-enforcement-press.md",
+      "exactUrl": "https://digital-strategy.ec.europa.eu/en/news/commission-starts-enforcing-ai-act-rules-and-new-transparency-requirements-2-august",
+      "title": "Commission starts enforcing AI Act rules and new transparency requirements on 2 August | Shaping Europe’s digital future",
+      "titleEvidence": "Commission starts enforcing AI Act rules and new transparency requirements on 2 August | Shaping Europe’s digital future",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:32:19.326Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Commission notice on enforcement start; distinct from provider compliance transition",
+        "European Commission enforcement notice"
+      ],
+      "citationKeys": [
+        "ec-ai-act-enforcement-press",
+        "eu-commission-enforcement-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-eu-gpai-guidelines.md",
+      "exactUrl": "https://digital-strategy.ec.europa.eu/en/policies/guidelines-gpai-providers",
+      "title": "Guidelines for providers of general-purpose AI models | Shaping Europe’s digital future",
+      "titleEvidence": "Guidelines for providers of general-purpose AI models | Shaping Europe’s digital future",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:36:43.554Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Commission guidance, distinct from enacted law",
+        "Commission implementation guidance, not the enacted legal text",
+        "Commission interpretation of GPAI application and enforcement timeline"
+      ],
+      "citationKeys": [
+        "eu-ai-act-gpai-guidelines",
+        "eu-gpai-guidelines"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-eu-kids-commission-proposal.md",
+      "exactUrl": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A52026PC0681",
+      "title": "EUR-Lex - 52026PC0681 - EN - EUR-Lex",
+      "titleEvidence": "EUR-Lex - 52026PC0681 - EN - EUR-Lex",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:45:31.292Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Commission proposal record, not an enacted regulation",
+        "Commission proposal text on EUR-Lex, dated 17 September",
+        "Commission proposal, its status, scope, and explanatory text"
+      ],
+      "citationKeys": [
+        "eu-kids-act-proposal-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-eu-kids-policy.md",
+      "exactUrl": "https://digital-strategy.ec.europa.eu/en/policies/kids-act",
+      "title": "Proposal for EU KIDS Act - 'EU Keeping Internet Digital Spaces Accountable and Trustworthy' | Shaping Europe’s digital future",
+      "titleEvidence": "Proposal for EU KIDS Act - 'EU Keeping Internet Digital Spaces Accountable and Trustworthy' | Shaping Europe’s digital future",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:35:38.902Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "European Commission proposal page and status"
+      ],
+      "citationKeys": [
+        "eu-kids-act-policy-page-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-euractiv-kids-act.md",
+      "exactUrl": "https://www.euractiv.com/news/eu-kids-act-targets-overly-friendly-ai-chatbots",
+      "title": "EU Kids Act targets overly friendly AI chatbots | Rapporteur",
+      "titleEvidence": "EU Kids Act targets overly friendly AI chatbots | Rapporteur",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:32:01.032Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent policy reporting and proposal status",
+        "Independent policy reporting; proposal status"
+      ],
+      "citationKeys": [
+        "euractiv-kids-act-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-gemini-audio-card.md",
+      "exactUrl": "https://deepmind.google/models/model-cards/gemini-3-8-audio/",
+      "title": "Gemini 3.8 Audio - Model Card — Google DeepMind",
+      "titleEvidence": "Gemini 3.8 Audio - Model Card — Google DeepMind",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "September 2026"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:32:10.562Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Google DeepMind first-party audio card and 15 September date",
+        "Google DeepMind primary model card"
+      ],
+      "citationKeys": [
+        "google-gemini-38-audio-card"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-google-september-roundup.md",
+      "exactUrl": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-september-2026/",
+      "title": "September 2026 AI Updates",
+      "titleEvidence": "September 2026 AI Updates",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:40:28.449Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Google’s dated monthly recap; not independent evaluation"
+      ],
+      "citationKeys": [
+        "google-ai-september-roundup-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-hindu-gpt61.md",
+      "exactUrl": "https://www.thehindu.com/sci-tech/technology/openai-unveils-gpt-61-sol-and-dots-ai-agents-at-devday/article71525534.ece",
+      "title": "OpenAI unveils GPT-6.1 Sol and ‘Dots’ AI agents at DevDay",
+      "titleEvidence": "OpenAI unveils GPT-6.1 Sol and ‘Dots’ AI agents at DevDay",
+      "titleEvidenceSource": "Captured document heading",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:32:25.980Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent launch coverage",
+        "Independent launch reporting"
+      ],
+      "citationKeys": [
+        "hindu-gpt61-sol-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-iea-ger-2026-news.md",
+      "exactUrl": "https://www.iea.org/news/data-centre-electricity-use-surged-in-2025-even-with-tightening-bottlenecks-driving-a-scramble-for-solutions",
+      "title": "Data centre electricity use surged in 2025, even with tightening bottlenecks driving a scramble for solutions - News - IEA",
+      "titleEvidence": "Data centre electricity use surged in 2025, even with tightening bottlenecks driving a scramble for solutions - News - IEA",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:35:29.174Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "IEA dated reporting page",
+        "IEA-dated reporting page, retaining IEA attribution"
+      ],
+      "citationKeys": [
+        "iea-ger-2026-news"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-microsoft-foundry-gpt61-sol.md",
+      "exactUrl": "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-gpt-6-1-sol-in-microsoft-foundry-advanced-intelligence-optimized-for/4560811",
+      "title": "Introducing GPT-6.1 Sol in Microsoft Foundry: Advanced intelligence, optimized for production agents | Microsoft Community Hub",
+      "titleEvidence": "Introducing GPT-6.1 Sol in Microsoft Foundry: Advanced intelligence, optimized for production agents | Microsoft Community Hub",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:45:41.513Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Microsoft Foundry availability record; not a model evaluation",
+        "Microsoft Foundry availability; not independent model evaluation"
+      ],
+      "citationKeys": [
+        "microsoft-foundry-gpt61-sol-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-openai-gpt55-aisi-card.md",
+      "exactUrl": "https://deploymentsafety.openai.com/gpt-5-5/external-evaluations-for-cyber-capabilities---uk-aisi",
+      "title": "GPT-5.5 System Card - OpenAI Deployment Safety Hub",
+      "titleEvidence": "GPT-5.5 System Card - OpenAI Deployment Safety Hub",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:41:29.138Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "OpenAI’s 23 April system-card section; reports 1/10 attempts"
+      ],
+      "citationKeys": [
+        "openai-gpt55-system-card-aisi"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-openai-gpt61-official.md",
+      "exactUrl": "https://openai.com/index/introducing-gpt-6-1-sol/",
+      "title": "Introducing GPT-6.1 Sol | OpenAI",
+      "titleEvidence": "Introducing GPT-6.1 Sol | OpenAI",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:32:56.358Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "OpenAI first-party release page with product and access details; publication date is not visible in the captured copy",
+        "OpenAI primary announcement, availability and benchmark claims"
+      ],
+      "citationKeys": [
+        "openai-gpt61-sol-release"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-pib-aikosh-july.md",
+      "exactUrl": "https://www.pib.gov.in/FactsheetDetails.aspx?ModuleId=16&NoteId=150860&id=150860&lang=1&reg=5",
+      "title": "Semiconductor and AI Revolution; featured heading: “From Chips to AI: Building India’s Technology Leadership”",
+      "titleEvidence": "Semiconductor and AI Revolution; featured heading: “From Chips to AI: Building India’s Technology Leadership”",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Press Information Bureau (PIB)",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:31:46.305Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "PIB factsheet entry dated 13 August 2026; AIKosh totals explicitly stated as of July",
+        "PIB’s July 2026 dataset and model counts",
+        "PIB’s July 2026 dataset and model totals"
+      ],
+      "citationKeys": [
+        "aikosh-pib-july-snapshot",
+        "pib-aikosh-july-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-reuters-openai-sol-luna.md",
+      "exactUrl": "https://www.reuters.com/technology/openai-expands-gpt-6-lineup-with-cheaper-sol-luna-models-2026-09-22",
+      "title": "OpenAI expands GPT-6 lineup with cheaper Sol and Luna models | Reuters",
+      "titleEvidence": "OpenAI expands GPT-6 lineup with cheaper Sol and Luna models | Reuters",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:32:06.344Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent launch reporting; not an independent benchmark",
+        "Independent launch reporting; not an independent model benchmark",
+        "Independent launch reporting; provider claims remain attributed",
+        "Independent launch reporting; vendor claims remain attributed"
+      ],
+      "citationKeys": [
+        "reuters-gpt6-sol-luna-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-reuters-sonnet55.md",
+      "exactUrl": "https://www.reuters.com/technology/anthropic-rolls-out-second-claude-55-model-it-builds-toward-ipo-2026-09-28",
+      "title": "Anthropic rolls out second Claude 5.5 model as it builds toward IPO | Reuters",
+      "titleEvidence": "Anthropic rolls out second Claude 5.5 model as it builds toward IPO | Reuters",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:36:02.973Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent launch and pricing report; company claims attributed",
+        "Independent launch and pricing reporting; model claims remain attributed",
+        "Independent launch reporting"
+      ],
+      "citationKeys": [
+        "reuters-sonnet55-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-techtarget-gemini-audio.md",
+      "exactUrl": "https://www.techtarget.com/ai/news/366650331/Gemini-38-Live-Transforms-Conversational-AI",
+      "title": "Gemini 3.8 Live Transforms Conversational AI | TechTarget",
+      "titleEvidence": "Gemini 3.8 Live Transforms Conversational AI | TechTarget",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "2026-09-16",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "16 Sep 2026"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:32:14.269Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Independent product reporting"
+      ],
+      "citationKeys": [
+        "techtarget-gemini-38-live-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-tribune-india-dc.md",
+      "exactUrl": "https://www.tribuneindia.com/news/business/india-to-add-3860-mw-data-centre-capacity-by-2030-require-usd-29-9-bn-investment-report",
+      "title": "India to add 3,860 MW data centre capacity by 2030, require USD 29.9 bn investment: Report - The Tribune",
+      "titleEvidence": "India to add 3,860 MW data centre capacity by 2030, require USD 29.9 bn investment: Report - The Tribune",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:31:37.842Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "ANI wire copy carried by The Tribune; not independent measurement"
+      ],
+      "citationKeys": [
+        "tribune-cw-india-dc-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-xai-grok47-api.md",
+      "exactUrl": "https://docs.x.ai/developers/release-notes",
+      "title": "Release Notes | SpaceXAI Docs",
+      "titleEvidence": "Release Notes | SpaceXAI Docs",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:41:18.453Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "xAI API documentation and published interface specifications",
+        "xAI model ID, context, direct API pricing and regional endpoint"
+      ],
+      "citationKeys": [
+        "xai-grok47-api-docs"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-xai-grok47-official.md",
+      "exactUrl": "https://x.ai/news/grok-4-7",
+      "title": "Introducing Grok 4.7 | SpaceXAI",
+      "titleEvidence": "Introducing Grok 4.7 | SpaceXAI",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:33:00.921Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "xAI primary release and company-reported claims",
+        "xAI release page and 21 September launch"
+      ],
+      "citationKeys": [
+        "xai-grok47-release"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-india-03-market-capacity.md",
+      "exactUrl": "https://www.cushmanwakefield.com/en/india/news/2026/09/india-data-centre-h1-2026-update",
+      "title": "India Data Centre H1 2026 Updates  | IN | Cushman & Wakefield",
+      "titleEvidence": "India Data Centre H1 2026 Updates  | IN | Cushman & Wakefield",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Cushman & Wakefield",
+      "publicationDate": "2026-09-23",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-09-23 (author byline shows 23/09/2026)"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:15:48.628Z",
+      "sourceType": "India data-centre market update",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary publisher report; not an independent market measurement",
+      "relevanceContext": [
+        "Top-seven-market operational-capacity and upcoming-supply totals and project-stage labels"
+      ],
+      "crosswalkRoles": [
+        "C&W H1 2026 seven-market operational and upcoming capacity labels",
+        "C&W's 23 September 2026 market values, aggregate totals and stage labels",
+        "C&W's dated market scope, operational figure and separately reported pipeline",
+        "C&W’s 23 September 2026 market table, aggregates and project-stage terms",
+        "C&W’s H1 2026 top-seven-market operational figure and separately labeled pipeline",
+        "Cushman & Wakefield primary market report"
+      ],
+      "citationKeys": [
+        "cw-india-dc-h1-2026",
+        "cw-india-h1-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-infrastructure-01-iea-electricity-demand.md",
+      "exactUrl": "https://www.iea.org/reports/global-energy-review-2026/electricity-demand",
+      "title": "Electricity demand – Global Energy Review 2026 – Analysis - IEA",
+      "titleEvidence": "Electricity demand – Global Energy Review 2026 – Analysis - IEA",
+      "titleEvidenceSource": "Title field",
+      "publisher": "International Energy Agency (IEA)",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:15:47.762Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Global data-centre electricity demand and 2025 change; not an AI-only measure",
+        "IEA global 2025 growth increment; not an AI-only total",
+        "IEA primary report"
+      ],
+      "citationKeys": [
+        "iea-ger-2026-electricity-demand",
+        "iea-global-energy-review-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-infrastructure-05-lbnl-us-data-center-energy-usage-2024.md",
+      "exactUrl": "https://eta-publications.lbl.gov/sites/default/files/2024-12/lbnl-2024-united-states-data-center-energy-usage-report_1.pdf",
+      "title": "2024 United States Data Center Energy Usage Report",
+      "titleEvidence": "2024 United States Data Center Energy Usage Report",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Lawrence Berkeley National Laboratory (Berkeley Lab)",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Published",
+          "value": "December 2024"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:16:54.008Z",
+      "sourceType": "National laboratory report",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "LBNL primary report; 2023 historical estimate and 2028 scenario range",
+        "U.S. historical estimate and 2028 scenario range",
+        "U.S. historical estimate and 2028 scenarios; distinguish evidence types and scope"
+      ],
+      "citationKeys": [
+        "lbnl-us-data-centre-energy-2024"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-infrastructure-07-aws-gpu-pricing.md",
+      "exactUrl": "https://aws.amazon.com/ec2/capacityblocks/pricing/",
+      "title": "Amazon EC2 Capacity Blocks for ML Pricing – AWS",
+      "titleEvidence": "Amazon EC2 Capacity Blocks for ML Pricing – AWS",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:16:59.947Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "AWS primary pricing page; the capture is dated 4 October and includes a schedule effective 7 October, so recheck before publication"
+      ],
+      "citationKeys": [
+        "aws-capacity-block-pricing-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-models-01-gemma4-card.md",
+      "exactUrl": "https://ai.google.dev/gemma/docs/core/model_card_4?hl=en",
+      "title": "Gemma 4 model card  |  Google AI for Developers",
+      "titleEvidence": "Gemma 4 model card  |  Google AI for Developers",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Google",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:15:38.003Z",
+      "sourceType": "Model card (web page)",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary (provider-authored)",
+      "relevanceContext": [
+        "Card sections for training data, evaluation, intended use, limitations, ethics and safety."
+      ],
+      "crosswalkRoles": [
+        "Broad language-support/training claims, not language-specific safety scores",
+        "First-party model card; publication date is not visible in the captured page",
+        "Gemma 4 model sizes, open-weight status, license, and provider disclosures",
+        "Gemma 4 variants and provider documentation",
+        "Primary Google model card; sections for training data, evaluation, intended use, limitations, ethics and safety",
+        "Provider-described open weights and Apache 2.0 terms for Gemma 4",
+        "Provider-stated model sizes, capabilities and distribution",
+        "Safety/evaluation sections and stated limitations"
+      ],
+      "citationKeys": [
+        "gemma4-model-card",
+        "gemma4-model-card-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-models-02-agentfloor-study.md",
+      "exactUrl": "https://arxiv.org/abs/2605.00334",
+      "title": "[2605.00334] AgentFloor: How Far Up the tool use Ladder Can Small Open-Weight Models Go?",
+      "titleEvidence": "[2605.00334] AgentFloor: How Far Up the tool use Ladder Can Small Open-Weight Models Go?",
+      "titleEvidenceSource": "Title field",
+      "publisher": "arXiv (preprint repository)",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated; arXiv submission date: 2026-05-01"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:15:41.578Z",
+      "sourceType": "Author research preprint (arXiv)",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary study; preprint, not an independent replication",
+      "relevanceContext": [
+        "Benchmark design, evaluated models and run count, aggregate and long-horizon findings, and intervention variation."
+      ],
+      "crosswalkRoles": [
+        "Independent but unreviewed benchmark findings, limited to its task suite and model set",
+        "One bounded 30-task, six-tier preprint benchmark",
+        "One bounded 30-task, six-tier preprint evaluation; not deployment evidence",
+        "Primary author study in a 2026 arXiv preprint; one bounded tiered benchmark, not production-performance evidence"
+      ],
+      "citationKeys": [
+        "agentfloor-2026",
+        "agentfloor-2026-preprint"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-models-03-gemini38-card.md",
+      "exactUrl": "https://deepmind.google/models/model-cards/gemini-3-8-flash",
+      "title": "Gemini 3.8 Flash - Model Card — Google DeepMind",
+      "titleEvidence": "Gemini 3.8 Flash - Model Card — Google DeepMind",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Google DeepMind",
+      "publicationDate": "2026-09-02",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-09-02"
+        },
+        {
+          "label": "Published",
+          "value": "September, 2026"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:15:44.002Z",
+      "sourceType": "Model card (web page)",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary (provider-authored)",
+      "relevanceContext": [
+        "Card sections, evaluation disclosure, and links to Gemini 3.7 material for inherited details."
+      ],
+      "crosswalkRoles": [
+        "Automated evaluation, multilingual result, human red-team distinction",
+        "Automated multilingual safety comparison and separate red-team disclosure",
+        "First-party card published 2 September 2026; includes update and limitation language",
+        "First-party model, data, evaluation, use and limitation disclosures",
+        "Google DeepMind’s stated up-to-1M-token input window",
+        "Google model card with cross-model table and per-row task/mode notes",
+        "Google model-card and availability documentation",
+        "Google’s first-party capability and safety disclosures",
+        "Primary Google DeepMind card; release-specific sections and links to Gemini 3.7 materials for inherited details",
+        "Provider-stated Gemini 3.8 Flash modalities, context, API access, and terms pointers",
+        "Provider-stated request context limit; not a durable-memory guarantee"
+      ],
+      "citationKeys": [
+        "gemini38-flash-card",
+        "gemini38-flash-card-2026",
+        "google-gemini38-flash-card"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-policy-01-eu-gpai-obligations.md",
+      "exactUrl": "https://digital-strategy.ec.europa.eu/en/factpages/general-purpose-ai-obligations-under-ai-act",
+      "title": "General-purpose AI obligations under the AI Act | Shaping Europe’s digital future",
+      "titleEvidence": "General-purpose AI obligations under the AI Act | Shaping Europe’s digital future",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:15:27.638Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Commission overview of GPAI provider duties and transition",
+        "Commission overview of GPAI provider duties and transitions"
+      ],
+      "citationKeys": [
+        "eu-gpai-obligations"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-policy-02-c2pa-specifications.md",
+      "exactUrl": "https://c2pa.org/specifications/specifications/1.4/index.html",
+      "title": "C2PA Specifications :: C2PA Specifications",
+      "titleEvidence": "C2PA Specifications :: C2PA Specifications",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:15:32.864Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Contrast between signed provenance records and probabilistic text classification"
+      ],
+      "citationKeys": [
+        "c2pa-specifications-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-verified-anthropic-sonnet55-card.md",
+      "exactUrl": "https://www-cdn.anthropic.com/870c8f525702625d2c62fc6dd04c857e3250bec1/Claude%20Sonnet%205.5%20System%20Card.pdf",
+      "title": "Claude Sonnet 5.5 System Card",
+      "titleEvidence": "Claude Sonnet 5.5 System Card",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Anthropic",
+      "publicationDate": "2026-09-28",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-09-28"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:24:39.756Z",
+      "sourceType": "System card (PDF)",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary (provider-authored)",
+      "relevanceContext": [
+        "Pre-deployment evaluations, external testing, stated omissions, and numerical-results emphasis."
+      ],
+      "crosswalkRoles": [
+        "Anthropic primary system card and self-evaluation",
+        "Anthropic system card and its stated evaluation coverage",
+        "Anthropic system card dated 28 September",
+        "Anthropic system-card scope and limitations",
+        "Anthropic’s first-party evaluation coverage and stated omissions",
+        "Domain evaluations, external testing, and omitted labor-intensive assessments",
+        "First-party system card dated 28 September 2026",
+        "First-party system-card scope and evaluation claims",
+        "Named seven-language harmful-request evaluation including Hindi",
+        "Primary Anthropic system card; pre-deployment scope, external testing, omissions and numerical-results emphasis"
+      ],
+      "citationKeys": [
+        "anthropic-sonnet55-card-2026",
+        "anthropic-sonnet55-system-card",
+        "anthropic-sonnet55-system-card-2026",
+        "claude-sonnet55-system-card"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-verified-eu-ai-companions-proposal.md",
+      "exactUrl": "https://data.consilium.europa.eu/doc/document/ST-13321-2026-INIT/en/pdf",
+      "title": "REGULATION OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL EU KIDS ACT -'EU Keeping Internet Digital Spaces Accountable and Trustworthy'",
+      "titleEvidence": "REGULATION OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL EU KIDS ACT -'EU Keeping Internet Digital Spaces Accountable and Trustworthy'",
+      "titleEvidenceSource": "Captured document heading",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:25:16.976Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Related Council document dated 18 September; not enacted law",
+        "Related Council document, dated 18 September"
+      ],
+      "citationKeys": [
+        "eu-kids-act-council-document-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-verified-openai-gpt6-sol-luna.md",
+      "exactUrl": "https://openai.com/index/introducing-gpt-6-sol-and-luna",
+      "title": "Introducing GPT-6 Sol and Luna | OpenAI",
+      "titleEvidence": "Introducing GPT-6 Sol and Luna | OpenAI",
+      "titleEvidenceSource": "Title field",
+      "publisher": "OpenAI",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:24:16.463Z",
+      "sourceType": "Product launch page",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary (provider-authored)",
+      "relevanceContext": [
+        "Availability, provider benchmark claims, and the internally labeled factuality evaluation."
+      ],
+      "crosswalkRoles": [
+        "Earlier OpenAI release for family context",
+        "First-party evaluation examples, effort and task-cost context",
+        "First-party launch page; included as a distinct document type, not a model card",
+        "OpenAI first-party launch page; publication date is not visible in the captured copy",
+        "OpenAI primary announcement and product details",
+        "OpenAI release evaluation examples with stated effort and task-cost context",
+        "OpenAI release-page positioning and evaluation claims",
+        "OpenAI’s product roles, listed API prices, and provider-run evaluation claims",
+        "OpenAI’s release-page claims and stated evaluation conditions",
+        "Primary OpenAI launch page; availability, provider benchmark claims and internally labeled factuality evaluation"
+      ],
+      "citationKeys": [
+        "openai-gpt6-sol-luna-2026",
+        "openai-gpt6-sol-luna-card-2026",
+        "openai-gpt6-sol-luna-release"
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-verified-xai-grok47-card.md",
+      "exactUrl": "https://media.x.ai/v1/website/4p7card-5eccc980.pdf",
+      "title": "ModelCard: Grok4.7",
+      "titleEvidence": "ModelCard: Grok4.7",
+      "titleEvidenceSource": "Title field",
+      "publisher": "xAI",
+      "publicationDate": "2026-09-21",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-09-21"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T08:24:21.586Z",
+      "sourceType": "Model card (PDF)",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary (provider-authored)",
+      "relevanceContext": [
+        "Capability and safety sections, including the final-deployed-checkpoint convention."
+      ],
+      "crosswalkRoles": [
+        "First-party evaluator, harness and trial-count disclosures",
+        "First-party model card dated 21 September 2026",
+        "Five-language coding benchmark distinguished from safety evaluation",
+        "Primary xAI model card; capability/safety domains and final-deployed-checkpoint convention",
+        "Provider disclosure of CursorBench version change",
+        "Safety domains and final-deployed-checkpoint convention",
+        "xAI card dated 21 September",
+        "xAI model-card evaluations and version notes",
+        "xAI primary model card",
+        "xAI system card with evaluator, harness and trial-count disclosures",
+        "xAI’s first-party results, evaluator attribution, and benchmark-version notes"
+      ],
+      "citationKeys": [
+        "grok47-model-card",
+        "grok47-model-card-2026",
+        "xai-grok47-card-2026",
+        "xai-grok47-model-card"
+      ]
+    },
+    {
+      "capturePath": "research/sources/power-01-indiaai-capacity.md",
+      "exactUrl": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2239616&lang=1&reg=3",
+      "title": "Data centre capacity in the country has increased from about 375 MW in 2020 to around 1500 MW by 2025",
+      "titleEvidence": "Data centre capacity in the country has increased from about 375 MW in 2020 to around 1500 MW by 2025",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Press Information Bureau, Ministry of Electronics & IT",
+      "publicationDate": "2026-03-13",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-03-13 (posted 13 MAR 2026 at 4:15 PM)"
+        }
+      ],
+      "fetchedDate": "2026-10-03",
+      "fetchedDateEvidence": "2026-10-03T10:58:57.460Z",
+      "sourceType": "Government press release",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary ministry statement; reports official figures rather than an independent measurement",
+      "relevanceContext": [
+        "Approximate national capacity in 2020 and by 2025, plus the Ministry of Power’s 2031–32 data-centre electricity-demand estimate"
+      ],
+      "crosswalkRoles": [
+        "13 March 2026 PIB release; about 1,500 MW by 2025 and 13.56-GW electricity-demand estimate",
+        "PIB release dated 13 March 2026; calls 13.56 GW projected electricity demand",
+        "PIB release posted 13 March 2026; about 1,500 MW by 2025 and 13.56-GW electricity-demand estimate"
+      ],
+      "citationKeys": [
+        "pib-data-centre-demand-2026-03-13"
+      ]
+    },
+    {
+      "capturePath": "research/sources/power-02-parliament-constraints.md",
+      "exactUrl": "https://sansad.in/getFile/annex/270/AU4151_DoYAWR.pdf?source=pqars",
+      "title": "Rajya Sabha Unstarred Question No. 4151: Data Centres Power and Water Infrastructure Crisis",
+      "titleEvidence": "Rajya Sabha Unstarred Question No. 4151: Data Centres Power and Water Infrastructure Crisis",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Ministry of Power, Government of India",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-03",
+      "fetchedDateEvidence": "2026-10-03T10:59:04.854Z",
+      "sourceType": "Parliamentary written answer",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "30 March 2026 answer to Unstarred Question 4151; about 1,500 MW by 2025 and 13.56-GW capacity wording",
+        "30 March 2026 parliamentary answer; capacity wording and projection",
+        "Rajya Sabha Unstarred Question 4151 answered 30 March 2026; places 13.56 GW under data-centre capacity"
+      ],
+      "citationKeys": [
+        "rajya-sabha-data-centre-capacity-2026-03-30"
+      ]
+    },
+    {
+      "capturePath": "research/sources/power-03-ceew-water-energy.md",
+      "exactUrl": "https://www.ceew.in/sites/default/files/ceew-data-centre-study-web-ready-final.pdf",
+      "title": "Scaling India’s Data Centre Ecosystem Stakeholder Perspectives on Infrastructure, Energy, and Resilience",
+      "titleEvidence": "Scaling India’s Data\nCentre Ecosystem\nStakeholder Perspectives on Infrastructure,\nEnergy, and Resilience",
+      "titleEvidenceSource": "Captured multi-line report-cover title",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-03",
+      "fetchedDateEvidence": "2026-10-03T10:59:10.360Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "CEEW study citing external national and facility-level estimates; not a direct measurement of every facility",
+        "India-focused power, water and policy study; selected figures attributed to external estimates"
+      ],
+      "citationKeys": [
+        "ceew-india-data-centre-resource-study",
+        "ceew-india-datacentre-water-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/power-04-ieefa-grid-analysis.md",
+      "exactUrl": "https://ieefa.org/resources/indias-power-hungry-data-centre-sector-crossroads",
+      "title": "India’s power-hungry data centre sector at a crossroads | IEEFA",
+      "titleEvidence": "India’s power-hungry data centre sector at a crossroads | IEEFA",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-03",
+      "fetchedDateEvidence": "2026-10-03T11:08:16.706Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "India capacity and grid discussion; numerical forecasts attributed to other reports"
+      ],
+      "citationKeys": [
+        "ieefa-india-data-centre-grid-analysis"
+      ]
+    },
+    {
+      "capturePath": "research/sources/power-05-pib-water-response.md",
+      "exactUrl": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2246886&lang=1&reg=6",
+      "title": "WATER CONSUMPTION BY DATA CENTERS IN THE COUNTRY",
+      "titleEvidence": "WATER CONSUMPTION BY DATA CENTERS IN THE COUNTRY",
+      "titleEvidenceSource": "Captured document heading",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-03",
+      "fetchedDateEvidence": "2026-10-03T11:08:24.293Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "March 2026 Rajya Sabha reply with capacity and cooling context; says no concerns were received, but supplies no national consumption total"
+      ],
+      "citationKeys": [
+        "pib-water-consumption-datacentres-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/report-c2pa-c2patool-docs-2026.md",
+      "exactUrl": "https://opensource.contentauthenticity.org/docs/c2patool",
+      "title": "C2PA command line tool | Open-source tools for content authenticity and provenance",
+      "titleEvidence": "C2PA command line tool | Open-source tools for content authenticity and provenance",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:50:01.865Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Official command-line tool for reading reports and adding manifests"
+      ],
+      "citationKeys": [
+        "c2pa-c2patool-docs-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/report-c2pa-deployment-guidance-2026.md",
+      "exactUrl": "https://c2pa.org/wp-content/uploads/sites/33/2026/07/Content-Credentials-Deployment-Guidance.pdf",
+      "title": "Content Credentials: Deployment Guidance",
+      "titleEvidence": "Content Credentials: Deployment Guidance",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:49:58.319Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "July 2026 publisher deployment guidance and status display",
+        "Publisher workflow and credential status display",
+        "Publisher workflows and user-facing credential states"
+      ],
+      "citationKeys": [
+        "c2pa-deployment-guidance-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/report-c2pa-independent-security-study-2026.md",
+      "exactUrl": "https://arxiv.org/html/2604.24890v1",
+      "title": "Verifying Provenance of Digital Media:Why the C2PA Specifications Fall Short",
+      "titleEvidence": "Verifying Provenance of Digital Media:Why the C2PA Specifications Fall Short",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:50:11.003Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "2026 independent arXiv preprint analyzing versions 2.2–2.4 and real-world implementations",
+        "Independent arXiv preprint analyzing validator, timestamp, and certificate issues",
+        "Independent arXiv preprint with implementation/specification findings, bounded to tested versions"
+      ],
+      "citationKeys": [
+        "c2pa-independent-security-study-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/report-c2pa-security-tool-2026.md",
+      "exactUrl": "https://github.com/contentauth/c2pa-attacks",
+      "title": "GitHub - contentauth/c2pa-attacks: Content Authenticity Security Tool · GitHub",
+      "titleEvidence": "GitHub - contentauth/c2pa-attacks: Content Authenticity Security Tool · GitHub",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:50:05.586Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Content Authenticity Security Tool; creates test artifacts but does not decide attack success"
+      ],
+      "citationKeys": [
+        "c2pa-security-test-tool-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/report-small-model-gemma4-overview-2026.md",
+      "exactUrl": "https://ai.google.dev/gemma/docs/core",
+      "title": "Gemma 4 model overview  |  Google AI for Developers",
+      "titleEvidence": "Gemma 4 model overview  |  Google AI for Developers",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:50:21.050Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Google parameter sizes, contexts, precision, quantization and on-device design claims",
+        "Google’s documented context, quantization, and deployment options"
+      ],
+      "citationKeys": [
+        "gemma4-deployment-overview",
+        "gemma4-overview-2026"
+      ]
+    },
+    {
+      "capturePath": "research/sources/report-small-model-llamacpp-quantization.md",
+      "exactUrl": "https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md",
+      "title": "llama.cpp/tools/quantize/README.md at master · ggml-org/llama.cpp · GitHub",
+      "titleEvidence": "llama.cpp/tools/quantize/README.md at master · ggml-org/llama.cpp · GitHub",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:50:28.742Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Quantization formats, conversion and quality tradeoffs"
+      ],
+      "citationKeys": [
+        "llama-cpp-quantization"
+      ]
+    },
+    {
+      "capturePath": "research/sources/report-small-model-mistral-small4-card-2026.md",
+      "exactUrl": "https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03",
+      "title": "Mistral Small 4 - Mistral AI | Mistral Docs",
+      "titleEvidence": "Mistral Small 4 - Mistral AI | Mistral Docs",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:50:18.039Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Mistral Small 4 total and active parameter counts, context and license; no hardware benchmark"
+      ],
+      "citationKeys": [
+        "mistral-small4-official-doc"
+      ]
+    },
+    {
+      "capturePath": "research/sources/report-small-model-rtx5090-spec.md",
+      "exactUrl": "https://www.nvidia.com/en-me/geforce/graphics-cards/50-series/rtx-5090/",
+      "title": "GeForce RTX 5090 Graphics Cards | NVIDIA",
+      "titleEvidence": "GeForce RTX 5090 Graphics Cards | NVIDIA",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:50:25.435Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "NVIDIA memory, power and board specifications; no model-specific performance"
+      ],
+      "citationKeys": [
+        "nvidia-rtx5090-spec"
+      ]
+    },
+    {
+      "capturePath": "research/sources/report-small-model-vllm-memory-docs.md",
+      "exactUrl": "https://docs.vllm.ai/projects/vllm-omni/en/latest/configuration/gpu_memory_utilization",
+      "title": "GPU Memory Calculation and Configuration - vLLM-Omni",
+      "titleEvidence": "GPU Memory Calculation and Configuration - vLLM-Omni",
+      "titleEvidenceSource": "Title field",
+      "publisher": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:51:33.891Z",
+      "sourceType": "UNKNOWN / NOT AVAILABLE",
+      "primarySecondary": "UNKNOWN / NOT AVAILABLE",
+      "evidenceClass": "UNKNOWN / NOT AVAILABLE",
+      "relevanceContext": [],
+      "crosswalkRoles": [
+        "Memory components and context/concurrency effects"
+      ],
+      "citationKeys": [
+        "vllm-gpu-memory"
+      ]
+    },
+    {
+      "capturePath": "research/sources/research-agents-anthropic-permissions.md",
+      "exactUrl": "https://docs.anthropic.com/en/docs/claude-code/permissions",
+      "title": "Configure permissions - Claude Code Docs",
+      "titleEvidence": "Configure permissions - Claude Code Docs",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Anthropic",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:35:29.014Z",
+      "sourceType": "Claude Code permissions documentation",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary product documentation",
+      "relevanceContext": [
+        "Permission modes, allow/ask/deny rule precedence, managed settings, and operating-system sandbox boundaries."
+      ],
+      "crosswalkRoles": [
+        "Claude Code’s product-specific permission modes and rule precedence",
+        "Product-specific allow, ask, and deny rules; not a universal agent standard",
+        "Product-specific allow/ask/deny rules",
+        "Product-specific permission modes, precedence, trust and sandboxing"
+      ],
+      "citationKeys": [
+        "anthropic-claude-code-permissions"
+      ]
+    },
+    {
+      "capturePath": "research/sources/research-agents-google-audit.md",
+      "exactUrl": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/audit-logging",
+      "title": "Agent Platform audit logging information  |  Gemini Enterprise Agent Platform  |  Google Cloud Documentation",
+      "titleEvidence": "Agent Platform audit logging information  |  Gemini Enterprise Agent Platform  |  Google Cloud Documentation",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Google Cloud",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:35:23.413Z",
+      "sourceType": "Official cloud product documentation",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary product documentation",
+      "relevanceContext": [
+        "Agent Platform audit-log types, user-data coverage, and default enablement for Data Access logs."
+      ],
+      "crosswalkRoles": [
+        "Audit categories and Data Access logging default",
+        "Audit logging as evidence, not a preventive action control",
+        "Audit-log classes and Data Access default; logging is not an approval gate"
+      ],
+      "citationKeys": [
+        "google-agent-audit-logging"
+      ]
+    },
+    {
+      "capturePath": "research/sources/research-agents-openai-hitl.md",
+      "exactUrl": "https://openai.github.io/openai-agents-python/human_in_the_loop/",
+      "title": "Human-in-the-loop - OpenAI Agents SDK",
+      "titleEvidence": "Human-in-the-loop - OpenAI Agents SDK",
+      "titleEvidenceSource": "Title field",
+      "publisher": "OpenAI",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:35:19.360Z",
+      "sourceType": "Agents SDK documentation",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary product documentation",
+      "relevanceContext": [
+        "Tool-approval interruptions, run-state resumption, and application responsibilities for approver identity and serialized-state integrity."
+      ],
+      "crosswalkRoles": [
+        "Approval interruption and resume flow; application owns approver authentication and authorization",
+        "Approval interruption/resume behavior; app owns approver authentication and authorization",
+        "Approval interruption/resumption; approver authentication and authorization remain application responsibilities",
+        "Approval pause/resume and application-owned authorization",
+        "Approval workflow; application owns approver identity and authorization"
+      ],
+      "citationKeys": [
+        "openai-agents-hitl-doc"
+      ]
+    },
+    {
+      "capturePath": "research/sources/research-c2pa-21-spec.md",
+      "exactUrl": "https://spec.c2pa.org/specifications/specifications/2.1/specs/C2PA_Specification.html",
+      "title": "Content Credentials : C2PA Technical Specification :: C2PA Specifications",
+      "titleEvidence": "Content Credentials : C2PA Technical Specification :: C2PA Specifications",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Coalition for Content Provenance and Authenticity (C2PA)",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated; version history dates 2.1 to September 2024"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:35:02.061Z",
+      "sourceType": "Technical specification",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary normative specification and version history",
+      "relevanceContext": [
+        "Version 2.1 change record and its supported-format listings."
+      ],
+      "crosswalkRoles": [
+        "Official C2PA 2.1 version history and change notes"
+      ],
+      "citationKeys": [
+        "c2pa-spec-21"
+      ]
+    },
+    {
+      "capturePath": "research/sources/research-c2pa-24-spec.md",
+      "exactUrl": "https://spec.c2pa.org/specifications/specifications/2.4/specs/C2PA_Specification.html",
+      "title": "Content Credentials : C2PA Technical Specification :: C2PA Specifications",
+      "titleEvidence": "Content Credentials : C2PA Technical Specification :: C2PA Specifications",
+      "titleEvidenceSource": "Title field",
+      "publisher": "Coalition for Content Provenance and Authenticity (C2PA)",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDateEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated; version history dates 2.4 to April 2026"
+        }
+      ],
+      "fetchedDate": "2026-10-04",
+      "fetchedDateEvidence": "2026-10-04T09:35:13.844Z",
+      "sourceType": "Technical specification",
+      "primarySecondary": "PRIMARY",
+      "evidenceClass": "Primary normative specification and version history",
+      "relevanceContext": [
+        "Version 2.4 change record, including new assertions, JSON serialization, embedding support, live-video changes, and versioning."
+      ],
+      "crosswalkRoles": [
+        "C2PA 2.4 provenance claims, bindings, and watermark support",
+        "C2PA 2.4 specification; technical scope, not adoption evidence",
+        "C2PA 2.4 standard; provenance claims and watermark terminology",
+        "Official C2PA 2.4 version history, change list and new support"
+      ],
+      "citationKeys": [
+        "c2pa-spec-24"
+      ]
+    }
+  ]
+}

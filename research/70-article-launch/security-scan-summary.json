@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-10-05T04:29:34.578Z",
+  "scanners": {
+    "dependencyAudit": {
+      "status": "ok",
+      "countsBySeverity": {
+        "critical": 0,
+        "high": 1,
+        "info": 0,
+        "low": 0,
+        "moderate": 0
+      },
+      "totalFindings": 1,
+      "findings": [
+        {
+          "severity": "high",
+          "id": "GHSA-vfj7-8cjw-p6xm@braces-3.0.3",
+          "package": "braces@3.0.3",
+          "scanner": "osv-scanner",
+          "message": "High-severity advisory identified for braces 3.0.3."
+        }
+      ]
+    },
+    "sast": {
+      "status": "ok",
+      "countsBySeverity": {
+        "critical": 0,
+        "high": 0,
+        "moderate": 0,
+        "low": 0,
+        "info": 0
+      },
+      "totalFindings": 0,
+      "findings": []
+    },
+    "houndDog": {
+      "status": "ok",
+      "countsBySeverity": {
+        "critical": 0,
+        "high": 0,
+        "moderate": 0,
+        "low": 0,
+        "info": 0
+      },
+      "totalFindings": 0,
+      "findings": [],
+      "privacyViolationCount": 0
+    }
+  }
+}

@@ -18,6 +18,7 @@
     "test:content-quality": "pnpm exec tsx --test tests/content-quality.test.mjs",
     "test:research-report": "pnpm exec tsx --test tests/research-report.test.mjs",
     "test:authority-registry": "pnpm exec tsx --test tests/authority-registry.test.ts",
+    "test:70-article-fixture": "pnpm exec tsx --test tests/disposable-70-article-validation.test.ts",
     "test:publication-fixture": "pnpm exec tsx --test tests/publication-flow-fixture.test.ts",
     "test:seo-date-stability": "pnpm exec tsx --test tests/seo-date-stability.test.mjs",
     "test:article-first-response": "node tests/article-first-response.test.mjs",

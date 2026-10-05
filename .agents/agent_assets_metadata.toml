@@ -56,3 +56,45 @@ mtime_ms = 1791101623123
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/7e20b1bb-eecd-48ba-9853-657fd92feb6c/46b91650-184e-47a5-84d3-ec49343e239b"
 storage_version_token = "1791101630460688"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "BduprOPdxMLfzuH21rTi6"
+uri = "file://research/70-article-launch/final-validation-matrix.json"
+type = "unspecified"
+title = "70-Article Validation Matrix"
+description = "Machine-readable candidate-by-candidate route, source, editorial, duplicate, authority, mobile, and security results from the isolated in-memory fixture."
+logical_id = "ffcc4a5f-b21c-4cf4-b57e-fdedd11082b6"
+content_hash = "sha256:f3f99a0ca558a449d807bda51e5a55b53a6074a95e5f1987ff6b008ada3daba9"
+size = 358335
+mtime_ms = 1791174643865
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/ffcc4a5f-b21c-4cf4-b57e-fdedd11082b6/f822c9fe-2e34-48bc-a4e4-cb7f7ba9d777"
+storage_version_token = "1791174788262132"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "FFPGaOce_w8kykhSfWsJm"
+uri = "file://research/70-article-launch/source-metadata-normalized.json"
+type = "unspecified"
+title = "Normalized Source Metadata"
+description = "Machine-readable evidence-preserving normalization for the 101 mapped source captures, including explicit unknowns and publication-date evidence."
+logical_id = "7a861054-0170-4a9f-aa0c-cd2e5c4f6a0c"
+content_hash = "sha256:ef4bc61fa3fb145af04eaf2c8de66cc2617be013b6fa13654febbabee3d29d14"
+size = 120976
+mtime_ms = 1791174643841
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/7a861054-0170-4a9f-aa0c-cd2e5c4f6a0c/26611998-d130-4a78-bae8-3171a0e926e7"
+storage_version_token = "1791174789846020"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "rX3CBxe4_SpNUmw0L1eFg"
+uri = "file://research/70-article-launch/security-scan-summary.json"
+type = "unspecified"
+title = "Security Scan Summary"
+description = "Dependency audit, SAST, and HoundDog results; the high braces advisory is recorded with its dependency path."
+logical_id = "abcc0c2a-2c52-4e1f-b673-e7fe6cd73302"
+content_hash = "sha256:5af246b600f26930b19ff61693e3c96ee2c101a29b665249bb4770e69e01112b"
+size = 1058
+mtime_ms = 1791174574797
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/abcc0c2a-2c52-4e1f-b673-e7fe6cd73302/1b139b8a-8cd3-4955-999f-2a4287de1516"
+storage_version_token = "1791174791581698"
+content_type = "application/octet-stream"
