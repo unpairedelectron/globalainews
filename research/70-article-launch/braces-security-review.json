@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-05T06:28:06.000Z",
-  "status": "MITIGATED — local depth guard verified; upstream advisory remains scanner-visible; release gate blocked",
+  "generatedAt": "2026-10-05T07:24:16.831Z",
+  "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
   "advisory": {
     "package": "braces@3.0.3",
     "id": "GHSA-vfj7-8cjw-p6xm",
@@ -10,8 +10,12 @@
     "issue": "Deeply nested brace patterns can trigger stack exhaustion in recursive AST walkers."
   },
   "dependencyPath": {
-    "production": "@workspace/api-server -> http-proxy-middleware@4.2.0 -> micromatch@4.0.8 -> braces@3.0.3",
-    "development": "fast-glob dependency chain; exercised by the depth-guard regression test"
+    "production": "NONE. pnpm --filter @workspace/api-server list --prod --depth Infinity --parseable resolves httpxy@0.5.5 and no http-proxy-middleware, micromatch, or braces.",
+    "development": [
+      "@workspace/api-server devDependencies -> http-proxy-middleware@4.2.0 -> micromatch@4.0.8 -> braces@3.0.3",
+      "@workspace/mockup-sandbox devDependencies -> fast-glob@3.3.3 -> micromatch@4.0.8 -> braces@3.0.3"
+    ],
+    "productionReplacement": "@workspace/api-server dependencies -> httpxy@0.5.5; this is the proxy engine previously used internally by http-proxy-middleware."
   },
   "mitigation": {
     "localPnpmPatch": "patches/braces@3.0.3.patch",
@@ -20,24 +24,39 @@
     "regressionTests": {
       "passed": 6,
       "failed": 0,
-      "productionChain": [
+      "apiServerDevelopmentChain": [
         "excessive brace nesting rejected",
         "excessive parenthesis nesting rejected",
         "ordinary brace expansion preserved"
       ],
-      "developmentChain": [
+      "mockupSandboxDevelopmentChain": [
         "excessive brace nesting rejected",
         "excessive parenthesis nesting rejected",
         "ordinary brace expansion preserved"
-      ]
-    }
+      ],
+      "clerkProxyContractTestsPassed": 3
+    },
+    "runtimeBundleVerification": "API typecheck and production build passed; the six depth-guard tests and three local-target Clerk proxy contract tests passed."
   },
   "runtimeExposureAssessment": {
-    "productionUse": "The Clerk proxy is enabled only in production when CLERK_SECRET_KEY is configured. Its path rewrite is a literal route-prefix replacement; it does not configure a brace glob/pathFilter or accept a user-provided brace pattern.",
-    "assessment": "The inspected middleware does not appear to route untrusted request data into braces pattern parsing. The local guard tests exercise the actual transitive production and development dependency chains. This is a scoped reachability assessment, not a claim that the dependency is fixed or that every package call site is harmless.",
+    "productionUse": "The production Clerk proxy uses httpxy@0.5.5 directly and preserves the existing route prefix handling, proxy headers, and response handling. http-proxy-middleware remains only as a development dependency for the existing braces depth-guard regression tests.",
+    "productionPackageSetContainsBraces": false,
+    "productionBundlesContainBraces": false,
+    "productionBundleFilesChecked": [
+      "artifacts/api-server/dist/index.mjs",
+      "artifacts/api-server/dist/editorial/replay-command.mjs"
+    ],
+    "productionDependencyTreeCommand": "pnpm --filter @workspace/api-server list --prod --depth Infinity --parseable",
+    "bundleMarkersChecked": [
+      "http-proxy-middleware",
+      "micromatch",
+      "braces@3.0.3",
+      "require_braces"
+    ],
+    "assessment": "The vulnerable package is not in the API production dependency tree or either emitted API executable bundle. The raw audit finding remains visible and is restricted to the two recorded development-only chains.",
     "fixedUpstreamReleaseConfirmed": false,
     "scannerRecognizesLocalPatch": false
   },
-  "releaseImplication": "The local depth guard and six regression checks mitigate the known recursion paths, and the production proxy configuration does not route untrusted data into brace-pattern parsing. The dependency audit still reports a High advisory against braces@3.0.3; do not suppress the finding or present the scanners as clean. Keep the release decision blocked until a fixed upstream release removes the finding or an authorized security exception is recorded. This remains a security blocker even though the 70-article byline and draft-date gates are resolved.",
+  "releaseImplication": "The dependency audit still reports the High advisory against braces@3.0.3; do not suppress it or present the scanners as clean. The only exception is for this exact finding because it is absent from the production API dependency tree and production bundles, with the patched development paths retained under depth-guard tests. Any production path, different critical/high finding, or failed evidence check blocks release.",
   "productionEditorialDataModified": false
 }

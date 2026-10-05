@@ -27,8 +27,8 @@ Smoke setup should probe the Vite root route for server readiness, not request a
 
 **How to apply:** Use a bounded HTTP check against the app shell to confirm Vite is listening, then test dynamic preview generation separately with its own timeout and diagnostics.
 
-Do not rely on an active Vite watcher during a production release build that rewrites the story snapshot and generated preview assets; finish the build, then restart the web workflow before preview verification.
+Keep the main Vite watcher stopped through a production release build and CPU-heavy smoke or release-fixture browser checks; restart it once those finish, before preview verification.
 
-**Why:** A concurrent hot reload can run ImageMagick while a generated PNG is being replaced, causing a transient invalid-header error and leaving the preview server unavailable even though the finished asset is valid.
+**Why:** Concurrent hot reloads can race generated assets and compete with Chromium, causing transient image errors or CDP timeouts even when the completed production build and assets are valid.
 
-**How to apply:** Run the production build to completion before restarting or capturing the dev preview, then confirm the Vite root and changed route respond.
+**How to apply:** Keep the watcher stopped for the build, full smoke suite, and isolated editorial fixture; restart it after those checks, then confirm the Vite root and changed route respond.

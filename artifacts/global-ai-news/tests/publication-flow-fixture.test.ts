@@ -98,33 +98,89 @@ async function runMobilePerformanceAudit(origin: string) {
     '--disable-dev-shm-usage',
     '--disable-cache',
     '--remote-allow-origins=*',
+    '--remote-debugging-address=127.0.0.1',
     '--remote-debugging-port=0',
     `--user-data-dir=${profile}`,
     '--window-size=402,874',
     '--force-device-scale-factor=2',
     'about:blank',
-  ], { detached: true, stdio: 'ignore' });
+  ], { detached: true, stdio: ['ignore', 'ignore', 'pipe'] });
 
   let socket: WebSocket | undefined;
+  let spawnError: string | undefined;
+  let exitDetails: string | undefined;
+  let startupStderr = '';
+  browser.stderr?.on('data', (chunk: Buffer) => {
+    startupStderr = `${startupStderr}${chunk.toString('utf8')}`.slice(-8_000);
+  });
+  browser.once('error', (error) => {
+    spawnError = error.message;
+  });
+  browser.once('exit', (code, signal) => {
+    exitDetails = `exit code=${String(code)}, signal=${String(signal)}`;
+  });
+
+  const browserDiagnostics = () => [
+    spawnError ? `spawn error: ${spawnError}` : '',
+    exitDetails ? `process: ${exitDetails}` : '',
+    startupStderr.trim() ? `stderr: ${startupStderr.trim()}` : '',
+  ].filter(Boolean).join('\n');
+
   try {
     const activePortFile = path.join(profile, 'DevToolsActivePort');
-    const deadline = Date.now() + 15_000;
+    const deadline = Date.now() + 60_000;
     while (!existsSync(activePortFile) && Date.now() < deadline) {
-      if (browser.exitCode !== null) throw new Error(`Performance browser exited: ${browser.exitCode}`);
+      if (spawnError || browser.exitCode !== null || browser.signalCode !== null) {
+        throw new Error(`Performance browser exited before exposing DevTools.\n${browserDiagnostics()}`);
+      }
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    assert.ok(existsSync(activePortFile), 'Chrome did not publish its DevTools port');
+    if (!existsSync(activePortFile)) {
+      throw new Error(`Chrome did not publish its DevTools port within 60 seconds.\n${browserDiagnostics()}`);
+    }
     const debugPort = Number(readFileSync(activePortFile, 'utf8').split('\n')[0]);
-    const targets = await fetch(`http://127.0.0.1:${debugPort}/json/list`).then((response) => response.json());
+    assert.ok(Number.isInteger(debugPort) && debugPort > 0, 'Chrome published an invalid DevTools port');
+    const targetDeadline = Date.now() + 10_000;
+    let targets: Array<{ type: string; webSocketDebuggerUrl?: string }> = [];
+    let lastProbeError = '';
+    while (Date.now() < targetDeadline) {
+      if (spawnError || browser.exitCode !== null || browser.signalCode !== null) {
+        throw new Error(`Performance browser exited before exposing a page target.\n${browserDiagnostics()}`);
+      }
+      try {
+        const response = await fetch(`http://127.0.0.1:${debugPort}/json/list`, {
+          signal: AbortSignal.timeout(1_000),
+        });
+        if (response.ok) {
+          targets = await response.json() as Array<{ type: string; webSocketDebuggerUrl?: string }>;
+          break;
+        }
+        lastProbeError = `DevTools returned HTTP ${response.status}`;
+      } catch (error) {
+        lastProbeError = error instanceof Error ? error.message : String(error);
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
     const target = targets.find((item: { type: string }) => item.type === 'page');
-    assert.ok(target?.webSocketDebuggerUrl, 'Chrome page target is unavailable');
+    assert.ok(
+      target?.webSocketDebuggerUrl,
+      `Chrome page target is unavailable${lastProbeError ? `: ${lastProbeError}` : ''}\n${browserDiagnostics()}`,
+    );
     socket = new WebSocket(target.webSocketDebuggerUrl);
     await new Promise<void>((resolve, reject) => {
-      socket!.addEventListener('open', () => resolve(), { once: true });
-      socket!.addEventListener('error', () => reject(new Error('Could not connect to Chrome DevTools.')), { once: true });
+      const timeout = setTimeout(() => reject(new Error('Timed out connecting to Chrome DevTools.')), 10_000);
+      socket!.addEventListener('open', () => {
+        clearTimeout(timeout);
+        resolve();
+      }, { once: true });
+      socket!.addEventListener('error', () => {
+        clearTimeout(timeout);
+        reject(new Error(`Could not connect to Chrome DevTools.\n${browserDiagnostics()}`));
+      }, { once: true });
     });
 
     let commandId = 0;
+    let currentRoute = 'browser setup';
     let currentLoad: (() => void) | undefined;
     const pending = new Map<number, {
       resolve: (value: any) => void;
@@ -164,12 +220,15 @@ async function runMobilePerformanceAudit(origin: string) {
 
     const cdp = (method: string, params: Record<string, unknown> = {}) => new Promise<any>((resolve, reject) => {
       const id = ++commandId;
+      const timeoutMs = method === 'Runtime.evaluate' ? 45_000 : 20_000;
       const timeout = setTimeout(() => {
         if (pending.has(id)) {
           pending.delete(id);
-          reject(new Error(`Timed out waiting for Chrome DevTools command ${method}`));
+          reject(new Error(
+            `Timed out waiting for Chrome DevTools command ${method} on ${currentRoute} after ${timeoutMs}ms.\n${browserDiagnostics()}`,
+          ));
         }
-      }, 20_000);
+      }, timeoutMs);
       pending.set(id, { resolve, reject, timeout });
       socket!.send(JSON.stringify({ id, method, params }));
     });
@@ -222,6 +281,7 @@ async function runMobilePerformanceAudit(origin: string) {
     ];
     const measurements = [];
     for (const route of routes) {
+      currentRoute = route;
       requestInfo = new Map();
       completedResources = [];
       const loaded = new Promise<void>((resolve) => { currentLoad = resolve; });
@@ -410,7 +470,7 @@ function createInMemoryApi(getStories: () => Story[]): Server {
   });
 }
 
-test('isolated publication reaches article, homepage, RSS, and sitemap without a rebuild', { timeout: 120_000 }, async () => {
+test('isolated publication reaches article, homepage, RSS, and sitemap without a rebuild', { timeout: 240_000 }, async () => {
   assert.ok(existsSync(webServerPath), 'run build:production before the isolated publication fixture');
   assert.ok(existsSync(chromium), `Chromium is required for homepage verification: ${chromium}`);
   const originalStories = getPublishedStories();

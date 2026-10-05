@@ -267,9 +267,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 0,
           "relatedLinks": 1,
-          "ttfbMs": 91.5,
+          "ttfbMs": 59.40000000037253,
           "transferBytes": 1066484,
-          "lcpMs": 284,
+          "lcpMs": 144,
           "cls": 0
         }
       },
@@ -279,7 +279,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -316,6 +317,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -494,9 +542,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 0,
-          "ttfbMs": 31.199999999254942,
+          "ttfbMs": 36,
           "transferBytes": 1065602,
-          "lcpMs": 276,
+          "lcpMs": 108,
           "cls": 0
         }
       },
@@ -506,7 +554,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -543,6 +592,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -729,14 +825,14 @@
           "viewportMeta": "width=device-width, initial-scale=1.0, maximum-scale=1",
           "documentWidth": 402,
           "bodyWidth": 402,
-          "h1FontSize": 60,
+          "h1FontSize": 48,
           "tableCount": 0,
           "tableScrollSafe": true,
-          "sourceLinks": 4,
+          "sourceLinks": 0,
           "relatedLinks": 0,
-          "ttfbMs": 41.40000000037253,
+          "ttfbMs": 99.89999999850988,
           "transferBytes": 1067935,
-          "lcpMs": 284,
+          "lcpMs": 196,
           "cls": 0
         }
       },
@@ -746,7 +842,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -783,6 +880,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -956,9 +1100,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 0,
-          "ttfbMs": 39.80000000074506,
+          "ttfbMs": 53.90000000037253,
           "transferBytes": 1065830,
-          "lcpMs": 112,
+          "lcpMs": 188,
           "cls": 0
         }
       },
@@ -968,7 +1112,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -1005,6 +1150,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -1197,9 +1389,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 0,
-          "ttfbMs": 87.40000000037253,
+          "ttfbMs": 98.09999999962747,
           "transferBytes": 1066504,
-          "lcpMs": 172,
+          "lcpMs": 416,
           "cls": 0
         }
       },
@@ -1209,7 +1401,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -1246,6 +1439,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -1463,7 +1703,7 @@
           "tableScrollSafe": true,
           "sourceLinks": 5,
           "relatedLinks": 0,
-          "ttfbMs": 82.59999999962747,
+          "ttfbMs": 45.90000000037253,
           "transferBytes": 1068093,
           "lcpMs": 128,
           "cls": 0
@@ -1475,7 +1715,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -1512,6 +1753,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -1686,9 +1974,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 0,
-          "ttfbMs": 47.59999999962747,
+          "ttfbMs": 54.09999999962747,
           "transferBytes": 1064266,
-          "lcpMs": 416,
+          "lcpMs": 300,
           "cls": 0
         }
       },
@@ -1698,7 +1986,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -1735,6 +2024,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -1937,9 +2273,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 0,
-          "ttfbMs": 68.80000000074506,
+          "ttfbMs": 48.69999999925494,
           "transferBytes": 1067516,
-          "lcpMs": 152,
+          "lcpMs": 136,
           "cls": 0
         }
       },
@@ -1949,7 +2285,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -1986,6 +2323,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -2176,9 +2560,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 0,
-          "ttfbMs": 75.09999999962747,
+          "ttfbMs": 52.19999999925494,
           "transferBytes": 1069328,
-          "lcpMs": 308,
+          "lcpMs": 296,
           "cls": 0
         }
       },
@@ -2188,7 +2572,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -2225,6 +2610,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -2425,9 +2857,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 0,
-          "ttfbMs": 36.09999999962747,
+          "ttfbMs": 34.90000000037253,
           "transferBytes": 1070601,
-          "lcpMs": 120,
+          "lcpMs": 292,
           "cls": 0
         }
       },
@@ -2437,7 +2869,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -2474,6 +2907,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -2754,9 +3234,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 3,
-          "ttfbMs": 49,
+          "ttfbMs": 62.69999999925494,
           "transferBytes": 1070270,
-          "lcpMs": 104,
+          "lcpMs": 328,
           "cls": 0
         }
       },
@@ -2766,7 +3246,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -2803,6 +3284,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -2967,9 +3495,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 0,
-          "ttfbMs": 30.899999998509884,
+          "ttfbMs": 30.800000000745058,
           "transferBytes": 1065659,
-          "lcpMs": 348,
+          "lcpMs": 288,
           "cls": 0
         }
       },
@@ -2979,7 +3507,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -3016,6 +3545,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -3165,9 +3741,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 1,
           "relatedLinks": 0,
-          "ttfbMs": 44.30000000074506,
+          "ttfbMs": 35.19999999925494,
           "transferBytes": 1063449,
-          "lcpMs": 300,
+          "lcpMs": 84,
           "cls": 0
         }
       },
@@ -3177,7 +3753,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -3214,6 +3791,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -3411,9 +4035,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 0,
-          "ttfbMs": 33.100000001490116,
+          "ttfbMs": 70.5,
           "transferBytes": 1066461,
-          "lcpMs": 252,
+          "lcpMs": 156,
           "cls": 0
         }
       },
@@ -3423,7 +4047,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -3460,6 +4085,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -3618,9 +4290,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 1,
           "relatedLinks": 0,
-          "ttfbMs": 31,
+          "ttfbMs": 70.69999999925494,
           "transferBytes": 1062800,
-          "lcpMs": 244,
+          "lcpMs": 448,
           "cls": 0
         }
       },
@@ -3630,7 +4302,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -3667,6 +4340,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -3843,9 +4563,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 0,
-          "ttfbMs": 31.299999998882413,
+          "ttfbMs": 77.90000000037253,
           "transferBytes": 1065428,
-          "lcpMs": 256,
+          "lcpMs": 176,
           "cls": 0
         }
       },
@@ -3855,7 +4575,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -3892,6 +4613,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -4051,9 +4819,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 0,
-          "ttfbMs": 36.09999999962747,
+          "ttfbMs": 75.40000000037253,
           "transferBytes": 1065166,
-          "lcpMs": 276,
+          "lcpMs": 180,
           "cls": 0
         }
       },
@@ -4063,7 +4831,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -4100,6 +4869,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -4252,9 +5068,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 1,
           "relatedLinks": 0,
-          "ttfbMs": 41.5,
+          "ttfbMs": 69.20000000111759,
           "transferBytes": 1064629,
-          "lcpMs": 344,
+          "lcpMs": 464,
           "cls": 0
         }
       },
@@ -4264,7 +5080,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -4301,6 +5118,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -4548,9 +5412,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 5,
           "relatedLinks": 0,
-          "ttfbMs": 35.79999999888241,
+          "ttfbMs": 50.80000000074506,
           "transferBytes": 1068499,
-          "lcpMs": 276,
+          "lcpMs": 380,
           "cls": 0
         }
       },
@@ -4560,7 +5424,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -4597,6 +5462,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -4904,9 +5816,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 3,
-          "ttfbMs": 48.40000000037253,
+          "ttfbMs": 34.30000000074506,
           "transferBytes": 1074266,
-          "lcpMs": 116,
+          "lcpMs": 348,
           "cls": 0
         }
       },
@@ -4916,7 +5828,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -4953,6 +5866,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -5190,9 +6150,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 1,
-          "ttfbMs": 52.5,
+          "ttfbMs": 29.40000000037253,
           "transferBytes": 1065396,
-          "lcpMs": 176,
+          "lcpMs": 292,
           "cls": 0
         }
       },
@@ -5202,7 +6162,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -5239,6 +6200,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -5431,9 +6439,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 0,
-          "ttfbMs": 49.600000001490116,
+          "ttfbMs": 33.19999999925494,
           "transferBytes": 1064559,
-          "lcpMs": 340,
+          "lcpMs": 308,
           "cls": 0
         }
       },
@@ -5443,7 +6451,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -5480,6 +6489,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -5817,9 +6873,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 5,
           "relatedLinks": 3,
-          "ttfbMs": 37,
+          "ttfbMs": 29.40000000037253,
           "transferBytes": 1067683,
-          "lcpMs": 296,
+          "lcpMs": 112,
           "cls": 0
         }
       },
@@ -5829,7 +6885,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -5866,6 +6923,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -6067,9 +7171,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 0,
-          "ttfbMs": 35.19999999925494,
+          "ttfbMs": 47.20000000111759,
           "transferBytes": 1064667,
-          "lcpMs": 248,
+          "lcpMs": 304,
           "cls": 0
         }
       },
@@ -6079,7 +7183,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -6116,6 +7221,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -6321,9 +7473,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 0,
-          "ttfbMs": 35.20000000111759,
+          "ttfbMs": 28.699999999254942,
           "transferBytes": 1063975,
-          "lcpMs": 228,
+          "lcpMs": 308,
           "cls": 0
         }
       },
@@ -6333,7 +7485,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -6370,6 +7523,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -6556,9 +7756,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 0,
-          "ttfbMs": 36.19999999925494,
+          "ttfbMs": 57.30000000074506,
           "transferBytes": 1063569,
-          "lcpMs": 252,
+          "lcpMs": 360,
           "cls": 0
         }
       },
@@ -6568,7 +7768,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -6605,6 +7806,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -6788,9 +8036,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 0,
-          "ttfbMs": 32.59999999962747,
+          "ttfbMs": 32.09999999962747,
           "transferBytes": 1065098,
-          "lcpMs": 260,
+          "lcpMs": 312,
           "cls": 0
         }
       },
@@ -6800,7 +8048,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -6837,6 +8086,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -7013,9 +8309,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 0,
-          "ttfbMs": 35.69999999925494,
+          "ttfbMs": 49.40000000037253,
           "transferBytes": 1063003,
-          "lcpMs": 292,
+          "lcpMs": 120,
           "cls": 0
         }
       },
@@ -7025,7 +8321,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -7062,6 +8359,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -7262,9 +8606,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 0,
-          "ttfbMs": 35.69999999925494,
+          "ttfbMs": 60,
           "transferBytes": 1064488,
-          "lcpMs": 280,
+          "lcpMs": 184,
           "cls": 0
         }
       },
@@ -7274,7 +8618,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -7311,6 +8656,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -7617,9 +9009,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 3,
-          "ttfbMs": 67.09999999962747,
+          "ttfbMs": 45.59999999962747,
           "transferBytes": 1065651,
-          "lcpMs": 332,
+          "lcpMs": 140,
           "cls": 0
         }
       },
@@ -7629,7 +9021,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -7666,6 +9059,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -7983,9 +9423,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 6,
           "relatedLinks": 0,
-          "ttfbMs": 45.30000000074506,
+          "ttfbMs": 50.20000000111759,
           "transferBytes": 1078319,
-          "lcpMs": 480,
+          "lcpMs": 376,
           "cls": 0
         }
       },
@@ -7995,7 +9435,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -8032,6 +9473,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -8349,9 +9837,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 1,
           "relatedLinks": 2,
-          "ttfbMs": 39.59999999962747,
+          "ttfbMs": 49.29999999888241,
           "transferBytes": 1068859,
-          "lcpMs": 320,
+          "lcpMs": 328,
           "cls": 0
         }
       },
@@ -8361,7 +9849,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -8398,6 +9887,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -8663,9 +10199,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 2,
-          "ttfbMs": 42.90000000037253,
+          "ttfbMs": 61.600000001490116,
           "transferBytes": 1068572,
-          "lcpMs": 288,
+          "lcpMs": 464,
           "cls": 0
         }
       },
@@ -8675,7 +10211,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -8712,6 +10249,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -8931,9 +10515,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 0,
-          "ttfbMs": 32.69999999925494,
+          "ttfbMs": 42.70000000111759,
           "transferBytes": 1067141,
-          "lcpMs": 360,
+          "lcpMs": 368,
           "cls": 0
         }
       },
@@ -8943,7 +10527,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -8980,6 +10565,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -9386,9 +11018,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 6,
           "relatedLinks": 4,
-          "ttfbMs": 41.90000000037253,
+          "ttfbMs": 36.40000000037253,
           "transferBytes": 1077736,
-          "lcpMs": 316,
+          "lcpMs": 288,
           "cls": 0
         }
       },
@@ -9398,7 +11030,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -9435,6 +11068,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -9737,9 +11417,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 3,
-          "ttfbMs": 37.79999999888241,
+          "ttfbMs": 33.90000000037253,
           "transferBytes": 1067246,
-          "lcpMs": 108,
+          "lcpMs": 104,
           "cls": 0
         }
       },
@@ -9749,7 +11429,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -9786,6 +11467,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -10065,9 +11793,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 5,
           "relatedLinks": 0,
-          "ttfbMs": 57.69999999925494,
+          "ttfbMs": 68.40000000037253,
           "transferBytes": 1075162,
-          "lcpMs": 288,
+          "lcpMs": 340,
           "cls": 0
         }
       },
@@ -10077,7 +11805,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -10114,6 +11843,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -10394,14 +12170,14 @@
           "viewportMeta": "width=device-width, initial-scale=1.0, maximum-scale=1",
           "documentWidth": 402,
           "bodyWidth": 402,
-          "h1FontSize": 48,
+          "h1FontSize": 60,
           "tableCount": 1,
           "tableScrollSafe": true,
-          "sourceLinks": 0,
+          "sourceLinks": 5,
           "relatedLinks": 0,
-          "ttfbMs": 162.7999999988824,
+          "ttfbMs": 39,
           "transferBytes": 1072986,
-          "lcpMs": 392,
+          "lcpMs": 304,
           "cls": 0
         }
       },
@@ -10411,7 +12187,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -10448,6 +12225,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -10647,9 +12471,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 0,
-          "ttfbMs": 90.5,
+          "ttfbMs": 42,
           "transferBytes": 1069000,
-          "lcpMs": 172,
+          "lcpMs": 300,
           "cls": 0
         }
       },
@@ -10659,7 +12483,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -10696,6 +12521,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -10962,9 +12834,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 0,
-          "ttfbMs": 75.40000000037253,
+          "ttfbMs": 58.09999999962747,
           "transferBytes": 1072787,
-          "lcpMs": 440,
+          "lcpMs": 720,
           "cls": 0
         }
       },
@@ -10974,7 +12846,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -11011,6 +12884,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -11377,9 +13297,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 5,
-          "ttfbMs": 38.5,
+          "ttfbMs": 62.19999999925494,
           "transferBytes": 1080011,
-          "lcpMs": 92,
+          "lcpMs": 140,
           "cls": 0
         }
       },
@@ -11389,7 +13309,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -11426,6 +13347,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -11628,9 +13596,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 3,
-          "ttfbMs": 40.100000001490116,
+          "ttfbMs": 38.70000000111759,
           "transferBytes": 1069630,
-          "lcpMs": 112,
+          "lcpMs": 312,
           "cls": 0
         }
       },
@@ -11640,7 +13608,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -11677,6 +13646,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -11956,9 +13972,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 0,
-          "ttfbMs": 49.19999999925494,
+          "ttfbMs": 67.69999999925494,
           "transferBytes": 1068373,
-          "lcpMs": 440,
+          "lcpMs": 152,
           "cls": 0
         }
       },
@@ -11968,7 +13984,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -12005,6 +14022,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -12328,9 +14392,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 6,
           "relatedLinks": 0,
-          "ttfbMs": 54.79999999888241,
+          "ttfbMs": 64.59999999962747,
           "transferBytes": 1071624,
-          "lcpMs": 320,
+          "lcpMs": 236,
           "cls": 0
         }
       },
@@ -12340,7 +14404,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -12377,6 +14442,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -12763,9 +14875,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 5,
           "relatedLinks": 7,
-          "ttfbMs": 47.79999999888241,
+          "ttfbMs": 84.70000000111759,
           "transferBytes": 1079157,
-          "lcpMs": 124,
+          "lcpMs": 176,
           "cls": 0
         }
       },
@@ -12775,7 +14887,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -12812,6 +14925,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -13083,9 +15243,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 5,
           "relatedLinks": 0,
-          "ttfbMs": 58,
+          "ttfbMs": 108.5,
           "transferBytes": 1075254,
-          "lcpMs": 368,
+          "lcpMs": 192,
           "cls": 0
         }
       },
@@ -13095,7 +15255,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -13132,6 +15293,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -13322,9 +15530,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 0,
-          "ttfbMs": 39.79999999888241,
+          "ttfbMs": 64.59999999962747,
           "transferBytes": 1069499,
-          "lcpMs": 104,
+          "lcpMs": 272,
           "cls": 0
         }
       },
@@ -13334,7 +15542,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -13371,6 +15580,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -13715,9 +15971,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 5,
           "relatedLinks": 4,
-          "ttfbMs": 67.19999999925494,
+          "ttfbMs": 115.5,
           "transferBytes": 1074503,
-          "lcpMs": 176,
+          "lcpMs": 260,
           "cls": 0
         }
       },
@@ -13727,7 +15983,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -13764,6 +16021,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -13982,9 +16286,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 5,
           "relatedLinks": 0,
-          "ttfbMs": 96.39999999850988,
+          "ttfbMs": 218.5,
           "transferBytes": 1069492,
-          "lcpMs": 204,
+          "lcpMs": 328,
           "cls": 0
         }
       },
@@ -13994,7 +16298,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -14031,6 +16336,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -14439,9 +16791,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 13,
           "relatedLinks": 6,
-          "ttfbMs": 72.09999999962747,
+          "ttfbMs": 71.80000000074506,
           "transferBytes": 1087719,
-          "lcpMs": 196,
+          "lcpMs": 208,
           "cls": 0
         }
       },
@@ -14451,7 +16803,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -14488,6 +16841,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -14714,9 +17114,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 3,
-          "ttfbMs": 51.90000000037253,
+          "ttfbMs": 58.80000000074506,
           "transferBytes": 1068968,
-          "lcpMs": 504,
+          "lcpMs": 148,
           "cls": 0
         }
       },
@@ -14726,7 +17126,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -14763,6 +17164,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -14981,9 +17429,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 2,
-          "ttfbMs": 61.19999999925494,
+          "ttfbMs": 61.30000000074506,
           "transferBytes": 1069328,
-          "lcpMs": 372,
+          "lcpMs": 364,
           "cls": 0
         }
       },
@@ -14993,7 +17441,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -15030,6 +17479,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -15380,14 +17876,14 @@
           "viewportMeta": "width=device-width, initial-scale=1.0, maximum-scale=1",
           "documentWidth": 402,
           "bodyWidth": 402,
-          "h1FontSize": 60,
+          "h1FontSize": 48,
           "tableCount": 1,
           "tableScrollSafe": true,
-          "sourceLinks": 5,
+          "sourceLinks": 0,
           "relatedLinks": 4,
-          "ttfbMs": 64.30000000074506,
+          "ttfbMs": 58.29999999888241,
           "transferBytes": 1072721,
-          "lcpMs": 320,
+          "lcpMs": 152,
           "cls": 0
         }
       },
@@ -15397,7 +17893,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -15434,6 +17931,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -15639,9 +18183,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 3,
-          "ttfbMs": 49.5,
+          "ttfbMs": 114.69999999925494,
           "transferBytes": 1068438,
-          "lcpMs": 136,
+          "lcpMs": 244,
           "cls": 0
         }
       },
@@ -15651,7 +18195,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -15688,6 +18233,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -15913,9 +18505,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 3,
-          "ttfbMs": 36.90000000037253,
+          "ttfbMs": 62.59999999962747,
           "transferBytes": 1068617,
-          "lcpMs": 332,
+          "lcpMs": 208,
           "cls": 0
         }
       },
@@ -15925,7 +18517,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -15962,6 +18555,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -16198,9 +18838,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 2,
-          "ttfbMs": 43.09999999962747,
+          "ttfbMs": 47.59999999962747,
           "transferBytes": 1069009,
-          "lcpMs": 332,
+          "lcpMs": 304,
           "cls": 0
         }
       },
@@ -16210,7 +18850,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -16247,6 +18888,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -16493,9 +19181,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 2,
-          "ttfbMs": 59.5,
+          "ttfbMs": 41,
           "transferBytes": 1071188,
-          "lcpMs": 440,
+          "lcpMs": 308,
           "cls": 0
         }
       },
@@ -16505,7 +19193,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -16542,6 +19231,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -16828,9 +19564,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 5,
-          "ttfbMs": 43.80000000074506,
+          "ttfbMs": 47.40000000037253,
           "transferBytes": 1070777,
-          "lcpMs": 124,
+          "lcpMs": 112,
           "cls": 0
         }
       },
@@ -16840,7 +19576,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -16877,6 +19614,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -17102,9 +19886,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 2,
           "relatedLinks": 2,
-          "ttfbMs": 55.80000000074506,
+          "ttfbMs": 36.90000000037253,
           "transferBytes": 1069272,
-          "lcpMs": 128,
+          "lcpMs": 132,
           "cls": 0
         }
       },
@@ -17114,7 +19898,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -17151,6 +19936,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -17388,9 +20220,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 2,
-          "ttfbMs": 47.69999999925494,
+          "ttfbMs": 39.100000001490116,
           "transferBytes": 1069925,
-          "lcpMs": 660,
+          "lcpMs": 300,
           "cls": 0
         }
       },
@@ -17400,7 +20232,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -17437,6 +20270,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -17737,9 +20617,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 6,
-          "ttfbMs": 115.59999999962747,
+          "ttfbMs": 54,
           "transferBytes": 1072641,
-          "lcpMs": 200,
+          "lcpMs": 324,
           "cls": 0
         }
       },
@@ -17749,7 +20629,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -17786,6 +20667,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -18047,9 +20975,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 5,
           "relatedLinks": 3,
-          "ttfbMs": 37.80000000074506,
+          "ttfbMs": 35.09999999962747,
           "transferBytes": 1069801,
-          "lcpMs": 304,
+          "lcpMs": 316,
           "cls": 0
         }
       },
@@ -18059,7 +20987,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -18096,6 +21025,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -18459,9 +21435,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 5,
           "relatedLinks": 4,
-          "ttfbMs": 41.19999999925494,
+          "ttfbMs": 36.40000000037253,
           "transferBytes": 1070070,
-          "lcpMs": 92,
+          "lcpMs": 300,
           "cls": 0
         }
       },
@@ -18471,7 +21447,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -18508,6 +21485,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -18874,9 +21898,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 9,
-          "ttfbMs": 48.90000000037253,
+          "ttfbMs": 36.20000000111759,
           "transferBytes": 1069820,
-          "lcpMs": 120,
+          "lcpMs": 92,
           "cls": 0
         }
       },
@@ -18886,7 +21910,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -18923,6 +21948,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -19126,9 +22198,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 4,
-          "ttfbMs": 51.40000000037253,
+          "ttfbMs": 49.80000000074506,
           "transferBytes": 1066206,
-          "lcpMs": 124,
+          "lcpMs": 160,
           "cls": 0
         }
       },
@@ -19138,7 +22210,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -19175,6 +22248,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -19439,9 +22559,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 6,
-          "ttfbMs": 53,
+          "ttfbMs": 70.39999999850988,
           "transferBytes": 1070212,
-          "lcpMs": 136,
+          "lcpMs": 356,
           "cls": 0
         }
       },
@@ -19451,7 +22571,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -19488,6 +22609,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -19722,9 +22890,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 3,
           "relatedLinks": 4,
-          "ttfbMs": 53.40000000037253,
+          "ttfbMs": 93.60000000149012,
           "transferBytes": 1069502,
-          "lcpMs": 444,
+          "lcpMs": 160,
           "cls": 0
         }
       },
@@ -19734,7 +22902,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -19771,6 +22940,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -20008,9 +23224,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 7,
           "relatedLinks": 2,
-          "ttfbMs": 52.70000000111759,
+          "ttfbMs": 68.40000000037253,
           "transferBytes": 1071472,
-          "lcpMs": 324,
+          "lcpMs": 160,
           "cls": 0
         }
       },
@@ -20020,7 +23236,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -20057,6 +23274,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -20309,9 +23573,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 4,
           "relatedLinks": 3,
-          "ttfbMs": 43.5,
+          "ttfbMs": 66.5,
           "transferBytes": 1069775,
-          "lcpMs": 324,
+          "lcpMs": 360,
           "cls": 0
         }
       },
@@ -20321,7 +23585,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -20358,6 +23623,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {
@@ -20722,9 +24034,9 @@
           "tableScrollSafe": true,
           "sourceLinks": 9,
           "relatedLinks": 4,
-          "ttfbMs": 43.70000000111759,
+          "ttfbMs": 55.29999999888241,
           "transferBytes": 1074465,
-          "lcpMs": 116,
+          "lcpMs": 108,
           "cls": 0
         }
       },
@@ -20734,7 +24046,8 @@
         "fixtureOnlyDate": true
       },
       "security": {
-        "status": "BLOCKED",
+        "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+        "rawScannerStatus": "BLOCKED",
         "scanners": {
           "dependencyAudit": {
             "status": "ok",
@@ -20771,6 +24084,53 @@
             "severityCounts": {},
             "criticalHighFindings": []
           }
+        },
+        "runtimeAssessment": {
+          "rawScannerStatus": "BLOCKED",
+          "releaseDisposition": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+          "rawHighFindingCount": 1,
+          "onlyHighFindingIsExpectedBracesAdvisory": true,
+          "unexceptedCriticalOrHighFindings": 0,
+          "allScannersCompletedAndOtherFindingsAbsent": true,
+          "productionDependencyTree": {
+            "checked": true,
+            "includesHttpxy055": true,
+            "excludesBracesMicromatchAndHpm": true,
+            "relevantEntries": [
+              "/home/runner/workspace/node_modules/.pnpm/httpxy@0.5.5/node_modules/httpxy"
+            ]
+          },
+          "productionPackageManifest": {
+            "checked": true,
+            "directDependencies": [
+              "@clerk/express",
+              "@clerk/shared",
+              "@workspace/api-zod",
+              "@workspace/db",
+              "@workspace/integrations-openai-ai-server",
+              "cookie-parser",
+              "cors",
+              "drizzle-orm",
+              "express",
+              "httpxy",
+              "pino",
+              "pino-http"
+            ],
+            "excludesBracesMicromatchAndHpm": true
+          },
+          "productionBundles": [
+            {
+              "file": "artifacts/api-server/dist/index.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            },
+            {
+              "file": "artifacts/api-server/dist/editorial/replay-command.mjs",
+              "exists": true,
+              "forbiddenMarkers": []
+            }
+          ],
+          "evidenceBasedExceptionRecorded": true
         }
       },
       "staging": {

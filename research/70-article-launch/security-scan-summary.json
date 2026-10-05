@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-05T06:14:14.586Z",
+  "generatedAt": "2026-10-05T07:24:16.831Z",
   "status": "BLOCKED",
-  "gate": "all three workspace scanners completed; no unresolved critical/high findings",
+  "gate": "raw workspace scanner disposition; the dependency audit still reports the exact High braces advisory below",
   "criticalHighCount": 1,
   "scanners": {
     "dependencyAudit": {
@@ -39,5 +39,17 @@
       "severityCounts": {},
       "criticalHighFindings": []
     }
+  },
+  "releaseGate": {
+    "status": "PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION",
+    "findingId": "GHSA-vfj7-8cjw-p6xm@braces-3.0.3",
+    "scope": "This release exception covers only braces@3.0.3 in API-server and mockup-sandbox development dependency paths. It is not a scanner suppression or a claim that the advisory is fixed.",
+    "productionRuntimeExposure": "absent: the API production dependency tree uses httpxy@0.5.5 directly; http-proxy-middleware, micromatch, and braces are absent from production dependencies and emitted API bundles",
+    "scannerFindingRetained": true,
+    "evidenceFiles": [
+      "braces-security-review.json",
+      "artifacts/api-server/tests/braces-depth-security.test.mjs",
+      "artifacts/api-server/tests/clerk-proxy.test.mjs"
+    ]
   }
 }

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { spawn, type ChildProcess } from 'node:child_process';
+import { execFileSync, spawn, type ChildProcess } from 'node:child_process';
 import { createServer, request as httpRequest, type Server } from 'node:http';
 import {
   existsSync,
@@ -1795,10 +1795,124 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
     };
     const sourceMetadataFile = path.join(portfolioRoot, 'source-metadata-normalized.json');
     const securityScanSummaryFile = path.join(portfolioRoot, 'security-scan-summary.json');
+    const bracesSecurityReviewFile = path.join(portfolioRoot, 'braces-security-review.json');
     const matrixFile = path.join(portfolioRoot, 'final-validation-matrix.json');
     const securityScanSummary = existsSync(securityScanSummaryFile)
       ? JSON.parse(readFileSync(securityScanSummaryFile, 'utf8'))
       : { status: 'NOT RUN', file: path.basename(securityScanSummaryFile) };
+    const bracesSecurityReview = existsSync(bracesSecurityReviewFile)
+      ? JSON.parse(readFileSync(bracesSecurityReviewFile, 'utf8'))
+      : { status: 'NOT RUN', file: path.basename(bracesSecurityReviewFile) };
+    const apiServerPackageFile = path.join(root, 'artifacts', 'api-server', 'package.json');
+    const apiServerPackage = JSON.parse(readFileSync(apiServerPackageFile, 'utf8')) as {
+      dependencies?: Record<string, string>;
+      devDependencies?: Record<string, string>;
+    };
+    const apiProductionDependencyTree = execFileSync(
+      'pnpm',
+      ['--filter', '@workspace/api-server', 'list', '--prod', '--depth', 'Infinity', '--parseable'],
+      { cwd: root, encoding: 'utf8' },
+    );
+    const apiProductionBundles = [
+      path.join(root, 'artifacts', 'api-server', 'dist', 'index.mjs'),
+      path.join(root, 'artifacts', 'api-server', 'dist', 'editorial', 'replay-command.mjs'),
+    ];
+    const apiProductionBundleEvidence = apiProductionBundles.map((file) => {
+      if (!existsSync(file)) {
+        return { file: path.relative(root, file), exists: false, forbiddenMarkers: ['bundle missing'] };
+      }
+      const bundle = readFileSync(file, 'utf8');
+      return {
+        file: path.relative(root, file),
+        exists: true,
+        forbiddenMarkers: [
+          ...(bundle.includes('http-proxy-middleware') ? ['http-proxy-middleware'] : []),
+          ...(bundle.includes('micromatch') ? ['micromatch'] : []),
+          ...(bundle.includes('braces@3.0.3') ? ['braces@3.0.3'] : []),
+          ...(bundle.includes('require_braces') ? ['require_braces'] : []),
+        ],
+      };
+    });
+    const apiProductionDirectDependencies = Object.keys(apiServerPackage.dependencies ?? {});
+    const apiProductionDependencyTreeClean =
+      apiProductionDependencyTree.includes('httpxy@0.5.5') &&
+      !/(?:braces@3\.0\.3|micromatch@|http-proxy-middleware@)/.test(apiProductionDependencyTree);
+    const apiProductionPackageManifestClean =
+      apiServerPackage.dependencies?.httpxy === '0.5.5' &&
+      !['braces', 'micromatch', 'http-proxy-middleware'].some((name) =>
+        apiProductionDirectDependencies.includes(name),
+      );
+    const apiProductionBundlesClean = apiProductionBundleEvidence.every((bundle) =>
+      bundle.exists && bundle.forbiddenMarkers.length === 0,
+    );
+    const dependencyHighFindings =
+      securityScanSummary.scanners?.dependencyAudit?.criticalHighFindings ?? [];
+    const onlyExpectedBracesFinding =
+      dependencyHighFindings.length === 1 &&
+      dependencyHighFindings[0].package === 'braces' &&
+      dependencyHighFindings[0].version === '3.0.3' &&
+      dependencyHighFindings[0].severity === 'high' &&
+      dependencyHighFindings[0].id === 'GHSA-vfj7-8cjw-p6xm@braces-3.0.3';
+    const allScannersCompletedAndOtherFindingsAbsent =
+      securityScanSummary.scanners?.dependencyAudit?.status === 'ok' &&
+      securityScanSummary.scanners?.sast?.status === 'ok' &&
+      securityScanSummary.scanners?.sast?.findingCount === 0 &&
+      securityScanSummary.scanners?.houndDog?.status === 'ok' &&
+      securityScanSummary.scanners?.houndDog?.findingCount === 0;
+    const narrowExceptionRecorded =
+      securityScanSummary.releaseGate?.status === 'PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION' &&
+      securityScanSummary.releaseGate?.findingId === 'GHSA-vfj7-8cjw-p6xm@braces-3.0.3' &&
+      securityScanSummary.releaseGate?.scannerFindingRetained === true &&
+      bracesSecurityReview.status === 'PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION' &&
+      bracesSecurityReview.advisory?.package === 'braces@3.0.3' &&
+      bracesSecurityReview.advisory?.id === 'GHSA-vfj7-8cjw-p6xm' &&
+      bracesSecurityReview.mitigation?.regressionTests?.passed === 6;
+    const runtimeExposureAbsent =
+      bracesSecurityReview.runtimeExposureAssessment?.productionPackageSetContainsBraces === false &&
+      bracesSecurityReview.runtimeExposureAssessment?.productionBundlesContainBraces === false &&
+      apiProductionDependencyTreeClean &&
+      apiProductionPackageManifestClean &&
+      apiProductionBundlesClean;
+    const documentedNonRuntimeExceptionPasses =
+      securityScanSummary.status === 'BLOCKED' &&
+      securityScanSummary.criticalHighCount === 1 &&
+      onlyExpectedBracesFinding &&
+      allScannersCompletedAndOtherFindingsAbsent &&
+      narrowExceptionRecorded &&
+      runtimeExposureAbsent;
+    const rawScannerGatePasses =
+      securityScanSummary.status === 'PASS' &&
+      securityScanSummary.criticalHighCount === 0 &&
+      allScannersCompletedAndOtherFindingsAbsent;
+    const securityReleaseStatus = rawScannerGatePasses
+      ? 'PASS'
+      : documentedNonRuntimeExceptionPasses
+        ? 'PASS_WITH_NARROW_NON_RUNTIME_EXCEPTION'
+        : 'BLOCKED';
+    const securityReleaseGatePassed = securityReleaseStatus !== 'BLOCKED';
+    const securityRuntimeAssessment = {
+      rawScannerStatus: securityScanSummary.status ?? 'NOT RUN',
+      releaseDisposition: securityReleaseStatus,
+      rawHighFindingCount: securityScanSummary.criticalHighCount ?? null,
+      onlyHighFindingIsExpectedBracesAdvisory: onlyExpectedBracesFinding,
+      unexceptedCriticalOrHighFindings: onlyExpectedBracesFinding ? 0 : dependencyHighFindings.length,
+      allScannersCompletedAndOtherFindingsAbsent,
+      productionDependencyTree: {
+        checked: true,
+        includesHttpxy055: apiProductionDependencyTree.includes('httpxy@0.5.5'),
+        excludesBracesMicromatchAndHpm: apiProductionDependencyTreeClean,
+        relevantEntries: apiProductionDependencyTree
+          .split('\n')
+          .filter((entry) => /httpxy|braces|micromatch|http-proxy-middleware/.test(entry)),
+      },
+      productionPackageManifest: {
+        checked: true,
+        directDependencies: apiProductionDirectDependencies,
+        excludesBracesMicromatchAndHpm: apiProductionPackageManifestClean,
+      },
+      productionBundles: apiProductionBundleEvidence,
+      evidenceBasedExceptionRecorded: narrowExceptionRecorded,
+    };
     const normalizedFieldCoverage = {
       totalMappedCaptureFiles: captures.length,
       sourceUrlAvailable: captures.filter((capture) => capture.exactUrl !== UNKNOWN).length,
@@ -1868,9 +1982,11 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
           source.publicationDate === UNKNOWN && source.publicationDateEvidence.length === 0,
         ).length,
       };
-      const rowSecurityStatus = securityScanSummary.status === 'PASS'
+      const rowSecurityStatus = securityReleaseStatus === 'PASS'
         ? 'PASS — workspace security scans completed with no unresolved critical/high findings'
-        : `NOT CLEARED — security scan status ${securityScanSummary.status ?? 'unknown'}`;
+        : securityReleaseGatePassed
+          ? 'PASS WITH NARROW NON-RUNTIME EXCEPTION — raw audit still reports High braces@3.0.3 only in development dependencies; API production dependency tree and bundles verified clear'
+          : `NOT CLEARED — security scan status ${securityScanSummary.status ?? 'unknown'}`;
       return {
         slug: draft.slug,
         segment: draft.contentType,
@@ -1964,7 +2080,10 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         jsonLdAuthor: result.jsonLdAuthor ?? false,
         security: {
           status: rowSecurityStatus,
+          rawScannerStatus: securityScanSummary.status ?? 'NOT RUN',
+          releaseDisposition: securityReleaseStatus,
           scanners: securityScanSummary.scanners ?? {},
+          runtimeAssessment: securityRuntimeAssessment,
         },
         staging: {
           status: result.stagingStatus ?? 'NOT RUN',
@@ -2130,8 +2249,10 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
           fixtureOnlyDate: result.fixturePublicationDatePresent ?? false,
         },
         security: {
-          status: securityScanSummary.status ?? 'NOT RUN',
+          status: securityReleaseStatus,
+          rawScannerStatus: securityScanSummary.status ?? 'NOT RUN',
           scanners: securityScanSummary.scanners ?? {},
+          runtimeAssessment: securityRuntimeAssessment,
         },
         staging: {
           status: 'DRAFT — workspace-only; not sent to editorial API or release database',
@@ -2186,7 +2307,7 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
     ).length;
     const releaseReady = stagedDraftCount === 70
       && fullSmokeStatus === 'PASS'
-      && securityScanSummary.status === 'PASS'
+      && securityReleaseGatePassed
       && semanticReview.unresolvedAClassCount === 0
       && contentTypeReview.count === contentTypeReview.manualFitCount
       && graphIssues.length === 0
@@ -2247,6 +2368,8 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
       securityAndRegression: {
         fullSmoke: fullSmokeStatus,
         candidateSpecificValidation: 'Fresh disposable in-memory snapshot and isolated Vite route fixture.',
+        releaseSecurityDisposition: securityReleaseStatus,
+        runtimeExposureAssessment: securityRuntimeAssessment,
         externalSecurityScans: securityScanSummary,
       },
       performance: {
@@ -2262,7 +2385,7 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         status: releaseReady ? 'READY FOR HUMAN PUBLISH' : 'BLOCKED — one or more validation/security gates did not pass',
         blockers: [
           ...(fullSmokeStatus === 'PASS' ? [] : ['Full regression smoke suite has not passed in the current validation run.']),
-          ...(securityScanSummary.status === 'PASS' ? [] : ['Security scanners have unresolved findings or did not complete successfully.']),
+          ...(securityReleaseGatePassed ? [] : ['Security scanners have unresolved findings and no validated non-runtime exception.']),
           ...(stagedDraftCount === 70 ? [] : [`Only ${stagedDraftCount}/70 records are staged as drafts.`]),
           ...(semanticReview.unresolvedAClassCount === 0 ? [] : ['Unresolved true-duplicate alerts remain.']),
           ...(contentTypeReview.count === contentTypeReview.manualFitCount ? [] : ['Content-type warning reviews are incomplete.']),
