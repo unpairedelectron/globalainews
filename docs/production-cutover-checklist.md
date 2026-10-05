@@ -99,6 +99,8 @@ At 2026-10-05T12:49:04Z, read-only `GET /` and `GET /api/healthz` requests to bo
 | Web artifact | `web-sha256:6de535690965318fb8e13a4090ba370878d122d98b32b21d25f6f8e482c58340` |
 | API artifact | `api-sha256:6d687de00eb58a4e9d2e0ca777049990d49d70ef1741a45194267a6830530219` |
 
+A targeted deployment-log query after 12:50Z found one `Article first-response rendering failed: This operation was aborted` error at `12:57:11.635Z`; no other matching error appeared in the queried interval. The tracked article-render handler is unchanged between the deployed source commit and current `main`; it has a five-second API snapshot timeout and returns HTTP 503 on an unhandled fetch failure. The log does not identify the article path or response status, so the cause and user impact are unconfirmed. Do not request an article route to reproduce this: its API snapshot may reach the schedule-seeding path described above.
+
 The deployed source commit exists in local Git history and is an ancestor six commits behind current `main` (`27b87f17ccfc18dd1a9258c2c6c3f63b64dbbb49`). All three deployed fingerprints differ from the current local table above. Both public hosts serve the same stale build; there is no evidence of a split host mapping. The evidence identifies an active deployment of an older commit, not a wrong branch or a local build failure. No production editorial writes, publishing automation, or deployment occurred during this check.
 
 After an approved publish, compare `X-GAN-Source-Revision`, `X-GAN-Web-Artifact-Revision`, and `X-GAN-API-Artifact-Revision` on both public hosts and both paths (`/` and `/api/healthz`) with the local values above. If a build changes before that publish, regenerate the fingerprints and update this document before comparing.
