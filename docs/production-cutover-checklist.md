@@ -1,24 +1,25 @@
 # Final pre-cutover checklist
 
 **Prepared:** 2026-10-05
-**State:** ACTIVE DEPLOYMENT — metadata reports a successful Autoscale deployment, but its Web/API revisions have not been matched to this workspace. No deployment or production mutation was performed for this remediation.
+**State:** STALE ACTIVE DEPLOYMENT — metadata reports a successful Autoscale deployment; read-only runtime fingerprints confirm both public hosts serve the same older build. No deployment or production mutation was performed for this remediation.
 
 ## Scope and approval boundary
 
 This is the final pre-publish handoff for Global AI News. It does not authorize or perform Publish, production automation, production editorial writes, production configuration changes, or database migrations. Do not start another foundation audit as part of this handoff.
 
-Deployment metadata observed at `2026-10-05T09:49:00Z` reports the Autoscale app as active with a successful build at `https://www.globalainews.in`. The deployed Web and API revisions have not been matched to the current workspace, so production parity is unverified. Do not publish, invoke editorial automation, or write production data as part of this local remediation.
+Deployment metadata observed at `2026-10-05T12:49Z` reports the Autoscale app as active with a successful build at `https://www.globalainews.in`. Read-only probes at `2026-10-05T12:49:04Z` identify the deployed source, Web, and API revisions; all differ from current `main`, as detailed below. Explicit owner authorization is still required before Publish. Do not invoke editorial automation or write production data.
 
 ## Verified state
 
 ### Production metadata and read-only probes
 
-The Replit deployment metadata snapshot from `2026-10-05T09:49:00Z` reports:
+The Replit deployment metadata snapshot from `2026-10-05T12:49Z` reports:
 
 - `isDeployed`: `true`
 - `hasSuccessfulBuild`: `true`
 - Primary deployment URL: `https://www.globalainews.in`
-- Deployed Web/API revisions: not matched to this workspace
+- Alias URL: `https://global-ai-media.replit.app`
+- Deployed source, Web, and API revisions: identified by read-only response headers; all differ from this workspace
 
 The following are historical read-only observations from 2026-10-03; they do not establish the current active deployment's behavior:
 
@@ -31,7 +32,7 @@ The following are historical read-only observations from 2026-10-03; they do not
 | Primary-host `GET /robots.txt` | `200`; general crawling allowed; sitemap listed |
 | Alias-host `GET /robots.txt` | `200`; general crawling disallowed; social bots allowed |
 
-No `X-GAN-*` response headers were observed on those historical production root or health responses. Current production source/Web/API fingerprint parity is **unverified**; no post-2026-10-03 production route probes were made for this remediation.
+No `X-GAN-*` response headers were observed on those historical 2026-10-03 root or health responses. Separate read-only requests on 2026-10-05 to `/` and `/api/healthz` on both hosts returned HTTP 200 with identical, stale `X-GAN-*` fingerprints (recorded below). These limited probes confirm a production/local fingerprint mismatch; they do not verify other production routes.
 
 The historical canonical and alias `robots.txt` responses differ. The checked-in `public/robots.txt` is host-independent, and the layer supplying the alias-specific response has not been identified. Do not change the file to try to fix the alias behavior; identify the responsible hosting/domain layer first.
 
@@ -51,7 +52,7 @@ These routes reach `getPublishedStoriesFromDatabase()` → `getReleaseRows()` �
 
 ### Scheduler and current production risk
 
-- The active deployed API revision and its automation setting have not been matched to the workspace; production scheduler state is therefore unknown.
+- The active deployed API revision is identified as an older source commit, but its automation setting and scheduler state have not been established; scheduler state remains unknown.
 - The current workspace API artifact sets `EDITORIAL_AUTOMATION_ENABLED=false`; retain that setting.
 - Do not enable or invoke production automation. No production automation was run for this remediation.
 - No production automation was invoked manually for this work.
@@ -72,21 +73,35 @@ The latest local security scan results available for this handoff reported:
 - SAST: **0** findings.
 - Privacy/dataflow scan: **0** findings.
 
-The repository carries a local `pnpm` patch with bounded input and recursive AST depth checks, matching the core mitigation in the merged upstream change. Ten regression cases exercise the installed production and development dependency chains and Clerk proxy behavior, including over-deep brace/parenthesis patterns and ordinary expansion. Both `pnpm audit --prod` and `pnpm audit -D` still report the high advisory because the resolved package version remains `3.0.3`; the local patch is a reviewed mitigation, not a clean audit or a released upstream fix. Code inspection found no user-controlled `micromatch` pattern in the current Clerk proxy configuration; this narrows the apparent request path but does not resolve the advisory or prove the package unreachable.
+The API server's exact path is development-only: `http-proxy-middleware@4.2.0` → `micromatch@4.0.8` → `braces@3.0.3`. The API production dependency view has no such path. Production uses `httpxy` directly in the Clerk proxy, and the production API bundle excludes `http-proxy-middleware`, `micromatch`, and `braces`; the security test asserts these exclusions. A separate development test chain is `fast-glob` → `micromatch` → `braces`. The repository's local `pnpm` patch bounds brace input and recursive AST depth; ten API/security tests exercise both development chains, normal expansion, and production-bundle exclusion. The advisory remains scanner-visible, but this dependency path is not shipped in or reachable through the production API bundle. No broad dependency upgrade or production dependency replacement is indicated by this evidence.
 
 The public JavaScript entry is `520,440` bytes (`160,470` gzip). The shared public-route chunk is `63,580` bytes (`14,250` gzip), and the Clerk route chunk is deferred at `146,780` bytes (`36,890` gzip). CSS is `148,390` bytes (`23,330` gzip). The public entry still triggers Vite's 500 kB chunk warning. These are local build measurements, not production payload measurements.
 
 ### Expected local fingerprints
 
-The final workspace build and `scripts/build-fingerprint.mjs` agree on these values. After the local API workflow restart on 2026-10-05, `/api/healthz` returned `200` with `{"status":"ok"}`, and all three `X-GAN-*` headers matched this table. No production route or fingerprint requests were made; deployed Web/API revisions remain unmatched.
+The final workspace build and `scripts/build-fingerprint.mjs` agree on these values. After the local API workflow restart on 2026-10-05, `/api/healthz` returned `200` with `{"status":"ok"}`, and all three `X-GAN-*` headers matched this table.
 
 | Fingerprint | Value |
 | --- | --- |
-| Source | `e4f725be73bcded80a8ccbe9f28d14e7c1f8a7f3+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a` |
+| Source | `27b87f17ccfc18dd1a9258c2c6c3f63b64dbbb49+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a` |
 | Web artifact | `web-sha256:0b95374b0e3f885f53b50be05823ce2778c87eb399c47267be364625a0d44c41` |
 | API artifact | `api-sha256:d7947a0f3167477b2a63b28b31bd771c7e17071b9bcf81c5b3dc17142eee0327` |
 
-After a future approved publish, compare `X-GAN-Source-Revision`, `X-GAN-Web-Artifact-Revision`, and `X-GAN-API-Artifact-Revision` on both the public root and API health response with the values above. If a build changes before that publish, regenerate the fingerprints and update this document before comparing.
+### Current production revision observation
+
+Replit deployment metadata at 2026-10-05 12:49Z reports one active, successful, public Autoscale deployment with `https://www.globalainews.in` and `https://global-ai-media.replit.app`. The metadata and available deployment-log callback did not expose a deployment ID or startup build record.
+
+At 2026-10-05T12:49:04Z, read-only `GET /` and `GET /api/healthz` requests to both hosts returned HTTP 200 and the same three runtime fingerprints:
+
+| Fingerprint | Deployed value |
+| --- | --- |
+| Source | `49575ba878da393ed503f337793d3837ffd7fa29+source-sha256:cc2b6fef44c5575e413a63eff05d40de9d445d1ba8d9460cd673d06dbca24c8d` |
+| Web artifact | `web-sha256:6de535690965318fb8e13a4090ba370878d122d98b32b21d25f6f8e482c58340` |
+| API artifact | `api-sha256:6d687de00eb58a4e9d2e0ca777049990d49d70ef1741a45194267a6830530219` |
+
+The deployed source commit exists in local Git history and is an ancestor six commits behind current `main` (`27b87f17ccfc18dd1a9258c2c6c3f63b64dbbb49`). All three deployed fingerprints differ from the current local table above. Both public hosts serve the same stale build; there is no evidence of a split host mapping. The evidence identifies an active deployment of an older commit, not a wrong branch or a local build failure. No production editorial writes, publishing automation, or deployment occurred during this check.
+
+After an approved publish, compare `X-GAN-Source-Revision`, `X-GAN-Web-Artifact-Revision`, and `X-GAN-API-Artifact-Revision` on both public hosts and both paths (`/` and `/api/healthz`) with the local values above. If a build changes before that publish, regenerate the fingerprints and update this document before comparing.
 
 ## Safe checks for any future owner-authorized publish
 
@@ -127,4 +142,4 @@ If a future publish fails after Unpublish, the expected consequence is continued
 
 ## Current decision
 
-**ACTIVE DEPLOYMENT — production revision parity is unverified.** This remediation did not publish, perform production writes, or run automation. The active deployment's runtime fingerprints, automation state, and the historical alias `robots.txt` behavior remain unverified. Use only the safe checks above after an owner-authorized publish.
+**STALE ACTIVE DEPLOYMENT — production/local fingerprint mismatch is confirmed.** This remediation did not publish, perform production writes, or run automation. The deployed automation state, non-health route behavior, and current alias `robots.txt` behavior remain unverified. Use only the safe checks above after an owner-authorized publish.

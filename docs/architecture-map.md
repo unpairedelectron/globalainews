@@ -1,12 +1,12 @@
 # Global AI News architecture map
 
-**Current as of:** 2026-10-04
+**Current as of:** 2026-10-05
 **Source branch:** `main`  
-**Current source fingerprint:** `e4f725be73bcded80a8ccbe9f28d14e7c1f8a7f3+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a`
+**Current source fingerprint:** `27b87f17ccfc18dd1a9258c2c6c3f63b64dbbb49+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a`
 
 ## Deployment topology
 
-The Web and API artifacts are configured for Replit Autoscale with path routing. Deployment metadata observed at `2026-10-05T09:49:00Z` reports an active deployment and successful build at `https://www.globalainews.in`. The deployed Web and API revisions have not been matched to the current workspace, so production parity and the active scheduler configuration remain unverified.
+The Web and API artifacts are configured for Replit Autoscale with path routing. Deployment metadata observed at `2026-10-05T12:49Z` reports an active deployment and successful build at `https://www.globalainews.in`. Read-only requests to both public hosts and both `/` and `/api/healthz` confirm an older deployed source commit and Web/API fingerprints than current `main`; see `docs/production-cutover-checklist.md`. The active scheduler configuration remains unverified.
 
 | Service | Artifact path | Local port | Production build | Production start |
 | --- | --- | ---: | --- | --- |
@@ -52,7 +52,7 @@ The API mounts its routers under `/api`. Public newsroom content and metadata ar
 - The workspace exposes the API through the shared path proxy at `/api`; development Web-to-API requests use the configured local proxy origin, while the production Web artifact uses `NEWSROOM_API_ORIGIN=https://www.globalainews.in`.
 - DM Sans, DM Mono, and Instrument Serif are served from licensed app-local font files; DM Sans and Instrument Serif are preloaded. Clerk provider/auth modules are dynamically loaded only for sign-in, sign-up, and insights routes. The `InsightsPage` implementation itself remains in the shared public module.
 - Historical read-only checks on 2026-10-03 returned a crawlable `robots.txt` on `www.globalainews.in` and `Disallow: /` on `global-ai-media.replit.app`. The checked-in robots file is host-independent; the layer adding the alias response is not identified, so do not change the file to address it.
-- Production health, robots, edge/cache behavior, and artifact headers were not rechecked for this remediation. Do not probe newsroom, feed, or sitemap routes; those GETs may seed schedule rows. Active artifact revisions and production parity remain unverified.
+- At `2026-10-05T12:49:04Z`, read-only root and `/api/healthz` requests on both production hosts returned HTTP 200 and identical stale artifact headers. The current deployment's robots behavior and edge/cache behavior were not checked in this remediation. Do not probe newsroom, feed, or sitemap routes; those GETs may seed schedule rows. Production/local parity is known to be mismatched.
 
 ## Environment configuration
 
@@ -60,20 +60,20 @@ Environment variable names referenced by the application/configuration include:
 
 - Web: `PORT`, `BASE_PATH`, `NEWSROOM_API_ORIGIN`, and the three `GAN_BUILD_*_REVISION` values.
 - API: `PORT`, `NODE_ENV`, `DATABASE_URL`, `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `NEWSLETTER_PROVIDER_URL`, `NEWSLETTER_PROVIDER_TOKEN`, `RESEND_API_KEY`, `RESEND_AUDIENCE_ID`, `EDITORIAL_DRAFT_MODEL`, `EDITORIAL_VERIFICATION_MODEL`, and `EDITORIAL_AUTOMATION_ENABLED`.
-- The current workspace API artifact explicitly sets `EDITORIAL_AUTOMATION_ENABLED=false`. The active deployed API revision and automation setting have not been matched to the workspace; do not infer its scheduler state or invoke production automation.
+- The current workspace API artifact explicitly sets `EDITORIAL_AUTOMATION_ENABLED=false`. The active deployed API revision is an older main-branch ancestor, and its automation setting has not been established; do not infer its scheduler state or invoke production automation.
 - Secret values are not recorded in this document.
 
 ## Scheduler ownership and cutover
 
-The API entrypoint calls `startEditorialAutomation()` after listening. The current workspace code gives an explicit `EDITORIAL_AUTOMATION_ENABLED=false` value precedence over the production default, and the API artifact supplies that value. The active deployed revision has not been matched, so its automation behavior is unknown. No production automation was invoked for this remediation.
+The API entrypoint calls `startEditorialAutomation()` after listening. The current workspace code gives an explicit `EDITORIAL_AUTOMATION_ENABLED=false` value precedence over the production default, and the API artifact supplies that value. The active deployed revision is identified as stale, but its automation behavior is unknown. No production automation was invoked for this remediation.
 
-No production automation has been invoked. The current workspace is locally verified, but its fingerprints have not been matched to the active deployment. Do not publish or run production automation for this remediation; use only the safe checks in `docs/production-cutover-checklist.md` after any future owner-authorized publish.
+No production automation has been invoked. Local fingerprints are verified and differ from the active deployment's observed fingerprints. Do not Publish without explicit owner authorization or run production automation; use only the safe checks in `docs/production-cutover-checklist.md` after any authorized publish.
 
 ## Current gaps and release gates
 
-- The local full smoke suite covers public routes, mobile routes, AMP pages, RSS, release-history recovery, themes, and the internal-link audit. The last production AMP observation was 7/10 on 2026-10-03; the 2026-10-05 deployment metadata reports an active successful build, but production route behavior and revision parity remain unverified.
+- The local full smoke suite covers public routes, mobile routes, AMP pages, RSS, release-history recovery, themes, and the internal-link audit. The last production AMP observation was 7/10 on 2026-10-03; 2026-10-05 root and health probes confirm stale revisions but do not verify AMP or other production route behavior.
 - No deployment or production automation was performed for this remediation. The active deployed scheduler state is unknown; the workspace API keeps automation disabled. If an owner authorizes a later publish, use only the safe health, authentication, robots, and fingerprint checks in the cutover checklist.
 - The report distinguishes GPU targets, shared/onboarded supply, access, availability, and reported GPU-hours. Public evidence does not yet reconcile the dated counts or establish a current schedulable inventory.
 - Existing source, entity, timeline, metric, and story data are code-managed and have varying provenance detail; do not present an unverified value as an evidenced fact.
-- The dependency audit still finds high-severity `braces@3.0.3` exposure through production `http-proxy-middleware` and development `fast-glob`. Upstream PR `micromatch/braces#72` merged on 2026-10-03, but no patched npm release is available as of 2026-10-04. The local pnpm patch adds bounded-depth checks and the API security suite verifies both installed chains; production and development audits still report the advisory because the resolved release remains 3.0.3. This is a documented mitigation, not a clean audit. Current Clerk proxy configuration uses a fixed path rewrite rather than a request-supplied glob, which narrows but does not eliminate the exposure.
+- The workspace audit still reports high-severity `braces@3.0.3`. The API chain is development-only (`http-proxy-middleware@4.2.0` → `micromatch@4.0.8` → `braces@3.0.3`); its production dependency view is empty, the production Clerk proxy uses `httpxy`, and tests confirm the API production bundle excludes this chain. A separate development test path is `fast-glob` → `micromatch` → `braces`. The local `pnpm` patch bounds input and recursive AST depth, and ten API/security tests cover the dependency paths and production exclusion. Scanner visibility remains, but this finding is not evidence of a braces dependency in the production API runtime. No broad dependency replacement was made.
 - The public client entry measures 520,440 bytes (160,470 gzip); the shared public-route chunk is 63,580 bytes (14,250 gzip), and the deferred Clerk route chunk measures 146,780 bytes (36,890 gzip). CSS is 148,390 bytes (23,330 gzip). The entry still exceeds Vite's 500 kB warning threshold. Local mobile measurements and their limits are recorded in `docs/mobile-performance-audit.md`; the latest six-route sample's slowest route was `/topic/india` at 3,880 ms LCP.

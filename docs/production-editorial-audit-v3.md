@@ -4,7 +4,7 @@
 **Production site:** https://www.globalainews.in/  
 **Purpose:** Record the production baseline and the later workspace-only editorial remediation.
 
-**Deployment boundary:** Deployment metadata reports an active, successfully built public autoscale deployment at the URL above. The current workspace changes have not been deployed, and metadata does not establish that production runs the current workspace revisions.
+**Deployment boundary:** The active deployment is public, successful, and Autoscale, but read-only runtime fingerprint checks on both public hosts confirm that it serves a stale main-branch ancestor rather than the current workspace. No editorial data, publishing automation, or deployment was changed.
 
 ## Method and limits
 
@@ -153,4 +153,4 @@ The route smoke includes AMP pages and confirms their canonical links, but an in
 
 ## Verification boundary
 
-No production editorial records, publication status, or deployment were changed, and no live publishing automation was run. The production inventory, route results, and original short-story measurements above describe the live baseline observed at `2026-10-05T09:49:00Z`; workspace remediation results and local checks describe the current local source/build. Although deployment metadata reports an active successful autoscale deployment, deployed artifact revisions were not matched to the current workspace. Production parity and any post-remediation production result are therefore unverified. Reconcile revisions and rerun safe production checks only after an owner-authorized publish.
+No production editorial records, publication status, or deployment were changed, and no live publishing automation was run. The production inventory, route results, and original short-story measurements above describe the live baseline observed at `2026-10-05T09:49:00Z`; workspace remediation results and local checks describe the current local source/build. Read-only requests at `2026-10-05T12:49:04Z` to `/` and `/api/healthz` on both `www.globalainews.in` and `global-ai-media.replit.app` returned HTTP 200 with the same stale source revision `49575ba878da393ed503f337793d3837ffd7fa29+source-sha256:cc2b6fef44c5575e413a63eff05d40de9d445d1ba8d9460cd673d06dbca24c8d`, Web revision `web-sha256:6de535690965318fb8e13a4090ba370878d122d98b32b21d25f6f8e482c58340`, and API revision `api-sha256:6d687de00eb58a4e9d2e0ca777049990d49d70ef1741a45194267a6830530219`. That Git commit exists locally and is six commits behind current `main`; the deployed source, Web, and API fingerprints all differ from the current local values. Full production parity and post-remediation route verification remain pending an owner-authorized publish.
