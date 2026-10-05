@@ -1,0 +1,80 @@
+{
+  "generatedAt": "2026-10-05T05:37:36.623Z",
+  "status": "PASS — requested regression commands passed",
+  "databaseSafety": {
+    "database": "gan70_test",
+    "host": "127.0.0.1",
+    "port": 55439,
+    "disposableLocalPostgres": true,
+    "workspaceDefaultDatabaseUrlOverridden": true,
+    "nodeEnv": "test",
+    "editorialAutomationEnabled": false,
+    "productionWrites": false,
+    "serverStoppedAfterTestRun": true
+  },
+  "checks": [
+    {
+      "name": "test:70-article-fixture",
+      "command": "env -u DATABASE_URL pnpm --filter @workspace/global-ai-news run test:70-article-fixture",
+      "status": "PASS",
+      "result": {
+        "eligibleDrafts": 70,
+        "totalDrafts": 70,
+        "citationMarkers": 640,
+        "citedKeys": 133,
+        "sourceMapRows": 253,
+        "sourceCaptures": 101,
+        "normalizedPublicationDates": 14,
+        "unresolvedDateEvidence": 18,
+        "currentSimilarityAlerts": 316,
+        "unresolvedRelatedReferences": 0,
+        "productionWrites": false
+      }
+    },
+    {
+      "name": "test:smoke",
+      "command": "pnpm --filter @workspace/global-ai-news run test:smoke",
+      "status": "PASS",
+      "exitCode": 0,
+      "includes": [
+        "API build",
+        "braces depth security tests",
+        "release metadata",
+        "release history",
+        "theme",
+        "content quality",
+        "research/report",
+        "authority registry",
+        "SEO date stability",
+        "production build",
+        "publication fixture",
+        "article-first-response",
+        "link audit",
+        "SEO/browser smoke"
+      ]
+    },
+    {
+      "name": "test:article-first-response (explicit rerun)",
+      "command": "pnpm --filter @workspace/global-ai-news run test:article-first-response",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    {
+      "name": "workspace typecheck",
+      "command": "pnpm -w run typecheck",
+      "status": "PASS",
+      "exitCode": 0
+    }
+  ],
+  "securityRegression": {
+    "bracesDepthGuardTests": {
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "notes": [
+    "The smoke command exited 0. Its in-suite first-response child emitted a teardown-only esbuild EPIPE after reporting PASS; the separate explicit rerun then passed cleanly.",
+    "The test-only long-headline fixture intentionally exercises and catches an impossible title; the parent SEO smoke tests all passed.",
+    "All database-backed checks used the disposable local gan70_test database; editorial automation was disabled."
+  ]
+}

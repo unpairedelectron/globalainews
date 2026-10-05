@@ -1,0 +1,496 @@
+{
+  "method": "Full-draft semantic fingerprints for pairwise similarity review; model-assisted, grounded in complete candidate text.",
+  "createdAt": "2026-10-05T04:58:18.361Z",
+  "summaries": [
+    {
+      "distinctiveContribution": "Clarifies that reported capacity figures aggregate different development stages, preventing the misinterpretation of planned projects as currently deliverable compute.",
+      "evidenceProfile": "Cushman & Wakefield H1 2026 data supplemented by corroborating but non-independent news reports.",
+      "intent": "Discerning the distinction between actual operational capacity and future project pipelines.",
+      "readerValue": "Provides a framework for accurately evaluating infrastructure growth versus immediate service availability.",
+      "slug": "india-data-centre-h1-2026"
+    },
+    {
+      "distinctiveContribution": "Demonstrates that reported data-centre electricity growth is a broad sector metric, not an AI-only footprint, and contextualizes it within total global demand.",
+      "evidenceProfile": "IEA Global Energy Review 2026 and secondary financial news reports.",
+      "intent": "Separating sector-wide electricity consumption trends from AI-specific usage claims.",
+      "readerValue": "Prevents overstating AI's individual environmental impact by clarifying that the sector total includes cloud, storage, and general business computing.",
+      "slug": "iea-data-centre-electricity-2025-brief"
+    },
+    {
+      "distinctiveContribution": "Identifies the proposal as a legislative draft rather than binding law, preventing premature compliance declarations.",
+      "evidenceProfile": "European Commission official policy pages, legislative proposals, and EURACTIV reporting.",
+      "intent": "Clarifying the legal status and practical implications of the proposed EU KIDS Act for AI developers.",
+      "readerValue": "Offers a strategy for risk management and auditable planning while awaiting final regulatory requirements.",
+      "slug": "eu-kids-act-ai-companions-proposal"
+    },
+    {
+      "distinctiveContribution": "Emphasizes that company-reported benchmarks are specific test-conditions rather than universal rankings and that total workflow costs depend on token utilization patterns.",
+      "evidenceProfile": "OpenAI product release documentation and corroborating news reports.",
+      "intent": "Evaluating new model tiers based on their advertised pricing and performance benchmarks.",
+      "readerValue": "Provides a methodology for teams to assess operational cost-efficiency and model fit through internal task-based testing.",
+      "slug": "openai-gpt6-sol-luna-release"
+    },
+    {
+      "distinctiveContribution": "Categorizes the Gemini 3.8 Audio family into distinct functional types (Live vs. TTS), highlighting specific interface and modality limitations.",
+      "evidenceProfile": "Google DeepMind first-party model card and company recaps.",
+      "intent": "Distinguishing between different voice-model variants to ensure appropriate prototype selection.",
+      "readerValue": "Prevents design errors by mapping specific capabilities and constraints to actual project requirements.",
+      "slug": "gemini-38-audio-model-cards"
+    },
+    {
+      "distinctiveContribution": "Differentiates between model capability documentation and hosting-layer infrastructure, advising separate performance testing per access channel.",
+      "evidenceProfile": "xAI release materials, AWS Bedrock documentation, and independent news reporting.",
+      "intent": "Assessing the practical deployment implications of xAI's latest model across multiple hosting routes.",
+      "readerValue": "Establishes a rigorous due-diligence process for validating performance and operational reliability across different cloud environments.",
+      "slug": "grok-47-platform-availability"
+    },
+    {
+      "distinctiveContribution": "Highlights that system cards are developmental evidence rather than proof of performance in specific real-world deployments.",
+      "evidenceProfile": "Anthropic system card and Reuters reporting.",
+      "intent": "Interpreting new model performance claims within the context of structured disclosure documents.",
+      "readerValue": "Encourages a disciplined approach to model validation by separating provider-claimed metrics from locally observed workflow results.",
+      "slug": "claude-sonnet-55-system-card"
+    },
+    {
+      "distinctiveContribution": "Corrects the tendency to treat model releases as a static ladder, emphasizing the impact of reasoning effort and tool configuration on total cost.",
+      "evidenceProfile": "OpenAI release pages, Microsoft Foundry documentation, and The Hindu launch reporting.",
+      "intent": "Integrating the latest model iteration into production workflows while accounting for staged availability.",
+      "readerValue": "Provides a checklist for managing production pilots and maintaining consistent baselines during rapid model updates.",
+      "slug": "openai-gpt61-sol-release"
+    },
+    {
+      "distinctiveContribution": "Disaggregates various enforcement dates (provider duties, commission powers, legacy transitions) into a clear timeline to avoid conflated deadlines.",
+      "evidenceProfile": "European Commission AI Act enforcement notices and official regulatory guidance.",
+      "intent": "Mapping complex, staggered legal timelines to specific compliance obligations.",
+      "readerValue": "Helps organizations avoid non-compliance or premature implementation by providing a precise, multi-date reference for regulatory milestones.",
+      "slug": "eu-ai-act-enforcement-dates-2026"
+    },
+    {
+      "distinctiveContribution": "Reconciles conflicting performance reports by documenting source-specific grading corrections and update histories.",
+      "evidenceProfile": "OpenAI system cards, AISI evaluation reports, and secondary technology press.",
+      "intent": "Interpreting variation in cyber-range evaluation results across different reporting periods.",
+      "readerValue": "Prevents the misinterpretation of benchmarked success as absolute security proof by maintaining historical context and testing boundaries.",
+      "slug": "aisi-gpt55-cyber-evaluation"
+    },
+    {
+      "distinctiveContribution": "Demonstrates that reported GPU-hour totals are disconnected from the application-to-usage lifecycle, revealing that neither the portal guidance nor factsheets track wait times or project completion.",
+      "evidenceProfile": "Analyzes the IndiaAI Compute Portal process documentation [L3], the allocation register [L3], and a PIB factsheet [L3].",
+      "intent": "To clarify how applicants navigate the IndiaAI compute request process and whether the programme's headline figures indicate current service availability.",
+      "readerValue": "Provides a practical framework for applicants to plan based on current process constraints rather than aggregate programme numbers.",
+      "slug": "indiaai-compute-application-flow"
+    },
+    {
+      "distinctiveContribution": "Identifies that discrepancies in record definitions and reporting methods between February and July 2026 snapshots prevent treating these figures as a valid growth rate.",
+      "evidenceProfile": "Compares data from a DD News article [L12] against a Ministry of Electronics and Information Technology factsheet [L12].",
+      "intent": "To determine whether government-reported AIKosh dataset and model counts represent a measurable growth series.",
+      "readerValue": "Warns researchers against misinterpreting headline totals as reliable indices of catalog growth or resource usability.",
+      "slug": "aikosh-counts-and-denominators"
+    },
+    {
+      "distinctiveContribution": "Clarifies that rate changes are specific to one purchasing model and supply/demand conditions, and that per-accelerator quotes do not account for the full instance bill or effective workload costs.",
+      "evidenceProfile": "Evaluates the AWS Capacity Block pricing page and its scheduled rate update [L21].",
+      "intent": "To understand how AWS Capacity Block pricing works and whether published rate cards function as a market benchmark.",
+      "readerValue": "Guides teams on how to account for reservation terms and instance costs to prevent budgeting errors.",
+      "slug": "aws-capacity-block-pricing"
+    },
+    {
+      "distinctiveContribution": "Argues that context window size is a capacity ceiling, not a performance metric; uses historical studies to show that factual accuracy often suffers based on evidence position and task complexity.",
+      "evidenceProfile": "Synthesizes data from the Google Gemini 3.8 Flash model card [L30], the RULER benchmark study [L30], and the “Lost in the Middle” research [L30].",
+      "intent": "To evaluate what a model's context window specification signifies about its actual reasoning and recall capability.",
+      "readerValue": "Prevents procurement teams from equating high token limits with reliable document-level reasoning.",
+      "slug": "context-window-vs-memory"
+    },
+    {
+      "distinctiveContribution": "Reveals that aggregate pass rates hide high-risk failures by compressing diverse tasks into a single number; demonstrates the need for task-level breakdowns and trial traces.",
+      "evidenceProfile": "References a 2025 survey on LLM agent benchmarking [L39].",
+      "intent": "To determine how to interpret aggregate success rates when evaluating AI agent reliability.",
+      "readerValue": "Provides a framework for building a procurement scorecard that aligns with the specific risks of an organization's use case.",
+      "slug": "agent-evaluation-task-map"
+    },
+    {
+      "distinctiveContribution": "Asserts that prompt instructions are insufficient as security boundaries, advocating for a design where a separate, trusted control plane enforces authorization before any side-effect tool execution.",
+      "evidenceProfile": "Analyzes the OWASP Agentic Top 10 [L48] and the OWASP Agent Control Standard [L48].",
+      "intent": "To identify how to enforce security boundaries for AI agents that have access to tools and data.",
+      "readerValue": "Offers security teams a blueprint for scoping identity and tool access to mitigate agent hijacking or privilege abuse.",
+      "slug": "enterprise-agent-tool-security"
+    },
+    {
+      "distinctiveContribution": "Demonstrates that existing figures mix distinct metrics—such as daily cooling estimates for a single facility and national annual projections—making them unsuitable for quantifying an AI-specific water footprint.",
+      "evidenceProfile": "Examines a CEEW data-centre water study [L57] and a Rajya Sabha parliamentary reply [L57].",
+      "intent": "To assess if current public data provides a reliable national measure of water consumption for Indian data centres.",
+      "readerValue": "Clarifies the limitations of public water estimates, helping stakeholders distinguish local facility risk from sector-wide projections.",
+      "slug": "india-data-centre-water-evidence"
+    },
+    {
+      "distinctiveContribution": "Identifies that the 325–580 TWh range is a scenario set rather than a single forecast; clarifies that these figures cover the entire data-centre ecosystem rather than just AI workloads.",
+      "evidenceProfile": "Evaluates the 2024 LBNL United States Data Center Energy Usage Report [L66].",
+      "intent": "To understand the assumptions behind LBNL’s projected energy demand for U.S. data centres by 2028.",
+      "readerValue": "Helps planners identify the specific operating assumptions—such as GPU utilization and efficiency—that drive electricity demand in their own contexts.",
+      "slug": "us-data-centre-energy-scenarios"
+    },
+    {
+      "distinctiveContribution": "Shows that differences in evaluation protocols, task versions, effort budgets, and tool scaffolding make side-by-side leaderboard comparisons fundamentally flawed without rigorous alignment.",
+      "evidenceProfile": "Compares model/system cards from Google [L75], Anthropic [L75], OpenAI [L75], and xAI [L75].",
+      "intent": "To determine whether benchmark scores from different model cards can be used to create a reliable cross-vendor leaderboard.",
+      "readerValue": "Advises buyers to perform independent validation on their own workloads rather than relying on disparate, non-normalized vendor benchmarks.",
+      "slug": "model-card-benchmark-incomparability"
+    },
+    {
+      "distinctiveContribution": "Identifies that numerical discrepancies arise from inconsistent definitions of 'operational' versus 'planned' capacity and the inclusion of different geographic markets, preventing a unified national total.",
+      "evidenceProfile": "Analyzes reports from Cushman & Wakefield [L84], PIB factsheets [L84], and Rajya Sabha parliamentary responses [L84].",
+      "intent": "To reconcile conflicting reports on India’s data-centre capacity and determine the actual current operational scale.",
+      "readerValue": "Equips readers to deconstruct capacity announcements by checking for specific reference dates, geographic coverage, and inclusion of pipeline projects.",
+      "slug": "india-capacity-definition-gap"
+    },
+    {
+      "distinctiveContribution": "Distinguishes between static inventory (installed/allocated) and operational availability (schedulable) [L3].",
+      "evidenceProfile": "Draws on IndiaAI portal guidance and government factsheets to illustrate reporting gaps [L3, L5].",
+      "intent": "Determining if available compute resources are ready to run specific workloads [L3, L7].",
+      "readerValue": "Provides a checklist to convert headline GPU counts into actionable workload feasibility assessments [L3].",
+      "slug": "schedulable-gpu-capacity"
+    },
+    {
+      "distinctiveContribution": "Deconstructs 'capacity' into distinct stages (operational vs. pipeline) and units (IT load vs. facility power) [L12].",
+      "evidenceProfile": "Cites industry reports (C&W, JLL, Knight Frank) as examples of varying methodologies [L12, L14].",
+      "intent": "Understanding what different data-centre capacity metrics actually represent [L12].",
+      "readerValue": "Prevents the common error of treating future construction pipelines as current, usable supply [L12].",
+      "slug": "data-centre-capacity-stages"
+    },
+    {
+      "distinctiveContribution": "Treats model cards as provider documentation rather than independent audits or performance guarantees [L21].",
+      "evidenceProfile": "References the original model-card proposal and provider cards (Google, Anthropic, OpenAI, xAI) [L21, L23].",
+      "intent": "Interpreting AI model documentation for application-specific due diligence [L21].",
+      "readerValue": "Guides readers to transform card disclosures into structured, held-out test plans for deployment [L21].",
+      "slug": "model-card-reading-guide"
+    },
+    {
+      "distinctiveContribution": "Decouples the technical mechanism of a large prompt window from the concept of persistent 'memory' [L30].",
+      "evidenceProfile": "Uses NIST terminology and provider-specific model constraints [L30, L32].",
+      "intent": "Clarifying the functional differences between context windows, history, and retrieval [L30].",
+      "readerValue": "Allows architects to accurately assign specific mechanisms to information path requirements [L30].",
+      "slug": "context-memory-retrieval"
+    },
+    {
+      "distinctiveContribution": "Distinguishes 'agentic' systems (dynamic decision loops) from fixed workflows [L39].",
+      "evidenceProfile": "Integrates Anthropic's engineering frameworks and agent evaluation surveys [L39, L41].",
+      "intent": "Defining the architectural requirements and autonomy levels of AI agents [L39].",
+      "readerValue": "Provides a four-question diagnostic test to assess system autonomy and oversight needs [L39].",
+      "slug": "what-is-an-ai-agent"
+    },
+    {
+      "distinctiveContribution": "Advocates for 'point-of-consequence' approval and distinct system identities rather than relying on prompts alone [L48].",
+      "evidenceProfile": "Incorporates OWASP risk lists and platform-specific control documentation (LangSmith) [L48, L50].",
+      "intent": "Securing AI agents through appropriate access controls and oversight [L48].",
+      "readerValue": "Translates the abstract concept of 'human in the loop' into specific security and permission boundaries [L48].",
+      "slug": "agent-permissions-explainer"
+    },
+    {
+      "distinctiveContribution": "Explains that ratios (PUE/WUE) are dimensionless indicators that do not represent absolute resource consumption [L57].",
+      "evidenceProfile": "Relies on ISO/IEC standards (30134-2 and 30134-9) [L57, L59].",
+      "intent": "Interpreting data-centre sustainability metrics (PUE/WUE) correctly [L57].",
+      "readerValue": "Warns against using normalized ratios to compare facilities without accounting for boundaries and absolute totals [L57].",
+      "slug": "pue-wue-explainer"
+    },
+    {
+      "distinctiveContribution": "Demonstrates that detectors provide statistical classifications, not provenance evidence, and suffer from high false-positive rates [L66].",
+      "evidenceProfile": "Summarizes findings from a 2023 peer-reviewed study regarding TOEFL essay evaluations [L66, L68].",
+      "intent": "Assessing the reliability of AI-text detection tools for consequential decisions [L66].",
+      "readerValue": "Establishes a responsible process that uses detection only as one signal among others, with human review [L66].",
+      "slug": "ai-detector-limitations"
+    },
+    {
+      "distinctiveContribution": "Categorizes model access by three distinct pillars: rights, access, and reproducibility [L75].",
+      "evidenceProfile": "Uses the Open Source Initiative (OSI) 1.0 definition as a baseline for system-wide transparency [L75, L77].",
+      "intent": "Clarifying the distinction between 'open weights' and 'open-source AI' [L75].",
+      "readerValue": "Enables nuanced procurement by identifying which model components (weights vs. data vs. code) are actually provided [L75].",
+      "slug": "open-weights-vs-open-source"
+    },
+    {
+      "distinctiveContribution": "Shifts model selection from leaderboard rankings to a process of measuring performance on held-out local task sets [L84].",
+      "evidenceProfile": "Uses the 2026 AgentFloor preprint as a case study for task-specific limitations [L84, L86].",
+      "intent": "Selecting the most efficient model based on specific workflow requirements rather than marketing labels [L84].",
+      "readerValue": "Provides a four-stage controlled trial framework to match model capability with actual operational costs [L84].",
+      "slug": "small-model-workflow-selection"
+    },
+    {
+      "distinctiveContribution": "Demonstrates that visibility, license, and delivery fields are distinct and should be verified separately rather than collapsed into a single reuse judgment.",
+      "evidenceProfile": "A qualitative audit of five purposively selected AIKosh detail pages [L3].",
+      "intent": "To determine what access and provenance fields are visible on AIKosh detail pages to inform user reliance on datasets.",
+      "readerValue": "Provides a practical, five-step checklist for users to verify dataset provenance, rights, and fitness before use [L3].",
+      "slug": "research-aikosh-listing-field-audit"
+    },
+    {
+      "distinctiveContribution": "Identifies that the sum of the seven displayed market rows for operational and upcoming capacity is lower than the provided aggregate totals, with no explanation offered by the source [L12].",
+      "evidenceProfile": "An arithmetic audit of data-centre figures from one C&W market update [L12].",
+      "intent": "To check if the individual city-level data-centre market rows in a Cushman & Wakefield report reconcile with the published top-line totals.",
+      "readerValue": "Warns readers to maintain original source aggregates while highlighting unresolved gaps between row-level and top-line data [L12].",
+      "slug": "research-cw-seven-market-row-sum-audit"
+    },
+    {
+      "distinctiveContribution": "Reveals that the records define the same value as either 'electricity demand' or 'data-centre capacity', demonstrating that labels are not interchangeable [L21].",
+      "evidenceProfile": "A transcription and cross-reference audit of two official Indian government documents [L21].",
+      "intent": "To determine if two different government records using the same 13.56-GW projection for 2031–32 measure the same metric.",
+      "readerValue": "Alerts readers to label ambiguity, preventing the incorrect merging of different infrastructure measurements [L21].",
+      "slug": "research-india-dc-13-56-label-audit"
+    },
+    {
+      "distinctiveContribution": "Creates a 'source-definition crosswalk' to show that annual increments, historical estimates, and modeled scenarios use different boundaries and cannot be combined [L30].",
+      "evidenceProfile": "A comparative audit of methodologies from IEA and LBNL reports [L30].",
+      "intent": "To identify what evidence and definitions are required to compare different public claims about data-centre electricity consumption.",
+      "readerValue": "Provides a reporting checklist to ensure geography, period, boundary, and evidence status are preserved for energy claims [L30].",
+      "slug": "research-data-centre-energy-attribution-audit"
+    },
+    {
+      "distinctiveContribution": "Shows that 'model card' or 'system card' labels do not imply standardized field coverage or evidence depth across providers [L39].",
+      "evidenceProfile": "A qualitative audit of six provider documents, including model cards, system cards, and launch pages [L39].",
+      "intent": "To understand the disclosure depth and formats of various model-provider release documents.",
+      "readerValue": "Provides a navigation guide for identifying what evaluation information is actually disclosed versus omitted in different document types [L39].",
+      "slug": "research-model-disclosure-document-audit"
+    },
+    {
+      "distinctiveContribution": "Uses a two-axis taxonomy to demonstrate that benchmark scores often conflate different dimensions like task success, reliability, and safety [L48].",
+      "evidenceProfile": "A qualitative crosswalk mapping a 2025 survey taxonomy against the AgentFloor preprint [L48].",
+      "intent": "To distinguish between what an agent benchmark evaluates (objectives) and how it evaluates it (process).",
+      "readerValue": "Offers a framework for readers to dissect agent benchmarks based on objective and process dimensions before accepting summary scores [L48].",
+      "slug": "research-agent-evaluation-taxonomy"
+    },
+    {
+      "distinctiveContribution": "Finds that providers use different safety domains and test ownership (automated vs. manual vs. external), preventing a single cross-provider comparison [L57].",
+      "evidenceProfile": "An audit of safety disclosures in four model cards and the foundational model-card proposal [L57].",
+      "intent": "To examine how public model documents structure and disclose safety evaluation information.",
+      "readerValue": "Teaches readers to treat safety labels and section headings as evidence of disclosure structure rather than comparable safety metrics [L57].",
+      "slug": "research-system-card-safety-coverage"
+    },
+    {
+      "distinctiveContribution": "Establishes that approval workflows, permission rules, and audit logs are distinct technical layers that do not automatically compensate for one another [L66].",
+      "evidenceProfile": "A review of documentation from four agent platforms (OpenAI, Google, Anthropic, LangChain) and the OWASP Agent Control Standard [L66].",
+      "intent": "To clarify how different platform control layers (approval, permissions, audit) function in agent documentation.",
+      "readerValue": "Provides a checklist for pilot testing of individual security controls, warning against reliance on broad 'human oversight' claims [L66].",
+      "slug": "research-agent-oversight-docs"
+    },
+    {
+      "distinctiveContribution": "Demonstrates that version updates reflect varied changes in manifest representation, assertion types, and validation logic, rather than a single unified feature expansion [L75].",
+      "evidenceProfile": "An audit of official C2PA specification change records [L75].",
+      "intent": "To compare changes between C2PA specifications 2.1 and 2.4 and understand the implications for provenance capabilities.",
+      "readerValue": "Advises implementers to test software against specific assertion versions rather than assuming backward compatibility or universal adoption based on a version number [L75].",
+      "slug": "research-c2pa-version-diff"
+    },
+    {
+      "distinctiveContribution": "Distinguishes between broad language-support counts, evaluation coverage, and actual language-disaggregated outcomes [L84].",
+      "evidenceProfile": "A text audit of multilingual detail in four first-party provider documents [L84].",
+      "intent": "To evaluate how current model documents disclose multilingual safety information.",
+      "readerValue": "Helps procurement teams identify when safety evidence is language-specific versus when it is a combined aggregate that masks individual language performance [L84].",
+      "slug": "research-model-card-multilingual-safety-audit"
+    },
+    {
+      "distinctiveContribution": "Provides a structured framework to categorize disparate capacity metrics (operational vs. planned vs. national demand) to prevent the conflation of incompatible datasets.",
+      "evidenceProfile": "Synthesizes one C&W market report and two official government records (PIB and Rajya Sabha answers) to highlight specific observation boundaries.",
+      "intent": "To help readers find and accurately interpret divergent Indian data-centre capacity figures.",
+      "readerValue": "Allows users to cite capacity statistics with necessary caveats regarding geography, project stage, and source definition, avoiding false aggregate totals.",
+      "slug": "report-india-data-centre-market-2026"
+    },
+    {
+      "distinctiveContribution": "Demonstrates why two distinct, dated snapshots do not constitute a growth series due to the lack of shared, reproducible counting methods.",
+      "evidenceProfile": "Compares two official statements (PIB factsheet and DD News report) alongside a review of platform-level Terms of Use.",
+      "intent": "To evaluate whether public AIKosh catalog totals provide a verifiable metric for tracking growth in AI resources.",
+      "readerValue": "Provides a template for demanding transparency in catalog reporting, focusing on units, versioning, and deduplication rules.",
+      "slug": "report-aikosh-catalog"
+    },
+    {
+      "distinctiveContribution": "Shifts the evaluation focus from generic benchmark scores to versioned, workflow-specific task traces, recovery logic, and security integration.",
+      "evidenceProfile": "Integrates an agent evaluation survey with technical documentation from platforms like OpenAI and Google to identify critical audit and control requirements.",
+      "intent": "To provide enterprise teams with a practical, risk-based approach for evaluating AI agents before deployment.",
+      "readerValue": "Equips readers to define and test their own operational acceptance thresholds rather than relying on vendor-provided demos.",
+      "slug": "report-agent-evaluation-field-guide"
+    },
+    {
+      "distinctiveContribution": "Translates high-level risk frameworks (OWASP) into an evidence-based checklist requiring artifact verification for identity, approvals, and logs.",
+      "evidenceProfile": "Synthesizes community guidance (OWASP) with product-specific audit/logging documentation (LangSmith, Claude Code, Gemini).",
+      "intent": "To guide reviewers in mapping enterprise security requirements to specific, testable agent controls.",
+      "readerValue": "Enables the creation of an evidence packet that links security claims to actual system configurations and re-testable failure scenarios.",
+      "slug": "report-agent-security-controls"
+    },
+    {
+      "distinctiveContribution": "Maintains clear distinctions between model cards, system cards, and launch pages to prevent treating these disparate document types as equivalent.",
+      "evidenceProfile": "Analyzes five first-party records from major AI providers captured in September 2026.",
+      "intent": "To offer a stable, source-verified index of primary model documentation that prevents the misattribution of publisher claims.",
+      "readerValue": "Provides a consistent citation method that points directly to original documentation while warning against inferring quality or safety from document presence alone.",
+      "slug": "report-2026-model-card-archive"
+    },
+    {
+      "distinctiveContribution": "Maps specific legal provisions and transitional phases to their corresponding articles, distinguishing enacted law from voluntary guidance and proposed acts (EU KIDS Act).",
+      "evidenceProfile": "Uses the consolidated EU AI Act text, European Commission official materials, and legislative metadata as of October 2026.",
+      "intent": "To clarify the complex, staged implementation timeline of the EU AI Act for professional compliance research.",
+      "readerValue": "Prevents legal misinterpretation by ensuring readers distinguish between current obligations, commission enforcement roles, and non-binding guidance.",
+      "slug": "report-eu-ai-act-status-2026"
+    },
+    {
+      "distinctiveContribution": "Disaggregates sector-wide energy/water forecasts from facility-level realities, emphasizing that national averages cannot replace site-specific due diligence.",
+      "evidenceProfile": "Aggregates external analyses (CEEW and IEEFA) and labels each metric by period, unit, and estimation method.",
+      "intent": "To help readers interpret environmental impact claims regarding the Indian data-centre sector.",
+      "readerValue": "Provides a method to isolate speculative forecasts and grid constraints from observed data, preventing the inflation of environmental impact estimates.",
+      "slug": "report-data-centre-energy-evidence"
+    },
+    {
+      "distinctiveContribution": "Moves beyond parameter-count marketing to account for KV cache, concurrency, quantization impacts, and hardware thermal limits.",
+      "evidenceProfile": "Synthesizes documentation from NVIDIA (hardware) and model providers (Google/Mistral) along with technical tools like llama.cpp and vLLM.",
+      "intent": "To guide hardware and software selection for local AI model deployment based on technical requirements.",
+      "readerValue": "Provides a repeatable local deployment checklist that guards against performance failure at production scales.",
+      "slug": "report-small-model-deployment-guide"
+    },
+    {
+      "distinctiveContribution": "Argues that C2PA credentials are a technical format, not a truth badge; requires testing of the entire publishing pipeline including CMS transformations.",
+      "evidenceProfile": "Combines C2PA 2.4 specifications, official deployment guidance, open-source auditing tools, and security research.",
+      "intent": "To assist publishers in implementing content provenance controls that are reliable, testable, and transparent.",
+      "readerValue": "Provides an implementation checklist that focuses on workflow integrity and the proper handling of missing or invalidated credentials.",
+      "slug": "report-content-provenance-guide"
+    },
+    {
+      "distinctiveContribution": "Forces the separation of announcement, documentation, and availability dates to prevent the collapse of distinct events into a single, misleading timestamp.",
+      "evidenceProfile": "Records specific publication and availability events for five AI models from September 2026 based on first-party pages and press reports.",
+      "intent": "To maintain an auditable, chronological record of model-release documentation events to support accurate reporting.",
+      "readerValue": "Enables writers to filter evidence by event type—such as evaluation disclosure or distribution record—ensuring accurate chronological attribution.",
+      "slug": "report-september-model-release-timeline"
+    },
+    {
+      "distinctiveContribution": "Provides a framework for calculating total task-specific cost rather than relying on per-token pricing.",
+      "evidenceProfile": "Based on OpenAI release page and Reuters launch coverage; identifies an unexplained discrepancy in published price reduction percentages.",
+      "intent": "Determining which OpenAI model to prioritize for testing based on published role and cost.",
+      "readerValue": "Prevents inefficient model selection by highlighting that vendor-described roles are not independently verified quality categories.",
+      "slug": "compare-gpt6-sol-luna"
+    },
+    {
+      "distinctiveContribution": "Distinguishes between repository-level issue resolution and end-to-end command-line task execution.",
+      "evidenceProfile": "Based on maintainer documentation and a 2026 technical paper; notes that aggregate scores are non-comparable due to differing task families and graders.",
+      "intent": "Understanding the difference between SWE-bench Verified and Terminal-Bench 2.0 to inform benchmark selection.",
+      "readerValue": "Warns against pooling scores from different benchmarks, ensuring procurement decisions match the relevant task family.",
+      "slug": "compare-coding-agent-benchmarks"
+    },
+    {
+      "distinctiveContribution": "Clarifies that 'open-weight' labels shift infrastructure and maintenance burdens to the user rather than removing them.",
+      "evidenceProfile": "Based on model cards and API terms; outlines specific service differences in data handling for Gemini tiers.",
+      "intent": "Assessing the operational responsibilities and trade-offs between hosted and open-weight models.",
+      "readerValue": "Facilitates informed deployment architecture choices by separating access control and maintenance effort from raw capability.",
+      "slug": "compare-hosted-open-weight-deployment"
+    },
+    {
+      "distinctiveContribution": "Defines a method for tracing actual data flow through logs, retrieval systems, and backups, rather than relying on high-level deployment labels.",
+      "evidenceProfile": "Based on NIST AI 600-1 and Gemini API terms; provides a structure for risk-weighted decision matrices.",
+      "intent": "Determining the right architecture for sensitive AI workflows to ensure privacy and security.",
+      "readerValue": "Protects against data leakage by exposing that 'local' models can still be insecure if telemetry or retrieval systems are not properly scoped.",
+      "slug": "compare-local-hosted-private-workflows"
+    },
+    {
+      "distinctiveContribution": "Explains that outcome-based scores fail to capture agent safety and path-based risks found in action traces.",
+      "evidenceProfile": "Based on a 2025 evaluation survey and technical definitions of pass^k; stresses the importance of repeated-run testing.",
+      "intent": "Choosing appropriate metrics to assess the reliability and safety of AI agents.",
+      "readerValue": "Ensures that delegation decisions are based on consistency and safety rather than misleading single-run success rates.",
+      "slug": "compare-agent-evaluation-metrics"
+    },
+    {
+      "distinctiveContribution": "Categorizes authority profiles by impact and reversibility, emphasizing that 'read-only' does not eliminate all data-flow risks.",
+      "evidenceProfile": "Based on OWASP agentic risk guidance and product documentation; highlights the need for cryptographically bound approval gates.",
+      "intent": "Deciding the appropriate security constraints for agent tools.",
+      "readerValue": "Reduces potential for privilege abuse by mandating the least-privilege principle and rigorous tool-boundary testing.",
+      "slug": "compare-agent-tool-permission-modes"
+    },
+    {
+      "distinctiveContribution": "Provides a crosswalk method to keep legal compliance and risk-management efforts separate but aligned.",
+      "evidenceProfile": "Based on EU AI Act, Commission guidance, and NIST AI 600-1; emphasizes that NIST is not a legal interpretation service.",
+      "intent": "Clarifying the distinction between mandatory EU legal obligations and voluntary risk management.",
+      "readerValue": "Prevents compliance failure by correcting the false equivalence between voluntary risk frameworks and binding legal duties.",
+      "slug": "compare-eu-ai-act-nist-genai-profile"
+    },
+    {
+      "distinctiveContribution": "Highlights that portal-based allocation involves application-and-review overhead, while cloud-based access involves quota-and-capacity management.",
+      "evidenceProfile": "Based on IndiaAI portal guidance and AWS documentation; warns against assuming historical availability equals current capacity.",
+      "intent": "Evaluating whether to pursue IndiaAI's subsidized compute or commercial cloud offerings.",
+      "readerValue": "Saves project time by framing access speed and eligibility as critical components of total cost.",
+      "slug": "compare-indiaai-commercial-cloud-access"
+    },
+    {
+      "distinctiveContribution": "Demonstrates that sharing a model name does not guarantee feature, billing, or regional parity between distribution channels.",
+      "evidenceProfile": "Based on xAI and AWS provider documentation; flags potential differences in logging and reasoning-field access.",
+      "intent": "Assessing whether Grok 4.7 behavior is identical across xAI and AWS Bedrock.",
+      "readerValue": "Encourages thorough endpoint-specific testing before migrating production workloads between different providers.",
+      "slug": "compare-grok47-api-distribution"
+    },
+    {
+      "distinctiveContribution": "Explicitly defines the distinct purposes of C2PA provenance, watermarks, and classifiers, showing they are layered controls rather than competing substitutes.",
+      "evidenceProfile": "Based on C2PA 2.4, ICLR 2024 studies, and independent security research; warns against treating detector results as 'truth'.",
+      "intent": "Differentiating between various image-authenticity technologies.",
+      "readerValue": "Reduces false certainty in newsrooms and media platforms by clarifying what specific evidence each control provides.",
+      "slug": "compare-provenance-controls"
+    },
+    {
+      "distinctiveContribution": "Proposes a standardized, dated vocabulary and evidence-linked reporting framework to prevent the conflation of project pipelines with usable, schedulable service.",
+      "evidenceProfile": "Compares IndiaAI compute portal records with Cushman & Wakefield market reports and government statistics to demonstrate how scopes vary.",
+      "intent": "How can researchers and startups distinguish between infrastructure announcements and actual compute access?",
+      "readerValue": "Provides a systematic way to evaluate AI infrastructure claims by requiring the separation of capacity stages from actual availability metrics.",
+      "slug": "essay-pipeline-promise-access-service"
+    },
+    {
+      "distinctiveContribution": "Argues that catalog counts are insufficient proxies for value; advocates for a multi-dimensional dashboard reporting metadata, licensing, and reuse evidence.",
+      "evidenceProfile": "Reviews dated AIKosh snapshot reports, platform terms of use, and W3C DCAT 3 standards to illustrate missing documentation.",
+      "intent": "How should readers interpret the public value of AI datasets listed on government portals?",
+      "readerValue": "Helps distinguish catalog scale from actual data usability and quality.",
+      "slug": "essay-public-value-ai-data"
+    },
+    {
+      "distinctiveContribution": "Defines a norm for versioned, dated model cards that explicitly link performance results to specific evaluation harnesses, task definitions, and negative evidence.",
+      "evidenceProfile": "Analyzes specific disclosure cards from Gemini, Sonnet, Grok, and OpenAI to show how evaluation contexts differ.",
+      "intent": "How can model release documents serve as reliable research evidence rather than marketing material?",
+      "readerValue": "Offers a framework for journalists and researchers to cite verifiable evidence instead of provider-led product claims.",
+      "slug": "essay-model-card-as-research-record"
+    },
+    {
+      "distinctiveContribution": "Argues that 'smallness' is only meaningful when measured against total workflow outcomes, including fallbacks, retries, and maintenance costs.",
+      "evidenceProfile": "Uses documentation for Mistral Small 4 and Gemma 4 alongside the AgentFloor 2026 preprint as examples of bounded evaluation.",
+      "intent": "What criteria should organizations use to evaluate the utility of 'small' AI models?",
+      "readerValue": "Moves the decision-making process from parameter counts to operational fit.",
+      "slug": "essay-smallness-workflow"
+    },
+    {
+      "distinctiveContribution": "Proposes an identity-based privilege design where agent authority is strictly bounded by task requirements and gated by auditable system-level authorization.",
+      "evidenceProfile": "Incorporates OWASP agentic risk guidance and product-specific documentation from OpenAI, Anthropic, and LangSmith.",
+      "intent": "How should organizations safely define the scope of authority for autonomous agents?",
+      "readerValue": "Provides a governance blueprint for limiting agent risk through narrow permissions and reversible, human-gated actions.",
+      "slug": "essay-agent-authority"
+    },
+    {
+      "distinctiveContribution": "Argues that scores are only comparable when the task, harness, grader, and model are stable; advocates for 'bridge sets' and explicit documentation of methodology changes.",
+      "evidenceProfile": "Uses SWE-bench Verified, Terminal-Bench, and Grok 4.7 cards to show how leaderboard results break over time.",
+      "intent": "How should researchers and journalists treat leaderboard scores to avoid misinterpreting them as direct measures of model progress?",
+      "readerValue": "Protects readers from equating changes in testing systems with improvements in AI model capability.",
+      "slug": "essay-benchmark-history"
+    },
+    {
+      "distinctiveContribution": "Provides an 'attribution ladder' for energy metrics, emphasizing the need for transparent assumptions when allocating shared infrastructure to specific workloads.",
+      "evidenceProfile": "Cites IEA and LBNL reports to contrast global energy trends with the specific challenges of modeling AI-workload demand.",
+      "intent": "How can stakeholders differentiate between facility-wide energy use and actual AI electricity consumption?",
+      "readerValue": "Clarifies why aggregate energy numbers should not be used as evidence for AI-specific environmental policy.",
+      "slug": "essay-energy-attribution"
+    },
+    {
+      "distinctiveContribution": "Distinguishes between political proposals, enacted law, and self-reported survey data, arguing that each requires different levels of evidentiary scrutiny.",
+      "evidenceProfile": "Examines the 2026 EU KIDS Act proposal, Digital Services Act Article 28, and a 2025 Common Sense Media teen survey.",
+      "intent": "How should the public engage with proposed child-safety laws and prevalence data?",
+      "readerValue": "Prevents the distortion of policy debate by labeling legal status and study design limits.",
+      "slug": "essay-ai-companions-and-law"
+    },
+    {
+      "distinctiveContribution": "Clarifies that C2PA credentials document a history of an asset, not its objective truth or the validity of the events it depicts.",
+      "evidenceProfile": "References C2PA specs, independent 2026 security studies, and detector robustness research.",
+      "intent": "Does content provenance provide a factual verification of an image?",
+      "readerValue": "Warns against confusing cryptographic signals with factual verification of content.",
+      "slug": "essay-provenance-and-trust"
+    },
+    {
+      "distinctiveContribution": "Proposes a centralized, versioned release index that separates marketing claims, technical evaluations, and availability data.",
+      "evidenceProfile": "Consolidates observations from various provider releases (OpenAI, Anthropic, Google, xAI) and independent news coverage.",
+      "intent": "How can the industry maintain a durable record of AI model releases?",
+      "readerValue": "Ensures that model evaluation context remains accessible long after the initial launch page has changed.",
+      "slug": "essay-public-model-release-record"
+    }
+  ]
+}

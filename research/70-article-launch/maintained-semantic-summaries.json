@@ -1,0 +1,47 @@
+{
+  "method": "Semantic fingerprints generated from complete maintained story bodies, including scheduled records; used only to classify similarity alerts.",
+  "summaries": [
+    {
+      "distinctiveContribution": "Argues that provenance is a record of origin and change, not a guarantee of truth, and advocates for a layered trust approach including visible, inspectable credentials [L3].",
+      "evidenceProfile": "References the EU AI Act Code and USPTO AI inventorship alongside general industry practices for metadata and signatures [L13-L16].",
+      "intent": "Explain the role and limitations of provenance in digital content and how it relates to trust and standard-setting [L3].",
+      "readerValue": "Provides a framework for understanding how publishers and platforms can build trust without claiming to eliminate uncertainty through technical certainty [L3].",
+      "slug": "quiet-race-watermark-everything-ai-makes"
+    },
+    {
+      "distinctiveContribution": "Highlights that smaller models offer latency, privacy, and cost advantages, and promotes routing tasks based on model capability rather than using one large model for everything [L24].",
+      "evidenceProfile": "Cites the Mistral model card and the Stanford AI Index 2026 [L38-L39].",
+      "intent": "Examine the benefits and practical trade-offs of deploying smaller, local AI models in professional workflows [L24].",
+      "readerValue": "Offers a strategic perspective on how to integrate AI models into serious workflows by focusing on operational discipline rather than just benchmark scores [L24].",
+      "slug": "small-models-serious-workflows"
+    },
+    {
+      "distinctiveContribution": "Identifies that India's compute programme reports are fragmented, distinguishing between 'target,' 'onboarded,' 'shared,' and 'installed' metrics without providing a unified operational ledger [L50].",
+      "evidenceProfile": "Extensive, including PIB releases, IndiaAI portal data, ETtech reports, and market research from Knight Frank, CBRE, and JLL [L61-L84].",
+      "intent": "Analyze the status of India's public AI compute infrastructure, focusing on the gap between headline claims and actionable capacity [L50].",
+      "readerValue": "Provides a critical, evidence-based assessment of the IndiaAI Mission that clarifies why current headline figures do not accurately reflect operational utility or availability [L50].",
+      "slug": "india-ai-compute-access-2026"
+    },
+    {
+      "distinctiveContribution": "Shifts focus from model performance to the 'operating layer' involving workflow permissions, error recovery, and observability.",
+      "evidenceProfile": "Stanford AI Index 2026 data regarding system reliability and operational workflows.",
+      "intent": "To argue that operational discipline in handling AI uncertainty is a more durable competitive advantage than initial model accuracy.",
+      "readerValue": "Provides a framework for building dependable AI systems by treating reliability as a measurable product feature rather than a secondary concern.",
+      "slug": "reliability-is-the-new-ai-moat"
+    },
+    {
+      "distinctiveContribution": "Proposes that success be measured by 'useful work' completed by diverse users rather than just total capacity announcements.",
+      "evidenceProfile": "IndiaAI Mission documents, Stanford AI Index 2026, and project-specific data points.",
+      "intent": "To advocate for transparency in national AI compute programs to ensure they support broad public value rather than just narrow interests.",
+      "readerValue": "Offers a methodology for policymakers and stakeholders to evaluate and improve the societal impact of public AI infrastructure investments.",
+      "slug": "public-compute-needs-public-metrics"
+    },
+    {
+      "distinctiveContribution": "Frames model selection and infrastructure routing as essential product design constraints tied to energy, latency, and business value.",
+      "evidenceProfile": "IEA data on data centres and Stanford AI Index 2026.",
+      "intent": "To explain that product success depends on managing AI as a broader 'operating budget' rather than just a per-token price.",
+      "readerValue": "Enables product teams to align AI capabilities with sustainable economics by consciously allocating 'intelligence' based on the specific needs of each task.",
+      "slug": "weekly-deep-dive-cost-of-intelligence"
+    }
+  ]
+}

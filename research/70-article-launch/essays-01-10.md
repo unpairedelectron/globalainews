@@ -194,119 +194,109 @@ An archive can attach later corrections without changing the citation in the ori
 
 **Related coverage:** Research 35 and 37; Report 45.
 
-## 64. Smallness becomes useful only inside a workflow
+## 64. The word “small” is not a performance claim
 
 **Slug:** `essay-smallness-workflow`  
 **Topic:** Technology argument  
-**Proposed dek:** A smaller model is not a workflow improvement until it can complete the task reliably, fit the operating environment, and reduce total work.
+**Proposed dek:** Model names and parameter counts describe specifications; they do not establish speed, cost, or where a system can run.
 
-### Parameter count is not a product outcome
+### An adjective is not an outcome
 
-“Small” sounds like an answer to cost, speed, or deployment constraints, but a parameter label does not measure any of those outcomes on its own. Model cards disclose architecture and context information; a task benchmark measures only selected behavior under its own test. A team still has to ask whether a model fits the workflow, whether it can run under the required hardware and latency limits, and what happens when it fails. [@gemma4-model-card] [@mistral-small4-model-card] [@agentfloor-2026-preprint]
+“Small model” sounds like a technical category with a clear boundary. In practice, the label can refer to a product family, a parameter count, or a comparison with a larger system. Readers may infer that a model is inexpensive, fast, or suitable for a device, but the adjective alone establishes none of those properties. A release note can use “small” accurately as a name or relative description while still leaving the practical meaning open. [@mistral-small4-model-card] [@gemma4-model-card]
 
-Mistral Small 4 makes the naming issue concrete: its card lists 119 billion total parameters and 6.5 billion active parameters. That active count is a model specification, not a guarantee that the complete weights fit in a particular device or that a chosen runtime will meet a latency target. Gemma 4 has multiple model sizes and documented deployment configurations, so even within one family “small” refers to a range of choices rather than a single operating point. [@mistral-small4-model-card] [@gemma4-model-card]
+That gap matters in reporting as well as procurement. A reader comparing model announcements needs to know whether two figures describe the same thing before treating them as a ranking. A name may be memorable; it is not a measurement protocol. The public discussion becomes less precise when a product label quietly stands in for several different claims about capability, hardware, and operating cost.
 
-The useful question is not “which model has the smallest number?” It is “what is the cost and quality of an accepted task in this environment?” If the model needs retries, long prompts, human correction, or a hosted fallback, the apparent savings can disappear. If the task is narrow and the failure cost is low, a smaller model may be the better operational choice even when it is not the strongest model in a broad benchmark.
+### Parameter counts need their definitions
 
-### The workflow defines the comparison
+Mistral Small 4 illustrates why a single number can mislead: its model card lists 119 billion total parameters and 6.5 billion active parameters. Those figures describe different aspects of the model; the active-parameter count is not the total parameter count, and neither number is a direct statement about measured speed, memory use, or the hardware needed by a particular runtime. The name “Small” does not resolve that difference. [@mistral-small4-model-card]
 
-Take a support workflow. A model may classify a request, draft a reply, and retrieve policy. A local model could reduce an external API dependency, but the full application may still use hosted search, logs, or ticketing tools. A hosted model may avoid local accelerator management but introduce a contract, network dependency, quota, or service cost. This essay makes no blanket privacy or speed claim; those properties depend on the exact application and endpoint.
+Gemma 4 presents a different naming problem: its card describes a family with multiple sizes, including E2B, E4B, and 31B variants. A reader cannot infer that every item in a family shares one deployment profile or that the smallest named variant meets a particular task requirement. Model cards provide useful specifications, but a specification should not be made to carry a conclusion that it does not state. [@gemma4-model-card]
 
-The evaluation should include the complete path from input to accepted output. Measure task completion, factual errors, reviewer edits, retries, latency, memory or accelerator use, and cost per accepted result. Record the model version, runtime, quantization, context, concurrency, and tool configuration. If a human needs to rewrite half the output, token price is not the workflow’s full cost.
+### A benchmark has an edge
 
-AgentFloor is one example of a bounded model evaluation: its 2026 preprint tests 30 tasks across six tiers and a specific set of models. That can help identify questions to test, but a 30-task preprint benchmark is not a guarantee of performance in a different company’s documents, policies, or software stack. A small-model decision should use public benchmarks as a starting point and a held-out task set from the intended workflow as the decision evidence. [@agentfloor-2026-preprint]
+Benchmarks add evidence, but their boundaries travel with the result. The AgentFloor 2026 preprint evaluates a defined set of models on 30 tasks across six tiers. That is a useful record of what the authors tested; it is not a universal statement about every model called small, every deployment environment, or every task a buyer might care about. Its status as a preprint also matters when describing the evidence. A score should be reported with the task suite and version that produced it, not turned into a general promise through a product label. [@agentfloor-2026-preprint]
 
-### Design for escalation, not just completion
+One evaluation can be informative without being comprehensive. The distinction is not a reason to dismiss a benchmark. It is a reason to describe the result at the same level of precision as the experiment: which models, which tasks, what comparison, and what remains outside the test. Readers can then judge whether the evidence speaks to their question rather than assuming that a broad-sounding category answers it for them.
 
-A model does not have to handle every case alone. A useful small-model workflow can use confidence thresholds, deterministic checks, a second model, or a human escalation route. This can reduce wasted compute on ordinary cases while sending ambiguous or high-impact cases to a more capable path. The escalation policy should be tested too: a model that fails quietly or overestimates confidence can make the hybrid system less reliable.
+### What a release should disclose
 
-The fallback should be visible in measurement. Record how often it was used, why, how much it cost, and whether the final answer passed the same acceptance test. Do not report the smaller model’s score while omitting work performed by the fallback. Avoid using one model for screening if its mistakes could prevent cases from reaching human review.
+The word “small” would be more useful if it sat beside information that lets readers interpret it. At minimum, a release description could state the exact model and version, how any parameter figures are defined, and which evaluation produced the headline result. If a comparison uses active parameters for one model and total parameters for another, the difference should be explicit instead of hidden in a footnote. [@mistral-small4-model-card]
 
-### Measure operational fit over time
+The same principle applies to claims about deployability. A model card can name supported configurations or deployment options, but those should not be silently generalized into “runs locally” or “fits on a laptop.” A report making such a claim should identify the tested hardware and software configuration and say whether the result concerns a demonstration, a supported setup, or an independent measurement. These are recommendations for clearer disclosure, not a claim that one existing standard requires every field. [@gemma4-model-card]
 
-Deployment is not a one-time inference. Models change, runtimes change, context grows, and applications accumulate edge cases. The maintenance cost includes updating weights, securing the runtime, handling new hardware, monitoring drift, and retaining the evaluation set. A hosted API shifts some infrastructure work to the provider but still requires version pinning, service monitoring, and data-term review.
+Evaluation disclosures also need limits. A model release should make the tested task set, scoring method, version, and relevant comparison visible, then state what the test did not examine. If a number comes from a preprint or provider-run evaluation, identify that provenance. An honest boundary is more useful than a broad adjective because it gives readers a way to understand what is known and what remains an open question.
 
-A small model becomes useful when it has a defined job, a bounded failure cost, a measured fallback, and an owner who can maintain it. That is more informative than a parameter-count competition. It also makes “small” a decision tied to work rather than a brand label.
+### Use size as a question, not an answer
 
-Set a review trigger as well as a launch threshold: rerun the held-out task set after a model, runtime, prompt, or workload change.
+This essay is not an argument that smaller models are better or worse. It is an argument about the language used to describe them. “Small” can be a useful shorthand when the comparison is clear, but it should prompt a follow-up question: small by which measure, in which family, and under what evaluation? Without those answers, the label invites readers to supply assumptions that the source may not support.
 
-**Bottom line:** Judge small models by accepted-work outcomes and total operating burden, not parameter count alone.
+Editors and providers can make those distinctions visible without discarding product names. Keep the name, then add the measure behind the claim and the evidence boundary around it. That gives a technical audience room to compare specifications and gives a general reader a clearer account of what the announcement actually establishes.
 
-**Why it matters:** A low-cost model can become expensive if it generates more retries, edits, or escalations than the alternative.
+**Bottom line:** Treat “small” as a description that needs context, not as proof of performance, low cost, or local deployability.
+
+**Why it matters:** Unqualified labels can make model specifications sound like deployment results even when the evidence describes only a name, a parameter measure, or a bounded benchmark.
 
 **Key takeaways:**
-- Parameter count does not certify hardware fit or workflow quality.
-- Test the whole task path, including reviewer corrections and fallbacks.
-- Public benchmarks are bounded examples, not deployment guarantees.
-- Measure cost per accepted outcome, not only model-token cost.
-- Plan for updates, monitoring, and escalation before rollout.
+- Total and active parameter counts describe different things.
+- A model family can contain variants with different specifications.
+- A benchmark supports claims about its tested models and tasks, not every use of a broad label.
+- Release reporting should identify the measure and evidence behind claims about size or deployability.
 
-**What changes:** Every small-model trial should include a held-out task set, end-to-end cost, fallback rate, and maintenance owner.
+**What changes:** Model announcements should pair size labels with defined specifications, evaluation context, and explicit limits on what those figures establish.
 
 **Evidence note:** The essay uses provider model documentation and one 30-task preprint as bounded evidence; it does not claim a universal speed, privacy, or performance advantage.
 
 **Related coverage:** Explainer 30; Analysis 15; Report 48.
 
-## 65. An agent’s authority should be smaller than its objective
+## 65. Delegation does not transfer responsibility
 
 **Slug:** `essay-agent-authority`  
 **Topic:** Governance argument  
-**Proposed dek:** Give an agent only the access needed for its current task, then make high-impact actions reviewable and reversible.
+**Proposed dek:** An agent can perform work, but an organization still has to own the decision, explain the outcome, and respond when it fails.
 
-### A broad goal is not a permission
+### A task has a human history
 
-“Book the trip,” “resolve the ticket,” or “update the customer record” describes an objective. It does not say which accounts, tools, messages, or payments an agent should be able to control. The authority should be narrower than the goal: specific actions, specific targets, a bounded period, and a clear path for anything outside the policy.
+An agent’s action may appear to begin with a prompt, but the work has a longer history. People choose the task, connect the service, decide where it will be used, and determine what counts as a successful result. When an agent changes a record or sends a response, that chain does not disappear because software performed the last step. The organization still needs someone who can explain why the workflow existed and what should happen after an unintended result.
 
-OWASP’s agentic risk guidance identifies tool misuse and identity or privilege abuse as concerns for agent applications. That is a reminder that a plausible answer does not guarantee a safe action. An agent can use a tool with overbroad credentials, act on a poisoned instruction, or make a change that the user did not authorize. These are system design risks, not just prompt-writing problems. [@owasp-agentic-top10-2025]
+This is an argument about governance, not a statement about legal liability. The practical point is narrower: an automated system cannot take responsibility, contact an affected person, or decide whether a process should continue. OWASP’s agentic risk guidance names concerns such as tool misuse and identity or privilege abuse. Those risks make the surrounding organization’s choices part of the story, rather than evidence that a model can be treated as an independent owner. [@owasp-agentic-top10-2025]
 
-| Action class | Sensible default | Why |
-|---|---|---|
-| Read low-sensitivity reference material | Narrow read-only access | Lets the agent gather context while limiting write effects |
-| Draft or summarize | Produce a proposal, do not send automatically | Keeps user intent and final communication under human control |
-| Change a reversible low-impact field | Automatic only with narrow scope and audit | Limits the blast radius and supports repair |
-| Publish, spend, delete, or disclose sensitive data | Approval-gated or human-executed | The consequences justify deliberate review |
-| Act beyond a defined policy | Stop and escalate | Makes uncertainty visible instead of converting it into permission |
+### An approval is not a handoff
 
-### Human review is a system, not a button
+Human approval can be an important part of a workflow, but a click does not automatically transfer ownership from the team that built the system to the person who reviewed one action. OpenAI’s Agents SDK documents an interruption and resume flow for approval-required tool calls; it also leaves the authentication and authorization of the approver to the integrating application. That boundary is revealing: a library can pause execution, but an organization must still decide who is allowed to speak for it and how that decision is recorded. [@openai-agents-hitl-doc]
 
-An approval step is valuable only if the reviewer can see the action and the application verifies that the approver is authorized. OpenAI’s Agents SDK documents an interruption/resume flow for approval-required tool calls, but leaves approver authentication and authorization to the integrating application. That is a useful boundary: an SDK can pause execution, while the product owner still has to define who can approve what. [@openai-agents-hitl-doc]
+The distinction matters after the action as much as before it. If an approval was mistaken, based on incomplete context, or made by someone without the relevant authority, the organization needs a route to investigate and respond. The reviewer is part of the decision record; the reviewer is not a substitute for the people who own the workflow, its intended use, and its consequences.
 
-The approval should identify the exact tool, target, and arguments. If the request changes after review, it should require a new decision. Stale approvals should expire, rejections should not be ambiguous, and the audit record should connect the person, request, approved arguments, and executed action. A reviewer should also have an easy way to decline or ask for clarification without being pressured by a default “approve” flow.
+### A trace tells a sequence, not who must act
 
-Approval fatigue is a real design cost even without claiming a particular measured rate. If every low-risk action requires a click, users may stop reading the prompt. The better design puts review at consequential boundaries and makes low-risk actions narrow enough to automate safely. Where a human review is not meaningful, use deterministic checks or do not give the agent the permission.
+Product documentation can help show where responsibilities sit. LangSmith Fleet describes workspace roles, controls for integrations and credentials, and execution traces. Those are features of that platform, not a guarantee that every deployment captures the same events or assigns the same duties. A trace can help reconstruct what happened; it cannot decide which team should tell a customer, pause a process, or correct a record. [@langsmith-fleet-access-oversight]
 
-### Permissions must exist below the conversation
+This is why auditability should be judged by the questions an organization can answer after an incident. Who requested the work? Which service performed it? Was there a human decision? What result did the system return, and what did the downstream service actually do? A record that captures a sequence without a responsible audience may help an engineer debug a call while leaving the operational response unclear. The necessary record depends on the workflow, but the responsibility to review it should be assigned before something goes wrong.
 
-Anthropic’s Claude Code documentation provides a product-specific example of permission rules with allow, ask, and deny behavior. That offers a concrete way to think about precedence, but it is not a universal standard and says nothing by itself about a deployment’s actual setup. The integration needs server-side authorization; a conversational instruction that says “do not write” is not a technical boundary. [@anthropic-claude-code-permissions]
+### Responsibility needs a route back to people
 
-LangSmith Fleet documentation shows another layer: workspace roles can distinguish who may run, clone, or edit an agent, with separate controls for integrations and credentials. Those controls manage people’s access to the agent platform; they do not replace the application’s authorization checks for actions an agent takes through a connected tool. [@langsmith-fleet-access-oversight]
+An organization can make ownership legible without pretending that every incident will have one simple cause. The team that requests a workflow may understand the intended result; the team that operates it may understand its failure modes; a human reviewer may authorize a particular exception. Those roles can be shared, but the handoff should be explicit. A person affected by an agent’s action should not have to infer which team is responsible from a product name or an automated message.
 
-An operator should assign separate credentials or scopes for separate tools, restrict destinations, cap the number or value of writes, make retries idempotent, and monitor unusual patterns. If an agent can update one customer record, it should not receive a general database administrator credential. If it can draft an email, it should not necessarily be able to send to an arbitrary external address.
+This is also a design choice about what an organization is willing to stand behind. If an agent communicates with a customer, someone should be able to explain the service’s role in that exchange. If it changes an internal process, an owner should be able to determine whether the result was expected and whether the process should run again. The goal is not to place every routine action before a committee. It is to avoid treating automation as an accountability vacuum.
 
-The same principle applies to escalation. A low-authority agent can still produce a harmful recommendation, expose retrieved information, or make a user believe an action occurred. Read-only systems need privacy controls, and human escalations need context and traceability. Authority is about side effects, not the whole risk model.
+### Make the promise explicit
 
-### Autonomy should be earned by evidence
+The governance question is not simply whether an agent is “autonomous.” It is whether the organization can name the purpose it delegated, the people responsible for that purpose, and the response when the result is wrong. That statement can be brief. It should say who owns the workflow, who can make a consequential decision, who reviews the record, and where a user or employee can raise a concern.
 
-Begin in a read-only or draft-only mode. Collect representative cases and test refusal, malformed requests, duplicate actions, poisoned content, and tool errors. Add a specific write permission only after the agent’s behavior and the application’s authorization checks meet a defined threshold. Retest after changing the model, tool description, policy, or identity provider.
+These are organizational commitments, not features supplied automatically by an SDK or agent platform. Product controls can support them, and risk guidance can help teams identify issues, but neither source makes a deployment accountable on its own. The people who decide to rely on an agent still have to decide how its work will be explained, reviewed, and repaired.
 
-An organization should be able to answer: what can the agent do, on whose behalf, to which records, and how would we know if it did the wrong thing? If the answer is “whatever the model decides,” the system has granted authority without an operating policy.
+**Bottom line:** Delegating execution does not delegate the organization’s responsibility to explain and respond to the outcome.
 
-A permission record can make that boundary inspectable by naming the principal, operation, target resource, data scope, time window, and any limit on value or volume. Tie each field to a server-side check and an audit event, and deny the request when a required field is missing. This turns a broad objective into a policy that can be tested and reviewed when the agent, tool, or business process changes.
-
-**Bottom line:** Give the agent only the permissions its current task needs, and gate consequential actions at the system boundary.
-
-**Why it matters:** A model’s broad objective can exceed what a user intended to authorize.
+**Why it matters:** When no person or team owns the workflow after launch, errors can be traceable in software but unanswered in practice.
 
 **Key takeaways:**
-- Treat tool access as an identity and privilege design decision.
-- Approval must be authenticated, specific, fresh, and auditable.
-- A prompt instruction is not a permission boundary.
-- Use narrow scopes, reversible writes, idempotency, and escalation.
-- Increase autonomy only after testing the exact model-tool-policy combination.
+- Treat an agent’s output as part of an organizational process, not as an independent decision-maker.
+- An approval record identifies a decision; it does not erase the responsibility of the team that built the workflow.
+- Logs support explanation only when someone is assigned to review and act on them.
+- Define how affected people can ask questions and how the organization will correct an unintended outcome.
 
-**What changes:** Maintain a tool-by-tool authority matrix, with owners, allowed targets, approval rules, and recovery paths.
+**What changes:** Name a responsible owner for each agent-enabled workflow and make its explanation, escalation, and repair path clear before relying on it.
 
-**Evidence note:** The essay draws on OWASP guidance and product documentation from Anthropic, OpenAI, and LangSmith; it does not test those platforms or claim a universally secure configuration.
+**Evidence note:** This is a governance argument, not legal advice or a claim about universal vendor controls. It draws on OWASP guidance and product documentation from OpenAI and LangSmith; neither source determines an organization’s legal liability.
 
 **Related coverage:** Analysis 16; Explainer 26; Report 44; Comparison 56.
 

@@ -1,10 +1,11 @@
 # Research Notes: Global AI News 70-Article Authority Launch
 
-**Status:** candidate-specific validation complete; portfolio remains blocked for release pending authoritative editorial metadata and follow-up.
+**Status:** final editorial, source-date, similarity, content-type, security, and regression review complete; portfolio remains blocked and is not staged or published until each draft has a real byline and evidenced publication date.
 **Depth:** deep portfolio audit
 **Research date:** 2026-10-04
 **Audience:** Intelligent non-specialists, technical practitioners, enterprise decision-makers, and readers following AI policy and infrastructure.
 **Deliverable:** 70 distinct, source-verified research drafts (10 each: Brief, Analysis, Explainer, Research, Report, Comparison, Essay). They remain research-only; this review does not stage or publish them, write production editorial data, or trigger automation.
+**Final resolution:** See `final-resolution.md` for the release decision and `final-validation-matrix.json` plus its linked sidecars for the reconciled evidence.
 
 ## Plan
 

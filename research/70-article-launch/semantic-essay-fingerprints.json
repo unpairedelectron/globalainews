@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-10-05T05:37:36.623Z",
+  "method": "Reviewer-maintained semantic fingerprints: thesis, reader task, evidence focus, and distinction from overlapping pieces; not a claim of unique facts or a cryptographic text hash.",
+  "articles": [
+    {
+      "slug": "essay-agent-authority",
+      "title": "Delegation does not transfer responsibility",
+      "contentType": "Essay",
+      "sourceFile": "essays-01-10.md",
+      "wordCount": 926,
+      "citationMarkerCount": 3,
+      "uniqueCitationKeys": [
+        "owasp-agentic-top10-2025",
+        "openai-agents-hitl-doc",
+        "langsmith-fleet-access-oversight"
+      ],
+      "relatedCoverage": "Analysis 16; Explainer 26; Report 44; Comparison 56.",
+      "semanticFingerprint": {
+        "thesis": "Delegating actions to an AI agent does not transfer organizational accountability: a named team must bound authority, explain consequential actions, and own escalation and repair.",
+        "readerTask": "Help leaders design ownership and response duties for AI-agent workflows after deployment.",
+        "distinctFrom": "Technical tool-permission comparisons and implementation checklists; this essay addresses accountability for outcomes and remedies.",
+        "evidenceFocus": "Agent oversight and permissions documentation plus security-control evidence, used to support an organizational argument rather than reproduce a control taxonomy."
+      },
+      "currentSimilarityReview": {
+        "alertCount": 7,
+        "A": 0,
+        "B": 3,
+        "C": 4,
+        "reviewFile": "semantic-pair-review.json"
+      },
+      "fullLengthEssay": true,
+      "actualAuthor": "UNKNOWN / NOT AVAILABLE",
+      "actualPublicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationState": "DRAFT — NOT STAGED OR PUBLISHED"
+    },
+    {
+      "slug": "essay-smallness-workflow",
+      "title": "The word “small” is not a performance claim",
+      "contentType": "Essay",
+      "sourceFile": "essays-01-10.md",
+      "wordCount": 936,
+      "citationMarkerCount": 7,
+      "uniqueCitationKeys": [
+        "mistral-small4-model-card",
+        "gemma4-model-card",
+        "agentfloor-2026-preprint"
+      ],
+      "relatedCoverage": "Explainer 30; Analysis 15; Report 48.",
+      "semanticFingerprint": {
+        "thesis": "The word small is not a capability or deployment result by itself; readers need the model, task, hardware, memory, tool, and evaluation context behind the label.",
+        "readerTask": "Help readers interpret “small model” claims and identify what a public model release should disclose.",
+        "distinctFrom": "Hardware and workflow deployment guides, benchmark comparisons, and general model-card tutorials; this essay focuses on the meaning and disclosure of the size label.",
+        "evidenceFocus": "Provider model/system cards and bounded benchmark evidence, including the AgentFloor arXiv v1 submission; provider claims remain attributed and the preprint is not described as peer-reviewed proceedings."
+      },
+      "currentSimilarityReview": {
+        "alertCount": 10,
+        "A": 0,
+        "B": 9,
+        "C": 1,
+        "reviewFile": "semantic-pair-review.json"
+      },
+      "fullLengthEssay": true,
+      "actualAuthor": "UNKNOWN / NOT AVAILABLE",
+      "actualPublicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationState": "DRAFT — NOT STAGED OR PUBLISHED"
+    }
+  ]
+}

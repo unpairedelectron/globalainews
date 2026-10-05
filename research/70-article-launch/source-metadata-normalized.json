@@ -12,8 +12,8 @@
     "titleUnavailable": 0,
     "publisherAvailable": 31,
     "publicationDateEvidenceAvailable": 32,
-    "publicationDateAvailable": 12,
-    "publicationDateEvidenceUnnormalized": 20,
+    "publicationDateAvailable": 14,
+    "publicationDateEvidenceUnnormalized": 18,
     "fetchDateEvidenceAvailable": 100,
     "fetchDateAvailable": 100,
     "sourceTypeAvailable": 25,
@@ -1401,11 +1401,11 @@
       "titleEvidence": "Gemini 3.8 Audio - Model Card — Google DeepMind",
       "titleEvidenceSource": "Title field",
       "publisher": "UNKNOWN / NOT AVAILABLE",
-      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "2026-09-15",
       "publicationDateEvidence": [
         {
           "label": "Published",
-          "value": "September 2026"
+          "value": "15 September 2026"
         }
       ],
       "fetchedDate": "2026-10-04",
@@ -1882,11 +1882,11 @@
       "titleEvidence": "[2605.00334] AgentFloor: How Far Up the tool use Ladder Can Small Open-Weight Models Go?",
       "titleEvidenceSource": "Title field",
       "publisher": "arXiv (preprint repository)",
-      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "publicationDate": "2026-05-01",
       "publicationDateEvidence": [
         {
           "label": "Publication date",
-          "value": "Not stated; arXiv submission date: 2026-05-01"
+          "value": "2026-05-01 (arXiv v1 submission date; preprint, not a peer-reviewed proceedings date)"
         }
       ],
       "fetchedDate": "2026-10-04",

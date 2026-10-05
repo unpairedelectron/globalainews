@@ -1,7 +1,7 @@
 Source: https://arxiv.org/abs/2605.00334
 Title: [2605.00334] AgentFloor: How Far Up the tool use Ladder Can Small Open-Weight Models Go?
 Publisher: arXiv (preprint repository)
-Publication date: Not stated; arXiv submission date: 2026-05-01
+Publication date: 2026-05-01 (arXiv v1 submission date; preprint, not a peer-reviewed proceedings date)
 Fetched: 2026-10-04T08:15:41.578Z
 Source type: Author research preprint (arXiv)
 Evidence class: Primary study; preprint, not an independent replication

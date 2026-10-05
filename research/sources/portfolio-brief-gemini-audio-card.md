@@ -12,7 +12,7 @@ Published 15 September 2026
 
 Model Cards are intended to provide essential information on Gemini models, including known limitations, mitigation approaches, and safety performance. Model cards may be updated from time to time; for example, to include updated evaluations as the model is improved or revised. See the [Google DeepMind site](https://deepmind.google/models/model-cards/) for a comprehensive list of model cards.
 
-Published: September 2026
+Published: 15 September 2026
 
 - [Model Information](https://deepmind.google/models/model-cards/gemini-3-8-audio/#model-information)
 - [Model Data](https://deepmind.google/models/model-cards/gemini-3-8-audio/#model-data)

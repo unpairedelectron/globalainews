@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-05T04:29:34.578Z",
+  "generatedAt": "2026-10-05T05:37:36.623Z",
   "scanners": {
     "dependencyAudit": {
       "status": "ok",
@@ -15,9 +15,51 @@
         {
           "severity": "high",
           "id": "GHSA-vfj7-8cjw-p6xm@braces-3.0.3",
+          "aliases": [
+            "CVE-2026-93687"
+          ],
           "package": "braces@3.0.3",
           "scanner": "osv-scanner",
-          "message": "High-severity advisory identified for braces 3.0.3."
+          "scannedAt": "2026-10-05T05:23:06.772Z",
+          "message": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+          "affectedVersions": {
+            "ranges": [
+              {
+                "introduced": "0",
+                "lastAffected": "3.0.3"
+              }
+            ]
+          },
+          "references": [
+            {
+              "type": "ADVISORY",
+              "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-93687"
+            },
+            {
+              "type": "WEB",
+              "url": "https://github.com/micromatch/braces/issues/70"
+            },
+            {
+              "type": "PACKAGE",
+              "url": "https://github.com/micromatch/braces"
+            },
+            {
+              "type": "WEB",
+              "url": "https://github.com/micromatch/braces/blob/3.0.3/lib/compile.js#L49-L53"
+            },
+            {
+              "type": "WEB",
+              "url": "https://github.com/micromatch/braces/blob/3.0.3/lib/expand.js#L102-L105"
+            },
+            {
+              "type": "WEB",
+              "url": "https://github.com/micromatch/braces/blob/3.0.3/lib/parse.js#L38-L40"
+            },
+            {
+              "type": "WEB",
+              "url": "https://www.vulncheck.com/advisories/braces-through-3.0.3-stack-overflow-via-deeply-nested-patterns"
+            }
+          ]
         }
       ]
     },

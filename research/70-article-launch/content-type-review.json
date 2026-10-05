@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-10-05T05:37:36.623Z",
+  "status": "COMPLETE — all three content-type warnings were manually reviewed and fit their assigned types",
+  "count": 3,
+  "manualFitCount": 3,
+  "contentTypeReviews": [
+    {
+      "slug": "research-cw-seven-market-row-sum-audit",
+      "title": "Seven market rows, two unresolved data-centre sums",
+      "assignedContentType": "Research",
+      "automatedStatus": "REVIEW_CONTENT_TYPE_FIT",
+      "manualDecision": "FIT",
+      "finalStatus": "PASS_MANUAL_REVIEW",
+      "rationale": "The draft is a source-led research audit: it checks seven market rows, explains the arithmetic discrepancies, attributes the figures, and states what the evidence cannot resolve. The Research label fits the method and reader task.",
+      "reviewedCompleteDraft": true,
+      "bodyRewriteRequired": false,
+      "productionEditorialDataModified": false
+    },
+    {
+      "slug": "report-data-centre-energy-evidence",
+      "title": "India data-centre resource evidence: energy, water, and grid limits",
+      "assignedContentType": "Report",
+      "automatedStatus": "REVIEW_CONTENT_TYPE_FIT",
+      "manualDecision": "FIT",
+      "finalStatus": "PASS_MANUAL_REVIEW",
+      "rationale": "The draft is a reusable, source-backed evidence reference that organizes energy, water, and grid constraints rather than presenting one new empirical study. The Report label fits the synthesis and lookup purpose.",
+      "reviewedCompleteDraft": true,
+      "bodyRewriteRequired": false,
+      "productionEditorialDataModified": false
+    },
+    {
+      "slug": "report-september-model-release-timeline",
+      "title": "September 2026 AI model-release timeline and source archive",
+      "assignedContentType": "Report",
+      "automatedStatus": "REVIEW_CONTENT_TYPE_FIT",
+      "manualDecision": "FIT",
+      "finalStatus": "PASS_MANUAL_REVIEW",
+      "rationale": "The draft is a dated model-release timeline and source archive. Its compact section structure is appropriate to a chronological reference; the structural cue is not evidence of a wrong content type.",
+      "reviewedCompleteDraft": true,
+      "bodyRewriteRequired": false,
+      "productionEditorialDataModified": false
+    }
+  ]
+}

@@ -1,0 +1,482 @@
+{
+  "generatedAt": "2026-10-05T05:37:36.623Z",
+  "status": "COMPLETE — normalize only explicit full publication dates; keep all other values separate from publication dates",
+  "coverage": {
+    "mappedCaptureFiles": 101,
+    "publicationDateEvidenceAvailable": 32,
+    "normalizedFullPublicationDates": 14,
+    "unresolvedOrUnnormalizedEvidence": 18
+  },
+  "normalizedPublicationDates": [
+    {
+      "capturePath": "research/sources/analysis-agent-control-standard-2026.md",
+      "title": "Agent Control Standard (ACS)",
+      "publicationDate": "2026-09-01",
+      "evidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-09-01"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-anthropic-agent-autonomy-2026.md",
+      "title": "Measuring agent autonomy in practice — Anthropic",
+      "publicationDate": "2026-02-18",
+      "evidence": [
+        {
+          "label": "Published",
+          "value": "2026-02-18"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-anthropic-building-effective-agents.md",
+      "title": "Building effective agents — Anthropic",
+      "publicationDate": "2024-12-19",
+      "evidence": [
+        {
+          "label": "Published",
+          "value": "2024-12-19"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/explainer-mistral-small4-card-2026.md",
+      "title": "Mistral Small 4 model card — Mistral AI",
+      "publicationDate": "2026-03-16",
+      "evidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-03-16"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-aisi-gpt55-progress-may-2026.md",
+      "title": "How fast is autonomous AI cyber capability advancing? | AISI Work",
+      "publicationDate": "2026-05-13",
+      "evidence": [
+        {
+          "label": "Published",
+          "value": "2026-05-13"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-ddnews-aikosh-february.md",
+      "title": "India ‘AI Impact Summit 2026’ to focus on democratisation of AI | DD News",
+      "publicationDate": "2026-02-10",
+      "evidence": [
+        {
+          "label": "Published",
+          "value": "2026-02-10 (page header shows `10/02/26`; URL path contains `/2026/02/`)"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-gemini-audio-card.md",
+      "title": "Gemini 3.8 Audio - Model Card — Google DeepMind",
+      "publicationDate": "2026-09-15",
+      "evidence": [
+        {
+          "label": "Published",
+          "value": "15 September 2026"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-techtarget-gemini-audio.md",
+      "title": "Gemini 3.8 Live Transforms Conversational AI | TechTarget",
+      "publicationDate": "2026-09-16",
+      "evidence": [
+        {
+          "label": "Published",
+          "value": "16 Sep 2026"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-india-03-market-capacity.md",
+      "title": "India Data Centre H1 2026 Updates  | IN | Cushman & Wakefield",
+      "publicationDate": "2026-09-23",
+      "evidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-09-23 (author byline shows 23/09/2026)"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-models-02-agentfloor-study.md",
+      "title": "[2605.00334] AgentFloor: How Far Up the tool use Ladder Can Small Open-Weight Models Go?",
+      "publicationDate": "2026-05-01",
+      "evidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-05-01 (arXiv v1 submission date; preprint, not a peer-reviewed proceedings date)"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-models-03-gemini38-card.md",
+      "title": "Gemini 3.8 Flash - Model Card — Google DeepMind",
+      "publicationDate": "2026-09-02",
+      "evidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-09-02"
+        },
+        {
+          "label": "Published",
+          "value": "September, 2026"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-verified-anthropic-sonnet55-card.md",
+      "title": "Claude Sonnet 5.5 System Card",
+      "publicationDate": "2026-09-28",
+      "evidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-09-28"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/portfolio-verified-xai-grok47-card.md",
+      "title": "ModelCard: Grok4.7",
+      "publicationDate": "2026-09-21",
+      "evidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-09-21"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/power-01-indiaai-capacity.md",
+      "title": "Data centre capacity in the country has increased from about 375 MW in 2020 to around 1500 MW by 2025",
+      "publicationDate": "2026-03-13",
+      "evidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-03-13 (posted 13 MAR 2026 at 4:15 PM)"
+        }
+      ]
+    }
+  ],
+  "newlyValidatedOrCorrectedDates": [
+    {
+      "capturePath": "research/sources/portfolio-brief-gemini-audio-card.md",
+      "title": "Gemini 3.8 Audio - Model Card — Google DeepMind",
+      "publicationDate": "2026-09-15",
+      "evidence": [
+        {
+          "label": "Published",
+          "value": "15 September 2026"
+        }
+      ],
+      "interpretation": "Google DeepMind Gemini audio model card publication date."
+    },
+    {
+      "capturePath": "research/sources/portfolio-models-02-agentfloor-study.md",
+      "title": "[2605.00334] AgentFloor: How Far Up the tool use Ladder Can Small Open-Weight Models Go?",
+      "publicationDate": "2026-05-01",
+      "evidence": [
+        {
+          "label": "Publication date",
+          "value": "2026-05-01 (arXiv v1 submission date; preprint, not a peer-reviewed proceedings date)"
+        }
+      ],
+      "interpretation": "arXiv v1 submission date; not peer-reviewed proceedings publication date."
+    }
+  ],
+  "unresolvedEvidence": [
+    {
+      "capturePath": "research/sources/aikosh-bhasha-sft-aya-record-2026-10-04.md",
+      "title": "bhasha-sft_aya_dataset",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Published",
+          "value": "Not separately stated; page date displayed as `03/07/25`, with date order unspecified."
+        }
+      ],
+      "decision": "PRESERVE_DISPLAYED_DATE_ONLY",
+      "precision": "ambiguous",
+      "reason": "A displayed catalog date is not separately identified as publication, and its date order is unspecified.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/aikosh-geochemical-record-2026-10-04.md",
+      "title": "Geochemical data",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Published",
+          "value": "Not separately stated; page date displayed as 29 March 2025."
+        }
+      ],
+      "decision": "PRESERVE_DISPLAYED_DATE_ONLY",
+      "precision": "day displayed; semantics unknown",
+      "reason": "A date is displayed on a catalog record, but the record does not establish that it is the publication date.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/aikosh-pdmc-record-2026-10-04.md",
+      "title": "PDMC Dataset",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Published",
+          "value": "Not separately stated; page date displayed as `08/12/25`, with date order unspecified."
+        }
+      ],
+      "decision": "PRESERVE_DISPLAYED_DATE_ONLY",
+      "precision": "ambiguous",
+      "reason": "A displayed catalog date is not separately identified as publication, and its date order is unspecified.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/aikosh-principal-commodity-import-record-2026-10-04.md",
+      "title": "Principal Commodity 2022-23 Import",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Published",
+          "value": "Not separately stated; page date displayed as 15 May 2026."
+        }
+      ],
+      "decision": "PRESERVE_DISPLAYED_DATE_ONLY",
+      "precision": "day displayed; semantics unknown",
+      "reason": "A date is displayed on a catalog record, but the record does not establish that it is the publication date.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/aikosh-repertory-grant-record-2026-10-04.md",
+      "title": "Repertory Grant Scheme",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Published",
+          "value": "Not separately stated; page date displayed as 25 June 2025."
+        }
+      ],
+      "decision": "PRESERVE_DISPLAYED_DATE_ONLY",
+      "precision": "day displayed; semantics unknown",
+      "reason": "A date is displayed on a catalog record, but the record does not establish that it is the publication date.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/explainer-ai-detector-bias-2023.md",
+      "title": "GPT detectors are biased against non-native English writers — Patterns",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Published",
+          "value": "2023"
+        }
+      ],
+      "decision": "INSUFFICIENT_PRECISION",
+      "precision": "year",
+      "reason": "The evidence gives a publication year but not an exact day; no full date is inferred.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/explainer-model-cards-mitchell-2019.md",
+      "title": "Model Cards for Model Reporting — ACM FAccT",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2019 (exact publication day not stated in captured page)"
+        }
+      ],
+      "decision": "INSUFFICIENT_PRECISION",
+      "precision": "year",
+      "reason": "The evidence gives a publication year but not an exact day; no full date is inferred.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/portfolio-agents-01-evaluation-survey.md",
+      "title": "Evaluation and Benchmarking of LLM Agents: A Survey",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "2025 (KDD ’25 proceedings; exact publication day not stated in capture)"
+        }
+      ],
+      "decision": "INSUFFICIENT_PRECISION",
+      "precision": "year",
+      "reason": "The evidence gives a publication year but not an exact day; no full date is inferred.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/portfolio-agents-02-platform-oversight.md",
+      "title": "Access & oversight - Docs by LangChain",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "decision": "NO_EXPLICIT_PUBLICATION_DATE_IN_CAPTURE",
+      "precision": "none",
+      "reason": "No publication date is stated in the captured page.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/portfolio-brief-aws-grok47.md",
+      "title": "Grok 4.7 is now available on Amazon Bedrock | Artificial Intelligence",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not visible in the captured page"
+        }
+      ],
+      "decision": "NO_VISIBLE_PUBLICATION_DATE",
+      "precision": "none",
+      "reason": "The capture does not show a publication date.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/portfolio-infrastructure-05-lbnl-us-data-center-energy-usage-2024.md",
+      "title": "2024 United States Data Center Energy Usage Report",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Published",
+          "value": "December 2024"
+        }
+      ],
+      "decision": "PRESERVE_VERSION_OR_MONTH_DATE_ONLY",
+      "precision": "month",
+      "reason": "The capture provides a month or version-history date, not an exact publication date.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/portfolio-models-01-gemma4-card.md",
+      "title": "Gemma 4 model card  |  Google AI for Developers",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "decision": "NO_EXPLICIT_PUBLICATION_DATE_IN_CAPTURE",
+      "precision": "none",
+      "reason": "No publication date is stated in the captured page.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/portfolio-verified-openai-gpt6-sol-luna.md",
+      "title": "Introducing GPT-6 Sol and Luna | OpenAI",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "decision": "NO_EXPLICIT_PUBLICATION_DATE_IN_CAPTURE",
+      "precision": "none",
+      "reason": "No publication date is stated in the captured page.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/research-agents-anthropic-permissions.md",
+      "title": "Configure permissions - Claude Code Docs",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "decision": "NO_EXPLICIT_PUBLICATION_DATE_IN_CAPTURE",
+      "precision": "none",
+      "reason": "No publication date is stated in the captured page.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/research-agents-google-audit.md",
+      "title": "Agent Platform audit logging information  |  Gemini Enterprise Agent Platform  |  Google Cloud Documentation",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "decision": "NO_EXPLICIT_PUBLICATION_DATE_IN_CAPTURE",
+      "precision": "none",
+      "reason": "No publication date is stated in the captured page.",
+      "otherObservedDates": [
+        {
+          "label": "Documentation update date",
+          "value": "2026-10-01",
+          "role": "update-date only; not publication date"
+        }
+      ]
+    },
+    {
+      "capturePath": "research/sources/research-agents-openai-hitl.md",
+      "title": "Human-in-the-loop - OpenAI Agents SDK",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated in captured page"
+        }
+      ],
+      "decision": "NO_EXPLICIT_PUBLICATION_DATE_IN_CAPTURE",
+      "precision": "none",
+      "reason": "No publication date is stated in the captured page.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/research-c2pa-21-spec.md",
+      "title": "Content Credentials : C2PA Technical Specification :: C2PA Specifications",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated; version history dates 2.1 to September 2024"
+        }
+      ],
+      "decision": "PRESERVE_VERSION_OR_MONTH_DATE_ONLY",
+      "precision": "month",
+      "reason": "The capture provides a month or version-history date, not an exact publication date.",
+      "otherObservedDates": []
+    },
+    {
+      "capturePath": "research/sources/research-c2pa-24-spec.md",
+      "title": "Content Credentials : C2PA Technical Specification :: C2PA Specifications",
+      "publicationDate": "UNKNOWN / NOT AVAILABLE",
+      "capturedEvidence": [
+        {
+          "label": "Publication date",
+          "value": "Not stated; version history dates 2.4 to April 2026"
+        }
+      ],
+      "decision": "PRESERVE_VERSION_OR_MONTH_DATE_ONLY",
+      "precision": "month",
+      "reason": "The capture provides a month or version-history date, not an exact publication date.",
+      "otherObservedDates": []
+    }
+  ],
+  "rules": [
+    "A source access, retrieval, catalog record, update, version-history, or fetch date is not treated as a publication date without explicit evidence.",
+    "Year-only and month-only evidence is preserved at its stated precision and not expanded to an invented day.",
+    "Ambiguous numeric dates remain ambiguous.",
+    "Actual publication dates for all 70 candidate articles remain UNKNOWN / NOT AVAILABLE."
+  ],
+  "manufacturedDates": 0,
+  "productionEditorialDataModified": false
+}
