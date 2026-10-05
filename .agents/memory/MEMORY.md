@@ -22,3 +22,4 @@
 - [Source capture evidence](source-capture-evidence.md) — confirm a fetched page’s body supports the cited claim; a title or successful fetch alone is not evidence.
 - [Dynamic social preview images](dynamic-social-preview-images.md) — post-build stories need a public PNG renderer; preserve existing build-time image URLs.
 - [Vite post-build metadata](vite-post-build-metadata.md) — use `writeBundle` when processing emitted files and test with external temporary output directories.
+- [Documentation checkpoints and build fingerprints](documentation-checkpoints-and-build-fingerprints.md) — distinguish build-time revisions from later documentation-only Git commits.

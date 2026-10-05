@@ -2,7 +2,8 @@
 
 **Current as of:** 2026-10-05
 **Source branch:** `main`  
-**Current source fingerprint:** `99710e4e3363aeb072a0dbf2cdae144c51cc3253+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a`
+**Last verified local build fingerprint:** `99710e4e3363aeb072a0dbf2cdae144c51cc3253+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a`
+**Workspace HEAD at the latest investigation check:** `edaa5172a238d9e6e061c4de0502318b531e127f` (documentation-only commits after the verified build; source-content hash and Web/API artifact hashes are unchanged).
 
 ## Deployment topology
 
