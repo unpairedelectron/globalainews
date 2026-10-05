@@ -1,0 +1,1235 @@
+GLOBAL AI NEWS — ONE-SHOT PRODUCTION RESCUE + EDITORIAL TRANSFORMATION
+=======================================================================
+
+MISSION
+
+Take the current Global AI News project all the way from its present state
+to a genuinely production-grade AI publication.
+
+DO NOT work in short cycles.
+
+DO NOT stop after finding one blocker.
+
+DO NOT repeatedly ask for approval.
+
+DO NOT return "would you like me to..." questions.
+
+DO NOT create another planning phase.
+
+Continue autonomously through diagnosis → implementation → testing →
+content remediation → deployment preparation → production verification.
+
+Only stop when the COMPLETE DEFINITION OF DONE below is satisfied, or when
+a genuinely human/platform-only action is unavoidable.
+
+If something can be solved in the workspace, SOLVE IT.
+
+========================================================
+CURRENT CRITICAL PROBLEMS
+========================================================
+
+Known production/runtime issue:
+
+Published article rendering can abort after approximately 5 seconds because
+the renderer times out while fetching/parsing the newsroom snapshot.
+
+Current failure behavior can produce:
+
+503
++
+noindex
++
+generic error response
+
+This is unacceptable for public article pages.
+
+Known evidence:
+
+- production has recorded multiple article-render aborts
+- logs currently lack route, response status, elapsed time, fetch phase,
+  request ID
+- nearby newsroom requests can return 200 but failed article renders cannot
+  be correlated reliably
+- the current renderer has the same timeout behavior as production
+
+KNOWN PRODUCT PROBLEM:
+
+The public articles still look too thin and generic.
+
+Some articles appear as approximately two-line/low-information pieces.
+
+This is NOT acceptable for production.
+
+The publication must not look like an AI-generated article feed.
+
+The content must become substantially more useful, specific, evidence-rich,
+visually informative, and differentiated.
+
+========================================================
+ABSOLUTE RULES
+========================================================
+
+1. QUALITY > PAGE COUNT
+
+Never preserve weak content merely to maintain a quota.
+
+Allowed:
+
+- rewrite
+- expand
+- consolidate
+- replace
+- unpublish
+- noindex
+
+2. NO FABRICATION
+
+Never invent:
+
+- facts
+- statistics
+- citations
+- URLs
+- quotes
+- authors
+- credentials
+- publication history
+- benchmarks
+- datasets
+- research results
+- GPU availability
+- company claims
+
+3. SOURCE DISCIPLINE
+
+Use the existing source registry and captured evidence.
+
+Every important claim must be traceable.
+
+4. TRUE AUTHORSHIP
+
+Use:
+
+Global AI News Editorial Desk
+
+for house-authored material when no verified individual author exists.
+
+Never invent an individual contributor.
+
+5. ARTICLE DATES
+
+For NEW material:
+
+publishedAt must be the actual publication timestamp when published.
+
+Do not use source publication dates as article publication dates.
+
+Do not invent historical publication dates.
+
+Source publication dates remain separate provenance metadata.
+
+6. NO FALSE SEO SIGNALS
+
+Do not expose unsupported percentages, multipliers, counts or trend metrics.
+
+Any public metric must have:
+
+- definition
+- period/date
+- baseline
+- source/methodology
+
+Otherwise remove it.
+
+7. NO FAKE AUTHORITY
+
+Do not create empty:
+
+- research pages
+- report pages
+- topic pages
+- entity pages
+- timelines
+
+========================================================
+PHASE 1 — FULL LIVE DIAGNOSIS
+========================================================
+
+Audit the actual production experience BEFORE changing it.
+
+Inspect:
+
+homepage
+navigation
+article pages
+research
+reports
+data
+topics
+entities
+timelines
+authors
+trust pages
+RSS
+sitemap
+robots
+AMP
+404
+
+Desktop + mobile.
+
+Create:
+
+docs/final-production-rescue-audit.md
+
+Include:
+
+- stale content
+- thin articles
+- weak headlines
+- generic prose
+- poor evidence density
+- broken/weak visuals
+- navigation problems
+- stale homepage modules
+- unsupported metrics
+- weak internal linking
+- source problems
+- runtime latency
+- 503/article-render behavior
+- SEO issues
+- mobile problems
+- performance problems
+
+Then immediately remediate.
+
+Do not stop after writing the audit.
+
+========================================================
+PHASE 2 — FIX ARTICLE RENDERING CORRECTLY
+========================================================
+
+Do NOT merely increase the timeout from 5 seconds.
+
+Find the actual source of latency.
+
+Add safe diagnostic instrumentation:
+
+request ID
+route
+fetch start/end
+API response status
+elapsed milliseconds
+JSON parse time
+snapshot lookup time
+total render time
+
+Never log article bodies, secrets or sensitive content.
+
+Correlate Web request IDs with API requests where possible.
+
+Determine whether the delay is caused by:
+
+- Web→API connection
+- DNS/service routing
+- API response latency
+- database query
+- snapshot generation
+- JSON size
+- parsing
+- server rendering
+- cache miss
+- cold start
+- deployment topology
+
+Fix the root cause.
+
+========================================================
+PHASE 3 — ARTICLE RESILIENCE
+========================================================
+
+A healthy published article should not randomly become a generic 503 because
+one internal snapshot request takes too long.
+
+Implement a robust strategy appropriate to the existing architecture.
+
+Preferred hierarchy:
+
+1. fresh request-time data
+2. short-lived cached public snapshot
+3. last-known-good public article snapshot where safe
+4. bounded fallback behavior
+
+A transient newsroom/API problem must NOT unnecessarily destroy public
+article availability.
+
+Still return true 404 for genuinely nonexistent articles.
+
+Do NOT turn missing articles into 200s.
+
+Do NOT expose private/editorial data through fallback snapshots.
+
+Do NOT make stale private content public.
+
+========================================================
+PHASE 4 — FIRST-RESPONSE GUARANTEE
+========================================================
+
+For EVERY public article verify first-response HTML contains:
+
+- useful article body
+- title
+- description
+- canonical
+- Open Graph
+- JSON-LD
+- author/byline
+- publication date
+- update date where meaningful
+
+A client-side JavaScript fetch must NOT be required for the essential
+article experience.
+
+========================================================
+PHASE 5 — HOMEPAGE RESCUE
+========================================================
+
+The homepage must look like a LIVE AI PUBLICATION.
+
+Remove stale hard-coded concepts.
+
+Do NOT show an obsolete "Latest edition" date.
+
+Do NOT show stale article counts.
+
+Use request-time/current public data.
+
+Homepage hierarchy:
+
+1. Lead story
+2. Latest
+3. Analysis
+4. Research
+5. Reports
+6. Data/intelligence
+7. Topic pulse
+8. Important entities
+9. Deep dives
+10. Newsletter/return-reader path
+
+Do not make every section visually identical.
+
+The flagship research/report content must be visible within one or two
+clicks from the homepage.
+
+========================================================
+PHASE 6 — REMOVE FAKE-LOOKING METRICS
+========================================================
+
+Audit every homepage metric.
+
+Anything resembling:
+
++18%
++12%
+0.4x
++9%
+10,000+ GPUs
+
+must either have:
+
+definition
+baseline
+time period
+source
+methodology
+
+OR BE REMOVED/REFRAMED.
+
+Never make the site's intelligence appear more quantitative than the
+evidence allows.
+
+For compute specifically distinguish:
+
+ANNOUNCED
+ONBOARDED
+INSTALLED
+DEPLOYED
+ACCESSIBLE
+SCHEDULABLE
+
+Do not equate them.
+
+========================================================
+PHASE 7 — ARTICLE QUALITY TRANSFORMATION
+========================================================
+
+Audit EVERY public article individually.
+
+Classify:
+
+A = excellent
+B = requires substantial revision
+C = weak/redundant/unfit
+
+For B:
+
+rewrite substantially.
+
+For C:
+
+consolidate, replace, unpublish or noindex.
+
+Do NOT publish filler.
+
+========================================================
+MINIMUM ARTICLE STANDARD
+========================================================
+
+A public article must NOT look like a two-line note.
+
+The reader should receive actual information.
+
+Even a short Brief should communicate:
+
+WHAT HAPPENED
+WHAT IS CONFIRMED
+WHO/WHAT IS INVOLVED
+IMPORTANT CONTEXT
+WHY IT MATTERS
+SOURCE/EVIDENCE
+WHAT TO WATCH NEXT
+
+where applicable.
+
+Do not force unnecessary length.
+
+Do not pad.
+
+========================================================
+EDITORIAL TYPE STANDARDS
+========================================================
+
+BRIEF
+
+Fast factual reporting.
+
+Structure:
+
+What happened
+What is confirmed
+Context
+Why it matters
+
+Target roughly 600–1,000 words where the subject warrants it.
+
+ANALYSIS
+
+Must contain actual interpretation beyond reporting.
+
+Evidence
+Argument
+Counter-considerations
+Implications
+What changes next
+
+Target roughly 1,200–2,000 where warranted.
+
+EXPLAINER
+
+Should answer a real question completely.
+
+Concept
+How it works
+Examples
+Implications
+Misconceptions
+
+Target roughly 1,500–2,500 where warranted.
+
+RESEARCH
+
+Must contain:
+
+research question
+methodology
+evidence/data
+findings
+limitations
+sources
+
+Do not call article summaries research.
+
+REPORT
+
+Must act as a durable reference asset.
+
+Include where relevant:
+
+executive summary
+current state
+historical context
+data
+findings
+methodology
+limitations
+sources
+update history
+
+COMPARISON
+
+Must help a decision.
+
+Compare actual dimensions.
+
+Do not invent benchmarks.
+
+ESSAY
+
+Must have a distinctive argument supported by evidence.
+
+Do not write generic "AI is changing everything" essays.
+
+========================================================
+CONTENT WRITING STANDARD
+========================================================
+
+Weak:
+
+"Companies are investing heavily in AI infrastructure."
+
+Preferred:
+
+Name the companies.
+
+Name the locations.
+
+Name the programs/facilities.
+
+Give dates.
+
+Give documented figures.
+
+Explain what those figures establish.
+
+State what they do NOT establish.
+
+Source it.
+
+Turn abstract statements into concrete reporting whenever evidence permits.
+
+========================================================
+FACT → EVIDENCE → INTERPRETATION
+========================================================
+
+For substantial claims, use:
+
+CLAIM
+↓
+SOURCE/EVIDENCE
+↓
+WHAT THE SOURCE ESTABLISHES
+↓
+CONTEXT
+↓
+INTERPRETATION
+↓
+IMPLICATION
+
+This is the core editorial identity of Global AI News.
+
+========================================================
+PHASE 8 — INDIA AI COMPUTE FLAGSHIP
+========================================================
+
+Make:
+
+/reports/ai-compute-india/
+
+the best page on the site.
+
+Use the existing report.
+
+Do NOT throw it away.
+
+Upgrade it with:
+
+- executive summary
+- current landscape
+- infrastructure
+- accelerators
+- geography
+- capacity
+- access
+- economics
+- energy
+- policy
+- organizations
+- timeline
+- evidence
+- tables
+- methodology
+- limitations
+- source registry
+- updates
+- research links
+- data links
+- entity links
+- supporting reporting
+
+Create useful visualizations where the evidence supports them.
+
+Examples:
+
+- dated capacity table
+- geographic map
+- announced vs deployed vs accessible
+- timeline
+- infrastructure diagram
+
+Never fabricate visual data.
+
+========================================================
+PHASE 9 — RESEARCH
+========================================================
+
+Make Research a real differentiator.
+
+Every Research asset must explain:
+
+What was investigated?
+Why?
+How?
+Using what evidence?
+What was found?
+What remains uncertain?
+
+Do not merely summarize third-party research.
+
+========================================================
+PHASE 10 — DATA
+========================================================
+
+Build data pages that readers can understand immediately.
+
+Each data product must state:
+
+metric
+unit
+date
+source
+methodology
+limitations
+
+The AI compute inventory must distinguish historical evidence from current
+availability.
+
+========================================================
+PHASE 11 — REPORTS
+========================================================
+
+/reports
+
+must feel like a research library rather than a card grid.
+
+Feature:
+
+reports
+research
+data products
+deep dives
+
+Show:
+
+scope
+date
+status
+methodology
+source coverage
+last updated
+
+========================================================
+PHASE 12 — VISUAL STORYTELLING
+========================================================
+
+The current site relies too heavily on decorative abstract artwork.
+
+Replace weak visuals with information-bearing visuals where useful:
+
+charts
+maps
+timelines
+diagrams
+tables
+annotated documents
+real source imagery where appropriate
+
+For every significant Research/Report page ask:
+
+"What can be understood faster through a visual?"
+
+Build that visual.
+
+Do not add graphics for decoration alone.
+
+========================================================
+PHASE 13 — ARTICLE DESIGN
+========================================================
+
+Make each article feel like editorial journalism.
+
+Header:
+
+content type
+headline
+dek
+byline
+publication date
+update date
+topic/entity
+
+Body:
+
+strong opening
+substantive sections
+evidence blocks
+tables/charts where useful
+sources
+related research
+related report
+related entities
+related topics
+
+Do NOT use the exact same section labels on every article.
+
+Reduce mechanical repetition such as:
+
+The bottom line
+Why this matters
+Key takeaways
+
+Use type-appropriate language.
+
+========================================================
+PHASE 14 — AUTHORITY GRAPH
+========================================================
+
+Integrate actual content relationships.
+
+Each substantive article should connect to meaningful:
+
+topic
+entity
+source
+research
+report
+timeline
+
+Reports should connect to:
+
+research
+data
+entities
+topics
+supporting articles
+
+Research should connect to:
+
+sources
+data
+reports
+articles
+
+Do not add artificial links.
+
+========================================================
+PHASE 15 — TOPIC + ENTITY EXPERIENCE
+========================================================
+
+Topic pages:
+
+description
+latest
+analysis
+research
+reports
+entities
+timeline
+sources
+
+Entity pages:
+
+overview
+latest coverage
+important developments
+research
+reports
+timeline
+sources
+
+No empty pages.
+
+========================================================
+PHASE 16 — SEO
+========================================================
+
+Perform candidate-specific SEO for ALL public articles.
+
+Verify:
+
+title
+slug
+search intent
+meta description
+canonical
+Open Graph
+social metadata
+JSON-LD
+breadcrumbs
+author
+publication metadata
+AMP
+robots
+sitemap
+internal links
+
+Titles must be useful and accurate.
+
+No keyword stuffing.
+
+No generic title formulas across the entire site.
+
+========================================================
+PHASE 17 — SEARCH INTENT
+========================================================
+
+For every article determine:
+
+primary intent
+secondary intent
+query family
+semantic entities
+related questions
+
+The opening section must satisfy the dominant intent immediately.
+
+========================================================
+PHASE 18 — INTERNAL DISCOVERY
+========================================================
+
+A visitor must be able to move:
+
+NEWS
+→ ANALYSIS
+→ RESEARCH
+→ REPORT
+→ DATA
+→ ENTITY
+→ TOPIC
+→ TIMELINE
+
+without needing Google.
+
+Build useful "Explore deeper" modules.
+
+========================================================
+PHASE 19 — SOURCE QUALITY
+========================================================
+
+For every important claim:
+
+Prefer:
+
+government
+official institution
+research paper
+first-party organization
+authoritative dataset
+reputable reporting
+
+Every source must be relevant to the exact claim.
+
+Never substitute a homepage when an exact source document exists.
+
+========================================================
+PHASE 20 — CONTENT PRUNING
+========================================================
+
+If a page remains:
+
+thin
+generic
+duplicative
+unsupported
+misleading
+low-value
+
+after reasonable revision:
+
+NOINDEX or UNPUBLISH.
+
+Do not protect page count.
+
+========================================================
+PHASE 21 — MOBILE
+========================================================
+
+Test:
+
+homepage
+article
+research
+report
+data
+topic
+entity
+
+on narrow mobile.
+
+Check:
+
+headline wrapping
+hero
+tables
+charts
+sources
+navigation
+tap targets
+overflow
+CLS
+reading width
+
+========================================================
+PHASE 22 — PERFORMANCE
+========================================================
+
+Current public JS was reduced materially.
+
+Continue safe optimization.
+
+Keep:
+
+admin/editor code
+sign-in libraries
+noncritical interactions
+
+out of the public critical path.
+
+Prioritize:
+
+article LCP
+report LCP
+homepage LCP
+
+Measure:
+
+TTFB
+LCP
+CLS
+JS
+image transfer
+first-response size
+
+Do not claim production field results from local tests.
+
+========================================================
+PHASE 23 — ACCESSIBILITY
+========================================================
+
+Verify:
+
+semantic HTML
+heading hierarchy
+alt text
+keyboard navigation
+focus states
+tables
+link clarity
+contrast
+
+========================================================
+PHASE 24 — SECURITY
+========================================================
+
+Investigate the remaining braces advisory.
+
+Determine:
+
+- exact path
+- runtime vs development
+- production artifact presence
+- reachability
+
+If development-only:
+
+document it accurately.
+
+If runtime:
+
+remove/replace the dependency path where safely possible.
+
+Do not broad-upgrade dependencies.
+
+========================================================
+PHASE 25 — SAFE CONTENT STAGING
+========================================================
+
+Keep production editorial data safe.
+
+Use isolated test fixtures.
+
+Never test by creating permanent production stories.
+
+Before staging, confirm:
+
+- source claims
+- metadata
+- author
+- publication model
+- SEO
+- AMP
+- mobile
+- internal links
+- graph
+- first response
+
+========================================================
+PHASE 26 — FULL REGRESSION
+========================================================
+
+After ALL changes, run:
+
+pnpm -w run typecheck
+
+production build
+
+test:smoke
+
+test:article-first-response
+
+SEO checks
+
+structured-data checks
+
+AMP checks
+
+mobile checks
+
+link audit
+
+source/citation validation
+
+authority graph validation
+
+publication fixture
+
+security checks
+
+performance checks
+
+Do not rely on results from before the final changes.
+
+========================================================
+PHASE 27 — PRODUCTION READINESS
+========================================================
+
+Before publication verify:
+
+- Web revision current
+- API revision current
+- fingerprints match
+- Web→API connection healthy
+- legacy scheduler safely stopped
+- new automation disabled
+- root feed current
+- root sitemap current
+- API secure
+- article first response resilient
+- all public articles substantive
+- AMP complete
+- trust routes correct
+- 404/noindex correct
+- canonical/robots correct
+
+========================================================
+PHASE 28 — FINAL LIVE VERIFICATION
+========================================================
+
+After deployment, inspect BOTH:
+
+https://www.globalainews.in
+https://global-ai-media.replit.app
+
+Verify:
+
+HOMEPAGE
+ARTICLES
+RESEARCH
+REPORTS
+DATA
+TOPICS
+ENTITIES
+TIMELINES
+RSS
+SITEMAP
+AMP
+ROBOTS
+404
+TRUST
+MOBILE
+
+Explicitly test multiple article requests repeatedly enough to detect
+intermittent 503/timeouts.
+
+If article rendering fails:
+
+TRACE THE REQUEST.
+
+Do not simply report it.
+
+========================================================
+PHASE 29 — FINAL CONTENT PORTFOLIO AUDIT
+========================================================
+
+Audit every public article.
+
+Produce:
+
+docs/final-content-quality-matrix.json
+
+Fields:
+
+slug
+type
+title
+search_intent
+topic
+entities
+source_count
+primary_source_count
+citation_count
+originality
+specificity
+information_density
+internal_links
+research_link
+report_link
+SEO
+AMP
+first_response
+mobile
+performance
+quality_grade
+action
+
+Actions:
+
+KEEP
+REWRITE
+EXPAND
+CONSOLIDATE
+UNPUBLISH
+NOINDEX
+
+========================================================
+PHASE 30 — NO MORE PARTIAL COMPLETION
+========================================================
+
+Never stop with:
+
+"SEO remains"
+
+"content needs work"
+
+"homepage needs improvement"
+
+"articles are drafts"
+
+"technical checks remain"
+
+Those are not status reports.
+
+Those are tasks.
+
+Fix them.
+
+Do not ask for approval.
+
+Continue.
+
+========================================================
+FINAL DEFINITION OF DONE
+========================================================
+
+[ ] article timeout root cause resolved
+[ ] article renderer resilient
+[ ] no intermittent generic 503 for healthy published articles
+[ ] homepage is genuinely current
+[ ] homepage does not display unsupported metrics
+[ ] articles are substantive
+[ ] no two-line public articles
+[ ] weak articles rewritten/pruned
+[ ] headlines are strong
+[ ] search intent is explicit
+[ ] source provenance is strong
+[ ] facts are separated from analysis
+[ ] Research is genuinely research
+[ ] Reports are genuinely useful
+[ ] Data products are traceable
+[ ] AI Compute India is flagship quality
+[ ] visual storytelling is informative
+[ ] topic pages are substantive
+[ ] entity pages are substantive
+[ ] timelines are meaningful
+[ ] knowledge graph works
+[ ] internal links work
+[ ] SEO is complete
+[ ] AMP is complete
+[ ] first-response HTML is robust
+[ ] mobile is polished
+[ ] accessibility passes
+[ ] performance is measured
+[ ] public JS has not regressed
+[ ] security is classified/remediated
+[ ] source metadata is honest
+[ ] no fabricated authors
+[ ] no fabricated dates
+[ ] no fabricated data
+[ ] no fabricated research
+[ ] no fabricated benchmarks
+[ ] no unsupported GPU availability claims
+[ ] full regression passes
+[ ] production deployment matches current workspace
+[ ] production verification passes
+
+========================================================
+FINAL ACTION
+========================================================
+
+Do all workspace work.
+
+Fix all technical issues.
+
+Fix all editorial issues.
+
+Fix all UX issues.
+
+Fix all SEO issues.
+
+Fix all authority/content issues.
+
+Deploy when safe.
+
+Verify production.
+
+If the platform requires a human Publish click after everything is ready,
+leave the deployment prepared and return EXACTLY:
+
+PUBLISH NOW
+
+Do not return another multi-step blocker report.
+
+If the agent itself has permission to complete the Publish action safely,
+complete it and then return:
+
+PRODUCTION VERIFIED — COMPLETE
