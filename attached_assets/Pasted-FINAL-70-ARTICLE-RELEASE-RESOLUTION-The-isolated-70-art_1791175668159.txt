@@ -1,0 +1,452 @@
+FINAL 70-ARTICLE RELEASE RESOLUTION
+===================================
+
+The isolated 70-article validation is substantially complete.
+
+Current verified state:
+
+- all 70 candidates pass isolated route checks
+- first-response structure passes
+- SEO/social metadata passes
+- AMP passes
+- sitemap/indexability passes
+- RSS passes
+- 402px mobile passes
+- all table pages remain safely scrollable
+- no technical route issues
+- authority graph has no relationship errors
+- no fabricated entities/timelines
+- 640 citation markers
+- 133 citation keys
+- 253 source-map rows
+- 101 captured source files
+
+REMAINING RELEASE BLOCKERS:
+
+1. missing authoritative bylines
+2. missing authoritative publication dates
+3. 20 source captures with unresolved/ambiguous publication-date evidence
+4. 317 lexical similarity alerts requiring semantic review
+5. 3 content-type-fit warnings
+6. GHSA-vfj7-8cjw-p6xm high dependency advisory affecting braces@3.0.3
+7. test:smoke was not rerun after the final content changes
+8. test:article-first-response was not rerun
+9. live maintained content currently has no candidate internal links
+10. candidate content is not yet staged
+
+DO NOT STOP AFTER IDENTIFYING THESE ITEMS.
+
+Resolve every workspace-solvable item in one continuous run.
+
+==================================================
+1. AUTHOR / PUBLICATION DATE RESOLUTION
+==================================================
+
+For every one of the 70 articles, determine whether an authoritative
+author and publication date exists.
+
+Allowed evidence:
+
+- approved author records
+- explicit editorial metadata
+- source-backed publication metadata where the article intentionally
+  represents a dated research/reporting publication
+- documented editorial assignment
+
+NOT allowed:
+
+- guessing
+- inferring from filename
+- using current date automatically
+- copying a random existing author
+- inventing biographies
+- inventing dates
+
+If authoritative author/date does not exist:
+
+DO NOT invent it.
+
+Instead use the site's explicit editorial convention for unpublished/
+provisional material, and ensure the article cannot be misrepresented as
+historically published.
+
+Create a clear release-ready state for each article.
+
+==================================================
+2. SOURCE DATE RECONCILIATION
+==================================================
+
+Review the 20 source captures with ambiguous/unresolved publication dates.
+
+For each:
+
+- inspect available source evidence
+- determine whether date is actually established
+- distinguish publication date from update date/access date
+- record UNKNOWN when evidence is insufficient
+
+Do not manufacture a date.
+
+Ensure source metadata remains consistent with the Source Registry.
+
+==================================================
+3. 317 SIMILARITY ALERTS
+==================================================
+
+These are alerts, NOT confirmed duplicates.
+
+Run semantic review against:
+
+- all 70 candidates
+- existing maintained stories
+- other candidate pieces in the same segment/topic
+
+Classify every alert:
+
+A = genuine duplicate/near-duplicate
+B = overlapping topic but materially different intent
+C = false positive lexical similarity
+
+For A:
+
+rewrite, consolidate, or replace the weaker article.
+
+For B:
+
+retain both only when their search intent, evidence, and reader value
+are genuinely different.
+
+For C:
+
+mark resolved.
+
+Do not rewrite articles merely to reduce an arbitrary similarity score.
+
+At completion:
+
+NO UNRESOLVED TRUE DUPLICATE INTENTS.
+
+==================================================
+4. THREE CONTENT-TYPE WARNINGS
+==================================================
+
+Review the three warnings.
+
+For each decide whether the assigned type genuinely matches the content.
+
+If not:
+
+- rewrite the piece to fit the assigned type
+OR
+- move it to the more appropriate editorial type
+
+Maintain the target portfolio:
+
+10 Briefs
+10 Analyses
+10 Explainers
+10 Research
+10 Reports
+10 Comparisons
+10 Essays
+
+Do not keep a misleading label merely to satisfy the quota.
+
+==================================================
+5. AUTHORITY GRAPH INTEGRATION
+==================================================
+
+The fixture has 81 internal anchors, but maintained/live content currently
+contains no candidate links.
+
+Build the actual relationships for all 70 candidates.
+
+Where relevant connect:
+
+Article → Topic
+Article → Entity
+Article → Source
+Article → Research
+Article → Report
+Article → Timeline
+
+Also add reader-useful reciprocal links.
+
+Do not add links just for SEO.
+
+No orphan candidate should remain when an obvious relevant authority
+connection exists.
+
+==================================================
+6. AI COMPUTE INDIA CLUSTER
+==================================================
+
+Strengthen the first flagship cluster.
+
+Connect relevant candidates to:
+
+/reports/ai-compute-india/
+
+Connect the report to:
+
+- supporting articles
+- source records
+- research
+- data
+- entities
+- topics
+- timeline
+
+Do not force unrelated articles into the cluster.
+
+==================================================
+7. SMALL MODELS CLUSTER
+==================================================
+
+Build the second authority cluster around:
+
+Small Models
+Efficient AI
+Serious Workflows
+
+Connect relevant:
+
+- explainers
+- analyses
+- comparisons
+- research
+- reports
+- entities
+- topics
+
+No fabricated benchmark information.
+
+==================================================
+8. DEPENDENCY SECURITY
+==================================================
+
+Investigate:
+
+GHSA-vfj7-8cjw-p6xm
+braces@3.0.3
+
+Determine:
+
+- exact dependency path
+- production/runtime exposure
+- development/build-only exposure
+- available safe mitigation
+- whether an upstream patch exists
+- whether the vulnerable code path is actually shipped
+
+If a minimal compatible fix exists:
+
+apply it.
+
+If no safe upstream fix exists:
+
+document exact mitigation and why the remaining advisory does or does not
+affect production runtime.
+
+Do NOT perform broad dependency upgrades.
+
+==================================================
+9. FULL REGRESSION
+==================================================
+
+After the final content/metadata/graph/dependency changes, MUST rerun:
+
+pnpm -w run typecheck
+
+production build
+
+test:smoke
+
+test:article-first-response
+
+full link audit
+
+SEO validation
+
+AMP validation
+
+structured-data validation
+
+mobile validation
+
+source/citation validation
+
+publication fixture validation
+
+security checks
+
+Do not claim release readiness from the earlier run.
+
+The tests must be executed AFTER the final changes.
+
+==================================================
+10. CANDIDATE-SPECIFIC FINAL CHECK
+==================================================
+
+All 70 must individually pass:
+
+- title
+- slug
+- search intent
+- meta description
+- canonical
+- Open Graph
+- JSON-LD
+- author/editorial attribution
+- publication/update metadata
+- AMP link
+- AMP route
+- AMP canonical
+- indexability
+- sitemap
+- internal links
+- topic
+- entity
+- source relationships
+- research/report relationships where relevant
+- mobile
+- first-response HTML
+
+==================================================
+11. QUALITY GATE
+==================================================
+
+For each article ask:
+
+- Does it add something beyond rewriting another publication?
+- Is the evidence sufficient?
+- Are claims narrower than or equal to the evidence?
+- Is the article type correct?
+- Does it satisfy a real search intent?
+- Is it useful enough to rank on merit?
+- Is it connected to the site's authority graph?
+- Is it readable and information-dense?
+- Does it avoid filler?
+- Would an informed editor approve it?
+
+If NO:
+
+fix it before staging.
+
+==================================================
+12. STAGING
+==================================================
+
+Only when all 70 pass every gate:
+
+Stage exactly:
+
+10 Briefs
+10 Analyses
+10 Explainers
+10 Research
+10 Reports
+10 Comparisons
+10 Essays
+
+for the next human Publish.
+
+Do NOT publish automatically.
+
+Do NOT trigger automation.
+
+Do NOT modify production editorial data.
+
+==================================================
+13. FINAL RELEASE MATRIX
+==================================================
+
+Create/update a machine-readable matrix containing:
+
+slug
+segment
+title
+author
+publication_date
+topic
+entities
+search_intent
+source_count
+citation_count
+primary_source
+similarity_status
+content_type_fit
+internal_link_count
+research_link
+report_link
+SEO
+AMP
+indexability
+mobile
+first_response
+security
+staging
+
+Every article must have a deterministic final status.
+
+==================================================
+14. EXECUTION RULE
+==================================================
+
+Do not stop after reporting:
+
+"bylines remain unresolved"
+
+or:
+
+"similarity alerts remain"
+
+or:
+
+"security remains"
+
+Those are tasks for this run.
+
+Work on independent tracks in parallel.
+
+If authoritative metadata genuinely does not exist:
+
+record it honestly and implement the correct editorial status rather than
+inventing metadata.
+
+If a dependency cannot safely be fixed:
+
+document the exact risk and mitigation.
+
+If an article cannot meet the quality bar:
+
+rewrite or replace it.
+
+==================================================
+FINAL GATE
+==================================================
+
+Only after:
+
+- metadata resolved or explicitly and safely represented
+- source dates normalized where evidence permits
+- true duplicates eliminated
+- content-type warnings resolved
+- authority graph integrated
+- internal links added
+- dependency security resolved/classified
+- test:smoke rerun
+- test:article-first-response rerun
+- all 70 candidate checks pass
+
+stage the 70 for the next human Publish.
+
+FINAL RESPONSE:
+
+70 ARTICLES — READY FOR HUMAN PUBLISH
+
+Then provide only the final release summary.
+
+Do NOT ask another question.
+Do NOT return another partial checklist.
+Do NOT stop at an intermediate blocker.
