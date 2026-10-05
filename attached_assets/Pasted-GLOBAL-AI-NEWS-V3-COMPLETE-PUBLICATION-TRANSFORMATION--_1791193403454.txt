@@ -1,0 +1,1716 @@
+GLOBAL AI NEWS V3 — COMPLETE PUBLICATION TRANSFORMATION
+========================================================
+
+MISSION
+
+Transform the currently published Global AI News site into a genuinely
+premium AI publication and research intelligence platform.
+
+This is NOT another cosmetic redesign.
+
+The objective is to make the production site materially better in:
+
+- editorial quality
+- factual depth
+- source transparency
+- information density
+- visual storytelling
+- search usefulness
+- authority
+- reader experience
+- homepage freshness
+- research discoverability
+- data presentation
+- internal discovery
+- mobile experience
+- performance
+- trust
+- overall perceived quality
+
+The final product should feel like a serious publication/research
+organization, not an AI-generated article site.
+
+========================================================
+IMPORTANT CONTEXT
+========================================================
+
+The platform already has substantial infrastructure.
+
+Do NOT rebuild working foundation systems unnecessarily.
+
+Already implemented:
+
+- Web/API architecture
+- public/private API separation
+- publication lifecycle
+- source registry
+- research system
+- report system
+- data system
+- entity system
+- topic system
+- timeline system
+- authority graph
+- AMP
+- structured data
+- sitemap
+- RSS
+- first-response rendering
+- report architecture
+- AI Compute India research asset
+- 70-article content portfolio
+- publication fixtures
+- regression testing
+
+The current problem is NOT primarily infrastructure.
+
+The current problem is:
+
+CONTENT QUALITY + EDITORIAL PRESENTATION + HOMEPAGE QUALITY +
+INFORMATION DENSITY + VISUAL STORYTELLING + FRESHNESS +
+AUTHORITY SIGNALS.
+
+Therefore:
+
+DO NOT start another foundation loop.
+
+DO NOT spend the majority of the run on already-passing API/security
+issues.
+
+DO NOT keep the current content merely because it already exists.
+
+Improve the actual publication.
+
+========================================================
+NON-NEGOTIABLE PRINCIPLES
+========================================================
+
+1. QUALITY OVER ARTICLE COUNT
+
+70 published articles do not matter if 30 of them are mediocre.
+
+Every published article must justify its existence.
+
+You may:
+
+- rewrite
+- expand
+- consolidate
+- differentiate
+- replace
+- unpublish
+- noindex
+
+content when genuinely necessary.
+
+Do not preserve weak content to satisfy an arbitrary number.
+
+2. NO FABRICATION
+
+Never invent:
+
+- facts
+- statistics
+- citations
+- URLs
+- quotes
+- authors
+- credentials
+- dates
+- research findings
+- benchmarks
+- datasets
+- company claims
+- GPU availability
+
+When evidence does not exist:
+
+say so.
+
+3. SOURCE FIRST
+
+Use the existing source registry and source captures wherever applicable.
+
+Every important factual or quantitative claim must be traceable.
+
+Prefer:
+
+primary government sources
+official organizations
+research papers
+first-party company documentation
+authoritative datasets
+high-quality journalism
+
+Do not use a publisher homepage when the exact source document is known.
+
+4. FACT ≠ ANALYSIS
+
+Clearly distinguish:
+
+reported fact
+source-backed synthesis
+original analysis
+editorial interpretation
+
+Never make speculation look factual.
+
+5. DO NOT WRITE AI-SLOP
+
+Avoid:
+
+generic introductions
+obvious summaries
+repetitive conclusions
+meaningless adjectives
+fake sophistication
+generic "AI is transforming..." openings
+filler paragraphs
+repeated templates
+keyword stuffing
+empty statistics
+manufactured certainty
+
+========================================================
+PHASE 0 — LIVE PRODUCTION AUDIT
+========================================================
+
+Before changing the site, perform a fresh crawl of the actual production
+experience:
+
+https://www.globalainews.in/
+
+Audit:
+
+homepage
+navigation
+article pages
+reports
+research
+data
+topics
+entities
+timelines
+authors
+trust pages
+RSS
+sitemap
+AMP
+robots
+404
+search/discovery if present
+
+Inspect both:
+
+desktop
+mobile
+
+Do not rely solely on previous workspace test results.
+
+Create:
+
+docs/production-editorial-audit-v3.md
+
+Record:
+
+- current homepage sections
+- latest content dates
+- content freshness
+- article quality
+- source density
+- title quality
+- metadata quality
+- visual quality
+- internal-link quality
+- authority graph usage
+- report visibility
+- research visibility
+- data visibility
+- mobile issues
+- performance issues
+- trust issues
+- dead/weak pages
+- duplicate/overlapping articles
+- thin content
+- stale modules
+- misleading metrics
+
+Then proceed immediately to remediation.
+
+========================================================
+PHASE 1 — HOMEPAGE TRANSFORMATION
+========================================================
+
+The homepage must stop feeling like a static blog.
+
+The first screen should communicate:
+
+WHAT IS HAPPENING
+WHAT MATTERS
+WHAT GLOBAL AI NEWS KNOWS
+WHERE THE EVIDENCE IS
+
+Replace stale concepts with request-time/current data.
+
+The homepage MUST NOT display a stale hard-coded:
+
+"Latest edition"
+
+date.
+
+It must reflect the actual latest publication.
+
+Do NOT show:
+
+"7 published stories"
+
+if 70 are live.
+
+Use the actual public publication dataset.
+
+========================================================
+HOMEPAGE INFORMATION ARCHITECTURE
+========================================================
+
+Build a hierarchy similar to:
+
+1. HERO / LEADING STORY
+2. LATEST AI
+3. EDITOR'S ANALYSIS
+4. RESEARCH & REPORTS
+5. DATA / INTELLIGENCE
+6. TOPIC PULSE
+7. IMPORTANT ENTITIES
+8. DEEP DIVES
+9. NEWSLETTER / RETURN READER
+
+Do not make every section visually equal.
+
+The page must create editorial hierarchy.
+
+========================================================
+HOMEPAGE HERO
+========================================================
+
+The hero must be based on genuinely important current content.
+
+Include:
+
+headline
+short dek
+publication time
+content type
+author/byline
+primary topic/entity
+source/context where useful
+
+Use the strongest visual asset.
+
+Do not use decorative AI art merely because it looks impressive.
+
+Hero imagery should communicate subject matter.
+
+========================================================
+CURRENT SIGNALS
+========================================================
+
+REMOVE OR REWORK unsupported pseudo-metrics.
+
+Any metric such as:
+
++18%
++12%
+0.4x
++9%
+
+must have:
+
+- definition
+- baseline
+- time period
+- methodology
+- source
+
+If that cannot be provided immediately:
+
+REMOVE THE NUMBER.
+
+Replace with evidence-backed qualitative signals.
+
+Never present arbitrary numbers as intelligence.
+
+========================================================
+HOMEPAGE RESEARCH PROMOTION
+========================================================
+
+Research and reports should not be buried.
+
+Prominently surface:
+
+AI Compute in India
+research
+data assets
+important investigations
+major comparisons
+
+The user should discover the strongest authority asset from the homepage
+within one or two clicks.
+
+========================================================
+PRIMARY NAVIGATION
+========================================================
+
+Redesign navigation around the publication's actual differentiation.
+
+Preferred structure:
+
+Latest
+Analysis
+Research
+Reports
+Data
+Models
+Policy
+India
+
+Secondary sections can include:
+
+Briefs
+Explainers
+Comparisons
+Essays
+Topics
+Entities
+
+Do not overload the navigation.
+
+========================================================
+PHASE 2 — ARTICLE TEMPLATE TRANSFORMATION
+========================================================
+
+The article experience must stop feeling like a generic blog template.
+
+Create different editorial experiences for:
+
+Brief
+Analysis
+Explainer
+Research
+Report
+Comparison
+Essay
+
+Do not force identical section labels on every article.
+
+For example:
+
+BRIEF
+What happened
+What is confirmed
+Why it matters
+
+ANALYSIS
+The argument
+Evidence
+Implications
+What could change
+
+EXPLAINER
+The concept
+How it works
+Why it matters
+Examples
+Common misconceptions
+
+RESEARCH
+Research question
+Method
+Data
+Findings
+Limitations
+Sources
+
+REPORT
+Executive summary
+Key findings
+Data
+Analysis
+Methodology
+Sources
+Update history
+
+COMPARISON
+The decision
+Criteria
+Evidence
+Tradeoffs
+Best fit
+Limitations
+
+ESSAY
+Premise
+Evidence/context
+Argument
+Counterpoint
+Implications
+
+========================================================
+ARTICLE HEADER
+========================================================
+
+Every article header should immediately communicate:
+
+content type
+headline
+dek
+author
+publication date
+update date where meaningful
+primary topic
+primary entity where appropriate
+
+Do not display machine-like metadata.
+
+Do not display:
+
+raw timestamps
+raw slugs
+internal IDs
+developer terminology
+
+Use natural editorial language.
+
+========================================================
+ARTICLE OPENING
+========================================================
+
+The first 2–3 screens must be exceptionally strong.
+
+A reader should know:
+
+what happened
+why it matters
+what the article adds
+
+before scrolling deeply.
+
+Do not waste the opening on generic background.
+
+========================================================
+ARTICLE EVIDENCE LAYER
+========================================================
+
+For substantial articles, introduce an evidence-aware presentation.
+
+Where useful:
+
+Key finding
+Evidence
+Source
+Interpretation
+
+Example:
+
+KEY FINDING
+India's public AI-compute program has announced X.
+
+EVIDENCE
+Government source / dated document.
+
+WHAT IT MEANS
+This establishes Y, but does not establish Z.
+
+This distinction is a major differentiator.
+
+========================================================
+CLAIM-LEVEL SOURCE TRANSPARENCY
+========================================================
+
+Important numbers should be visibly source-backed.
+
+Do not require readers to guess which citation supports which claim.
+
+Use:
+
+- inline citation markers
+- source references
+- source blocks
+- "What this source establishes" where useful
+
+Do not turn every sentence into a citation.
+
+========================================================
+ARTICLE INFORMATION DENSITY
+========================================================
+
+Where useful, add:
+
+tables
+timelines
+named entities
+data
+examples
+comparisons
+source documents
+key findings
+definitions
+methodology
+
+Do not add components simply to make pages longer.
+
+========================================================
+REPEATED BOILERPLATE
+========================================================
+
+Reduce repetitive patterns such as:
+
+"The bottom line"
+"Why this matters"
+"Key takeaways"
+"What changes"
+
+across every article.
+
+Use editorially appropriate section names.
+
+The publication should have a recognizable voice without looking
+machine-generated from one template.
+
+========================================================
+PHASE 3 — REWRITE THE 70 ARTICLES
+========================================================
+
+Audit all currently published articles.
+
+For each article determine:
+
+- actual editorial quality
+- actual search intent
+- factual depth
+- evidence depth
+- originality
+- information density
+- differentiation
+- internal authority connections
+
+Do NOT assume all 70 are good enough simply because they passed technical
+validation.
+
+Classify:
+
+A = publish-quality
+B = needs substantial rewrite
+C = weak/redundant/replace
+
+For B:
+
+rewrite.
+
+For C:
+
+consolidate, replace, unpublish or noindex as appropriate.
+
+Do not preserve weak content for volume.
+
+========================================================
+ARTICLE CONTENT STANDARD
+========================================================
+
+Each substantive article should contain a progression:
+
+CLAIM
+→ EVIDENCE
+→ CONTEXT
+→ SPECIFIC EXAMPLES
+→ INTERPRETATION
+→ IMPLICATION
+
+Whenever the subject permits.
+
+Avoid:
+
+THESIS
+→ GENERIC EXPLANATION
+→ GENERIC CONCLUSION
+
+That is the main editorial weakness to eliminate.
+
+========================================================
+SPECIFICITY STANDARD
+========================================================
+
+Replace abstract statements with concrete evidence whenever possible.
+
+Weak:
+
+"Companies are investing heavily in regional compute."
+
+Strong:
+
+Name the companies.
+
+Name the locations.
+
+Name the facilities/programs.
+
+Give dates.
+
+Give documented numbers.
+
+Explain what is known versus announced.
+
+Source it.
+
+Do not fabricate missing specifics.
+
+========================================================
+PHASE 4 — AI COMPUTE INDIA FLAGSHIP
+========================================================
+
+Make:
+
+/reports/ai-compute-india/
+
+the flagship public asset of the site.
+
+Treat it as a living reference product.
+
+It should include:
+
+Executive summary
+Current landscape
+Compute definition
+Infrastructure
+Accelerators
+Geography
+Capacity
+Access
+Public/private initiatives
+Economics
+Energy
+Policy
+Organizations
+Historical timeline
+Evidence
+Data tables
+Research findings
+Methodology
+Limitations
+Sources
+Update history
+
+Critically distinguish:
+
+ANNOUNCED
+ONBOARDED
+INSTALLED
+DEPLOYED
+ACCESSIBLE
+SCHEDULABLE
+
+Never present:
+
+announced capacity
+
+as:
+
+currently accessible compute.
+
+================================================
+AI COMPUTE VISUALIZATION
+================================================
+
+Create genuinely informative visuals:
+
+- India compute map where defensible
+- capacity comparison
+- dated evidence timeline
+- announced vs onboarded vs accessible
+- infrastructure relationships
+- source-backed tables
+
+Every visualization must expose:
+
+metric
+unit
+date
+source
+limitations
+
+Do not manufacture maps/data.
+
+================================================
+PHASE 5 — RESEARCH SYSTEM
+================================================
+
+Make Research one of the publication's primary differentiators.
+
+A Research page should feel substantially more authoritative than a normal
+article.
+
+Use:
+
+Research question
+Methodology
+Dataset
+Evidence
+Findings
+Limitations
+Sources
+Update history
+
+For original work:
+
+show what Global AI News actually did.
+
+Do not simply summarize research papers.
+
+================================================
+PHASE 6 — DATA PRODUCTS
+================================================
+
+Build polished data pages.
+
+Examples:
+
+AI compute snapshots
+model comparisons
+AI infrastructure trackers
+policy trackers
+historical timelines
+
+Data products should show:
+
+What is measured?
+When was it measured?
+Where did it come from?
+What does it mean?
+What does it NOT mean?
+
+================================================
+PHASE 7 — REPORTS HUB
+================================================
+
+Make:
+
+/reports
+
+feel like a research library.
+
+Not a card grid.
+
+Create:
+
+featured report
+latest reports
+research
+data products
+topic clusters
+
+Each report should communicate:
+
+importance
+scope
+date
+methodology
+source count
+update status
+
+================================================
+PHASE 8 — VISUAL STORYTELLING
+================================================
+
+This is critical.
+
+Reduce reliance on abstract decorative hero art.
+
+Prioritize:
+
+- charts
+- tables
+- maps
+- timelines
+- diagrams
+- annotated source documents
+- meaningful photography
+- technically meaningful illustrations
+
+For each important report/research page, ask:
+
+"What visual explains something that text alone cannot?"
+
+Build that visual.
+
+Do not add graphics purely for decoration.
+
+================================================
+PHASE 9 — AUTHORITY GRAPH EXPERIENCE
+================================================
+
+The graph must become visible to the reader.
+
+Article should naturally lead to:
+
+Topic
+Entity
+Research
+Report
+Timeline
+
+Example:
+
+Article
+→ Nvidia
+→ AI Infrastructure
+→ Research
+→ Report
+→ Data
+
+Report should lead back to:
+
+supporting articles
+research
+entities
+topics
+sources
+
+Do not display meaningless relationship lists.
+
+================================================
+PHASE 10 — TOPIC PAGES
+================================================
+
+Topic pages must become actual editorial hubs.
+
+Each substantive topic should contain:
+
+description
+latest reporting
+important analysis
+research
+reports
+entities
+timeline
+sources
+
+No thin SEO category pages.
+
+================================================
+PHASE 11 — ENTITY PAGES
+================================================
+
+Make entity pages useful.
+
+For a company/model/lab/etc:
+
+overview
+latest coverage
+important developments
+research
+reports
+timeline
+sources
+
+Do not create pages with merely:
+
+Name
+description
+two links
+
+================================================
+PHASE 12 — SEARCH INTENT
+================================================
+
+Audit all content for real search intent.
+
+For each article determine:
+
+primary search intent
+secondary intent
+target query family
+semantic entities
+related questions
+
+Titles must serve intent.
+
+Meta descriptions must promise exactly what the page delivers.
+
+================================================
+PHASE 13 — SEO
+================================================
+
+Perform candidate-specific SEO for ALL published content.
+
+Verify:
+
+title
+slug
+canonical
+description
+Open Graph
+social metadata
+JSON-LD
+Article schema
+Breadcrumbs
+author
+date
+updated date
+sitemap
+robots
+AMP
+internal links
+
+Do not keyword stuff.
+
+Do not create doorway content.
+
+Do not create duplicate search intents.
+
+================================================
+SEARCH SNIPPET QUALITY
+================================================
+
+Titles should be:
+
+specific
+accurate
+useful
+distinctive
+compelling
+
+Do not use generic patterns like:
+
+"X: Everything You Need to Know"
+
+unless genuinely appropriate.
+
+Prefer specific search answers.
+
+================================================
+PHASE 14 — INTERNAL LINKING
+================================================
+
+Build a genuine editorial graph.
+
+Every strong article should have appropriate links to:
+
+related reporting
+topic
+entity
+research
+report
+data
+timeline
+
+Do not add links solely for SEO.
+
+Measure:
+
+orphan pages
+weakly connected pages
+overlinked pages
+cluster depth
+
+================================================
+PHASE 15 — FRESHNESS
+================================================
+
+The homepage must always show the real current publication state.
+
+Remove stale hard-coded "latest edition" logic.
+
+Create dynamic modules:
+
+Latest
+Just updated
+Research
+Deep dives
+Data
+
+Where update dates exist, communicate them naturally.
+
+Do not fake freshness.
+
+================================================
+PHASE 16 — NEWS VS EVERGREEN
+================================================
+
+Clearly distinguish:
+
+NEWS
+
+from:
+
+EVERGREEN
+
+from:
+
+RESEARCH
+
+from:
+
+REPORT
+
+A September news story should not visually compete with a durable
+research report as if they are the same product.
+
+================================================
+PHASE 17 — TRUST
+================================================
+
+Verify:
+
+About
+Code of Ethics
+Corrections
+Contact
+Authors
+Sources
+
+All trust information must be truthful.
+
+No fabricated biographies.
+
+No invented editorial credentials.
+
+Make corrections/reporting standards discoverable.
+
+================================================
+PHASE 18 — AUTHOR SYSTEM
+================================================
+
+Use:
+
+Global AI News Editorial Desk
+
+for house-authored material where legitimate.
+
+Do not invent individuals.
+
+Author pages should contain meaningful information only when available.
+
+================================================
+PHASE 19 — HOMEPAGE METRICS
+================================================
+
+Every numerical homepage metric must have:
+
+definition
+date
+baseline
+source/methodology
+
+If that cannot be explained in the UI:
+
+REMOVE IT.
+
+Do not display impressive-looking unsupported numbers.
+
+This applies to:
+
+GPU counts
+market changes
+growth rates
+signal percentages
+multipliers
+funding figures
+
+================================================
+PHASE 20 — MOBILE EXPERIENCE
+================================================
+
+Test:
+
+homepage
+article
+research
+report
+data
+topic
+entity
+
+at narrow mobile widths.
+
+Check:
+
+headline wrapping
+hero image
+tables
+source blocks
+charts
+navigation
+sticky elements
+spacing
+tap targets
+overflow
+CLS
+reading width
+
+All tables must remain usable without destroying page layout.
+
+================================================
+PHASE 21 — PERFORMANCE
+================================================
+
+Current public JS bundle:
+
+approximately 575 KB minified
+170 KB gzip
+
+Do not allow the site redesign to increase this substantially.
+
+Continue eliminating unnecessary client-side code.
+
+Prefer:
+
+server rendering
+minimal hydration
+lazy loading
+code splitting
+deferred noncritical components
+
+Pay particular attention to article/report LCP.
+
+The previous article LCP was approximately 7 seconds in the local throttled
+environment.
+
+Treat article/report LCP as a priority problem.
+
+Optimize:
+
+- hero image loading
+- server data waterfalls
+- blocking scripts
+- fonts
+- hydration
+- below-the-fold components
+- third-party code
+- large interactive components
+
+Target:
+
+LCP < 2.5s where realistically achievable.
+
+Do not claim field-performance success without real measurement.
+
+================================================
+PHASE 22 — ACCESSIBILITY
+================================================
+
+Improve:
+
+semantic HTML
+heading hierarchy
+alt text
+contrast
+keyboard navigation
+focus state
+ARIA only where necessary
+table accessibility
+link labels
+
+Run accessibility checks.
+
+================================================
+PHASE 23 — VISUAL DESIGN SYSTEM
+================================================
+
+Refine the design system around:
+
+editorial hierarchy
+content density
+credible typography
+consistent spacing
+data visualization
+source presentation
+research presentation
+
+Avoid:
+
+excessive gradients
+generic glassmorphism
+decorative cards everywhere
+AI-generated visual clichés
+huge empty spaces
+identical cards for every content type
+
+The interface should look like a serious publication.
+
+================================================
+PHASE 24 — CONTENT VISUALS
+================================================
+
+For important articles, identify whether a visual can improve understanding.
+
+Prefer:
+
+chart
+diagram
+table
+timeline
+map
+annotated evidence
+
+before decorative artwork.
+
+Every visual must have a reason to exist.
+
+================================================
+PHASE 25 — COMPETITIVE DIFFERENTIATION
+================================================
+
+Do NOT copy competitors.
+
+Use them only as benchmarks for:
+
+- information hierarchy
+- newsroom freshness
+- reading experience
+- source presentation
+- visual quality
+- research discoverability
+
+Global AI News must differentiate through:
+
+- evidence transparency
+- India intelligence
+- research
+- data
+- entity graph
+- timelines
+- comparative intelligence
+- durable reference reports
+
+The site's advantage should be:
+
+FAST ENOUGH TO MATTER
++
+DEEP ENOUGH TO REFERENCE
+
+================================================
+PHASE 26 — EDITORIAL PORTFOLIO
+================================================
+
+After rewriting the 70, ensure the portfolio has a balanced mix of:
+
+Briefs
+Analysis
+Explainers
+Research
+Reports
+Comparisons
+Essays
+
+Do not allow the site to feel like 70 essays.
+
+The homepage and navigation should visually communicate the diversity.
+
+================================================
+PHASE 27 — CONTENT PRUNING
+================================================
+
+If an article remains:
+
+thin
+duplicative
+unsupported
+generic
+low-value
+misleading
+
+after reasonable revision:
+
+UNPUBLISH or NOINDEX IT.
+
+Do not maintain pages solely because they are already published.
+
+Document every pruning decision.
+
+================================================
+PHASE 28 — NEWSROOM QUALITY RULES
+================================================
+
+Create an editorial quality checklist in:
+
+docs/editorial-quality-standard-v3.md
+
+Every future article should pass:
+
+Accuracy
+Evidence
+Originality
+Specificity
+Search intent
+Structure
+Visual quality
+Internal links
+Authority graph
+SEO
+Mobile
+Performance
+Trust
+
+================================================
+PHASE 29 — EDITORIAL CMS SUPPORT
+================================================
+
+Where the existing CMS permits, expose:
+
+content type
+topic
+entities
+sources
+research relationship
+report relationship
+timeline
+visual/data asset
+house byline
+publication/update metadata
+
+Do not expose internal workflow information through public APIs.
+
+================================================
+PHASE 30 — AUTOMATED QUALITY GATES
+================================================
+
+Implement automated checks where practical for:
+
+- missing title
+- missing description
+- missing canonical
+- invalid JSON-LD
+- missing author
+- invalid publication date
+- missing source references
+- broken source links
+- missing AMP
+- incorrect AMP canonical
+- orphan article
+- no topic
+- no entity where appropriate
+- duplicate slug
+- duplicate search intent indicator
+- indexable thin page
+- stale homepage content
+- unsupported homepage metric
+- missing image alt text
+
+================================================
+PHASE 31 — FULL SITE CONTENT AUDIT
+================================================
+
+Audit ALL published content.
+
+Produce:
+
+docs/content-quality-matrix-v3.json
+
+For each page record:
+
+slug
+type
+title
+search intent
+topic
+entities
+source count
+primary-source count
+citation count
+originality
+specificity
+information density
+internal links
+research connection
+report connection
+SEO
+AMP
+mobile
+performance
+quality grade
+action
+
+Actions:
+
+KEEP
+REWRITE
+EXPAND
+CONSOLIDATE
+UNPUBLISH
+NOINDEX
+
+================================================
+PHASE 32 — FINAL PRODUCTION EXPERIENCE
+================================================
+
+The production site should feel coherent from:
+
+HOMEPAGE
+→ ARTICLE
+→ TOPIC
+→ ENTITY
+→ RESEARCH
+→ REPORT
+→ DATA
+→ TIMELINE
+
+A reader must be able to go deeper without relying on Google to find the
+next relevant page.
+
+================================================
+PHASE 33 — REGRESSION
+================================================
+
+After implementation run:
+
+typecheck
+production build
+full smoke
+article first-response
+desktop checks
+mobile checks
+AMP checks
+SEO checks
+structured data
+RSS
+sitemap
+link audit
+accessibility
+security
+performance
+
+No critical regression may remain.
+
+================================================
+PHASE 34 — LIVE VERIFICATION
+================================================
+
+After deployment-ready changes, inspect:
+
+https://www.globalainews.in/
+
+Verify:
+
+- homepage freshness
+- navigation
+- article quality
+- research visibility
+- reports visibility
+- source presentation
+- data presentation
+- AMP
+- metadata
+- structured data
+- mobile
+- performance
+- trust
+- robots
+- sitemap
+- RSS
+- 404/noindex
+
+Do not rely solely on local results.
+
+================================================
+PHASE 35 — DEPLOYMENT
+================================================
+
+Do not break production.
+
+Before deployment:
+
+- verify current source revision
+- verify current Web artifact
+- verify current API artifact
+- verify scheduler state
+- verify no stale artifact
+- verify build
+
+Deploy only after all checks pass.
+
+Do not trigger editorial automation accidentally.
+
+================================================
+CONTINUOUS EXECUTION
+================================================
+
+Do NOT stop after the audit.
+
+Do NOT return:
+
+"homepage needs work"
+
+"articles need SEO"
+
+"internal links remain"
+
+"we should improve visuals"
+
+Those are exactly the tasks this run must perform.
+
+Use:
+
+AUDIT
+→ PRIORITIZE
+→ IMPLEMENT
+→ TEST
+→ REASSESS
+→ IMPROVE
+→ REGRESS
+→ CONTINUE
+
+If something is weak:
+
+fix it.
+
+If something is redundant:
+
+consolidate it.
+
+If content lacks evidence:
+
+find valid existing evidence or rewrite the claim.
+
+If evidence doesn't exist:
+
+remove the claim.
+
+If a page cannot become valuable:
+
+unpublish/noindex it.
+
+If visuals are weak:
+
+replace them with meaningful information-bearing visuals.
+
+If homepage modules are stale:
+
+make them dynamic.
+
+If metrics are unsupported:
+
+remove them.
+
+================================================
+NO COSMETIC-ONLY COMPLETION
+================================================
+
+Do NOT declare success because:
+
+- colors improved
+- cards look nicer
+- animations were added
+- spacing changed
+- typography changed
+
+The site must become materially better in:
+
+EDITORIAL QUALITY
+INFORMATION VALUE
+AUTHORITY
+SEARCH USEFULNESS
+VISUAL STORYTELLING
+DISCOVERABILITY
+TRUST
+PERFORMANCE
+
+================================================
+FINAL DEFINITION OF DONE
+================================================
+
+[ ] Homepage feels like a live publication
+[ ] Homepage reflects real current publication state
+[ ] No unsupported homepage metrics
+[ ] Research is prominent
+[ ] Reports are prominent
+[ ] Data is discoverable
+[ ] Articles have differentiated editorial templates
+[ ] Articles contain more concrete evidence
+[ ] Important claims have source provenance
+[ ] Abstract generic prose reduced
+[ ] Repetitive boilerplate reduced
+[ ] Weak content rewritten/replaced/pruned
+[ ] 70-article portfolio has genuine diversity
+[ ] AI Compute India is flagship authority asset
+[ ] Research pages feel authoritative
+[ ] Reports feel authoritative
+[ ] Data products are understandable
+[ ] Topic pages are useful
+[ ] Entity pages are useful
+[ ] Timeline pages are useful
+[ ] Knowledge graph is visible to readers
+[ ] Internal linking works
+[ ] SEO is complete
+[ ] Structured data is valid
+[ ] AMP is complete
+[ ] 404/noindex works
+[ ] Trust pages work
+[ ] Author/byline model is truthful
+[ ] Mobile experience is premium
+[ ] Accessibility passes
+[ ] Performance materially improved
+[ ] Public JS does not regress materially
+[ ] Source registry is used consistently
+[ ] Research methodology is visible
+[ ] Limitations are visible
+[ ] No fabricated data
+[ ] No fabricated sources
+[ ] No fake authors
+[ ] No fake research
+[ ] No unsupported benchmarks
+[ ] No stale homepage modules
+[ ] No major orphan content
+[ ] Full regression passes
+[ ] Production verification passes
+
+================================================
+FINAL OUTPUT
+================================================
+
+Do not provide a progress update after each individual task.
+
+Continue working until the complete run is finished.
+
+At the end provide:
+
+1. BEFORE vs AFTER summary
+2. homepage improvements
+3. article improvements
+4. research/report improvements
+5. data/visual improvements
+6. SEO improvements
+7. internal-link/authority improvements
+8. performance measurements
+9. content-pruning decisions
+10. regression results
+11. production verification results
+12. remaining genuine risks
+
+Use:
+
+COMPLETE
+
+only when the Definition of Done is satisfied.
+
+If a genuinely external platform action prevents completion, continue ALL
+workspace work and clearly identify:
+
+EXTERNAL ACTION REQUIRED
+
+Do not stop for routine confirmation.
+
+================================================
+ULTIMATE STANDARD
+================================================
+
+Global AI News should no longer look like:
+
+"an AI news website with AI-written articles."
+
+It should look and read like:
+
+"A serious AI publication that reports quickly, investigates deeply,
+shows its evidence, maintains original research and data, connects people,
+companies, technologies and events, and gives readers somewhere valuable
+to go next."
+
+Build exactly that.
