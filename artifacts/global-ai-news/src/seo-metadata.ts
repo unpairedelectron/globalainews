@@ -26,7 +26,7 @@ export interface SeoMetadataManifest {
 const staticMetadata: Record<string, SeoMetadata> = {
   '/': {
     title: 'Global AI News — Intelligence for the AI economy',
-    description: 'Stories, signals and context for understanding the AI industry.',
+    description: 'Evidence-led reporting, research and data on what changed in the AI economy and what the public record supports.',
     path: '/',
   },
   '/brief': {
@@ -52,38 +52,42 @@ const staticMetadata: Record<string, SeoMetadata> = {
   },
   '/archive': {
     title: 'Archive — Global AI News',
-    description: 'Editorial input is required before this route is published.',
+    description: 'Browse published Global AI News stories by publication date. Draft and scheduled records are excluded.',
     path: '/archive',
-    indexable: false,
   },
   '/about-us': {
     title: 'About us — Global AI News',
-    description: 'Editorial input is required before this route is published.',
+    description: 'What Global AI News covers and how its reporting connects to sources, research and data.',
     path: '/about-us',
     indexable: false,
   },
   '/code-of-ethics': {
     title: 'Code of ethics — Global AI News',
-    description: 'Editorial input is required before this route is published.',
+    description: 'Global AI News standards for sourcing, attribution, evidence labels and transparent limitations.',
     path: '/code-of-ethics',
     indexable: false,
   },
   '/corrections': {
     title: 'Corrections — Global AI News',
-    description: 'Editorial input is required before this route is published.',
+    description: 'How Global AI News distinguishes publication dates, material updates and correction records.',
     path: '/corrections',
     indexable: false,
   },
   '/contact-us': {
     title: 'Contact us — Global AI News',
-    description: 'Editorial input is required before this route is published.',
+    description: 'Public contact details for Global AI News have not been verified.',
     path: '/contact-us',
     indexable: false,
   },
   '/signals': {
-    title: 'Signals — Global AI News',
-    description: 'Directional intelligence across the AI economy.',
+    title: 'Signals on file — Global AI News',
+    description: 'Dated editorial summaries linked to published reporting; not a live market feed or measurement series.',
     path: '/signals',
+  },
+  '/data': {
+    title: 'Data products — Global AI News',
+    description: 'Published datasets and dated observations with methods, limitations and source trails.',
+    path: '/data',
   },
   '/research': {
     title: 'Research & context — Global AI News',
@@ -162,6 +166,15 @@ export function setSeoMetadataManifest(manifest: SeoMetadataManifest | undefined
   activeManifest = manifest;
 }
 
+export function getResearchSeoTitle(title: string): string {
+  const prefix = 'Research record: ';
+  const suffix = ' — Global AI News';
+  const maximumHeadlineLength = 60 - prefix.length - suffix.length;
+  const cleanTitle = title.replace(/\s+/g, ' ').trim();
+  const boundedHeadline = Array.from(cleanTitle).slice(0, maximumHeadlineLength).join('').replace(/[\s,.;:—-]+$/u, '');
+  return `${prefix}${boundedHeadline}${suffix}`;
+}
+
 function articleTitle(headline: string): string {
   const cleanHeadline = headline
     .trim()
@@ -208,22 +221,40 @@ export function getSeoMetadata(
   route: string,
   publishedStories = getPublishedStories(),
   sourceRecords: Source[] = sources,
+  authoritySnapshot?: NewsroomContentSnapshot,
 ): SeoMetadata {
   const cleanPath = cleanRoute(route);
+  const manifestMetadata = activeManifest?.routes.find((metadata) => metadata.path === cleanPath);
+  if (manifestMetadata) return manifestMetadata;
+  const authorRecords = authoritySnapshot?.authors ?? authors;
+  const entityRecords = authoritySnapshot?.entities ?? entities;
+  const timelineRecords = authoritySnapshot?.timelineEvents ?? timelineEvents;
+  const researchRecordList = authoritySnapshot?.researchRecords ?? researchRecords;
+  const dataProductList = authoritySnapshot?.dataProducts ?? dataProductRecords;
+  const topicRecordList = authoritySnapshot?.topics ?? topicRecords;
   const publishedStorySlugs = new Set(publishedStories.map((story) => story.slug));
 
   if (cleanPath === '/research') {
     return {
       ...staticMetadata['/research'],
-      indexable: researchRecords.some(
+      indexable: researchRecordList.some(
         (record) => record.status === 'published' && publishedStorySlugs.has(record.storySlug),
+      ),
+    };
+  }
+
+  if (cleanPath === '/data') {
+    return {
+      ...staticMetadata['/data'],
+      indexable: dataProductList.some(
+        (product) => product.status === 'published' && product.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
       ),
     };
   }
 
   const researchMatch = cleanPath.match(/^\/research\/([^/]+)$/);
   if (researchMatch) {
-    const record = researchRecords.find(
+    const record = researchRecordList.find(
       (candidate) =>
         candidate.slug === researchMatch[1] &&
         candidate.status === 'published' &&
@@ -231,7 +262,7 @@ export function getSeoMetadata(
     );
     if (record) {
       return {
-        title: articleTitle(record.title),
+        title: getResearchSeoTitle(record.title),
         description: getArticleDescription({ dek: record.researchQuestion }),
         path: `/research/${record.slug}`,
         lastmod: record.updatedAt,
@@ -247,7 +278,7 @@ export function getSeoMetadata(
 
   const dataMatch = cleanPath.match(/^\/data\/([^/]+)$/);
   if (dataMatch) {
-    const product = dataProductRecords.find(
+    const product = dataProductList.find(
       (candidate) =>
         candidate.slug === dataMatch[1] &&
         candidate.status === 'published' &&
@@ -293,7 +324,7 @@ export function getSeoMetadata(
 
   const topicMatch = cleanPath.match(/^\/topic\/([^/]+)$/);
   if (topicMatch) {
-    const topic = topicRecords.find((candidate) => candidate.slug === topicMatch[1]);
+    const topic = topicRecordList.find((candidate) => candidate.slug === topicMatch[1]);
     if (topic) {
       const visibleStorySlugs = topic.storySlugs.filter((slug) => publishedStorySlugs.has(slug));
       const label = topic.slug === 'india'
@@ -324,15 +355,12 @@ export function getSeoMetadata(
     return getArticleSeoMetadata(story);
   }
 
-  const manifestMetadata = activeManifest?.routes.find((metadata) => metadata.path === cleanPath);
-  if (manifestMetadata) return manifestMetadata;
-
   const staticPage = staticMetadata[cleanPath];
   if (staticPage) return staticPage;
 
   const timelineMatch = cleanPath.match(/^\/timeline\/([^/]+)$/);
   if (timelineMatch) {
-    const event = findTimeline(timelineMatch[1]);
+    const event = timelineRecords.find((candidate) => candidate.slug === timelineMatch[1]);
     if (event) {
       return {
         title: `${event.title} — Global AI News`,
@@ -345,8 +373,17 @@ export function getSeoMetadata(
   const entityMatch = cleanPath.match(/^\/(company|lab|model|technology|institution|policy|dataset|infrastructure|person)\/([^/]+)$/);
   if (entityMatch) {
     const [, kind, slug] = entityMatch;
-    const person = kind === 'person' ? authors.find((author) => author.slug === slug) : undefined;
-    const entity = person ? undefined : findEntity(slug);
+    const authorRecord = kind === 'person' ? authorRecords.find((author) => author.slug === slug) : undefined;
+    if (authorRecord && authorRecord.verifiedForPublication !== true) {
+      return {
+        title: 'Contributor profile unavailable — Global AI News',
+        description: 'No verified public contributor profile exists at this URL.',
+        path: cleanPath,
+        indexable: false,
+      };
+    }
+    const person = authorRecord?.verifiedForPublication === true ? authorRecord : undefined;
+    const entity = person ? undefined : entityRecords.find((candidate) => candidate.slug === slug && candidate.kind === kind);
     if (person) {
       return {
         title: `${person.name} — Global AI News`,
@@ -403,8 +440,10 @@ export function getSeoMetadataManifest(
   const dynamicPaths = [
     ...publishedStories.map((story) => `/article/${story.slug}`),
     ...timelineEvents.map((event) => `/timeline/${event.slug}`),
-    ...entities.map((entity) => `/${entity.kind}/${entity.slug}`),
-    ...authors.map((author) => `/person/${author.slug}`),
+    ...entities
+      .filter((entity) => entity.kind !== 'person' || !authors.some((author) => author.slug === entity.slug && author.verifiedForPublication !== true))
+      .map((entity) => `/${entity.kind}/${entity.slug}`),
+    ...authors.filter((author) => author.verifiedForPublication === true).map((author) => `/person/${author.slug}`),
     ...visibleResearch.map((record) => `/research/${record.slug}`),
     ...visibleDataProducts.map((product) => `/data/${product.slug}`),
     ...visibleSources.map((source) => `/source/${source.slug}`),
@@ -443,7 +482,7 @@ export function getStructuredData(
   const articleAuthor = articleStory ? getStoryAuthorIdentity(articleStory, authorRecords) : undefined;
   const authorSlug = metadata.path.match(/^\/person\/([^/]+)$/)?.[1];
   const profileAuthor = authorSlug
-    ? authorRecords.find((author) => author.slug === authorSlug)
+    ? authorRecords.find((author) => author.slug === authorSlug && author.verifiedForPublication === true)
     : undefined;
   const researchSlug = metadata.path.match(/^\/research\/([^/]+)$/)?.[1];
   const researchRecord = researchSlug
@@ -465,6 +504,12 @@ export function getStructuredData(
   const source = sourceSlug
     ? (authoritySnapshot?.sources ?? sources).find((item) => item.slug === sourceSlug)
     : undefined;
+  const researchStory = researchRecord
+    ? publishedStories.find((story) => story.slug === researchRecord.storySlug)
+    : undefined;
+  const researchAuthor = researchRecord && researchStory
+    ? getStoryAuthorIdentity(researchStory, authorRecords)
+    : { type: 'Organization' as const, name: 'Global AI News Editorial Desk' };
   const articleDateModified = articleStory ? getPublicDateModified(articleStory) : undefined;
   const publisher = {
     '@type': 'Organization',
@@ -523,14 +568,13 @@ export function getStructuredData(
             url: canonical,
             datePublished: researchRecord.date,
             dateModified: researchRecord.updatedAt,
-            ...(authorRecords.find((author) => author.slug === researchRecord.authorSlug)
-              ? {
-                  author: {
-                    '@type': 'Person',
-                    name: authorRecords.find((author) => author.slug === researchRecord.authorSlug)?.name,
-                  },
-                }
-              : {}),
+            author: {
+              '@type': researchAuthor.type,
+              name: researchAuthor.name,
+              url: researchAuthor.type === 'Person' && researchAuthor.slug
+                ? getCanonicalUrl(`/person/${researchAuthor.slug}`)
+                : SITE_URL,
+            },
             publisher,
             mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
           }

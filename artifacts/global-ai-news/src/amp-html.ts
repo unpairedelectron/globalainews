@@ -1,4 +1,4 @@
-import { authors, getStoryAuthorIdentity, type Author, type Source, type Story } from './content';
+import { authors, getStoryAuthorIdentity, getStoryReadTime, type Author, type Source, type Story } from './content';
 import { getCanonicalUrl } from './seo-metadata';
 
 function escapeHtml(value: string): string {
@@ -18,6 +18,16 @@ function formatPublishedDate(date: string): string {
   }).format(new Date(`${date}T00:00:00Z`));
 }
 
+function sourceSpecificUrl(url: string): string | undefined {
+  try {
+    const parsed = new URL(url);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return undefined;
+    return parsed.pathname === '/' && !parsed.search && !parsed.hash ? undefined : url;
+  } catch {
+    return undefined;
+  }
+}
+
 export function renderAmpArticleDocument(
   story: Story,
   authorRecords: readonly Author[] = authors,
@@ -32,7 +42,7 @@ export function renderAmpArticleDocument(
       const source = sourceRecords.find((candidate) => candidate.slug === slug);
       const number = story.sources.indexOf(slug) + 1;
       if (!source || number === 0) return '<span class="citation-missing">[source not found]</span>';
-      return `<a class="citation" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer" aria-label="Source ${number}: ${escapeHtml(source.name)}">[${number}]</a>`;
+      return `<a class="citation" href="#source-${number}" aria-label="Source ${number}: ${escapeHtml(source.name)}, jump to citation details">[${number}]</a>`;
     });
   const sections = story.body.map((section) => `
         <section>
@@ -48,13 +58,17 @@ export function renderAmpArticleDocument(
     ? `<section class="sources"><h2>Sources</h2><ol>${story.sources.map((slug, index) => {
         const source = sourceRecords.find((candidate) => candidate.slug === slug);
         if (!source) return `<li id="source-${index + 1}">[source record unavailable: ${escapeHtml(slug)}]</li>`;
+        const externalUrl = sourceSpecificUrl(source.url);
+        const href = externalUrl ?? `/source/${encodeURIComponent(slug)}/`;
+        const externalAttributes = externalUrl ? ' target="_blank" rel="noopener noreferrer"' : '';
         const details = [
           source.publisher,
           source.tier ? `Tier ${source.tier}` : undefined,
           source.publicationDate ? `Published ${source.publicationDate}` : undefined,
           source.accessed ? `Accessed ${source.accessed}` : undefined,
         ].filter(Boolean).join(' · ');
-        return `<li id="source-${index + 1}"><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">[${index + 1}] ${escapeHtml(source.name)}</a><p>${escapeHtml(details)}</p>${source.scopeNote ? `<p>${escapeHtml(source.scopeNote)}</p>` : ''}</li>`;
+        const incompleteNotice = externalUrl ? '' : '<p class="source-warning">This record does not contain a usable source-specific web address. Treat the citation as incomplete until it is corrected.</p>';
+        return `<li id="source-${index + 1}"><a href="${escapeHtml(href)}"${externalAttributes}>[${index + 1}] ${escapeHtml(source.name)}</a><p>${escapeHtml(details)}</p>${source.scopeNote ? `<p>${escapeHtml(source.scopeNote)}</p>` : ''}${incompleteNotice}</li>`;
       }).join('')}</ol></section>`
     : '';
 
@@ -81,7 +95,7 @@ export function renderAmpArticleDocument(
       .kicker { color: var(--coral); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; margin-top: 52px; }
       h1 { font-family: Georgia, serif; font-size: clamp(42px, 9vw, 76px); font-weight: 400; line-height: .94; margin: 16px 0; }
       .dek { font-size: 20px; line-height: 1.5; color: rgba(19,38,50,.7); }
-      .citation { color: var(--teal); font-size: .7em; vertical-align: super; margin: 0 2px; }
+      .citation { display: inline-block; min-width: 28px; min-height: 28px; padding: 4px 2px; color: var(--teal); font-size: .7em; text-align: center; vertical-align: super; margin: 0 2px; }
       .citation-missing { color: #9b2c20; font: 12px Arial, sans-serif; }
       .byline { border-block: 1px solid rgba(19,38,50,.2); padding: 16px 0; margin: 24px 0 40px; font-size: 13px; }
       .hero { background: #193b3e; color: white; padding: 42px 24px; border-radius: 16px; font-family: Georgia, serif; font-size: 34px; }
@@ -96,6 +110,7 @@ export function renderAmpArticleDocument(
       .sources { font: 14px/1.55 Arial, sans-serif; }
       .sources li { border-bottom: 1px solid rgba(19,38,50,.2); padding: 14px 0; }
       .sources p { margin: 6px 0 0; font-size: 12px; }
+      .sources .source-warning { border-left: 2px solid var(--coral); padding-left: 10px; }
       .ad { border: 1px dashed rgba(19,38,50,.35); padding: 24px; margin: 42px 0; text-align: center; font: 11px Arial, sans-serif; letter-spacing: .15em; }
       footer { border-top: 1px solid rgba(19,38,50,.2); color: rgba(19,38,50,.65); font-size: 12px; }
     </style>
@@ -103,7 +118,7 @@ export function renderAmpArticleDocument(
   <body>
     <header><div class="brand">GLOBAL AI NEWS</div></header>
     <main>
-      <div class="kicker">${escapeHtml(story.category)} · ${escapeHtml(story.contentType ?? story.readTime)}</div>
+      <div class="kicker">${escapeHtml(story.contentType ?? story.category)} · ${escapeHtml(getStoryReadTime(story))}</div>
       <h1>${escapeHtml(story.title)}</h1>
       <p class="dek">${escapeHtml(story.dek)}</p>
       <div class="byline">${author ? `<strong>${escapeHtml(author.name)}</strong>${personAuthor ? ` · ${escapeHtml(personAuthor.role)}` : ''}` : '<strong>Byline unavailable</strong>'} · ${formatPublishedDate(story.date)}</div>

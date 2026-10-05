@@ -83,6 +83,7 @@ export interface Author {
   bio: string;
   location: string;
   initials: string;
+  verifiedForPublication?: boolean;
 }
 export interface Source {
   slug: string;
@@ -178,6 +179,29 @@ export interface Story {
   whyItMatters: string;
   keyTakeaways: string[];
   whatChanges: string;
+}
+
+export function getStoryReadTime(
+  story: Pick<Story, 'title' | 'dek' | 'body' | 'bottomLine' | 'whyItMatters' | 'keyTakeaways' | 'whatChanges'>,
+): string {
+  const bodyText = story.body.flatMap((section) => [
+    section.heading,
+    ...section.paragraphs,
+    section.pullQuote ?? '',
+    section.table?.caption ?? '',
+    ...(section.table?.rows.flatMap((row) => row.cells) ?? []),
+  ]);
+  const wordCount = [
+    story.title,
+    story.dek,
+    story.bottomLine,
+    story.whyItMatters,
+    ...story.keyTakeaways,
+    story.whatChanges,
+    ...bodyText,
+  ].join(' ').trim().split(/\s+/u).filter(Boolean).length;
+  const minutes = Math.max(1, Math.ceil(wordCount / 250));
+  return `${minutes} min read`;
 }
 
 const readerFacingContentTypes: Record<Story['classification'], string> = {
@@ -394,13 +418,17 @@ export type StoryAuthorIdentity = {
 export function getStoryAuthorIdentity(
   story: Pick<Story, 'author' | 'authorType' | 'authorName'>,
   authorRecords: readonly Author[] = authors,
-): StoryAuthorIdentity | undefined {
+): StoryAuthorIdentity {
   if (story.authorType === 'organization') {
     const name = story.authorName?.trim();
-    return name ? { type: 'Organization', name } : undefined;
+    return { type: 'Organization', name: name || 'Global AI News Editorial Desk' };
   }
-  const person = authorRecords.find((author) => author.slug === story.author);
-  return person ? { type: 'Person', name: person.name, slug: person.slug } : undefined;
+  const person = authorRecords.find(
+    (author) => author.slug === story.author && author.verifiedForPublication === true,
+  );
+  return person
+    ? { type: 'Person', name: person.name, slug: person.slug }
+    : { type: 'Organization', name: 'Global AI News Editorial Desk' };
 }
 
 export let sources: Source[] = [

@@ -1,6 +1,16 @@
 import React from 'react';
 import type { Source, Story } from '@/content';
 
+function sourceSpecificUrl(url: string): string | undefined {
+  try {
+    const parsed = new URL(url);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return undefined;
+    return parsed.pathname === '/' && !parsed.search && !parsed.hash ? undefined : url;
+  } catch {
+    return undefined;
+  }
+}
+
 function CitedText({
   text,
   story,
@@ -33,11 +43,9 @@ function CitedText({
     return (
       <a
         key={`${sourceSlug}-${index}`}
-        href={source.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`Source ${citationNumber}: ${source.name} (opens in a new tab)`}
-        className="mx-0.5 inline-flex align-super font-mono text-[0.72em] font-semibold text-primary underline decoration-primary/40 underline-offset-2"
+        href={`#source-${citationNumber}`}
+        aria-label={`Source ${citationNumber}: ${source.name}, jump to citation details`}
+        className="mx-0.5 inline-flex min-h-7 min-w-7 items-center justify-center px-1 align-super font-mono text-[0.72em] font-semibold text-primary underline decoration-primary/40 underline-offset-2"
       >
         [{citationNumber}]
       </a>
@@ -119,9 +127,14 @@ export function StorySourceList({
       <ol className="mt-4 grid gap-3">
         {resolvedSources.map((source) => {
           const citationNumber = story.sources.indexOf(source.slug) + 1;
+          const externalUrl = sourceSpecificUrl(source.url);
           return (
             <li key={source.slug} id={`source-${citationNumber}`} className="border-b border-foreground/15 pb-3 text-sm">
-              <a href={source.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+              <a
+                href={externalUrl ?? `/source/${source.slug}/`}
+                {...(externalUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                className="block min-h-11 py-1 hover:text-primary"
+              >
                 <span className="mr-2 font-mono text-primary">[{citationNumber}]</span>
                 {source.name}
                 <span className="mt-1 block text-xs text-muted-foreground">
@@ -131,6 +144,7 @@ export function StorySourceList({
                   {source.accessed ? ` · Accessed ${source.accessed}` : ''}
                 </span>
               </a>
+              {!externalUrl && <p role="note" className="mt-2 border-l-2 border-accent pl-3 text-xs leading-5 text-muted-foreground">The maintained URL does not identify a source-specific document. Open the citation record for its scope and limitations.</p>}
               {source.scopeNote && (
                 <p className="mt-2 max-w-3xl text-xs leading-5 text-muted-foreground">{source.scopeNote}</p>
               )}

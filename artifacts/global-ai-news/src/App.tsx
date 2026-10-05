@@ -7,28 +7,30 @@ import { NewsroomProvider } from '@/newsroom';
 import { ThemeProvider, type Theme } from '@/theme';
 import { Router, Route, Switch, useLocation } from 'wouter';
 import NotFound from '@/pages/not-found';
-import {
-  AmpArticlePage,
-  ArticlePage,
-  AskPage,
-  BriefPage,
-  EditorialInputPage,
-  EntityPage,
-  FocusIndexPage,
-  HomePage,
-  IndiaPage,
-  IndustryPage,
-  ResearchPage,
-  SearchPage,
-  SignalsPage,
-  TimelinePage,
-  TopicPage,
-} from '@/pages/public';
-import { ReportsIndexPage } from '@/pages/reports-index';
-import { DataProductPage, ResearchIndexPage, ResearchRecordPage, SourceRecordPage, TopicsIndexPage } from '@/pages/authority-pages';
-
 const queryClient = new QueryClient();
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const HomePage = lazy(() => import('./pages/public').then((module) => ({ default: module.HomePage })));
+const BriefPage = lazy(() => import('./pages/public').then((module) => ({ default: module.BriefPage })));
+const SearchPage = lazy(() => import('./pages/public').then((module) => ({ default: module.SearchPage })));
+const SignalsPage = lazy(() => import('./pages/public').then((module) => ({ default: module.SignalsPage })));
+const ResearchPage = lazy(() => import('./pages/public').then((module) => ({ default: module.ResearchPage })));
+const IndustryPage = lazy(() => import('./pages/public').then((module) => ({ default: module.IndustryPage })));
+const FocusIndexPage = lazy(() => import('./pages/public').then((module) => ({ default: module.FocusIndexPage })));
+const IndiaPage = lazy(() => import('./pages/public').then((module) => ({ default: module.IndiaPage })));
+const AskPage = lazy(() => import('./pages/public').then((module) => ({ default: module.AskPage })));
+const ArticlePage = lazy(() => import('./pages/public').then((module) => ({ default: module.ArticlePage })));
+const AmpArticlePage = lazy(() => import('./pages/public').then((module) => ({ default: module.AmpArticlePage })));
+const TopicPage = lazy(() => import('./pages/public').then((module) => ({ default: module.TopicPage })));
+const EntityPage = lazy(() => import('./pages/public').then((module) => ({ default: module.EntityPage })));
+const TimelinePage = lazy(() => import('./pages/public').then((module) => ({ default: module.TimelinePage })));
+const EditorialInputPage = lazy(() => import('./pages/public').then((module) => ({ default: module.EditorialInputPage })));
+const ReportsIndexPage = lazy(() => import('./pages/reports-index').then((module) => ({ default: module.ReportsIndexPage })));
+const ResearchIndexPage = lazy(() => import('./pages/authority-pages').then((module) => ({ default: module.ResearchIndexPage })));
+const ResearchRecordPage = lazy(() => import('./pages/authority-pages').then((module) => ({ default: module.ResearchRecordPage })));
+const DataIndexPage = lazy(() => import('./pages/authority-pages').then((module) => ({ default: module.DataIndexPage })));
+const DataProductPage = lazy(() => import('./pages/authority-pages').then((module) => ({ default: module.DataProductPage })));
+const SourceRecordPage = lazy(() => import('./pages/authority-pages').then((module) => ({ default: module.SourceRecordPage })));
+const TopicsIndexPage = lazy(() => import('./pages/authority-pages').then((module) => ({ default: module.TopicsIndexPage })));
 const ClerkProviderWithRoutes = lazy(() => import('./clerk-routes').then((module) => ({
   default: module.ClerkProviderWithRoutes,
 })));
@@ -61,6 +63,7 @@ function AppRoutes() {
     <Route path="/signals" component={SignalsPage} />
     <Route path="/research"><ResearchIndexPage /></Route>
     <Route path="/research/:slug" component={ResearchRecordPage} />
+    <Route path="/data"><DataIndexPage /></Route>
     <Route path="/data/:slug" component={DataProductPage} />
     <Route path="/source/:slug" component={SourceRecordPage} />
     <Route path="/essays"><ResearchPage essay /></Route>
@@ -95,11 +98,9 @@ function AppRoutes() {
   </Switch>;
 
   return <ErrorBoundary resetKey={location}>
-    {needsClerk ? (
-      <Suspense fallback={<main role="status" className="flex min-h-[100dvh] items-center justify-center bg-background p-6 text-sm text-muted-foreground">Loading editor workspace…</main>}>
-        <ClerkProviderWithRoutes>{routes}</ClerkProviderWithRoutes>
-      </Suspense>
-    ) : routes}
+    <Suspense fallback={<main role="status" className="flex min-h-[100dvh] items-center justify-center bg-background p-6 text-sm text-muted-foreground">{needsClerk ? 'Loading editor workspace…' : 'Loading page…'}</main>}>
+      {needsClerk ? <ClerkProviderWithRoutes>{routes}</ClerkProviderWithRoutes> : routes}
+    </Suspense>
   </ErrorBoundary>;
 }
 

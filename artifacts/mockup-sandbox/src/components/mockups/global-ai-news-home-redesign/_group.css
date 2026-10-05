@@ -1,0 +1,188 @@
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/dm-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/dm-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/dm-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/dm-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fonts/dm-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fonts/dm-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/dm-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/dm-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face { font-family: 'DM Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url('./fonts/dm-mono-400.woff2') format('woff2'); }
+@font-face { font-family: 'DM Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url('./fonts/dm-mono-500.woff2') format('woff2'); }
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/instrument-serif-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/instrument-serif-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/instrument-serif-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/instrument-serif-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --background: 45 30% 95%;
+  --foreground: 204 21% 8%;
+  --border: 50 7% 77%;
+  --input: 50 7% 77%;
+  --ring: 218 82% 46%;
+  --card: 0 0% 100%;
+  --surface: 0 0% 100%;
+  --surface-muted: 48 15% 91%;
+  --card-foreground: 204 21% 8%;
+  --primary: 218 82% 46%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 214 24% 92%;
+  --secondary-foreground: 215 27% 15%;
+  --muted: 55 15% 90%;
+  --muted-foreground: 204 5% 37%;
+  --accent: 43 76% 60%;
+  --accent-foreground: 204 21% 8%;
+  --destructive: 4 47% 43%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 155 45% 29%;
+  --warning: 28 64% 38%;
+  --danger: 4 47% 43%;
+  --primary-border: 218 82% 40%;
+  --secondary-border: 214 18% 78%;
+  --sidebar: 45 30% 95%;
+  --sidebar-foreground: 204 21% 8%;
+  --sidebar-border: 50 7% 77%;
+  --sidebar-accent: 214 24% 92%;
+  --sidebar-accent-foreground: 215 27% 15%;
+  --editorial-visual-bg: 202 35% 16%;
+  --editorial-visual-fg: 45 24% 95%;
+  --editorial-visual-muted: 201 18% 78%;
+  --editorial-visual-rule: 201 19% 52%;
+  --editorial-visual-accent: 43 76% 60%;
+  --app-font-sans: 'DM Sans', sans-serif;
+  --app-font-serif: 'Instrument Serif', Georgia, serif;
+  --app-font-mono: 'DM Mono', monospace;
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+  --radius: 0.15rem;
+}
+.dark {
+  --background: 204 21% 8%;
+  --foreground: 45 25% 96%;
+  --border: 200 8% 31%;
+  --input: 200 8% 31%;
+  --card: 204 18% 12%;
+  --surface: 204 18% 12%;
+  --surface-muted: 210 16% 18%;
+  --card-foreground: 45 25% 96%;
+  --primary: 218 100% 74%;
+  --primary-foreground: 204 21% 8%;
+  --secondary: 210 16% 19%;
+  --secondary-foreground: 45 25% 96%;
+  --muted: 202 12% 19%;
+  --muted-foreground: 201 10% 72%;
+  --accent: 43 72% 62%;
+  --accent-foreground: 204 21% 8%;
+  --success: 155 40% 62%;
+  --warning: 28 70% 62%;
+  --danger: 4 65% 66%;
+  --ring: 218 100% 74%;
+  --primary-border: 218 100% 78%;
+  --secondary-border: 200 8% 38%;
+  --sidebar: 204 18% 12%;
+  --sidebar-foreground: 45 25% 96%;
+  --sidebar-border: 200 8% 31%;
+  --sidebar-accent: 210 16% 19%;
+  --sidebar-accent-foreground: 45 25% 96%;
+  --editorial-visual-bg: 204 24% 11%;
+  --editorial-visual-fg: 45 25% 96%;
+  --editorial-visual-muted: 201 18% 78%;
+  --editorial-visual-rule: 201 19% 52%;
+  --editorial-visual-accent: 43 72% 62%;
+}
+.eyebrow { font-family: var(--app-font-mono); font-size: .68rem; letter-spacing: .11em; text-transform: uppercase; }
+.display { font-family: var(--app-font-serif); }
+.ticker-track { animation: ticker 28s linear infinite; }
+.editorial-visual { position: relative; background: radial-gradient(circle at 78% 20%, hsl(var(--editorial-visual-accent) / .12), transparent 24%), hsl(var(--editorial-visual-bg)); color: hsl(var(--editorial-visual-fg)); }
+.editorial-visual::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .22; background: linear-gradient(120deg, transparent 0 42%, hsl(var(--editorial-visual-accent) / .12) 42.2%, transparent 42.5% 100%); }
+.editorial-visual-ring { border-color: hsl(var(--editorial-visual-rule) / .5); }
+.editorial-visual-accent { border-color: hsl(var(--editorial-visual-accent) / .7); background-color: hsl(var(--editorial-visual-accent) / .7); }
+.editorial-visual-rule { background-color: hsl(var(--editorial-visual-rule) / .6); }
+.editorial-visual-muted { color: hsl(var(--editorial-visual-muted)); }
+.editorial-visual-caption { border-color: hsl(var(--editorial-visual-rule)); color: hsl(var(--editorial-visual-muted)); }
+.section-label { min-height: 2rem; }
+button, a { -webkit-tap-highlight-color: transparent; }

@@ -3,6 +3,7 @@ import { Link } from '@/components/canonical-link';
 import { Footer, Header, SectionLabel, SeoHead } from '@/components/site';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { formatEditorialDate } from '@/editorial-date';
+import { getStoryAuthorIdentity, getStoryReadTime } from '@/content';
 
 const container = 'editorial-page mx-auto max-w-[1440px] px-5 md:px-10';
 
@@ -13,10 +14,10 @@ export function ReportsIndexPage() {
     .sort((a, b) => b.date.localeCompare(a.date));
   const featuredReport = reports[0];
   const researchRecords = snapshot.researchRecords
-    .filter((record) => record.status === 'published')
+    .filter((record) => record.status === 'published' && snapshot.stories.some((story) => story.slug === record.storySlug))
     .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
   const dataProducts = snapshot.dataProducts
-    .filter((product) => product.status === 'published')
+    .filter((product) => product.status === 'published' && product.storySlugs.some((slug) => snapshot.stories.some((story) => story.slug === slug)))
     .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
   const indexableTopics = snapshot.topics.filter((topic) => topic.indexable);
   const reportEntityKinds = ['company', 'lab', 'model', 'person', 'technology', 'institution', 'policy', 'dataset', 'infrastructure'];
@@ -74,13 +75,14 @@ export function ReportsIndexPage() {
             {reports.length ? (
               <div className="border-t border-foreground/15">
                 {reports.map((story, index) => {
-                  const author = snapshot.authors.find((candidate) => candidate.slug === story.author);
-                  const storyResearch = snapshot.researchRecords.filter((record) => record.status === 'published' && (record.storySlug === story.slug || record.relatedStorySlugs.includes(story.slug)));
-                  const storyData = snapshot.dataProducts.filter((product) => product.status === 'published' && product.storySlugs.includes(story.slug));
+                  const author = getStoryAuthorIdentity(story, snapshot.authors);
+                  const storyResearch = researchRecords.filter((record) => record.storySlug === story.slug || record.relatedStorySlugs.includes(story.slug));
+                  const storyData = dataProducts.filter((product) => product.storySlugs.includes(story.slug));
                   const storyTopics = snapshot.topics.filter((topic) => topic.indexable && topic.storySlugs.includes(story.slug));
                   const storyEntities = story.entities.flatMap((slug) => {
                     const entity = snapshot.entities.find((candidate) => candidate.slug === slug);
-                    return entity && reportEntityKinds.includes(entity.kind) ? [entity] : [];
+                    const author = entity?.kind === 'person' ? snapshot.authors.find((candidate) => candidate.slug === slug) : undefined;
+                    return entity && reportEntityKinds.includes(entity.kind) && (!author || author.verifiedForPublication === true) ? [entity] : [];
                   });
                   return (
                     <article
@@ -98,7 +100,7 @@ export function ReportsIndexPage() {
                             <span aria-hidden="true" className="h-1 w-1 rounded-full bg-accent" />
                             <span className="text-xs text-muted-foreground">{story.category}</span>
                             <span aria-hidden="true" className="h-1 w-1 rounded-full bg-foreground/30" />
-                            <span className="text-xs text-muted-foreground">{story.readTime}</span>
+                            <span className="text-xs text-muted-foreground">{getStoryReadTime(story)}</span>
                           </div>
                           <Link
                             data-testid={`link-report-${story.slug}`}

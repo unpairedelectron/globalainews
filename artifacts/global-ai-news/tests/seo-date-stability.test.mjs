@@ -141,9 +141,12 @@ test('unknown article URLs are noindex instead of inheriting an unrelated story'
 
 test('author profile routes emit ProfilePage structured data from maintained author records', () => {
   const author = authors[0];
+  const authorRecords = authors.map((candidate) => candidate.slug === author.slug
+    ? { ...candidate, verifiedForPublication: true }
+    : candidate);
   const stories = getPublishedStories(new Date('2026-10-01T00:00:00.000Z'));
-  const metadata = getSeoMetadata(`/person/${author.slug}`, stories);
-  const profilePage = JSON.parse(getStructuredData(metadata, stories, authors))
+  const metadata = getSeoMetadata(`/person/${author.slug}`, stories, sources, { authors: authorRecords });
+  const profilePage = JSON.parse(getStructuredData(metadata, stories, authorRecords))
     ['@graph']
     .find((entry) => entry['@type'] === 'ProfilePage');
 

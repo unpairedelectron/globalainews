@@ -4,12 +4,23 @@ import { Link } from '@/components/canonical-link';
 import { Footer, Header, SectionLabel, SeoHead } from '@/components/site';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { formatEditorialDate } from '@/editorial-date';
+import { getStoryAuthorIdentity } from '@/content';
+import { getResearchSeoTitle } from '@/seo-metadata';
 import { useParams } from 'wouter';
 import NotFound from '@/pages/not-found';
 
 const container = 'editorial-page mx-auto max-w-[1440px] px-5 md:px-10';
-const shell = ({ children }: { children: ReactNode }) => <><Header />{children}<Footer /></>;
+const shell = ({ children }: { children: ReactNode }) => <><a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-primary focus:px-4 focus:py-3 focus:text-primary-foreground">Skip to main content</a><Header /><div id="main-content" tabIndex={-1} className="scroll-mt-20">{children}</div><Footer /></>;
 const date = (value?: string | null) => value ? formatEditorialDate(value) : 'Date not stated';
+function sourceSpecificUrl(url: string): string | undefined {
+  try {
+    const parsed = new URL(url);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return undefined;
+    return parsed.pathname === '/' && !parsed.search && !parsed.hash ? undefined : url;
+  } catch {
+    return undefined;
+  }
+}
 
 function TitleBlock({ eyebrow, title, dek }: { eyebrow: string; title: string; dek?: string }) {
   return <header className="border-b border-foreground/20 py-14 md:py-20">
@@ -35,6 +46,8 @@ function LinkList({ title, links }: { title: string; links: { href: string; labe
 function entityHref(snapshot: ReturnType<typeof useNewsroomSnapshot>, slug: string) {
   const entity = snapshot.entities.find((item) => item.slug === slug);
   if (!entity) return undefined;
+  const author = entity.kind === 'person' ? snapshot.authors.find((item) => item.slug === slug) : undefined;
+  if (author && author.verifiedForPublication !== true) return undefined;
   const routeKinds = ['company', 'lab', 'model', 'person', 'technology', 'institution', 'policy', 'dataset', 'infrastructure'];
   return routeKinds.includes(entity.kind) ? { href: `/${entity.kind}/${slug}`, label: entity.name, detail: entity.strapline } : undefined;
 }
@@ -77,7 +90,9 @@ function productLinks(snapshot: ReturnType<typeof useNewsroomSnapshot>, slugs: s
 
 export function ResearchIndexPage() {
   const snapshot = useNewsroomSnapshot();
-  const records = snapshot.researchRecords.filter((record) => record.status === 'published').sort((a, b) => b.date.localeCompare(a.date));
+  const records = snapshot.researchRecords
+    .filter((record) => record.status === 'published' && snapshot.stories.some((story) => story.slug === record.storySlug))
+    .sort((a, b) => b.date.localeCompare(a.date));
   return <>{shell({ children: <><SeoHead title="Research — Global AI News" description="Published research records with methodology, findings, limitations and source trails." path="/research" />
     <main className={container}>
       <TitleBlock eyebrow="Global AI News · Research register" title="Research, made traceable." dek="Published research records show the question, method, evidence and limits behind our work. Follow the record into the reporting, data and sources." />
@@ -94,18 +109,48 @@ export function ResearchIndexPage() {
   </> })}</>;
 }
 
+export function DataIndexPage() {
+  const snapshot = useNewsroomSnapshot();
+  const products = snapshot.dataProducts
+    .filter((product) => product.status === 'published' && product.storySlugs.some((slug) => snapshot.stories.some((story) => story.slug === slug)))
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  return <>{shell({ children: <><SeoHead title="Data products — Global AI News" description="Published datasets and dated observations with methods, limitations and source trails." path="/data" />
+    <main className={container}>
+      <TitleBlock eyebrow="Global AI News · Data register" title="Data you can trace." dek="Published data products show what is measured, how observations are grouped and which source records support them. Dated claims are not live inventories." />
+      <section className="grid gap-10 py-12 md:grid-cols-[.55fr_1.45fr] md:py-16">
+        <aside><SectionLabel aside={`${products.length} published`}>The register</SectionLabel><p className="max-w-sm text-sm leading-7 text-muted-foreground">Each product links back to its reporting and source records. Read the unit, methodology and limitations before comparing observations.</p></aside>
+        <div>{products.length ? products.map((product) => {
+          const linkedSources = product.sourceSlugs.filter((slug) => snapshot.sources.some((source) => source.slug === slug)).length;
+          return <article key={product.slug} data-testid={`card-data-${product.slug}`} className="border-t border-foreground/15 py-7">
+            <p className="eyebrow text-primary">Dataset · updated {date(product.updatedAt)}</p>
+            <Link href={`/data/${product.slug}`} className="mt-3 block max-w-3xl font-serif text-3xl leading-[.96] hover:text-primary sm:text-4xl">{product.title}</Link>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{product.description}</p>
+            <p className="mt-4 text-xs text-muted-foreground">{product.observations.length} dated observations · {linkedSources} linked source records · unit: {product.unit}</p>
+          </article>;
+        }) : <div className="border border-dashed border-foreground/20 bg-surface-muted/50 p-8"><Database className="text-primary" size={22} /><h2 className="mt-5 font-serif text-3xl">No published data products yet.</h2><p className="mt-3 max-w-lg text-sm leading-6 text-muted-foreground">This index includes products marked published and linked to a published story in the current newsroom snapshot.</p></div>}</div>
+      </section>
+    </main>
+  </> })}</>;
+}
+
 export function ResearchRecordPage() {
   const { slug = '' } = useParams<{ slug: string }>();
   const snapshot = useNewsroomSnapshot();
-  const record = snapshot.researchRecords.find((item) => item.slug === slug && item.status === 'published');
+  const record = snapshot.researchRecords.find((item) =>
+    item.slug === slug &&
+    item.status === 'published' &&
+    snapshot.stories.some((story) => story.slug === item.storySlug),
+  );
   if (!record) return <NotFound />;
   const stories = [...new Set([record.storySlug, ...record.relatedStorySlugs])];
-  return <>{shell({ children: <><SeoHead title={`${record.title} — Global AI News Research`} description={record.researchQuestion} path={`/research/${record.slug}`} />
+  const linkedStory = snapshot.stories.find((story) => story.slug === record.storySlug);
+  const author = linkedStory ? getStoryAuthorIdentity(linkedStory, snapshot.authors) : { type: 'Organization' as const, name: 'Global AI News Editorial Desk' };
+  return <>{shell({ children: <><SeoHead title={getResearchSeoTitle(record.title)} description={record.researchQuestion} path={`/research/${record.slug}`} />
     <main className={`${container} max-w-[1240px]`}><nav aria-label="Breadcrumb" className="pt-8 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"><Link href="/research" className="hover:text-primary">Research</Link><span className="mx-2">/</span><span aria-current="page">{record.slug}</span></nav>
       <TitleBlock eyebrow={`Research record · ${record.provenance.replaceAll('-', ' ')} · ${record.status}`} title={record.title} dek={record.researchQuestion} />
       <div className="grid gap-12 py-12 md:grid-cols-[minmax(0,1fr)_340px]">
         <article className="space-y-10">
-          <section className="grid gap-5 border-b border-foreground/15 pb-7 sm:grid-cols-3"><div><p className="eyebrow text-muted-foreground">Published</p><p className="mt-2 text-sm">{date(record.date)}</p></div><div><p className="eyebrow text-muted-foreground">Last reviewed</p><p className="mt-2 text-sm">{date(record.updatedAt)}</p></div><div><p className="eyebrow text-muted-foreground">Author</p><p className="mt-2 text-sm">{snapshot.authors.find((a) => a.slug === record.authorSlug)?.name ?? 'Byline unavailable'}</p></div></section>
+          <section className="grid gap-5 border-b border-foreground/15 pb-7 sm:grid-cols-3"><div><p className="eyebrow text-muted-foreground">Published</p><p className="mt-2 text-sm">{date(record.date)}</p></div><div><p className="eyebrow text-muted-foreground">Last reviewed</p><p className="mt-2 text-sm">{date(record.updatedAt)}</p></div><div><p className="eyebrow text-muted-foreground">Author</p><p className="mt-2 text-sm">{author.name}</p></div></section>
           <section><SectionLabel>Findings</SectionLabel><ol className="grid gap-0">{record.findings.map((finding, index) => <li key={finding} className="grid grid-cols-[2.5rem_1fr] gap-3 border-b border-foreground/10 py-5"><span className="font-mono text-xs text-primary">{String(index + 1).padStart(2, '0')}</span><p className="max-w-3xl text-base leading-7">{finding}</p></li>)}</ol></section>
           <section className="grid gap-8 border-y border-foreground/15 py-7 sm:grid-cols-2"><div><SectionLabel>Methodology</SectionLabel><p className="text-sm leading-7 text-muted-foreground">{record.methodology}</p></div><div><SectionLabel>Dataset description</SectionLabel><p className="text-sm leading-7 text-muted-foreground">{record.datasetDescription}</p></div></section>
           <section><SectionLabel>Limitations</SectionLabel><ul className="grid gap-3">{record.limitations.map((limitation) => <li key={limitation} className="border-l-2 border-accent pl-4 text-sm leading-6 text-muted-foreground">{limitation}</li>)}</ul></section>
@@ -131,10 +176,14 @@ function ObservationStatus({ label, value }: { label: string; value: string }) {
 export function DataProductPage() {
   const { slug = '' } = useParams<{ slug: string }>();
   const snapshot = useNewsroomSnapshot();
-  const product = snapshot.dataProducts.find((item) => item.slug === slug && item.status === 'published');
+  const product = snapshot.dataProducts.find((item) =>
+    item.slug === slug &&
+    item.status === 'published' &&
+    item.storySlugs.some((storySlug) => snapshot.stories.some((story) => story.slug === storySlug)),
+  );
   if (!product) return <NotFound />;
   return <>{shell({ children: <><SeoHead title={`${product.title} — Global AI News Data`} description={product.description} path={`/data/${product.slug}`} />
-    <main className={`${container} max-w-[1320px]`}><nav aria-label="Breadcrumb" className="pt-8 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"><Link href="/research" className="hover:text-primary">Research</Link><span className="mx-2">/</span><span aria-current="page">Data product</span></nav>
+    <main className={`${container} max-w-[1320px]`}><nav aria-label="Breadcrumb" className="pt-8 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"><Link href="/data" className="hover:text-primary">Data</Link><span className="mx-2">/</span><span aria-current="page">Data product</span></nav>
       <TitleBlock eyebrow={`Data product · ${product.evidenceType.replaceAll('-', ' ')}`} title={product.title} dek={product.description} />
       <section className="grid gap-6 border-b border-foreground/15 py-7 sm:grid-cols-3"><div><p className="eyebrow text-muted-foreground">Last updated</p><p className="mt-2 text-sm">{date(product.updatedAt)}</p></div><div><p className="eyebrow text-muted-foreground">Observation unit</p><p className="mt-2 text-sm">{product.unit}</p></div><div><p className="eyebrow text-muted-foreground">Evidence framing</p><p className="mt-2 text-sm">Dated public-source claims</p></div></section>
       <section className="py-10"><div className="flex flex-wrap items-end justify-between gap-4"><div><SectionLabel aside={`${product.observations.length} observations`}>Recorded observations</SectionLabel><p className="max-w-2xl text-sm leading-6 text-muted-foreground">These are dated claims, not a live inventory. Stages are kept distinct; announcement does not establish installation, deployment, access or scheduling.</p></div><Database className="mb-1 text-primary" size={24} strokeWidth={1.4} /></div>
@@ -173,7 +222,7 @@ export function SourceRecordPage() {
       ] as [string, string | undefined][]).filter(([, value]) => value).map(([label, value]) => <div key={label} className="border-t border-foreground/15 py-4"><dt className="eyebrow text-muted-foreground">{label}</dt><dd className="mt-2 text-sm capitalize">{value}</dd></div>)}</dl>
         {source.scopeNote && <div className="mt-7 border-l-2 border-accent pl-5"><p className="eyebrow text-muted-foreground">Scope note</p><p className="mt-2 text-sm leading-7">{source.scopeNote}</p></div>}
         {source.notes?.length ? <div className="mt-8"><SectionLabel>Editorial notes</SectionLabel><ul className="grid gap-3">{source.notes.map((note) => <li key={note} className="text-sm leading-6 text-muted-foreground">{note}</li>)}</ul></div> : null}
-        <a href={source.url} target="_blank" rel="noreferrer" className="mt-8 inline-flex items-center gap-2 border border-primary px-4 py-3 text-sm text-primary hover:bg-primary hover:text-primary-foreground">Visit original source <ArrowUpRight size={15} /></a>
+        {sourceSpecificUrl(source.url) ? <a href={sourceSpecificUrl(source.url)} target="_blank" rel="noreferrer" className="mt-8 inline-flex min-h-11 items-center gap-2 border border-primary px-4 text-sm text-primary hover:bg-primary hover:text-primary-foreground">Visit cited source <ArrowUpRight size={15} /></a> : <p role="note" className="mt-8 border-l-2 border-accent pl-4 text-sm leading-6 text-muted-foreground">This source record does not contain a usable source-specific web address. Treat the citation as incomplete until the record is corrected.</p>}
         <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground"><ShieldCheck size={14} />This citation record is useful for readers, but is not indexed as a standalone landing page.</p>
       </article><aside className="space-y-8">
         <LinkList title="Cited by reporting" links={storyLinks(snapshot, citingStories.map((story) => story.slug))} />

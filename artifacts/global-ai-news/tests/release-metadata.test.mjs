@@ -171,11 +171,19 @@ try {
     (author) => author.slug === releaseStory.author,
   );
   assert.ok(releaseAuthor, 'release article has no author attribution record');
-  assert.ok(
-    document.includes(`/person/${releaseAuthor.slug}/`) &&
-      document.includes(releaseAuthor.name),
-    'the first response is missing the API-backed author attribution',
-  );
+  if (releaseAuthor.verifiedForPublication === true) {
+    assert.ok(
+      document.includes(`/person/${releaseAuthor.slug}/`) &&
+        document.includes(releaseAuthor.name),
+      'the first response is missing the verified API-backed author attribution',
+    );
+  } else {
+    assert.ok(
+      document.includes('<strong class="font-semibold">Global AI News Editorial Desk</strong>') &&
+        !document.includes(`href="/person/${releaseAuthor.slug}/"`),
+      'unverified authors should use the editorial desk byline and have no public profile link',
+    );
+  }
   const releaseSource = apiContent.sources.find(
     (source) => releaseStory.sources.includes(source.slug),
   );
@@ -184,15 +192,21 @@ try {
     document.includes(releaseSource.name),
     'the first response is missing the API-backed source attribution',
   );
-  const authorPage = await readFile(
-    path.join(outputDir, 'person', releaseAuthor.slug, 'index.html'),
-    'utf8',
-  );
-  assert.match(
-    authorPage,
-    /"@type":"ProfilePage"/,
-    'author page is missing ProfilePage structured data',
-  );
+  const authorPagePath = path.join(outputDir, 'person', releaseAuthor.slug, 'index.html');
+  if (releaseAuthor.verifiedForPublication === true) {
+    const authorPage = await readFile(authorPagePath, 'utf8');
+    assert.match(
+      authorPage,
+      /"@type":"ProfilePage"/,
+      'verified author page is missing ProfilePage structured data',
+    );
+  } else {
+    await assert.rejects(
+      readFile(authorPagePath, 'utf8'),
+      { code: 'ENOENT' },
+      'unverified author profile should not be included in public release output',
+    );
+  }
 
   async function assertBuildFails(metadataUrl, message) {
     const failedOutputDir = await mkdtemp(

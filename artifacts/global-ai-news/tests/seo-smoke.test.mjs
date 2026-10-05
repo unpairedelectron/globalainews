@@ -681,7 +681,7 @@ async function renderRoute(route, width, height) {
   const expectedPath = new URL(url).pathname;
   await waitForBrowserCondition(
     cdp,
-    `location.pathname === ${JSON.stringify(expectedPath)} && document.readyState !== 'loading' && Boolean(document.querySelector('main'))`,
+    `location.pathname === ${JSON.stringify(expectedPath)} && document.readyState !== 'loading' && Boolean(document.querySelector('main h1')?.textContent?.trim())`,
     `${route}: initial page content did not render in Chromium.`,
   );
   return await evaluateBrowser(cdp, 'document.documentElement.outerHTML');
@@ -2522,17 +2522,34 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
     const articleData = structuredData['@graph'].find((entry) => entry['@type'] === 'NewsArticle');
     const slug = route.split('/')[2];
     const expectedStory = stories.find((story) => story.slug === slug);
-    const expectedAuthor = expectedStory && authors.find((author) => author.slug === expectedStory.author);
+    const expectedAuthor = expectedStory && authors.find(
+      (author) => author.slug === expectedStory.author && author.verifiedForPublication === true,
+    );
+    const expectedOrganizationByline = expectedStory?.authorType === 'organization'
+      ? expectedStory.authorName?.trim() || 'Global AI News Editorial Desk'
+      : 'Global AI News Editorial Desk';
     const expectedModifiedDate =
       expectedStory?.dateModified &&
       expectedStory.dateModified >= expectedStory.date
         ? expectedStory.dateModified
         : undefined;
     assert.equal(articleData.image, metaContent(document, 'property', 'og:image'), `${route}: JSON-LD image does not match social preview`);
-    assert.equal(articleData.author['@type'], 'Person', `${route}: JSON-LD author should identify the maintained story author`);
-    assert.ok(expectedStory && expectedAuthor, `${route}: maintained story record is missing for JSON-LD verification`);
-    assert.equal(articleData.author.name, expectedAuthor.name, `${route}: JSON-LD author drifted from the maintained story record`);
-    assert.equal(articleData.author.url, `${site}/person/${expectedAuthor.slug}/`, `${route}: JSON-LD author URL drifted from the maintained story record`);
+    assert.ok(expectedStory, `${route}: maintained story record is missing for JSON-LD verification`);
+    assert.equal(
+      articleData.author['@type'],
+      expectedAuthor ? 'Person' : 'Organization',
+      `${route}: JSON-LD author must match the verified-person or organization fallback policy`,
+    );
+    assert.equal(
+      articleData.author.name,
+      expectedAuthor?.name ?? expectedOrganizationByline,
+      `${route}: JSON-LD author drifted from the maintained story record`,
+    );
+    assert.equal(
+      articleData.author.url,
+      expectedAuthor ? `${site}/person/${expectedAuthor.slug}/` : site,
+      `${route}: JSON-LD author URL does not match its public attribution`,
+    );
     assert.equal(articleData.datePublished, expectedStory.date, `${route}: JSON-LD publication date drifted from the maintained story record`);
     assert.equal(articleData.dateModified, expectedModifiedDate, `${route}: JSON-LD modification date is not publication-safe`);
     const expectedVisibleUpdatedDate =
@@ -2753,12 +2770,17 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   }
   const publicNoindexRoutes = [
     '/search',
-    '/archive',
     '/about-us',
     '/code-of-ethics',
     '/corrections',
     '/contact-us',
   ];
+  const editorialPageCopy = {
+    '/about-us': /Who speaks for the publication/,
+    '/code-of-ethics': /AI-assisted work/,
+    '/corrections': /public correction inbox has not yet been approved/i,
+    '/contact-us': /verified public contact address has not been supplied/i,
+  };
   for (const route of publicNoindexRoutes) {
     assert.equal(
       metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
@@ -2773,10 +2795,22 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     if (route === '/search') {
       assert.match(body, /name="q"/, 'search route is missing a usable initial HTML search form');
     } else {
-      assert.match(body, /data-testid="editorial-input-required"/, `${route}: placeholder must clearly require editorial input`);
+      assert.match(body, editorialPageCopy[route], `${route}: shared editorial copy is missing`);
       assert.doesNotMatch(body, /Latest stories/, `${route}: editorial-input placeholder must not present unrelated stories`);
     }
   }
+  const archiveMetadata = metadataManifest.routes.find((metadata) => metadata.path === '/archive');
+  assert.ok(archiveMetadata, 'published archive is missing public SEO metadata');
+  assert.notEqual(archiveMetadata.indexable, false, 'published archive must remain indexable');
+  assert.ok(routes.includes('/archive'), 'published archive is missing from the sitemap');
+  const { response: archiveResponse, body: archiveBody } = await fetchText('/archive');
+  assert.equal(archiveResponse.status, 200, 'published archive is not reachable');
+  assert.match(archiveBody, /data-testid="published-archive"/, 'archive does not render its published-story index');
+  assert.ok(
+    archiveBody.includes(`href="/article/${newsroomContent.stories[0].slug}/`),
+    'archive is missing the first story from the published newsroom snapshot',
+  );
+  assert.doesNotMatch(archiveBody, /name="robots" content="noindex,follow"/);
   const topicsMetadata = metadataManifest.routes.find((metadata) => metadata.path === '/topics');
   assert.ok(topicsMetadata, 'Topics index is missing public SEO metadata');
   assert.notEqual(topicsMetadata.indexable, false, 'Topics index must be indexable when connected topic records exist');
@@ -2894,7 +2928,9 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       if (route.startsWith('/article/')) {
         const slug = route.split('/')[2];
         const story = newsroomContent.stories.find((candidate) => candidate.slug === slug);
-        const author = newsroomContent.authors.find((candidate) => candidate.slug === story?.author);
+        const author = newsroomContent.authors.find(
+          (candidate) => candidate.slug === story?.author && candidate.verifiedForPublication === true,
+        );
         assert.ok(story, `${route}: published story is missing from the newsroom content snapshot`);
         assert.equal(
           linkHref(body, 'amphtml'),
@@ -2924,14 +2960,22 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
           assert.ok(body.includes(`href="/person/${author.slug}/"`), `${route}: verified author byline is not linked to the profile`);
           assert.ok(body.includes(author.name), `${route}: verified author name is missing from the byline`);
         } else {
-          assert.match(body, /Byline unavailable/, `${route}: missing author record should be explicit`);
+          const organizationByline = story.authorType === 'organization'
+            ? story.authorName?.trim() || 'Global AI News Editorial Desk'
+            : 'Global AI News Editorial Desk';
+          assert.ok(body.includes(organizationByline), `${route}: organization attribution is missing for an unverified author`);
+          assert.ok(!body.includes(`href="/person/${story.author}/"`), `${route}: unverified author is linked to a public profile`);
           assert.ok(!body.includes(story.author), `${route}: raw author slug was displayed`);
         }
         for (const sourceSlug of story.sources) {
           const source = newsroomContent.sources.find((candidate) => candidate.slug === sourceSlug);
           if (source) {
             assert.ok(body.includes(source.name), `${route}: verified source name is missing`);
-            assert.ok(body.includes(source.url.replaceAll('&', '&amp;')), `${route}: verified source URL is missing`);
+            const parsedSourceUrl = new URL(source.url);
+            const expectedSourceHref = parsedSourceUrl.pathname === '/' && !parsedSourceUrl.search && !parsedSourceUrl.hash
+              ? `/source/${source.slug}/`
+              : source.url.replaceAll('&', '&amp;');
+            assert.ok(body.includes(`href="${expectedSourceHref}"`), `${route}: specific source link or citation record is missing`);
           } else {
             assert.ok(!body.includes(sourceSlug), `${route}: unresolved source slug was displayed as a citation`);
           }

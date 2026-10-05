@@ -26,3 +26,9 @@ Initial-response and app-served SEO checks should share one route-aware primary 
 **Why:** The raw-HTML and hydrated-route smoke paths had separate expectations, and authority pages inheriting a linked article's preview image violated the existing article-only metadata contract.
 
 **How to apply:** Reuse the same route-type helper for both SEO checks, and keep article-only image and AMP assertions scoped to article routes.
+
+Only owner-verified contributors should receive personal bylines or indexable profiles; otherwise attribute the story to the organization. Keep trust pages non-indexable until the owner verifies the publication's contact and corrections channels and operating details. Do not invent identities, biographies, contact information, or procedures.
+
+**Why:** The available evidence does not establish contributor identities, biographies, or an approved public contact path; publishing those as facts would overstate what the newsroom can verify.
+
+**How to apply:** Apply this boundary whenever changing bylines, author profiles, trust-page content, route metadata, or release attribution. Ask the owner to verify missing details before making them public.

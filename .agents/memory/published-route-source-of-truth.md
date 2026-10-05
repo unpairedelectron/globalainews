@@ -32,3 +32,9 @@ The local link-audit server must model production ownership for root XML routes 
 **Why:** A build-only smoke server otherwise falls back to the SPA shell, so tests can report HTML as a successful root feed response even when the real web server correctly proxies the API.
 
 **How to apply:** Keep static-output and Vite-dev smoke checks explicit about which server they exercise, and verify root XML parity against the API endpoints.
+
+Do not change live editorial records, trigger publishing automation, or deploy without explicit user authorization. Use isolated fixtures for publication and release-flow checks.
+
+**Why:** The user requires approval before live editorial or release activity; workspace tests must not be mistaken for authorization to publish.
+
+**How to apply:** Keep code changes, builds, and simulated release tests local. Ask for authorization before any operation that mutates live editorial data, runs publishing automation, or deploys.

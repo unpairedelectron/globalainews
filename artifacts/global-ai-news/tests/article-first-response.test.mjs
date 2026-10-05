@@ -178,7 +178,7 @@ async function requestApi(route, options = {}) {
   return body;
 }
 
-async function createRelease(slug, title, publishAt, author = 'lena-hoff') {
+async function createRelease(slug, title, publishAt, author = 'lena-hoff', authorType) {
   const created = await requestApi('/api/newsroom/releases', {
     method: 'POST',
     body: JSON.stringify({
@@ -186,6 +186,7 @@ async function createRelease(slug, title, publishAt, author = 'lena-hoff') {
       slug,
       title,
       author,
+      ...(authorType ? { authorType } : {}),
       publishAt,
     }),
   });
@@ -406,13 +407,19 @@ async function assertContactAlias() {
   assert.equal(response.status, 308, '/contact must redirect to the approved pending route');
   assert.equal(response.headers.get('location'), '/contact-us');
 
-  for (const route of ['/about-us', '/code-of-ethics', '/corrections', '/contact-us']) {
+  const expectedCopy = {
+    '/about-us': /Who speaks for the publication/,
+    '/code-of-ethics': /AI-assisted work/,
+    '/corrections': /public correction inbox has not yet been approved/i,
+    '/contact-us': /verified public contact address has not been supplied/i,
+  };
+  for (const [route, copy] of Object.entries(expectedCopy)) {
     const destination = await fetch(`${webOrigin}${route}`);
     const html = await destination.text();
     assert.equal(destination.status, 200, `${route} must resolve to its pending page`);
     assert.equal(destination.headers.get('x-robots-tag'), 'noindex');
     assert.match(html, /name="robots" content="noindex,follow"/i);
-    assert.match(html, /data-testid="editorial-input-required"/);
+    assert.match(html, copy, `${route} must render its shared editorial copy`);
   }
 }
 
@@ -708,10 +715,17 @@ async function testRawArticleResponses() {
   assert.equal(ampHtml.match(/<title>([\s\S]*?)<\/title>/i)?.[1], story.title);
   assert.equal(ampHtml.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1], story.title);
 
-  assert.match(
-    html,
-    new RegExp(`<a href="/person/${escapeRegExp(story.author)}/"[^>]*>`),
-  );
+  const publicAuthor = publicContent.authors.find((author) => author.slug === story.author);
+  assert.ok(publicAuthor, 'published story must resolve its author record from the API snapshot');
+  if (publicAuthor.verifiedForPublication === true) {
+    assert.match(
+      html,
+      new RegExp(`<a href="/person/${escapeRegExp(story.author)}/"[^>]*>`),
+    );
+  } else {
+    assert.match(html, /By <strong class="font-semibold">Global AI News Editorial Desk<\/strong>/);
+    assert.doesNotMatch(html, new RegExp(`href="/person/${escapeRegExp(story.author)}/"`));
+  }
   assert.match(html, /Published <time\b/i);
   const publishedTime = html.match(/<time\b[^>]*datetime=["']([^"']+)["'][^>]*>([\s\S]*?)<\/time>/i);
   assert.equal(publishedTime?.[1], story.date);
@@ -727,8 +741,16 @@ async function testRawArticleResponses() {
   assert.equal(articleSchema.description, publishedDek);
   assert.equal(articleSchema.datePublished, story.date);
   assert.equal(articleSchema.mainEntityOfPage['@id'], canonical);
-  assert.equal(articleSchema.author.name, publicContent.authors.find((author) => author.slug === story.author).name);
-  assert.equal(articleSchema.author.url, `https://www.globalainews.in/person/${story.author}/`);
+  assert.equal(
+    articleSchema.author.name,
+    publicAuthor.verifiedForPublication === true ? publicAuthor.name : 'Global AI News Editorial Desk',
+  );
+  assert.equal(
+    articleSchema.author.url,
+    publicAuthor.verifiedForPublication === true
+      ? `https://www.globalainews.in/person/${story.author}/`
+      : 'https://www.globalainews.in',
+  );
   assert.equal(articleSchema.publisher.name, 'Global AI News');
   assert.equal(Object.hasOwn(articleSchema, 'dateModified'), false);
   assert.doesNotMatch(html, /property="article:modified_time"/);
@@ -745,11 +767,20 @@ async function testRawArticleResponses() {
   const missingAuthor = await getArticle(slugs.missingAuthor);
   const missingAuthorHtml = await missingAuthor.text();
   assert.equal(missingAuthor.status, 200);
-  assert.match(missingAuthorHtml, /Byline unavailable/);
+  assert.equal(
+    publicContent.authors.some((author) => author.slug === 'unlisted-fixture-author'),
+    false,
+  );
+  assert.match(
+    missingAuthorHtml,
+    /By <strong class="font-semibold">Global AI News Editorial Desk<\/strong>/,
+  );
+  assert.doesNotMatch(missingAuthorHtml, /href="\/person\/unlisted-fixture-author\//);
   assert.doesNotMatch(missingAuthorHtml, new RegExp(escapeRegExp('unlisted-fixture-author')));
   const missingAuthorSchema = articleJsonLd(missingAuthorHtml)['@graph']
     .find((item) => item['@type'] === 'NewsArticle');
-  assert.equal(Object.hasOwn(missingAuthorSchema, 'author'), false);
+  assert.equal(missingAuthorSchema.author['@type'], 'Organization');
+  assert.equal(missingAuthorSchema.author.name, 'Global AI News Editorial Desk');
 
   for (const candidate of [authorStory, oneSourceStory, multiSourceStory, relatedStory]) {
     const articleResponse = await getArticle(candidate.slug);
@@ -805,7 +836,13 @@ async function main() {
     const publishedAt = new Date(Date.now() - 120_000).toISOString();
     const futureAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
     await createRelease(slugs.published, publishedTitle, publishedAt);
-    await createRelease(slugs.missingAuthor, missingAuthorTitle, publishedAt, 'unlisted-fixture-author');
+    await createRelease(
+      slugs.missingAuthor,
+      missingAuthorTitle,
+      publishedAt,
+      'unlisted-fixture-author',
+      'person',
+    );
     await createRelease(slugs.scheduled, 'A scheduled article fixture', futureAt);
     await createRelease(slugs.draft, 'A draft article fixture', publishedAt);
     await createRelease(slugs.canceled, 'A canceled article fixture', publishedAt);
