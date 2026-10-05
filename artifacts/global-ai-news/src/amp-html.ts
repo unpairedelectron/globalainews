@@ -98,6 +98,7 @@ export function renderAmpArticleDocument(
       .citation { display: inline-block; min-width: 28px; min-height: 28px; padding: 4px 2px; color: var(--teal); font-size: .7em; text-align: center; vertical-align: super; margin: 0 2px; }
       .citation-missing { color: #9b2c20; font: 12px Arial, sans-serif; }
       .byline { border-block: 1px solid rgba(19,38,50,.2); padding: 16px 0; margin: 24px 0 40px; font-size: 13px; }
+      .byline-description { display: block; margin-top: 6px; color: rgba(19,38,50,.68); font: 12px/1.55 Arial, sans-serif; }
       .hero { background: #193b3e; color: white; padding: 42px 24px; border-radius: 16px; font-family: Georgia, serif; font-size: 34px; }
       article { font-family: Georgia, serif; font-size: 20px; line-height: 1.7; }
       article h2 { font-size: 34px; line-height: 1; font-weight: 400; margin-top: 52px; }
@@ -121,7 +122,7 @@ export function renderAmpArticleDocument(
       <div class="kicker">${escapeHtml(story.contentType ?? story.category)} · ${escapeHtml(getStoryReadTime(story))}</div>
       <h1>${escapeHtml(story.title)}</h1>
       <p class="dek">${escapeHtml(story.dek)}</p>
-      <div class="byline">${author ? `<strong>${escapeHtml(author.name)}</strong>${personAuthor ? ` · ${escapeHtml(personAuthor.role)}` : ''}` : '<strong>Byline unavailable</strong>'} · ${formatPublishedDate(story.date)}</div>
+      <div class="byline">${author ? `<strong>${escapeHtml(author.name)}</strong>${personAuthor ? ` · ${escapeHtml(personAuthor.role)}` : ''}` : '<strong>Byline unavailable</strong>'} · ${formatPublishedDate(story.date)}${author?.type === 'Organization' && author.description ? `<span class="byline-description">${escapeHtml(author.description)}</span>` : ''}</div>
       <div class="hero">${escapeHtml(story.imageTreatment.caption)}</div>
       <article>
         <p><strong>${renderCitedText(story.bottomLine)}</strong></p>

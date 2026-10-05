@@ -2,18 +2,18 @@
 
 **Current as of:** 2026-10-04
 **Source branch:** `main`  
-**Current source fingerprint:** `69283d30a906b48ba210fe2e96dff92d6b678301+source-sha256:75730aa7fb4e854b0568077ed015ae0a2bee0a7b6596bfda5c80bd1c84edf729`
+**Current source fingerprint:** `e4f725be73bcded80a8ccbe9f28d14e7c1f8a7f3+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a`
 
 ## Deployment topology
 
-The Web and API artifacts are configured for Replit Autoscale with path routing. The latest available deployment metadata reports no active deployment, no successful published build, and no deployment URLs. The previous Autoscale deployment is offline, so its process-owned scheduler is stopped. Earlier public URL and health observations are historical and do not establish parity for the current workspace.
+The Web and API artifacts are configured for Replit Autoscale with path routing. Deployment metadata observed at `2026-10-05T09:49:00Z` reports an active deployment and successful build at `https://www.globalainews.in`. The deployed Web and API revisions have not been matched to the current workspace, so production parity and the active scheduler configuration remain unverified.
 
 | Service | Artifact path | Local port | Production build | Production start |
 | --- | --- | ---: | --- | --- |
 | Web | `/` | `19819` | `pnpm --filter @workspace/global-ai-news run build:production` | `node --enable-source-maps artifacts/global-ai-news/dist/server/server.mjs` |
 | API | `/api` | `8080` | `pnpm --filter @workspace/api-server run build` | `node --enable-source-maps artifacts/api-server/dist/index.mjs` |
 
-The deployment target is set to `autoscale` in `.replit`. Replit prepares a replacement alongside the running version and switches traffic at promotion. Replit's documented `Unpublish` action shuts down the whole deployment, not only the API. The current deployment is already offline; publishing will restore both the public site and API.
+The deployment target is set to `autoscale` in `.replit`. Replit prepares a replacement alongside the running version and switches traffic at promotion. Replit's documented `Unpublish` action shuts down the whole deployment, not only the API. The deployment is currently reported active; this remediation did not publish, unpublish, or otherwise change production.
 
 ## Route ownership
 
@@ -25,7 +25,7 @@ The deployment target is set to `autoscale` in `.replit`. Replit prepares a repl
 | `/amp/article/:slug` | Web artifact | Built AMP documents and the request-time handler use the published story, author, and source records; citations, tables, and source lists are rendered from that snapshot. Unknown slugs return 404/noindex. |
 | `/feed.xml` | Web artifact, proxying API | Proxies to `/api/newsroom/feed.xml`; no checked-in root XML should own this route. |
 | `/sitemap.xml` | Web artifact, proxying API | Proxies to `/api/newsroom/sitemap.xml`; no checked-in root XML should own this route. |
-| `/about-us`, `/code-of-ethics`, `/corrections`, `/contact-us` | Web artifact | Request-time HTML placeholders with `200` and `noindex` pending approved editorial content. |
+| `/about-us`, `/code-of-ethics`, `/corrections`, `/contact-us` | Web artifact | Verified editorial-policy copy with `200` and `noindex`; no unapproved contact or corrections channel is presented. |
 | `/contact` | Web artifact | Permanent `308` redirect to `/contact-us`. |
 | `/privacy`, `/terms` | Web artifact | Intentionally unavailable until authoritative, owner-approved legal text exists. |
 | Unknown Web routes | Web artifact | HTML `404`, `noindex`. |
@@ -52,7 +52,7 @@ The API mounts its routers under `/api`. Public newsroom content and metadata ar
 - The workspace exposes the API through the shared path proxy at `/api`; development Web-to-API requests use the configured local proxy origin, while the production Web artifact uses `NEWSROOM_API_ORIGIN=https://www.globalainews.in`.
 - DM Sans, DM Mono, and Instrument Serif are served from licensed app-local font files; DM Sans and Instrument Serif are preloaded. Clerk provider/auth modules are dynamically loaded only for sign-in, sign-up, and insights routes. The `InsightsPage` implementation itself remains in the shared public module.
 - Historical read-only checks on 2026-10-03 returned a crawlable `robots.txt` on `www.globalainews.in` and `Disallow: /` on `global-ai-media.replit.app`. The checked-in robots file is host-independent; the layer adding the alias response is not identified, so do not change the file to address it.
-- Production health, robots, edge/cache behavior, and artifact headers have not been rechecked since the deployment went offline. Do not probe newsroom, feed, or sitemap routes; those GETs may seed schedule rows.
+- Production health, robots, edge/cache behavior, and artifact headers were not rechecked for this remediation. Do not probe newsroom, feed, or sitemap routes; those GETs may seed schedule rows. Active artifact revisions and production parity remain unverified.
 
 ## Environment configuration
 
@@ -60,20 +60,20 @@ Environment variable names referenced by the application/configuration include:
 
 - Web: `PORT`, `BASE_PATH`, `NEWSROOM_API_ORIGIN`, and the three `GAN_BUILD_*_REVISION` values.
 - API: `PORT`, `NODE_ENV`, `DATABASE_URL`, `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `NEWSLETTER_PROVIDER_URL`, `NEWSLETTER_PROVIDER_TOKEN`, `RESEND_API_KEY`, `RESEND_AUDIENCE_ID`, `EDITORIAL_DRAFT_MODEL`, `EDITORIAL_VERIFICATION_MODEL`, and `EDITORIAL_AUTOMATION_ENABLED`.
-- The API production artifact explicitly sets `EDITORIAL_AUTOMATION_ENABLED=false`. The prior deployed API predated that override and had a process-owned 30-minute timer; the deployment is now offline, so that timer is stopped.
+- The current workspace API artifact explicitly sets `EDITORIAL_AUTOMATION_ENABLED=false`. The active deployed API revision and automation setting have not been matched to the workspace; do not infer its scheduler state or invoke production automation.
 - Secret values are not recorded in this document.
 
 ## Scheduler ownership and cutover
 
-The API entrypoint calls `startEditorialAutomation()` after listening. The new code gives an explicit `EDITORIAL_AUTOMATION_ENABLED=false` value precedence over the production default, and the API artifact supplies that value. The previous bundle did not honor the override; its deployment is now offline and the old timer is stopped.
+The API entrypoint calls `startEditorialAutomation()` after listening. The current workspace code gives an explicit `EDITORIAL_AUTOMATION_ENABLED=false` value precedence over the production default, and the API artifact supplies that value. The active deployed revision has not been matched, so its automation behavior is unknown. No production automation was invoked for this remediation.
 
-No production automation has been invoked manually. The current workspace is locally verified and awaits the human Publish action. After publishing, verify the new runtime headers using the safe checks in `docs/production-cutover-checklist.md`.
+No production automation has been invoked. The current workspace is locally verified, but its fingerprints have not been matched to the active deployment. Do not publish or run production automation for this remediation; use only the safe checks in `docs/production-cutover-checklist.md` after any future owner-authorized publish.
 
 ## Current gaps and release gates
 
-- The latest local full smoke run passes 58 public routes at desktop, 8 at mobile, 11 AMP pages, RSS, release-history recovery, theme checks, and the internal-link audit. It audited 104 built routes and 465 internal references with 0 issues. Public route captures show no third-party script origins. The last known production AMP check was 7/10 before the deployment went offline; current production parity is unverified.
-- The prior deployment is offline, so the old scheduler is stopped. The workspace awaits the human Publish action; after publishing, only safe health, authentication, robots, and fingerprint checks should be used.
+- The local full smoke suite covers public routes, mobile routes, AMP pages, RSS, release-history recovery, themes, and the internal-link audit. The last production AMP observation was 7/10 on 2026-10-03; the 2026-10-05 deployment metadata reports an active successful build, but production route behavior and revision parity remain unverified.
+- No deployment or production automation was performed for this remediation. The active deployed scheduler state is unknown; the workspace API keeps automation disabled. If an owner authorizes a later publish, use only the safe health, authentication, robots, and fingerprint checks in the cutover checklist.
 - The report distinguishes GPU targets, shared/onboarded supply, access, availability, and reported GPU-hours. Public evidence does not yet reconcile the dated counts or establish a current schedulable inventory.
 - Existing source, entity, timeline, metric, and story data are code-managed and have varying provenance detail; do not present an unverified value as an evidenced fact.
 - The dependency audit still finds high-severity `braces@3.0.3` exposure through production `http-proxy-middleware` and development `fast-glob`. Upstream PR `micromatch/braces#72` merged on 2026-10-03, but no patched npm release is available as of 2026-10-04. The local pnpm patch adds bounded-depth checks and the API security suite verifies both installed chains; production and development audits still report the advisory because the resolved release remains 3.0.3. This is a documented mitigation, not a clean audit. Current Clerk proxy configuration uses a fixed path rewrite rather than a request-supplied glob, which narrows but does not eliminate the exposure.
-- The public client entry measures 588,045 bytes (171,280 gzip); the deferred Clerk route chunk measures 146,770 bytes (36,890 gzip). CSS is 147,507 bytes (23,190 gzip). The entry still exceeds Vite's 500 kB warning threshold. Local mobile measurements and their limits are recorded in `docs/mobile-performance-audit.md`; the slowest route in the latest sample was `/topic/india` at 3,984 ms LCP.
+- The public client entry measures 520,440 bytes (160,470 gzip); the shared public-route chunk is 63,580 bytes (14,250 gzip), and the deferred Clerk route chunk measures 146,780 bytes (36,890 gzip). CSS is 148,390 bytes (23,330 gzip). The entry still exceeds Vite's 500 kB warning threshold. Local mobile measurements and their limits are recorded in `docs/mobile-performance-audit.md`; the latest six-route sample's slowest route was `/topic/india` at 3,880 ms LCP.

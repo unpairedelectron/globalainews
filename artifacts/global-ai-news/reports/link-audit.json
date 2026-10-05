@@ -1768,6 +1768,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/data/india-ai-compute-snapshots",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/topic/india/",
     "status": "200",
     "canonical": "https://www.globalainews.in/topic/india/",
@@ -2851,6 +2859,14 @@
     "url": "https://www.globalainews.in/article/new-geography-of-compute/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "indexability": "indexable",
+    "linkSource": "/research/india-ai-compute-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "indexability": "indexable",
     "linkSource": "/research/india-ai-compute-2026",
     "issue": ""

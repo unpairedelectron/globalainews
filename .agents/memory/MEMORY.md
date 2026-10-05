@@ -10,6 +10,7 @@
 - [Editorial publishing queue](editorial-publishing-queue.md) — release prepared stories by publish time at the API boundary; client polling makes publication restart-safe.
 - [Editorial Clerk transport](editorial-clerk-transport.md) — browser editor mutations use Clerk session cookies plus the production proxy; do not add bearer-token handling to web calls.
 - [Editorial release history](editorial-release-history.md) — audit changes durably; authenticated Clerk identity is the actor source for editor mutations.
+- [Editorial trust boundaries](editorial-trust-boundaries.md) — show only verified people; keep unapproved corrections/contact channels unavailable and noindex.
 - [Mobile browser smoke scrolling](mobile-browser-smoke.md) — use CDP DOM scrolling for viewport assertions when headless mobile emulation ignores script and wheel scrolling.
 - [Clerk theme browser checks](clerk-theme-regression.md) — auth routes need the smoke API proxy, keyboard-driven focus, and composited translucent surface colors.
 - [Autonomous editorial gates](autonomous-editorial-gates.md) — source selection must stay coherent before AI drafting; unrelated citations are a hard rejection, not a confidence downgrade.
@@ -20,3 +21,4 @@
 - [IndiaAI compute observation contract](indiaai-compute-observation-contract.md) — new GPU stages and quantity qualifiers must be added to the public API contract before publication.
 - [Source capture evidence](source-capture-evidence.md) — confirm a fetched page’s body supports the cited claim; a title or successful fetch alone is not evidence.
 - [Dynamic social preview images](dynamic-social-preview-images.md) — post-build stories need a public PNG renderer; preserve existing build-time image URLs.
+- [Vite post-build metadata](vite-post-build-metadata.md) — use `writeBundle` when processing emitted files and test with external temporary output directories.

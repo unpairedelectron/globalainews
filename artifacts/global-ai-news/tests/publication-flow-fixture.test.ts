@@ -277,7 +277,7 @@ async function runMobilePerformanceAudit(origin: string) {
       '/reports',
       '/topic/india',
       '/company/openai',
-      '/person/lena-hoff',
+      '/about-us',
     ];
     const measurements = [];
     for (const route of routes) {

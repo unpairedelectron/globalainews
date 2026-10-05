@@ -150,6 +150,9 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
                 ? <> · Updated <time dateTime={publicDateModified}>{formatEditorialDate(publicDateModified)}</time></>
                 : null}
               {' · '}{getStoryReadTime(story)}
+              {author?.type === 'Organization' && author.description
+                ? <span className="mt-2 block font-sans text-[11px] normal-case leading-5 tracking-normal text-muted-foreground">{author.description}</span>
+                : null}
             </p>
             <figure className="my-8 border border-foreground/15 bg-surface-muted">
               <img
@@ -384,7 +387,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
               <section className="grid gap-5 border-b border-foreground/15 pb-6 sm:grid-cols-3">
                 <p><span className="eyebrow text-muted-foreground">Published</span><time className="mt-2 block text-sm" dateTime={record.date}>{formatEditorialDate(record.date)}</time></p>
                 <p><span className="eyebrow text-muted-foreground">Last reviewed</span><time className="mt-2 block text-sm" dateTime={record.updatedAt}>{formatEditorialDate(record.updatedAt)}</time></p>
-                <p><span className="eyebrow text-muted-foreground">Author</span><span className="mt-2 block text-sm">{researchAuthor.name}</span></p>
+                <p><span className="eyebrow text-muted-foreground">Author</span><span className="mt-2 block text-sm">{researchAuthor.name}</span>{researchAuthor.type === 'Organization' && researchAuthor.description ? <span className="mt-1 block text-xs leading-5 text-muted-foreground">{researchAuthor.description}</span> : null}</p>
               </section>
               <section><h2 className="eyebrow mb-3 text-primary">Findings</h2><ol className="grid">{record.findings.map((finding, index) => <li key={finding} className="grid grid-cols-[2.5rem_1fr] gap-3 border-t border-foreground/10 py-5"><span className="font-mono text-xs text-primary">{String(index + 1).padStart(2, '0')}</span><p className="max-w-3xl text-base leading-7">{finding}</p></li>)}</ol></section>
               <section className="grid gap-8 border-y border-foreground/15 py-7 sm:grid-cols-2"><div><h2 className="eyebrow mb-3 text-primary">Methodology</h2><p className="text-sm leading-7 text-muted-foreground">{record.methodology}</p></div><div><h2 className="eyebrow mb-3 text-primary">Dataset description</h2><p className="text-sm leading-7 text-muted-foreground">{record.datasetDescription}</p></div></section>

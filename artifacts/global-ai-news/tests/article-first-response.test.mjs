@@ -410,8 +410,8 @@ async function assertContactAlias() {
   const expectedCopy = {
     '/about-us': /Who speaks for the publication/,
     '/code-of-ethics': /AI-assisted work/,
-    '/corrections': /public correction inbox has not yet been approved/i,
-    '/contact-us': /verified public contact address has not been supplied/i,
+    '/corrections': /No approved public corrections or contact channel is available/i,
+    '/contact-us': /No approved public contact address or working contact form has been verified/i,
   };
   for (const [route, copy] of Object.entries(expectedCopy)) {
     const destination = await fetch(`${webOrigin}${route}`);
@@ -483,6 +483,27 @@ async function testRawArticleResponses() {
     ].sort(),
   );
   assert.equal(Object.hasOwn(publicContent, 'schedule'), false);
+  assert.ok(
+    publicContent.authors.every((author) => author.verifiedForPublication === true),
+    'public author records must include only contributors verified for publication',
+  );
+  const publicAuthorsBySlug = new Map(publicContent.authors.map((author) => [author.slug, author]));
+  for (const story of publicContent.stories) {
+    const verifiedAuthor = publicAuthorsBySlug.get(story.author);
+    if (verifiedAuthor) {
+      assert.equal(story.authorType, 'person', `${story.slug} should use its verified person byline`);
+      assert.equal(story.authorName, verifiedAuthor.name, `${story.slug} byline name should match its verified author record`);
+    } else {
+      assert.equal(story.author, 'global-ai-news-editorial-desk', `${story.slug} should not expose an unverified author slug`);
+      assert.equal(story.authorType, 'organization', `${story.slug} should use an organization byline`);
+      assert.equal(story.authorName, 'Global AI News Editorial Desk', `${story.slug} should use the publication desk byline`);
+    }
+  }
+  assert.equal(
+    publicContent.researchRecords.find((record) => record.slug === 'india-ai-compute-2026')?.authorSlug,
+    'global-ai-news-editorial-desk',
+    'the public research record should not expose an unverified personal author slug',
+  );
   const forbiddenFields = new Set([
     'schedule',
     'publishAt',
@@ -555,7 +576,8 @@ async function testRawArticleResponses() {
     (story) => !Object.values(slugs).includes(story.slug),
   );
   const authorStory = existingStories.find((story) =>
-    publicContent.authors.some((author) => author.slug === story.author),
+    (story.authorType === 'person' && publicContent.authors.some((author) => author.slug === story.author)) ||
+    (story.authorType === 'organization' && story.author === 'global-ai-news-editorial-desk'),
   );
   const oneSourceStory = existingStories.find(
     (story) => story.sources.filter((slug) =>
@@ -572,7 +594,7 @@ async function testRawArticleResponses() {
       existingStories.some((candidate) => candidate.slug === slug),
     ),
   );
-  assert.ok(authorStory, 'public snapshot needs a published article with an author for the route matrix');
+  assert.ok(authorStory, 'public snapshot needs a published article with a verified-person or desk byline for the route matrix');
   assert.ok(oneSourceStory, 'public snapshot needs a published article with one source');
   assert.ok(multiSourceStory, 'public snapshot needs a published article with multiple sources');
   assert.ok(relatedStory, 'public snapshot needs a published article with a related story');
@@ -619,6 +641,8 @@ async function testRawArticleResponses() {
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('cache-control'), 'no-store');
   assert.match(html, /<h1[^>]*>A live article renders before browser scripts run<\/h1>/);
+  assert.match(html, /By <strong class="font-semibold">Global AI News Editorial Desk<\/strong>/);
+  assert.match(html, /The Global AI News Editorial Desk publishes source-linked reporting, analysis, research and reference material/);
   assert.match(html, /The temporary newsroom article contains enough editorial copy/);
   assert.match(html, /id="global-ai-prerender"/);
   assert.equal(
@@ -716,15 +740,21 @@ async function testRawArticleResponses() {
   assert.equal(ampHtml.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1], story.title);
 
   const publicAuthor = publicContent.authors.find((author) => author.slug === story.author);
-  assert.ok(publicAuthor, 'published story must resolve its author record from the API snapshot');
-  if (publicAuthor.verifiedForPublication === true) {
+  const hasVerifiedPublicAuthor = publicAuthor?.verifiedForPublication === true;
+  if (hasVerifiedPublicAuthor) {
     assert.match(
       html,
       new RegExp(`<a href="/person/${escapeRegExp(story.author)}/"[^>]*>`),
     );
   } else {
+    assert.equal(story.author, 'global-ai-news-editorial-desk');
+    assert.equal(story.authorType, 'organization');
+    assert.equal(story.authorName, 'Global AI News Editorial Desk');
     assert.match(html, /By <strong class="font-semibold">Global AI News Editorial Desk<\/strong>/);
+    assert.match(html, /The Global AI News Editorial Desk publishes source-linked reporting, analysis, research and reference material/);
     assert.doesNotMatch(html, new RegExp(`href="/person/${escapeRegExp(story.author)}/"`));
+    assert.match(ampHtml, /<div class="byline"><strong>Global AI News Editorial Desk<\/strong>/);
+    assert.match(ampHtml, /<span class="byline-description">The Global AI News Editorial Desk publishes source-linked reporting/);
   }
   assert.match(html, /Published <time\b/i);
   const publishedTime = html.match(/<time\b[^>]*datetime=["']([^"']+)["'][^>]*>([\s\S]*?)<\/time>/i);
@@ -743,11 +773,11 @@ async function testRawArticleResponses() {
   assert.equal(articleSchema.mainEntityOfPage['@id'], canonical);
   assert.equal(
     articleSchema.author.name,
-    publicAuthor.verifiedForPublication === true ? publicAuthor.name : 'Global AI News Editorial Desk',
+    hasVerifiedPublicAuthor ? publicAuthor.name : 'Global AI News Editorial Desk',
   );
   assert.equal(
     articleSchema.author.url,
-    publicAuthor.verifiedForPublication === true
+    hasVerifiedPublicAuthor
       ? `https://www.globalainews.in/person/${story.author}/`
       : 'https://www.globalainews.in',
   );

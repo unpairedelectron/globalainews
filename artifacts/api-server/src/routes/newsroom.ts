@@ -38,6 +38,7 @@ import {
   evidenceSummaries,
   getEditorialLifecycleStatus,
   getPublicDateModified,
+  getStoryAuthorIdentity,
   getReleaseDraftWordCount,
   getReleaseWordCount,
   getPublishedStories,
@@ -100,6 +101,8 @@ type EditorialReleaseStory = ScheduledStory & {
 
 function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
   const dateModified = getPublicDateModified(story);
+  const author = getStoryAuthorIdentity(story, authors);
+  const isVerifiedPerson = author.type === "Person" && Boolean(author.slug);
   return {
     slug: story.slug,
     category: story.category,
@@ -109,9 +112,9 @@ function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
     date: story.date,
     ...(dateModified ? { dateModified } : {}),
     readTime: story.readTime,
-    author: story.author,
-    ...(story.authorType ? { authorType: story.authorType } : {}),
-    ...(story.authorName ? { authorName: story.authorName } : {}),
+    author: author.slug ?? "global-ai-news-editorial-desk",
+    authorType: isVerifiedPerson ? "person" : "organization",
+    authorName: author.name,
     evidence: story.evidence,
     evidenceSummary: story.evidenceSummary,
     classification: story.classification,
@@ -606,7 +609,7 @@ router.get("/newsroom/content", async (_req, res): Promise<void> => {
       generatedAt: new Date().toISOString(),
       source: "maintained-editorial-source",
       stale,
-      authors,
+      authors: authors.filter((author) => author.verifiedForPublication === true),
       sources: publicSources,
       evidenceSummaries,
       entities: entities.map((entity) => ({

@@ -1,6 +1,7 @@
 import {
   canonicalStorySlug,
   entities,
+  scheduledStories,
   sources,
   stories,
   timelineEvents,
@@ -136,7 +137,7 @@ export const dataProductRecords: DataProductRecord[] = [
     unit: 'GPUs',
     topicSlugs: ['india'],
     entitySlugs: ['indiaai-mission'],
-    storySlugs: [reportStory.slug],
+    storySlugs: [reportStory.slug, 'public-compute-needs-public-metrics'],
     researchSlugs: ['india-ai-compute-2026'],
     timelineSlugs: reportStory.timeline,
     sourceSlugs: unique([...indiaAiComputeObservations.map((observation) => observation.sourceSlug), 'indiaai-compute-allocation-register-2026']),
@@ -165,14 +166,14 @@ export const researchRecords: ResearchRecord[] = [
     status: 'published',
     provenance: 'original-analysis',
     researchQuestion: 'What does the public record establish about IndiaAI compute supply, practical access, and use—and where do its measurements stop?',
-    authorSlug: reportStory.author,
+    authorSlug: 'global-ai-news-editorial-desk',
     storySlug: reportStory.slug,
     topicSlugs: ['india'],
     entitySlugs: reportStory.entities,
     timelineSlugs: reportStory.timeline,
     sourceSlugs: reportStory.sources,
     dataProductSlugs: ['india-ai-compute-snapshots'],
-    relatedStorySlugs: reportStory.relatedStories,
+    relatedStorySlugs: [...new Set([...reportStory.relatedStories, 'public-compute-needs-public-metrics'])],
     methodology: 'A dated synthesis of government records, the public compute portal, parliamentary material, and independent market reporting. Each quantity remains attached to its source and the stage the source names; portal allocation rows are separate from hardware counts and unlike-for-like counts are not combined.',
     datasetDescription: 'Nine dated public claims covering the mission target, planned additions, reported empanelled/additional pool, an independently reported installation figure, onboarding, shared capacity, and an independently reported access figure. A separate primary portal register lists dated project allocations. None is a live inventory.',
     findings: [
@@ -418,7 +419,10 @@ export function buildAuthorityGraph(storyRecords: Story[] = stories): AuthorityE
 export function validateAuthorityRegistry(): string[] {
   const errors: string[] = [];
   const storyBySlug = new Map(stories.map((story) => [story.slug, story]));
-  const storySlugs = new Set(storyBySlug.keys());
+  const storySlugs = new Set([
+    ...storyBySlug.keys(),
+    ...scheduledStories.map((story) => story.slug),
+  ]);
   const entitySlugs = new Set(entities.map((entity: Entity) => entity.slug));
   const sourceBySlug = new Map(sources.map((source) => [source.slug, source]));
   const sourceSlugs = new Set(sourceBySlug.keys());

@@ -220,7 +220,7 @@ async function assertPublicContentContract() {
 
   const allowedStoryFields = new Set([
     'slug', 'category', 'contentType', 'title', 'dek', 'body', 'date', 'dateModified', 'readTime',
-    'author', 'evidence', 'evidenceSummary', 'classification', 'entities', 'timeline',
+    'author', 'authorType', 'authorName', 'evidence', 'evidenceSummary', 'classification', 'entities', 'timeline',
     'relatedStories', 'imageTreatment', 'topic', 'sources', 'bottomLine', 'whyItMatters',
     'keyTakeaways', 'whatChanges',
   ]);

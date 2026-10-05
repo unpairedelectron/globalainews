@@ -1,0 +1,114 @@
+{
+  "version": 3,
+  "auditDate": "2026-10-05",
+  "productionBaselineObservedAt": "2026-10-05T09:49:00Z",
+  "scope": "Three production stories were measured before local remediation. The workspace candidates below are scheduled source records; they are not production editorial records and were not published by this task.",
+  "measurement": {
+    "productionBodyWordCount": "The production audit counted story-body headings, paragraphs, and table cells.",
+    "workspaceBodyWordCount": "Whitespace-separated words in story-body headings and paragraphs; summaries and takeaways are excluded.",
+    "workspaceEditorialWordCount": "getStoryWordCount(): dek, body paragraphs, bottom line, why it matters, key takeaways, and what changes.",
+    "readTime": "The workspace estimate is derived with getStoryReadTime() from the complete scheduled story.",
+    "minimumEditorialWords": 800,
+    "comparisonNote": "Production and workspace figures refer to different records and must not be read as a production update or parity claim."
+  },
+  "rows": [
+    {
+      "slug": "weekly-deep-dive-cost-of-intelligence",
+      "productionBaseline": {
+        "title": "The cost of intelligence is becoming a design constraint",
+        "state": "published production record at baseline",
+        "bodyWords": 60,
+        "sourceCount": 2,
+        "readTime": "10 min read",
+        "finding": "Thin for the displayed format and read time; mostly general framing."
+      },
+      "workspaceCandidate": {
+        "title": "AI’s electricity demand is becoming a product-design constraint",
+        "state": "scheduled local source record; not published by this task",
+        "dateModified": "2026-10-05",
+        "classification": "analysis",
+        "contentType": "Analysis",
+        "bodyWords": 997,
+        "editorialWordCount": 1101,
+        "sourceCount": 2,
+        "sourceSlugs": [
+          "iea-energy-ai-executive-summary",
+          "stanford-ai-index-2026"
+        ],
+        "readTime": "5 min read",
+        "confidence": "MEDIUM",
+        "evidenceBoundary": "The IEA global data-centre electricity forecast supplies infrastructure context; neither it nor the Stanford analysis provides energy per AI request."
+      }
+    },
+    {
+      "slug": "public-compute-needs-public-metrics",
+      "productionBaseline": {
+        "title": "Public compute needs public metrics",
+        "state": "published production record at baseline",
+        "bodyWords": 52,
+        "sourceCount": 2,
+        "readTime": "7 min read",
+        "finding": "Thin and overlaps the flagship report’s subject without equivalent evidence depth."
+      },
+      "workspaceCandidate": {
+        "title": "IndiaAI’s GPU claims need a public status crosswalk",
+        "state": "scheduled local source record; not published by this task",
+        "dateModified": "2026-10-05",
+        "classification": "analysis",
+        "contentType": "Analysis",
+        "bodyWords": 920,
+        "editorialWordCount": 1007,
+        "sourceCount": 9,
+        "sourceSlugs": [
+          "indiaai-cabinet-approval-2024",
+          "pib-initial-compute-2025",
+          "pib-common-compute-34000-2025",
+          "pib-compute-onboarded-2026",
+          "pib-onboarded-nearly-38000-2026",
+          "pib-capacity-and-use-factsheet-2026",
+          "indiaai-compute-allocation-register-2026",
+          "indiaai-compute-portal",
+          "indiaai-portal-eligibility"
+        ],
+        "readTime": "5 min read",
+        "confidence": "MEDIUM",
+        "evidenceBoundary": "Government records use different status labels and do not reconcile them into installed, currently schedulable capacity; GPU-hours are not defined as metered consumption.",
+        "linkedResearchRecord": "india-ai-compute-2026",
+        "linkedDataProduct": "india-ai-compute-snapshots"
+      }
+    },
+    {
+      "slug": "reliability-is-the-new-ai-moat",
+      "productionBaseline": {
+        "title": "Reliability is becoming the new AI moat",
+        "state": "published production record at baseline",
+        "bodyWords": 66,
+        "sourceCount": 1,
+        "readTime": "6 min read",
+        "finding": "Thin, broad analysis with no concrete case or measured evidence."
+      },
+      "workspaceCandidate": {
+        "title": "AI agents improved on OSWorld; reliability remains the test",
+        "state": "scheduled local source record; not published by this task",
+        "dateModified": "2026-10-05",
+        "classification": "analysis",
+        "contentType": "Analysis",
+        "bodyWords": 905,
+        "editorialWordCount": 972,
+        "sourceCount": 1,
+        "sourceSlugs": [
+          "stanford-ai-index-2026"
+        ],
+        "readTime": "5 min read",
+        "confidence": "MEDIUM",
+        "evidenceBoundary": "OSWorld accuracy and its reported human baseline support a benchmark-specific conclusion, not a production success-rate estimate."
+      }
+    }
+  ],
+  "publicationQualityGate": {
+    "minimumEditorialWords": 800,
+    "revisedCandidatesPass": true,
+    "citationRegistryCheck": "Each inline source citation is present in the story source list and maintained source registry.",
+    "publicationStatus": "No production record or publication state was changed."
+  }
+}

@@ -2,7 +2,9 @@
 
 **Audit date:** 5 October 2026  
 **Production site:** https://www.globalainews.in/  
-**Purpose:** Establish a fresh production baseline before workspace remediation.
+**Purpose:** Record the production baseline and the later workspace-only editorial remediation.
+
+**Deployment boundary:** Deployment metadata reports an active, successfully built public autoscale deployment at the URL above. The current workspace changes have not been deployed, and metadata does not establish that production runs the current workspace revisions.
 
 ## Method and limits
 
@@ -91,13 +93,13 @@ The shared public JavaScript payload is approximately 586 KiB by Resource Timing
 
 ## Prioritized workspace remediation
 
-1. Make the latest evidence-rich story the actual homepage lead and replace decorative hero art with a source-labelled explanation of the story’s evidence.
-2. Remove unsupported signal numbers and stale signal freshness claims.
-3. Keep unverified person identities out of public bylines, Person schema, and indexable author pages until the publication verifies them; use the organization byline for unattributed house work.
-4. Fix inaccurate read times and prevent thin stories from being presented as long-form reporting. Keep any public pruning limited to the rendering/release boundary; do not delete editorial records.
-5. Differentiate article, research, report, and data titles and make the research method, limitations, source relationships, and data product discoverable from the home page.
-6. Replace trust-page placeholders only where truthful content and a real contact path are available; do not invent staff, contact details, or operating procedures.
-7. Reduce shared client JavaScript, improve image transfer size, and rerun mobile and accessibility checks.
+1. Completed locally: make the evidence-rich India compute report the homepage lead and use source-labelled evidence rather than decorative hero copy.
+2. Completed locally: remove unsupported signal numbers and stale signal freshness claims.
+3. Implemented locally: expose only verified people as Person bylines and profiles; use the descriptive Global AI News Editorial Desk attribution otherwise.
+4. Completed for the three scheduled workspace candidates: replace thin copy with evidence-supported analysis and derived five-minute read times. The production records remain unchanged.
+5. Improved locally: link the India compute candidate to its maintained research record and data product. Broader homepage discovery and taxonomy work remains.
+6. Updated locally: make About, Ethics, Corrections, and Contact copy truthful and mutually linked. No approved public contact route exists, so Corrections and Contact remain noindex and no submission channel is claimed.
+7. Not addressed in this editorial remediation: reduce shared client JavaScript, improve image transfer size, and run a dedicated Lighthouse or axe audit.
 
 ## Post-remediation workspace results
 
@@ -105,7 +107,21 @@ The Global AI News workspace now uses the evidence-rich India compute report as 
 
 The published archive is indexable. About, Code of Ethics, Corrections, and Contact remain explicitly `noindex` until their public operating details are verified. Unverified contributor names are not exposed as Person bylines or indexable profiles; affected stories use organization attribution. Source links that resolve only to a publisher's general homepage are treated as source records, not as direct evidence for a specific claim.
 
-The three short live stories identified above were not edited or removed. Their presentation still needs an editorial-owner decision, alongside verification of contributor identities and biographies and approval of a public contact/corrections channel.
+### Workspace-only editorial remediation
+
+The three production entries below remain as observed at the 09:49 UTC baseline. Their scheduled source records were expanded locally; no production editorial record was changed. Body-word counts use headings and paragraphs only, so the workspace and production figures are directly comparable in scope.
+
+| Story | Production baseline body words / sources / read time | Workspace scheduled candidate body words / sources / read time | Local change |
+| --- | --- | --- | --- |
+| Cost of intelligence | 60 / 2 / 10 min | 997 / 2 / 5 min | Renamed around the IEA’s global data-centre forecast; distinguishes system demand from energy per AI request. |
+| Public compute | 52 / 2 / 7 min | 920 / 9 / 5 min | Separates targets, empanelment, onboarding, shared capacity, allocations, and undefined GPU-hours; links to research record `india-ai-compute-2026` and data product `india-ai-compute-snapshots`. |
+| AI reliability | 66 / 1 / 6 min | 905 / 1 / 5 min | Adds the OSWorld score and human baseline, with an explicit limit that benchmark accuracy is not a production success rate. |
+
+The workspace candidates are classified as Analysis, dated `2026-10-05`, and have citations checked against their source lists and maintained source registry. Their derived editorial word counts are 1,101, 1,007, and 972 respectively; the separate body-only counts above exclude deks, summaries, and takeaways. See `docs/content-quality-matrix-v3.json` for the complete comparison and counting rules.
+
+The public API projection now includes only contributors marked verified for publication. Unverified story identities resolve to the Global AI News Editorial Desk, whose description appears in article first-response HTML, the hydrated article page, AMP, and the linked research record. The India compute research record also uses the desk identity rather than an unverified author slug.
+
+About, Code of Ethics, Corrections, and Contact now have truthful copy and links to related trust pages. No approved public corrections/contact channel was found: the pages do not invent an inbox, form, response time, or investigation service; newsletter signup is identified as subscription-only. Corrections and Contact remain noindex until an approved route exists.
 
 ### Local verification
 
@@ -120,20 +136,21 @@ All checks below ran against workspace builds and isolated test fixtures, not pr
 
 ### Post-remediation mobile lab sample
 
-The local production build was measured at 402 × 874 CSS pixels, 4× CPU throttling, 150 ms RTT, and 1.6 Mbps down / 0.75 Mbps up. These are navigation-only lab samples; INP was not measured.
+The local production build was measured at 402 × 874 CSS pixels, 4× CPU throttling, 150 ms RTT, and 1.6 Mbps down / 0.75 Mbps up. These are navigation-only lab samples from an in-memory publication fixture; INP was not measured.
 
 | Route | TTFB | LCP | CLS | JS transfer | Image transfer |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Home | 248 ms | 2,552 ms | 0.000 | 501 KiB | 0 KiB |
-| India compute article | 182 ms | 3,540 ms | 0.000 | 623 KiB | 77 KiB |
-| Reports | 162 ms | 2,616 ms | 0.000 | 512 KiB | 0 KiB |
-| India topic | 171 ms | 3,980 ms | 0.000 | 562 KiB | 152 KiB |
-| Company profile | 166 ms | 2,332 ms | 0.000 | 562 KiB | 0 KiB |
+| Home (`/`) | 158 ms | 2,668 ms | 0.000 | 509 KiB | 0 KiB |
+| India compute article | 161 ms | 3,452 ms | 0.000 | 634 KiB | 77 KiB |
+| Reports | 162 ms | 2,392 ms | 0.000 | 521 KiB | 0 KiB |
+| India topic | 179 ms | 3,880 ms | 0.000 | 572 KiB | 152 KiB |
+| Company profile | 170 ms | 2,356 ms | 0.000 | 572 KiB | 0 KiB |
+| About us (`/about-us`) | 33 ms | 2,236 ms | 0.000 | 572 KiB | 0 KiB |
 
-Compared with the production baseline, the homepage sample's LCP improved by about 0.5 seconds, its JavaScript transfer fell from 586 KiB to about 501 KiB, and its 303 KiB image transfer was eliminated. The article, Reports, and India topic samples were slightly slower than their baseline LCP values; those route-level results need further profiling rather than a blanket performance claim. The production build still reports a main JavaScript chunk above Vite's 500 kB warning threshold.
+The home, article, and India topic LCP samples remain above 2.5 seconds; Reports, company, and About us are below that threshold. CLS was zero on all six routes, and no third-party scripts were loaded. Treat these local navigation measurements as route-specific diagnostics, not field or production performance results. The production build still reports a main JavaScript chunk above Vite's 500 kB warning threshold.
 
 The route smoke includes AMP pages and confirms their canonical links, but an independent AMP validator was not run. Contrast, focus, semantics, and responsive behavior have regression checks; a dedicated Lighthouse or axe audit was not run.
 
 ## Verification boundary
 
-No production editorial records, publication status, or deployment were changed. The smoke tests use isolated fixtures; they do not run live publishing automation. All post-remediation findings and measurements above describe the local workspace only. Production must be rechecked after an authorized publish; no post-change production result is claimed here.
+No production editorial records, publication status, or deployment were changed, and no live publishing automation was run. The production inventory, route results, and original short-story measurements above describe the live baseline observed at `2026-10-05T09:49:00Z`; workspace remediation results and local checks describe the current local source/build. Although deployment metadata reports an active successful autoscale deployment, deployed artifact revisions were not matched to the current workspace. Production parity and any post-remediation production result are therefore unverified. Reconcile revisions and rerun safe production checks only after an owner-authorized publish.

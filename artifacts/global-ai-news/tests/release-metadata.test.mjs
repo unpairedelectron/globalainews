@@ -170,17 +170,25 @@ try {
   const releaseAuthor = apiContent.authors.find(
     (author) => author.slug === releaseStory.author,
   );
-  assert.ok(releaseAuthor, 'release article has no author attribution record');
-  if (releaseAuthor.verifiedForPublication === true) {
+  const hasVerifiedReleaseAuthor = releaseAuthor?.verifiedForPublication === true;
+  if (hasVerifiedReleaseAuthor) {
     assert.ok(
       document.includes(`/person/${releaseAuthor.slug}/`) &&
         document.includes(releaseAuthor.name),
       'the first response is missing the verified API-backed author attribution',
     );
   } else {
+    assert.equal(
+      releaseStory.author,
+      'global-ai-news-editorial-desk',
+      'an unverified release author must resolve to the publication desk identity',
+    );
+    assert.equal(releaseStory.authorType, 'organization');
+    assert.equal(releaseStory.authorName, 'Global AI News Editorial Desk');
     assert.ok(
       document.includes('<strong class="font-semibold">Global AI News Editorial Desk</strong>') &&
-        !document.includes(`href="/person/${releaseAuthor.slug}/"`),
+        document.includes('The Global AI News Editorial Desk publishes source-linked reporting, analysis, research and reference material') &&
+        !document.includes(`href="/person/${releaseStory.author}/`),
       'unverified authors should use the editorial desk byline and have no public profile link',
     );
   }
@@ -192,8 +200,8 @@ try {
     document.includes(releaseSource.name),
     'the first response is missing the API-backed source attribution',
   );
-  const authorPagePath = path.join(outputDir, 'person', releaseAuthor.slug, 'index.html');
-  if (releaseAuthor.verifiedForPublication === true) {
+  const authorPagePath = path.join(outputDir, 'person', releaseStory.author, 'index.html');
+  if (hasVerifiedReleaseAuthor) {
     const authorPage = await readFile(authorPagePath, 'utf8');
     assert.match(
       authorPage,

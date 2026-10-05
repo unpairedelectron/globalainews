@@ -679,10 +679,19 @@ async function renderRoute(route, width, height) {
   });
   await cdp.send('Page.navigate', { url });
   const expectedPath = new URL(url).pathname;
+  const canonicalPath = expectedPath === '/' ? '/' : `${expectedPath.replace(/\/+$/, '')}/`;
+  const expectedCanonical = route.startsWith('/amp/') ? null : `${site}${canonicalPath}`;
+  const canonicalReady = expectedCanonical
+    ? `document.querySelector('link[rel="canonical"]')?.href === ${JSON.stringify(expectedCanonical)}`
+    : 'true';
+  const newsroomRequestReady = route.startsWith('/amp/')
+    ? 'true'
+    : `performance.getEntriesByType('resource').some((entry) => new URL(entry.name, location.href).pathname.endsWith('/api/newsroom/content') && entry.responseEnd > 0)`;
   await waitForBrowserCondition(
     cdp,
-    `location.pathname === ${JSON.stringify(expectedPath)} && document.readyState !== 'loading' && Boolean(document.querySelector('main h1')?.textContent?.trim())`,
-    `${route}: initial page content did not render in Chromium.`,
+    `location.pathname === ${JSON.stringify(expectedPath)} && document.readyState !== 'loading' && ${canonicalReady} && ${newsroomRequestReady} && !document.querySelector('main')?.textContent?.includes('Loading page…') && Boolean(document.querySelector('main h1')?.textContent?.trim())`,
+    `${route}: route-specific page content did not finish rendering in Chromium.`,
+    { stableSamples: 3 },
   );
   return await evaluateBrowser(cdp, 'document.documentElement.outerHTML');
 }
@@ -780,10 +789,16 @@ async function evaluateBrowser(cdp, expression) {
   return result.result?.value;
 }
 
-async function waitForBrowserCondition(cdp, expression, message) {
+async function waitForBrowserCondition(cdp, expression, message, { stableSamples = 1 } = {}) {
   const deadline = Date.now() + 20_000;
+  let consecutiveMatches = 0;
   while (Date.now() < deadline) {
-    if (await evaluateBrowser(cdp, expression)) return;
+    if (await evaluateBrowser(cdp, expression)) {
+      consecutiveMatches += 1;
+      if (consecutiveMatches >= stableSamples) return;
+    } else {
+      consecutiveMatches = 0;
+    }
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
   assert.fail(message);
@@ -2506,7 +2521,12 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
   assert.equal(metaContent(document, 'property', 'og:url'), canonical, `${route}: og:url mismatch`);
   assert.equal(metaContent(document, 'name', 'twitter:card'), 'summary_large_image', `${route}: Twitter card missing`);
   assert.equal((document.match(/<main\b/gi) ?? []).length, 1, `${route}: expected one main landmark`);
-  assert.equal((document.match(/<h1\b/gi) ?? []).length, 1, `${route}: expected one h1`);
+  const h1Count = (document.match(/<h1\b/gi) ?? []).length;
+  assert.equal(
+    h1Count,
+    1,
+    `${route}: expected one h1 (found ${h1Count}); main excerpt: ${tagContent(document, 'main').slice(0, 500)}`,
+  );
 
   const structuredDataText = tagContent(document, 'script', '[^>]*data-global-ai-ld');
   assert.ok(structuredDataText, `${route}: JSON-LD is missing`);
@@ -2778,8 +2798,8 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   const editorialPageCopy = {
     '/about-us': /Who speaks for the publication/,
     '/code-of-ethics': /AI-assisted work/,
-    '/corrections': /public correction inbox has not yet been approved/i,
-    '/contact-us': /verified public contact address has not been supplied/i,
+    '/corrections': /No approved public corrections or contact channel is available/i,
+    '/contact-us': /No approved public contact address or working contact form has been verified/i,
   };
   for (const route of publicNoindexRoutes) {
     assert.equal(

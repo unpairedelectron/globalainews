@@ -681,7 +681,7 @@ function routeMetadataPlugin() {
   return {
     name: 'global-ai-news-route-metadata',
     apply: 'build' as const,
-    async closeBundle() {
+    async writeBundle() {
       const outputDir = buildOutputDir(projectRoot);
       const metadataManifest = await loadBuildMetadataManifest(projectRoot);
       const contentSnapshot = metadataManifest.contentSnapshot;
