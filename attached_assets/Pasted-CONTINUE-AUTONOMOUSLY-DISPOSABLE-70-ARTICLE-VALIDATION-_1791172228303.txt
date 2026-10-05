@@ -1,0 +1,583 @@
+CONTINUE AUTONOMOUSLY — DISPOSABLE 70-ARTICLE VALIDATION FIXTURE
+===============================================================
+
+Do NOT ask for approval.
+
+The 70-article source-claim/editorial review is COMPLETE.
+
+Verified:
+
+- 640 in-body citations
+- 133 cited keys
+- 253 source-map rows
+- 101 captured source files
+- no missing citation mappings
+- no missing source files
+- all 70 slugs unique
+- no collision with maintained stories
+- unsupported claims/dates identified during review were corrected
+
+The ONLY remaining content-release blockers are:
+
+- candidate-specific SEO validation
+- candidate-specific AMP validation
+- candidate-specific indexability validation
+- candidate-specific internal-link validation
+- candidate-specific mobile validation
+- incomplete source-capture metadata normalization
+- safe disposable test environment
+
+Do NOT stage.
+Do NOT publish.
+Do NOT write production editorial data.
+Do NOT trigger automation.
+Do NOT use the existing DATABASE_URL-backed temporary-release fixture.
+
+================================================
+1. BUILD A DISPOSABLE IN-MEMORY FIXTURE
+================================================
+
+Create a dedicated test-only fixture specifically for the 70 draft articles.
+
+It MUST:
+
+- load all 70 actual draft records
+- preserve each actual slug
+- preserve actual title
+- preserve actual segment/content type
+- preserve actual article body
+- preserve actual citation/source relationships
+- preserve topic/entity relationships where defined
+- preserve report/research relationships where defined
+- simulate publication eligibility
+- simulate public article retrieval
+- simulate homepage inclusion
+- simulate RSS inclusion
+- simulate sitemap inclusion
+
+It MUST NOT use:
+
+DATABASE_URL
+production database
+development database
+real release tables
+real audit tables
+
+No persistent writes.
+
+The fixture must be disposable and deterministic.
+
+================================================
+2. CANDIDATE-SPECIFIC SEO
+================================================
+
+Run SEO validation separately for EVERY ONE of the 70 articles.
+
+Check:
+
+- title
+- meta description
+- slug
+- canonical
+- Open Graph
+- social metadata
+- JSON-LD
+- author
+- publication metadata
+- update metadata where appropriate
+- breadcrumbs
+- indexability
+- sitemap eligibility
+
+Do not rely on generic route tests.
+
+Report failures by exact slug.
+
+Fix every workspace-solvable failure.
+
+================================================
+3. CANDIDATE-SPECIFIC AMP
+================================================
+
+For every one of the 70:
+
+/article/<slug>
+→ rel="amphtml"
+/amp/article/<same-slug>
+
+Verify:
+
+- article route
+- AMP link
+- ampPath
+- AMP HTTP status
+- AMP title
+- AMP H1
+- AMP canonical
+- canonical/article relationship
+
+No generic fallback AMP route.
+
+Unknown AMP slug must remain:
+
+404 + noindex
+
+================================================
+4. CANDIDATE-SPECIFIC INDEXABILITY
+================================================
+
+For every 70:
+
+Verify:
+
+- indexable status
+- robots
+- canonical
+- sitemap inclusion
+- no accidental noindex
+- no accidental duplicate canonical
+- no draft/private state leakage
+
+Confirm provisional/draft-only routes remain non-indexable.
+
+================================================
+5. CANDIDATE-SPECIFIC INTERNAL LINKING
+================================================
+
+For each article determine appropriate relationships:
+
+- topics
+- entities
+- sources
+- research
+- reports
+- timelines
+- related articles
+
+Verify every substantive article has useful internal discovery paths.
+
+Do NOT invent irrelevant links merely to increase link count.
+
+Flag genuine orphan articles.
+
+Fix the relationship graph where the workspace data supports it.
+
+================================================
+6. CANDIDATE-SPECIFIC MOBILE
+================================================
+
+Render all 70 in the test fixture.
+
+Check:
+
+- title/metadata
+- article body
+- tables
+- source blocks
+- methodology blocks
+- related-content modules
+- long headlines
+- responsive typography
+- overflow
+- horizontal scrolling
+- AMP/mobile behavior
+- CLS-sensitive elements
+
+Use representative visual captures where full 70 visual captures are too
+expensive, but every article must receive a structural/mobile assertion.
+
+Fix actual layout defects.
+
+================================================
+7. SOURCE METADATA NORMALIZATION
+================================================
+
+Complete normalization across all 101 captured source files where metadata
+is actually available.
+
+Track:
+
+- exact URL/path
+- title
+- publisher
+- publication date
+- fetch date
+- source type
+- primary/secondary
+- relevance/context
+
+Do NOT invent missing publisher/title/date information.
+
+If unavailable, explicitly record:
+
+UNKNOWN / NOT AVAILABLE
+
+rather than guessing.
+
+================================================
+8. CONTENT-TYPE VALIDATION
+================================================
+
+Verify exactly:
+
+10 Briefs
+10 Analyses
+10 Explainers
+10 Research
+10 Reports
+10 Comparisons
+10 Essays
+
+Every article must have the correct editorial treatment.
+
+Reject articles where the actual content does not fit the assigned type.
+
+================================================
+9. DUPLICATION / INTENT
+================================================
+
+Compare all 70 against each other and existing maintained stories.
+
+Detect:
+
+- duplicate search intent
+- near-duplicate topics
+- overlapping titles
+- redundant analysis
+- repetitive conclusions
+
+Where meaningful overlap exists:
+
+rewrite/differentiate the weaker article.
+
+Do not create artificial differences merely to preserve the quota.
+
+================================================
+10. AUTHORITY GRAPH
+================================================
+
+Verify the actual 70 articles connect to the Authority Engine.
+
+Audit:
+
+Article → Topic
+Article → Entity
+Article → Source
+Article → Research
+Article → Report
+Article → Timeline
+
+and useful reciprocal paths.
+
+Identify:
+
+- orphan articles
+- empty topic relationships
+- empty entity relationships
+- broken research references
+- broken report references
+
+Fix workspace-solvable issues.
+
+Do not generate empty pages.
+
+================================================
+11. AI COMPUTE INDIA CLUSTER
+================================================
+
+Ensure all relevant 70 articles connect meaningfully to:
+
+/reports/ai-compute-india/
+
+where appropriate.
+
+Verify the flagship report is connected to:
+
+- supporting articles
+- research
+- sources
+- entities
+- topics
+- data
+- timeline
+
+Do not force unrelated articles into the cluster.
+
+================================================
+12. SMALL MODELS CLUSTER
+================================================
+
+Ensure the relevant 70 articles reinforce:
+
+Small Models
+Efficient AI
+Serious Workflows
+
+Verify:
+
+- explainers
+- comparisons
+- analysis
+- research
+- reports
+- entities
+
+are connected meaningfully.
+
+================================================
+13. FIRST-RESPONSE VALIDATION
+================================================
+
+For every one of the 70 articles, verify first-response HTML contains:
+
+- title
+- description
+- canonical
+- Open Graph
+- JSON-LD
+- author
+- publication date
+- article body
+
+Do not substitute client-rendered inspection.
+
+================================================
+14. TECHNICAL VALIDATION
+================================================
+
+Run:
+
+typecheck
+production build
+full smoke
+link audit
+SEO tests
+structured-data tests
+AMP tests
+mobile tests
+publication fixture
+research tests
+report tests
+authority graph tests
+
+Fix failures.
+
+================================================
+15. PERFORMANCE
+================================================
+
+Do not claim the portfolio is performance-ready merely because the current
+build succeeds.
+
+Measure representative article types:
+
+Brief
+Analysis
+Explainer
+Research
+Report
+Comparison
+Essay
+
+Measure:
+
+- LCP
+- CLS
+- TTFB where available
+- client JS
+- image payload
+- first-response HTML
+
+The current public JS bundle is approximately:
+
+575 kB minified
+170 kB gzip
+
+Do not introduce regressions.
+
+Keep editor/admin code out of public bundles.
+
+================================================
+16. SECURITY
+================================================
+
+Recheck:
+
+- API authorization
+- public DTO projection
+- dependency audit
+- SAST
+- privacy checks
+
+For braces@3.0.3:
+
+determine runtime vs development exposure.
+
+Do not perform broad upgrades.
+
+================================================
+17. SAFE PUBLICATION FLOW
+================================================
+
+Use the new in-memory fixture to verify:
+
+draft
+→ eligible
+→ public article
+→ homepage
+→ RSS
+→ root RSS
+→ sitemap
+→ root sitemap
+
+No database writes.
+
+No production content.
+
+No production scheduler.
+
+Also verify publication does not require a rebuild when the current
+architecture is designed for request-time content.
+
+================================================
+18. STAGING
+================================================
+
+Do NOT stage anything until every one of the 70 passes.
+
+Then stage:
+
+10 Briefs
+10 Analyses
+10 Explainers
+10 Research
+10 Reports
+10 Comparisons
+10 Essays
+
+Only completed, validated content.
+
+No provisional drafts.
+
+================================================
+19. FINAL 70-ARTICLE QUALITY MATRIX
+================================================
+
+Create a final machine-readable matrix containing:
+
+slug
+segment
+title
+topic
+entities
+search intent
+source count
+citation count
+primary-source status
+research/report relationships
+internal-link count
+SEO status
+AMP status
+indexability
+mobile status
+first-response status
+quality status
+staging status
+
+Every row must be complete.
+
+================================================
+20. AUTONOMOUS EXECUTION
+================================================
+
+DO NOT stop after the fixture is created.
+
+Immediately continue:
+
+fixture
+→ SEO
+→ AMP
+→ indexability
+→ links
+→ mobile
+→ metadata
+→ graph
+→ regression
+→ staging readiness
+
+If something fails:
+
+fix it.
+
+If a source is weak:
+
+rewrite/remove the unsupported claim.
+
+If an article is weak:
+
+rewrite or replace it.
+
+If an article is duplicated:
+
+differentiate or replace it.
+
+If a link is broken:
+
+repair it.
+
+If metadata is unavailable:
+
+mark it unavailable rather than inventing it.
+
+Continue until all possible workspace work is complete.
+
+================================================
+FINAL GATE
+================================================
+
+Only after all 70 have passed:
+
+[ ] claim/source review
+[ ] source metadata
+[ ] SEO
+[ ] AMP
+[ ] indexability
+[ ] internal links
+[ ] authority graph
+[ ] mobile
+[ ] first response
+[ ] structured data
+[ ] publication fixture
+[ ] duplication review
+[ ] technical regression
+[ ] security
+
+may the portfolio be staged.
+
+Then return:
+
+70 ARTICLES — READY FOR HUMAN PUBLISH
+
+and provide the final matrix summary.
+
+Do NOT publish automatically.
+
+Do NOT trigger automation.
+
+Do NOT stop for routine confirmation.
+
+================================================
+CRITICAL
+================================================
+
+The in-memory fixture exists specifically to eliminate the current blocker.
+
+Do not replace it with a database fixture.
+
+Do not use production.
+
+Do not use DATABASE_URL.
+
+Do not stop once the fixture passes.
+
+Continue through the complete 70-article validation pipeline.
