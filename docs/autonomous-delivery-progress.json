@@ -3,7 +3,7 @@
   "updatedAt": "2026-10-05",
   "source": {
     "branch": "main",
-    "revision": "27b87f17ccfc18dd1a9258c2c6c3f63b64dbbb49+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a",
+    "revision": "99710e4e3363aeb072a0dbf2cdae144c51cc3253+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a",
     "webArtifactRevision": "web-sha256:0b95374b0e3f885f53b50be05823ce2778c87eb399c47267be364625a0d44c41",
     "apiArtifactRevision": "api-sha256:d7947a0f3167477b2a63b28b31bd771c7e17071b9bcf81c5b3dc17142eee0327"
   },
@@ -16,7 +16,7 @@
     "deployedSourceRevision": "49575ba878da393ed503f337793d3837ffd7fa29+source-sha256:cc2b6fef44c5575e413a63eff05d40de9d445d1ba8d9460cd673d06dbca24c8d",
     "deployedWebRevision": "web-sha256:6de535690965318fb8e13a4090ba370878d122d98b32b21d25f6f8e482c58340",
     "deployedApiRevision": "api-sha256:6d687de00eb58a4e9d2e0ca777049990d49d70ef1741a45194267a6830530219",
-    "publicationState": "ready_for_human_publish",
+    "publicationState": "awaiting_human_decision",
     "productionEditorialWritesByAgent": 0,
     "productionAutomationRunsByAgent": 0
   },
@@ -63,20 +63,20 @@
   "knownProductionState": {
     "lastKnownAmpCoverage": "7/10 on the 2026-10-03 check; 2026-10-05 root and health probes confirmed a stale deployment but did not recheck AMP, so current production AMP coverage remains unknown",
     "currentRuntimeFingerprint": "mismatch confirmed: source=49575ba878da393ed503f337793d3837ffd7fa29+source-sha256:cc2b6fef44c5575e413a63eff05d40de9d445d1ba8d9460cd673d06dbca24c8d; Web=web-sha256:6de535690965318fb8e13a4090ba370878d122d98b32b21d25f6f8e482c58340; API=api-sha256:6d687de00eb58a4e9d2e0ca777049990d49d70ef1741a45194267a6830530219",
-    "lastKnownIssue": "both public hosts serve the same successful but stale deployment: source commit 49575ba is six commits behind current main; source, Web, and API fingerprints all differ from local. One article first-response abort was logged; its cause and user impact are unconfirmed.",
-    "note": "At 2026-10-05T12:49:04Z, / and /api/healthz returned HTTP 200 on both public hosts with identical stale fingerprints. Replit metadata reports a public active successful Autoscale deployment; the available metadata and deployment-log callback did not expose a deployment ID or startup build record. One error-filtered deployment-log query after 12:50Z found a single article first-response abort at 12:57:11.635Z; the log has no request path or response status, and no repeat appeared in the queried interval. Current workspace HEAD is 27b87f17ccfc18dd1a9258c2c6c3f63b64dbbb49. No production editorial writes, publishing automation, or deployment occurred. Full post-deployment route parity remains pending."
+    "lastKnownIssue": "both public hosts serve the same successful but stale deployment: source commit 49575ba is eight commits behind current main; source, Web, and API fingerprints all differ from local. Two article first-response aborts were logged about 10 minutes apart; their paths and user impact are unconfirmed.",
+    "note": "At 2026-10-05T12:49:04Z, / and /api/healthz returned HTTP 200 on both public hosts with identical stale fingerprints; repeat safe probes around 13:12Z returned the same 200 responses and fingerprints. Replit metadata reports a public active successful Autoscale deployment; the available metadata and deployment-log callback did not expose a deployment ID or startup build record. An error-filtered log query after 12:50Z found article first-response aborts at 12:57:11.635Z and 13:07:33.515Z; logs have no article path or response status. Current workspace HEAD is 99710e4e3363aeb072a0dbf2cdae144c51cc3253. No production editorial writes, publishing automation, or deployment occurred. Full post-deployment route parity remains pending."
   },
   "externalActionRequired": [
     {
-      "action": "A human must Publish the reviewed current workspace, then perform only the safe post-publish health, authentication, robots, and fingerprint checks in docs/production-cutover-checklist.md.",
-      "consequence": "Publishing restores the public Web and API; the agent must not publish or invoke editorial automation.",
-      "state": "awaiting human Publish"
+      "action": "A human must decide whether to proceed despite two article first-response aborts with unknown paths/statuses; if proceeding, click Publish and perform only the safe checks in docs/production-cutover-checklist.md.",
+      "consequence": "Publishing replaces the public Web/API. Review managed schema prompts; no production editorial writes or automation will be performed.",
+      "state": "awaiting human decision after repeated article-render aborts"
     }
   ],
   "failingTests": [],
   "workstreams": [
     { "id": 0, "name": "Architecture discovery and map", "status": "complete", "evidence": "Architecture and cutover documents contain current local fingerprints, route ownership, smoke evidence, mobile measurements, and the 2026-10-05 read-only production fingerprint comparison identifying a stale active deployment." },
-    { "id": 1, "name": "Deployment provenance", "status": "partial", "evidence": "Production source commit 49575ba is a known ancestor six commits behind current main; both public hosts return the same stale source/Web/API fingerprints. Deployment ID and startup build log are not exposed in available metadata/logs." },
+    { "id": 1, "name": "Deployment provenance", "status": "partial", "evidence": "Production source commit 49575ba is a known ancestor eight commits behind current main; both public hosts return the same stale source/Web/API fingerprints. Deployment ID and startup build log are not exposed in available metadata/logs." },
     { "id": 2, "name": "Legacy API automation cutover", "status": "blocked_external", "evidence": "The current workspace API keeps EDITORIAL_AUTOMATION_ENABLED=false; the active deployment is an older main ancestor, but its scheduler state is unknown. No production automation was run." },
     { "id": 3, "name": "API security", "status": "partial", "evidence": "Editor routes use authorization and explicit public projection; regression coverage still needs a full audit." },
     { "id": 4, "name": "Single publication eligibility source", "status": "complete", "evidence": "The canonical eligibility rule is covered by date-stability, release metadata, publication fixture, first-response, and public-route checks." },
@@ -106,8 +106,8 @@
     { "id": 28, "name": "Authority-led content strategy", "status": "not_verified", "evidence": "Priority rules need to be reflected in editorial tooling and publication gates." },
     { "id": 29, "name": "Security", "status": "in_progress", "evidence": "braces@3.0.3 remains scanner-visible but the API path is dev-only: http-proxy-middleware@4.2.0 -> micromatch@4.0.8 -> braces@3.0.3. The production API dependency view and bundle exclude it; the bounded-depth patch and 10 security/proxy tests pass." },
     { "id": 30, "name": "Regression suite", "status": "complete", "evidence": "The configured full smoke passes, including content/research/authority/SEO checks, publication-fixture cleanup, first-response pages, 56 desktop and 8 mobile routes, 11 AMP pages, RSS, responsive checks, release history, Clerk themes, a 105-route/460-reference link audit with 0 issues, and preview HMR." },
-    { "id": 31, "name": "Deployment safety", "status": "blocked_external", "evidence": "Both public hosts serve the same stale successful build from a known main ancestor; current local production builds pass. User-initiated Publish is required to update production. No production mutation or automation was performed." },
-    { "id": 32, "name": "Autonomous progress loop", "status": "awaiting_human_publish", "evidence": "Current local fingerprints, clean production builds, full smoke evidence, and mobile measurements are updated. Local API health headers match current main; production headers remain stale until user-initiated Publish, after which parity checks can run." }
+    { "id": 31, "name": "Deployment safety", "status": "blocked_external", "evidence": "Both public hosts serve the same stale successful build from a known main ancestor eight commits behind current main; two article first-response aborts are present in recent logs with unknown route/status. Current local production builds pass, but a human must decide whether to hold or proceed with Publish. No production mutation or automation was performed." },
+    { "id": 32, "name": "Autonomous progress loop", "status": "awaiting_human_publish_decision", "evidence": "Current local fingerprints, clean production builds, full smoke evidence, and mobile measurements are updated. Local API health headers match current HEAD; production root and health remain 200 with stale fingerprints, and two article-render aborts require human review before deciding whether to publish." }
   ],
-  "finalGate": "awaiting_human_publish"
+  "finalGate": "awaiting_human_publish_decision"
 }

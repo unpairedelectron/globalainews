@@ -2,7 +2,7 @@
 
 **Current as of:** 2026-10-05
 **Source branch:** `main`  
-**Current source fingerprint:** `27b87f17ccfc18dd1a9258c2c6c3f63b64dbbb49+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a`
+**Current source fingerprint:** `99710e4e3363aeb072a0dbf2cdae144c51cc3253+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a`
 
 ## Deployment topology
 

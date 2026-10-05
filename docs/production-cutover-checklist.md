@@ -83,7 +83,7 @@ The final workspace build and `scripts/build-fingerprint.mjs` agree on these val
 
 | Fingerprint | Value |
 | --- | --- |
-| Source | `27b87f17ccfc18dd1a9258c2c6c3f63b64dbbb49+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a` |
+| Source | `99710e4e3363aeb072a0dbf2cdae144c51cc3253+source-sha256:ef63fe0bcf3bffb215109ccf2a5c57a510c4b4f23e3b9ca9a58177577d62360a` |
 | Web artifact | `web-sha256:0b95374b0e3f885f53b50be05823ce2778c87eb399c47267be364625a0d44c41` |
 | API artifact | `api-sha256:d7947a0f3167477b2a63b28b31bd771c7e17071b9bcf81c5b3dc17142eee0327` |
 
@@ -99,9 +99,11 @@ At 2026-10-05T12:49:04Z, read-only `GET /` and `GET /api/healthz` requests to bo
 | Web artifact | `web-sha256:6de535690965318fb8e13a4090ba370878d122d98b32b21d25f6f8e482c58340` |
 | API artifact | `api-sha256:6d687de00eb58a4e9d2e0ca777049990d49d70ef1741a45194267a6830530219` |
 
-A targeted deployment-log query after 12:50Z found one `Article first-response rendering failed: This operation was aborted` error at `12:57:11.635Z`; no other matching error appeared in the queried interval. The tracked article-render handler is unchanged between the deployed source commit and current `main`; it has a five-second API snapshot timeout and returns HTTP 503 on an unhandled fetch failure. The log does not identify the article path or response status, so the cause and user impact are unconfirmed. Do not request an article route to reproduce this: its API snapshot may reach the schedule-seeding path described above.
+A targeted deployment-log query after 12:50Z found two `Article first-response rendering failed: This operation was aborted` errors, at `12:57:11.635Z` and `13:07:33.515Z`. The tracked article-render handler is unchanged between the deployed source commit and current `main`; it has a five-second API snapshot timeout and returns HTTP 503 on an unhandled fetch failure. The logs do not identify the article paths or response statuses, so cause and user impact are unconfirmed. Do not request an article route to reproduce this: its API snapshot may reach the schedule-seeding path described above.
 
-The deployed source commit exists in local Git history and is an ancestor six commits behind current `main` (`27b87f17ccfc18dd1a9258c2c6c3f63b64dbbb49`). All three deployed fingerprints differ from the current local table above. Both public hosts serve the same stale build; there is no evidence of a split host mapping. The evidence identifies an active deployment of an older commit, not a wrong branch or a local build failure. No production editorial writes, publishing automation, or deployment occurred during this check.
+Additional safe `GET /` and `GET /api/healthz` probes around `13:12Z` returned HTTP 200 on both public hosts with the same stale source, Web, and API fingerprints listed above. These do not verify article-route availability.
+
+The deployed source commit exists in local Git history and is an ancestor eight commits behind current `main` (`99710e4e3363aeb072a0dbf2cdae144c51cc3253`). All three deployed fingerprints differ from the current local table above. Both public hosts serve the same stale build; there is no evidence of a split host mapping. The evidence identifies an active deployment of an older commit, not a wrong branch or a local build failure. No production editorial writes, publishing automation, or deployment occurred during this check.
 
 After an approved publish, compare `X-GAN-Source-Revision`, `X-GAN-Web-Artifact-Revision`, and `X-GAN-API-Artifact-Revision` on both public hosts and both paths (`/` and `/api/healthz`) with the local values above. If a build changes before that publish, regenerate the fingerprints and update this document before comparing.
 
