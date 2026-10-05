@@ -57,6 +57,12 @@ const chromium = process.env.CHROMIUM_BIN || '/repl/tools/bin/chromium';
 const UNKNOWN = 'UNKNOWN / NOT AVAILABLE';
 const FIXTURE_NOW = new Date('2026-10-05T00:00:00.000Z');
 const FIXTURE_DATE = FIXTURE_NOW.toISOString().slice(0, 10);
+const HOUSE_AUTHOR = {
+  slug: 'global-ai-news-editorial-desk',
+  name: 'Global AI News Editorial Desk',
+  authorType: 'organization' as const,
+};
+const stagingManifestFile = path.join(portfolioRoot, 'staged-articles.json');
 
 const families: Array<{
   file: string;
@@ -113,7 +119,7 @@ interface PortfolioDraft {
   topic: string;
   dek: string;
   byline: string;
-  actualPublicationDate: string;
+  actualPublicationDate: null;
   evidenceNote: string;
   relatedCoverage: string;
   relatedSlugs: string[];
@@ -635,8 +641,8 @@ function parseDrafts(
         slug,
         topic,
         dek,
-        byline: fileAuthorStatus,
-        actualPublicationDate: UNKNOWN,
+        byline: HOUSE_AUTHOR.name,
+        actualPublicationDate: null,
         evidenceNote,
         relatedCoverage,
         relatedSlugs: [],
@@ -697,7 +703,9 @@ function parseDrafts(
       body: bodySections,
       date,
       readTime: `${Math.max(1, Math.ceil(draft.wordCount / 220))} min read`,
-      author: '',
+      author: HOUSE_AUTHOR.slug,
+      authorType: HOUSE_AUTHOR.authorType,
+      authorName: HOUSE_AUTHOR.name,
       evidence: draft.evidenceNote || UNKNOWN,
       evidenceSummary: {
         primarySources: primaryCount,
@@ -1173,6 +1181,87 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
   const citationKeys = new Set(drafts.flatMap((draft) => draft.citationKeys));
   const maintainedStories = getPublishedStories();
   const maintainedSlugs = new Set(maintainedStories.map((story) => story.slug));
+  const overlayPath = path.join(portfolioRoot, 'candidate-authority-link-overlay.json');
+  const linkOverlay = JSON.parse(readFileSync(overlayPath, 'utf8')) as {
+    counts: Record<string, number>;
+    edges: Array<{
+      fromSlug: string;
+      fromTitle: string;
+      fromContentType: string;
+      cluster: string;
+      toSlug: string;
+      toTitle: string;
+      toKind: string;
+      toContentType: string | null;
+      href: string;
+      targetState: string;
+      linkReason: string;
+      [key: string]: unknown;
+    }>;
+  };
+  const overlayEdges = linkOverlay.edges;
+  const draftsBySlug = new Map(drafts.map((draft) => [draft.slug, draft]));
+  assert.equal(overlayEdges.length, 63, 'all curated authority overlay edges must be present');
+  const overlayCounts = overlayEdges.reduce<Record<string, number>>((counts, edge) => {
+    const key = edge.toKind === 'candidate' ? 'toUnpublishedCandidates'
+      : edge.toKind === 'story' ? 'toMaintainedStories'
+        : edge.toKind === 'research' ? 'toMaintainedResearchRecords'
+          : edge.toKind === 'topic' ? 'toMaintainedTopics'
+            : `unexpected:${edge.toKind}`;
+    counts[key] = (counts[key] ?? 0) + 1;
+    return counts;
+  }, {});
+  assert.equal(linkOverlay.counts.totalDraftOnlyLinks, overlayEdges.length);
+  for (const key of ['toUnpublishedCandidates', 'toMaintainedStories', 'toMaintainedResearchRecords', 'toMaintainedTopics']) {
+    assert.equal(linkOverlay.counts[key], overlayCounts[key] ?? 0, `overlay count must match ${key}`);
+  }
+  assert.ok(overlayEdges.every((edge) => draftsBySlug.has(edge.fromSlug)), 'every overlay edge must start at a candidate');
+  for (const edge of overlayEdges) {
+    if (edge.toKind === 'candidate') {
+      assert.ok(draftsBySlug.has(edge.toSlug), `overlay target candidate must exist: ${edge.toSlug}`);
+    } else if (edge.toKind === 'story') {
+      assert.ok(maintainedSlugs.has(edge.toSlug), `overlay maintained story must resolve: ${edge.toSlug}`);
+    } else if (edge.toKind === 'research') {
+      assert.ok(researchRecords.some((record) => record.slug === edge.toSlug), `overlay research record must resolve: ${edge.toSlug}`);
+    } else if (edge.toKind === 'topic') {
+      const topic = topicRecords.find((record) => record.slug === edge.toSlug);
+      assert.ok(topic, `overlay topic must resolve: ${edge.toSlug}`);
+      assert.equal(topic.route, edge.href, `overlay topic href must use its maintained route: ${edge.toSlug}`);
+    } else {
+      assert.fail(`unexpected overlay target kind: ${edge.toKind}`);
+    }
+  }
+  const reciprocalCandidateEdges = overlayEdges.flatMap((edge) => {
+    if (edge.toKind !== 'candidate') return [];
+    const reverseExists = overlayEdges.some((candidate) =>
+      candidate.fromSlug === edge.toSlug && candidate.toSlug === edge.fromSlug && candidate.toKind === 'candidate',
+    );
+    if (reverseExists) return [];
+    const sourceDraft = draftsBySlug.get(edge.fromSlug);
+    const targetDraft = draftsBySlug.get(edge.toSlug);
+    assert.ok(sourceDraft && targetDraft, `reciprocal target pair must resolve for ${edge.fromSlug}`);
+    return [{
+      ...edge,
+      fromSlug: edge.toSlug,
+      fromTitle: targetDraft.title,
+      fromContentType: targetDraft.contentType,
+      toSlug: edge.fromSlug,
+      toTitle: sourceDraft.title,
+      toKind: 'candidate',
+      toContentType: sourceDraft.contentType,
+      href: `/article/${sourceDraft.slug}`,
+      targetState: 'unpublished-candidate; reciprocal link staged only',
+      linkReason: `Reciprocal related-candidate link for curated ${edge.cluster} overlay edge.`,
+      reciprocalOf: `${edge.fromSlug}->${edge.toSlug}`,
+    }];
+  });
+  const stagingLinkEdges = [...overlayEdges, ...reciprocalCandidateEdges];
+  for (const draft of drafts) {
+    const curatedRelated = stagingLinkEdges
+      .filter((edge) => edge.fromSlug === draft.slug && edge.toKind === 'candidate')
+      .map((edge) => edge.toSlug);
+    draft.story.relatedStories = [...new Set([...draft.story.relatedStories, ...curatedRelated])];
+  }
 
   assert.equal(drafts.length, 70, 'all actual draft records must load');
   assert.deepEqual(
@@ -1423,7 +1512,12 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         const twitterCard = readMetadataValue(articleHtml, 'name', 'twitter:card');
         const breadcrumbPresent = jsonLdNodes.some((node) => node['@type'] === 'BreadcrumbList');
         const jsonLdTitlePass = jsonLdNodes.some((node) => node.headline === draft.title || node.name === draft.title);
-        const jsonLdAuthorPresent = jsonLdNodes.some((node) => Boolean(node.author));
+        const articleJsonLd = jsonLdNodes.find((node) => node.headline === draft.title);
+        const articleAuthor = articleJsonLd?.author as { '@type'?: string; name?: string } | undefined;
+        const jsonLdAuthorPresent = Boolean(articleAuthor);
+        const jsonLdOrganizationAuthor = articleAuthor?.['@type'] === 'Organization'
+          && articleAuthor.name === HOUSE_AUTHOR.name;
+        const bylinePresentInFirstResponse = articleHtml.includes(HOUSE_AUTHOR.name);
         const jsonLdDatePresent = jsonLdNodes.some((node) => Boolean(node.datePublished));
         const robotsNoindex = /<meta\b[^>]*name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(articleHtml);
         const sitemapPass = apiSitemap.includes(`<loc>${canonical}</loc>`);
@@ -1445,7 +1539,7 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
           && twitterCard === 'summary_large_image'
           && Boolean(readMetadataValue(articleHtml, 'name', 'twitter:image'));
         result.jsonLd = Boolean(jsonLd) && jsonLdTitlePass;
-        result.jsonLdAuthor = jsonLdAuthorPresent;
+        result.jsonLdAuthor = jsonLdOrganizationAuthor;
         result.jsonLdPublicationDate = jsonLdDatePresent;
         result.breadcrumbs = breadcrumbPresent;
         result.amp = articleResponse.status === 200
@@ -1463,23 +1557,21 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         result.internalLinkCount = 0;
         result.fixtureInternalLinkCount = relatedLinkCount + sourceLinkCount + topicLinkCount;
         result.liveMaintainedRouteCount = 0;
-        result.bylinePresentInFirstResponse = jsonLdAuthorPresent || /<strong>[^<]+<\/strong>[^<]*by/i.test(articleHtml);
+        result.bylinePresentInFirstResponse = bylinePresentInFirstResponse;
         result.fixturePublicationDatePresent = jsonLdDatePresent;
-        result.actualAuthorStatus = draft.fileAuthorStatus.toLowerCase().includes('unassigned')
-          ? UNKNOWN
-          : draft.fileAuthorStatus;
-        result.seoStatus = 'STRUCTURAL ROUTE PASS; HUMAN RELEASE BLOCKED BY MISSING REAL AUTHOR/PUBLICATION DATE';
+        result.actualAuthorStatus = HOUSE_AUTHOR.name;
+        result.seoStatus = 'PASS IN DISPOSABLE PUBLISHED-ROUTE FIXTURE; staged record remains a private draft';
         result.ampStatus = result.amp
           ? 'PASS — candidate-specific article-to-AMP relationship in disposable fixture'
           : 'FAIL — AMP route contract';
         result.indexabilityStatus = result.indexability
           ? 'PASS IN FIXTURE; DRAFT REMAINS PRIVATE OUTSIDE FIXTURE'
           : 'FAIL — indexability/sitemap';
-        result.firstResponseStatus = bodyPass && result.jsonLd && result.canonical
-          ? 'STRUCTURAL PASS; BLOCKED — actual author and publication date unavailable'
+        result.firstResponseStatus = bodyPass && result.jsonLd && result.canonical && result.bylinePresentInFirstResponse
+          ? 'PASS — first response carries the organization byline; fixture publication date is test-only'
           : 'FAIL — first-response structural contract';
-        result.qualityStatus = `SOURCE REVIEW COMPLETE; ${draft.typeFit.status}; release metadata unavailable`;
-        result.stagingStatus = 'NOT STAGED';
+        result.qualityStatus = `PASS — reviewed sources, ${draft.typeFit.status}, distinct organization byline, draft publication metadata`;
+        result.stagingStatus = 'STAGED — workspace-only draft; publishedAt remains null';
         result.unresolvedRelatedReferences = unresolvedRelated
           .filter((item) => item.slug === draft.slug)
           .map((item) => item.reference);
@@ -1493,16 +1585,14 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
           ['Open Graph metadata', result.openGraph],
           ['social metadata', result.socialMetadata],
           ['JSON-LD headline', result.jsonLd],
+          ['JSON-LD organization author', result.jsonLdAuthor],
+          ['organization byline in first response', result.bylinePresentInFirstResponse],
           ['AMP article relationship', result.amp],
           ['indexability/sitemap', result.indexability],
           ['RSS entry', result.rss],
           ['first-response article body', result.firstResponseBody],
         ];
         result.technicalIssues.push(...routeChecks.filter(([, passed]) => !passed).map(([name]) => name));
-        if (!jsonLdAuthorPresent) result.editorialBlockers = ['No assigned author/byline in the actual draft.'];
-        if (!jsonLdDatePresent || draft.actualPublicationDate === UNKNOWN) {
-          result.editorialBlockers = [...(result.editorialBlockers ?? []), 'No actual publication date in the draft; the route date is synthetic and test-only.'];
-        }
         result.titleTag = titleTag ?? UNKNOWN;
         result.descriptionLength = expectedDescription.length;
         result.responseBytes = Buffer.byteLength(articleHtml);
@@ -1646,7 +1736,7 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         || graphSet.has(`article:${draft.slug}:cites:source:${key}`),
       );
       const targetType = draft.contentType === 'Report' ? 'report' : 'article';
-      const relatedEdges = draft.relatedSlugs.filter((slug) =>
+      const relatedEdges = draft.story.relatedStories.filter((slug) =>
         graphSet.has(`${targetType}:${draft.slug}:related:article:${slug}`)
         || graphSet.has(`${targetType}:${draft.slug}:related:report:${slug}`),
       );
@@ -1655,7 +1745,7 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
       ));
       if (!hasTopicEdge) graphIssues.push(`${draft.slug}: missing fixture topic edge`);
       if (sourceEdges.length !== draft.citationKeys.length) graphIssues.push(`${draft.slug}: missing one or more fixture source edges`);
-      if (relatedEdges.length !== draft.relatedSlugs.length) graphIssues.push(`${draft.slug}: missing one or more reciprocal related-story edges`);
+      if (relatedEdges.length !== draft.story.relatedStories.length) graphIssues.push(`${draft.slug}: missing one or more reciprocal related-story edges`);
       const result = candidateResults.get(draft.slug)!;
       result.fixtureAuthorityGraph = {
         topic: expectedTopic?.slug ?? UNKNOWN,
@@ -1674,6 +1764,35 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
     for (const alert of duplicateAlerts) {
       duplicateBySlug.set(alert.leftSlug, [...(duplicateBySlug.get(alert.leftSlug) ?? []), alert]);
     }
+    const semanticReview = JSON.parse(readFileSync(
+      path.join(portfolioRoot, 'semantic-pair-review.json'),
+      'utf8',
+    )) as {
+      classificationCounts: Record<string, number>;
+      unresolvedAClassCount: number;
+      pairReviews: Array<{ leftSlug: string; rightSlug: string; classification: string; rationale: string; differentiation?: string }>;
+    };
+    const semanticPairsBySlug = new Map<string, typeof semanticReview.pairReviews>();
+    for (const review of semanticReview.pairReviews) {
+      semanticPairsBySlug.set(review.leftSlug, [...(semanticPairsBySlug.get(review.leftSlug) ?? []), review]);
+      semanticPairsBySlug.set(review.rightSlug, [...(semanticPairsBySlug.get(review.rightSlug) ?? []), review]);
+    }
+    const contentTypeReview = JSON.parse(readFileSync(
+      path.join(portfolioRoot, 'content-type-review.json'),
+      'utf8',
+    )) as {
+      status: string;
+      count: number;
+      manualFitCount: number;
+      contentTypeReviews: Array<{ slug: string; finalStatus: string; manualDecision: string; rationale: string }>;
+    };
+    const sourceDateReview = JSON.parse(readFileSync(
+      path.join(portfolioRoot, 'source-date-review.json'),
+      'utf8',
+    )) as {
+      coverage: { normalizedPublicationDates: number; unresolvedOrUnnormalizedEvidence: number; manufacturedDates: number };
+      unresolvedEvidence: unknown[];
+    };
     const sourceMetadataFile = path.join(portfolioRoot, 'source-metadata-normalized.json');
     const securityScanSummaryFile = path.join(portfolioRoot, 'security-scan-summary.json');
     const matrixFile = path.join(portfolioRoot, 'final-validation-matrix.json');
@@ -1728,10 +1847,65 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
       const classifiedPrimary = draft.sourceRows.filter((source) => source.primarySecondary === 'PRIMARY').length;
       const classifiedSecondary = draft.sourceRows.filter((source) => source.primarySecondary === 'SECONDARY').length;
       const unknownPrimary = draft.sourceRows.filter((source) => source.primarySecondary === UNKNOWN).length;
+      const internalLinks = stagingLinkEdges.filter((edge) => edge.fromSlug === draft.slug);
+      const researchLinks = internalLinks.filter((edge) => edge.toKind === 'research');
+      const reportLinks = internalLinks.filter((edge) =>
+        edge.toKind === 'report' || edge.toContentType === 'Report',
+      );
+      const reviewedPairs = semanticPairsBySlug.get(draft.slug) ?? [];
+      const reviewedClassCounts = reviewedPairs.reduce<Record<string, number>>((counts, pair) => {
+        counts[pair.classification] = (counts[pair.classification] ?? 0) + 1;
+        return counts;
+      }, {});
+      const unresolvedSimilarities = reviewedPairs.filter((pair) => pair.classification === 'A');
+      const contentTypeAdjudication = contentTypeReview.contentTypeReviews.find((item) => item.slug === draft.slug);
+      const sourceDateCounts = {
+        normalized: draft.sourceRows.filter((source) => source.publicationDate !== UNKNOWN).length,
+        ambiguousEvidencePreserved: draft.sourceRows.filter((source) =>
+          source.publicationDate === UNKNOWN && source.publicationDateEvidence.length > 0,
+        ).length,
+        unavailableWithoutDateEvidence: draft.sourceRows.filter((source) =>
+          source.publicationDate === UNKNOWN && source.publicationDateEvidence.length === 0,
+        ).length,
+      };
+      const rowSecurityStatus = securityScanSummary.status === 'PASS'
+        ? 'PASS — workspace security scans completed with no unresolved critical/high findings'
+        : `NOT CLEARED — security scan status ${securityScanSummary.status ?? 'unknown'}`;
       return {
         slug: draft.slug,
         segment: draft.contentType,
         title: draft.title,
+        author: HOUSE_AUTHOR.name,
+        author_type: HOUSE_AUTHOR.authorType,
+        publication_state: 'draft',
+        publishedAt: null,
+        source_count: draft.sourceRows.length,
+        citation_count: draft.citationCount,
+        source_date_status: {
+          ...sourceDateCounts,
+          status: sourceDateCounts.ambiguousEvidencePreserved > 0
+            ? 'AMBIGUOUS SOURCE DATE EVIDENCE PRESERVED; not an article publication-date blocker'
+            : 'SOURCE DATES PRESERVED; not article publication metadata',
+        },
+        similarity_status: {
+          status: unresolvedSimilarities.length === 0
+            ? 'REVIEWED — no unresolved true duplicates'
+            : `BLOCKED — ${unresolvedSimilarities.length} unresolved A-class pairs`,
+          reviewedPairCount: reviewedPairs.length,
+          classificationCounts: reviewedClassCounts,
+          unresolvedPairCount: unresolvedSimilarities.length,
+        },
+        content_type_status: contentTypeAdjudication
+          ? {
+              status: contentTypeAdjudication.finalStatus,
+              manualDecision: contentTypeAdjudication.manualDecision,
+              rationale: contentTypeAdjudication.rationale,
+            }
+          : {
+              status: draft.typeFit.status,
+              manualDecision: 'No warning; assigned type retained',
+              rationale: 'Structural signals were checked against the completed draft and its evidence profile.',
+            },
         topic: draft.topic || UNKNOWN,
         entities: {
           linked: [],
@@ -1749,15 +1923,61 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
           unresolvedReferences: result.unresolvedRelatedReferences ?? [],
           maintainedResearchOrReportRecords: [],
         },
+        research: researchLinks,
+        report: reportLinks,
+        timeline: {
+          links: [],
+          status: 'No timeline relationship asserted; no unsupported event was added.',
+        },
+        internal_links: internalLinks,
         internalLinkCount: 0,
         fixtureInternalLinkCount: result.fixtureInternalLinkCount ?? 0,
         mobileMetrics: result.mobileMetrics ?? null,
+        SEO: {
+          status: result.seoStatus ?? 'NOT RUN',
+          title: result.title ?? false,
+          description: result.description ?? false,
+          canonical: result.canonical ?? false,
+          openGraph: result.openGraph ?? false,
+          socialMetadata: result.socialMetadata ?? false,
+          jsonLd: result.jsonLd ?? false,
+          organizationAuthor: result.jsonLdAuthor ?? false,
+        },
+        AMP: {
+          status: result.ampStatus ?? 'NOT RUN',
+          articleRelationship: result.amp ?? false,
+          canonicalRelationship: result.ampCanonicalRelationship ?? false,
+        },
+        indexability: {
+          status: result.indexabilityStatus ?? 'NOT RUN',
+          stagingPolicy: 'The 70 records remain drafts and are not publicly indexed; fixture sitemap checks are disposable only.',
+        },
+        mobile: {
+          status: result.mobile ?? 'NOT RUN',
+          metrics: result.mobileMetrics ?? null,
+        },
+        first_response: {
+          status: result.firstResponseStatus ?? 'NOT RUN',
+          organizationByline: result.bylinePresentInFirstResponse ?? false,
+          fixturePublicationDateOnly: result.fixturePublicationDatePresent ?? false,
+        },
+        jsonLdAuthor: result.jsonLdAuthor ?? false,
+        security: {
+          status: rowSecurityStatus,
+          scanners: securityScanSummary.scanners ?? {},
+        },
+        staging: {
+          status: result.stagingStatus ?? 'NOT RUN',
+          publicationState: 'draft',
+          publishedAt: null,
+          productionEditorialDataChanged: false,
+        },
         seoStatus: result.seoStatus ?? 'NOT RUN',
         ampStatus: result.ampStatus ?? 'NOT RUN',
         indexability: result.indexabilityStatus ?? 'NOT RUN',
         mobileStatus: result.mobile ?? 'NOT RUN',
         firstResponseStatus: result.firstResponseStatus ?? 'NOT RUN',
-        qualityStatus: `${draft.typeFit.status}; source/editorial review complete; actual author and publication date unavailable`,
+        qualityStatus: `${draft.typeFit.status}; reviewed source evidence; organization byline assigned; draft publication date correctly remains null`,
         contentTypeFit: {
           status: draft.typeFit.status,
           staticCues: draft.typeFit.cues,
@@ -1785,19 +2005,196 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         smallModelsCluster: /small model|compact model|efficient ai|local inference|on-device|serious workflow/i.test(`${draft.title} ${draft.dek} ${draft.topic}`)
           ? 'RELEVANT BY TITLE/DEK; candidate-only link not published'
           : 'NOT FLAGGED — no direct title/dek evidence',
-        publicationEligibility: draft.eligible ? 'ELIGIBLE IN TEST ONLY' : 'INELIGIBLE IN TEST',
-        actualAuthor: draft.fileAuthorStatus.toLowerCase().includes('unassigned') ? UNKNOWN : draft.fileAuthorStatus,
+        publicationEligibility: 'DRAFT — workspace staging only; awaiting a human Publish action',
+        actualAuthor: HOUSE_AUTHOR.name,
+        authorType: HOUSE_AUTHOR.authorType,
         actualPublicationDate: draft.actualPublicationDate,
         wordCount: draft.wordCount,
         sourceFile: draft.file,
         evidenceNote: draft.evidenceNote || UNKNOWN,
-        stagingStatus: 'NOT STAGED',
+        stagingStatus: 'STAGED — workspace-only draft; publishedAt:null',
         technicalIssues: result.technicalIssues ?? [],
       };
     });
+    const stagedArticles = drafts.map((draft) => {
+      const result = candidateResults.get(draft.slug)!;
+      const internalLinks = stagingLinkEdges.filter((edge) => edge.fromSlug === draft.slug);
+      const sourceDateStatus = {
+        normalized: draft.sourceRows.filter((source) => source.publicationDate !== UNKNOWN).length,
+        ambiguousEvidencePreserved: draft.sourceRows.filter((source) =>
+          source.publicationDate === UNKNOWN && source.publicationDateEvidence.length > 0,
+        ).length,
+        unavailableWithoutDateEvidence: draft.sourceRows.filter((source) =>
+          source.publicationDate === UNKNOWN && source.publicationDateEvidence.length === 0,
+        ).length,
+      };
+      const reviewedPairs = semanticPairsBySlug.get(draft.slug) ?? [];
+      const reviewClasses = reviewedPairs.reduce<Record<string, number>>((counts, pair) => {
+        counts[pair.classification] = (counts[pair.classification] ?? 0) + 1;
+        return counts;
+      }, {});
+      const contentTypeAdjudication = contentTypeReview.contentTypeReviews.find((item) => item.slug === draft.slug);
+      const rowsForResearch = internalLinks.filter((edge) => edge.toKind === 'research');
+      const rowsForReports = internalLinks.filter((edge) =>
+        edge.toKind === 'report' || edge.toContentType === 'Report',
+      );
+      return {
+        slug: draft.slug,
+        segment: draft.contentType,
+        title: draft.title,
+        author: HOUSE_AUTHOR.name,
+        authorSlug: HOUSE_AUTHOR.slug,
+        author_type: HOUSE_AUTHOR.authorType,
+        publication_state: 'draft',
+        draftCreatedAt: FIXTURE_NOW.toISOString(),
+        updatedAt: FIXTURE_NOW.toISOString(),
+        publishedAt: null,
+        source_count: draft.sourceRows.length,
+        citation_count: draft.citationCount,
+        source_date_status: sourceDateStatus,
+        similarity_status: {
+          status: reviewedPairs.every((pair) => pair.classification !== 'A')
+            ? 'REVIEWED — no unresolved true duplicates'
+            : 'BLOCKED — unresolved A-class duplicate pair',
+          reviewedPairCount: reviewedPairs.length,
+          classificationCounts: reviewClasses,
+          unresolvedPairCount: reviewedPairs.filter((pair) => pair.classification === 'A').length,
+        },
+        content_type_status: contentTypeAdjudication
+          ? {
+              status: contentTypeAdjudication.finalStatus,
+              manualDecision: contentTypeAdjudication.manualDecision,
+              rationale: contentTypeAdjudication.rationale,
+            }
+          : {
+              status: draft.typeFit.status,
+              manualDecision: 'No warning; assigned type retained',
+              rationale: 'The completed draft was checked against the assigned editorial form.',
+            },
+        topic: draft.topic || UNKNOWN,
+        entities: {
+          linked: [],
+          titleDekMentions: draft.mentionedEntities,
+          status: 'No unsupported entity edge added.',
+        },
+        research: rowsForResearch,
+        report: rowsForReports,
+        timeline: [],
+        internal_links: internalLinks,
+        content: {
+          category: draft.category,
+          classification: draft.classification,
+          dek: draft.dek,
+          body: draft.bodySections,
+          citations: draft.citationKeys,
+          sources: draft.sourceRows.map((source, index) => ({
+            citationKey: draft.citationKeys[index] ?? source.citationKeys[0] ?? UNKNOWN,
+            capturePath: source.capturePath,
+            url: source.exactUrl,
+            title: source.title,
+            publisher: source.publisher,
+            publicationDate: source.publicationDate,
+            publicationDateEvidence: source.publicationDateEvidence,
+            fetchedDate: source.fetchedDate,
+            evidenceClass: source.evidenceClass,
+            primarySecondary: source.primarySecondary,
+            relevanceContext: source.relevanceContext,
+          })),
+          explicitRelatedCoverage: draft.relatedCoverage || UNKNOWN,
+          relatedCandidateSlugs: draft.story.relatedStories,
+          entityMentions: draft.mentionedEntities,
+          timelineSlugs: [],
+        },
+        SEO: {
+          status: result.seoStatus ?? 'NOT RUN',
+          canonical: getCanonicalUrl(`/article/${draft.slug}`),
+          ampPath: `/amp/article/${draft.slug}/`,
+          firstResponseMetadataPass: Boolean(result.title && result.description && result.canonical && result.jsonLd),
+        },
+        AMP: {
+          status: result.ampStatus ?? 'NOT RUN',
+          route: `/amp/article/${draft.slug}/`,
+          relationshipPass: Boolean(result.ampCanonicalRelationship),
+        },
+        indexability: {
+          status: 'NO PUBLIC INDEX ENTRY WHILE DRAFT',
+          fixtureRouteStatus: result.indexabilityStatus ?? 'NOT RUN',
+        },
+        mobile: {
+          status: result.mobile ?? 'NOT RUN',
+          metrics: result.mobileMetrics ?? null,
+        },
+        first_response: {
+          status: result.firstResponseStatus ?? 'NOT RUN',
+          organizationByline: result.bylinePresentInFirstResponse ?? false,
+          fixtureOnlyDate: result.fixturePublicationDatePresent ?? false,
+        },
+        security: {
+          status: securityScanSummary.status ?? 'NOT RUN',
+          scanners: securityScanSummary.scanners ?? {},
+        },
+        staging: {
+          status: 'DRAFT — workspace-only; not sent to editorial API or release database',
+          productionEditorialDataChanged: false,
+          publicationAutomationTriggered: false,
+          relatedOverlayEdgeCount: internalLinks.length,
+          similarityReviewClasses: reviewClasses,
+        },
+      };
+    });
+    assert.equal(stagedArticles.length, 70);
+    assert.ok(stagedArticles.every((article) => article.publication_state === 'draft'));
+    assert.ok(stagedArticles.every((article) => article.publishedAt === null));
+    assert.ok(stagedArticles.every((article) => !Object.hasOwn(article, 'publishAt') && !Object.hasOwn(article, 'date')));
+    assert.ok(stagedArticles.every((article) =>
+      article.author_type === 'organization' && article.author === HOUSE_AUTHOR.name,
+    ));
+    const stagedManifest = {
+      format: 'global-ai-news-editorial-draft-stage/v1',
+      generatedAt: FIXTURE_NOW.toISOString(),
+      status: 'WORKSPACE-ONLY DRAFT STAGING — AWAITING HUMAN PUBLISH',
+      bylinePolicy: {
+        type: 'organization',
+        name: HOUSE_AUTHOR.name,
+        slug: HOUSE_AUTHOR.slug,
+        personalProfileCreated: false,
+      },
+      publicationPolicy: {
+        publicationState: 'draft',
+        publishedAt: null,
+        publishAtIncluded: false,
+        draftCreatedAtAndUpdatedAtStoredSeparately: true,
+        humanPublishRequired: true,
+        automaticPublicationTriggered: false,
+      },
+      authorityLinks: {
+        curatedOverlayFile: path.basename(overlayPath),
+        curatedOverlayEdges: overlayEdges.length,
+        reciprocalCandidateEdgesAdded: reciprocalCandidateEdges.length,
+        totalStagedLinks: stagingLinkEdges.length,
+        publicLinksAdded: 0,
+        authorityRegistryChanged: false,
+      },
+      sourceDatePolicy: 'Source publication-date evidence stays on source records; it is never copied into article publication metadata.',
+      productionEditorialDataChanged: false,
+      articles: stagedArticles,
+    };
+    writeFileSync(stagingManifestFile, `${JSON.stringify(stagedManifest, null, 2)}\n`);
+    const fullSmokeStatus = process.env.RELEASE_FULL_SMOKE_STATUS ?? 'NOT RUN';
+    const stagedDraftCount = stagedArticles.filter((article) =>
+      article.publication_state === 'draft' && article.publishedAt === null,
+    ).length;
+    const releaseReady = stagedDraftCount === 70
+      && fullSmokeStatus === 'PASS'
+      && securityScanSummary.status === 'PASS'
+      && semanticReview.unresolvedAClassCount === 0
+      && contentTypeReview.count === contentTypeReview.manualFitCount
+      && graphIssues.length === 0
+      && unresolvedRelated.length === 0
+      && matrixRows.every((row) => row.technicalIssues.length === 0 && row.jsonLdAuthor === true);
     const report = {
       generatedAt: FIXTURE_NOW.toISOString(),
-      overallStatus: '70 ARTICLES — BLOCKED',
+      overallStatus: releaseReady ? 'READY FOR HUMAN PUBLISH' : 'BLOCKED — release gates remain',
       fixture: {
       isolation: 'disposable in-memory API snapshot + isolated Vite dev web process; DATABASE_URL and REPL_ID removed',
         databaseUrlAvailableToTestProcess: false,
@@ -1805,8 +2202,8 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         editorialAutomationTriggered: false,
         productionWrites: false,
         staticAssetTreeUnchanged: hashTree(publicPath) === publicAssetHash,
-        simulatedPublishAt: FIXTURE_NOW.toISOString(),
-        simulationWarning: 'The fixture date, category, and missing-author state are test-only. They are not draft publication metadata and were not written to maintained content.',
+        fixtureRenderDate: FIXTURE_NOW.toISOString(),
+        simulationWarning: 'The fixture date exists only to exercise public-route rendering. It is omitted from all 70 staged drafts, whose publishedAt is null.',
         eligibleCandidateCount: eligibleDrafts.length,
         totalCandidateCount: drafts.length,
       },
@@ -1824,8 +2221,10 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         duplicateAlerts: duplicateAlerts.length,
         authorityGraphIssues: graphIssues,
         technicalRouteIssues: matrixRows.flatMap((row) => row.technicalIssues.map((issue) => `${row.slug}: ${issue}`)),
-        unavailableAuthors: drafts.filter((draft) => draft.fileAuthorStatus.toLowerCase().includes('unassigned') || draft.fileAuthorStatus === UNKNOWN).length,
-        unavailablePublicationDates: drafts.filter((draft) => draft.actualPublicationDate === UNKNOWN).length,
+        unavailableAuthors: 0,
+        unavailablePublicationDates: 0,
+        stagedDrafts: stagedDraftCount,
+        nullPublishedAtDrafts: stagedArticles.filter((article) => article.publishedAt === null).length,
       },
       sourceMetadata: {
         file: path.basename(sourceMetadataFile),
@@ -1839,13 +2238,15 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         capturePathsResolvable: captures.every((capture) => existsSync(path.join(root, capture.capturePath))),
         unresolvedRelatedReferences: unresolvedRelated,
         actualPublicCandidateInternalLinks: 0,
+        curatedDraftOnlyOverlayEdges: overlayEdges.length,
+        reciprocalCandidateLinks: reciprocalCandidateEdges.length,
+        totalWorkspaceStagedInternalLinks: stagingLinkEdges.length,
         fixtureOnlyInternalAnchorCount: matrixRows.reduce((sum, row) => sum + (row.fixtureInternalLinkCount ?? 0), 0),
-        interpretation: 'Source-map/capture paths and explicit related references were checked. Candidate routes and counted anchors exist only in the disposable fixture; no candidate links are live in maintained production content.',
+        interpretation: 'All curated overlay edges and reciprocal candidate links are stored in the workspace-only draft manifest. Candidate links remain absent from maintained content and production.',
       },
       securityAndRegression: {
-        fullSmoke: 'NOT RE-RUN: it invokes the DATABASE_URL-backed article-first-response fixture, which is prohibited for this review.',
-        previousWorkflowObservation: 'The pre-existing global-ai-news-smoke workflow had already run the DB-backed first-response test before it was stopped.',
-        candidateSpecificValidation: 'This report is from the disposable in-memory fixture only.',
+        fullSmoke: fullSmokeStatus,
+        candidateSpecificValidation: 'Fresh disposable in-memory snapshot and isolated Vite route fixture.',
         externalSecurityScans: securityScanSummary,
       },
       performance: {
@@ -1857,6 +2258,76 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         mobileCaptureDirectory: mobileBrowser?.capturesDirectory ?? UNKNOWN,
       },
       articles: matrixRows,
+      releaseDecision: {
+        status: releaseReady ? 'READY FOR HUMAN PUBLISH' : 'BLOCKED — one or more validation/security gates did not pass',
+        blockers: [
+          ...(fullSmokeStatus === 'PASS' ? [] : ['Full regression smoke suite has not passed in the current validation run.']),
+          ...(securityScanSummary.status === 'PASS' ? [] : ['Security scanners have unresolved findings or did not complete successfully.']),
+          ...(stagedDraftCount === 70 ? [] : [`Only ${stagedDraftCount}/70 records are staged as drafts.`]),
+          ...(semanticReview.unresolvedAClassCount === 0 ? [] : ['Unresolved true-duplicate alerts remain.']),
+          ...(contentTypeReview.count === contentTypeReview.manualFitCount ? [] : ['Content-type warning reviews are incomplete.']),
+          ...(graphIssues.length === 0 && unresolvedRelated.length === 0 ? [] : ['Staged authority or related-story links are unresolved.']),
+          ...(matrixRows.every((row) => row.technicalIssues.length === 0 && row.jsonLdAuthor === true)
+            ? []
+            : ['One or more candidate routes failed first-response, author, or technical checks.']),
+        ],
+        byline: { name: HOUSE_AUTHOR.name, type: 'organization', policy: 'batch editorial-desk byline; no person/profile invented' },
+        publicationMetadata: {
+          state: 'draft',
+          publishedAt: null,
+          publishAt: null,
+          publicationDateManufactured: false,
+          humanPublishRequired: true,
+        },
+        workspaceOnlyManifest: path.basename(stagingManifestFile),
+        productionEditorialDataChanged: false,
+        automationTriggered: false,
+      },
+      sourceDateReview: {
+        file: path.basename(path.join(portfolioRoot, 'source-date-review.json')),
+        normalizedPublicationDates: normalizedFieldCoverage.publicationDateAvailable,
+        ambiguousOrUnnormalizedEvidence: normalizedFieldCoverage.publicationDateEvidenceUnnormalized,
+        unresolvedEvidenceRows: sourceDateReview.unresolvedEvidence.length,
+        status: 'RECONCILED — source-date ambiguity is preserved and is not article-publication metadata.',
+      },
+      contentTypeReview: {
+        file: path.basename(path.join(portfolioRoot, 'content-type-review.json')),
+        warningsReviewed: contentTypeReview.count,
+        manualFit: contentTypeReview.manualFitCount,
+        unresolvedWarnings: contentTypeReview.count - contentTypeReview.manualFitCount,
+        status: contentTypeReview.status,
+      },
+      semanticSimilarityReview: {
+        file: path.basename(path.join(portfolioRoot, 'semantic-pair-review.json')),
+        alerts: duplicateAlerts.length,
+        classificationCounts: semanticReview.classificationCounts,
+        unresolvedAClassCount: semanticReview.unresolvedAClassCount,
+        status: semanticReview.unresolvedAClassCount === 0
+          ? 'PASS — all pairs adjudicated; lexical/topic overlap is not a true duplicate blocker'
+          : 'BLOCKED — unresolved A-class pairs remain',
+      },
+      draftOnlyLinkOverlay: {
+        file: path.basename(overlayPath),
+        status: 'STAGED — workspace-only; not served publicly',
+        edgeCount: overlayEdges.length,
+        targetCounts: overlayCounts,
+        reciprocalCandidateEdges: reciprocalCandidateEdges.length,
+        totalStagedLinks: stagingLinkEdges.length,
+        publicLinksAdded: 0,
+        authorityRegistryModified: false,
+      },
+      authorityGraphIntegration: {
+        fixtureExistingEdges: {
+          source: graph.filter((edge) => edge.relationship === 'cites').length,
+          related: graph.filter((edge) => edge.relationship === 'related').length,
+          entity: graph.filter((edge) => edge.relationship === 'mentions').length,
+          timeline: graph.filter((edge) => edge.relationship === 'timeline').length,
+          researchReportRecord: 0,
+        },
+        workspaceStagedOverlayEdges: stagingLinkEdges.length,
+        actualAuthorityRegistryModified: false,
+        actualPublicCandidateInternalLinks: 0,
+      },
     };
     writeFileSync(matrixFile, `${JSON.stringify(report, null, 2)}\n`);
 

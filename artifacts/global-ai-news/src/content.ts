@@ -162,6 +162,8 @@ export interface Story {
   updatedAt?: string;
   readTime: string;
   author: string;
+  authorType?: 'person' | 'organization';
+  authorName?: string;
   evidence: string;
   evidenceSummary: EvidenceSummary;
   classification: 'reported' | 'analysis' | 'opinion' | 'synthesis';
@@ -382,6 +384,24 @@ export let authors: Author[] = [
   { slug: 'lena-hoff', name: 'Lena Hoff', role: 'Enterprise correspondent', bio: 'Lena studies how AI becomes an operating capability inside ambitious organizations.', location: 'Berlin', initials: 'LH' },
   { slug: 'david-okafor', name: 'David Okafor', role: 'Infrastructure editor', bio: 'David covers energy, chips, data centres and the physical geography behind computation.', location: 'Lagos', initials: 'DO' },
 ];
+
+export type StoryAuthorIdentity = {
+  type: 'Person' | 'Organization';
+  name: string;
+  slug?: string;
+};
+
+export function getStoryAuthorIdentity(
+  story: Pick<Story, 'author' | 'authorType' | 'authorName'>,
+  authorRecords: readonly Author[] = authors,
+): StoryAuthorIdentity | undefined {
+  if (story.authorType === 'organization') {
+    const name = story.authorName?.trim();
+    return name ? { type: 'Organization', name } : undefined;
+  }
+  const person = authorRecords.find((author) => author.slug === story.author);
+  return person ? { type: 'Person', name: person.name, slug: person.slug } : undefined;
+}
 
 export let sources: Source[] = [
   { slug: 'nature-antibiotic-study', name: 'A generative deep learning approach to antibiotic discovery', publisher: 'Nature Chemical Biology', kind: 'primary', url: 'https://www.nature.com/', accessed: '2026-09-10' },

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-05T05:37:36.623Z",
-  "status": "MITIGATED — scanner-visible advisory remains unresolved upstream",
+  "generatedAt": "2026-10-05T06:28:06.000Z",
+  "status": "MITIGATED — local depth guard verified; upstream advisory remains scanner-visible; release gate blocked",
   "advisory": {
     "package": "braces@3.0.3",
     "id": "GHSA-vfj7-8cjw-p6xm",
@@ -38,6 +38,6 @@
     "fixedUpstreamReleaseConfirmed": false,
     "scannerRecognizesLocalPatch": false
   },
-  "releaseImplication": "Keep the local depth guard and its tests. Do not suppress the high finding: the scanner reports the upstream package version and does not account for the local patch. Before a future publication, reassess for a fixed upstream release or an acceptable security exception. The current release is independently blocked by missing real authors and publication dates.",
+  "releaseImplication": "The local depth guard and six regression checks mitigate the known recursion paths, and the production proxy configuration does not route untrusted data into brace-pattern parsing. The dependency audit still reports a High advisory against braces@3.0.3; do not suppress the finding or present the scanners as clean. Keep the release decision blocked until a fixed upstream release removes the finding or an authorized security exception is recorded. This remains a security blocker even though the 70-article byline and draft-date gates are resolved.",
   "productionEditorialDataModified": false
 }

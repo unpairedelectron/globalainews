@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ArrowUpRight, Bookmark, BookmarkCheck, Menu, Moon, Search, Share2, Sun, X } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { Link } from '@/components/canonical-link';
-import { authors, findEntity, findStory, getPublicDateModified, timelineEvents } from '@/content';
+import { findEntity, findStory, getPublicDateModified, getStoryAuthorIdentity, timelineEvents } from '@/content';
 import { formatEditorialDate, getLatestStory } from '@/editorial-date';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { useTheme } from '@/theme';
@@ -30,7 +30,7 @@ export function SeoHead({ title, description, path, article = false, indexable =
     ? snapshot.stories.find((story) => story.slug === articleSlug)
     : undefined;
   const resolvedAuthor = resolvedStory
-    ? snapshot.authors.find((author) => author.slug === resolvedStory.author)
+    ? getStoryAuthorIdentity(resolvedStory, snapshot.authors)
     : undefined;
   const currentQuery = new URLSearchParams(currentLocation.split('?')[1] ?? '');
   const routePath = path.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
@@ -171,7 +171,7 @@ export function SeoHead({ title, description, path, article = false, indexable =
             ? [['article:modified_time', publicDateModified] as [string, string]]
             : []),
           ...(resolvedAuthor
-            ? [['article:author', getCanonicalUrl(`/person/${resolvedAuthor.slug}`)] as [string, string]]
+            ? [['article:author', getCanonicalUrl(resolvedAuthor.type === 'Person' && resolvedAuthor.slug ? `/person/${resolvedAuthor.slug}` : '/')] as [string, string]]
             : []),
           ['article:section', resolvedStory.category],
         ]
@@ -249,8 +249,11 @@ export function StoryRow({ slug, rank, compact = false }: { slug: string; rank?:
   const story = findStory(slug);
   const [saved, setSaved] = useState(false);
   if (!story) return null;
-  const author = authors.find((candidate) => candidate.slug === story.author);
-  return <article data-testid={`card-story-${slug}`} className={`group -mx-3 border-t border-foreground/15 px-3 py-5 transition-colors hover:bg-primary/[.035] ${compact ? '' : 'md:py-7'}`}><div className="grid grid-cols-[auto_1fr_auto] gap-4"><span className="font-serif text-3xl leading-none text-primary/70">{rank ? `0${rank}` : '—'}</span><div><div className="flex flex-wrap items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span className="h-1 w-1 rounded-full bg-accent" /><span className="text-xs text-muted-foreground">{story.readTime}</span></div><Link data-testid={`link-story-${slug}`} href={`/article/${story.slug}`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] transition-colors group-hover:text-primary md:text-3xl">{story.title}</Link><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p><p className="mt-4 text-xs text-muted-foreground">{author ? <>By <Link data-testid={`link-story-author-${story.slug}`} href={`/person/${author.slug}`} className="underline decoration-foreground/30 underline-offset-2 hover:text-primary">{author.name}</Link></> : 'Byline unavailable'} · <time dateTime={story.date}>{formatEditorialDate(story.date)}</time></p></div><button data-testid={`button-bookmark-${slug}`} type="button" aria-label={saved ? 'Remove bookmark' : 'Bookmark story'} onClick={() => { const nextSaved = !saved; setSaved(nextSaved); trackEvent(nextSaved ? 'story_bookmarked' : 'story_unbookmarked', { story_slug: story.slug }); }} className="self-start rounded-full p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary">{saved ? <BookmarkCheck size={17} /> : <Bookmark size={17} />}</button></div></article>;
+  const author = getStoryAuthorIdentity(story);
+  const authorLabel = author?.type === 'Person' && author.slug
+    ? <Link data-testid={`link-story-author-${story.slug}`} href={`/person/${author.slug}`} className="underline decoration-foreground/30 underline-offset-2 hover:text-primary">{author.name}</Link>
+    : author?.name;
+  return <article data-testid={`card-story-${slug}`} className={`group -mx-3 border-t border-foreground/15 px-3 py-5 transition-colors hover:bg-primary/[.035] ${compact ? '' : 'md:py-7'}`}><div className="grid grid-cols-[auto_1fr_auto] gap-4"><span className="font-serif text-3xl leading-none text-primary/70">{rank ? `0${rank}` : '—'}</span><div><div className="flex flex-wrap items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span className="h-1 w-1 rounded-full bg-accent" /><span className="text-xs text-muted-foreground">{story.readTime}</span></div><Link data-testid={`link-story-${slug}`} href={`/article/${story.slug}`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] transition-colors group-hover:text-primary md:text-3xl">{story.title}</Link><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p><p className="mt-4 text-xs text-muted-foreground">{authorLabel ? <>By {authorLabel}</> : 'Byline unavailable'} · <time dateTime={story.date}>{formatEditorialDate(story.date)}</time></p></div><button data-testid={`button-bookmark-${slug}`} type="button" aria-label={saved ? 'Remove bookmark' : 'Bookmark story'} onClick={() => { const nextSaved = !saved; setSaved(nextSaved); trackEvent(nextSaved ? 'story_bookmarked' : 'story_unbookmarked', { story_slug: story.slug }); }} className="self-start rounded-full p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary">{saved ? <BookmarkCheck size={17} /> : <Bookmark size={17} />}</button></div></article>;
 }
 
 export function EvidencePanel({ storySlug }: { storySlug: string }) {

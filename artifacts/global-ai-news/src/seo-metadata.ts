@@ -1,4 +1,4 @@
-import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, sources, timelineEvents, type Author, type NewsroomContentSnapshot, type Source, type Story } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, getStoryAuthorIdentity, sources, timelineEvents, type Author, type NewsroomContentSnapshot, type Source, type Story } from './content';
 import { dataProductRecords, researchRecords, topicRecords } from './authority/registry';
 
 export const SITE_URL = 'https://www.globalainews.in';
@@ -440,7 +440,7 @@ export function getStructuredData(
   const articleStory = articleSlug
     ? publishedStories.find((story) => story.slug === articleSlug)
     : undefined;
-  const articleAuthor = articleStory ? authorRecords.find((author) => author.slug === articleStory.author) : undefined;
+  const articleAuthor = articleStory ? getStoryAuthorIdentity(articleStory, authorRecords) : undefined;
   const authorSlug = metadata.path.match(/^\/person\/([^/]+)$/)?.[1];
   const profileAuthor = authorSlug
     ? authorRecords.find((author) => author.slug === authorSlug)
@@ -492,9 +492,11 @@ export function getStructuredData(
         ...(articleAuthor
           ? {
               author: {
-                '@type': 'Person',
+                '@type': articleAuthor.type,
                 name: articleAuthor.name,
-                url: getCanonicalUrl(`/person/${articleAuthor.slug}`),
+                url: articleAuthor.type === 'Person' && articleAuthor.slug
+                  ? getCanonicalUrl(`/person/${articleAuthor.slug}`)
+                  : SITE_URL,
               },
             }
           : {}),

@@ -732,6 +732,11 @@ components:
           type: string
         author:
           type: string
+        authorType:
+          type: string
+          enum: [person, organization]
+        authorName:
+          type: string
         evidence:
           type: string
         evidenceSummary:

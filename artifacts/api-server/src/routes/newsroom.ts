@@ -110,6 +110,8 @@ function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
     ...(dateModified ? { dateModified } : {}),
     readTime: story.readTime,
     author: story.author,
+    ...(story.authorType ? { authorType: story.authorType } : {}),
+    ...(story.authorName ? { authorName: story.authorName } : {}),
     evidence: story.evidence,
     evidenceSummary: story.evidenceSummary,
     classification: story.classification,

@@ -125,6 +125,8 @@ export const GetNewsroomContentResponse = zod.object({
   "dateModified": zod.string().regex(getNewsroomContentResponseStoriesItemDateModifiedRegExp).optional(),
   "readTime": zod.string(),
   "author": zod.string(),
+  "authorType": zod.enum(['person', 'organization']).optional(),
+  "authorName": zod.string().optional(),
   "evidence": zod.string(),
   "evidenceSummary": zod.object({
   "primarySources": zod.number().int(),

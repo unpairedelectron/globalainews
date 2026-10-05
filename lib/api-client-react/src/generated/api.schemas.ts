@@ -234,6 +234,14 @@ export const PublicNewsroomStoryCategory = {
   Policy: 'Policy',
 } as const;
 
+export type PublicNewsroomStoryAuthorType = typeof PublicNewsroomStoryAuthorType[keyof typeof PublicNewsroomStoryAuthorType];
+
+
+export const PublicNewsroomStoryAuthorType = {
+  person: 'person',
+  organization: 'organization',
+} as const;
+
 export type PublicNewsroomStoryClassification = typeof PublicNewsroomStoryClassification[keyof typeof PublicNewsroomStoryClassification];
 
 
@@ -269,6 +277,8 @@ export interface PublicNewsroomStory {
   dateModified?: string;
   readTime: string;
   author: string;
+  authorType?: PublicNewsroomStoryAuthorType;
+  authorName?: string;
   evidence: string;
   evidenceSummary: PublicNewsroomEvidenceSummary;
   classification: PublicNewsroomStoryClassification;

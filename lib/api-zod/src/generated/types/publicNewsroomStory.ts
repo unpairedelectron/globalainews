@@ -8,6 +8,7 @@
 import type { PublicNewsroomBodySection } from './publicNewsroomBodySection';
 import type { PublicNewsroomEvidenceSummary } from './publicNewsroomEvidenceSummary';
 import type { PublicNewsroomImageTreatment } from './publicNewsroomImageTreatment';
+import type { PublicNewsroomStoryAuthorType } from './publicNewsroomStoryAuthorType';
 import type { PublicNewsroomStoryCategory } from './publicNewsroomStoryCategory';
 import type { PublicNewsroomStoryClassification } from './publicNewsroomStoryClassification';
 import type { PublicNewsroomStoryContentType } from './publicNewsroomStoryContentType';
@@ -24,6 +25,8 @@ export interface PublicNewsroomStory {
   dateModified?: string;
   readTime: string;
   author: string;
+  authorType?: PublicNewsroomStoryAuthorType;
+  authorName?: string;
   evidence: string;
   evidenceSummary: PublicNewsroomEvidenceSummary;
   classification: PublicNewsroomStoryClassification;

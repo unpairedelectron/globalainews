@@ -1,4 +1,4 @@
-import { authors, type Author, type Source, type Story } from './content';
+import { authors, getStoryAuthorIdentity, type Author, type Source, type Story } from './content';
 import { getCanonicalUrl } from './seo-metadata';
 
 function escapeHtml(value: string): string {
@@ -23,7 +23,10 @@ export function renderAmpArticleDocument(
   authorRecords: readonly Author[] = authors,
   sourceRecords: readonly Source[] = [],
 ): string {
-  const author = authorRecords.find((candidate) => candidate.slug === story.author);
+  const author = getStoryAuthorIdentity(story, authorRecords);
+  const personAuthor = author?.type === 'Person'
+    ? authorRecords.find((candidate) => candidate.slug === author.slug)
+    : undefined;
   const renderCitedText = (text: string) =>
     escapeHtml(text).replace(/\[@([a-z0-9-]+)\]/g, (_marker, slug: string) => {
       const source = sourceRecords.find((candidate) => candidate.slug === slug);
@@ -103,7 +106,7 @@ export function renderAmpArticleDocument(
       <div class="kicker">${escapeHtml(story.category)} · ${escapeHtml(story.contentType ?? story.readTime)}</div>
       <h1>${escapeHtml(story.title)}</h1>
       <p class="dek">${escapeHtml(story.dek)}</p>
-      <div class="byline">${author ? `<strong>${escapeHtml(author.name)}</strong> · ${escapeHtml(author.role)}` : '<strong>Byline unavailable</strong>'} · ${formatPublishedDate(story.date)}</div>
+      <div class="byline">${author ? `<strong>${escapeHtml(author.name)}</strong>${personAuthor ? ` · ${escapeHtml(personAuthor.role)}` : ''}` : '<strong>Byline unavailable</strong>'} · ${formatPublishedDate(story.date)}</div>
       <div class="hero">${escapeHtml(story.imageTreatment.caption)}</div>
       <article>
         <p><strong>${renderCitedText(story.bottomLine)}</strong></p>

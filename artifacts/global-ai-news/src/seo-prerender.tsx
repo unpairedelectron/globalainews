@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   findStory,
+  getStoryAuthorIdentity,
   getPublicDateModified,
   getReaderFacingContentType,
   type NewsroomContentSnapshot,
@@ -48,9 +49,14 @@ function StoryList({
             <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               <time dateTime={story.date}>{formatEditorialDate(story.date)}</time>
               {' · '}
-              {authors.find((author) => author.slug === story.author)
-                ? <a href={`/person/${story.author}/`} className="hover:text-primary">{authors.find((author) => author.slug === story.author)?.name}</a>
-                : 'Byline unavailable'}
+              {(() => {
+                const author = getStoryAuthorIdentity(story, authors);
+                return author
+                  ? author.type === 'Person' && author.slug
+                    ? <a href={`/person/${author.slug}/`} className="hover:text-primary">{author.name}</a>
+                    : <span>{author.name}</span>
+                  : 'Byline unavailable';
+              })()}
             </p>
           </div>
         </article>
@@ -96,7 +102,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
       throw new Error(`Cannot prerender published article without its story snapshot: ${route}`);
     }
 
-    const author = authors.find((candidate) => candidate.slug === story.author);
+    const author = getStoryAuthorIdentity(story, authors);
     const relatedStories = story.relatedStories
       .map((relatedSlug) => {
         const exactMatch = stories.find((candidate) => candidate.slug === relatedSlug);
@@ -127,7 +133,13 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             <p className="mt-6 max-w-3xl text-xl leading-8 text-muted-foreground">{story.dek}</p>
             <p className="mt-6 border-b border-foreground/15 pb-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               {author
-                ? <>By <a href={`/person/${author.slug}/`} className="font-semibold underline decoration-foreground/30 underline-offset-2 hover:text-primary">{author.name}</a> · {author.role}</>
+                ? <>By {author.type === 'Person' && author.slug
+                  ? <a href={`/person/${author.slug}/`} className="font-semibold underline decoration-foreground/30 underline-offset-2 hover:text-primary">{author.name}</a>
+                  : <strong className="font-semibold">{author.name}</strong>}
+                  {author.type === 'Person'
+                    ? ` · ${authors.find((candidate) => candidate.slug === author.slug)?.role ?? ''}`
+                    : ''}
+                </>
                 : 'Byline unavailable'}
               {' · '}Published <time dateTime={story.date}>{formatEditorialDate(story.date)}</time>
               {publicDateModified && publicDateModified !== story.date

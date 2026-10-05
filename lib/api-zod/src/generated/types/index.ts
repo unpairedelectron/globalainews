@@ -79,6 +79,7 @@ export * from './publicNewsroomSourceKind';
 export * from './publicNewsroomSourceSourceType';
 export * from './publicNewsroomSourceTier';
 export * from './publicNewsroomStory';
+export * from './publicNewsroomStoryAuthorType';
 export * from './publicNewsroomStoryCategory';
 export * from './publicNewsroomStoryClassification';
 export * from './publicNewsroomStoryContentType';

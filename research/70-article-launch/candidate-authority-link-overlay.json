@@ -16,7 +16,8 @@
     "totalDraftOnlyLinks": 63,
     "toUnpublishedCandidates": 29,
     "toMaintainedStories": 18,
-    "toMaintainedResearchRecords": 16
+    "toMaintainedResearchRecords": 8,
+    "toMaintainedTopics": 8
   },
   "existingFixtureAuthorityGraph": {
     "sourceEdges": 252,
@@ -391,13 +392,13 @@
       "fromTitle": "How to choose a small model for a real workflow",
       "fromContentType": "Explainer",
       "cluster": "small-models",
-      "toSlug": "small-models-efficient-ai-serious-workflows",
-      "toTitle": "small-models-efficient-ai-serious-workflows",
-      "toKind": "research",
+      "toSlug": "ai",
+      "toTitle": "AI",
+      "toKind": "topic",
       "toContentType": null,
-      "href": "/research/small-models-efficient-ai-serious-workflows",
-      "targetState": "maintained research-record route verified in current registry",
-      "linkReason": "Connects model-size, workflow, evaluation, or disclosure coverage to the maintained small-model story/research record and the directly relevant candidate guide, archive, or audit."
+      "href": "/topic/ai",
+      "targetState": "maintained topic route verified in current registry",
+      "linkReason": "Uses the maintained AI topic route as the canonical index for small-model coverage; related candidate guides and audits are linked separately."
     },
     {
       "fromSlug": "small-model-workflow-selection",
@@ -456,13 +457,13 @@
       "fromTitle": "Agent evaluations test different things under the same label",
       "fromContentType": "Research",
       "cluster": "small-models",
-      "toSlug": "small-models-efficient-ai-serious-workflows",
-      "toTitle": "small-models-efficient-ai-serious-workflows",
-      "toKind": "research",
+      "toSlug": "ai",
+      "toTitle": "AI",
+      "toKind": "topic",
       "toContentType": null,
-      "href": "/research/small-models-efficient-ai-serious-workflows",
-      "targetState": "maintained research-record route verified in current registry",
-      "linkReason": "Connects model-size, workflow, evaluation, or disclosure coverage to the maintained small-model story/research record and the directly relevant candidate guide, archive, or audit."
+      "href": "/topic/ai",
+      "targetState": "maintained topic route verified in current registry",
+      "linkReason": "Uses the maintained AI topic route as the canonical index for small-model coverage; related candidate guides and audits are linked separately."
     },
     {
       "fromSlug": "research-agent-evaluation-taxonomy",
@@ -560,13 +561,13 @@
       "fromTitle": "A reader’s archive of 2026 model cards",
       "fromContentType": "Report",
       "cluster": "small-models",
-      "toSlug": "small-models-efficient-ai-serious-workflows",
-      "toTitle": "small-models-efficient-ai-serious-workflows",
-      "toKind": "research",
+      "toSlug": "ai",
+      "toTitle": "AI",
+      "toKind": "topic",
       "toContentType": null,
-      "href": "/research/small-models-efficient-ai-serious-workflows",
-      "targetState": "maintained research-record route verified in current registry",
-      "linkReason": "Connects model-size, workflow, evaluation, or disclosure coverage to the maintained small-model story/research record and the directly relevant candidate guide, archive, or audit."
+      "href": "/topic/ai",
+      "targetState": "maintained topic route verified in current registry",
+      "linkReason": "Uses the maintained AI topic route as the canonical index for small-model coverage; related candidate guides and audits are linked separately."
     },
     {
       "fromSlug": "report-2026-model-card-archive",
@@ -599,13 +600,13 @@
       "fromTitle": "Small-model deployment: hardware, memory, and workflow fit",
       "fromContentType": "Report",
       "cluster": "small-models",
-      "toSlug": "small-models-efficient-ai-serious-workflows",
-      "toTitle": "small-models-efficient-ai-serious-workflows",
-      "toKind": "research",
+      "toSlug": "ai",
+      "toTitle": "AI",
+      "toKind": "topic",
       "toContentType": null,
-      "href": "/research/small-models-efficient-ai-serious-workflows",
-      "targetState": "maintained research-record route verified in current registry",
-      "linkReason": "Connects model-size, workflow, evaluation, or disclosure coverage to the maintained small-model story/research record and the directly relevant candidate guide, archive, or audit."
+      "href": "/topic/ai",
+      "targetState": "maintained topic route verified in current registry",
+      "linkReason": "Uses the maintained AI topic route as the canonical index for small-model coverage; related candidate guides and audits are linked separately."
     },
     {
       "fromSlug": "report-small-model-deployment-guide",
@@ -664,13 +665,13 @@
       "fromTitle": "Hosted Gemini 3.8 Flash or open-weight Gemma 4 and Mistral Small 4?",
       "fromContentType": "Comparison",
       "cluster": "small-models",
-      "toSlug": "small-models-efficient-ai-serious-workflows",
-      "toTitle": "small-models-efficient-ai-serious-workflows",
-      "toKind": "research",
+      "toSlug": "ai",
+      "toTitle": "AI",
+      "toKind": "topic",
       "toContentType": null,
-      "href": "/research/small-models-efficient-ai-serious-workflows",
-      "targetState": "maintained research-record route verified in current registry",
-      "linkReason": "Connects model-size, workflow, evaluation, or disclosure coverage to the maintained small-model story/research record and the directly relevant candidate guide, archive, or audit."
+      "href": "/topic/ai",
+      "targetState": "maintained topic route verified in current registry",
+      "linkReason": "Uses the maintained AI topic route as the canonical index for small-model coverage; related candidate guides and audits are linked separately."
     },
     {
       "fromSlug": "compare-hosted-open-weight-deployment",
@@ -703,13 +704,13 @@
       "fromTitle": "What a model card can—and cannot—tell you",
       "fromContentType": "Explainer",
       "cluster": "small-models",
-      "toSlug": "small-models-efficient-ai-serious-workflows",
-      "toTitle": "small-models-efficient-ai-serious-workflows",
-      "toKind": "research",
+      "toSlug": "ai",
+      "toTitle": "AI",
+      "toKind": "topic",
       "toContentType": null,
-      "href": "/research/small-models-efficient-ai-serious-workflows",
-      "targetState": "maintained research-record route verified in current registry",
-      "linkReason": "Connects model-size, workflow, evaluation, or disclosure coverage to the maintained small-model story/research record and the directly relevant candidate guide, archive, or audit."
+      "href": "/topic/ai",
+      "targetState": "maintained topic route verified in current registry",
+      "linkReason": "Uses the maintained AI topic route as the canonical index for small-model coverage; related candidate guides and audits are linked separately."
     },
     {
       "fromSlug": "model-card-reading-guide",
@@ -768,13 +769,13 @@
       "fromTitle": "The word “small” is not a performance claim",
       "fromContentType": "Essay",
       "cluster": "small-models",
-      "toSlug": "small-models-efficient-ai-serious-workflows",
-      "toTitle": "small-models-efficient-ai-serious-workflows",
-      "toKind": "research",
+      "toSlug": "ai",
+      "toTitle": "AI",
+      "toKind": "topic",
       "toContentType": null,
-      "href": "/research/small-models-efficient-ai-serious-workflows",
-      "targetState": "maintained research-record route verified in current registry",
-      "linkReason": "Connects model-size, workflow, evaluation, or disclosure coverage to the maintained small-model story/research record and the directly relevant candidate guide, archive, or audit."
+      "href": "/topic/ai",
+      "targetState": "maintained topic route verified in current registry",
+      "linkReason": "Uses the maintained AI topic route as the canonical index for small-model coverage; related candidate guides and audits are linked separately."
     },
     {
       "fromSlug": "essay-smallness-workflow",
@@ -833,13 +834,13 @@
       "fromTitle": "A model card is a research artifact, not a launch poster",
       "fromContentType": "Essay",
       "cluster": "small-models",
-      "toSlug": "small-models-efficient-ai-serious-workflows",
-      "toTitle": "small-models-efficient-ai-serious-workflows",
-      "toKind": "research",
+      "toSlug": "ai",
+      "toTitle": "AI",
+      "toKind": "topic",
       "toContentType": null,
-      "href": "/research/small-models-efficient-ai-serious-workflows",
-      "targetState": "maintained research-record route verified in current registry",
-      "linkReason": "Connects model-size, workflow, evaluation, or disclosure coverage to the maintained small-model story/research record and the directly relevant candidate guide, archive, or audit."
+      "href": "/topic/ai",
+      "targetState": "maintained topic route verified in current registry",
+      "linkReason": "Uses the maintained AI topic route as the canonical index for small-model coverage; related candidate guides and audits are linked separately."
     },
     {
       "fromSlug": "essay-model-card-as-research-record",

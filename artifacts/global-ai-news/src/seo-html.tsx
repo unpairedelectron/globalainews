@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { getPublicDateModified, type NewsroomContentSnapshot } from './content';
+import { getPublicDateModified, getStoryAuthorIdentity, type NewsroomContentSnapshot } from './content';
 import { getCanonicalUrl, getStructuredData, SITE_URL, type SeoMetadata } from './seo-metadata';
 import { SeoPrerender } from './seo-prerender';
 
@@ -43,7 +43,7 @@ export function renderSeoRouteHtml(
     ? contentSnapshot.stories.find((story) => story.slug === articleSlug)
     : undefined;
   const articleAuthor = articleStory
-    ? contentSnapshot.authors.find((author) => author.slug === articleStory.author)
+    ? getStoryAuthorIdentity(articleStory, contentSnapshot.authors)
     : undefined;
   const title = escapeHtml(metadata.title);
   const description = escapeHtml(metadata.description);
@@ -69,7 +69,7 @@ export function renderSeoRouteHtml(
       ? `<meta property="article:modified_time" content="${escapeHtml(articleDateModified)}" />`
       : ''}
     ${articleAuthor
-      ? `<meta property="article:author" content="${escapeHtml(getCanonicalUrl(`/person/${articleAuthor.slug}`))}" />`
+      ? `<meta property="article:author" content="${escapeHtml(getCanonicalUrl(articleAuthor.type === 'Person' && articleAuthor.slug ? `/person/${articleAuthor.slug}` : '/'))}" />`
       : ''}
     <meta property="article:section" content="${escapeHtml(articleStory.category)}" />`
     : '';
