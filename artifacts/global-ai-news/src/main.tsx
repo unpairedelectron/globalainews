@@ -1,13 +1,14 @@
 import { createRoot } from 'react-dom/client';
 
-import App, { primeNewsroomContent } from './App';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { initializeTheme } from './theme';
 import { trackEvent } from './analytics';
+import { STATIC_PRERENDER_ROUTES } from './static-prerender-routes';
 
 import './index.css';
 
 const initialTheme = initializeTheme();
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 function observeWebVitals(): void {
   if (typeof PerformanceObserver === "undefined") return;
@@ -40,8 +41,19 @@ observeWebVitals();
 
 async function startApp(): Promise<void> {
   const prerenderMarker = document.getElementById('global-ai-prerender');
+  const pathname = window.location.pathname.startsWith(basePath)
+    ? window.location.pathname.slice(basePath.length)
+    : window.location.pathname;
+  const route = pathname.replace(/\/+$/, '') || '/';
+
+  // These complete, link-only pages intentionally stay server-rendered. Their
+  // client routes have a different shell, so createRoot would replace the
+  // useful first response and create a late, larger LCP candidate.
+  if (prerenderMarker && STATIC_PRERENDER_ROUTES.has(route)) return;
+
+  const appPromise = import('./App');
+  let initialSnapshot: unknown;
   if (prerenderMarker) {
-    const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 5_000);
     try {
@@ -57,7 +69,7 @@ async function startApp(): Promise<void> {
           'stories' in snapshot &&
           Array.isArray(snapshot.stories)
         ) {
-          primeNewsroomContent(snapshot);
+          initialSnapshot = snapshot;
         }
       }
     } catch {
@@ -67,6 +79,8 @@ async function startApp(): Promise<void> {
     }
   }
 
+  const { default: App, primeNewsroomContent } = await appPromise;
+  if (initialSnapshot !== undefined) primeNewsroomContent(initialSnapshot);
   createRoot(document.getElementById('root')!, {
     // Keeps caught errors off reportError(), which would raise the dev overlay.
     onCaughtError: (error, errorInfo) => {

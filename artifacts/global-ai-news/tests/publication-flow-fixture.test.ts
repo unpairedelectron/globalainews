@@ -312,6 +312,9 @@ async function runMobilePerformanceAudit(origin: string) {
             lcpMs: window.__ganMobileAudit?.lcp == null ? null : Math.round(window.__ganMobileAudit.lcp),
             lcpElement: window.__ganMobileAudit?.lcpElement ?? null,
             cls: Number((window.__ganMobileAudit?.cls ?? 0).toFixed(4)),
+            rootText: document.querySelector('#root')?.textContent ?? '',
+            moduleScriptCount: document.querySelectorAll('script[type="module"]').length,
+            prerenderMarkerPresent: Boolean(document.getElementById('global-ai-prerender')),
             jsResourceCount: js.length,
             jsBytesFromTiming: bytes(js),
             imageResourceCount: images.length,
@@ -327,9 +330,43 @@ async function runMobilePerformanceAudit(origin: string) {
       const thirdPartyScripts = [...new Set(jsResources
         .filter((resource) => resource.origin !== origin)
         .map((resource) => resource.origin))];
+      const { rootText, ...measuredPageMetrics } = pageMetrics.result.value;
+      if (route === '/reports') {
+        assert.match(rootText, /Reports\./, 'Reports first-response content was replaced or lost');
+      } else if (route === '/about-us') {
+        assert.match(rootText, /Who speaks for the publication/, 'About first-response content was replaced or lost');
+      }
+      if (['/reports', '/about-us'].includes(route)) {
+        assert.equal(pageMetrics.result.value.moduleScriptCount, 0, `${route}: static first response must not boot the mismatched SPA shell`);
+        assert.equal(pageMetrics.result.value.prerenderMarkerPresent, true, `${route}: static first response lost its prerender marker`);
+        assert.equal(jsResources.length, 0, `${route}: static first response unexpectedly downloaded JavaScript`);
+        assert.ok(
+          measuredPageMetrics.lcpMs !== null && measuredPageMetrics.lcpMs <= 2_200,
+          `${route}: static first-response LCP exceeded the 2.2 s mobile budget (${measuredPageMetrics.lcpMs} ms)`,
+        );
+        assert.ok(
+          measuredPageMetrics.cls <= 0.02,
+          `${route}: static first-response CLS exceeded the 0.02 budget (${measuredPageMetrics.cls})`,
+        );
+        assert.equal(
+          completedResources.some((resource) => resource.url.endsWith('/api/newsroom/content')),
+          false,
+          `${route}: static first response unexpectedly fetched the full newsroom snapshot`,
+        );
+      }
+      if (route === '/' || route.startsWith('/article/')) {
+        assert.ok(
+          measuredPageMetrics.lcpMs !== null && measuredPageMetrics.lcpMs <= 2_700,
+          `${route}: homepage/article LCP exceeded the no-regression budget (${measuredPageMetrics.lcpMs} ms)`,
+        );
+        assert.ok(
+          measuredPageMetrics.cls <= 0.05,
+          `${route}: homepage/article CLS exceeded the no-regression budget (${measuredPageMetrics.cls})`,
+        );
+      }
       measurements.push({
         route,
-        ...pageMetrics.result.value,
+        ...measuredPageMetrics,
         inpMs: null,
         inpNote: 'Not measured: this navigation-only run does not include real user interaction.',
         totalTransferredBytes: cdpBytes,
@@ -532,6 +569,20 @@ test('isolated publication reaches article, homepage, RSS, and sitemap without a
     assert.match(articleHtml, new RegExp(`<h1[^>]*>${story.title}</h1>`));
     assert.match(articleHtml, /name="description"/);
     assert.match(articleHtml, new RegExp(`<link rel="canonical" href="${getCanonicalUrl(`/article/${story.slug}`)}" \\/>`));
+    for (const [route, expectedContent] of [
+      ['/reports', /<h1[^>]*>Reports/],
+      ['/about-us', /Who speaks for the publication/],
+    ] as const) {
+      const response = await fetch(`${webOrigin}${route}`);
+      const html = await response.text();
+      assert.equal(response.status, 200, `${route}: static first response is not reachable`);
+      assert.match(html, expectedContent, `${route}: prerendered page content is missing`);
+      assert.match(html, /id="global-ai-prerender"/, `${route}: prerender marker is missing`);
+      assert.match(html, /data-static-prerender-theme/, `${route}: theme preference bootstrap is missing`);
+      assert.match(html, /data-static-prerender-vitals/, `${route}: web-vitals tracking bootstrap is missing`);
+      assert.doesNotMatch(html, /<script\b[^>]*\btype=["']module["']/i, `${route}: should not load the mismatched SPA shell`);
+      assert.doesNotMatch(html, /<link\b[^>]*\brel=["']modulepreload["']/i, `${route}: should not preload unused application modules`);
+    }
 
     const [apiFeed, rootFeed, apiSitemap, rootSitemap] = await Promise.all([
       fetch(`${apiOrigin}/api/newsroom/feed.xml`).then((response) => response.text()),

@@ -4,6 +4,11 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { getPublicDateModified, getStoryAuthorIdentity, type NewsroomContentSnapshot } from './content';
 import { getCanonicalUrl, getStructuredData, SITE_URL, type SeoMetadata } from './seo-metadata';
 import { SeoPrerender } from './seo-prerender';
+import { STATIC_PRERENDER_ROUTES } from './static-prerender-routes';
+import {
+  STATIC_PRERENDER_THEME_BOOTSTRAP,
+  STATIC_PRERENDER_VITALS_BOOTSTRAP,
+} from './static-prerender-bootstrap';
 
 const prerenderPublicNoindexRoutes = new Set([
   '/search',
@@ -82,6 +87,13 @@ export function renderSeoRouteHtml(
     /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>\s*/gi,
   ];
   let html = baseHtml;
+  if (STATIC_PRERENDER_ROUTES.has(route)) {
+    html = html
+      .replace(/<link\b(?=[^>]*\brel=["']modulepreload["'])[^>]*>\s*/gi, '')
+      .replace(/<script\b(?=[^>]*\btype=["']module["'])[^>]*>[\s\S]*?<\/script>\s*/gi, '')
+      .replace('</head>', `${STATIC_PRERENDER_THEME_BOOTSTRAP}\n  </head>`)
+      .replace('</body>', `${STATIC_PRERENDER_VITALS_BOOTSTRAP}\n  </body>`);
+  }
   for (const pattern of existingHeadMetadata) html = html.replace(pattern, '');
 
   const ampLink = metadata.ampPath

@@ -17,6 +17,7 @@
 - [Newsroom analytics boundary](newsroom-analytics-boundary.md) — use Replit’s injected analytics for pageviews and safe events; never add a second tracker or send visitor data.
 - [API smoke environment](api-smoke-environment.md) — preserve NODE_ENV=test so synthetic editor auth and deterministic fixtures remain isolated.
 - [Published route source of truth](published-route-source-of-truth.md) — live feeds reflect releases, while static article fallbacks still lack first-response SEO for new slugs.
+- [Static-first route performance](static-first-route-performance.md) — Reports/About use complete server HTML, preserving theme and Web Vitals while skipping the React runtime.
 - [Editorial release word counts](editorial-release-word-counts.md) — validate editor copy by provenance while maintained records use the complete story snapshot.
 - [IndiaAI compute observation contract](indiaai-compute-observation-contract.md) — new GPU stages and quantity qualifiers must be added to the public API contract before publication.
 - [Source capture evidence](source-capture-evidence.md) — confirm a fetched page’s body supports the cited claim; a title or successful fetch alone is not evidence.

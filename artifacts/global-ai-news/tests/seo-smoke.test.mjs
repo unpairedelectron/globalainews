@@ -687,7 +687,7 @@ async function renderRoute(route, width, height) {
   const canonicalReady = expectedCanonical
     ? `document.querySelector('link[rel="canonical"]')?.href === ${JSON.stringify(expectedCanonical)}`
     : 'true';
-  const newsroomRequestReady = route.startsWith('/amp/')
+  const newsroomRequestReady = route.startsWith('/amp/') || route === '/reports' || route === '/about-us'
     ? 'true'
     : `performance.getEntriesByType('resource').some((entry) => new URL(entry.name, location.href).pathname.endsWith('/api/newsroom/content') && entry.responseEnd > 0)`;
   await waitForBrowserCondition(
