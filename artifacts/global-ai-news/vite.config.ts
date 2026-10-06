@@ -1,6 +1,8 @@
 import path from 'path';
+import { randomUUID } from 'crypto';
 import { execFileSync } from 'child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { performance } from 'perf_hooks';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type ViteDevServer } from 'vite';
@@ -16,6 +18,7 @@ import {
   type SeoMetadataManifest,
 } from './src/seo-metadata';
 import {
+  NewsroomSnapshotFetchError,
   getPrerenderedArticleHtmlPath,
   fetchNewsroomContentSnapshot,
   hasPrerenderedArticleHtml,
@@ -716,6 +719,12 @@ function routeMetadataPlugin() {
   };
 }
 
+function writeStructuredArticleLog(event: string, fields: Record<string, unknown>): void {
+  process.stderr.write(
+    `${JSON.stringify({ timestamp: new Date().toISOString(), event, ...fields })}\n`,
+  );
+}
+
 function articleResponsePlugin() {
   const projectRoot = path.resolve(import.meta.dirname);
   return {
@@ -732,6 +741,31 @@ function articleResponsePlugin() {
           next();
           return;
         }
+
+        const requestId = randomUUID();
+        const startedAt = performance.now();
+        response.setHeader('X-GAN-Request-ID', requestId);
+        let snapshotLookupMs = 0;
+        let serverRenderMs = 0;
+        let routeStatus: number | undefined;
+        let completionLogged = false;
+        const logCompletion = (event: string): void => {
+          if (completionLogged) return;
+          completionLogged = true;
+          writeStructuredArticleLog(event, {
+            requestId,
+            route: pathname,
+            statusCode: routeStatus ?? response.statusCode,
+            totalRenderMs: Math.round(performance.now() - startedAt),
+            snapshotLookupMs,
+            serverRenderMs,
+          });
+        };
+        response.once('finish', () => logCompletion('article_render_complete'));
+        response.once('close', () => {
+          if (!response.writableFinished) logCompletion('article_render_connection_closed');
+        });
+
         if (hasPrerenderedArticleHtml(pathname, path.join(projectRoot, 'public'))) {
           next();
           return;
@@ -741,6 +775,7 @@ function articleResponsePlugin() {
           buildOutputDir(projectRoot),
         );
         if (prerenderedArticlePath) {
+          routeStatus = 200;
           response.statusCode = 200;
           response.setHeader('Content-Type', 'text/html; charset=utf-8');
           response.end(
@@ -752,24 +787,47 @@ function articleResponsePlugin() {
         void (async () => {
           const rawTemplate = readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
           const baseHtml = await server.transformIndexHtml(requestUrl, rawTemplate);
+          const snapshotStartedAt = performance.now();
           const snapshot = await fetchNewsroomContentSnapshot(
             process.env.NEWSROOM_API_ORIGIN,
+            {
+              requestId,
+              route: pathname,
+              onEvent: (diagnostic) =>
+                writeStructuredArticleLog('article_snapshot_lookup', {
+                  requestId,
+                  route: pathname,
+                  ...diagnostic,
+                }),
+            },
           );
+          snapshotLookupMs = Math.round(performance.now() - snapshotStartedAt);
+          const renderStartedAt = performance.now();
           const result = renderArticleHtml(
             baseHtml,
             pathname,
             path.join(projectRoot, 'public'),
             snapshot,
           );
+          serverRenderMs = Math.round(performance.now() - renderStartedAt);
+          routeStatus = result.status;
           response.statusCode = result.status;
           response.setHeader('Content-Type', 'text/html; charset=utf-8');
           response.setHeader('Cache-Control', 'no-store');
           if (result.status === 404) response.setHeader('X-Robots-Tag', 'noindex');
           response.end(result.html);
         })().catch((error: unknown) => {
-          process.stderr.write(
-            `Article first-response rendering failed: ${error instanceof Error ? error.message : 'unknown error'}\n`,
-          );
+          routeStatus = 503;
+          writeStructuredArticleLog('article_render_failed', {
+            requestId,
+            route: pathname,
+            statusCode: routeStatus,
+            totalRenderMs: Math.round(performance.now() - startedAt),
+            snapshotLookupMs,
+            serverRenderMs,
+            failureCode:
+              error instanceof NewsroomSnapshotFetchError ? error.code : 'render_error',
+          });
           if (response.headersSent) {
             response.destroy();
             return;

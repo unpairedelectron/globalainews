@@ -15,6 +15,7 @@ import {
 } from './server/article-html';
 import { getSeoMetadata } from './seo-metadata';
 import { renderSeoRouteHtml } from './seo-html';
+import { gzipResponseMiddleware } from './server/gzipResponseMiddleware';
 
 const serverDirectory = path.dirname(fileURLToPath(import.meta.url));
 const distributionDirectory = path.resolve(serverDirectory, '..');
@@ -50,6 +51,7 @@ app.use((_request, response, next) => {
   );
   next();
 });
+app.use(gzipResponseMiddleware());
 
 function proxyNewsroomXmlDocument(apiPath: string, defaultContentType: string) {
   return async (_request: Request, response: Response): Promise<void> => {
@@ -122,7 +124,6 @@ app.use((request, response, next) => {
 
   let snapshotLookupMs = 0;
   let serverRenderMs = 0;
-  let renderSource = 'request_snapshot';
   let routeStatus: number | undefined;
   let completionLogged = false;
   const logCompletion = (event: string): void => {
@@ -135,7 +136,6 @@ app.use((request, response, next) => {
       totalRenderMs: Math.round(performance.now() - startedAt),
       snapshotLookupMs,
       serverRenderMs,
-      renderSource,
     });
   };
   response.once('finish', () => logCompletion('article_render_complete'));
@@ -144,7 +144,6 @@ app.use((request, response, next) => {
   });
 
   if (hasPrerenderedArticleHtml(pathname, publicDirectory)) {
-    renderSource = 'prerendered_html';
     next();
     return;
   }
@@ -328,7 +327,6 @@ app.listen(port, '0.0.0.0', () => {
         requestId,
         route,
         elapsedMs: Math.round(performance.now() - startedAt),
-        storyCount: snapshot.stories.length,
       });
     })
     .catch((error: unknown) => {

@@ -10,6 +10,7 @@ import {
   clerkProxyMiddleware,
   getClerkProxyHost,
 } from "./middlewares/clerkProxyMiddleware";
+import { gzipResponseMiddleware } from "./middlewares/gzipResponseMiddleware";
 
 const app: Express = express();
 
@@ -32,6 +33,20 @@ app.use((_request, response, next) => {
 app.use(
   pinoHttp({
     logger,
+    customProps(request) {
+      const pathname = request.url?.split("?")[0];
+      const articleRequestId = request.headers["x-gan-request-id"];
+      if (
+        pathname !== "/api/newsroom/content" ||
+        typeof articleRequestId !== "string" ||
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          articleRequestId,
+        )
+      ) {
+        return {};
+      }
+      return { articleRequestId };
+    },
     serializers: {
       req(req) {
         return {
@@ -61,6 +76,16 @@ app.use(
   })),
 );
 
+app.use(
+  gzipResponseMiddleware({
+    paths: [
+      "/api/newsroom/content",
+      "/api/newsroom/metadata",
+      "/api/newsroom/feed.xml",
+      "/api/newsroom/sitemap.xml",
+    ],
+  }),
+);
 app.use("/api", router);
 
 export default app;

@@ -242,7 +242,6 @@ export async function fetchNewsroomContentSnapshot(
       phase: 'snapshot_cache_hit',
       cacheState: 'fresh',
       cacheAgeMs: cachedAgeMs,
-      storyCount: cached.snapshot.stories.length,
     });
     return cached.snapshot;
   }
@@ -300,7 +299,6 @@ export async function fetchNewsroomContentSnapshot(
       options.onEvent?.({
         phase: 'snapshot_body_received',
         statusCode: response.status,
-        bodyBytes,
         bodyReadMs,
       });
 
@@ -325,10 +323,8 @@ export async function fetchNewsroomContentSnapshot(
       options.onEvent?.({
         phase: 'snapshot_validated',
         statusCode: response.status,
-        bodyBytes,
         bodyReadMs,
         jsonParseMs,
-        storyCount: parsedSnapshot.stories.length,
         totalFetchMs: Math.round(performance.now() - upstreamStartedAt),
       });
       return parsedSnapshot;
@@ -345,7 +341,6 @@ export async function fetchNewsroomContentSnapshot(
         failureCode,
         statusCode: responseStatus,
         bodyReadMs,
-        bodyBytes,
         jsonParseMs,
         totalFetchMs: Math.round(performance.now() - upstreamStartedAt),
       });
@@ -364,7 +359,6 @@ export async function fetchNewsroomContentSnapshot(
           failureCode,
           statusCode: responseStatus,
           cacheAgeMs: staleAgeMs,
-          storyCount: lastKnownGood.snapshot.stories.length,
         });
         return lastKnownGood.snapshot;
       }
