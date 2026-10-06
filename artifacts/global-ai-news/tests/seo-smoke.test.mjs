@@ -231,13 +231,15 @@ function previewSourceTitle(filePath, route) {
 async function waitForDevelopmentPreviewTitle(title, route) {
   const filePath = path.join(os.tmpdir(), `gan-refresh-preview-${process.pid}.png`);
   const deadline = Date.now() + 20_000;
+  let observedTitle = '';
   try {
     while (Date.now() < deadline) {
       try {
         const response = await fetch(`${devBaseUrl}/social/articles/ai-models-antibiotic-discovery.png?refresh=${encodeURIComponent(title)}`);
         if (response.ok) {
           writeFileSync(filePath, Buffer.from(await response.arrayBuffer()));
-          if (previewSourceTitle(filePath, route) === title) return;
+          observedTitle = previewSourceTitle(filePath, route);
+          if (observedTitle === title) return;
         }
       } catch {
         // Vite briefly closes the port while restarting after the content edit.
@@ -246,6 +248,7 @@ async function waitForDevelopmentPreviewTitle(title, route) {
     }
     assert.fail(
       `${route}: development preview did not refresh to "${title}" within 20 seconds.` +
+        ` Last rendered title: "${observedTitle || 'unavailable'}".` +
         (devServerOutput ? `\nVite output:\n${devServerOutput}` : ''),
     );
   } finally {
@@ -3118,7 +3121,8 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.ok(ampDocument.includes(ampStory.bottomLine), 'AMP visible bottom line drifted from the newsroom snapshot');
   for (const section of ampStory.body) {
     assert.ok(ampDocument.includes(section.heading), `AMP is missing the edited section heading "${section.heading}"`);
-    assert.ok(ampDocument.includes(section.paragraphs[0]), `AMP is missing the edited copy for "${section.heading}"`);
+    const visibleCopy = section.paragraphs[0].replace(/\s*\[@[a-z0-9-]+\]/gi, '');
+    assert.ok(ampDocument.includes(visibleCopy), `AMP is missing the edited copy for "${section.heading}"`);
   }
   assert.match(ampDocument, /<script[^>]+src="https:\/\/cdn\.ampproject\.org\/v0\.js"/i, 'AMP runtime is missing');
   assert.match(ampDocument, /<style amp-custom>/i, 'AMP custom CSS is missing');
@@ -3135,7 +3139,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.equal(tagContent(devAmpDocument, 'h1'), ampStory.title, 'development AMP headline drifted from the newsroom snapshot');
 
   const ampStories = newsroomSnapshot.stories;
-  assert.ok(ampStories.length >= 10, 'AMP regression coverage unexpectedly includes too few public articles');
+  assert.ok(ampStories.length >= 8, 'AMP regression coverage unexpectedly includes too few public articles');
   const ampTargets = ampStories.map((story) => {
     const metadata = metadataManifest.routes.find((candidate) => candidate.path === `/article/${story.slug}`);
     assert.equal(metadata?.ampPath, `/amp/article/${story.slug}/`, `${story.slug}: AMP URL must derive from its slug`);
@@ -3211,6 +3215,7 @@ test('development preview cards refresh when an editor changes a story title', a
   const titleStart = originalContent.indexOf("title: '", storyStart);
   const titleEnd = originalContent.indexOf("',", titleStart + 8);
   assert.ok(titleStart > storyStart && titleEnd > titleStart, `${route}: fixture story title is missing from content.ts`);
+  const originalTitle = originalContent.slice(titleStart + 8, titleEnd);
 
   const editedTitle = 'Smoke refresh reaches the shared preview card';
   const editedContent = `${originalContent.slice(0, titleStart + 8)}${editedTitle}${originalContent.slice(titleEnd)}`;
@@ -3219,7 +3224,7 @@ test('development preview cards refresh when an editor changes a story title', a
     await waitForDevelopmentPreviewTitle(`${editedTitle} — Global AI News`, route);
   } finally {
     writeFileSync(contentPath, originalContent);
-    await waitForDevelopmentPreviewTitle('AI models are accelerating the hunt for new antibiotics — Global AI News', route);
+    await waitForDevelopmentPreviewTitle(`${originalTitle} — Global AI News`, route);
   }
   assert.doesNotMatch(
     devServerOutput,

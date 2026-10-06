@@ -14,3 +14,9 @@ When preview generation is triggered by editable story content, keep that data m
 **Why:** Vite also restarts for transitive config dependencies. A full restart raced social-image generation and could expose a truncated PNG while the server was coming back up.
 
 **How to apply:** Use the dev server's config dependency list to suppress only the content module's restart trigger, leaving the normal module watcher active. Verify the edit/restore cycle updates the preview and produces no Vite restart log.
+
+When a smoke test temporarily edits editorial content, derive the restore expectation from the captured original source instead of hard-coding the old headline.
+
+**Why:** Maintained headlines change, and a stale reset assertion can make a working preview refresh look broken after the edited preview already passed.
+
+**How to apply:** Capture the original field value before writing the fixture edit; wait for that captured value when the test restores the file.

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ArrowUpRight, Search, Share2 } from 'lucide-react';
 import { useLocation, useParams } from 'wouter';
 import { Link } from '@/components/canonical-link';
-import { askGlobalAnswers, authors, canonicalStorySlug, entities, essays, findEntity, findStory, findTimeline, getPublicDateModified, getReaderFacingContentType, getStoryAuthorIdentity, getStoryReadTime, indiaIndex, industryMap, signals, sources, stories, timelineEvents, type Story } from '@/content';
+import { authors, canonicalStorySlug, entities, findEntity, findStory, findTimeline, getPublicDateModified, getReaderFacingContentType, getStoryAuthorIdentity, getStoryReadTime, industryMap, signals, sources, timelineEvents, type Story } from '@/content';
 import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryRow, TimelineList } from '@/components/site';
 import { StoryBody, StoryCitedText, StorySourceList } from '@/components/story-content';
 import { useNewsroomSnapshot } from '@/newsroom';
@@ -185,7 +185,7 @@ export function EditorialInputPage({ title, path }: { title: string; path: strin
 export function SignalsPage() {
   const snapshot = useNewsroomSnapshot();
   const [topic, setTopic] = useState('All signals');
-  const topics = ['All signals', 'Models', 'Infrastructure', 'Capital', 'Policy', 'Applications'];
+  const topics = ['All signals', 'Models', 'Infrastructure', 'Research', 'Policy', 'India', 'Applications'];
   const visible = snapshot.signals.filter((signal) => topic === 'All signals' || signal.topic.toLowerCase() === topic.toLowerCase());
   return <Shell><SeoHead title="Signals on file — Global AI News" description="Dated editorial summaries linked to published reporting; not a live market feed or measurement series." path="/signals" /><main className={container}>
     <section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Dated editorial records</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">Signals<br /><em className="text-primary">on file.</em></h1><p className="mt-7 max-w-2xl text-lg leading-7 text-muted-foreground">These summaries are not live market measurements, current forecasts or continuously updated indices. Each card shows its maintained date and links to related reporting so you can inspect the source record.</p></section>
@@ -203,8 +203,65 @@ export function SignalsPage() {
 }
 
 export function ResearchPage({ essay = false }: { essay?: boolean }) {
-  const list = essay ? essays : stories.filter((story) => ['Breakthroughs', 'Field Notes', 'Infrastructure'].includes(story.category));
-  return <Shell><SeoHead title={`${essay ? 'Essays' : 'Research & context'} — Global AI News`} description="Context for the AI economy." path={essay ? '/essays' : '/research'} /><main className={container}><section className="grid gap-8 border-b border-foreground/20 py-14 md:grid-cols-[1fr_300px] md:py-20"><div><p className="eyebrow text-primary">{essay ? 'Long-form desk' : 'Research desk'}</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[8rem]">{essay ? 'Essays.' : <>Context<br /><em className="text-primary">over noise.</em></>}</h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">{essay ? 'Arguments and field notes about what the AI industry is becoming.' : 'Research, analysis and explanatory work for readers who need the second-order view.'}</p></div><div className="border-t border-foreground/15 pt-4 text-sm leading-6 text-muted-foreground">Our desks distinguish reported facts, analysis and synthesis so readers can understand the status of each claim.</div></section><section className="grid gap-10 py-12 md:grid-cols-[1.15fr_.85fr]"><div>{essay ? list.map((item) => <article key={item.slug} className="border-t border-foreground/15 py-7"><p className="eyebrow text-primary">Essay outline</p><h2 className="mt-3 block max-w-3xl font-serif text-4xl leading-[.9]">{item.title}</h2><p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{item.dek}</p><p className="mt-5 text-xs text-muted-foreground">By Global AI News Editorial Desk · <time dateTime={item.date}>{formatEditorialDate(item.date)}</time></p></article>) : list.map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} />)}</div><aside><SectionLabel>Entry points</SectionLabel>{['Model evaluation', 'AI in science', 'The infrastructure map', 'Public AI systems'].map((item, index) => <div key={item} className="border-b border-foreground/15 py-4 text-sm"><span className="mr-3 font-mono text-primary">0{index + 1}</span>{item}</div>)}<div className="mt-12"><Newsletter compact /></div></aside></section></main></Shell>;
+  const snapshot = useNewsroomSnapshot();
+  const researchStories = snapshot.stories.filter((story) =>
+    ['Breakthroughs', 'Field Notes', 'Infrastructure'].includes(story.category),
+  );
+
+  return (
+    <Shell>
+      <SeoHead
+        title={`${essay ? 'Essays' : 'Research & context'} — Global AI News`}
+        description="Context for the AI economy."
+        path={essay ? '/essays' : '/research'}
+      />
+      <main className={container}>
+        <section className="grid gap-8 border-b border-foreground/20 py-14 md:grid-cols-[1fr_300px] md:py-20">
+          <div>
+            <p className="eyebrow text-primary">{essay ? 'Long-form desk' : 'Research desk'}</p>
+            <h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[8rem]">
+              {essay ? 'Essays.' : <>Context<br /><em className="text-primary">over noise.</em></>}
+            </h1>
+            <p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">
+              {essay
+                ? 'Arguments and field notes about what the AI industry is becoming.'
+                : 'Research, analysis and explanatory work for readers who need the second-order view.'}
+            </p>
+          </div>
+          <div className="border-t border-foreground/15 pt-4 text-sm leading-6 text-muted-foreground">
+            Our desks distinguish reported facts, analysis and synthesis so readers can understand the status of each claim.
+          </div>
+        </section>
+        <section className="grid gap-10 py-12 md:grid-cols-[1.15fr_.85fr]">
+          <div>
+            {essay
+              ? snapshot.essays.map((item) => (
+                  <article key={item.slug} className="border-t border-foreground/15 py-7">
+                    <p className="eyebrow text-primary">Essay outline</p>
+                    <h2 className="mt-3 block max-w-3xl font-serif text-4xl leading-[.9]">{item.title}</h2>
+                    <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{item.dek}</p>
+                    <p className="mt-5 text-xs text-muted-foreground">
+                      By Global AI News Editorial Desk · <time dateTime={item.date}>{formatEditorialDate(item.date)}</time>
+                    </p>
+                  </article>
+                ))
+              : researchStories.map((story, index) => (
+                  <StoryRow key={story.slug} slug={story.slug} rank={index + 1} />
+                ))}
+          </div>
+          <aside>
+            <SectionLabel>Entry points</SectionLabel>
+            {['Model evaluation', 'AI in science', 'The infrastructure map', 'Public AI systems'].map((item, index) => (
+              <div key={item} className="border-b border-foreground/15 py-4 text-sm">
+                <span className="mr-3 font-mono text-primary">0{index + 1}</span>{item}
+              </div>
+            ))}
+            <div className="mt-12"><Newsletter compact /></div>
+          </aside>
+        </section>
+      </main>
+    </Shell>
+  );
 }
 
 export function IndustryPage() {
@@ -221,14 +278,105 @@ export function FocusIndexPage({ kind }: { kind: 'models' | 'policy' }) {
 }
 
 export function IndiaPage() {
-  return <Shell><SeoHead title="India AI Index — Global AI News" description="India’s startups, funding, talent, research, policy and public AI infrastructure." path="/india" /><main className={container}><section className="grid gap-10 border-b border-foreground/20 py-14 md:grid-cols-[1fr_.7fr] md:py-20"><div><p className="eyebrow text-primary">Regional intelligence · India</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">India<br /><em className="text-primary">in build mode.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A differentiated view of the companies, talent, public infrastructure and policy bets shaping India’s AI economy.</p></div><div className="border-l border-foreground/15 pl-6 md:pl-10"><p className="eyebrow text-muted-foreground">Index thesis</p><p className="mt-5 font-serif text-3xl leading-none">The public layer is becoming the competitive layer.</p></div></section><section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.55fr_1.45fr]"><div><SectionLabel>Index metrics</SectionLabel><p className="text-sm leading-6 text-muted-foreground">Updated across startups, funding, talent, research, policy, infrastructure, companies and government initiatives.</p></div><div className="grid gap-px border bg-foreground/15 sm:grid-cols-2">{indiaIndex.map((metric) => <div data-testid={`metric-india-${metric.slug}`} key={metric.slug} className="bg-background p-6"><p className="eyebrow text-primary">{metric.label}</p><p className="mt-7 font-serif text-4xl">{metric.value}</p><p className="mt-2 text-xs text-primary">{metric.change}</p><p className="mt-3 text-sm leading-5 text-muted-foreground">{metric.context}</p></div>)}</div></section><section className="grid gap-10 py-12 md:grid-cols-[1fr_1fr]"><div><SectionLabel>Stories from India</SectionLabel>{stories.filter((story) => story.topic === 'India').map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} />)}</div><div><SectionLabel>Government initiatives</SectionLabel><div className="border-t border-foreground/15">{entities.filter((entity) => entity.kind === 'policy').map((entity) => <Link href={`/${entity.kind}/${entity.slug}`} key={entity.slug} className="block border-b border-foreground/15 py-5 hover:text-primary"><p className="font-serif text-2xl">{entity.name}</p><p className="mt-2 text-sm text-muted-foreground">{entity.strapline}</p></Link>)}</div></div></section><Newsletter compact /></main></Shell>;
+  const snapshot = useNewsroomSnapshot();
+  const indiaStories = snapshot.stories.filter((story) => story.topic === 'India');
+  const policyEntities = snapshot.entities.filter((entity) => entity.kind === 'policy');
+
+  return (
+    <Shell>
+      <SeoHead
+        title="India AI Index — Global AI News"
+        description="Dated, sourced indicators for India’s public AI compute and operating data-centre capacity."
+        path="/india"
+      />
+      <main className={container}>
+        <section className="grid gap-10 border-b border-foreground/20 py-14 md:grid-cols-[1fr_.7fr] md:py-20">
+          <div>
+            <p className="eyebrow text-primary">Regional intelligence · India</p>
+            <h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">
+              India<br /><em className="text-primary">in build mode.</em>
+            </h1>
+            <p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">
+              A source-linked view of public compute reporting and operating data-centre capacity, with dates and scope kept explicit.
+            </p>
+          </div>
+          <div className="border-l border-foreground/15 pl-6 md:pl-10">
+            <p className="eyebrow text-muted-foreground">Index thesis</p>
+            <p className="mt-5 font-serif text-3xl leading-none">
+              A public infrastructure claim is useful only when its status is clear.
+            </p>
+          </div>
+        </section>
+        <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.55fr_1.45fr]">
+          <div>
+            <SectionLabel>Dated infrastructure indicators</SectionLabel>
+            <p className="text-sm leading-6 text-muted-foreground">
+              These measures describe different things: shared GPU capacity and all-workload data-centre operating stock. Neither is a live availability feed.
+            </p>
+          </div>
+          <div className="grid gap-px border bg-foreground/15 sm:grid-cols-2">
+            {snapshot.indiaIndex.map((metric) => {
+              const source = snapshot.sources.find((record) => record.slug === metric.source);
+              return (
+                <article data-testid={`metric-india-${metric.slug}`} key={metric.slug} className="bg-background p-6">
+                  <p className="eyebrow text-primary">{metric.label}</p>
+                  <p className="mt-7 font-serif text-4xl">{metric.value}</p>
+                  <p className="mt-2 text-xs text-primary">{metric.change}</p>
+                  <p className="mt-3 text-sm leading-5 text-muted-foreground">{metric.context}</p>
+                  {source
+                    ? (
+                      <Link href={`/source/${source.slug}`} className="mt-4 flex min-h-11 items-center gap-2 border-t border-foreground/10 pt-3 text-xs hover:text-primary">
+                        {source.publisher} · source record <ArrowUpRight size={13} aria-hidden="true" />
+                      </Link>
+                    )
+                    : (
+                      <p className="mt-4 border-t border-foreground/10 pt-3 text-xs text-muted-foreground">
+                        Source record unavailable in this snapshot.
+                      </p>
+                    )}
+                </article>
+              );
+            })}
+          </div>
+        </section>
+        <section className="grid gap-10 py-12 md:grid-cols-[1fr_1fr]">
+          <div>
+            <SectionLabel>Stories from India</SectionLabel>
+            {indiaStories.map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} />)}
+          </div>
+          <div>
+            <SectionLabel>Government initiatives</SectionLabel>
+            <div className="border-t border-foreground/15">
+              {policyEntities.map((entity) => (
+                <Link href={`/${entity.kind}/${entity.slug}`} key={entity.slug} className="block border-b border-foreground/15 py-5 hover:text-primary">
+                  <p className="font-serif text-2xl">{entity.name}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{entity.strapline}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+        <Newsletter compact />
+      </main>
+    </Shell>
+  );
 }
 
 export function AskPage() {
-  const [selected, setSelected] = useState(askGlobalAnswers[0]);
+  const snapshot = useNewsroomSnapshot();
+  const answers = snapshot.askGlobalAnswers;
+  const [selectedSlug, setSelectedSlug] = useState(answers[0]?.slug ?? '');
   const [question, setQuestion] = useState('');
-  const answer = (question ? askGlobalAnswers.find((item) => item.question.toLowerCase() === question.toLowerCase()) : selected) ?? selected;
-  return <Shell><SeoHead title="Ask Global — Global AI News" description="An intelligence interface for asking what changed." path="/ask" /><main className={`${container} max-w-[1180px]`}><section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Ask Global · intelligence interface</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">Ask what<br /><em className="text-primary">changed.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">Answers grounded in Global AI News stories, sources, timelines and entities — not a generic chatbot.</p><form onSubmit={(event) => { event.preventDefault(); const found = askGlobalAnswers.find((item) => item.question.toLowerCase().includes(question.toLowerCase())); if (found) setSelected(found); }} className="mt-9 flex max-w-2xl gap-2 border-b border-foreground/40 py-3"><Search size={18} className="mt-1 text-primary" /><input data-testid="input-ask-global" value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="What do you want to understand?" className="min-w-0 flex-1 bg-transparent outline-none" /><button data-testid="button-ask-global" className="font-mono text-[10px] uppercase tracking-widest text-primary">Ask</button></form></section><section className="grid gap-10 py-12 md:grid-cols-[.7fr_1.3fr]"><aside><SectionLabel>Start here</SectionLabel><div className="grid gap-2">{askGlobalAnswers.map((item) => <button data-testid={`button-ask-example-${item.slug}`} type="button" key={item.slug} onClick={() => { setSelected(item); setQuestion(item.question); }} className={`border-b border-foreground/15 py-4 text-left text-sm hover:text-primary ${selected.slug === item.slug ? 'text-primary' : ''}`}>{item.question}</button>)}</div></aside><article className="border-l border-foreground/15 pl-0 md:pl-10"><p className="eyebrow text-primary">Answer · as of <time dateTime={answer.asOf}>{formatEditorialDate(answer.asOf)}</time></p><h2 data-testid="text-ask-question" className="mt-4 font-serif text-4xl leading-[.9]">{answer.question}</h2><p data-testid="text-ask-answer" className="mt-7 max-w-2xl text-lg leading-8">{answer.answer}</p><div className="mt-10 grid gap-8 border-t border-foreground/15 pt-6 sm:grid-cols-3"><div><p className="eyebrow text-muted-foreground">Stories</p><div className="mt-3 grid gap-2">{answer.citedStories.map((slug) => <Link href={storyHref(slug)} key={slug} className="text-sm hover:text-primary">{findStory(slug)?.title ?? slug}</Link>)}</div></div><div><p className="eyebrow text-muted-foreground">Entities</p><div className="mt-3 grid gap-2">{answer.citedEntities.map((slug) => { const entity = findEntity(slug); return entity ? <Link href={`/${entity.kind}/${slug}`} key={slug} className="text-sm hover:text-primary">{entity.name}</Link> : null; })}</div></div><div><p className="eyebrow text-muted-foreground">Sources</p><div className="mt-3 grid gap-2">{answer.citedSources.map((slug) => <a href={sources.find((source) => source.slug === slug)?.url} target="_blank" rel="noreferrer" key={slug} className="text-sm hover:text-primary">{sources.find((source) => source.slug === slug)?.publisher ?? slug} <ArrowUpRight size={12} className="inline" /></a>)}</div></div></div><div className="mt-8"><SectionLabel>Timeline</SectionLabel><TimelineList slugs={answer.citedTimeline} /></div></article></section></main></Shell>;
+  const selected = answers.find((item) => item.slug === selectedSlug) ?? answers[0];
+  const answer = (question
+    ? answers.find((item) => item.question.toLowerCase() === question.toLowerCase())
+    : selected) ?? selected;
+
+  if (!answer) {
+    return <Shell><SeoHead title="Ask Global — Global AI News" description="An intelligence interface for asking what changed." path="/ask" /><main className={container}><p className="py-20 text-sm text-muted-foreground">No sourced answers are available in this snapshot.</p></main></Shell>;
+  }
+
+  return <Shell><SeoHead title="Ask Global — Global AI News" description="An intelligence interface for asking what changed." path="/ask" /><main className={`${container} max-w-[1180px]`}><section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Ask Global · intelligence interface</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">Ask what<br /><em className="text-primary">changed.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">Answers grounded in Global AI News stories, sources, timelines and entities — not a generic chatbot.</p><form onSubmit={(event) => { event.preventDefault(); const found = answers.find((item) => item.question.toLowerCase().includes(question.toLowerCase())); if (found) setSelectedSlug(found.slug); }} className="mt-9 flex max-w-2xl gap-2 border-b border-foreground/40 py-3"><Search size={18} className="mt-1 text-primary" /><input data-testid="input-ask-global" value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="What do you want to understand?" className="min-w-0 flex-1 bg-transparent outline-none" /><button data-testid="button-ask-global" className="font-mono text-[10px] uppercase tracking-widest text-primary">Ask</button></form></section><section className="grid gap-10 py-12 md:grid-cols-[.7fr_1.3fr]"><aside><SectionLabel>Start here</SectionLabel><div className="grid gap-2">{answers.map((item) => <button data-testid={`button-ask-example-${item.slug}`} type="button" key={item.slug} onClick={() => { setSelectedSlug(item.slug); setQuestion(item.question); }} className={`border-b border-foreground/15 py-4 text-left text-sm hover:text-primary ${selected.slug === item.slug ? 'text-primary' : ''}`}>{item.question}</button>)}</div></aside><article className="border-l border-foreground/15 pl-0 md:pl-10"><p className="eyebrow text-primary">Answer · as of <time dateTime={answer.asOf}>{formatEditorialDate(answer.asOf)}</time></p><h2 data-testid="text-ask-question" className="mt-4 font-serif text-4xl leading-[.9]">{answer.question}</h2><p data-testid="text-ask-answer" className="mt-7 max-w-2xl text-lg leading-8">{answer.answer}</p><div className="mt-10 grid gap-8 border-t border-foreground/15 pt-6 sm:grid-cols-3"><div><p className="eyebrow text-muted-foreground">Stories</p><div className="mt-3 grid gap-2">{answer.citedStories.map((slug) => <Link href={storyHref(slug)} key={slug} className="text-sm hover:text-primary">{snapshot.stories.find((story) => story.slug === canonicalStorySlug(slug))?.title ?? slug}</Link>)}</div></div><div><p className="eyebrow text-muted-foreground">Entities</p><div className="mt-3 grid gap-2">{answer.citedEntities.map((slug) => { const entity = snapshot.entities.find((candidate) => candidate.slug === slug); return entity ? <Link href={`/${entity.kind}/${slug}`} key={slug} className="text-sm hover:text-primary">{entity.name}</Link> : null; })}</div></div><div><p className="eyebrow text-muted-foreground">Sources</p><div className="mt-3 grid gap-2">{answer.citedSources.map((slug) => { const source = snapshot.sources.find((candidate) => candidate.slug === slug); return <a href={source?.url} target="_blank" rel="noreferrer" key={slug} className="text-sm hover:text-primary">{source?.publisher ?? slug} <ArrowUpRight size={12} className="inline" /></a>; })}</div></div></div><div className="mt-8"><SectionLabel>Timeline</SectionLabel><TimelineList slugs={answer.citedTimeline} /></div></article></section></main></Shell>;
 }
 
 export function ArticlePage() {

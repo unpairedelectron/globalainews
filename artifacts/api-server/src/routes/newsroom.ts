@@ -40,6 +40,7 @@ import {
   getEditorialLifecycleStatus,
   getPublicDateModified,
   getStoryAuthorIdentity,
+  getStoryReadTime,
   getReleaseDraftWordCount,
   getReleaseWordCount,
   getPublishedStories,
@@ -91,6 +92,11 @@ const NEWSROOM_CONTENT_CACHE_TTL_MS = 1_000;
 let publicNewsroomContentCache:
   | { snapshot: PublicNewsroomContentSnapshot; cachedAt: number }
   | undefined;
+
+function invalidatePublicNewsroomContentCache(): void {
+  publicNewsroomContentCache = undefined;
+}
+
 type ReleaseInput = {
   slug: string;
   title: string;
@@ -106,7 +112,10 @@ type EditorialReleaseStory = ScheduledStory & {
   editorialSource?: "editor";
 };
 
-function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
+function toPublicStory(
+  story: Story,
+  publicStorySlugs: ReadonlySet<string>,
+): Omit<Story, "updatedAt"> {
   const dateModified = getPublicDateModified(story);
   const author = getStoryAuthorIdentity(story, authors);
   const isVerifiedPerson = author.type === "Person" && Boolean(author.slug);
@@ -118,7 +127,7 @@ function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
     body: story.body,
     date: story.date,
     ...(dateModified ? { dateModified } : {}),
-    readTime: story.readTime,
+    readTime: getStoryReadTime(story),
     author: author.slug ?? "global-ai-news-editorial-desk",
     authorType: isVerifiedPerson ? "person" : "organization",
     authorName: author.name,
@@ -128,7 +137,9 @@ function toPublicStory(story: Story): Omit<Story, "updatedAt"> {
     ...(story.contentType ? { contentType: story.contentType } : {}),
     entities: story.entities,
     timeline: story.timeline,
-    relatedStories: story.relatedStories.map(canonicalStorySlug),
+    relatedStories: story.relatedStories
+      .map(canonicalStorySlug)
+      .filter((slug) => publicStorySlugs.has(slug)),
     imageTreatment: story.imageTreatment,
     topic: story.topic,
     sources: story.sources,
@@ -244,6 +255,10 @@ function toScheduledStory(row: ReleaseRow): EditorialReleaseStory {
     ...story,
     slug: row.slug,
     title: useMaintainedStory ? story.title : row.title,
+    readTime: getStoryReadTime({
+      ...story,
+      title: useMaintainedStory ? story.title : row.title,
+    }),
     publishAt: row.publishAt.toISOString(),
     cadence: row.cadence as EditorialCadence,
     date: dateOnly(row.publishAt),
@@ -606,17 +621,41 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
     const publishedStories = await getPublishedStoriesFromDatabase();
     publishedStoriesMs = Date.now() - publishedStoriesStartedAt;
     const publishedStorySlugs = new Set(publishedStories.map((story) => story.slug));
+    const publicTimelineEvents = timelineEvents.filter(
+      (event) => !event.story || publishedStorySlugs.has(canonicalStorySlug(event.story)),
+    );
+    const publicTimelineSlugs = new Set(publicTimelineEvents.map((event) => event.slug));
+    const publicEntitySlugs = new Set(entities.map((entity) => entity.slug));
     const publicResearchRecords = researchRecords.filter(
       (record) => record.status === "published" && publishedStorySlugs.has(record.storySlug),
-    );
+    ).map((record) => ({
+      ...record,
+      relatedStorySlugs: record.relatedStorySlugs
+        .map(canonicalStorySlug)
+        .filter((slug) => publishedStorySlugs.has(slug)),
+      timelineSlugs: record.timelineSlugs.filter((slug) => publicTimelineSlugs.has(slug)),
+    }));
     const publicDataProducts = dataProductRecords.filter(
       (record) => record.status === "published" && record.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
-    );
+    ).map((record) => ({
+      ...record,
+      storySlugs: record.storySlugs
+        .map(canonicalStorySlug)
+        .filter((slug) => publishedStorySlugs.has(slug)),
+    }));
     const publicTopics = topicRecords.filter(
       (record) => record.indexable && record.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
-    );
+    ).map((record) => ({
+      ...record,
+      storySlugs: record.storySlugs
+        .map(canonicalStorySlug)
+        .filter((slug) => publishedStorySlugs.has(slug)),
+      timelineSlugs: record.timelineSlugs.filter((slug) => publicTimelineSlugs.has(slug)),
+    }));
     const citedSourceSlugs = new Set([
       ...publishedStories.flatMap((story) => story.sources),
+      ...indiaIndex.map((metric) => metric.source),
+      ...publicTimelineEvents.flatMap((event) => event.sourceSlugs ?? []),
       ...publicResearchRecords.flatMap((record) => record.sourceSlugs),
       ...publicDataProducts.flatMap((record) => record.sourceSlugs),
       ...publicTopics.flatMap((record) => record.sourceSlugs),
@@ -674,13 +713,17 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
       evidenceSummaries,
       entities: entities.map((entity) => ({
         ...entity,
-        recentStories: entity.recentStories.map(canonicalStorySlug),
+        timeline: entity.timeline.filter((slug) => publicTimelineSlugs.has(slug)),
+        signals: entity.signals.filter((slug) => signals.some((signal) => signal.slug === slug)),
+        recentStories: entity.recentStories
+          .map(canonicalStorySlug)
+          .filter((slug) => publishedStorySlugs.has(slug)),
       })),
-      timelineEvents: timelineEvents.map((event) => ({
-        ...event,
-        ...(event.story ? { story: canonicalStorySlug(event.story) } : {}),
-      })),
-      stories: publishedStories.map(toPublicStory),
+      timelineEvents: publicTimelineEvents.map((event) => ({
+          ...event,
+          ...(event.story ? { story: canonicalStorySlug(event.story) } : {}),
+        })),
+      stories: publishedStories.map((story) => toPublicStory(story, publishedStorySlugs)),
       researchRecords: publicResearchRecords,
       dataProducts: publicDataProducts,
       topics: publicTopics,
@@ -689,7 +732,17 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
       industryMap,
       indiaIndex,
       essays,
-      askGlobalAnswers,
+      askGlobalAnswers: askGlobalAnswers
+        .map((answer) => ({
+          ...answer,
+          citedStories: answer.citedStories
+            .map(canonicalStorySlug)
+            .filter((slug) => publishedStorySlugs.has(slug)),
+          citedSources: answer.citedSources.filter((slug) => resolvedSourceSlugs.has(slug)),
+          citedTimeline: answer.citedTimeline.filter((slug) => publicTimelineSlugs.has(slug)),
+          citedEntities: answer.citedEntities.filter((slug) => publicEntitySlugs.has(slug)),
+        }))
+        .filter((answer) => answer.citedStories.length > 0),
     });
     snapshotValidationMs = Date.now() - snapshotValidationStartedAt;
     publicNewsroomContentCache = { snapshot, cachedAt: Date.now() };
@@ -859,6 +912,7 @@ router.post("/newsroom/releases", requireEditorAuth, async (req, res): Promise<v
       );
       return release;
     });
+    invalidatePublicNewsroomContentCache();
     res.status(201).json(CreateNewsroomReleaseResponse.parse(toReleaseResponse(created)));
   } catch (error: unknown) {
     req.log.error({ err: error }, "Release creation failed");
@@ -996,6 +1050,7 @@ router.patch("/newsroom/releases/:slug", requireEditorAuth, async (req, res): Pr
       }
       return release;
     });
+    invalidatePublicNewsroomContentCache();
     res.json(UpdateNewsroomReleaseResponse.parse(toReleaseResponse(updated)));
   } catch (error) {
     req.log.error({ err: error }, "Release update failed");
@@ -1033,6 +1088,7 @@ router.delete("/newsroom/releases/:slug", requireEditorAuth, async (req, res): P
       res.status(404).json({ error: "Release not found." });
       return;
     }
+    invalidatePublicNewsroomContentCache();
     res.json(CancelNewsroomReleaseResponse.parse(toReleaseResponse(updated)));
   } catch (error) {
     req.log.error({ err: error }, "Release cancellation failed");

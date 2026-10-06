@@ -45,7 +45,7 @@
   <body>
     <header><div class="brand">GLOBAL AI NEWS</div></header>
     <main>
-      <div class="kicker">Analysis · 3 min read</div>
+      <div class="kicker">Analysis · 4 min read</div>
       <h1>Mistral Small 4’s active parameter count is not its full footprint</h1>
       <p class="dek">Mistral lists 119 billion total parameters and 6.5 billion active parameters; its model card does not establish hardware fit or runtime performance.</p>
       <div class="byline"><strong>Global AI News Editorial Desk</strong> · 8 Sept 2026<span class="byline-description">The Global AI News Editorial Desk publishes source-linked reporting, analysis, research and reference material on AI systems, infrastructure, policy and their economic effects.</span></div>
@@ -94,8 +94,17 @@
           
           
         </section>
+
+        <section>
+          <h2>Write down the conditions behind a deployment claim</h2>
+          <p>A useful evaluation record should name the exact model artifact, weight format, precision, runtime, hardware and serving mode. It should state the input and output lengths, batch size and expected concurrency, then report memory use, throughput, latency and cost for the same workload. This is a proposed measurement plan, not a claim that the model card provides those results.</p>
+          <p>For a long-context task, teams should test both retrieval quality and operational behavior as input length grows. A 256K limit is a published maximum, not a promise that every deployment can serve that context at its chosen speed, memory budget or concurrency. Results should identify the conditions that were actually measured rather than attach a general “fits locally” label to the model.</p>
+          <p>The comparison should include a smaller or hosted alternative when that is a real option for the team, but it should not mix measurements taken under different prompts, hardware or quantization. That discipline turns “small” into a question with a workload-specific answer and keeps provider specifications separate from independent deployment evidence. <a class="citation" href="#source-1" aria-label="Source 1: Mistral Small 4 model card, jump to citation details">[1]</a></p>
+          
+          
+        </section>
         <p><strong>What changes:</strong> Evaluate the full serving configuration on representative tasks rather than infer deployment properties from the model name.</p>
-        <section class="sources"><h2>Sources</h2><ol><li id="source-1"><a href="https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03" target="_blank" rel="noopener noreferrer">[1] Mistral Small 4 model card</a><p>Mistral AI · Accessed 2026-10-02</p></li></ol></section>
+        <section class="sources"><h2>Sources</h2><ol><li id="source-1"><a href="https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03" target="_blank" rel="noopener noreferrer">[1] Mistral Small 4 model card</a><p>Mistral AI · Tier 1 · Published 2026-03-16 · Accessed 2026-10-06</p><p>Provider-authored specifications dated 16 March 2026 and license; the card does not independently benchmark performance or establish hardware fit.</p></li></ol></section>
         <div class="ad">NATIVE AD · CLEARLY LABELED INVENTORY</div>
       </article>
     </main>

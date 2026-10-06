@@ -446,8 +446,8 @@ export function getStoryAuthorIdentity(
 }
 
 export let sources: Source[] = [
-  { slug: 'nature-antibiotic-study', name: 'A generative artificial intelligence approach for the discovery of antimicrobial peptides against multidrug-resistant bacteria', publisher: 'Nature Microbiology', kind: 'primary', sourceType: 'academic-paper', classification: 'primary', url: 'https://www.nature.com/articles/s41564-025-02114-4', accessed: '2026-10-05', publicationDate: '2025-10-03', tier: 1, evidenceType: 'full-page', scopeNote: 'ProteoGPT and specialized protein-language-model pipeline; findings are reported for in-vitro assays and mouse infection models, not human treatment.' },
-  { slug: 'open-a7f1c833c9a1e5c0', name: 'How a Cooperative-Override Circuit Suppresses Nash Play in Large Language Models (version 3)', publisher: 'arXiv', kind: 'primary', sourceType: 'academic-paper', classification: 'primary', url: 'https://arxiv.org/abs/2604.27167v3', accessed: '2026-10-05', publicationDate: '2026-09-18', tier: 1, evidenceType: 'full-page', scopeNote: 'Version 3 is a major revision; its claims concern the tested models, prompts, and game protocols and remain a preprint.' },
+  { slug: 'nature-antibiotic-study', name: 'A generative artificial intelligence approach for the discovery of antimicrobial peptides against multidrug-resistant bacteria', publisher: 'Nature Microbiology', kind: 'primary', sourceType: 'academic-paper', classification: 'primary', url: 'https://www.nature.com/articles/s41564-025-02114-4', accessed: '2026-10-06', publicationDate: '2025-10-03', tier: 1, evidenceType: 'full-page', scopeNote: 'ProteoGPT and specialized protein-language-model pipeline; findings are reported for in-vitro assays and mouse infection models, not human treatment.' },
+  { slug: 'open-a7f1c833c9a1e5c0', name: 'How a Cooperative-Override Circuit Suppresses Nash Play in Large Language Models (version 3)', publisher: 'arXiv', kind: 'primary', sourceType: 'academic-paper', classification: 'primary', url: 'https://arxiv.org/abs/2604.27167v3', accessed: '2026-10-06', publicationDate: '2026-09-18', tier: 1, evidenceType: 'full-page', scopeNote: 'Version 3 is a major revision; its claims concern the tested models, prompts, and game protocols and remain a preprint.' },
   { slug: 'uspto-ai-inventorship', name: 'Guidance on AI-assisted inventions', publisher: 'United States Patent and Trademark Office', kind: 'primary', url: 'https://www.uspto.gov/sites/default/files/documents/ai-inventorship-memo.pdf', accessed: '2026-10-02' },
   { slug: 'indiaai-mission', name: 'IndiaAI Mission', publisher: 'Ministry of Electronics and Information Technology', kind: 'primary', sourceType: 'government-portal', classification: 'primary', url: 'https://indiaai.gov.in/', accessed: '2026-09-08' },
   { slug: 'stanford-ai-index-2026', name: 'AI Index Report 2026', publisher: 'Stanford Institute for Human-Centered AI', kind: 'independent', sourceType: 'research-report', classification: 'secondary', url: 'https://hai.stanford.edu/ai-index/2026-ai-index-report', accessed: '2026-10-05', tier: 2, evidenceType: 'full-page', scopeNote: 'The report documents OSWorld task accuracy, its reported human baseline, and remaining agent failures; these benchmark results do not establish success rates for a specific production workflow.' },
@@ -458,7 +458,7 @@ export let sources: Source[] = [
   { slug: 'c2pa-specification-v2-4', name: 'C2PA Technical Specifications, version 2.4', publisher: 'Coalition for Content Provenance and Authenticity', kind: 'primary', sourceType: 'technical-document', classification: 'primary', url: 'https://spec.c2pa.org/specifications/specifications/2.4/index.html', accessed: '2026-10-05', tier: 1, evidenceType: 'full-page', scopeNote: 'Technical standard for signed provenance assertions and asset history; it is not a determination that depicted content is true.' },
   { slug: 'c2pa-deployment-guidance-2026', name: 'Content Credentials: Deployment Guidance', publisher: 'Coalition for Content Provenance and Authenticity', kind: 'primary', sourceType: 'technical-document', classification: 'primary', url: 'https://c2pa.org/wp-content/uploads/sites/33/2026/07/Content-Credentials-Deployment-Guidance.pdf', accessed: '2026-10-05', publicationDate: '2026-07-08', tier: 1, evidenceType: 'full-page', scopeNote: 'C2PA-authored implementation guidance; supports vendor and workflow questions, not independent proof of adoption or end-to-end preservation.' },
   { slug: 'c2pa-independent-security-preprint', name: 'Verifying Provenance of Digital Media: Why the C2PA Specifications Fall Short', publisher: 'arXiv', kind: 'independent', sourceType: 'academic-paper', classification: 'secondary', url: 'https://arxiv.org/abs/2604.24890v1', accessed: '2026-10-05', publicationDate: '2026-04-27', tier: 2, evidenceType: 'full-page', scopeNote: 'Single arXiv security preprint analyzing C2PA versions 2.2–2.4; attribute its reported findings and do not present them as settled consensus.' },
-  { slug: 'mistral-model-card', name: 'Mistral Small 4 model card', publisher: 'Mistral AI', kind: 'primary', url: 'https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03', accessed: '2026-10-02' },
+  { slug: 'mistral-model-card', name: 'Mistral Small 4 model card', publisher: 'Mistral AI', kind: 'primary', sourceType: 'technical-document', classification: 'primary', url: 'https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03', accessed: '2026-10-06', publicationDate: '2026-03-16', tier: 1, evidenceType: 'full-page', scopeNote: 'Provider-authored specifications dated 16 March 2026 and license; the card does not independently benchmark performance or establish hardware fit.' },
   { slug: 'indiaai-cabinet-approval-2024', name: 'Cabinet approves the IndiaAI Mission', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2012355', accessed: '2026-10-03', publicationDate: '2024-03-07', tier: 1, evidenceType: 'full-page', scopeNote: 'Programme authorization and target; not proof of delivered capacity.' },
   { slug: 'pib-initial-compute-2025', name: 'With robust and high-end common computing facility in place, India all set to launch its own AI model', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2097709', accessed: '2026-10-03', publicationDate: '2025-01-30', tier: 1, evidenceType: 'full-page', scopeNote: 'Describes an initial facility and further GPUs to be added; does not establish that all planned GPUs were live.' },
   { slug: 'pib-common-compute-34000-2025', name: 'India’s Common Compute Capacity Crosses 34,000 GPUs', publisher: 'Press Information Bureau, Government of India', kind: 'primary', sourceType: 'government-record', classification: 'primary', url: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2132817&lang=1&reg=3', accessed: '2026-10-03', publicationDate: '2025-05-30', tier: 1, evidenceType: 'full-page', scopeNote: 'Reports 34,333 GPUs, including empanelled and additional capacity; status is not defined as installed or live.' },
@@ -515,15 +515,8 @@ export let timelineEvents: TimelineEvent[] = [
   { slug: 'indiaai-compute-onboarded-nearly-38000-2026', date: '2026-07-29', title: 'PIB repeats a rounded onboarded figure', description: 'A PIB release says nearly 38,000 GPUs were onboarded but supplies no exact count or definition connecting onboarding to shared capacity.', entities: ['indiaai-mission'], story: 'india-ai-compute-access-2026', sourceSlugs: ['pib-onboarded-nearly-38000-2026'], topicSlugs: ['india'], researchSlugs: ['india-ai-compute-2026'], reportSlugs: ['india-ai-compute-access-2026'], dataProductSlugs: ['india-ai-compute-snapshots'] },
   { slug: 'indiaai-compute-shared-capacity-2026', date: '2026-08-13', title: 'Factsheet reports more than 45,000 shared GPUs', description: 'The published factsheet says shared capacity exceeded 45,000 GPUs as of June 2026; it does not reconcile that figure with earlier snapshots.', entities: ['indiaai-mission'], story: 'india-ai-compute-access-2026', sourceSlugs: ['pib-capacity-and-use-factsheet-2026'], topicSlugs: ['india'], researchSlugs: ['india-ai-compute-2026'], reportSlugs: ['india-ai-compute-access-2026'], dataProductSlugs: ['india-ai-compute-snapshots'] },
   { slug: 'indiaai-compute-access-reported-2026', date: '2026-10-01', title: 'Independent reporting puts access near 30,000 GPUs', description: 'ETtech reports access to about 30,000 GPUs against a 45,000 commitment. The report is not a reconciled government inventory.', entities: ['indiaai-mission'], story: 'india-ai-compute-access-2026', sourceSlugs: ['ettech-indiaai-recalibration-2026'], topicSlugs: ['india'], researchSlugs: ['india-ai-compute-2026'], reportSlugs: ['india-ai-compute-access-2026'], dataProductSlugs: ['india-ai-compute-snapshots'] },
-  { slug: 'antibiotic-candidates', date: '2026-01-18', title: 'AI-proposed antibiotic candidates enter testing', description: 'A research team reports molecules generated outside public antibiotic databases and advances them to laboratory testing.', entities: ['antibiotic-discovery', 'google-deepmind'], story: 'antibiotic' },
-  { slug: 'openai-agent-platform', date: '2026-08-21', title: 'OpenAI opens a longer-running agent platform', description: 'Developers receive tools for agents that can plan, call software and return evidence alongside an answer.', entities: ['openai'], story: 'founders' },
-  { slug: 'gpt-5-release', date: '2026-08-28', title: 'GPT-5 release raises the cost of being “model agnostic”', description: 'The release shifts enterprise evaluation toward tool use, reliability and total workflow cost.', entities: ['openai', 'gpt-5'], story: 'small-models' },
-  { slug: 'claude-4-release', date: '2026-07-30', title: 'Claude 4 adds computer-use controls', description: 'Anthropic makes computer interaction available to more enterprise developers with audit controls.', entities: ['anthropic', 'claude-4'], story: 'small-models' },
-  { slug: 'indiaai-compute-tender', date: '2026-06-14', title: 'IndiaAI opens public compute access', description: 'The national mission begins allocating accelerator capacity to startups, researchers and public-interest projects.', entities: ['indiaai-mission', 'sarvam-ai'], story: 'india-stack' },
-  { slug: 'azure-inference-expansion', date: '2026-08-09', title: 'Cloud providers follow demand closer to regional grids', description: 'New inference facilities favour reliable power, fibre and customer proximity over a single global hub.', entities: ['microsoft'], story: 'infrastructure' },
-  { slug: 'watermarking-code', date: '2026-05-22', title: 'Provenance moves from proposal to procurement rule', description: 'Public-sector buyers begin asking image and video vendors for durable content credentials.', entities: ['content-credentials'], story: 'watermarking' },
-  { slug: 'gemini-science-release', date: '2026-04-11', title: 'Foundation models become lab instruments', description: 'Scientific teams use multimodal models to navigate papers, structures and experimental hypotheses.', entities: ['google-deepmind'], story: 'antibiotic' },
-  { slug: 'sarvam-public-model', date: '2026-07-03', title: 'Sarvam publishes a smaller Indic-language model', description: 'The release prioritises affordable local inference and speech performance over benchmark breadth.', entities: ['sarvam-ai'], story: 'india-stack' },
+  { slug: 'antibiotic-candidates', date: '2025-10-03', title: 'Nature Microbiology paper reports ProteoGPT preclinical results', description: 'A peer-reviewed study describes antimicrobial-peptide testing in laboratory assays and mouse infection models; it does not report human treatment results.', entities: ['antibiotic-discovery'], story: 'ai-models-antibiotic-discovery', sourceSlugs: ['nature-antibiotic-study'] },
+  { slug: 'watermarking-code', date: '2026-08-02', title: 'EU AI Act content-transparency obligations begin to apply', description: 'The Commission says applicable Article 50 duties apply from this date; its transparency Code of Practice remains voluntary.', entities: ['content-credentials'], story: 'quiet-race-watermark-everything-ai-makes', sourceSlugs: ['eu-ai-act-content-transparency'] },
 ];
 
 const storyBodies: Record<string, BodySection[]> = {
@@ -562,6 +555,14 @@ const storyBodies: Record<string, BodySection[]> = {
       paragraphs: [
         'The work is worth following because it connects a computational search with experiments against clinically important resistant bacteria. Its present status is still preclinical. The article describes one peer-reviewed primary study, and the source set used here contains no independent replication of its findings. [@nature-antibiotic-study]',
         'A careful account can recognize both points at once: the authors report promising activity in specified laboratory and mouse models, and no one should treat that as proof of a new antibiotic for patients. Further validation is what would move the claim forward. Until then, the useful lesson is about a model-assisted research process, not a medicine ready for the clinic. [@nature-antibiotic-study]',
+      ],
+    },
+    {
+      heading: 'Follow each candidate through the evidence ladder',
+      paragraphs: [
+        'The paper says seven leading peptides were selected for the mouse experiments after earlier screening and laboratory tests. That funnel matters: the number of sequences a pipeline can examine is not the number of candidates that reach an animal model, and neither number is a count of treatments ready for patients. The stages describe different evidence and should not be collapsed into one headline about “AI-discovered antibiotics.” [@nature-antibiotic-study]',
+        'Useful follow-up work would make the path from selection to validation easy to inspect: which candidates were synthesized, which assays they passed, and which results were reproduced. Independent teams could test additional isolates and report how changes in dose and exposure affect the measured outcome. These are proposed checks, not findings reported by this paper.',
+        'Before a patient-level claim could be considered, further studies would also need to address the safety and clinical questions that laboratory and mouse experiments cannot answer. The current paper gives readers a defined preclinical result to evaluate; it does not supply those later results. Keeping the stages separate lets the work be taken seriously without describing a research candidate as a medicine.',
       ],
     },
   ],
@@ -690,6 +691,14 @@ const storyBodies: Record<string, BodySection[]> = {
       paragraphs: [
         'Before selecting Small 4 for a workflow, teams can ask the vendor or deployment provider to identify the complete weight artifact and serving configuration, then measure memory, throughput, latency and cost on representative tasks. They should also test quality and failure behavior against a baseline that matters to users. These are recommended evaluation steps, not performance results claimed by the model card.',
         'Mistral’s card makes the model’s published size, active-parameter count, context limit and license easier to inspect. It does not support the broader claim that small models are already winning serious workflows or that this model is a local-laptop model. The honest conclusion is narrower: its specifications justify a deployment evaluation, and that evaluation must measure the full system rather than rely on its name. [@mistral-model-card]',
+      ],
+    },
+    {
+      heading: 'Write down the conditions behind a deployment claim',
+      paragraphs: [
+        'A useful evaluation record should name the exact model artifact, weight format, precision, runtime, hardware and serving mode. It should state the input and output lengths, batch size and expected concurrency, then report memory use, throughput, latency and cost for the same workload. This is a proposed measurement plan, not a claim that the model card provides those results.',
+        'For a long-context task, teams should test both retrieval quality and operational behavior as input length grows. A 256K limit is a published maximum, not a promise that every deployment can serve that context at its chosen speed, memory budget or concurrency. Results should identify the conditions that were actually measured rather than attach a general “fits locally” label to the model.',
+        'The comparison should include a smaller or hosted alternative when that is a real option for the team, but it should not mix measurements taken under different prompts, hardware or quantization. That discipline turns “small” into a question with a workload-specific answer and keeps provider specifications separate from independent deployment evidence. [@mistral-model-card]',
       ],
     },
   ],
@@ -829,9 +838,16 @@ const maintainedStudyStory: Story = {
         'Version 3 is a major revision of the earlier preprint and adds a randomized-payoff experiment. It remains a single arXiv paper with no independent confirmation in this source set. The most defensible reading is therefore narrow: familiar action words changed choices in the reported tests, and label-robust evaluation is needed before broader claims are made. [@open-a7f1c833c9a1e5c0]',
       ],
     },
+    {
+      heading: 'Separate the observed choice from its explanation',
+      paragraphs: [
+        'The behavioral result and the proposed internal mechanism are different claims. The paper reports choices in prompted games, then uses intermediate readouts and interventions to examine a possible explanation in Llama-3-8B. A steering effect is evidence about that model and setup; it does not show that the same circuit explains choices in every tested family or that one measured direction is the sole cause. [@open-a7f1c833c9a1e5c0]',
+        'Replication could hold the payoff structure constant while changing action labels, prompt wording and model checkpoints, then report variation across runs. The 48 payoff-random games broaden the paper’s own test, but they do not independently confirm the findings or cover every strategic task. These are next-step evaluation questions, not additional results attributed to version 3. [@open-a7f1c833c9a1e5c0]',
+      ],
+    },
   ],
   date: '2026-09-21',
-  dateModified: '2026-10-05',
+  dateModified: '2026-10-06',
   readTime: '4 min read',
   author: 'ishaan-mehta',
   evidence: 'Developing evidence · 1 preprint · 0 independent confirmations',
@@ -866,10 +882,76 @@ const maintainedStudyStory: Story = {
 
 export let stories: Story[] = [
   maintainedStudyStory,
-  { slug: 'ai-models-antibiotic-discovery', category: 'Breakthroughs', title: 'ProteoGPT study reports peptide candidates for resistant bacteria', dek: 'One protein-language-model pipeline reports in-vitro and mouse-model results; the findings remain preclinical.', body: storyBodies.antibiotic, date: '2026-09-11', dateModified: '2026-10-05', readTime: '7 min read', author: 'mira-patel', evidence: 'Developing evidence · 1 peer-reviewed primary study · 0 independent confirmations', evidenceSummary: evidenceSummaries.antibiotic, classification: 'synthesis', contentType: 'Brief', entities: [], timeline: [], relatedStories: [], imageTreatment: { type: 'editorial-abstract', alt: 'Abstract map of peptide sequences and a laboratory assay', palette: 'deep teal, chalk white, antibiotic amber', caption: 'A model-assisted search still depends on experiments.' }, topic: 'AI in science', sources: ['nature-antibiotic-study'], bottomLine: 'A 2025 Nature Microbiology paper reports AMP activity in laboratory and mouse models; it does not establish a human treatment.', whyItMatters: 'The case shows why model-assisted drug discovery should be described through its experiments and evidence boundary, not the novelty of a prediction alone.', keyTakeaways: ['ProteoGPT is a specialized protein-language-model pipeline.', 'The reported evidence covers in-vitro assays and mouse infection models.', 'No human treatment result is reported in this study.'], whatChanges: 'Track which candidates reproduce in further preclinical work before making claims about clinical benefit.' },
+  {
+    slug: 'ai-models-antibiotic-discovery',
+    category: 'Breakthroughs',
+    title: 'ProteoGPT study reports peptide candidates for resistant bacteria',
+    dek: 'One protein-language-model pipeline reports in-vitro and mouse-model results; the findings remain preclinical.',
+    body: storyBodies.antibiotic,
+    date: '2026-09-11',
+    dateModified: '2026-10-06',
+    readTime: '4 min read',
+    author: 'mira-patel',
+    evidence: 'Developing evidence · 1 peer-reviewed primary study · 0 independent confirmations',
+    evidenceSummary: evidenceSummaries.antibiotic,
+    classification: 'synthesis',
+    contentType: 'Brief',
+    entities: [],
+    timeline: [],
+    relatedStories: [],
+    imageTreatment: {
+      type: 'editorial-abstract',
+      alt: 'Abstract map of peptide sequences and a laboratory assay',
+      palette: 'deep teal, chalk white, antibiotic amber',
+      caption: 'A model-assisted search still depends on experiments.',
+    },
+    topic: 'AI in science',
+    sources: ['nature-antibiotic-study'],
+    bottomLine: 'A 2025 Nature Microbiology paper reports AMP activity in laboratory and mouse models; it does not establish a human treatment.',
+    whyItMatters: 'The case shows why model-assisted drug discovery should be described through its experiments and evidence boundary, not the novelty of a prediction alone.',
+    keyTakeaways: [
+      'ProteoGPT is a specialized protein-language-model pipeline.',
+      'The reported evidence covers in-vitro assays and mouse infection models.',
+      'No human treatment result is reported in this study.',
+    ],
+    whatChanges: 'Track which candidates reproduce in further preclinical work before making claims about clinical benefit.',
+  },
   { slug: 'quiet-race-watermark-everything-ai-makes', category: 'Policy', title: 'C2PA provenance records do not prove content is true', dek: 'EU disclosure obligations, a voluntary code and a contested provenance standard do different jobs.', body: storyBodies.watermarking, date: '2026-09-10', dateModified: '2026-10-05', readTime: '5 min read', author: 'jonas-rhee', evidence: 'Medium confidence · 3 official records · 1 attributed security preprint', evidenceSummary: evidenceSummaries.watermarking, classification: 'analysis', contentType: 'Analysis', entities: ['content-credentials'], timeline: ['watermarking-code'], relatedStories: [], imageTreatment: { type: 'data-graphic', alt: 'A signed provenance record shown beside an image, with its limits made explicit', palette: 'warm white, cobalt, graphite', caption: 'Provenance describes a file history, not whether the content is true.' }, topic: 'Policy', sources: ['eu-ai-act-content-transparency', 'c2pa-specification-v2-4', 'c2pa-deployment-guidance-2026', 'c2pa-independent-security-preprint'], bottomLine: 'C2PA can record signed provenance, but it cannot establish that an image is true; one unreviewed preprint reports security limitations that should be investigated.', whyItMatters: 'A reader or buyer needs to distinguish legal disclosure, file provenance and verification of the underlying claim.', keyTakeaways: ['The EU Code of Practice is voluntary; applicable Article 50 obligations are legal requirements.', 'A valid provenance record is not proof of authenticity.', 'A single arXiv security study reports validator and specification weaknesses that remain to be independently tested.'], whatChanges: 'Procurement and newsroom workflows should test how credentials are attached, preserved, validated and explained when absent.' },
   { slug: 'indias-public-ai-stack', category: 'India Watch', title: 'India’s public AI stack is being built in the open', dek: 'From language data to compute, a sovereign layer is becoming visible.', body: storyBodies['india-stack'], date: '2026-09-09', readTime: '6 min read', author: 'ananya-rao', evidence: 'High confidence · 4 primary sources · 3 independent confirmations', evidenceSummary: evidenceSummaries['india-stack'], classification: 'reported', entities: ['indiaai-mission', 'sarvam-ai'], timeline: ['indiaai-compute-tender', 'sarvam-public-model'], relatedStories: ['small-models', 'infrastructure'], imageTreatment: { type: 'field-photograph', alt: 'Bengaluru technology district at dusk', palette: 'saffron, indigo, concrete grey', caption: 'India is treating shared infrastructure as a competitive advantage.' }, topic: 'India', sources: ['indiaai-mission', 'stanford-ai-index-2026'], bottomLine: 'India is building a shared layer for language, compute and public-interest deployment.', whyItMatters: 'A public substrate could lower the cost of building products for hundreds of millions of users.', keyTakeaways: ['Compute access is moving beyond the largest companies.', 'Indic-language data is a strategic asset.', 'Procurement will determine whether infrastructure becomes useful.'], whatChanges: 'Startups can spend more effort on products and less on recreating basic AI infrastructure.' },
-  { slug: 'small-models-serious-workflows', category: 'The Edge', title: 'Mistral Small 4’s active parameter count is not its full footprint', dek: 'Mistral lists 119 billion total parameters and 6.5 billion active parameters; its model card does not establish hardware fit or runtime performance.', body: storyBodies['small-models'], date: '2026-09-08', dateModified: '2026-10-05', readTime: '4 min read', author: 'ishaan-mehta', evidence: 'Developing evidence · 1 provider-authored model card · no independent deployment tests', evidenceSummary: evidenceSummaries['small-models'], classification: 'analysis', contentType: 'Analysis', entities: [], timeline: [], relatedStories: [], imageTreatment: { type: 'editorial-abstract', alt: 'Model specifications displayed beside a system deployment checklist', palette: 'slate, electric blue, paper white', caption: 'A model label is not a deployment measurement.' }, topic: 'Models', sources: ['mistral-model-card'], bottomLine: 'Mistral’s model card lists 119B total and 6.5B active parameters; active count alone does not establish storage, hardware fit or performance.', whyItMatters: 'Teams need the full model artifact and a workload test before treating a parameter label as a deployment claim.', keyTakeaways: ['The model card states 119B total parameters and 6.5B active parameters.', 'The 256K context window and Apache 2.0 label are provider specifications.', 'The source set has no independent hardware, latency or quality measurements.'], whatChanges: 'Evaluate the full serving configuration on representative tasks rather than infer deployment properties from the model name.' },
+  {
+    slug: 'small-models-serious-workflows',
+    category: 'The Edge',
+    title: 'Mistral Small 4’s active parameter count is not its full footprint',
+    dek: 'Mistral lists 119 billion total parameters and 6.5 billion active parameters; its model card does not establish hardware fit or runtime performance.',
+    body: storyBodies['small-models'],
+    date: '2026-09-08',
+    dateModified: '2026-10-06',
+    readTime: '4 min read',
+    author: 'ishaan-mehta',
+    evidence: 'Developing evidence · 1 provider-authored model card · no independent deployment tests',
+    evidenceSummary: evidenceSummaries['small-models'],
+    classification: 'analysis',
+    contentType: 'Analysis',
+    entities: [],
+    timeline: [],
+    relatedStories: [],
+    imageTreatment: {
+      type: 'editorial-abstract',
+      alt: 'Model specifications displayed beside a system deployment checklist',
+      palette: 'slate, electric blue, paper white',
+      caption: 'A model label is not a deployment measurement.',
+    },
+    topic: 'Models',
+    sources: ['mistral-model-card'],
+    bottomLine: 'Mistral’s model card lists 119B total and 6.5B active parameters; active count alone does not establish storage, hardware fit or performance.',
+    whyItMatters: 'Teams need the full model artifact and a workload test before treating a parameter label as a deployment claim.',
+    keyTakeaways: [
+      'The model card states 119B total parameters and 6.5B active parameters.',
+      'The 256K context window and Apache 2.0 label are provider specifications.',
+      'The source set has no independent hardware, latency or quality measurements.',
+    ],
+    whatChanges: 'Evaluate the full serving configuration on representative tasks rather than infer deployment properties from the model name.',
+  },
   { slug: 'founders-first-million-model-calls', category: 'Field Notes', title: 'What founders notice after their first million model calls', dek: 'The bottleneck is rarely the model. It is the operating system around it.', body: storyBodies.founders, date: '2026-09-07', readTime: '8 min read', author: 'lena-hoff', evidence: 'Medium confidence · 2 primary sources · 6 independent confirmations', evidenceSummary: evidenceSummaries.founders, classification: 'analysis', entities: ['openai', 'anthropic'], timeline: ['openai-agent-platform'], relatedStories: ['small-models', 'infrastructure'], imageTreatment: { type: 'portrait', alt: 'Founder reviewing an AI operations dashboard in a quiet office', palette: 'ink, copper, soft green', caption: 'Scale exposes the system around the model.' }, topic: 'Founders', sources: ['stanford-ai-index-2026'], bottomLine: 'At scale, reliability, permissions and feedback loops matter more than clever prompts.', whyItMatters: 'The next generation of AI companies will be built around operational discipline.', keyTakeaways: ['Exceptions are product feedback.', 'Human escalation is a feature, not a failure.', 'Unit economics include monitoring and wrong answers.'], whatChanges: 'Founders will treat evaluation and governance as core product infrastructure.' },
   { slug: 'new-geography-of-compute', category: 'Infrastructure', title: 'The new geography of compute is surprisingly regional', dek: 'Power, permits and proximity are redrawing the map of intelligence.', body: storyBodies.infrastructure, date: '2026-09-06', readTime: '9 min read', author: 'david-okafor', evidence: 'High confidence · 4 primary sources · 5 independent confirmations', evidenceSummary: evidenceSummaries.infrastructure, classification: 'analysis', entities: ['microsoft'], timeline: ['azure-inference-expansion'], relatedStories: ['indias-public-ai-stack', 'small-models'], imageTreatment: { type: 'data-graphic', alt: 'Map showing regional compute corridors and energy connections', palette: 'night blue, grid green, signal orange', caption: 'The infrastructure map follows power, fibre and permission.' }, topic: 'Technology', sources: ['iea-data-centres', 'stanford-ai-index-2026'], bottomLine: 'The AI cloud is becoming a network of regional corridors shaped by physical constraints.', whyItMatters: 'Energy and permitting will influence who can offer fast, affordable intelligence.', keyTakeaways: ['Inference is moving closer to users.', 'Training remains more concentrated than deployment.', 'Power availability is now a strategic differentiator.'], whatChanges: 'AI infrastructure planning will look increasingly like energy and telecom planning.' },
   indiaAiComputeReport,
@@ -1104,6 +1186,13 @@ export const scheduledStories: ScheduledStory[] = [
  * Combine maintained articles with release records whose lifecycle and word
  * count were already checked by the caller using isPublicArticle.
  */
+for (const story of stories) {
+  story.readTime = getStoryReadTime(story);
+}
+for (const story of scheduledStories) {
+  story.readTime = getStoryReadTime(story);
+}
+
 export function resolveMaintainedReleaseStory(
   storedStory: Story,
   maintainedStory: ScheduledStory | undefined,
@@ -1116,17 +1205,35 @@ export function resolveMaintainedReleaseStory(
 }
 
 export function mergeEligiblePublishedStories(now = new Date(), schedule: Story[] = []): Story[] {
-  const publishedStories = stories.filter((story) => isPublicArticle({ date: story.date }, now));
+  const publishedStories = stories.filter(
+    (story) => !withdrawnStorySlugs.has(story.slug)
+      && isPublicArticle({ date: story.date }, now),
+  );
   const publishedSlugs = new Set(publishedStories.map((story) => story.slug));
-  const eligibleReleases = schedule.filter((story) => !publishedSlugs.has(story.slug));
-  return [...publishedStories, ...eligibleReleases].sort((left, right) => {
-    if (left.date !== right.date) return right.date.localeCompare(left.date);
-    return left.slug.localeCompare(right.slug);
-  });
+  const eligibleReleases = schedule.filter(
+    (story) => !withdrawnStorySlugs.has(story.slug) && !publishedSlugs.has(story.slug),
+  );
+  const eligibleStories = [...publishedStories, ...eligibleReleases];
+  const eligibleSlugs = new Set(eligibleStories.map((story) => story.slug));
+  return eligibleStories
+    .map((story) => ({
+      ...story,
+      readTime: getStoryReadTime(story),
+      relatedStories: story.relatedStories
+        .map(canonicalStorySlug)
+        .filter((slug) => eligibleSlugs.has(slug)),
+    }))
+    .sort((left, right) => {
+      if (left.date !== right.date) return right.date.localeCompare(left.date);
+      return left.slug.localeCompare(right.slug);
+    });
 }
 
 export function getPublishedStories(now = new Date(), schedule = scheduledStories): Story[] {
-  const publishedStories = stories.filter((story) => isPublicArticle({ date: story.date }, now));
+  const publishedStories = stories.filter(
+    (story) => !withdrawnStorySlugs.has(story.slug)
+      && isPublicArticle({ date: story.date }, now),
+  );
   const publishedSlugs = new Set(publishedStories.map((story) => story.slug));
   const newlyPublished = schedule.filter(
     (story) => !publishedSlugs.has(story.slug)
@@ -1153,14 +1260,12 @@ export function getEditorialSchedule(now = new Date(), schedule = scheduledStori
 }
 
 export let signals: Signal[] = [
-  { slug: 'frontier-model-race', label: 'Model race', topic: 'Models', direction: 'up', impact: 'high', change: '+18%', summary: 'Tool use and long-horizon reliability, rather than raw benchmark scores, are driving the latest frontier releases.', entities: ['openai', 'anthropic', 'gpt-5', 'claude-4'], stories: ['small-models', 'founders'], updated: '2026-09-11' },
-  { slug: 'compute-geography', label: 'AI infrastructure', topic: 'Infrastructure', direction: 'up', impact: 'high', change: '+12%', summary: 'New inference capacity is following power, fibre and regional customer demand.', entities: ['microsoft'], stories: ['infrastructure'], updated: '2026-09-11' },
-  { slug: 'capital-efficiency', label: 'Capital', topic: 'Capital', direction: 'steady', impact: 'medium', change: '0.4x', summary: 'Investors are rewarding evidence of repeatable usage and gross margin, not model novelty alone.', entities: ['openai', 'anthropic'], stories: ['founders'], updated: '2026-09-10' },
-  { slug: 'provenance-rules', label: 'Regulation', topic: 'Policy', direction: 'up', impact: 'medium', change: '+9%', summary: 'Content provenance is moving from standards discussions into public procurement requirements.', entities: ['content-credentials'], stories: ['quiet-race-watermark-everything-ai-makes'], updated: '2026-09-10' },
-  { slug: 'open-model-edge', label: 'Open source', topic: 'Models', direction: 'up', impact: 'medium', change: '+14%', summary: 'Compact open models are making local inference practical for teams with sensitive data.', entities: ['sarvam-ai'], stories: ['small-models', 'indias-public-ai-stack'], updated: '2026-09-09' },
-  { slug: 'enterprise-adoption', label: 'Enterprise adoption', topic: 'Applications', direction: 'up', impact: 'high', change: '+21%', summary: 'AI budgets are shifting from pilots toward monitored workflows with clear owners.', entities: ['microsoft', 'anthropic'], stories: ['founders'], updated: '2026-09-08' },
-  { slug: 'india-public-stack', label: 'India public stack', topic: 'India', direction: 'up', impact: 'high', change: '+16%', summary: 'Shared compute and Indic-language data are becoming national capability rather than isolated projects.', entities: ['indiaai-mission', 'sarvam-ai'], stories: ['indias-public-ai-stack'], updated: '2026-09-09' },
-  { slug: 'ai-in-science', label: 'AI in science', topic: 'Research', direction: 'up', impact: 'high', change: '+11%', summary: 'Models are increasingly valuable when paired with experimental feedback.', entities: ['antibiotic-discovery', 'google-deepmind'], stories: ['ai-models-antibiotic-discovery'], updated: '2026-09-11' },
+  { slug: 'ai-in-science', label: 'AI in science', topic: 'Research', direction: 'steady', impact: 'medium', change: 'Preclinical study', summary: 'A Nature Microbiology paper reports antimicrobial-peptide activity in in-vitro assays and mouse models; it does not report human treatment results.', entities: ['antibiotic-discovery'], stories: ['ai-models-antibiotic-discovery'], updated: '2026-10-05' },
+  { slug: 'provenance-rules', label: 'EU content-transparency duties', topic: 'Policy', direction: 'steady', impact: 'medium', change: 'Applicable from 2 Aug 2026', summary: 'The European Commission distinguishes binding Article 50 obligations from its voluntary Code of Practice; neither makes provenance proof of truth.', entities: ['content-credentials'], stories: ['quiet-race-watermark-everything-ai-makes'], updated: '2026-10-05' },
+  { slug: 'india-public-compute', label: 'India public compute', topic: 'India', direction: 'steady', impact: 'medium', change: '45,000+ shared GPUs · June 2026', summary: 'A PIB factsheet reports more than 45,000 shared GPUs as of June 2026; the figure is not a live or schedulable hardware inventory.', entities: ['indiaai-mission'], stories: ['public-compute-needs-public-metrics'], updated: '2026-10-05' },
+  { slug: 'data-centre-electricity', label: 'Data-centre electricity', topic: 'Infrastructure', direction: 'up', impact: 'high', change: '415 → ~945 TWh', summary: 'The IEA reports 415 TWh of global data-centre electricity use in 2024 and projects about 945 TWh by 2030; this is not an AI-only or per-request measure.', entities: [], stories: ['weekly-deep-dive-cost-of-intelligence'], updated: '2026-10-05' },
+  { slug: 'agent-benchmark-evidence', label: 'Agent benchmark evidence', topic: 'Applications', direction: 'steady', impact: 'medium', change: 'Benchmark-specific', summary: 'The AI Index documents OSWorld task accuracy and remaining failures; the benchmark does not establish success rates for a particular production workflow.', entities: [], stories: ['reliability-is-the-new-ai-moat'], updated: '2026-10-05' },
+  { slug: 'model-card-specifications', label: 'Model-card specifications', topic: 'Models', direction: 'steady', impact: 'low', change: 'One provider model card', summary: 'Mistral lists Small 4 at 119B total and 6.5B active parameters; this single model card does not establish hardware fit or a broader deployment trend.', entities: [], stories: ['small-models-serious-workflows'], updated: '2026-10-05' },
 ];
 
 export let industryMap: IndustryMapNode[] = [
@@ -1175,11 +1280,7 @@ export let industryMap: IndustryMapNode[] = [
 
 export let indiaIndex: IndiaIndexMetric[] = [
   { slug: 'compute-allocation', label: 'Public shared compute capacity', value: '45,000+ GPUs', change: 'Government snapshot · June 2026', context: 'Source: PIB factsheet, published 13 Aug 2026. Reported as shared capacity; not a count of installed, live, available or consumed GPUs.', source: 'pib-capacity-and-use-factsheet-2026' },
-  { slug: 'venture-funding', label: 'AI venture funding', value: '$1.1B', change: '+18% y/y', context: 'Disclosed funding for Indian AI startups in the current index period.', source: 'stanford-ai-index-2026' },
-  { slug: 'indic-language-coverage', label: 'Indic language coverage', value: '22 languages', change: '+6 this year', context: 'Languages represented in public speech and text dataset initiatives.', source: 'indiaai-mission' },
-  { slug: 'research-output', label: 'AI research papers', value: '14,800', change: '+23% y/y', context: 'India-affiliated publications indexed across major AI research fields.', source: 'stanford-ai-index-2026' },
-  { slug: 'skilling-pipeline', label: 'People in AI skilling programmes', value: '2.4M', change: '+41% y/y', context: 'Public and industry programmes reporting completed training.', source: 'indiaai-mission' },
-  { slug: 'data-centre-capacity', label: 'Operational data-centre capacity', value: '1.6 GW', change: 'Knight Frank via BusinessLine · 20 Jun 2026', context: 'Source: Knight Frank reporting, published by The Hindu BusinessLine. All-workload live stock estimate; excludes pipeline and is not IndiaAI GPU capacity.', source: 'hbl-knight-frank-data-centre-pipeline-2026' },
+  { slug: 'data-centre-capacity', label: 'Operational data-centre capacity', value: '1.6 GW', change: 'Knight Frank estimate · year-end 2025', context: 'Reported by The Hindu BusinessLine on 20 Jun 2026 as operating stock. Excludes pipeline and measures all-workload data-centre capacity, not IndiaAI GPU supply.', source: 'hbl-knight-frank-data-centre-pipeline-2026' },
 ];
 
 export let essays: Essay[] = [
@@ -1189,11 +1290,12 @@ export let essays: Essay[] = [
 ];
 
 export let askGlobalAnswers: AskGlobalAnswer[] = [
-  { slug: 'what-changed-openai-this-week', question: 'What changed in OpenAI this week?', answer: 'OpenAI’s important shift was operational: its agent platform moved from a product demo toward a tool with permissions, evidence and longer-running tasks. That raises the bar for reliability and makes the surrounding workflow more important than a single benchmark.', citedStories: ['founders', 'small-models'], citedSources: ['stanford-ai-index-2026'], citedTimeline: ['openai-agent-platform', 'gpt-5-release'], citedEntities: ['openai', 'gpt-5'], asOf: '2026-09-11' },
-  { slug: 'why-is-nvidia-moving', question: 'Why is NVIDIA moving?', answer: 'The market is pricing a broader infrastructure cycle: more inference is being deployed regionally, while frontier training remains accelerator-intensive. The opportunity is large, but power, supply and customer concentration remain the constraints to watch.', citedStories: ['infrastructure'], citedSources: ['iea-data-centres'], citedTimeline: ['azure-inference-expansion'], citedEntities: ['microsoft'], asOf: '2026-09-11' },
-  { slug: 'biggest-open-source-model-developments', question: 'What are the biggest open-source model developments?', answer: 'The centre of gravity is moving toward compact models that can run close to sensitive data. Their advantage is not that they beat every frontier benchmark; it is that teams can adapt, audit and operate them at predictable cost.', citedStories: ['small-models', 'indias-public-ai-stack'], citedSources: ['mistral-model-card'], citedTimeline: ['sarvam-public-model'], citedEntities: ['sarvam-ai', 'gpt-5'], asOf: '2026-09-11' },
-  { slug: 'what-changed-india-ai-policy', question: 'What changed in India’s AI policy?', answer: 'IndiaAI moved from a mission statement toward allocation: public compute access, common language datasets and procurement pathways are becoming tangible. The next question is whether access reaches researchers and smaller companies beyond the largest cloud partners.', citedStories: ['indias-public-ai-stack'], citedSources: ['indiaai-mission'], citedTimeline: ['indiaai-compute-tender'], citedEntities: ['indiaai-mission', 'sarvam-ai'], asOf: '2026-09-11' },
-  { slug: 'compare-anthropic-openai', question: 'Compare Anthropic vs OpenAI.', answer: 'OpenAI is pushing a broad product and agent ecosystem, while Anthropic has made controllability and long-context work central to Claude. Both increasingly compete on dependable tool use, distribution and enterprise trust rather than model chat quality alone.', citedStories: ['small-models', 'founders'], citedSources: ['stanford-ai-index-2026'], citedTimeline: ['gpt-5-release', 'claude-4-release'], citedEntities: ['openai', 'anthropic', 'gpt-5', 'claude-4'], asOf: '2026-09-11' },
+  { slug: 'indiaai-compute-status', question: 'What does the latest IndiaAI GPU figure measure?', answer: 'The PIB factsheet published on 13 August 2026 reports more than 45,000 shared GPUs as of June 2026. Other government records use labels such as onboarded, and the sources do not reconcile those categories into installed, live or currently schedulable capacity. The figure is a dated government snapshot, not a live inventory.', citedStories: ['public-compute-needs-public-metrics'], citedSources: ['pib-capacity-and-use-factsheet-2026', 'pib-compute-onboarded-2026'], citedTimeline: ['indiaai-compute-shared-capacity-2026'], citedEntities: ['indiaai-mission'], asOf: '2026-10-05' },
+  { slug: 'c2pa-truth-boundary', question: 'Does C2PA prove an AI image is true?', answer: 'No. C2PA credentials can record signed assertions about an asset’s origin and edits. They do not verify that the depicted event happened as described. One 2026 arXiv preprint reports security weaknesses in tested versions; those findings remain a single study and have not been independently confirmed in this source set.', citedStories: ['quiet-race-watermark-everything-ai-makes'], citedSources: ['c2pa-specification-v2-4', 'c2pa-independent-security-preprint'], citedTimeline: ['watermarking-code'], citedEntities: ['content-credentials'], asOf: '2026-10-05' },
+  { slug: 'proteogpt-evidence', question: 'What has the ProteoGPT study shown so far?', answer: 'A 2025 Nature Microbiology paper reports that an AI-assisted peptide pipeline produced candidates tested against two resistant bacteria in laboratory assays and mouse infection models. The paper does not report a human treatment trial, so its results are preclinical rather than evidence of an available medicine.', citedStories: ['ai-models-antibiotic-discovery'], citedSources: ['nature-antibiotic-study'], citedTimeline: ['antibiotic-candidates'], citedEntities: ['antibiotic-discovery'], asOf: '2026-10-05' },
+  { slug: 'mistral-small4-deployment', question: 'Does Mistral Small 4’s 6.5B active count mean it fits on a laptop?', answer: 'The model card does not establish that. It lists 119 billion total parameters and 6.5 billion active parameters, plus a 256K context window and Apache 2.0 open weights. Hardware fit, memory use, speed and quality need to be measured with the complete model artifact and serving setup.', citedStories: ['small-models-serious-workflows'], citedSources: ['mistral-model-card'], citedTimeline: [], citedEntities: [], asOf: '2026-10-05' },
+  { slug: 'data-centre-electricity-outlook', question: 'What does the IEA say about data-centre electricity?', answer: 'The IEA reports global data-centre electricity use of 415 TWh in 2024 and projects about 945 TWh by 2030, with AI a leading growth driver alongside other digital services. These figures are not an AI-only total or an estimate of energy per model request.', citedStories: ['weekly-deep-dive-cost-of-intelligence'], citedSources: ['iea-energy-ai-executive-summary'], citedTimeline: [], citedEntities: [], asOf: '2026-10-05' },
+  { slug: 'osworld-agent-evidence', question: 'What does the OSWorld benchmark tell us about AI agents?', answer: 'The Stanford AI Index documents OSWorld task accuracy and a reported human baseline, while also noting remaining agent failures. That benchmark result is specific to its tasks and evaluation conditions; it does not establish success rates for a particular production workflow.', citedStories: ['reliability-is-the-new-ai-moat'], citedSources: ['stanford-ai-index-2026'], citedTimeline: [], citedEntities: [], asOf: '2026-10-05' },
 ];
 
 export interface NewsroomContentSnapshot {
@@ -1227,8 +1329,26 @@ export function hydrateContent(snapshot: NewsroomContentSnapshot): void {
   askGlobalAnswers = snapshot.askGlobalAnswers;
 }
 
-export const findStory = (slug: string): Story | undefined => stories.find((story) => story.slug === canonicalStorySlug(slug));
-export const findEntity = (slug: string): Entity | undefined => entities.find((entity) => entity.slug === slug);
+export const findStory = (slug: string): Story | undefined =>
+  getPublishedStories().find((story) => story.slug === canonicalStorySlug(slug));
+
+export const findEntity = (slug: string): Entity | undefined => {
+  const entity = entities.find((candidate) => candidate.slug === slug);
+  if (!entity) return undefined;
+
+  const publicStorySlugs = new Set(getPublishedStories().map((story) => story.slug));
+  const publicTimelineSlugs = new Set(timelineEvents.map((event) => event.slug));
+  const publicSignalSlugs = new Set(signals.map((signal) => signal.slug));
+
+  return {
+    ...entity,
+    timeline: entity.timeline.filter((timelineSlug) => publicTimelineSlugs.has(timelineSlug)),
+    signals: entity.signals.filter((signalSlug) => publicSignalSlugs.has(signalSlug)),
+    recentStories: entity.recentStories
+      .map(canonicalStorySlug)
+      .filter((storySlug) => publicStorySlugs.has(storySlug)),
+  };
+};
 export const findTimeline = (slug: string): TimelineEvent | undefined => timelineEvents.find((event) => event.slug === slug);
 export const filterSignals = (topic?: string): Signal[] =>
   topic ? signals.filter((signal) => signal.topic.toLowerCase() === topic.toLowerCase() || signal.slug === topic) : signals;

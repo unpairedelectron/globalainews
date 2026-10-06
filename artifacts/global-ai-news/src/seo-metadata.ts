@@ -1,4 +1,4 @@
-import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, getStoryAuthorIdentity, sources, timelineEvents, type Author, type NewsroomContentSnapshot, type Source, type Story } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, getStoryAuthorIdentity, indiaIndex, sources, timelineEvents, type Author, type NewsroomContentSnapshot, type Source, type Story } from './content';
 import { dataProductRecords, researchRecords, topicRecords } from './authority/registry';
 
 export const SITE_URL = 'https://www.globalainews.in';
@@ -430,6 +430,7 @@ export function getSeoMetadataManifest(
   );
   const citedSourceSlugs = new Set([
     ...publishedStories.flatMap((story) => story.sources),
+    ...indiaIndex.map((metric) => metric.source),
     ...visibleResearch.flatMap((record) => record.sourceSlugs),
     ...visibleDataProducts.flatMap((record) => record.sourceSlugs),
     ...topicRecords

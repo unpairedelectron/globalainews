@@ -12,6 +12,7 @@ import {
   getReleaseWordCount,
   getStoryWordCount,
   isPublicArticle,
+  resolveMaintainedReleaseStory,
   indiaIndex,
   industryMap,
   scheduledStories,
@@ -40,20 +41,36 @@ async function getPublishedStoriesForBuild() {
     .from(editorialReleasesTable);
   const now = new Date();
   const schedule = rows.flatMap((row) => {
-    const story = row.story ?? {};
+    const storedStory = row.story ?? {};
     const maintainedStory = scheduledStories.find((candidate) => candidate.slug === row.slug);
+    const useMaintainedStory =
+      Boolean(maintainedStory) && storedStory.editorialSource !== 'editor';
+    const story = resolveMaintainedReleaseStory(
+      {
+        ...storedStory,
+        slug: row.slug,
+        title: row.title,
+        publishAt: row.publishAt.toISOString(),
+        date: row.publishAt.toISOString().slice(0, 10),
+        updatedAt: row.updatedAt.toISOString(),
+      },
+      maintainedStory,
+    );
     const scheduledStory = {
       ...story,
       slug: row.slug,
-      title: row.title,
+      title: useMaintainedStory ? story.title : row.title,
       publishAt: row.publishAt.toISOString(),
+      cadence: row.cadence,
       date: row.publishAt.toISOString().slice(0, 10),
-      dateModified: story.dateModified ?? maintainedStory?.dateModified,
+      dateModified: useMaintainedStory
+        ? maintainedStory?.dateModified ?? storedStory.dateModified
+        : storedStory.dateModified,
       updatedAt: row.updatedAt.toISOString(),
     };
     const wordCount =
-      story.editorialSource === 'editor' || !maintainedStory
-        ? getReleaseWordCount(story.dek, story.body)
+      storedStory.editorialSource === 'editor' || !maintainedStory
+        ? getReleaseWordCount(storedStory.dek, storedStory.body)
         : getStoryWordCount(maintainedStory);
     return isPublicArticle({
       status: row.status,

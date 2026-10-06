@@ -32,10 +32,10 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/source/nature-antibiotic-study/",
+    "url": "https://www.globalainews.in/amp/article/ai-models-antibiotic-discovery/#source-1",
     "status": "200",
-    "canonical": "https://www.globalainews.in/source/nature-antibiotic-study/",
-    "indexability": "noindex",
+    "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
+    "indexability": "indexable",
     "linkSource": "/amp/article/ai-models-antibiotic-discovery",
     "issue": ""
   },
@@ -312,9 +312,81 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/source/indiaai-mission/",
+    "url": "https://www.globalainews.in/amp/article/public-compute-needs-public-metrics/#source-3",
     "status": "200",
-    "canonical": "https://www.globalainews.in/source/indiaai-mission/",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/public-compute-needs-public-metrics/#source-4",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/public-compute-needs-public-metrics/#source-6",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/public-compute-needs-public-metrics/#source-1",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/public-compute-needs-public-metrics/#source-7",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/public-compute-needs-public-metrics/#source-2",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/public-compute-needs-public-metrics/#source-5",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/public-compute-needs-public-metrics/#source-8",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/public-compute-needs-public-metrics/#source-9",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-compute-portal/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-compute-portal/",
     "indexability": "noindex",
     "linkSource": "/amp/article/public-compute-needs-public-metrics",
     "issue": ""
@@ -336,6 +408,38 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/amp/article/quiet-race-watermark-everything-ai-makes/#source-1",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/quiet-race-watermark-everything-ai-makes/#source-2",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/quiet-race-watermark-everything-ai-makes/#source-3",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/quiet-race-watermark-everything-ai-makes/#source-4",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/",
     "status": "200",
     "canonical": "https://www.globalainews.in/",
@@ -349,6 +453,14 @@
     "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
     "indexability": "indexable",
     "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/reliability-is-the-new-ai-moat/#source-1",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/reliability-is-the-new-ai-moat",
     "issue": ""
   },
   {
@@ -368,6 +480,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/amp/article/small-models-serious-workflows/#source-1",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/small-models-serious-workflows",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/",
     "status": "200",
     "canonical": "https://www.globalainews.in/",
@@ -384,6 +504,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/amp/article/study-finds-word-cues-can-override-game-theory-choices-in-llms/#source-1",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/study-finds-word-cues-can-override-game-theory-choices-in-llms/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/study-finds-word-cues-can-override-game-theory-choices-in-llms",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/",
     "status": "200",
     "canonical": "https://www.globalainews.in/",
@@ -397,6 +525,22 @@
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "indexability": "indexable",
     "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/weekly-deep-dive-cost-of-intelligence/#source-1",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/weekly-deep-dive-cost-of-intelligence",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/amp/article/weekly-deep-dive-cost-of-intelligence/#source-2",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
+    "indexability": "indexable",
+    "linkSource": "/amp/article/weekly-deep-dive-cost-of-intelligence",
     "issue": ""
   },
   {
@@ -488,33 +632,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/archive",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/archive",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/archive",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/archive",
     "issue": ""
@@ -552,75 +672,11 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/source/nature-antibiotic-study/",
+    "url": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/#source-1",
     "status": "200",
-    "canonical": "https://www.globalainews.in/source/nature-antibiotic-study/",
-    "indexability": "noindex",
-    "linkSource": "/article/ai-models-antibiotic-discovery",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
     "indexability": "indexable",
     "linkSource": "/article/ai-models-antibiotic-discovery",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/article/ai-models-antibiotic-discovery",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/article/founders-first-million-model-calls",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/article/founders-first-million-model-calls",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/research/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/research/",
-    "indexability": "indexable",
-    "linkSource": "/article/founders-first-million-model-calls",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/article/founders-first-million-model-calls",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "indexability": "indexable",
-    "linkSource": "/article/founders-first-million-model-calls",
     "issue": ""
   },
   {
@@ -840,123 +896,11 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "indexability": "indexable",
     "linkSource": "/article/india-ai-compute-access-2026",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "indexability": "indexable",
-    "linkSource": "/article/india-ai-compute-access-2026",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/article/indias-public-ai-stack",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/article/indias-public-ai-stack",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/research/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/research/",
-    "indexability": "indexable",
-    "linkSource": "/article/indias-public-ai-stack",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/source/indiaai-mission/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/source/indiaai-mission/",
-    "indexability": "noindex",
-    "linkSource": "/article/indias-public-ai-stack",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/article/indias-public-ai-stack",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "indexability": "indexable",
-    "linkSource": "/article/indias-public-ai-stack",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/article/new-geography-of-compute",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/article/new-geography-of-compute",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/research/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/research/",
-    "indexability": "indexable",
-    "linkSource": "/article/new-geography-of-compute",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/article/new-geography-of-compute",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/article/new-geography-of-compute",
     "issue": ""
   },
   {
@@ -992,26 +936,82 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/source/indiaai-mission/",
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-3",
     "status": "200",
-    "canonical": "https://www.globalainews.in/source/indiaai-mission/",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-4",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-6",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-1",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-7",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-2",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-5",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-8",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-9",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
+    "indexability": "indexable",
+    "linkSource": "/article/public-compute-needs-public-metrics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/indiaai-compute-portal/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/indiaai-compute-portal/",
     "indexability": "noindex",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "indexability": "indexable",
     "linkSource": "/article/public-compute-needs-public-metrics",
     "issue": ""
   },
@@ -1048,9 +1048,33 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/#source-1",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "indexability": "indexable",
+    "linkSource": "/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/#source-2",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "indexability": "indexable",
+    "linkSource": "/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/#source-3",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "indexability": "indexable",
+    "linkSource": "/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/#source-4",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
     "indexability": "indexable",
     "linkSource": "/article/quiet-race-watermark-everything-ai-makes",
     "issue": ""
@@ -1088,17 +1112,17 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "url": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/#source-1",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
     "indexability": "indexable",
     "linkSource": "/article/reliability-is-the-new-ai-moat",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "indexability": "indexable",
     "linkSource": "/article/reliability-is-the-new-ai-moat",
     "issue": ""
@@ -1136,17 +1160,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/#source-1",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/article/small-models-serious-workflows",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "indexability": "indexable",
     "linkSource": "/article/small-models-serious-workflows",
     "issue": ""
@@ -1184,6 +1200,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/study-finds-word-cues-can-override-game-theory-choices-in-llms/#source-1",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/study-finds-word-cues-can-override-game-theory-choices-in-llms/",
+    "indexability": "indexable",
+    "linkSource": "/article/study-finds-word-cues-can-override-game-theory-choices-in-llms",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
@@ -1216,9 +1240,17 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/#source-1",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
+    "indexability": "indexable",
+    "linkSource": "/article/weekly-deep-dive-cost-of-intelligence",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/#source-2",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "indexability": "indexable",
     "linkSource": "/article/weekly-deep-dive-cost-of-intelligence",
     "issue": ""
@@ -1312,33 +1344,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/ask",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/ask",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/ask",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/ask",
     "issue": ""
@@ -1424,33 +1432,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/brief",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/brief",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/brief",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/brief",
     "issue": ""
@@ -1944,33 +1928,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/essays",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/essays",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/essays",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/essays",
     "issue": ""
@@ -2232,33 +2192,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/india",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/india",
     "issue": ""
@@ -2344,33 +2280,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/industry",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/industry",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/industry",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/industry",
     "issue": ""
@@ -2536,33 +2448,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/models",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/models",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/models",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/models",
     "issue": ""
@@ -2648,33 +2536,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/policy",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/policy",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/policy",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/policy",
     "issue": ""
@@ -2760,14 +2624,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/topic/ai/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/topic/ai/",
-    "indexability": "indexable",
-    "linkSource": "/reports",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/policy/indiaai-mission/",
     "status": "200",
     "canonical": "https://www.globalainews.in/policy/indiaai-mission/",
@@ -2843,22 +2699,6 @@
     "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
-    "indexability": "indexable",
-    "linkSource": "/research/india-ai-compute-2026",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/research/india-ai-compute-2026",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
     "indexability": "indexable",
     "linkSource": "/research/india-ai-compute-2026",
     "issue": ""
@@ -3256,14 +3096,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "indexability": "indexable",
-    "linkSource": "/signals",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
@@ -3272,19 +3104,27 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/founders-first-million-model-calls/",
+    "url": "https://www.globalainews.in/source/c2pa-deployment-guidance-2026",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/founders-first-million-model-calls/",
-    "indexability": "indexable",
-    "linkSource": "/signals",
+    "canonical": "https://www.globalainews.in/source/c2pa-deployment-guidance-2026/",
+    "indexability": "noindex",
+    "linkSource": "built route",
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/new-geography-of-compute/",
+    "url": "https://www.globalainews.in/source/c2pa-independent-security-preprint",
     "status": "200",
-    "canonical": "https://www.globalainews.in/article/new-geography-of-compute/",
-    "indexability": "indexable",
-    "linkSource": "/signals",
+    "canonical": "https://www.globalainews.in/source/c2pa-independent-security-preprint/",
+    "indexability": "noindex",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/source/c2pa-specification-v2-4",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/source/c2pa-specification-v2-4/",
+    "indexability": "noindex",
+    "linkSource": "built route",
     "issue": ""
   },
   {
@@ -3320,9 +3160,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/source/eu-ai-act-code",
+    "url": "https://www.globalainews.in/source/eu-ai-act-content-transparency",
     "status": "200",
-    "canonical": "https://www.globalainews.in/source/eu-ai-act-code/",
+    "canonical": "https://www.globalainews.in/source/eu-ai-act-content-transparency/",
     "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
@@ -3336,9 +3176,9 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/source/iea-data-centres",
+    "url": "https://www.globalainews.in/source/iea-energy-ai-executive-summary",
     "status": "200",
-    "canonical": "https://www.globalainews.in/source/iea-data-centres/",
+    "canonical": "https://www.globalainews.in/source/iea-energy-ai-executive-summary/",
     "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
@@ -3520,14 +3360,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/source/uspto-ai-inventorship",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/source/uspto-ai-inventorship/",
-    "indexability": "noindex",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/technology/antibiotic-discovery",
     "status": "200",
     "canonical": "https://www.globalainews.in/technology/antibiotic-discovery/",
@@ -3600,99 +3432,11 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/timeline/azure-inference-expansion",
+    "url": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
     "status": "200",
-    "canonical": "https://www.globalainews.in/timeline/azure-inference-expansion/",
+    "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
     "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/azure-inference-expansion",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/azure-inference-expansion",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/timeline/claude-4-release",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/timeline/claude-4-release/",
-    "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/claude-4-release",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/claude-4-release",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/timeline/gemini-science-release",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/timeline/gemini-science-release/",
-    "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/gemini-science-release",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/gemini-science-release",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/timeline/gpt-5-release",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/timeline/gpt-5-release/",
-    "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/gpt-5-release",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/gpt-5-release",
+    "linkSource": "/timeline/antibiotic-candidates",
     "issue": ""
   },
   {
@@ -3952,78 +3696,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/timeline/indiaai-compute-tender",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/timeline/indiaai-compute-tender/",
-    "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/indiaai-compute-tender",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/indiaai-compute-tender",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/timeline/openai-agent-platform",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/timeline/openai-agent-platform/",
-    "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/openai-agent-platform",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/openai-agent-platform",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/timeline/sarvam-public-model",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/timeline/sarvam-public-model/",
-    "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/sarvam-public-model",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/timeline/sarvam-public-model",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/timeline/watermarking-code",
     "status": "200",
     "canonical": "https://www.globalainews.in/timeline/watermarking-code/",
@@ -4048,107 +3720,19 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "indexability": "indexable",
+    "linkSource": "/timeline/watermarking-code",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/topic/ai",
     "status": "200",
     "canonical": "https://www.globalainews.in/topic/ai/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/technology/antibiotic-discovery/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/technology/antibiotic-discovery/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/lab/google-deepmind/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/lab/google-deepmind/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/model/gpt-5/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/model/gpt-5/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/model/claude-4/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/model/claude-4/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/company/sarvam-ai/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/company/sarvam-ai/",
-    "indexability": "indexable",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/source/nature-antibiotic-study/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/source/nature-antibiotic-study/",
-    "indexability": "noindex",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/source/stanford-ai-index-2026/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/source/stanford-ai-index-2026/",
-    "indexability": "noindex",
-    "linkSource": "/topic/ai",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/source/mistral-model-card/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/source/mistral-model-card/",
-    "indexability": "noindex",
-    "linkSource": "/topic/ai",
     "issue": ""
   },
   {
@@ -4171,14 +3755,6 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/topic/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/indias-public-ai-stack/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/indias-public-ai-stack/",
     "indexability": "indexable",
     "linkSource": "/topic/india",
     "issue": ""
@@ -4499,14 +4075,6 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/topics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/topic/ai/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/topic/ai/",
     "indexability": "indexable",
     "linkSource": "/topics",
     "issue": ""
