@@ -9,6 +9,8 @@ import {
 } from '@/content';
 
 const snapshotContext = createContext<NewsroomContentSnapshot | null>(null);
+// Leave room for the production database's five-minute idle suspension between refreshes.
+const NEWSROOM_CONTENT_REFRESH_INTERVAL_MS = 10 * 60_000;
 
 function StatusPanel({ title, detail, retry }: { title: string; detail: string; retry?: () => void }) {
   return (
@@ -34,8 +36,8 @@ export function NewsroomProvider({ children }: { children: ReactNode }) {
   const query = useGetNewsroomContent({
     query: {
       queryKey: getGetNewsroomContentQueryKey(),
-      staleTime: 60_000,
-      refetchInterval: 60_000,
+      staleTime: NEWSROOM_CONTENT_REFRESH_INTERVAL_MS,
+      refetchInterval: NEWSROOM_CONTENT_REFRESH_INTERVAL_MS,
       refetchIntervalInBackground: false,
       retry: 2,
     },
