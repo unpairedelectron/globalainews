@@ -28,6 +28,35 @@ const missingAuthorTitle = 'A published story with no author record';
 const longCopy = Array(120)
   .fill('The temporary newsroom article contains enough editorial copy to pass publication readiness and verify complete server-rendered article content.')
   .join(' ');
+const privateStoryFixtures = [
+  {
+    slug: slugs.scheduled,
+    title: 'A scheduled article fixture',
+  },
+  {
+    slug: slugs.draft,
+    title: 'A draft article fixture',
+  },
+  {
+    slug: slugs.canceled,
+    title: 'A canceled article fixture',
+  },
+  {
+    slug: slugs.unpublished,
+    title: 'An unpublished article fixture',
+  },
+  {
+    slug: slugs.archived,
+    title: 'An archived article fixture',
+  },
+].map((fixture) => {
+  const privateBodyMarker = `PRIVATE_ARTICLE_BODY_${fixture.slug}`;
+  return {
+    ...fixture,
+    privateBodyMarker,
+    body: `${longCopy} ${privateBodyMarker}`,
+  };
+});
 const testEditorHeader = { 'x-newsroom-test-editor': actor };
 const storyPayload = {
   dek: publishedDek,
@@ -178,13 +207,21 @@ async function requestApi(route, options = {}) {
   return body;
 }
 
-async function createRelease(slug, title, publishAt, author = 'lena-hoff', authorType) {
+async function createRelease(
+  slug,
+  title,
+  publishAt,
+  author = 'lena-hoff',
+  authorType,
+  body = storyPayload.body,
+) {
   const created = await requestApi('/api/newsroom/releases', {
     method: 'POST',
     body: JSON.stringify({
       ...storyPayload,
       slug,
       title,
+      body,
       author,
       ...(authorType ? { authorType } : {}),
       publishAt,
@@ -289,14 +326,38 @@ async function getArticleFrom(
   });
 }
 
-async function assertNotPublic(slug, label) {
-  const response = await getArticle(slug);
-  const html = await response.text();
-  assert.equal(response.status, 404, `${label} must return HTTP 404`);
-  assert.equal(response.headers.get('x-robots-tag'), 'noindex');
-  assert.match(html, /name="robots" content="noindex,follow"/i);
-  assert.match(html, /<title>Article not found — Global AI News<\/title>/);
-  assert.doesNotMatch(html, /<h1[^>]*>.*(?:draft|scheduled).*<\/h1>/i);
+async function assertHiddenArticleResponses(origin, environment) {
+  const cases = [
+    ...privateStoryFixtures.map(({ slug, title }) => ({
+      slug,
+      label: `${title} (${environment})`,
+    })),
+    {
+      slug: `missing-article-${fixtureToken}`,
+      label: `unknown article (${environment})`,
+    },
+  ];
+
+  for (const { slug, label } of cases) {
+    const response = await getArticleFrom(origin, slug);
+    const html = await response.text();
+    assert.equal(response.status, 404, `${label} must return HTTP 404`);
+    assert.equal(response.headers.get('x-robots-tag'), 'noindex', `${label} must send noindex`);
+    assert.match(html, /name="robots" content="noindex,follow"/i, `${label} HTML must be noindex`);
+    assert.match(html, /<title>Article not found — Global AI News<\/title>/, `${label} must not render the SPA shell`);
+    for (const fixture of privateStoryFixtures) {
+      assert.doesNotMatch(
+        html,
+        new RegExp(escapeRegExp(fixture.title)),
+        `${label} response must not contain private title ${fixture.title}`,
+      );
+      assert.doesNotMatch(
+        html,
+        new RegExp(escapeRegExp(fixture.privateBodyMarker)),
+        `${label} response must not contain private body for ${fixture.slug}`,
+      );
+    }
+  }
 }
 
 async function assertPublishedOnlyFeeds() {
@@ -902,12 +963,8 @@ async function testRawArticleResponses() {
   const relatedHtml = await relatedResponse.text();
   assert.match(relatedHtml, /<h2[^>]*>Next stories<\/h2>/);
 
-  await assertNotPublic(slugs.scheduled, 'future scheduled article');
-  await assertNotPublic(slugs.draft, 'draft article');
-  await assertNotPublic(slugs.canceled, 'canceled/unpublished article');
-  await assertNotPublic(slugs.unpublished, 'unpublished article');
-  await assertNotPublic(slugs.archived, 'archived article');
-  await assertNotPublic(`missing-article-${fixtureToken}`, 'missing article');
+  await assertHiddenArticleResponses(webOrigin, 'production');
+  await assertHiddenArticleResponses(devWebOrigin, 'Vite development');
   const unknownAmpResponse = await fetch(`${webOrigin}/amp/article/missing-article-${fixtureToken}/`);
   const unknownAmpHtml = await unknownAmpResponse.text();
   assert.equal(unknownAmpResponse.status, 404, 'unknown AMP article must return HTTP 404');
@@ -935,11 +992,17 @@ async function main() {
       'unlisted-fixture-author',
       'person',
     );
-    await createRelease(slugs.scheduled, 'A scheduled article fixture', futureAt);
-    await createRelease(slugs.draft, 'A draft article fixture', publishedAt);
-    await createRelease(slugs.canceled, 'A canceled article fixture', publishedAt);
-    await createRelease(slugs.unpublished, 'An unpublished article fixture', publishedAt);
-    await createRelease(slugs.archived, 'An archived article fixture', publishedAt);
+    for (const fixture of privateStoryFixtures) {
+      const publishAt = fixture.slug === slugs.scheduled ? futureAt : publishedAt;
+      await createRelease(
+        fixture.slug,
+        fixture.title,
+        publishAt,
+        'lena-hoff',
+        undefined,
+        fixture.body,
+      );
+    }
     await setReleaseStates();
 
     await startWeb();
