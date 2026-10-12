@@ -9,8 +9,8 @@ import {
 } from '@/content';
 
 const snapshotContext = createContext<NewsroomContentSnapshot | null>(null);
-// Leave room for the production database's five-minute idle suspension between refreshes.
-const NEWSROOM_CONTENT_REFRESH_INTERVAL_MS = 10 * 60_000;
+// Reduce database wakeups; an already-open page can show new stories up to 12 hours later.
+const NEWSROOM_CONTENT_REFRESH_INTERVAL_MS = 12 * 60 * 60_000;
 
 function StatusPanel({ title, detail, retry }: { title: string; detail: string; retry?: () => void }) {
   return (
