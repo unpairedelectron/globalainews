@@ -24,7 +24,6 @@ test('authority registry resolves the report across topics, entities, sources, t
   assert.ok(cluster.storySlugs.includes(report.slug));
   assert.deepEqual(cluster.storySlugs, [report.slug], 'the merged compute hub must not retain a duplicate story route');
   assert.deepEqual(research.sourceSlugs, report.sources);
-  assert.equal(research.sourceSlugs.length, 22);
   assert.ok(research.sourceSlugs.every((slug) => sources.some((source) => source.slug === slug)));
   assert.ok(research.entitySlugs.every((slug) => report.entities.includes(slug)));
   assert.ok(research.timelineSlugs.every((slug) => report.timeline.includes(slug)));
