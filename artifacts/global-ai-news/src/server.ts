@@ -53,6 +53,58 @@ app.use((_request, response, next) => {
 });
 app.use(gzipResponseMiddleware());
 
+const permanentRouteAliases = new Map([
+  ['/about', '/about-us/'],
+  ['/ethics', '/code-of-ethics/'],
+  ['/contact', '/contact-us/'],
+]);
+const retiredStoryRedirects = new Map([
+  ['/article/public-compute-needs-public-metrics', '/article/india-ai-compute-access-2026/'],
+  ['/amp/article/public-compute-needs-public-metrics', '/article/india-ai-compute-access-2026/'],
+]);
+const uuidArticlePath = /^\/article\/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?:\/[^/]+)?\/?$/i;
+
+app.use((request, response, next) => {
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    next();
+    return;
+  }
+
+  const requestedUrl = new URL(request.originalUrl, 'https://www.globalainews.in');
+  const pathname = requestedUrl.pathname;
+  if (uuidArticlePath.test(pathname)) {
+    response
+      .status(410)
+      .set('X-Robots-Tag', 'noindex')
+      .type('text/plain')
+      .send('This legacy article URL is no longer available.');
+    return;
+  }
+
+  const cleanPath = pathname.replace(/\/+$/, '') || '/';
+  const routeAlias = retiredStoryRedirects.get(cleanPath) ?? permanentRouteAliases.get(cleanPath);
+  const forwardedHost = request.get('x-forwarded-host')?.split(',')[0]?.trim();
+  const host = (forwardedHost ?? request.get('host') ?? '').toLowerCase().replace(/:\d+$/, '');
+  const forwardedProtocol = request.get('x-forwarded-proto')?.split(',')[0]?.trim().toLowerCase();
+  const protocol = forwardedProtocol ?? (request.secure ? 'https' : 'http');
+  const canonicalOrigin = 'https://www.globalainews.in';
+  const managedHost = host === 'globalainews.in' || host === 'www.globalainews.in';
+  const isCanonicalHost = host === 'www.globalainews.in' && protocol === 'https';
+  const canonicalArticlePath = managedHost && /^\/article\/[^/]+$/.test(cleanPath)
+    ? `${cleanPath}/`
+    : undefined;
+
+  if (routeAlias || canonicalArticlePath || (managedHost && !isCanonicalHost)) {
+    const destinationPath = routeAlias ?? canonicalArticlePath ?? pathname;
+    const destination = managedHost
+      ? `${canonicalOrigin}${destinationPath}${requestedUrl.search}`
+      : `${destinationPath}${requestedUrl.search}`;
+    response.redirect(301, destination);
+    return;
+  }
+  next();
+});
+
 function proxyNewsroomXmlDocument(apiPath: string, defaultContentType: string) {
   return async (_request: Request, response: Response): Promise<void> => {
     const configuredOrigin = process.env.NEWSROOM_API_ORIGIN;
@@ -95,9 +147,6 @@ function proxyNewsroomXmlDocument(apiPath: string, defaultContentType: string) {
 
 app.get('/feed.xml', proxyNewsroomXmlDocument('/api/newsroom/feed.xml', 'application/rss+xml'));
 app.get('/sitemap.xml', proxyNewsroomXmlDocument('/api/newsroom/sitemap.xml', 'application/xml'));
-app.get('/contact', (_request, response) => {
-  response.redirect(308, '/contact-us');
-});
 
 function writeStructuredRenderLog(event: string, fields: Record<string, unknown>): void {
   process.stderr.write(

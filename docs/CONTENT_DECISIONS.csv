@@ -1,7 +1,7 @@
 slug,production_date,source_record_count,decision,evidence_note,change_applied
 india-ai-compute-access-2026,2026-10-03,22,KEEP,"Current report has a maintained source trail; retain dated quantities and operational-stage qualifiers.",NO
 weekly-deep-dive-cost-of-intelligence,2026-09-28,2,KEEP,"Keep bounded date-specific framing; source count alone is not a quality score.",NO
-public-compute-needs-public-metrics,2026-09-23,9,MERGE_CANDIDATE,"Topical overlap with the current India compute report; exact legacy UUID mapping is unverified.",NO
+public-compute-needs-public-metrics,2026-09-23,9,MERGE_CANDIDATE,"Merged into the maintained India compute report with a reversible 301; UUID history remains unverified.",YES
 reliability-is-the-new-ai-moat,2026-09-21,1,UPGRADE,"Single maintained source record; add independent support before broad reliability conclusions.",NO
 study-finds-word-cues-can-override-game-theory-choices-in-llms,2026-09-21,1,UPGRADE,"Keep preprint status explicit and do not imply peer review or generality beyond the reported study.",NO
 ai-models-antibiotic-discovery,2026-09-11,1,KEEP,"Retain study-specific model, assay, and preclinical limitations.",NO

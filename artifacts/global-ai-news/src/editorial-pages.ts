@@ -99,7 +99,7 @@ export const editorialPageCopy: Record<string, EditorialPageCopy> = {
   },
   '/authors': {
     description: 'Current bylines and verified contributor-profile status for Global AI News.',
-    intro: 'The current public newsroom snapshot attributes its eight published stories to the Global AI News Editorial Desk. It contains no named individual bylines with verified biographies for a public author profile.',
+    intro: 'The current public newsroom snapshot attributes its seven published stories to the Global AI News Editorial Desk. It contains no named individual bylines with verified biographies for a public author profile.',
     sections: [
       { heading: 'Global AI News Editorial Desk', body: 'This organizational byline identifies the publication desk, not a named individual. Individual author pages will be added only when the contributor identity and biography are verified and approved for publication.' },
       { heading: 'Current reporting', body: 'Browse the current public stories in the archive. Scheduled editorial records are not presented as published work.' },

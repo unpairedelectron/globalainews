@@ -733,12 +733,38 @@ function articleResponsePlugin() {
       server.middlewares.use((request, response, next) => {
         const requestUrl = request.url ?? '/';
         const pathname = new URL(requestUrl, 'http://localhost').pathname;
+        const cleanPath = pathname.replace(/\/+$/, '') || '/';
+        const query = requestUrl.includes('?') ? requestUrl.slice(requestUrl.indexOf('?')) : '';
+        if (request.method === 'GET' || request.method === 'HEAD') {
+          const aliases: Record<string, string> = {
+            '/about': '/about-us/',
+            '/ethics': '/code-of-ethics/',
+            '/contact': '/contact-us/',
+            '/article/public-compute-needs-public-metrics': '/article/india-ai-compute-access-2026/',
+            '/amp/article/public-compute-needs-public-metrics': '/article/india-ai-compute-access-2026/',
+          };
+          const alias = aliases[cleanPath];
+          if (alias) {
+            response.statusCode = 301;
+            response.setHeader('Location', `${alias}${query}`);
+            response.end();
+            return;
+          }
+        }
         if (pathname !== '/article' && !pathname.startsWith('/article/')) {
           next();
           return;
         }
         if (request.method !== 'GET' && request.method !== 'HEAD') {
           next();
+          return;
+        }
+
+        if (/^\/article\/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?:\/[^/]+)?\/?$/i.test(pathname)) {
+          response.statusCode = 410;
+          response.setHeader('X-Robots-Tag', 'noindex');
+          response.setHeader('Content-Type', 'text/plain; charset=utf-8');
+          response.end('This legacy article URL is no longer available.');
           return;
         }
 

@@ -404,8 +404,70 @@ async function assertPublishedOnlyFeeds() {
 
 async function assertContactAlias() {
   const response = await fetch(`${webOrigin}/contact`, { redirect: 'manual' });
-  assert.equal(response.status, 308, '/contact must redirect to the approved pending route');
-  assert.equal(response.headers.get('location'), '/contact-us');
+  assert.equal(response.status, 301, '/contact must permanently redirect to the canonical placeholder route');
+  assert.equal(response.headers.get('location'), '/contact-us/');
+
+  for (const [route, destination] of [
+    ['/about', '/about-us/'],
+    ['/ethics', '/code-of-ethics/'],
+  ]) {
+    const alias = await fetch(`${webOrigin}${route}?source=test`, { redirect: 'manual' });
+    assert.equal(alias.status, 301, `${route} must permanently redirect`);
+    assert.equal(alias.headers.get('location'), `${destination}?source=test`);
+  }
+  const canonicalHost = await fetch(`${webOrigin}/contact?from=apex`, {
+    headers: { 'x-forwarded-host': 'globalainews.in', 'x-forwarded-proto': 'http' },
+    redirect: 'manual',
+  });
+  assert.equal(canonicalHost.status, 301);
+  assert.equal(
+    canonicalHost.headers.get('location'),
+    'https://www.globalainews.in/contact-us/?from=apex',
+    'host and known-route redirects must be combined and preserve the query',
+  );
+
+  for (const route of [
+    '/about-us/',
+    '/code-of-ethics/',
+    '/corrections/',
+    '/contact-us/',
+    '/privacy/',
+    '/terms/',
+    '/authors/',
+  ]) {
+    const placeholder = await fetch(`${webOrigin}${route}`);
+    const html = await placeholder.text();
+    assert.equal(placeholder.status, 200, `${route} must remain reachable`);
+    assert.equal(placeholder.headers.get('x-robots-tag'), 'noindex');
+    assert.match(html, /name="robots" content="noindex,follow"/i);
+  }
+
+  const mergedStory = await fetch(
+    `${webOrigin}/article/public-compute-needs-public-metrics?campaign=legacy`,
+    { redirect: 'manual' },
+  );
+  assert.equal(mergedStory.status, 301);
+  assert.equal(
+    mergedStory.headers.get('location'),
+    '/article/india-ai-compute-access-2026/?campaign=legacy',
+  );
+  const mergedAmp = await fetch(
+    `${webOrigin}/amp/article/public-compute-needs-public-metrics/?campaign=legacy`,
+    { redirect: 'manual' },
+  );
+  assert.equal(mergedAmp.status, 301);
+  assert.equal(
+    mergedAmp.headers.get('location'),
+    '/article/india-ai-compute-access-2026/?campaign=legacy',
+  );
+  for (const legacyUuidPath of [
+    '/article/123e4567-e89b-42d3-a456-426614174000',
+    '/article/123e4567-e89b-42d3-a456-426614174000/old-title',
+  ]) {
+    const gone = await fetch(`${webOrigin}${legacyUuidPath}`, { redirect: 'manual' });
+    assert.equal(gone.status, 410, `${legacyUuidPath} must be permanently gone without a verified mapping`);
+    assert.equal(gone.headers.get('x-robots-tag'), 'noindex');
+  }
 
   const expectedCopy = {
     '/about-us': /Who speaks for the publication/,
@@ -417,8 +479,8 @@ async function assertContactAlias() {
     const destination = await fetch(`${webOrigin}${route}`);
     const html = await destination.text();
     assert.equal(destination.status, 200, `${route} must resolve to its pending page`);
-    assert.equal(destination.headers.get('x-robots-tag'), null, `${route} must not send a noindex header`);
-    assert.doesNotMatch(html, /name="robots" content="noindex,follow"/i, `${route} must remain indexable`);
+    assert.equal(destination.headers.get('x-robots-tag'), 'noindex', `${route} must send a noindex header`);
+    assert.match(html, /name="robots" content="noindex,follow"/i, `${route} must remain noindex`);
     assert.match(html, copy, `${route} must render its shared editorial copy`);
   }
 }

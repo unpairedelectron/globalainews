@@ -29,7 +29,7 @@ export const indiaAiComputeReport: Story = {
     'indiaai-compute-shared-capacity-2026',
     'indiaai-compute-access-reported-2026',
   ],
-  relatedStories: ['public-compute-needs-public-metrics'],
+  relatedStories: [],
   imageTreatment: {
     type: 'data-graphic',
     alt: 'Editorial illustration of shared compute links connecting research teams to data-centre capacity across India',

@@ -17,6 +17,9 @@ const prerenderPublicNoindexRoutes = new Set([
   '/code-of-ethics',
   '/corrections',
   '/contact-us',
+  '/privacy',
+  '/terms',
+  '/authors',
 ]);
 
 function escapeHtml(value: string): string {

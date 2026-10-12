@@ -3,7 +3,7 @@
     "url": "https://www.globalainews.in/about-us",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
   },
@@ -27,7 +27,7 @@
     "url": "https://www.globalainews.in/code-of-ethics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/about-us",
     "issue": ""
   },
@@ -35,7 +35,7 @@
     "url": "https://www.globalainews.in/corrections/",
     "status": "200",
     "canonical": "https://www.globalainews.in/corrections/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/about-us",
     "issue": ""
   },
@@ -43,7 +43,7 @@
     "url": "https://www.globalainews.in/contact-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/about-us",
     "issue": ""
   },
@@ -616,14 +616,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/archive",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
@@ -920,126 +912,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/article/india-ai-compute-access-2026",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "built route",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/brief/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/brief/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/research/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/research/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-3",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-4",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-6",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-1",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-7",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-2",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-5",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-8",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/#source-9",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/source/indiaai-compute-portal/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/source/indiaai-compute-portal/",
-    "indexability": "noindex",
-    "linkSource": "/article/public-compute-needs-public-metrics",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
@@ -1328,14 +1200,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/ask",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
@@ -1379,7 +1243,7 @@
     "url": "https://www.globalainews.in/authors",
     "status": "200",
     "canonical": "https://www.globalainews.in/authors/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
   },
@@ -1411,7 +1275,7 @@
     "url": "https://www.globalainews.in/about-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/authors",
     "issue": ""
   },
@@ -1419,7 +1283,7 @@
     "url": "https://www.globalainews.in/code-of-ethics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/authors",
     "issue": ""
   },
@@ -1459,14 +1323,6 @@
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
-    "indexability": "indexable",
-    "linkSource": "/brief",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "indexability": "indexable",
     "linkSource": "/brief",
     "issue": ""
@@ -1515,7 +1371,7 @@
     "url": "https://www.globalainews.in/code-of-ethics",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
   },
@@ -1539,7 +1395,7 @@
     "url": "https://www.globalainews.in/about-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/code-of-ethics",
     "issue": ""
   },
@@ -1547,7 +1403,7 @@
     "url": "https://www.globalainews.in/corrections/",
     "status": "200",
     "canonical": "https://www.globalainews.in/corrections/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/code-of-ethics",
     "issue": ""
   },
@@ -1555,7 +1411,7 @@
     "url": "https://www.globalainews.in/contact-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/code-of-ethics",
     "issue": ""
   },
@@ -1659,7 +1515,7 @@
     "url": "https://www.globalainews.in/contact-us",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
   },
@@ -1683,7 +1539,7 @@
     "url": "https://www.globalainews.in/corrections/",
     "status": "200",
     "canonical": "https://www.globalainews.in/corrections/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/contact-us",
     "issue": ""
   },
@@ -1691,7 +1547,7 @@
     "url": "https://www.globalainews.in/code-of-ethics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/contact-us",
     "issue": ""
   },
@@ -1699,7 +1555,7 @@
     "url": "https://www.globalainews.in/about-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/contact-us",
     "issue": ""
   },
@@ -1707,7 +1563,7 @@
     "url": "https://www.globalainews.in/corrections",
     "status": "200",
     "canonical": "https://www.globalainews.in/corrections/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
   },
@@ -1731,7 +1587,7 @@
     "url": "https://www.globalainews.in/code-of-ethics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/corrections",
     "issue": ""
   },
@@ -1739,7 +1595,7 @@
     "url": "https://www.globalainews.in/about-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/corrections",
     "issue": ""
   },
@@ -1747,7 +1603,7 @@
     "url": "https://www.globalainews.in/contact-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/corrections",
     "issue": ""
   },
@@ -1896,14 +1752,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/data/india-ai-compute-snapshots",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/topic/india/",
     "status": "200",
     "canonical": "https://www.globalainews.in/topic/india/",
@@ -2027,14 +1875,6 @@
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
-    "indexability": "indexable",
-    "linkSource": "/essays",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "indexability": "indexable",
     "linkSource": "/essays",
     "issue": ""
@@ -2208,14 +2048,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
@@ -2235,6 +2067,14 @@
     "url": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
+    "indexability": "indexable",
+    "linkSource": "/",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
     "indexability": "indexable",
     "linkSource": "/",
     "issue": ""
@@ -2275,14 +2115,6 @@
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
-    "indexability": "indexable",
-    "linkSource": "/india",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "indexability": "indexable",
     "linkSource": "/india",
     "issue": ""
@@ -2363,14 +2195,6 @@
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
-    "indexability": "indexable",
-    "linkSource": "/industry",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "indexability": "indexable",
     "linkSource": "/industry",
     "issue": ""
@@ -2536,14 +2360,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/models",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
@@ -2624,14 +2440,6 @@
     "issue": ""
   },
   {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "indexability": "indexable",
-    "linkSource": "/policy",
-    "issue": ""
-  },
-  {
     "url": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/reliability-is-the-new-ai-moat/",
@@ -2699,7 +2507,7 @@
     "url": "https://www.globalainews.in/privacy",
     "status": "200",
     "canonical": "https://www.globalainews.in/privacy/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
   },
@@ -2723,7 +2531,7 @@
     "url": "https://www.globalainews.in/contact-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/privacy",
     "issue": ""
   },
@@ -2731,7 +2539,7 @@
     "url": "https://www.globalainews.in/terms/",
     "status": "200",
     "canonical": "https://www.globalainews.in/terms/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/privacy",
     "issue": ""
   },
@@ -2867,14 +2675,6 @@
     "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
-    "indexability": "indexable",
-    "linkSource": "/research/india-ai-compute-2026",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "indexability": "indexable",
     "linkSource": "/research/india-ai-compute-2026",
     "issue": ""
@@ -3219,14 +3019,6 @@
     "url": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/weekly-deep-dive-cost-of-intelligence/",
-    "indexability": "indexable",
-    "linkSource": "/signals",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/article/public-compute-needs-public-metrics/",
     "indexability": "indexable",
     "linkSource": "/signals",
     "issue": ""
@@ -3579,7 +3371,7 @@
     "url": "https://www.globalainews.in/terms",
     "status": "200",
     "canonical": "https://www.globalainews.in/terms/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "built route",
     "issue": ""
   },
@@ -3603,7 +3395,7 @@
     "url": "https://www.globalainews.in/privacy/",
     "status": "200",
     "canonical": "https://www.globalainews.in/privacy/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/terms",
     "issue": ""
   },
@@ -3611,7 +3403,7 @@
     "url": "https://www.globalainews.in/contact-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "indexable",
+    "indexability": "noindex",
     "linkSource": "/terms",
     "issue": ""
   },

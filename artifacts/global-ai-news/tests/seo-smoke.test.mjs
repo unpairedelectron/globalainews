@@ -2791,7 +2791,16 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       `${route}: initial HTML must explicitly prevent indexing before JavaScript runs`,
     );
   }
-  const publicNoindexRoutes = ['/search'];
+  const publicNoindexRoutes = [
+    '/search',
+    '/about-us',
+    '/code-of-ethics',
+    '/corrections',
+    '/contact-us',
+    '/privacy',
+    '/terms',
+    '/authors',
+  ];
   for (const route of publicNoindexRoutes) {
     assert.equal(
       metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
@@ -2803,9 +2812,11 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     assert.match(body, /<meta name="robots" content="noindex,follow"/, `${route}: initial HTML must explicitly prevent indexing`);
     assert.match(body, /<main\b/, `${route}: initial HTML is missing page content`);
     assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing the newsroom bootstrap marker`);
-    assert.match(body, /name="q"/, 'search route is missing a usable initial HTML search form');
+    if (route === '/search') {
+      assert.match(body, /name="q"/, 'search route is missing a usable initial HTML search form');
+    }
   }
-  const indexableEditorialRoutes = [
+  const placeholderRoutes = [
     '/about-us',
     '/code-of-ethics',
     '/corrections',
@@ -2821,17 +2832,17 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     '/contact-us': /No approved public contact address or working contact form has been verified/i,
     '/privacy': /provisional disclosure, not a complete privacy policy/i,
     '/terms': /placeholder, not a complete agreement/i,
-    '/authors': /eight published stories to the Global AI News Editorial Desk/i,
+    '/authors': /seven published stories to the Global AI News Editorial Desk/i,
   };
-  for (const route of indexableEditorialRoutes) {
-    assert.notEqual(
+  for (const route of placeholderRoutes) {
+    assert.equal(
       metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
       false,
-      `${route}: public trust or publisher-information page must be indexable`,
+      `${route}: unapproved publisher-information placeholder must be non-indexable`,
     );
     const { response, body } = await fetchText(route);
     assert.equal(response.status, 200, `${route}: direct public route failed`);
-    assert.doesNotMatch(body, /<meta name="robots" content="noindex,follow"/, `${route}: public trust page must not be blocked from indexing`);
+    assert.match(body, /<meta name="robots" content="noindex,follow"/, `${route}: placeholder must be blocked from indexing`);
     assert.match(body, /<main\b/, `${route}: initial HTML is missing page content`);
     assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing the newsroom bootstrap marker`);
     assert.match(body, editorialPageCopy[route], `${route}: shared editorial copy is missing`);
@@ -3154,7 +3165,11 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.equal(tagContent(devAmpDocument, 'h1'), ampStory.title, 'development AMP headline drifted from the newsroom snapshot');
 
   const ampStories = newsroomSnapshot.stories;
-  assert.ok(ampStories.length >= 8, 'AMP regression coverage unexpectedly includes too few public articles');
+  assert.equal(
+    ampStories.length,
+    articleRoutes.length,
+    'AMP regression coverage must include every public article',
+  );
   const ampTargets = ampStories.map((story) => {
     const metadata = metadataManifest.routes.find((candidate) => candidate.path === `/article/${story.slug}`);
     assert.equal(metadata?.ampPath, `/amp/article/${story.slug}/`, `${story.slug}: AMP URL must derive from its slug`);

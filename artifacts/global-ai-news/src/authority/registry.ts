@@ -137,7 +137,7 @@ export const dataProductRecords: DataProductRecord[] = [
     unit: 'GPUs',
     topicSlugs: ['india'],
     entitySlugs: ['indiaai-mission'],
-    storySlugs: [reportStory.slug, 'public-compute-needs-public-metrics'],
+    storySlugs: [reportStory.slug],
     researchSlugs: ['india-ai-compute-2026'],
     timelineSlugs: reportStory.timeline,
     sourceSlugs: unique([...indiaAiComputeObservations.map((observation) => observation.sourceSlug), 'indiaai-compute-allocation-register-2026']),
@@ -173,7 +173,7 @@ export const researchRecords: ResearchRecord[] = [
     timelineSlugs: reportStory.timeline,
     sourceSlugs: reportStory.sources,
     dataProductSlugs: ['india-ai-compute-snapshots'],
-    relatedStorySlugs: [...new Set([...reportStory.relatedStories, 'public-compute-needs-public-metrics'])],
+    relatedStorySlugs: [...new Set(reportStory.relatedStories)],
     methodology: 'A dated synthesis of government records, the public compute portal, parliamentary material, and independent market reporting. Each quantity remains attached to its source and the stage the source names; portal allocation rows are separate from hardware counts and unlike-for-like counts are not combined.',
     datasetDescription: 'Nine dated public claims covering the mission target, planned additions, reported empanelled/additional pool, an independently reported installation figure, onboarding, shared capacity, and an independently reported access figure. A separate primary portal register lists dated project allocations. None is a live inventory.',
     findings: [

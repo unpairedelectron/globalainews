@@ -74,34 +74,6 @@
       "evidenceBoundary": "The IEA’s global data-centre forecast and Stanford’s analysis of competition on cost and reliability support a system-level design argument, not per-request energy estimates."
     },
     {
-      "slug": "public-compute-needs-public-metrics",
-      "title": "IndiaAI’s GPU claims need a public status crosswalk",
-      "date": "2026-09-23",
-      "dateModified": "2026-10-05",
-      "classification": "analysis",
-      "contentType": "Analysis",
-      "workspaceState": "public in local snapshot",
-      "bodyWords": 920,
-      "editorialWordCount": 1007,
-      "readTime": "5 min read",
-      "sourceCount": 9,
-      "sourceSlugs": [
-        "indiaai-cabinet-approval-2024",
-        "pib-initial-compute-2025",
-        "pib-common-compute-34000-2025",
-        "pib-compute-onboarded-2026",
-        "pib-onboarded-nearly-38000-2026",
-        "pib-capacity-and-use-factsheet-2026",
-        "indiaai-compute-allocation-register-2026",
-        "indiaai-compute-portal",
-        "indiaai-portal-eligibility"
-      ],
-      "confidence": "MEDIUM",
-      "primarySources": 9,
-      "independentConfirmations": 0,
-      "evidenceBoundary": "Official records provide dated counts and project allocations but do not reconcile status labels, installed hardware, current schedulability or GPU-hour metering."
-    },
-    {
       "slug": "reliability-is-the-new-ai-moat",
       "title": "AI agents improved on OSWorld; reliability remains the test",
       "date": "2026-09-21",
@@ -207,8 +179,8 @@
   ],
   "publicationQualityGate": {
     "minimumEditorialWords": 800,
-    "publicStoriesAudited": 8,
-    "storiesMeetingEditorialMinimum": 8,
+    "publicStoriesAudited": 7,
+    "storiesMeetingEditorialMinimum": 7,
     "inlineCitationCoverage": "All listed citations resolve to the maintained registry; each listed source appears in reader-facing copy.",
     "withdrawnStoryRelationshipCheck": "Public story results exclude withdrawn stories and remove related-story links that do not resolve to a currently public story.",
     "productionEditorialRecordsChanged": false,

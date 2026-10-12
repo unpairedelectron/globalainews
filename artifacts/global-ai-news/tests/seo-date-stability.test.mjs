@@ -12,13 +12,13 @@ import {
   scheduledStories,
   sources,
   stories as maintainedStories,
+  withdrawnStorySlugs,
 } from '../src/content.ts';
 import { getSeoMetadata, getSeoMetadataManifest, getStructuredData } from '../src/seo-metadata.ts';
 import { SeoPrerender } from '../src/seo-prerender.tsx';
 
 const explicitArticleDates = {
   'reliability-is-the-new-ai-moat': '2026-10-05',
-  'public-compute-needs-public-metrics': '2026-10-05',
   'weekly-deep-dive-cost-of-intelligence': '2026-10-05',
 };
 
@@ -42,6 +42,7 @@ test('one public eligibility rule governs dated articles and prepared releases',
     .map((story) => story.slug);
   const expectedScheduledSlugs = scheduledStories
     .filter((story) => !maintainedStories.some((maintained) => maintained.slug === story.slug))
+    .filter((story) => !withdrawnStorySlugs.has(story.slug))
     .filter((story) => isPublicArticle({
       status: 'scheduled',
       publishAt: story.publishAt,
