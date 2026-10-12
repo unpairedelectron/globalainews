@@ -3,8 +3,9 @@ import { ArrowUpRight, Search, Share2 } from 'lucide-react';
 import { useLocation, useParams } from 'wouter';
 import { Link } from '@/components/canonical-link';
 import { authors, canonicalStorySlug, entities, findEntity, findStory, findTimeline, getPublicDateModified, getReaderFacingContentType, getStoryAuthorIdentity, getStoryReadTime, industryMap, signals, sources, timelineEvents, type Story } from '@/content';
-import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryRow, TimelineList } from '@/components/site';
+import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryImage, StoryRow, TimelineList } from '@/components/site';
 import { StoryBody, StoryCitedText, StorySourceList } from '@/components/story-content';
+import { AuthorDirectory } from '@/components/author-directory';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { formatEditorialDate, getLatestStory } from '@/editorial-date';
 import { getEditorialPageCopy } from '@/editorial-pages';
@@ -42,6 +43,7 @@ export function HomePage() {
            </div>
          </div>
           {leadStory ? <article className="flex flex-col justify-center border-l border-foreground/20 py-4 pl-6 md:pl-9">
+            <StoryImage slug={leadStory.slug} alt={leadStory.imageTreatment.alt} className="mb-5 aspect-[16/9] w-full object-cover" loading="eager" fetchPriority="high" />
             <p className="eyebrow text-primary">{leadStory.contentType ?? getReaderFacingContentType(leadStory.classification)} · {leadStory.category}</p>
             <Link href={`/article/${leadStory.slug}`} className="group block">
               <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-[.95] transition-colors group-hover:text-primary md:text-6xl">{leadStory.title}</h2>
@@ -152,7 +154,25 @@ export function EditorialInputPage({ title, path }: { title: string; path: strin
     <p className="eyebrow text-primary">{eyebrow}</p>
     <h1 className="mt-6 max-w-4xl font-serif text-6xl leading-[.88] md:text-8xl">{title}</h1>
     <p className="mt-7 max-w-3xl border-t border-foreground/15 pt-5 text-lg leading-8 text-muted-foreground">{copy.intro}</p>
-    {isArchive ? <section className="mt-10"><SectionLabel>Published archive</SectionLabel>{storiesByDate.length ? storiesByDate.map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} />) : <p className="py-8 text-sm text-muted-foreground">No published stories are available in the current newsroom snapshot.</p>}</section> : <div className="mt-10 max-w-3xl">{copy.sections.map((section) => <section key={section.heading} className="border-t border-foreground/15 py-6"><h2 className="font-serif text-3xl">{section.heading}</h2><p className="mt-3 text-base leading-7 text-muted-foreground">{section.body}</p></section>)}</div>}
+    {isArchive ? (
+      <section className="mt-10">
+        <SectionLabel>Published archive</SectionLabel>
+        {storiesByDate.length
+          ? storiesByDate.map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} />)
+          : <p className="py-8 text-sm text-muted-foreground">No published stories are available in the current newsroom snapshot.</p>}
+      </section>
+    ) : path === '/authors' ? (
+      <AuthorDirectory stories={snapshot.stories} authors={snapshot.authors} />
+    ) : (
+      <div className="mt-10 max-w-3xl">
+        {copy.sections.map((section) => (
+          <section key={section.heading} className="border-t border-foreground/15 py-6">
+            <h2 className="font-serif text-3xl">{section.heading}</h2>
+            <p className="mt-3 text-base leading-7 text-muted-foreground">{section.body}</p>
+          </section>
+        ))}
+      </div>
+    )}
     {!isArchive && copy.relatedLinks?.length ? <nav data-testid="editorial-policy-links" aria-label="Related editorial pages" className="mt-8 flex max-w-3xl flex-wrap gap-3 border-t border-foreground/15 pt-6">{copy.relatedLinks.map((link) => <Link key={link.href} href={link.href} className="flex min-h-11 items-center gap-2 border border-foreground/15 px-4 text-sm hover:border-primary hover:text-primary">{link.label}<ArrowUpRight size={14} aria-hidden="true" /></Link>)}</nav> : null}
   </main></Shell>;
 }
@@ -392,7 +412,7 @@ export function ArticlePage() {
           </div>
         </div>
       </header>
-      <EditorialImage large treatment={story.imageTreatment.type} alt={story.imageTreatment.alt} caption={story.imageTreatment.caption} />
+        <EditorialImage large storySlug={story.slug} treatment={story.imageTreatment.type} alt={story.imageTreatment.alt} caption={story.imageTreatment.caption} />
       <div className="grid gap-12 py-12 md:grid-cols-[minmax(0,740px)_280px]">
         <article className="prose prose-lg max-w-none min-w-0 prose-headings:font-serif prose-headings:font-normal prose-p:leading-8 prose-p:text-foreground/85">
           <section className="not-prose border-l-2 border-primary bg-secondary/50 p-6"><p className="eyebrow text-primary">The bottom line</p><p className="mt-3 font-serif text-3xl leading-none"><StoryCitedText text={story.bottomLine} story={story} sources={snapshot.sources} /></p></section>
@@ -508,7 +528,7 @@ export function AmpArticlePage() {
         <p className="eyebrow text-primary">Global AI News · AMP preview · {story.contentType ?? story.category}</p>
         <h1 className="mt-5 font-serif text-5xl leading-none">{story.title}</h1>
         <p className="mt-5 text-lg text-muted-foreground">{story.dek}</p>
-        <EditorialImage alt={story.imageTreatment.alt} caption={story.imageTreatment.caption} />
+        <EditorialImage storySlug={story.slug} alt={story.imageTreatment.alt} caption={story.imageTreatment.caption} />
         <p className="mt-8 text-lg leading-8"><StoryCitedText text={story.bottomLine} story={story} sources={snapshot.sources} /></p>
         <p className="mt-6 leading-8"><StoryCitedText text={story.whyItMatters} story={story} sources={snapshot.sources} /></p>
         <ul className="mt-6 grid gap-3 text-sm">{story.keyTakeaways.map((item) => <li key={item}><StoryCitedText text={item} story={story} sources={snapshot.sources} /></li>)}</ul>

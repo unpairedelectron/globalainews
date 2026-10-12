@@ -11,7 +11,9 @@ import {
 import { formatEditorialDate, getLatestStory } from './editorial-date';
 import type { SeoMetadata } from './seo-metadata';
 import { getEditorialPageCopy } from './editorial-pages';
+import { getEditorialImagePath } from './editorial-images';
 import { StoryBody, StoryCitedText, StorySourceList } from './components/story-content';
+import { AuthorDirectory } from './components/author-directory';
 
 interface SeoPrerenderProps {
   route: string;
@@ -156,18 +158,16 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             </p>
             <figure className="my-8 border border-foreground/15 bg-surface-muted">
               <img
-                src={metadata.imagePath ?? articleImagePath(story.slug)}
+                src={getEditorialImagePath(story.slug)}
                 alt={metadata.imageAlt ?? story.imageTreatment.alt}
                 width={1200}
                 height={630}
                 fetchPriority="high"
                 className="aspect-[1.91/1] w-full object-cover"
               />
-              {metadata.imagePath === `/social/articles/${story.slug}.png` && (
-                <figcaption className="border-t border-foreground/15 px-4 py-3 text-xs leading-5 text-muted-foreground">
-                  {story.imageTreatment.caption}
-                </figcaption>
-              )}
+              <figcaption className="border-t border-foreground/15 px-4 py-3 text-xs leading-5 text-muted-foreground">
+                Editorial illustration · {story.imageTreatment.caption}
+              </figcaption>
             </figure>
             <div className="prose prose-lg mt-8 max-w-none text-foreground">
               <section className="not-prose my-8 border-l-2 border-primary bg-secondary/50 p-6">
@@ -665,7 +665,10 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
           <p className="mt-7 max-w-3xl border-t border-foreground/15 pt-5 text-lg leading-8 text-muted-foreground">{copy.intro}</p>
           {isArchive
             ? <section className="mt-10"><h2 className="eyebrow mb-5 text-primary">Published archive</h2>{archivedStories.length ? <StoryList stories={archivedStories} authors={authors} /> : <p className="border-t border-foreground/15 py-6 text-sm text-muted-foreground">No published stories are available in the current newsroom snapshot.</p>}</section>
-             : <div className="mt-10 max-w-3xl">{copy.sections.map((section) => <section key={section.heading} className="border-t border-foreground/15 py-6"><h2 className="font-serif text-3xl">{section.heading}</h2><p className="mt-3 text-base leading-7 text-muted-foreground">{section.body}</p></section>)}
+            : <div className="mt-10 max-w-3xl">
+                {route === '/authors'
+                  ? <AuthorDirectory stories={stories} authors={authors} />
+                  : copy.sections.map((section) => <section key={section.heading} className="border-t border-foreground/15 py-6"><h2 className="font-serif text-3xl">{section.heading}</h2><p className="mt-3 text-base leading-7 text-muted-foreground">{section.body}</p></section>)}
               {copy.relatedLinks?.length ? <nav aria-label="Related publication pages" className="mt-8 flex flex-wrap gap-3 border-t border-foreground/15 pt-6">{copy.relatedLinks.map((link) => <a key={link.href} href={`${link.href}/`} className="flex min-h-11 items-center border border-foreground/15 px-4 text-sm hover:border-primary hover:text-primary">{link.label}</a>)}</nav> : null}
              </div>}
         </main>

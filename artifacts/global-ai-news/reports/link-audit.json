@@ -1243,7 +1243,7 @@
     "url": "https://www.globalainews.in/authors",
     "status": "200",
     "canonical": "https://www.globalainews.in/authors/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -2507,7 +2507,7 @@
     "url": "https://www.globalainews.in/privacy",
     "status": "200",
     "canonical": "https://www.globalainews.in/privacy/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -2539,7 +2539,7 @@
     "url": "https://www.globalainews.in/terms/",
     "status": "200",
     "canonical": "https://www.globalainews.in/terms/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/privacy",
     "issue": ""
   },
@@ -3371,7 +3371,7 @@
     "url": "https://www.globalainews.in/terms",
     "status": "200",
     "canonical": "https://www.globalainews.in/terms/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -3395,7 +3395,7 @@
     "url": "https://www.globalainews.in/privacy/",
     "status": "200",
     "canonical": "https://www.globalainews.in/privacy/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/terms",
     "issue": ""
   },

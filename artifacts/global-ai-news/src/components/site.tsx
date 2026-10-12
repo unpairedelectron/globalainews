@@ -10,6 +10,7 @@ import { useSubscribeNewsletter } from '@workspace/api-client-react';
 import { getCanonicalUrl, getSeoMetadata, getStructuredData, SITE_URL } from '@/seo-metadata';
 import { GlobalAiNewsLockup } from '@/components/brand-mark';
 import { trackEvent } from '@/analytics';
+import { EDITORIAL_IMAGE_FALLBACK, getEditorialImagePath } from '@/editorial-images';
 
 export const SITE = SITE_URL;
 
@@ -243,8 +244,19 @@ export function Newsletter({ compact = false }: { compact?: boolean }) {
 
 export function SectionLabel({ children, aside }: { children: ReactNode; aside?: ReactNode }) { return <div className="section-label mb-5 flex items-center justify-between border-b border-foreground/15 pb-3"><p className="eyebrow flex items-center text-primary"><span aria-hidden="true" className="mr-2 h-1.5 w-1.5 rounded-full bg-primary" />{children}</p>{aside && <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{aside}</span>}</div>; }
 
-export function EditorialImage({ treatment = 'editorial-abstract', alt, caption, large = false }: { treatment?: string; alt: string; caption?: string; large?: boolean }) {
-  return <figure className={`editorial-visual overflow-hidden border border-foreground/15 ${large ? 'min-h-[300px] md:min-h-[540px]' : 'min-h-[180px]'}`}><div role="img" aria-label={alt} className="relative h-full min-h-[inherit] overflow-hidden p-6 md:p-10"><div className="editorial-visual-ring absolute right-10 top-10 h-28 w-28 rounded-full border" /><div className="editorial-visual-accent absolute right-20 top-20 h-16 w-16 rounded-full border" /><div className="editorial-visual-rule absolute bottom-12 left-12 h-px w-3/4" /><div className="editorial-visual-accent absolute bottom-20 left-20 h-px w-1/2 rotate-[-14deg]" /><div className="relative flex h-full min-h-[inherit] flex-col justify-between"><span className="editorial-visual-muted eyebrow">{treatment.replace('-', ' ')} / field note</span><div><p className="max-w-sm font-serif text-4xl leading-[.9] md:text-6xl">{treatment === 'data-graphic' ? 'The map follows the constraint.' : 'A new map of the invisible.'}</p><p className="editorial-visual-muted mt-4 max-w-xs text-xs leading-5">Global AI News · editorial visual</p></div></div></div>{caption && <figcaption className="editorial-visual-caption border-t px-6 py-3 text-xs">{caption}</figcaption>}</figure>;
+export function StoryImage({ slug, alt, className, loading = 'lazy', fetchPriority }: { slug: string; alt: string; className: string; loading?: 'eager' | 'lazy'; fetchPriority?: 'high' | 'low' | 'auto' }) {
+  const [failed, setFailed] = useState(false);
+  const imagePath = failed ? EDITORIAL_IMAGE_FALLBACK : getEditorialImagePath(slug);
+  return <img src={imagePath} alt={alt} width={1200} height={675} loading={loading} fetchPriority={fetchPriority} className={className} onError={() => setFailed(true)} />;
+}
+
+export function EditorialImage({ treatment = 'editorial-abstract', alt, caption, large = false, storySlug }: { treatment?: string; alt: string; caption?: string; large?: boolean; storySlug?: string }) {
+  return <figure className={`editorial-visual overflow-hidden border border-foreground/15 ${large ? 'min-h-[300px] md:min-h-[540px]' : 'min-h-[180px]'}`}>
+    {storySlug
+      ? <StoryImage slug={storySlug} alt={alt} className="aspect-[1.91/1] h-full w-full object-cover" loading={large ? 'eager' : 'lazy'} fetchPriority={large ? 'high' : undefined} />
+      : <div role="img" aria-label={alt} className="relative h-full min-h-[inherit] overflow-hidden p-6 md:p-10"><div className="editorial-visual-ring absolute right-10 top-10 h-28 w-28 rounded-full border" /><div className="editorial-visual-accent absolute right-20 top-20 h-16 w-16 rounded-full border" /><div className="editorial-visual-rule absolute bottom-12 left-12 h-px w-3/4" /><div className="editorial-visual-accent absolute bottom-20 left-20 h-px w-1/2 rotate-[-14deg]" /><div className="relative flex h-full min-h-[inherit] flex-col justify-between"><span className="editorial-visual-muted eyebrow">{treatment.replace('-', ' ')} / field note</span><div><p className="max-w-sm font-serif text-4xl leading-[.9] md:text-6xl">{treatment === 'data-graphic' ? 'The map follows the constraint.' : 'A new map of the invisible.'}</p><p className="editorial-visual-muted mt-4 max-w-xs text-xs leading-5">Global AI News · editorial visual</p></div></div></div>}
+    {caption && <figcaption className="editorial-visual-caption border-t px-6 py-3 text-xs">Editorial illustration · {caption}</figcaption>}
+  </figure>;
 }
 
 export function StoryRow({ slug, rank, compact = false }: { slug: string; rank?: number; compact?: boolean }) {

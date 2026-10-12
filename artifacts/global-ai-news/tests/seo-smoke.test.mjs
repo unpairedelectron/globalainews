@@ -2797,9 +2797,6 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     '/code-of-ethics',
     '/corrections',
     '/contact-us',
-    '/privacy',
-    '/terms',
-    '/authors',
   ];
   for (const route of publicNoindexRoutes) {
     assert.equal(
@@ -2821,18 +2818,12 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     '/code-of-ethics',
     '/corrections',
     '/contact-us',
-    '/privacy',
-    '/terms',
-    '/authors',
   ];
   const editorialPageCopy = {
     '/about-us': /Who speaks for the publication/,
     '/code-of-ethics': /AI-assisted work/,
     '/corrections': /No approved public corrections or contact channel is available/i,
     '/contact-us': /No approved public contact address or working contact form has been verified/i,
-    '/privacy': /provisional disclosure, not a complete privacy policy/i,
-    '/terms': /placeholder, not a complete agreement/i,
-    '/authors': /seven published stories to the Global AI News Editorial Desk/i,
   };
   for (const route of placeholderRoutes) {
     assert.equal(
@@ -2847,6 +2838,37 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing the newsroom bootstrap marker`);
     assert.match(body, editorialPageCopy[route], `${route}: shared editorial copy is missing`);
     assert.doesNotMatch(body, /Latest stories/, `${route}: editorial-information placeholder must not present unrelated stories`);
+  }
+  const publicTrustRoutes = ['/privacy', '/terms', '/authors'];
+  for (const route of publicTrustRoutes) {
+    const routeMetadata = metadataManifest.routes.find((metadata) => metadata.path === route);
+    assert.ok(routeMetadata, `${route}: route metadata is missing`);
+    assert.notEqual(routeMetadata.indexable, false, `${route}: factual trust information should be indexable`);
+    assert.ok(routes.includes(route), `${route}: indexable trust page is missing from sitemap.xml`);
+    const { response, body } = await fetchText(route);
+    assert.equal(response.status, 200, `${route}: direct trust page failed`);
+    assert.equal(response.headers.get('x-robots-tag'), null, `${route}: indexable page must not send noindex header`);
+    assert.doesNotMatch(body, /<meta name="robots" content="noindex,follow"/, `${route}: indexable page must not emit noindex metadata`);
+    assert.match(body, /<main\b/, `${route}: initial HTML is missing page content`);
+    assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing the newsroom bootstrap marker`);
+  }
+  const privacyPage = (await fetchText('/privacy')).body;
+  assert.match(privacyPage, /provisional disclosure, not a complete privacy policy/i);
+  assert.match(privacyPage, /asks for an email address/i);
+  assert.match(privacyPage, /retention period/i);
+  const termsPage = (await fetchText('/terms')).body;
+  assert.match(termsPage, /placeholder, not a complete agreement/i);
+  assert.match(termsPage, /No approved terms covering permitted use, intellectual property, liability, or dispute handling/i);
+
+  const authorsPage = (await fetchText('/authors')).body;
+  assert.match(authorsPage, /data-testid="author-directory"/);
+  assert.match(authorsPage, /Global AI News Editorial Desk/);
+  assert.ok(authorsPage.includes('href="/archive/"'), 'author directory must link to the published story archive');
+  assert.ok(authorsPage.includes('href="/about-us/"'), 'author directory must link to the publication information page');
+  for (const author of newsroomContent.authors) {
+    if (author.verifiedForPublication === true) continue;
+    assert.ok(!authorsPage.includes(author.name), `unverified author ${author.slug} must not appear in the public directory`);
+    assert.ok(!authorsPage.includes(author.bio), `unverified bio for ${author.slug} must not appear in the public directory`);
   }
   const archiveMetadata = metadataManifest.routes.find((metadata) => metadata.path === '/archive');
   assert.ok(archiveMetadata, 'published archive is missing public SEO metadata');

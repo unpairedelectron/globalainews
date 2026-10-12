@@ -694,15 +694,42 @@ async function assertContactAlias() {
     '/code-of-ethics/',
     '/corrections/',
     '/contact-us/',
-    '/privacy/',
-    '/terms/',
-    '/authors/',
   ]) {
     const placeholder = await fetch(`${webOrigin}${route}`);
     const html = await placeholder.text();
     assert.equal(placeholder.status, 200, `${route} must remain reachable`);
     assert.equal(placeholder.headers.get('x-robots-tag'), 'noindex');
     assert.match(html, /name="robots" content="noindex,follow"/i);
+  }
+
+  for (const route of ['/privacy/', '/terms/', '/authors/']) {
+    const publicTrustPage = await fetch(`${webOrigin}${route}`);
+    const html = await publicTrustPage.text();
+    assert.equal(publicTrustPage.status, 200, `${route} must render a complete first response`);
+    assert.equal(publicTrustPage.headers.get('x-robots-tag'), null, `${route} must remain indexable`);
+    assert.doesNotMatch(html, /name="robots" content="noindex/i, `${route} must not emit noindex metadata`);
+    assert.match(html, /<main\b/, `${route} must include page content in its first response`);
+    assert.match(html, /id="global-ai-prerender"/, `${route} must include its prerender marker`);
+  }
+
+  const authorDirectoryResponse = await fetch(`${webOrigin}/authors/`);
+  const authorDirectoryHtml = await authorDirectoryResponse.text();
+  const authorSnapshotResponse = await fetch(`${apiOrigin}/api/newsroom/content`);
+  assert.equal(authorSnapshotResponse.status, 200, 'author directory verification needs the current public snapshot');
+  const authorSnapshot = await authorSnapshotResponse.json();
+  assert.match(authorDirectoryHtml, /Global AI News Editorial Desk/);
+  for (const author of authorSnapshot.authors) {
+    if (author.verifiedForPublication === true) continue;
+    assert.doesNotMatch(
+      authorDirectoryHtml,
+      new RegExp(escapeRegExp(author.name)),
+      `author directory must not publish unverified contributor ${author.slug}`,
+    );
+    assert.doesNotMatch(
+      authorDirectoryHtml,
+      new RegExp(escapeRegExp(author.bio)),
+      `author directory must not publish the unverified biography for ${author.slug}`,
+    );
   }
 
   const mergedStory = await fetch(
