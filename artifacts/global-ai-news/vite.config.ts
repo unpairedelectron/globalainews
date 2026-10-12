@@ -20,9 +20,7 @@ import {
 import {
   ARTICLE_NOT_FOUND_HTML,
   NewsroomSnapshotFetchError,
-  getPrerenderedArticleHtmlPath,
   fetchNewsroomContentSnapshot,
-  hasPrerenderedArticleHtml,
   parseArticleRoutePath,
   renderArticleHtml,
 } from './src/server/article-html';
@@ -803,24 +801,6 @@ function articleResponsePlugin() {
         response.once('close', () => {
           if (!response.writableFinished) logCompletion('article_render_connection_closed');
         });
-
-        if (hasPrerenderedArticleHtml(pathname, path.join(projectRoot, 'public'))) {
-          next();
-          return;
-        }
-        const prerenderedArticlePath = getPrerenderedArticleHtmlPath(
-          pathname,
-          buildOutputDir(projectRoot),
-        );
-        if (prerenderedArticlePath) {
-          routeStatus = 200;
-          response.statusCode = 200;
-          response.setHeader('Content-Type', 'text/html; charset=utf-8');
-          response.end(
-            request.method === 'HEAD' ? undefined : readFileSync(prerenderedArticlePath),
-          );
-          return;
-        }
 
         void (async () => {
           const rawTemplate = readFileSync(path.join(projectRoot, 'index.html'), 'utf8');

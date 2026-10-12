@@ -734,6 +734,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
                 </div>
               </div>
               {lead ? <article className="flex flex-col justify-center border-l border-foreground/20 py-4 pl-6 md:pl-9">
+                <img src={getEditorialImagePath(lead.slug)} alt={lead.imageTreatment.alt} width={1200} height={675} fetchPriority="high" className="mb-5 aspect-[16/9] w-full object-cover" />
                 <p className="eyebrow text-primary">{lead.contentType ?? getReaderFacingContentType(lead.classification)} · {lead.category}</p>
                 <a href={`/article/${lead.slug}/`} className="group block">
                   <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-[.95] transition-colors group-hover:text-primary md:text-6xl">{lead.title}</h2>
@@ -751,10 +752,11 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
           <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.75fr_1.25fr] md:py-16">
             <div><p className="eyebrow mb-5 border-b border-foreground/15 pb-3 text-primary">More from the newsroom · {remainingStories.length} stories</p><h2 className="max-w-sm font-serif text-5xl leading-[.9]">The useful read, not the loudest read.</h2><a href="/brief/" className="mt-8 inline-flex border-b border-primary pb-2 text-sm text-primary">Read the Daily Brief <span className="ml-2" aria-hidden="true">↗</span></a></div>
             <div className="grid gap-0">
-              {remainingStories.slice(0, 5).map((story) => <article key={story.slug} className="border-t border-foreground/15 py-5 first:border-t-0 first:pt-0">
-                <div className="flex items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span className="h-1 w-1 rounded-full bg-accent" /><time className="text-xs text-muted-foreground" dateTime={story.date}>{formatEditorialDate(story.date)}</time></div>
-                <a href={`/article/${story.slug}/`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] hover:text-primary md:text-3xl">{story.title}</a>
-                <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p>
+              {remainingStories.slice(0, 5).map((story) => <article key={story.slug} className="grid gap-4 border-t border-foreground/15 py-5 first:border-t-0 first:pt-0 sm:grid-cols-[128px_1fr]">
+                <img src={getEditorialImagePath(story.slug)} alt={story.imageTreatment.alt} width={1200} height={675} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+                <div><div className="flex items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span className="h-1 w-1 rounded-full bg-accent" /><time className="text-xs text-muted-foreground" dateTime={story.date}>{formatEditorialDate(story.date)}</time></div>
+                  <a href={`/article/${story.slug}/`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] hover:text-primary md:text-3xl">{story.title}</a>
+                  <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p></div>
               </article>)}
             </div>
           </section>

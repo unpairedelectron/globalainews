@@ -98,3 +98,45 @@ mtime_ms = 1791174574797
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/abcc0c2a-2c52-4e1f-b673-e7fe6cd73302/1b139b8a-8cd3-4955-999f-2a4287de1516"
 storage_version_token = "1791174791581698"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "1gEs63CUY8iSgtgxmILWF"
+uri = "file://artifacts/global-ai-news/screenshots/homepage-final.jpg"
+type = "image"
+title = "Homepage — desktop"
+description = "Final desktop homepage showing the new lead illustration and featured story."
+logical_id = "91317673-dd81-4303-8588-5a6e9b15c8f3"
+content_hash = "sha256:f14402edb2efd876c0e75eb566eb0580f8d0f78fca86e017864cdb2103cb6449"
+size = 144663
+mtime_ms = 1791802989631
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/91317673-dd81-4303-8588-5a6e9b15c8f3/c04145ee-c504-4239-8d97-9a56d48c2372"
+storage_version_token = "1791803390541014"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "7_TjwopmWtZglfdODTtVi"
+uri = "file://artifacts/global-ai-news/screenshots/homepage-mobile-final.jpg"
+type = "image"
+title = "Homepage — mobile"
+description = "Final mobile homepage preview."
+logical_id = "fd7822be-49ff-486f-a62a-366985bddc78"
+content_hash = "sha256:7f4a9285f37aa19a272b409bf6b1d3504468888a69fdbefd6c527c4c2bf2c94c"
+size = 51168
+mtime_ms = 1791802994022
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/fd7822be-49ff-486f-a62a-366985bddc78/63aba3ce-decd-4651-9218-d9cb314c2ffa"
+storage_version_token = "1791803391923726"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "zTrfveHUf38MJcg52_Gi7"
+uri = "file://artifacts/global-ai-news/screenshots/article-final.jpg"
+type = "image"
+title = "Article page — desktop"
+description = "Final styled article page with the local editorial illustration."
+logical_id = "fdbf9777-9f82-401b-97e8-05ac17c26e3f"
+content_hash = "sha256:1e1be92b0b14f0ce14112667bc9df1a72a107d7a1d8266b63256d9760c443f79"
+size = 133945
+mtime_ms = 1791803137471
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/fdbf9777-9f82-401b-97e8-05ac17c26e3f/e28f28de-13ac-425a-819f-77bc3e2ebd17"
+storage_version_token = "1791803393303609"
+content_type = "image/jpeg"

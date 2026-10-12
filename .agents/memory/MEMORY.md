@@ -23,6 +23,7 @@
 - [IndiaAI compute observation contract](indiaai-compute-observation-contract.md) — new GPU stages and quantity qualifiers must be added to the public API contract before publication.
 - [Source capture evidence](source-capture-evidence.md) — confirm a fetched page’s body supports the cited claim; a title or successful fetch alone is not evidence.
 - [Dynamic social preview images](dynamic-social-preview-images.md) — post-build stories need a public PNG renderer; preserve existing build-time image URLs.
+- [Editorial image honesty](editorial-image-honesty.md) — clearly label generated conceptual artwork so it is not mistaken for documentary reporting imagery.
 - [Vite post-build metadata](vite-post-build-metadata.md) — use `writeBundle` when processing emitted files and test with external temporary output directories.
 - [Documentation checkpoints and build fingerprints](documentation-checkpoints-and-build-fingerprints.md) — distinguish build-time revisions from later documentation-only Git commits.
 - [Article-render diagnostic whitelist](article-render-diagnostic-whitelist.md) — log correlation, route, timings, failure/cache state, and status; exclude bodies, payload sizes/counts, and editorial fields.

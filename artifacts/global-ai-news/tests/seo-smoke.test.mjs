@@ -3332,3 +3332,43 @@ test('headline pixels stay readable and inside the card at every supported title
     }
   }
 });
+
+test('homepage and article body serve local editorial images with a working fallback', async () => {
+  const home = await fetchText('/');
+  assert.equal(home.response.status, 200);
+  const homeImage = openingTags(home.body, 'img')
+    .find((tag) => (attributeValue(tag, 'src') ?? '').startsWith('/images/editorial/'));
+  assert.ok(homeImage, 'homepage lead story is missing its local editorial image');
+  assert.ok(attributeValue(homeImage, 'alt'), 'homepage editorial image is missing alt text');
+  assert.ok(attributeValue(homeImage, 'width'), 'homepage editorial image is missing width');
+  assert.ok(attributeValue(homeImage, 'height'), 'homepage editorial image is missing height');
+
+  const article = await fetchText('/article/india-ai-compute-access-2026/');
+  assert.equal(article.response.status, 200);
+  const articleImage = openingTags(article.body, 'img')
+    .find((tag) => (attributeValue(tag, 'src') ?? '').startsWith('/images/editorial/'));
+  assert.ok(articleImage, 'article body is missing its local editorial image');
+
+  const storySlugs = [
+    'india-ai-compute-access-2026',
+    'weekly-deep-dive-cost-of-intelligence',
+    'reliability-is-the-new-ai-moat',
+    'study-finds-word-cues-can-override-game-theory-choices-in-llms',
+    'ai-models-antibiotic-discovery',
+    'quiet-race-watermark-everything-ai-makes',
+    'small-models-serious-workflows',
+  ];
+  const imagePaths = new Set([
+    attributeValue(homeImage, 'src'),
+    attributeValue(articleImage, 'src'),
+    '/images/editorial/fallback.jpg',
+    ...storySlugs.map((slug) => `/images/editorial/${slug}.jpg`),
+  ]);
+  for (const imagePath of imagePaths) {
+    const response = await fetch(`${baseUrl}${imagePath}`);
+    assert.equal(response.status, 200, `${imagePath}: image did not load`);
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    assert.ok(bytes.length > 10_000, `${imagePath}: image is unexpectedly small`);
+    assert.deepEqual([...bytes.slice(0, 3)], [0xff, 0xd8, 0xff], `${imagePath}: response is not a valid JPEG`);
+  }
+});
