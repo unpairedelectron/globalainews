@@ -59,25 +59,36 @@ const staticMetadata: Record<string, SeoMetadata> = {
     title: 'About us — Global AI News',
     description: 'What Global AI News covers and how its reporting connects to sources, research and data.',
     path: '/about-us',
-    indexable: false,
   },
   '/code-of-ethics': {
     title: 'Code of ethics — Global AI News',
     description: 'Global AI News standards for sourcing, attribution, evidence labels and transparent limitations.',
     path: '/code-of-ethics',
-    indexable: false,
   },
   '/corrections': {
     title: 'Corrections — Global AI News',
     description: 'How Global AI News distinguishes publication dates, material updates and correction records.',
     path: '/corrections',
-    indexable: false,
   },
   '/contact-us': {
     title: 'Contact us — Global AI News',
     description: 'Public contact details for Global AI News have not been verified.',
     path: '/contact-us',
-    indexable: false,
+  },
+  '/privacy': {
+    title: 'Privacy notice — Global AI News',
+    description: 'Interim disclosure of what the Daily Brief signup collects and which privacy-policy details still need publisher confirmation.',
+    path: '/privacy',
+  },
+  '/terms': {
+    title: 'Terms of use — Global AI News',
+    description: 'Interim notice that publisher-approved terms of use have not yet been supplied.',
+    path: '/terms',
+  },
+  '/authors': {
+    title: 'Authors — Global AI News',
+    description: 'Current Global AI News bylines and the status of verified individual contributor profiles.',
+    path: '/authors',
   },
   '/signals': {
     title: 'Signals on file — Global AI News',

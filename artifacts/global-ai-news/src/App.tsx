@@ -94,6 +94,9 @@ function AppRoutes() {
     <Route path="/code-of-ethics"><EditorialInputPage title="Code of ethics" path="/code-of-ethics" /></Route>
     <Route path="/corrections"><EditorialInputPage title="Corrections" path="/corrections" /></Route>
     <Route path="/contact-us"><EditorialInputPage title="Contact us" path="/contact-us" /></Route>
+    <Route path="/privacy"><EditorialInputPage title="Privacy notice" path="/privacy" /></Route>
+    <Route path="/terms"><EditorialInputPage title="Terms of use" path="/terms" /></Route>
+    <Route path="/authors"><EditorialInputPage title="Authors" path="/authors" /></Route>
     <Route component={NotFound} />
   </Switch>;
 

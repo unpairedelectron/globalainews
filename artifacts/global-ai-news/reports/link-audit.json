@@ -3,7 +3,7 @@
     "url": "https://www.globalainews.in/about-us",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -19,6 +19,30 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/about-us",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/code-of-ethics/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/code-of-ethics/",
+    "indexability": "indexable",
+    "linkSource": "/about-us",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/corrections/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/corrections/",
+    "indexability": "indexable",
+    "linkSource": "/about-us",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/contact-us/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/contact-us/",
     "indexability": "indexable",
     "linkSource": "/about-us",
     "issue": ""
@@ -1352,6 +1376,54 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/authors",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/authors/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/authors",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/authors",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/archive/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/archive/",
+    "indexability": "indexable",
+    "linkSource": "/authors",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/about-us/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/about-us/",
+    "indexability": "indexable",
+    "linkSource": "/authors",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/code-of-ethics/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/code-of-ethics/",
+    "indexability": "indexable",
+    "linkSource": "/authors",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/brief",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
@@ -1443,7 +1515,7 @@
     "url": "https://www.globalainews.in/code-of-ethics",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -1459,6 +1531,30 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/code-of-ethics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/about-us/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/about-us/",
+    "indexability": "indexable",
+    "linkSource": "/code-of-ethics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/corrections/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/corrections/",
+    "indexability": "indexable",
+    "linkSource": "/code-of-ethics",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/contact-us/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/contact-us/",
     "indexability": "indexable",
     "linkSource": "/code-of-ethics",
     "issue": ""
@@ -1563,7 +1659,7 @@
     "url": "https://www.globalainews.in/contact-us",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -1584,10 +1680,34 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/corrections/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/corrections/",
+    "indexability": "indexable",
+    "linkSource": "/contact-us",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/code-of-ethics/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/code-of-ethics/",
+    "indexability": "indexable",
+    "linkSource": "/contact-us",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/about-us/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/about-us/",
+    "indexability": "indexable",
+    "linkSource": "/contact-us",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/corrections",
     "status": "200",
     "canonical": "https://www.globalainews.in/corrections/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -1603,6 +1723,30 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/corrections",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/code-of-ethics/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/code-of-ethics/",
+    "indexability": "indexable",
+    "linkSource": "/corrections",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/about-us/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/about-us/",
+    "indexability": "indexable",
+    "linkSource": "/corrections",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/contact-us/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/contact-us/",
     "indexability": "indexable",
     "linkSource": "/corrections",
     "issue": ""
@@ -2051,22 +2195,6 @@
     "url": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/india-ai-compute-access-2026/",
-    "indexability": "indexable",
-    "linkSource": "/",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/research/india-ai-compute-2026/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/research/india-ai-compute-2026/",
-    "indexability": "indexable",
-    "linkSource": "/",
-    "issue": ""
-  },
-  {
-    "url": "https://www.globalainews.in/data/india-ai-compute-snapshots/",
-    "status": "200",
-    "canonical": "https://www.globalainews.in/data/india-ai-compute-snapshots/",
     "indexability": "indexable",
     "linkSource": "/",
     "issue": ""
@@ -2565,6 +2693,46 @@
     "canonical": "https://www.globalainews.in/brief/",
     "indexability": "indexable",
     "linkSource": "/policy/indiaai-mission",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/privacy",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/privacy/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/privacy",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/privacy",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/contact-us/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/contact-us/",
+    "indexability": "indexable",
+    "linkSource": "/privacy",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/terms/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/terms/",
+    "indexability": "indexable",
+    "linkSource": "/privacy",
     "issue": ""
   },
   {
@@ -3405,6 +3573,46 @@
     "canonical": "https://www.globalainews.in/brief/",
     "indexability": "indexable",
     "linkSource": "/technology/content-credentials",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/terms",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/terms/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/terms",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/brief/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/terms",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/privacy/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/privacy/",
+    "indexability": "indexable",
+    "linkSource": "/terms",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/contact-us/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/contact-us/",
+    "indexability": "indexable",
+    "linkSource": "/terms",
     "issue": ""
   },
   {

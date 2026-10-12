@@ -18,9 +18,6 @@ export function HomePage() {
   const orderedStories = [...snapshot.stories].sort((a, b) => b.date.localeCompare(a.date));
   const [leadStory, ...topStories] = orderedStories;
   const latestStory = getLatestStory(snapshot.stories);
-  const researchRecord = snapshot.researchRecords.find((record) => record.status === 'published' && record.storySlug === leadStory?.slug);
-  const dataProduct = snapshot.dataProducts.find((product) => product.status === 'published' && product.storySlugs.includes(leadStory?.slug ?? ''));
-  const evidenceRows = (dataProduct?.observations ?? []).slice().sort((a, b) => b.reportedOn.localeCompare(a.reportedOn)).slice(0, 4);
   const analysisStories = orderedStories.filter((story) => story.contentType === 'Analysis' || story.classification === 'analysis');
   const reportStories = orderedStories.filter((story) => story.contentType === 'Report');
   const publishedResearch = snapshot.researchRecords.filter((record) => record.status === 'published');
@@ -43,48 +40,20 @@ export function HomePage() {
              <h1 className="mt-5 max-w-3xl font-serif text-[3.7rem] leading-[.83] tracking-[-.04em] sm:text-7xl md:text-[6.6rem]">Know what<br /><em className="text-primary">changed.</em></h1>
              <p className="mt-7 max-w-md text-lg leading-7 text-muted-foreground">What happened, why it matters, and the evidence that lets you check.</p>
            </div>
-           {leadStory && <div className="mt-10 border-t border-foreground/15 pt-4">
-             <p className="eyebrow text-primary">{leadStory.contentType ?? getReaderFacingContentType(leadStory.classification)} · {leadStory.category}</p>
-             <Link href={`/article/${leadStory.slug}`} className="group block">
-               <h2 className="mt-3 max-w-2xl font-serif text-4xl leading-[.9] transition-colors group-hover:text-primary md:text-6xl">{leadStory.title}</h2>
-               <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">{leadStory.dek}</p>
-             </Link>
-             <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-               Published <time dateTime={leadStory.date}>{formatEditorialDate(leadStory.date)}</time>
-               {leadStory.dateModified && leadStory.dateModified !== leadStory.date && <> · Updated <time dateTime={leadStory.dateModified}>{formatEditorialDate(leadStory.dateModified)}</time></>}
-                {' · '}{getStoryReadTime(leadStory)} · Global AI News Editorial Desk
-             </p>
-           </div>}
          </div>
-         {leadStory ? <aside aria-label="Evidence from the lead report" className="border border-foreground/15 bg-surface-muted/70 p-5 md:p-7">
-           <div className="flex flex-wrap items-start justify-between gap-3 border-b border-foreground/15 pb-4">
-             <div><p className="eyebrow text-primary">Evidence snapshot</p><p className="mt-2 max-w-sm font-serif text-2xl leading-tight">What the public record does—and doesn’t—establish</p></div>
-             <span className="border border-foreground/20 px-2 py-1 font-mono text-[10px] uppercase tracking-widest">Not live inventory</span>
-           </div>
-           <div className="grid grid-cols-2 gap-4 border-b border-foreground/15 py-4 text-xs sm:grid-cols-3">
-             <div><span className="eyebrow text-muted-foreground">Primary records</span><strong className="mt-1 block font-serif text-2xl">{leadStory.evidenceSummary.primarySources}</strong></div>
-             <div><span className="eyebrow text-muted-foreground">Other confirmations</span><strong className="mt-1 block font-serif text-2xl">{leadStory.evidenceSummary.independentConfirmations}</strong></div>
-             <div><span className="eyebrow text-muted-foreground">Confidence</span><strong className="mt-1 block font-mono text-sm">{leadStory.evidenceSummary.confidence}</strong></div>
-           </div>
-           {evidenceRows.length > 0 && <div className="pt-4">
-             <div className="mb-2 flex items-center justify-between gap-2"><p className="eyebrow text-primary">Dated claims · separate stages</p><span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">Reported date · source</span></div>
-             <ol className="divide-y divide-foreground/10">
-               {evidenceRows.map((item) => {
-                 const source = snapshot.sources.find((candidate) => candidate.slug === item.sourceSlug);
-                 return <li key={item.id} className="grid grid-cols-[1fr_auto] gap-3 py-3">
-                    <div><p className="text-sm leading-tight">{item.quantityLabel} GPUs <span className="text-muted-foreground">· {item.status.replaceAll('-', ' ')}</span></p><p className="mt-1 text-xs text-muted-foreground">{source ? <Link href={`/source/${source.slug}`} className="underline decoration-foreground/30 underline-offset-2 hover:text-primary">{source.publisher || source.name}</Link> : 'Source record unavailable'} · <time dateTime={item.reportedOn}>{formatEditorialDate(item.reportedOn)}</time></p></div>
-                   <span className="self-center font-mono text-[9px] uppercase tracking-wider text-primary">{item.sourceKind === 'primary' ? 'Primary' : 'Independent'}</span>
-                 </li>;
-               })}
-             </ol>
-           </div>}
-           <p className="mt-4 text-xs leading-5 text-muted-foreground">{leadStory.evidenceSummary.note}</p>
-           <div className="mt-5 grid gap-2 border-t border-foreground/15 pt-4 sm:grid-cols-2">
-             <Link href={`/article/${leadStory.slug}`} className="flex items-center justify-between border border-foreground/15 bg-background px-3 py-3 text-sm hover:border-primary hover:text-primary"><span>Read the report</span><ArrowUpRight size={14} /></Link>
-             {researchRecord && <Link href={`/research/${researchRecord.slug}`} className="flex items-center justify-between border border-foreground/15 bg-background px-3 py-3 text-sm hover:border-primary hover:text-primary"><span>Research record</span><ArrowUpRight size={14} /> </Link>}
-             {dataProduct && <Link href={`/data/${dataProduct.slug}`} className="flex items-center justify-between border border-foreground/15 bg-background px-3 py-3 text-sm hover:border-primary hover:text-primary sm:col-span-2"><span>{dataProduct.title}</span><ArrowUpRight size={14} /></Link>}
-           </div>
-         </aside> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">There are no published stories in the newsroom snapshot.</p>}
+          {leadStory ? <article className="flex flex-col justify-center border-l border-foreground/20 py-4 pl-6 md:pl-9">
+            <p className="eyebrow text-primary">{leadStory.contentType ?? getReaderFacingContentType(leadStory.classification)} · {leadStory.category}</p>
+            <Link href={`/article/${leadStory.slug}`} className="group block">
+              <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-[.95] transition-colors group-hover:text-primary md:text-6xl">{leadStory.title}</h2>
+              <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">{leadStory.dek}</p>
+            </Link>
+            <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              Published <time dateTime={leadStory.date}>{formatEditorialDate(leadStory.date)}</time>
+              {leadStory.dateModified && leadStory.dateModified !== leadStory.date && <> · Updated <time dateTime={leadStory.dateModified}>{formatEditorialDate(leadStory.dateModified)}</time></>}
+              {' · '}{getStoryReadTime(leadStory)} · Global AI News Editorial Desk
+            </p>
+            <Link href={`/article/${leadStory.slug}`} className="mt-6 inline-flex min-h-11 w-fit items-center border-b border-primary pb-2 text-sm text-primary">Read the lead story <ArrowUpRight size={14} className="ml-2" /></Link>
+          </article> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">There are no published stories in the newsroom snapshot.</p>}
        </div>
      </section>
       <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.75fr_1.25fr] md:py-16"><div><SectionLabel aside={`${topStories.length} stories`}>Latest</SectionLabel><h2 className="max-w-sm font-serif text-5xl leading-[.9]">The useful read, not the loudest read.</h2><p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">A running file of what moved, with the date and reporting attached.</p><Link href="/brief" className="mt-8 inline-flex min-h-11 items-center border-b border-primary pb-2 text-sm text-primary">Read the Daily Brief <ArrowUpRight size={14} className="ml-2" /></Link></div><div>{topStories.slice(0, 5).map((story, index) => <article key={story.slug} className="border-t border-foreground/15 py-5 first:border-t-0 first:pt-0"><div className="flex items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span aria-hidden="true" className="h-1 w-1 rounded-full bg-accent" /><time className="text-xs text-muted-foreground" dateTime={story.date}>{formatEditorialDate(story.date)}</time></div><Link href={`/article/${story.slug}`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] hover:text-primary md:text-3xl">{story.title}</Link><p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p></article>)}</div></section>
@@ -170,11 +139,17 @@ export function SearchPage() {
 export function EditorialInputPage({ title, path }: { title: string; path: string }) {
   const snapshot = useNewsroomSnapshot();
   const isArchive = path === '/archive';
-  const isUnverifiedTrustPage = ['/about-us', '/code-of-ethics', '/corrections', '/contact-us'].includes(path);
   const copy = getEditorialPageCopy(path);
   const storiesByDate = [...snapshot.stories].sort((a, b) => b.date.localeCompare(a.date));
-  return <Shell><SeoHead title={`${title} — Global AI News`} description={copy.description} path={path} indexable={!isUnverifiedTrustPage} /><main data-testid={isArchive ? 'published-archive' : `editorial-page-${path.slice(1)}`} className={`${container} min-h-[60vh] max-w-[1180px] py-14 md:py-20`}>
-    <p className="eyebrow text-primary">{isArchive ? `${storiesByDate.length} published stories` : 'Global AI News · Editorial standards'}</p>
+  const eyebrow = isArchive
+    ? `${storiesByDate.length} published stories`
+    : path === '/authors'
+      ? 'Global AI News · Contributors'
+      : ['/privacy', '/terms'].includes(path)
+        ? 'Global AI News · Publication policies'
+        : 'Global AI News · Editorial standards';
+  return <Shell><SeoHead title={`${title} — Global AI News`} description={copy.description} path={path} /><main data-testid={isArchive ? 'published-archive' : `editorial-page-${path.slice(1)}`} className={`${container} min-h-[60vh] max-w-[1180px] py-14 md:py-20`}>
+    <p className="eyebrow text-primary">{eyebrow}</p>
     <h1 className="mt-6 max-w-4xl font-serif text-6xl leading-[.88] md:text-8xl">{title}</h1>
     <p className="mt-7 max-w-3xl border-t border-foreground/15 pt-5 text-lg leading-8 text-muted-foreground">{copy.intro}</p>
     {isArchive ? <section className="mt-10"><SectionLabel>Published archive</SectionLabel>{storiesByDate.length ? storiesByDate.map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} />) : <p className="py-8 text-sm text-muted-foreground">No published stories are available in the current newsroom snapshot.</p>}</section> : <div className="mt-10 max-w-3xl">{copy.sections.map((section) => <section key={section.heading} className="border-t border-foreground/15 py-6"><h2 className="font-serif text-3xl">{section.heading}</h2><p className="mt-3 text-base leading-7 text-muted-foreground">{section.body}</p></section>)}</div>}

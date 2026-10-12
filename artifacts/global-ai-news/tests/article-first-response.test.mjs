@@ -417,8 +417,8 @@ async function assertContactAlias() {
     const destination = await fetch(`${webOrigin}${route}`);
     const html = await destination.text();
     assert.equal(destination.status, 200, `${route} must resolve to its pending page`);
-    assert.equal(destination.headers.get('x-robots-tag'), 'noindex');
-    assert.match(html, /name="robots" content="noindex,follow"/i);
+    assert.equal(destination.headers.get('x-robots-tag'), null, `${route} must not send a noindex header`);
+    assert.doesNotMatch(html, /name="robots" content="noindex,follow"/i, `${route} must remain indexable`);
     assert.match(html, copy, `${route} must render its shared editorial copy`);
   }
 }

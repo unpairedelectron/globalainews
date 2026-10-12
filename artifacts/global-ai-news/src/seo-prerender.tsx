@@ -632,6 +632,9 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
     '/code-of-ethics': 'Code of ethics',
     '/corrections': 'Corrections',
     '/contact-us': 'Contact us',
+    '/privacy': 'Privacy notice',
+    '/terms': 'Terms of use',
+    '/authors': 'Authors',
   };
   if (route === '/search') {
     return (
@@ -662,7 +665,9 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
           <p className="mt-7 max-w-3xl border-t border-foreground/15 pt-5 text-lg leading-8 text-muted-foreground">{copy.intro}</p>
           {isArchive
             ? <section className="mt-10"><h2 className="eyebrow mb-5 text-primary">Published archive</h2>{archivedStories.length ? <StoryList stories={archivedStories} authors={authors} /> : <p className="border-t border-foreground/15 py-6 text-sm text-muted-foreground">No published stories are available in the current newsroom snapshot.</p>}</section>
-            : <div className="mt-10 max-w-3xl">{copy.sections.map((section) => <section key={section.heading} className="border-t border-foreground/15 py-6"><h2 className="font-serif text-3xl">{section.heading}</h2><p className="mt-3 text-base leading-7 text-muted-foreground">{section.body}</p></section>)}</div>}
+             : <div className="mt-10 max-w-3xl">{copy.sections.map((section) => <section key={section.heading} className="border-t border-foreground/15 py-6"><h2 className="font-serif text-3xl">{section.heading}</h2><p className="mt-3 text-base leading-7 text-muted-foreground">{section.body}</p></section>)}
+              {copy.relatedLinks?.length ? <nav aria-label="Related publication pages" className="mt-8 flex flex-wrap gap-3 border-t border-foreground/15 pt-6">{copy.relatedLinks.map((link) => <a key={link.href} href={`${link.href}/`} className="flex min-h-11 items-center border border-foreground/15 px-4 text-sm hover:border-primary hover:text-primary">{link.label}</a>)}</nav> : null}
+             </div>}
         </main>
       </div>
     );
@@ -685,9 +690,6 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
       ? [latestStory, ...stories.filter((story) => story.slug !== latestStory.slug).sort((a, b) => b.date.localeCompare(a.date))]
       : [];
     const [lead, ...remainingStories] = orderedStories;
-    const researchRecord = snapshot.researchRecords.find((record) => record.status === 'published' && record.storySlug === lead?.slug);
-    const dataProduct = snapshot.dataProducts.find((product) => product.status === 'published' && product.storySlugs.includes(lead?.slug ?? ''));
-    const evidenceRows = (dataProduct?.observations ?? []).slice().sort((a, b) => b.reportedOn.localeCompare(a.reportedOn)).slice(0, 4);
     return (
       <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
         <header className="flex items-center justify-between border-b border-foreground/20 py-5">
@@ -727,48 +729,20 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
                   <h1 className="mt-5 max-w-3xl font-serif text-[3.7rem] leading-[.83] tracking-[-.04em] sm:text-7xl md:text-[6.6rem]">Know what<br /><em className="text-primary">changed.</em></h1>
                   <p className="mt-7 max-w-md text-lg leading-7 text-muted-foreground">What happened, why it matters, and the evidence that lets you check.</p>
                 </div>
-                {lead && <div className="mt-10 border-t border-foreground/15 pt-4">
-                  <p className="eyebrow text-primary">{lead.contentType ?? getReaderFacingContentType(lead.classification)} · {lead.category}</p>
-                  <a href={`/article/${lead.slug}/`} className="group block">
-                    <h2 className="mt-3 max-w-2xl font-serif text-4xl leading-[.9] transition-colors group-hover:text-primary md:text-6xl">{lead.title}</h2>
-                    <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">{lead.dek}</p>
-                  </a>
-                  <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Published <time dateTime={lead.date}>{formatEditorialDate(lead.date)}</time>
-                    {lead.dateModified && lead.dateModified !== lead.date && <> · Updated <time dateTime={lead.dateModified}>{formatEditorialDate(lead.dateModified)}</time></>}
-              {' · '}{getStoryReadTime(lead)} · Global AI News Editorial Desk
-                  </p>
-                </div>}
               </div>
-              {lead ? <aside aria-label="Evidence from the lead report" className="border border-foreground/15 bg-surface-muted/70 p-5 md:p-7">
-                <div className="flex flex-wrap items-start justify-between gap-3 border-b border-foreground/15 pb-4">
-                  <div><p className="eyebrow text-primary">Evidence snapshot</p><p className="mt-2 max-w-sm font-serif text-2xl leading-tight">What the public record does—and doesn’t—establish</p></div>
-                  <span className="border border-foreground/20 px-2 py-1 font-mono text-[10px] uppercase tracking-widest">Not live inventory</span>
-                </div>
-                <div className="grid grid-cols-2 gap-4 border-b border-foreground/15 py-4 text-xs sm:grid-cols-3">
-                  <div><span className="eyebrow text-muted-foreground">Primary records</span><strong className="mt-1 block font-serif text-2xl">{lead.evidenceSummary.primarySources}</strong></div>
-                  <div><span className="eyebrow text-muted-foreground">Other confirmations</span><strong className="mt-1 block font-serif text-2xl">{lead.evidenceSummary.independentConfirmations}</strong></div>
-                  <div><span className="eyebrow text-muted-foreground">Confidence</span><strong className="mt-1 block font-mono text-sm">{lead.evidenceSummary.confidence}</strong></div>
-                </div>
-                {evidenceRows.length > 0 && <div className="pt-4">
-                  <div className="mb-2 flex items-center justify-between gap-2"><p className="eyebrow text-primary">Dated claims · separate stages</p><span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">Reported date · source</span></div>
-                  <ol className="divide-y divide-foreground/10">
-                    {evidenceRows.map((item) => {
-                      const source = sources.find((candidate) => candidate.slug === item.sourceSlug);
-                      return <li key={item.id} className="grid grid-cols-[1fr_auto] gap-3 py-3">
-                        <div><p className="text-sm leading-tight">{item.quantityLabel} GPUs <span className="text-muted-foreground">· {item.status.replaceAll('-', ' ')}</span></p><p className="mt-1 text-xs text-muted-foreground">{source?.publisher ?? source?.name ?? 'Source record'} · <time dateTime={item.reportedOn}>{formatEditorialDate(item.reportedOn)}</time></p></div>
-                        <span className="self-center font-mono text-[9px] uppercase tracking-wider text-primary">{item.sourceKind === 'primary' ? 'Primary' : 'Independent'}</span>
-                      </li>;
-                    })}
-                  </ol>
-                </div>}
-                <p className="mt-4 text-xs leading-5 text-muted-foreground">{lead.evidenceSummary.note}</p>
-                <div className="mt-5 grid gap-2 border-t border-foreground/15 pt-4 sm:grid-cols-2">
-                  <a href={`/article/${lead.slug}/`} className="flex items-center justify-between border border-foreground/15 bg-background px-3 py-3 text-sm hover:border-primary hover:text-primary"><span>Read the report</span><span aria-hidden="true">↗</span></a>
-                  {researchRecord && <a href={`/research/${researchRecord.slug}/`} className="flex items-center justify-between border border-foreground/15 bg-background px-3 py-3 text-sm hover:border-primary hover:text-primary"><span>Research record</span><span aria-hidden="true">↗</span></a>}
-                  {dataProduct && <a href={`/data/${dataProduct.slug}/`} className="flex items-center justify-between border border-foreground/15 bg-background px-3 py-3 text-sm hover:border-primary hover:text-primary sm:col-span-2"><span>{dataProduct.title}</span><span aria-hidden="true">↗</span></a>}
-                </div>
-              </aside> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">There are no published stories in the newsroom snapshot.</p>}
+              {lead ? <article className="flex flex-col justify-center border-l border-foreground/20 py-4 pl-6 md:pl-9">
+                <p className="eyebrow text-primary">{lead.contentType ?? getReaderFacingContentType(lead.classification)} · {lead.category}</p>
+                <a href={`/article/${lead.slug}/`} className="group block">
+                  <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-[.95] transition-colors group-hover:text-primary md:text-6xl">{lead.title}</h2>
+                  <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">{lead.dek}</p>
+                </a>
+                <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Published <time dateTime={lead.date}>{formatEditorialDate(lead.date)}</time>
+                  {lead.dateModified && lead.dateModified !== lead.date && <> · Updated <time dateTime={lead.dateModified}>{formatEditorialDate(lead.dateModified)}</time></>}
+                  {' · '}{getStoryReadTime(lead)} · Global AI News Editorial Desk
+                </p>
+                <a href={`/article/${lead.slug}/`} className="mt-6 inline-flex min-h-11 w-fit items-center border-b border-primary pb-2 text-sm text-primary">Read the lead story <span className="ml-2" aria-hidden="true">↗</span></a>
+              </article> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">There are no published stories in the newsroom snapshot.</p>}
             </div>
           </section>
           <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.75fr_1.25fr] md:py-16">

@@ -687,7 +687,7 @@ async function renderRoute(route, width, height) {
   const canonicalReady = expectedCanonical
     ? `document.querySelector('link[rel="canonical"]')?.href === ${JSON.stringify(expectedCanonical)}`
     : 'true';
-  const newsroomRequestReady = route.startsWith('/amp/') || route === '/reports' || route === '/about-us'
+  const newsroomRequestReady = route.startsWith('/amp/') || route === '/reports' || ['/about-us', '/code-of-ethics', '/corrections', '/contact-us', '/privacy', '/terms', '/authors'].includes(route)
     ? 'true'
     : `performance.getEntriesByType('resource').some((entry) => new URL(entry.name, location.href).pathname.endsWith('/api/newsroom/content') && entry.responseEnd > 0)`;
   await waitForBrowserCondition(
@@ -2791,36 +2791,51 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       `${route}: initial HTML must explicitly prevent indexing before JavaScript runs`,
     );
   }
-  const publicNoindexRoutes = [
-    '/search',
-    '/about-us',
-    '/code-of-ethics',
-    '/corrections',
-    '/contact-us',
-  ];
-  const editorialPageCopy = {
-    '/about-us': /Who speaks for the publication/,
-    '/code-of-ethics': /AI-assisted work/,
-    '/corrections': /No approved public corrections or contact channel is available/i,
-    '/contact-us': /No approved public contact address or working contact form has been verified/i,
-  };
+  const publicNoindexRoutes = ['/search'];
   for (const route of publicNoindexRoutes) {
     assert.equal(
       metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
       false,
-      `${route}: utility/editorial-input route must be non-indexable`,
+      `${route}: utility route must be non-indexable`,
     );
     const { response, body } = await fetchText(route);
     assert.equal(response.status, 200, `${route}: direct non-indexable route failed`);
     assert.match(body, /<meta name="robots" content="noindex,follow"/, `${route}: initial HTML must explicitly prevent indexing`);
     assert.match(body, /<main\b/, `${route}: initial HTML is missing page content`);
     assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing the newsroom bootstrap marker`);
-    if (route === '/search') {
-      assert.match(body, /name="q"/, 'search route is missing a usable initial HTML search form');
-    } else {
-      assert.match(body, editorialPageCopy[route], `${route}: shared editorial copy is missing`);
-      assert.doesNotMatch(body, /Latest stories/, `${route}: editorial-input placeholder must not present unrelated stories`);
-    }
+    assert.match(body, /name="q"/, 'search route is missing a usable initial HTML search form');
+  }
+  const indexableEditorialRoutes = [
+    '/about-us',
+    '/code-of-ethics',
+    '/corrections',
+    '/contact-us',
+    '/privacy',
+    '/terms',
+    '/authors',
+  ];
+  const editorialPageCopy = {
+    '/about-us': /Who speaks for the publication/,
+    '/code-of-ethics': /AI-assisted work/,
+    '/corrections': /No approved public corrections or contact channel is available/i,
+    '/contact-us': /No approved public contact address or working contact form has been verified/i,
+    '/privacy': /provisional disclosure, not a complete privacy policy/i,
+    '/terms': /placeholder, not a complete agreement/i,
+    '/authors': /eight published stories to the Global AI News Editorial Desk/i,
+  };
+  for (const route of indexableEditorialRoutes) {
+    assert.notEqual(
+      metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
+      false,
+      `${route}: public trust or publisher-information page must be indexable`,
+    );
+    const { response, body } = await fetchText(route);
+    assert.equal(response.status, 200, `${route}: direct public route failed`);
+    assert.doesNotMatch(body, /<meta name="robots" content="noindex,follow"/, `${route}: public trust page must not be blocked from indexing`);
+    assert.match(body, /<main\b/, `${route}: initial HTML is missing page content`);
+    assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing the newsroom bootstrap marker`);
+    assert.match(body, editorialPageCopy[route], `${route}: shared editorial copy is missing`);
+    assert.doesNotMatch(body, /Latest stories/, `${route}: editorial-information placeholder must not present unrelated stories`);
   }
   const archiveMetadata = metadataManifest.routes.find((metadata) => metadata.path === '/archive');
   assert.ok(archiveMetadata, 'published archive is missing public SEO metadata');

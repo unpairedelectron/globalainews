@@ -1,1 +1,8 @@
 old_url,action,new_url_or_reason
+https://www.globalainews.in/robots.txt,Updated crawler directives,"Disallow /api/, /insights/, /sign-in/, /sign-up/; keep public pages crawlable"
+https://www.globalainews.in/,Removed restrictive maximum-scale viewport,"Restored pinch zoom while keeping responsive width and initial scale"
+https://www.globalainews.in/,Replaced the homepage evidence snapshot with the current lead story,"Preserved the feature headline, publication date, summary, and article link in first-response and hydrated views"
+https://www.globalainews.in/about-us,Removed noindex from public editorial trust pages,"About, ethics, corrections, and contact are indexable in workspace HTML; no contact channel was invented"
+https://www.globalainews.in/privacy,Added an interim privacy disclosure,"States the newsletter signup facts and explicitly identifies publisher details still requiring approval"
+https://www.globalainews.in/terms,Added an interim terms notice,"Clearly marked as a placeholder; no publisher terms were invented"
+https://www.globalainews.in/authors,Added an author directory,"Reports the current organizational byline and does not invent individual biographies"

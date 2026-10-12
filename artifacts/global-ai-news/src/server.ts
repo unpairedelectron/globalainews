@@ -209,17 +209,20 @@ const pendingEditorialRoutes = [
   '/code-of-ethics',
   '/corrections',
   '/contact-us',
+  '/privacy',
+  '/terms',
+  '/authors',
 ];
 
 app.get(pendingEditorialRoutes, async (request, response): Promise<void> => {
   const route = new URL(request.originalUrl, 'http://localhost').pathname.replace(/\/+$/, '') || '/';
   try {
     const snapshot = await fetchNewsroomContentSnapshot(process.env.NEWSROOM_API_ORIGIN);
-    const metadata = { ...getSeoMetadata(route, snapshot.stories), indexable: false };
+    const metadata = getSeoMetadata(route, snapshot.stories);
     response.status(200);
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Cache-Control', 'no-store');
-    response.setHeader('X-Robots-Tag', 'noindex');
+    if (metadata.indexable === false) response.setHeader('X-Robots-Tag', 'noindex');
     response.send(renderSeoRouteHtml(baseHtml, route, metadata, snapshot));
   } catch (error) {
     process.stderr.write(

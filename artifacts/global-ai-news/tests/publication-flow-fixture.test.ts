@@ -339,7 +339,11 @@ async function runMobilePerformanceAudit(origin: string) {
       if (['/reports', '/about-us'].includes(route)) {
         assert.equal(pageMetrics.result.value.moduleScriptCount, 0, `${route}: static first response must not boot the mismatched SPA shell`);
         assert.equal(pageMetrics.result.value.prerenderMarkerPresent, true, `${route}: static first response lost its prerender marker`);
-        assert.equal(jsResources.length, 0, `${route}: static first response unexpectedly downloaded JavaScript`);
+        assert.equal(
+          jsResources.length,
+          0,
+          `${route}: static first response unexpectedly downloaded JavaScript: ${jsResources.map((resource) => resource.url).join(', ')}`,
+        );
         assert.ok(
           measuredPageMetrics.lcpMs !== null && measuredPageMetrics.lcpMs <= 2_200,
           `${route}: static first-response LCP exceeded the 2.2 s mobile budget (${measuredPageMetrics.lcpMs} ms)`,
