@@ -24,6 +24,7 @@ const slugs = {
 };
 const publishedTitle = 'A live article renders before browser scripts run';
 const publishedDek = 'A temporary publication fixture verifies first-response article metadata and visible content.';
+const publishedBodyMarker = `FIRST_RESPONSE_BODY_${fixtureToken}`;
 const missingAuthorTitle = 'A published story with no author record';
 const longCopy = Array(120)
   .fill('The temporary newsroom article contains enough editorial copy to pass publication readiness and verify complete server-rendered article content.')
@@ -63,15 +64,23 @@ const storyPayload = {
   cadence: 'daily',
   category: 'Field Notes',
   author: 'lena-hoff',
-  body: longCopy,
+  body: `${longCopy} ${publishedBodyMarker}`,
 };
 
 let apiProcess;
 let webProcess;
 let devWebProcess;
+let failureApiServer;
+let failureWebProcess;
+let failureDevWebProcess;
 let apiOrigin;
 let webOrigin;
 let devWebOrigin;
+let failureApiOrigin;
+let failureWebOrigin;
+let failureDevWebOrigin;
+let failureApiRequests = [];
+let failureApiUnavailable = false;
 
 async function findFreePort() {
   return new Promise((resolve, reject) => {
@@ -99,11 +108,21 @@ function terminate(processHandle) {
 
 async function stopProcess(processHandle) {
   if (!processHandle?.pid) return;
+  if (processHandle.exitCode !== null || processHandle.signalCode !== null) return;
+  const exited = once(processHandle, 'exit').catch(() => {});
   terminate(processHandle);
   await Promise.race([
-    once(processHandle, 'exit'),
+    exited,
     new Promise((resolve) => setTimeout(resolve, 5_000)),
   ]);
+  if (processHandle.exitCode === null && processHandle.signalCode === null) {
+    try {
+      process.kill(-processHandle.pid, 'SIGKILL');
+    } catch {
+      processHandle.kill('SIGKILL');
+    }
+    await exited;
+  }
 }
 
 async function waitForHttp(url, processHandle) {
@@ -143,26 +162,44 @@ async function startApi() {
 }
 
 async function startWeb() {
+  const started = await startWebAtApi(apiOrigin);
+  webOrigin = started.origin;
+  webProcess = started.processHandle;
+}
+
+async function startWebAtApi(newsroomApiOrigin) {
   const port = await findFreePort();
-  webOrigin = `http://127.0.0.1:${port}`;
-  webProcess = spawn('node', [webServer], {
+  const origin = `http://127.0.0.1:${port}`;
+  const processHandle = spawn('node', [webServer], {
     cwd: root,
     detached: true,
     env: {
       ...process.env,
       NODE_ENV: 'test',
-      NEWSROOM_API_ORIGIN: apiOrigin,
+      NEWSROOM_API_ORIGIN: newsroomApiOrigin,
       PORT: String(port),
     },
     stdio: ['ignore', 'ignore', 'inherit'],
   });
-  await waitForHttp(`${webOrigin}/`, webProcess);
+  try {
+    await waitForHttp(`${origin}/`, processHandle);
+  } catch (error) {
+    await stopProcess(processHandle);
+    throw error;
+  }
+  return { origin, processHandle };
 }
 
 async function startDevWeb() {
+  const started = await startDevWebAtApi(apiOrigin);
+  devWebOrigin = started.origin;
+  devWebProcess = started.processHandle;
+}
+
+async function startDevWebAtApi(newsroomApiOrigin) {
   const port = await findFreePort();
-  devWebOrigin = `http://127.0.0.1:${port}`;
-  devWebProcess = spawn(
+  const origin = `http://127.0.0.1:${port}`;
+  const processHandle = spawn(
     'pnpm',
     [
       '--filter',
@@ -181,13 +218,132 @@ async function startDevWeb() {
         ...process.env,
         BASE_PATH: process.env.BASE_PATH ?? '/',
         NODE_ENV: 'development',
-        NEWSROOM_API_ORIGIN: apiOrigin,
+        NEWSROOM_API_ORIGIN: newsroomApiOrigin,
         PORT: String(port),
       },
       stdio: ['ignore', 'ignore', 'inherit'],
     },
   );
-  await waitForHttp(`${devWebOrigin}/`, devWebProcess);
+  try {
+    await waitForHttp(`${origin}/`, processHandle);
+  } catch (error) {
+    await stopProcess(processHandle);
+    throw error;
+  }
+  return { origin, processHandle };
+}
+
+async function startApiFailureFixture() {
+  const port = await findFreePort();
+  failureApiOrigin = `http://127.0.0.1:${port}`;
+  failureApiRequests = [];
+  failureApiUnavailable = false;
+  failureApiServer = createServer((request, response) => {
+    failureApiRequests.push({
+      route: new URL(request.url ?? '/', failureApiOrigin).pathname,
+      unavailable: failureApiUnavailable,
+    });
+    if (!failureApiUnavailable) {
+      void fetch(`${apiOrigin}${request.url ?? '/'}`)
+        .then(async (upstream) => {
+          response.writeHead(upstream.status, {
+            'content-type': upstream.headers.get('content-type') ?? 'application/json',
+          });
+          response.end(Buffer.from(await upstream.arrayBuffer()));
+        })
+        .catch(() => {
+          response.writeHead(502, { 'content-type': 'text/plain; charset=utf-8' });
+          response.end('CONTROLLED_NEWSROOM_API_PROXY_FAILURE');
+        });
+      return;
+    }
+    response.writeHead(503, { 'content-type': 'text/plain; charset=utf-8' });
+    response.end('CONTROLLED_NEWSROOM_API_FAILURE_FIXTURE');
+  });
+  await new Promise((resolve, reject) => {
+    failureApiServer.once('error', reject);
+    failureApiServer.listen(port, '127.0.0.1', resolve);
+  });
+}
+
+async function stopApiFailureFixture() {
+  if (!failureApiServer?.listening) return;
+  await new Promise((resolve, reject) => {
+    failureApiServer.close((error) => (error ? reject(error) : resolve()));
+  });
+  failureApiServer = undefined;
+}
+
+async function assertTemporaryArticleUnavailable(origin, environment) {
+  const response = await getArticleFrom(origin, slugs.published);
+  const html = await response.text();
+  assert.equal(response.status, 503, `${environment} must return HTTP 503 when the newsroom API is unavailable`);
+  assert.equal(response.headers.get('x-robots-tag'), 'noindex', `${environment} must send a noindex header`);
+  assert.equal(response.headers.get('cache-control'), 'no-store', `${environment} must not cache the outage response`);
+  assert.match(html, /name="robots" content="noindex,follow"/i, `${environment} HTML must be noindex`);
+  assert.equal(
+    html.match(/<title>([\s\S]*?)<\/title>/i)?.[1],
+    'Article temporarily unavailable — Global AI News',
+    `${environment} must render the temporary-unavailable title`,
+  );
+  assert.match(html, /<h1>Article temporarily unavailable<\/h1>/i);
+  assert.doesNotMatch(html, /<link\b[^>]*rel=["']canonical["']/i, `${environment} must not expose a stale canonical`);
+  assert.doesNotMatch(html, /<meta\b[^>]*(?:property=["']og:url["']|name=["']twitter:url["'])/i);
+  for (const staleStoryValue of [
+    publishedTitle,
+    publishedDek,
+    publishedBodyMarker,
+    `/article/${slugs.published}`,
+    'CONTROLLED_NEWSROOM_API_FAILURE_FIXTURE',
+    'CONTROLLED_NEWSROOM_API_PROXY_FAILURE',
+  ]) {
+    assert.ok(
+      !html.includes(staleStoryValue),
+      `${environment} outage response must not include ${staleStoryValue}`,
+    );
+  }
+}
+
+async function assertArticleFailureResponses() {
+  await startApiFailureFixture();
+  const production = await startWebAtApi(failureApiOrigin);
+  failureWebOrigin = production.origin;
+  failureWebProcess = production.processHandle;
+  const development = await startDevWebAtApi(failureApiOrigin);
+  failureDevWebOrigin = development.origin;
+  failureDevWebProcess = development.processHandle;
+
+  const builtArticlePath = path.join(webDist, 'public', 'article', slugs.published, 'index.html');
+  assert.equal(
+    existsSync(builtArticlePath),
+    false,
+    'outage fixture article must not have a prerendered file that bypasses the newsroom API',
+  );
+  for (const [origin, environment] of [
+    [failureWebOrigin, 'production'],
+    [failureDevWebOrigin, 'Vite development'],
+  ]) {
+    const warmResponse = await getArticleFrom(origin, slugs.published);
+    const warmHtml = await warmResponse.text();
+    assert.equal(warmResponse.status, 200, `${environment} should render the article before the outage`);
+    assert.match(warmHtml, new RegExp(escapeRegExp(publishedTitle)));
+    assert.match(warmHtml, new RegExp(escapeRegExp(publishedBodyMarker)));
+  }
+
+  failureApiUnavailable = true;
+  await new Promise((resolve) => setTimeout(resolve, 1_100));
+  await assertTemporaryArticleUnavailable(failureWebOrigin, 'production');
+  await assertTemporaryArticleUnavailable(failureDevWebOrigin, 'Vite development');
+  assert.ok(
+    failureApiRequests.filter(
+      ({ route, unavailable }) => route === '/api/newsroom/content' && unavailable,
+    ).length >= 2,
+    'both web servers must retry the snapshot after the outage begins',
+  );
+  assert.ok(
+    failureApiRequests.every(({ route }) => route === '/api/newsroom/content'),
+    'the API outage fixture should receive only public snapshot requests',
+  );
 }
 
 async function requestApi(route, options = {}) {
@@ -1056,12 +1212,18 @@ async function main() {
     await startWeb();
     await startDevWeb();
     await testRawArticleResponses();
+    await assertArticleFailureResponses();
     await assertContactAlias();
     process.stdout.write('PASS: article first-response raw HTML in production and Vite development, publication gates, and crawler parity\n');
   } finally {
-    await stopProcess(devWebProcess);
-    await stopProcess(webProcess);
-    await stopProcess(apiProcess);
+    await Promise.all([
+      stopProcess(failureDevWebProcess),
+      stopProcess(failureWebProcess),
+      stopProcess(devWebProcess),
+      stopProcess(webProcess),
+      stopProcess(apiProcess),
+    ]);
+    await stopApiFailureFixture();
     await cleanupFixtures();
   }
 }

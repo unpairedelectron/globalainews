@@ -38,3 +38,9 @@ Do not change live editorial records, trigger publishing automation, or deploy w
 **Why:** The user requires approval before live editorial or release activity; workspace tests must not be mistaken for authorization to publish.
 
 **How to apply:** Keep code changes, builds, and simulated release tests local. Ask for authorization before any operation that mutates live editorial data, runs publishing automation, or deploys.
+
+Dynamic article first responses must not use a last-known-good newsroom snapshot after a failed refresh. Return a noindex temporary-unavailable response instead; other snapshot consumers can retain stale fallback where their behavior allows it.
+
+**Why:** A stale article snapshot can expose outdated title, canonical, or body content as if it were current after an upstream failure.
+
+**How to apply:** Disable last-known-good fallback only on the production and Vite article HTML render paths, and verify the outage response after priming each renderer's cache.

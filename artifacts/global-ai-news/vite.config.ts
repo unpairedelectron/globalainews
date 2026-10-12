@@ -831,6 +831,7 @@ function articleResponsePlugin() {
             {
               requestId,
               route: pathname,
+              allowLastKnownGood: false,
               onEvent: (diagnostic) =>
                 writeStructuredArticleLog('article_snapshot_lookup', {
                   requestId,

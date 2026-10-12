@@ -25,6 +25,7 @@ export interface NewsroomSnapshotFetchOptions {
   requestId?: string;
   route?: string;
   timeoutMs?: number;
+  allowLastKnownGood?: boolean;
   onEvent?: (event: NewsroomSnapshotDiagnosticEvent) => void;
 }
 
@@ -375,6 +376,7 @@ export async function fetchNewsroomContentSnapshot(
         ? Math.max(0, failedAt - lastKnownGood.fetchedAt)
         : undefined;
       if (
+        options.allowLastKnownGood !== false &&
         lastKnownGood &&
         staleAgeMs !== undefined &&
         staleAgeMs <= PUBLIC_SNAPSHOT_MAX_STALE_MS

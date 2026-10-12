@@ -216,6 +216,7 @@ app.use((request, response, next) => {
       {
         requestId,
         route: pathname,
+        allowLastKnownGood: false,
         onEvent: (diagnostic) =>
           writeStructuredRenderLog('article_snapshot_lookup', {
             requestId,
