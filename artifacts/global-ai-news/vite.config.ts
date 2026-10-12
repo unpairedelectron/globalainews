@@ -18,10 +18,12 @@ import {
   type SeoMetadataManifest,
 } from './src/seo-metadata';
 import {
+  ARTICLE_NOT_FOUND_HTML,
   NewsroomSnapshotFetchError,
   getPrerenderedArticleHtmlPath,
   fetchNewsroomContentSnapshot,
   hasPrerenderedArticleHtml,
+  parseArticleRoutePath,
   renderArticleHtml,
 } from './src/server/article-html';
 import { renderSeoRouteHtml } from './src/seo-html';
@@ -732,6 +734,16 @@ function articleResponsePlugin() {
     configureServer(server: ViteDevServer) {
       server.middlewares.use((request, response, next) => {
         const requestUrl = request.url ?? '/';
+        const rawPathname = requestUrl.split(/[?#]/, 1)[0] || '/';
+        const articlePath = parseArticleRoutePath(rawPathname);
+        if (articlePath.matched && !articlePath.slug) {
+          response.statusCode = 404;
+          response.setHeader('Cache-Control', 'no-store');
+          response.setHeader('Content-Type', 'text/html; charset=utf-8');
+          response.setHeader('X-Robots-Tag', 'noindex');
+          response.end(request.method === 'HEAD' ? undefined : ARTICLE_NOT_FOUND_HTML);
+          return;
+        }
         const pathname = new URL(requestUrl, 'http://localhost').pathname;
         const cleanPath = pathname.replace(/\/+$/, '') || '/';
         const query = requestUrl.includes('?') ? requestUrl.slice(requestUrl.indexOf('?')) : '';
@@ -751,7 +763,7 @@ function articleResponsePlugin() {
             return;
           }
         }
-        if (pathname !== '/article' && !pathname.startsWith('/article/')) {
+        if (!articlePath.matched) {
           next();
           return;
         }

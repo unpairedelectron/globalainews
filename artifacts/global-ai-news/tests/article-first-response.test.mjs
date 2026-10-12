@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { createServer } from 'node:http';
+import { createServer, request as httpRequest } from 'node:http';
 import { execFile, spawn } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { promisify } from 'node:util';
@@ -324,6 +324,52 @@ async function getArticleFrom(
   return fetch(`${origin}/article/${slug}`, {
     headers: { 'user-agent': userAgent },
   });
+}
+
+async function getArticleFromRawPath(origin, rawPath) {
+  const url = new URL(origin);
+  return new Promise((resolve, reject) => {
+    const request = httpRequest({
+      protocol: url.protocol,
+      hostname: url.hostname,
+      port: url.port,
+      method: 'GET',
+      path: rawPath,
+    }, (response) => {
+      const chunks = [];
+      response.on('data', (chunk) => chunks.push(chunk));
+      response.on('end', () => resolve({
+        status: response.statusCode,
+        headers: response.headers,
+        body: Buffer.concat(chunks).toString('utf8'),
+      }));
+    });
+    request.once('error', reject);
+    request.end();
+  });
+}
+
+async function assertMalformedArticleResponses(origin, environment) {
+  const malformedPaths = [
+    '/article/encoded%2Fseparator',
+    '/article/encoded%5Cseparator',
+    `/article/%2e%2e%2f${slugs.published}`,
+    '/article/%2e%2e',
+    '/article/bad%ZZ',
+  ];
+
+  for (const rawPath of malformedPaths) {
+    const response = await getArticleFromRawPath(origin, rawPath);
+    assert.equal(response.status, 404, `${environment} ${rawPath} must return HTTP 404`);
+    assert.equal(response.headers['x-robots-tag'], 'noindex', `${environment} ${rawPath} must send noindex`);
+    assert.match(response.headers['content-type'] ?? '', /text\/html/i);
+    assert.match(response.body, /<title>Article not found — Global AI News<\/title>/);
+    assert.match(response.body, /<meta name="robots" content="noindex,follow">/i);
+    assert.doesNotMatch(response.body, /id=["']root["']/i, `${environment} ${rawPath} must not return the SPA root`);
+    assert.doesNotMatch(response.body, /type=["']module["']/i, `${environment} ${rawPath} must not return app scripts`);
+    assert.doesNotMatch(response.body, new RegExp(escapeRegExp(publishedTitle)));
+    assert.doesNotMatch(response.body, /PRIVATE_ARTICLE_BODY_/);
+  }
 }
 
 async function assertHiddenArticleResponses(origin, environment) {
@@ -965,6 +1011,8 @@ async function testRawArticleResponses() {
 
   await assertHiddenArticleResponses(webOrigin, 'production');
   await assertHiddenArticleResponses(devWebOrigin, 'Vite development');
+  await assertMalformedArticleResponses(webOrigin, 'production');
+  await assertMalformedArticleResponses(devWebOrigin, 'Vite development');
   const unknownAmpResponse = await fetch(`${webOrigin}/amp/article/missing-article-${fixtureToken}/`);
   const unknownAmpHtml = await unknownAmpResponse.text();
   assert.equal(unknownAmpResponse.status, 404, 'unknown AMP article must return HTTP 404');

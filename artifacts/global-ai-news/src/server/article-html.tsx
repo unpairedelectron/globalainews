@@ -38,6 +38,31 @@ export class NewsroomSnapshotFetchError extends Error {
   }
 }
 
+export const ARTICLE_NOT_FOUND_HTML =
+  '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Article not found — Global AI News</title></head><body><main><h1>Article not found</h1></main></body></html>';
+
+export function parseArticleRoutePath(
+  pathname: string,
+): { matched: false } | { matched: true; slug?: string } {
+  if (pathname !== '/article' && !pathname.startsWith('/article/')) {
+    return { matched: false };
+  }
+
+  const match = pathname.match(/^\/article\/([^/]+)\/?$/);
+  if (!match) return { matched: true };
+
+  let slug: string;
+  try {
+    slug = decodeURIComponent(match[1]);
+  } catch {
+    return { matched: true };
+  }
+  if (!slug || slug === '.' || slug === '..' || /[\\/]/.test(slug)) {
+    return { matched: true };
+  }
+  return { matched: true, slug };
+}
+
 const PUBLIC_SNAPSHOT_FRESH_MS = 1_000;
 const PUBLIC_SNAPSHOT_MAX_STALE_MS = 60_000;
 const DEFAULT_NEWSROOM_API_TIMEOUT_MS = 5_000;

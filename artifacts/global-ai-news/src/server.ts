@@ -8,9 +8,11 @@ import express, { type Request, type Response } from 'express';
 
 import { renderAmpArticleDocument } from './amp-html';
 import {
+  ARTICLE_NOT_FOUND_HTML,
   fetchNewsroomContentSnapshot,
   hasPrerenderedArticleHtml,
   NewsroomSnapshotFetchError,
+  parseArticleRoutePath,
   renderArticleHtml,
 } from './server/article-html';
 import { getSeoMetadata } from './seo-metadata';
@@ -155,10 +157,18 @@ function writeStructuredRenderLog(event: string, fields: Record<string, unknown>
 }
 
 app.use((request, response, next) => {
-  const requestUrl = new URL(request.originalUrl, 'http://localhost');
-  const pathname = requestUrl.pathname;
-  if (pathname !== '/article' && !pathname.startsWith('/article/')) {
+  const rawPathname = request.originalUrl.split(/[?#]/, 1)[0] || '/';
+  const articlePath = parseArticleRoutePath(rawPathname);
+  if (!articlePath.matched) {
     next();
+    return;
+  }
+  if (!articlePath.slug) {
+    response.status(404);
+    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.setHeader('X-Robots-Tag', 'noindex');
+    response.send(request.method === 'HEAD' ? undefined : ARTICLE_NOT_FOUND_HTML);
     return;
   }
   if (request.method !== 'GET' && request.method !== 'HEAD') {
@@ -166,6 +176,8 @@ app.use((request, response, next) => {
     response.status(405).end();
     return;
   }
+
+  const pathname = new URL(request.originalUrl, 'http://localhost').pathname;
 
   const requestId = randomUUID();
   const startedAt = performance.now();
