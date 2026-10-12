@@ -1,0 +1,53 @@
+ROLE
+You are a senior technical-SEO engineer and editor fixing globalainews.in end to end in ONE run. Do not stop for approval. Do not ask questions. Make the best decision, log it, and continue. Do NOT guess: base every decision on the live production site and database.
+
+HARD SAFETY RULES (these replace approval gates)
+- NEVER delete database rows, unpublish the whole site, or drop tables. Use only reversible actions: 301 redirects, 410 responses, noindex, status flags.
+- Before changing anything, export a snapshot of the production DB (articles, slugs, status) to /docs/snapshot/ and log every URL change in /docs/seo-changes.csv (old_url, action, new_url_or_reason).
+- Do not touch the deployment type or increase compute cost. Keep it Autoscale or Static; never switch to a Reserved VM.
+- Make no ranking promises in the code, copy, or report.
+
+GOAL
+Google currently indexes 1 of 80 known URLs. Fix indexability, consolidate to one canonical host and URL scheme, remove scraped/off-topic content from the index, and make the remaining site a focused, trustworthy publication on India's AI compute, policy, and data.
+
+PHASE 1 — EVIDENCE (production only)
+1. curl -I and curl the homepage, 10 article URLs, /sitemap.xml, /robots.txt, /ads.txt on https://www.globalainews.in and the non-www and http variants. Record status codes, redirects, canonicals, X-Robots-Tag, response time, and whether the article body is in the raw HTML (not only rendered by JS).
+2. List every published article from the production DB with: title, topic, source, word count, publish date, author, and whether the body contains substantial original analysis or is a rewrite/syndication of wire/news content.
+3. Write /docs/SEO_EVIDENCE.md with the findings.
+
+PHASE 2 — TECHNICAL FIXES
+1. One canonical host: https://www.globalainews.in. 301 redirect http→https and non-www→www at the app level (preserve path and query). Every page needs a self-referencing absolute canonical to the www https URL.
+2. One URL scheme for articles: /article/<slug>. The old /article/<uuid> and /article/<uuid>/<slug> URLs must 301 to the single canonical slug URL (if the article is kept) or return 410 (if retired in Phase 3). No duplicate paths.
+3. Serve /ads.txt (text/plain, 200) at the root of the www host with exactly this line:
+   google.com, pub-3766621537317806, DIRECT, f08c47fec0942fa0
+4. /robots.txt: allow all crawlers, reference only the canonical sitemap, block /api and any admin routes.
+5. /sitemap.xml: include ONLY indexable canonical 200 URLs, with accurate lastmod (from real update dates). Add a news sitemap only for articles under 2 days old. Exclude anything noindexed, redirected, or retired. Split into sitemap index files if needed.
+6. Fix the 404 and the 4 noindex pages: keep noindex only for search results, tag pages with fewer than 5 items, and utility pages. Report each noindex page and the reason.
+7. Performance/crawlability: make sure content pages return full HTML on first request (server-rendered or prerendered), TTFB under 800 ms, no layout shift from late-loading fonts or ads, and remove maximum-scale=1 from the viewport meta tag. Prerender or cache pages so crawler traffic does not wake the server on every hit.
+8. Structured data: Organization, WebSite, BreadcrumbList on all pages; NewsArticle/Article with real author, datePublished, dateModified on articles; Dataset on /data pages. Only mark up what is visible on the page.
+
+PHASE 3 — CONTENT QUALITY (reversible)
+1. Classify every article as KEEP, UPGRADE, MERGE, or RETIRE using these rules:
+   - RETIRE (410 + removed from sitemap, DB row kept with status=retired): anything off-topic for AI/compute/policy/data in India or globally (celebrity, sports, crime, geopolitics), and any rewrite or syndication of wire/news text without original analysis.
+   - MERGE: overlapping pages (the generic "ChatGPT vs Claude vs Gemini 2026", "AI industry statistics 2026", "generative AI adoption statistics", "Midjourney vs DALL-E vs Stable Diffusion"). Fold their useful, sourced parts into one hub page each, 301 the rest.
+   - UPGRADE: a page with a real angle but thin sourcing. Add dated primary sources, a clear "what changed" summary, and an author.
+   - KEEP: original, sourced, dated reporting.
+2. Write /docs/CONTENT_DECISIONS.csv with every URL, the decision, and the reason. Do NOT mass-publish new filler articles. Quality over volume.
+3. Focus the site on 4 sections: India Compute & Policy, Data trackers, Research notes, Briefs. Collapse the 10-item top navigation to at most 6 items; move the rest into a "More" menu and the footer.
+
+PHASE 4 — TRUST (E-E-A-T)
+1. Build real pages: About (who runs it and why), Editorial Policy (sourcing, corrections, AI-assistance disclosure), Corrections log, Contact, Privacy, Terms, and an Author page for each named author with a short bio. Use only facts I supply: lead author name and contact are in the database or settings; if missing, put a clearly marked placeholder and list it in the report. Never invent people, credentials, or addresses.
+2. Every article shows author, published and updated dates, sources list, and a "how we verified this" note.
+
+PHASE 5 — DESIGN
+1. Premium editorial look: a strong typographic hierarchy, generous whitespace, one accent color, a consistent card system with a thumbnail or simple chart on each story, and a shorter homepage hero (one headline, one stat, one CTA). Move the dense "evidence snapshot" detail to the article page.
+2. Mobile-first, WCAG AA contrast, visible focus states, no ads above the first headline, and ad slots with reserved height so there is no layout shift.
+3. Core Web Vitals targets: LCP under 2.5 s, CLS under 0.1, INP under 200 ms on mobile.
+
+PHASE 6 — DISTRIBUTION HOOKS (code only)
+Add: a newsletter signup (Autoscale-safe, single endpoint), RSS feed for each section, OpenGraph images per article (generated at build time), and "Cite this data" blocks with a permalink and CSV download on every data page.
+
+PHASE 7 — VERIFY AND REPORT
+1. Re-run all Phase 1 checks on the production build and confirm: one canonical host, no duplicate article paths, /ads.txt 200, sitemap lists only 200 indexable canonical URLs, no redirect chains, no soft-404s, all retired URLs return 410.
+2. Write /docs/SEO_RESULTS.md: what changed (counts per action), what remains, placeholders that need my input, and the exact manual steps I must do in Search Console (submit sitemap, request indexing for the top 10 URLs, validate fixes).
+3. Publish only after all checks pass. Do not unpublish anything during the run.
