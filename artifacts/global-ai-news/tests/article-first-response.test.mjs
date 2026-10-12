@@ -981,11 +981,19 @@ async function testRawArticleResponses() {
   );
   const devPreRenderedResponse = await getArticleFrom(devWebOrigin, preRenderedStory.slug);
   assert.equal(devPreRenderedResponse.status, 200);
-  assert.equal(
-    await devPreRenderedResponse.text(),
+  const devPreRenderedHtml = await devPreRenderedResponse.text();
+  assert.notEqual(
+    devPreRenderedHtml,
     preRenderedHtml,
-    'Vite development must preserve existing pre-rendered article metadata and content unchanged',
+    'Vite development must transform the article shell instead of serving production HTML verbatim',
   );
+  assert.match(devPreRenderedHtml, /\/@vite\/client/, 'Vite development article is missing the Vite client');
+  assert.equal(
+    metaValue(devPreRenderedHtml, 'og:title'),
+    metaValue(preRenderedHtml, 'og:title'),
+    'Vite development article metadata drifted from the pre-rendered story',
+  );
+  assert.match(devPreRenderedHtml, /id="global-ai-prerender"/, 'Vite development article is missing its prerender marker');
 
   const canonical = `https://www.globalainews.in/article/${slugs.published}/`;
   const response = await getArticle(slugs.published);

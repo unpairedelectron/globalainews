@@ -187,8 +187,8 @@ async function runMobilePerformanceAudit(origin: string) {
       reject: (error: Error) => void;
       timeout: ReturnType<typeof setTimeout>;
     }>();
-    let requestInfo = new Map<string, { url: string; type: string; origin: string }>();
-    let completedResources: Array<{ url: string; type: string; origin: string; bytes: number }> = [];
+    let requestInfo = new Map<string, { url: string; type: string; origin: string; loaderId?: string }>();
+    let completedResources: Array<{ url: string; type: string; origin: string; bytes: number; loaderId?: string }> = [];
     socket.addEventListener('message', (event) => {
       const message = JSON.parse(String(event.data));
       if (message.id) {
@@ -203,11 +203,12 @@ async function runMobilePerformanceAudit(origin: string) {
         currentLoad?.();
         currentLoad = undefined;
       } else if (message.method === 'Network.responseReceived') {
-        const { requestId, response, type } = message.params;
+        const { requestId, response, type, loaderId } = message.params;
         requestInfo.set(requestId, {
           url: response.url,
           type: type ?? response.mimeType,
           origin: new URL(response.url).origin,
+          loaderId,
         });
       } else if (message.method === 'Network.loadingFinished') {
         const resource = requestInfo.get(message.params.requestId);
@@ -285,7 +286,8 @@ async function runMobilePerformanceAudit(origin: string) {
       requestInfo = new Map();
       completedResources = [];
       const loaded = new Promise<void>((resolve) => { currentLoad = resolve; });
-      await cdp('Page.navigate', { url: `${origin}${route}` });
+      const { loaderId } = await cdp('Page.navigate', { url: `${origin}${route}` });
+      assert.ok(loaderId, `Chrome did not return a navigation loader ID for ${route}`);
       let loadTimeout: ReturnType<typeof setTimeout> | undefined;
       try {
         await Promise.race([
@@ -325,8 +327,11 @@ async function runMobilePerformanceAudit(origin: string) {
         })()`,
       });
       const cdpBytes = completedResources.reduce((sum, resource) => sum + resource.bytes, 0);
-      const jsResources = completedResources.filter((resource) => resource.type === 'Script');
-      const imageResources = completedResources.filter((resource) => resource.type === 'Image');
+      // A request from the previous route can finish after navigation starts.
+      // Attribute resources by Chromium's loader ID, not by event completion time.
+      const routeResources = completedResources.filter((resource) => resource.loaderId === loaderId);
+      const jsResources = routeResources.filter((resource) => resource.type === 'Script');
+      const imageResources = routeResources.filter((resource) => resource.type === 'Image');
       const thirdPartyScripts = [...new Set(jsResources
         .filter((resource) => resource.origin !== origin)
         .map((resource) => resource.origin))];
