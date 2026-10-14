@@ -2858,7 +2858,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.match(privacyPage, /retention period/i);
   const termsPage = (await fetchText('/terms')).body;
   assert.match(termsPage, /placeholder, not a complete agreement/i);
-  assert.match(termsPage, /No approved terms covering permitted use, intellectual property, liability, or dispute handling/i);
+  assert.match(termsPage, /No approved terms covering permitted use, intellectual property, attribution, warranties, liability, governing law, or dispute handling/i);
 
   const authorsPage = (await fetchText('/authors')).body;
   assert.match(authorsPage, /data-testid="author-directory"/);
