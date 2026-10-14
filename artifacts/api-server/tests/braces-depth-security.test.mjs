@@ -3,54 +3,37 @@ import { createRequire } from "node:module";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const apiRequire = createRequire(new URL("../package.json", import.meta.url));
 const sandboxRequire = createRequire(new URL("../../mockup-sandbox/package.json", import.meta.url));
 
-function bracesFromDependencyChain(parentRequire, parentName) {
-  const parentEntry = parentRequire.resolve(parentName);
-  const parentModuleRequire = createRequire(parentEntry);
-  const micromatchEntry = parentModuleRequire.resolve("micromatch");
-  const micromatchRequire = createRequire(micromatchEntry);
+const mockupPackage = JSON.parse(
+  readFileSync(new URL("../../mockup-sandbox/package.json", import.meta.url), "utf8"),
+);
+const mockupDependencies = {
+  ...mockupPackage.dependencies,
+  ...mockupPackage.devDependencies,
+};
+const lockfile = readFileSync(new URL("../../../pnpm-lock.yaml", import.meta.url), "utf8");
 
-  return micromatchRequire("braces");
-}
+test("API development dependencies do not retain the middleware vulnerability path", () => {
+  const apiPackage = JSON.parse(
+    readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+  );
 
-const hostileBracePattern = `{`.repeat(101) + "value,other" + `}`.repeat(101);
-const hostileParenthesisPattern = `(`.repeat(101) + `)`.repeat(101);
+  assert.equal(apiPackage.dependencies["http-proxy-middleware"], undefined);
+  assert.equal(apiPackage.devDependencies["http-proxy-middleware"], undefined);
+});
 
-const dependencyChains = [
-  {
-    name: "development-only http-proxy-middleware dependency chain",
-    braces: bracesFromDependencyChain(apiRequire, "http-proxy-middleware"),
-  },
-  {
-    name: "development fast-glob dependency chain",
-    braces: bracesFromDependencyChain(sandboxRequire, "fast-glob"),
-  },
-];
+test("mockup globbing uses tinyglobby without a braces dependency", () => {
+  assert.equal(mockupDependencies["fast-glob"], undefined);
+  assert.ok(mockupDependencies.tinyglobby);
 
-for (const dependency of dependencyChains) {
-  test(`${dependency.name} rejects excessive brace nesting`, () => {
-    assert.throws(() => dependency.braces(hostileBracePattern), /exceeds max depth/);
-    assert.throws(() => dependency.braces.parse(hostileBracePattern), /exceeds max depth/);
-  });
+  const tinyglobbyRequire = createRequire(sandboxRequire.resolve("tinyglobby"));
+  assert.throws(() => tinyglobbyRequire.resolve("braces"), { code: "MODULE_NOT_FOUND" });
+});
 
-  test(`${dependency.name} rejects excessive parenthesis nesting`, () => {
-    assert.throws(() => dependency.braces.parse(hostileParenthesisPattern), /exceeds max depth/);
-  });
-
-  test(`${dependency.name} keeps ordinary brace expansion working`, () => {
-    assert.deepEqual(
-      dependency.braces("root/{alpha,beta}", { expand: true }),
-      ["root/alpha", "root/beta"],
-    );
-    assert.throws(
-      () => dependency.braces.parse("{{alpha,beta},gamma}", { maxDepth: 1 }),
-      /exceeds max depth/,
-    );
-    assert.doesNotThrow(() => dependency.braces.parse("{{alpha,beta},gamma}", { maxDepth: 2 }));
-  });
-}
+test("workspace lockfile no longer resolves the affected braces release", () => {
+  assert.doesNotMatch(lockfile, /braces@3\.0\.3/);
+});
 
 test("API production package and bundle exclude the braces proxy dependency chain", () => {
   const apiPackage = JSON.parse(
@@ -65,7 +48,6 @@ test("API production package and bundle exclude the braces proxy dependency chai
   assert.equal(apiPackage.dependencies.braces, undefined);
   assert.equal(apiPackage.dependencies.micromatch, undefined);
   assert.equal(apiPackage.dependencies.httpxy, "0.5.5");
-  assert.ok(apiPackage.devDependencies["http-proxy-middleware"]);
   for (const bundle of productionBundles) {
     assert.doesNotMatch(bundle, /http-proxy-middleware|micromatch|braces@3\.0\.3|require_braces/);
   }
