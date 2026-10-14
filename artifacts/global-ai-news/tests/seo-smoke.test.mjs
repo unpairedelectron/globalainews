@@ -2795,13 +2795,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       `${route}: initial HTML must explicitly prevent indexing before JavaScript runs`,
     );
   }
-  const publicNoindexRoutes = [
-    '/search',
-    '/about-us',
-    '/code-of-ethics',
-    '/corrections',
-    '/contact-us',
-  ];
+  const publicNoindexRoutes = ['/search'];
   for (const route of publicNoindexRoutes) {
     assert.equal(
       metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
@@ -2830,18 +2824,20 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     '/contact-us': /No approved public contact address or working contact form has been verified/i,
   };
   for (const route of placeholderRoutes) {
-    assert.equal(
+    assert.notEqual(
       metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
       false,
-      `${route}: unapproved publisher-information placeholder must be non-indexable`,
+      `${route}: factual trust disclosure should be indexable`,
     );
     const { response, body } = await fetchText(route);
     assert.equal(response.status, 200, `${route}: direct public route failed`);
-    assert.match(body, /<meta name="robots" content="noindex,follow"/, `${route}: placeholder must be blocked from indexing`);
+    assert.equal(response.headers.get('x-robots-tag'), null, `${route}: factual trust disclosure must not send noindex`);
+    assert.doesNotMatch(body, /<meta name="robots" content="noindex,follow"/, `${route}: factual trust disclosure must be indexable`);
     assert.match(body, /<main\b/, `${route}: initial HTML is missing page content`);
     assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing the newsroom bootstrap marker`);
     assert.match(body, editorialPageCopy[route], `${route}: shared editorial copy is missing`);
     assert.doesNotMatch(body, /Latest stories/, `${route}: editorial-information placeholder must not present unrelated stories`);
+    assert.ok(routes.includes(route), `${route}: factual trust disclosure should be included in the sitemap`);
   }
   const publicTrustRoutes = ['/privacy', '/terms', '/authors'];
   for (const route of publicTrustRoutes) {

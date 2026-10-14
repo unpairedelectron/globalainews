@@ -273,3 +273,21 @@ test('trust pages link to one another and do not invent a contact or corrections
   assert.match(contactText, /only for newsletter delivery/);
   assert.doesNotMatch(contactText, /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i);
 });
+
+test('footer policy and standards pages provide substantive, page-specific information', () => {
+  const paths = [
+    '/about-us',
+    '/code-of-ethics',
+    '/corrections',
+    '/contact-us',
+    '/privacy',
+    '/terms',
+  ];
+  for (const path of paths) {
+    const page = editorialPageCopy[path];
+    const copy = [page.intro, ...page.sections.map((section) => `${section.heading} ${section.body}`)].join(' ');
+    const wordCount = copy.trim().split(/\s+/).length;
+    assert.ok(page.sections.length >= 4, `${path} needs at least four specific sections`);
+    assert.ok(wordCount >= 150, `${path} has only ${wordCount} words of useful copy`);
+  }
+});

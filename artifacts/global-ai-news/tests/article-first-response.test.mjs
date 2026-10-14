@@ -754,11 +754,11 @@ async function assertContactAlias() {
     '/corrections/',
     '/contact-us/',
   ]) {
-    const placeholder = await fetch(`${webOrigin}${route}`);
-    const html = await placeholder.text();
-    assert.equal(placeholder.status, 200, `${route} must remain reachable`);
-    assert.equal(placeholder.headers.get('x-robots-tag'), 'noindex');
-    assert.match(html, /name="robots" content="noindex,follow"/i);
+    const trustPage = await fetch(`${webOrigin}${route}`);
+    const html = await trustPage.text();
+    assert.equal(trustPage.status, 200, `${route} must remain reachable`);
+    assert.equal(trustPage.headers.get('x-robots-tag'), null, `${route} should be indexable`);
+    assert.doesNotMatch(html, /name="robots" content="noindex,follow"/i);
   }
 
   for (const route of ['/privacy/', '/terms/', '/authors/']) {
@@ -828,8 +828,8 @@ async function assertContactAlias() {
     const destination = await fetch(`${webOrigin}${route}`);
     const html = await destination.text();
     assert.equal(destination.status, 200, `${route} must resolve to its pending page`);
-    assert.equal(destination.headers.get('x-robots-tag'), 'noindex', `${route} must send a noindex header`);
-    assert.match(html, /name="robots" content="noindex,follow"/i, `${route} must remain noindex`);
+    assert.equal(destination.headers.get('x-robots-tag'), null, `${route} should not send a noindex header`);
+    assert.doesNotMatch(html, /name="robots" content="noindex,follow"/i, `${route} should remain indexable`);
     assert.match(html, copy, `${route} must render its shared editorial copy`);
   }
 }
