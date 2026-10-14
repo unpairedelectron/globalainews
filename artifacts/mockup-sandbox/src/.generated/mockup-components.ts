@@ -3,9 +3,9 @@ type ModuleMap = Record<string, () => Promise<Record<string, unknown>>>;
 export const modules: ModuleMap = {
   "./components/mockups/global-ai-news-home-redesign/Current.tsx": () => import("../components/mockups/global-ai-news-home-redesign/Current.tsx"),
   "./components/mockups/global-ai-news-home-redesign/Updated.tsx": () => import("../components/mockups/global-ai-news-home-redesign/Updated.tsx"),
+  "./components/mockups/global-ai-news-redesign/AtlasBold.tsx": () => import("../components/mockups/global-ai-news-redesign/AtlasBold.tsx"),
+  "./components/mockups/global-ai-news-redesign/Current.tsx": () => import("../components/mockups/global-ai-news-redesign/Current.tsx"),
   "./components/mockups/global-ai-news-logo/EditorialMonogram.tsx": () => import("../components/mockups/global-ai-news-logo/EditorialMonogram.tsx"),
   "./components/mockups/global-ai-news-logo/OrbitAtlas.tsx": () => import("../components/mockups/global-ai-news-logo/OrbitAtlas.tsx"),
-  "./components/mockups/global-ai-news-logo/SignalNetwork.tsx": () => import("../components/mockups/global-ai-news-logo/SignalNetwork.tsx"),
-  "./components/mockups/global-ai-news-redesign/AtlasBold.tsx": () => import("../components/mockups/global-ai-news-redesign/AtlasBold.tsx"),
-  "./components/mockups/global-ai-news-redesign/Current.tsx": () => import("../components/mockups/global-ai-news-redesign/Current.tsx")
+  "./components/mockups/global-ai-news-logo/SignalNetwork.tsx": () => import("../components/mockups/global-ai-news-logo/SignalNetwork.tsx")
 };
