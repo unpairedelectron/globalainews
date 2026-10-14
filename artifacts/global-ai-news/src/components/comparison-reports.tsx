@@ -18,6 +18,9 @@ interface ComparisonReport {
   description: string;
   intro: string;
   criteria: string;
+  sourcesReviewedOn: string;
+  sourceReviewCadence: string;
+  nextSourceReviewDue: string;
   rows: ComparisonRow[];
   limitations: string[];
 }
@@ -31,13 +34,16 @@ export const comparisonReports: Record<ComparisonReportSlug, ComparisonReport> =
       'This guide compares product surfaces and workflows documented by the vendors: research, file and image handling, and integration with work tools. It does not rank answer quality. We have not run a common benchmark across plans, accounts or regions.',
     criteria:
       'Criteria: user-facing work surfaces, vendor-documented capabilities, and access conditions. Feature availability and usage limits can vary by plan, account type, country and product release.',
+    sourcesReviewedOn: '2026-10-14',
+    sourceReviewCadence: 'Monthly',
+    nextSourceReviewDue: '2026-11-13',
     rows: [
       {
         product: 'ChatGPT',
         documentedUse:
-          'OpenAI describes chat for web search and image generation, a work surface for creating and editing deliverables, and Codex for coding tasks.',
-        sourceLabel: 'OpenAI product overview',
-        sourceUrl: 'https://openai.com/chatgpt/overview/',
+          'OpenAI documents Search for timely, source-backed answers; Deep Research for multi-step research with cited outputs; and image input, generation and natural-language edits.',
+        sourceLabel: 'OpenAI capabilities overview',
+        sourceUrl: 'https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview',
         sourceDate: 'Accessed 2026-10-14',
         limitation:
           'The overview is a vendor description; tools, limits and access can differ by plan and account.',
@@ -46,7 +52,7 @@ export const comparisonReports: Record<ComparisonReportSlug, ComparisonReport> =
         product: 'Claude',
         documentedUse:
           'Anthropic documents web search with citations, file creation and editing, projects, and interactive visuals. Its support page says it does not produce raster photos or illustrations.',
-        sourceLabel: 'Claude feature help',
+        sourceLabel: 'Claude features and capabilities help',
         sourceUrl: 'https://support.claude.com/en/collections/18031719-features-and-capabilities',
         sourceDate: 'Accessed 2026-10-14',
         limitation:
@@ -55,19 +61,19 @@ export const comparisonReports: Record<ComparisonReportSlug, ComparisonReport> =
       {
         product: 'Gemini Apps',
         documentedUse:
-          'Google documents model selection and image generation and editing in Gemini Apps, including edits to generated images and user-uploaded images.',
+          'Google documents Nano Banana 2 image generation and editing, including local edits, character consistency and combining images.',
         sourceLabel: 'Gemini Apps Help',
         sourceUrl: 'https://support.google.com/gemini/answer/14286560?hl=en',
         sourceDate: 'Accessed 2026-10-14',
         limitation:
-          'Google notes that availability can depend on language, country, account type and plan.',
+          'Google notes that availability depends on supported languages and countries, sign-in, age and account type; paid subscribers also have access to Nano Banana Pro.',
       },
       {
         product: 'Microsoft Copilot',
         documentedUse:
-          'Microsoft describes Copilot workflows inside Word, Excel, PowerPoint and Outlook, including drafting, spreadsheet analysis, presentations and email summaries.',
-        sourceLabel: 'Microsoft Copilot features',
-        sourceUrl: 'https://www.microsoft.com/en-us/copilot/solutions/individuals',
+          'Microsoft describes Copilot inside Word, Excel, PowerPoint and Outlook, where it can assist with work across those apps and use work files, messages and meetings as context.',
+        sourceLabel: 'Microsoft 365 Copilot in apps for work',
+        sourceUrl: 'https://www.microsoft.com/en-in/microsoft-365-copilot/in-apps-for-work',
         sourceDate: 'Accessed 2026-10-14',
         limitation:
           'The page describes Microsoft 365 product surfaces; features depend on subscription and account eligibility.',
@@ -87,6 +93,9 @@ export const comparisonReports: Record<ComparisonReportSlug, ComparisonReport> =
       'The table compares capabilities described in first-party documentation, not image quality or commercial suitability. No tool is ranked, and no affiliate links are active on this page.',
     criteria:
       'Criteria: documented image-generation and editing controls, reference-image workflows, and stated access limits. Source dates identify a release/update date when the vendor provides one; otherwise they show when we checked the documentation.',
+    sourcesReviewedOn: '2026-10-14',
+    sourceReviewCadence: 'Monthly',
+    nextSourceReviewDue: '2026-11-13',
     rows: [
       {
         product: 'ChatGPT Images 2.5',
@@ -104,7 +113,7 @@ export const comparisonReports: Record<ComparisonReportSlug, ComparisonReport> =
           'Adobe documents image generation and editing, reference images and multiple partner models, including FLUX, Gemini, GPT Image, Imagen and Ideogram.',
         sourceLabel: 'Adobe Firefly: What’s new',
         sourceUrl: 'https://helpx.adobe.com/firefly/web/whats-new/new-features/whats-new.html',
-        sourceDate: 'Updated 2026-09-18',
+        sourceDate: 'Accessed 2026-10-14',
         limitation:
           'Model access, credits and features depend on the current Firefly plan and release; inclusion is not an endorsement.',
       },
@@ -121,12 +130,12 @@ export const comparisonReports: Record<ComparisonReportSlug, ComparisonReport> =
       {
         product: 'Gemini Apps',
         documentedUse:
-          'Google documents Nano Banana 2 image generation and editing, including local edits and edits using one or more uploaded images.',
+          'Google documents Nano Banana 2 image generation and editing, including local edits, character consistency and combining images.',
         sourceLabel: 'Google: Generate and edit images',
         sourceUrl: 'https://support.google.com/gemini/answer/14286560?hl=en',
         sourceDate: 'Accessed 2026-10-14',
         limitation:
-          'Google notes that language, country, sign-in, age, school-account and plan restrictions can affect availability and output options.',
+          'Google notes that supported languages and countries, sign-in, age and school-account restrictions affect access; paid subscribers can also use Nano Banana Pro.',
       },
     ],
     limitations: [
@@ -160,7 +169,7 @@ export function ComparisonReportContent({
       <div className="mt-10 overflow-x-auto border border-foreground/15">
         <table className="w-full min-w-[760px] border-collapse text-left text-sm">
           <caption className="bg-surface-muted px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {report.title} · vendor documentation checked 2026-10-14
+            {report.title} · sources checked {report.sourcesReviewedOn} · {report.sourceReviewCadence.toLowerCase()} review · next due {report.nextSourceReviewDue}
           </caption>
           <thead className="bg-secondary/50">
             <tr>
