@@ -625,6 +625,65 @@ async function assertPublishedOnlyFeeds() {
     content.sources.find((source) => source.slug === 'pib-capacity-and-use-factsheet-2026')?.tier === 1,
     'API-backed snapshot must preserve report source provenance metadata',
   );
+
+  const evidenceLedStories = [
+    {
+      slug: 'weekly-deep-dive-cost-of-intelligence',
+      title: 'AI’s electricity demand is becoming a product-design constraint',
+      evidenceMarker: '945 TWh by 2030',
+    },
+    {
+      slug: 'reliability-is-the-new-ai-moat',
+      title: 'AI agents improved on OSWorld; reliability remains the test',
+      evidenceMarker: '66.3%',
+    },
+  ];
+  for (const expected of evidenceLedStories) {
+    const story = content.stories.find((candidate) => candidate.slug === expected.slug);
+    assert.ok(story, `${expected.slug} must remain in the public newsroom snapshot`);
+    assert.equal(story.title, expected.title);
+    assert.ok(
+      story.body.flatMap((section) => section.paragraphs).join(' ').includes(expected.evidenceMarker),
+      `${expected.slug} snapshot is missing its evidence-backed copy`,
+    );
+    assert.ok(metadata.routes.some((route) => route.path === `/article/${expected.slug}`));
+    assert.ok(sitemap.includes(`/article/${expected.slug}/`));
+    assert.ok(feed.includes(`/article/${expected.slug}/`));
+    assert.ok(webSitemap.includes(`/article/${expected.slug}/`));
+    assert.ok(webFeed.includes(`/article/${expected.slug}/`));
+
+    const articleResponse = await fetch(`${webOrigin}/article/${expected.slug}`);
+    const articleHtml = await articleResponse.text();
+    assert.equal(articleResponse.status, 200, `${expected.slug} must render in its first response`);
+    assert.match(articleHtml, new RegExp(`<h1[^>]*>${escapeRegExp(expected.title)}</h1>`));
+    assert.ok(articleHtml.includes(expected.evidenceMarker));
+  }
+
+  const supersededSlug = 'public-compute-needs-public-metrics';
+  assert.equal(publishedSlugs.has(supersededSlug), false);
+  assert.equal(
+    metadata.routes.some((route) => route.path === `/article/${supersededSlug}`),
+    false,
+  );
+  for (const [surface, body] of [
+    ['API sitemap', sitemap],
+    ['API feed', feed],
+    ['web sitemap', webSitemap],
+    ['web feed', webFeed],
+  ]) {
+    assert.equal(body.includes(`/article/${supersededSlug}/`), false, `${surface} must omit the withdrawn story`);
+  }
+  const supersededArticleResponse = await fetch(
+    `${webOrigin}/article/${supersededSlug}`,
+    { redirect: 'manual' },
+  );
+  assert.equal(supersededArticleResponse.status, 301);
+  assert.equal(
+    supersededArticleResponse.headers.get('location'),
+    '/article/india-ai-compute-access-2026/',
+    'the withdrawn story route must resolve to its evidence-led replacement',
+  );
+
   const articlePaths = new Set(
     metadata.routes.filter((route) => route.article).map((route) => route.path),
   );

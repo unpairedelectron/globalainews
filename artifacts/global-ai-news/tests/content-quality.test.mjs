@@ -71,6 +71,42 @@ test('the three revised scheduled stories are sourced, classified, and correctly
   }
 });
 
+test('the three short production records resolve to evidence-backed public copy or stay withdrawn', () => {
+  const now = new Date('2026-10-14T23:59:59.999Z');
+  const publicStories = new Map(getPublishedStories(now).map((story) => [story.slug, story]));
+  const reviewedPublicStories = [
+    {
+      slug: 'weekly-deep-dive-cost-of-intelligence',
+      title: 'AI’s electricity demand is becoming a product-design constraint',
+      evidenceMarker: '945 TWh by 2030',
+      sourceSlug: 'iea-energy-ai-executive-summary',
+    },
+    {
+      slug: 'reliability-is-the-new-ai-moat',
+      title: 'AI agents improved on OSWorld; reliability remains the test',
+      evidenceMarker: '66.3%',
+      sourceSlug: 'stanford-ai-index-2026',
+    },
+  ];
+
+  for (const expected of reviewedPublicStories) {
+    const story = publicStories.get(expected.slug);
+    assert.ok(story, `${expected.slug} should remain public on its maintained evidence`);
+    assert.equal(story.title, expected.title, `${expected.slug} must not expose its stale release title`);
+    assert.ok(getStoryWordCount(story) >= MINIMUM_STORY_WORDS);
+    assert.ok(story.sources.includes(expected.sourceSlug));
+    assert.ok(
+      story.body.flatMap((section) => section.paragraphs).join(' ').includes(expected.evidenceMarker),
+      `${expected.slug} is missing its concrete evidence`,
+    );
+  }
+
+  const supersededSlug = 'public-compute-needs-public-metrics';
+  assert.ok(withdrawnStorySlugs.has(supersededSlug));
+  assert.equal(publicStories.has(supersededSlug), false);
+  assert.equal(findStory(supersededSlug), undefined);
+});
+
 test('every public story has complete, registered inline citations and a derived read time', () => {
   const publicStories = getPublishedStories(new Date('2026-10-12T23:59:59.999Z'));
   const publicStorySlugs = new Set(publicStories.map((story) => story.slug));
