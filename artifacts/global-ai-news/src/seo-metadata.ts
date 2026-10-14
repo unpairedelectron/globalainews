@@ -45,6 +45,16 @@ const staticMetadata: Record<string, SeoMetadata> = {
     description: 'Maintained reports on the AI industry, with transparent sourcing and connected context.',
     path: '/reports',
   },
+  '/reports/ai-assistants-compared': {
+    title: 'AI Assistants Compared — Global AI News',
+    description: 'Compare documented workflows in ChatGPT, Claude, Gemini and Microsoft Copilot with source dates and limitations.',
+    path: '/reports/ai-assistants-compared',
+  },
+  '/reports/ai-image-tools-compared': {
+    title: 'AI Image Tools Compared — Global AI News',
+    description: 'Compare documented image-generation and editing workflows with current vendor sources and stated limitations.',
+    path: '/reports/ai-image-tools-compared',
+  },
   '/topics': {
     title: 'Topics — Global AI News',
     description: 'Explore connected topic records linking published reporting, research, data, sources and timelines.',

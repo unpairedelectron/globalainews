@@ -14,6 +14,11 @@ import { getEditorialPageCopy } from './editorial-pages';
 import { getEditorialImagePath } from './editorial-images';
 import { StoryBody, StoryCitedText, StorySourceList } from './components/story-content';
 import { AuthorDirectory } from './components/author-directory';
+import { AdSlot } from './components/monetization';
+import {
+  ComparisonReportContent,
+  type ComparisonReportSlug,
+} from './components/comparison-reports';
 
 interface SeoPrerenderProps {
   route: string;
@@ -192,6 +197,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             </section>
             {story.sources.length > 0 && <StorySourceList story={story} sources={sources} />}
           </article>
+          <AdSlot placement="article" />
           {relatedStories.length > 0 && (
             <section className="border-t border-foreground/15 py-12">
               <h2 className="eyebrow mb-5 text-primary">Next stories</h2>
@@ -596,6 +602,28 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
       </div>
     );
   }
+  const comparisonReportSlug: ComparisonReportSlug | undefined =
+    route === '/reports/ai-assistants-compared'
+      ? 'ai-assistants-compared'
+      : route === '/reports/ai-image-tools-compared'
+        ? 'ai-image-tools-compared'
+        : undefined;
+  if (comparisonReportSlug) {
+    return (
+      <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
+        <header className="flex items-center justify-between border-b border-foreground/20 py-5">
+          <a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a>
+          <a href="/reports/" className="eyebrow text-primary">Reports</a>
+        </header>
+        <main className="mx-auto max-w-[1180px] py-12 md:py-16">
+          <nav aria-label="Breadcrumb" className="mb-8 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <a href="/">Home</a><span className="mx-2">/</span><a href="/reports/">Reports</a>
+          </nav>
+          <ComparisonReportContent reportSlug={comparisonReportSlug} />
+        </main>
+      </div>
+    );
+  }
   if (route === '/reports') {
     const reports = stories.filter((story) => story.contentType === 'Report').sort((a, b) => b.date.localeCompare(a.date));
     const researchRecords = snapshot.researchRecords.filter((record) => record.status === 'published' && stories.some((story) => story.slug === record.storySlug)).sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
@@ -620,6 +648,19 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             <div><h2 className="eyebrow border-b border-foreground/15 pb-3 text-primary">Data products</h2>{dataProducts.length ? dataProducts.map((product) => <a key={product.slug} href={`/data/${product.slug}/`} className="block border-b border-foreground/10 py-4 hover:text-primary"><span className="block text-sm">{product.title}</span><span className="mt-1 block text-xs text-muted-foreground">Updated {formatEditorialDate(product.updatedAt)} · {product.observations.length} dated observations</span></a>) : <p className="py-4 text-sm text-muted-foreground">No published data products.</p>}</div>
             <div><h2 className="eyebrow border-b border-foreground/15 pb-3 text-primary">Topics</h2>{topics.length ? topics.map((topic) => <a key={topic.slug} href={`${topic.route}/`} className="block border-b border-foreground/10 py-4 hover:text-primary"><span className="block text-sm">{topic.label}</span><span className="mt-1 block text-xs text-muted-foreground">{topic.description}</span></a>) : <p className="py-4 text-sm text-muted-foreground">No published topic records.</p>}</div>
             <div><h2 className="eyebrow border-b border-foreground/15 pb-3 text-primary">Entities</h2>{entities.length ? entities.map((entity) => <a key={entity.slug} href={`/${entity.kind}/${entity.slug}/`} className="block border-b border-foreground/10 py-4 hover:text-primary"><span className="block text-sm">{entity.name}</span><span className="mt-1 block text-xs text-muted-foreground">{entity.strapline ?? entity.kind}</span></a>) : <p className="py-4 text-sm text-muted-foreground">No connected entity records.</p>}</div>
+          </section>
+          <section className="grid gap-4 border-t border-foreground/15 py-10 md:grid-cols-2" aria-labelledby="comparison-reports-title">
+            <h2 id="comparison-reports-title" className="sr-only">Comparison reports</h2>
+            <a href="/reports/ai-assistants-compared/" className="border border-foreground/15 p-5 hover:border-primary">
+              <span className="eyebrow text-primary">Comparison report</span>
+              <span className="mt-3 block font-serif text-2xl">AI Assistants Compared</span>
+              <span className="mt-2 block text-sm text-muted-foreground">Documented workflows, evidence dates and limitations.</span>
+            </a>
+            <a href="/reports/ai-image-tools-compared/" className="border border-foreground/15 p-5 hover:border-primary">
+              <span className="eyebrow text-primary">Comparison report</span>
+              <span className="mt-3 block font-serif text-2xl">AI Image Tools Compared</span>
+              <span className="mt-2 block text-sm text-muted-foreground">Generation and editing features from current vendor documentation.</span>
+            </a>
           </section>
         </main>
       </div>
@@ -749,6 +790,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
               </article> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">There are no published stories in the newsroom snapshot.</p>}
             </div>
           </section>
+           <AdSlot placement="home" />
           <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.75fr_1.25fr] md:py-16">
             <div><p className="eyebrow mb-5 border-b border-foreground/15 pb-3 text-primary">More from the newsroom · {remainingStories.length} stories</p><h2 className="max-w-sm font-serif text-5xl leading-[.9]">The useful read, not the loudest read.</h2><a href="/brief/" className="mt-8 inline-flex border-b border-primary pb-2 text-sm text-primary">Read the Daily Brief <span className="ml-2" aria-hidden="true">↗</span></a></div>
             <div className="grid gap-0">

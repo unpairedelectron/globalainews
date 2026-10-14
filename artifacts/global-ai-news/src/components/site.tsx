@@ -9,6 +9,7 @@ import { useTheme } from '@/theme';
 import { useSubscribeNewsletter } from '@workspace/api-client-react';
 import { getCanonicalUrl, getSeoMetadata, getStructuredData, SITE_URL } from '@/seo-metadata';
 import { GlobalAiNewsLockup } from '@/components/brand-mark';
+import { AdSlot } from '@/components/monetization';
 import { trackEvent } from '@/analytics';
 import { EDITORIAL_IMAGE_FALLBACK, getEditorialImagePath } from '@/editorial-images';
 

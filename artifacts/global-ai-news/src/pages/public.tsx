@@ -9,6 +9,7 @@ import { AuthorDirectory } from '@/components/author-directory';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { formatEditorialDate, getLatestStory } from '@/editorial-date';
 import { getEditorialPageCopy } from '@/editorial-pages';
+import { AdSlot } from '@/components/monetization';
 import NotFound from '@/pages/not-found';
 
 const container = 'editorial-page mx-auto max-w-[1440px] px-5 md:px-10';
@@ -57,8 +58,9 @@ export function HomePage() {
             <Link href={`/article/${leadStory.slug}`} className="mt-6 inline-flex min-h-11 w-fit items-center border-b border-primary pb-2 text-sm text-primary">Read the lead story <ArrowUpRight size={14} className="ml-2" /></Link>
           </article> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">There are no published stories in the newsroom snapshot.</p>}
        </div>
-     </section>
-      <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.75fr_1.25fr] md:py-16">
+      </section>
+      <AdSlot placement="home" />
+       <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.75fr_1.25fr] md:py-16">
         <div><SectionLabel aside={`${topStories.length} stories`}>Latest</SectionLabel><h2 className="max-w-sm font-serif text-5xl leading-[.9]">The useful read, not the loudest read.</h2><p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">A running file of what moved, with the date and reporting attached.</p><Link href="/brief" className="mt-8 inline-flex min-h-11 items-center border-b border-primary pb-2 text-sm text-primary">Read the Daily Brief <ArrowUpRight size={14} className="ml-2" /></Link></div>
         <div>{topStories.slice(0, 5).map((story, index) => <article key={story.slug} className="grid gap-4 border-t border-foreground/15 py-5 first:border-t-0 first:pt-0 sm:grid-cols-[128px_1fr]">
           <StoryImage slug={story.slug} alt={story.imageTreatment.alt} className="aspect-[4/3] w-full object-cover" />
@@ -429,8 +431,9 @@ export function ArticlePage() {
           {story.sources.length > 0 && <StorySourceList story={story} sources={snapshot.sources} />}
         </article>
         <aside className="space-y-10"><EvidencePanel storySlug={story.slug} /><section><SectionLabel>Related entities</SectionLabel><EntityLinks slugs={story.entities} /></section><section><SectionLabel>Timeline</SectionLabel><TimelineList slugs={story.timeline} /></section><section><SectionLabel>Source records</SectionLabel><div className="grid gap-3">{story.sources.map((sourceSlug) => { const source = snapshot.sources.find((item) => item.slug === sourceSlug); return source ? <Link key={sourceSlug} href={`/source/${sourceSlug}`} className="border-b border-foreground/15 pb-3 text-sm hover:text-primary">{source.name}<span className="mt-1 block text-xs text-muted-foreground">{source.publisher} · citation detail</span></Link> : null; })}</div></section></aside>
-      </div>
-      {story.relatedStories.length > 0 && <section className="border-t border-foreground/15 py-12"><SectionLabel>Next stories</SectionLabel><div className="grid gap-6 md:grid-cols-3">{story.relatedStories.map((relatedSlug) => <StoryRow key={relatedSlug} slug={relatedSlug} />)}</div></section>}
+       </div>
+       <AdSlot placement="article" />
+       {story.relatedStories.length > 0 && <section className="border-t border-foreground/15 py-12"><SectionLabel>Next stories</SectionLabel><div className="grid gap-6 md:grid-cols-3">{story.relatedStories.map((relatedSlug) => <StoryRow key={relatedSlug} slug={relatedSlug} />)}</div></section>}
       {(researchRecords.length > 0 || dataProducts.length > 0) && <section className="grid gap-10 border-t border-foreground/15 py-10 md:grid-cols-2">
         {researchRecords.length > 0 && <div><SectionLabel>Research record</SectionLabel>{researchRecords.map((record) => <Link key={record.slug} href={`/research/${record.slug}`} className="block border-b border-foreground/15 py-4 hover:text-primary"><span className="font-serif text-2xl">{record.title}</span><span className="mt-2 block text-sm leading-6 text-muted-foreground">{record.researchQuestion}</span></Link>)}</div>}
         {dataProducts.length > 0 && <div><SectionLabel>Reusable data</SectionLabel>{dataProducts.map((product) => <Link key={product.slug} href={`/data/${product.slug}`} className="block border-b border-foreground/15 py-4 hover:text-primary"><span className="font-serif text-2xl">{product.title}</span><span className="mt-2 block text-sm leading-6 text-muted-foreground">{product.description}</span></Link>)}</div>}
