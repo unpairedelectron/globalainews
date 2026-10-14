@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type ComparisonReportSlug =
   | 'ai-assistants-compared'
   | 'ai-image-tools-compared';

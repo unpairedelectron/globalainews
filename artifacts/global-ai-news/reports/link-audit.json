@@ -2544,6 +2544,54 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/reports/ai-assistants-compared",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/ai-assistants-compared/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/reports/ai-assistants-compared",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/",
+    "indexability": "indexable",
+    "linkSource": "/reports/ai-assistants-compared",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/ai-image-tools-compared",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/ai-image-tools-compared/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/reports/ai-image-tools-compared",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/",
+    "indexability": "indexable",
+    "linkSource": "/reports/ai-image-tools-compared",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/reports",
     "status": "200",
     "canonical": "https://www.globalainews.in/reports/",
@@ -2603,6 +2651,22 @@
     "url": "https://www.globalainews.in/policy/indiaai-mission/",
     "status": "200",
     "canonical": "https://www.globalainews.in/policy/indiaai-mission/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/ai-assistants-compared/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/ai-assistants-compared/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/ai-image-tools-compared/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/ai-image-tools-compared/",
     "indexability": "indexable",
     "linkSource": "/reports",
     "issue": ""
