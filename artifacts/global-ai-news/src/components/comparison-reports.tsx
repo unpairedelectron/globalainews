@@ -13,6 +13,12 @@ interface ComparisonRow {
   limitation: string;
 }
 
+interface ComparisonRevision {
+  recordedOn: string;
+  summary: string;
+  previousRows: ComparisonRow[];
+}
+
 interface ComparisonReport {
   title: string;
   description: string;
@@ -22,6 +28,7 @@ interface ComparisonReport {
   sourceReviewCadence: string;
   nextSourceReviewDue: string;
   rows: ComparisonRow[];
+  revisions: ComparisonRevision[];
   limitations: string[];
 }
 
@@ -77,6 +84,45 @@ export const comparisonReports: Record<ComparisonReportSlug, ComparisonReport> =
         sourceDate: 'Accessed 2026-10-14',
         limitation:
           'The page describes Microsoft 365 product surfaces; features depend on subscription and account eligibility.',
+      },
+    ],
+    revisions: [
+      {
+        recordedOn: '2026-10-14',
+        summary:
+          'The ChatGPT, Gemini Apps and Microsoft Copilot descriptions and citations were updated after checking the current first-party documentation.',
+        previousRows: [
+          {
+            product: 'ChatGPT',
+            documentedUse:
+              'OpenAI describes chat for web search and image generation, a work surface for creating and editing deliverables, and Codex for coding tasks.',
+            sourceLabel: 'OpenAI product overview',
+            sourceUrl: 'https://openai.com/chatgpt/overview/',
+            sourceDate: 'Accessed 2026-10-14',
+            limitation:
+              'The overview is a vendor description; tools, limits and access can differ by plan and account.',
+          },
+          {
+            product: 'Gemini Apps',
+            documentedUse:
+              'Google documents model selection and image generation and editing in Gemini Apps, including edits to generated images and user-uploaded images.',
+            sourceLabel: 'Gemini Apps Help',
+            sourceUrl: 'https://support.google.com/gemini/answer/14286560?hl=en',
+            sourceDate: 'Accessed 2026-10-14',
+            limitation:
+              'Google notes that availability can depend on language, country, account type and plan.',
+          },
+          {
+            product: 'Microsoft Copilot',
+            documentedUse:
+              'Microsoft describes Copilot workflows inside Word, Excel, PowerPoint and Outlook, including drafting, spreadsheet analysis, presentations and email summaries.',
+            sourceLabel: 'Microsoft Copilot features',
+            sourceUrl: 'https://www.microsoft.com/en-us/copilot/solutions/individuals',
+            sourceDate: 'Accessed 2026-10-14',
+            limitation:
+              'The page describes Microsoft 365 product surfaces; features depend on subscription and account eligibility.',
+          },
+        ],
       },
     ],
     limitations: [
@@ -136,6 +182,35 @@ export const comparisonReports: Record<ComparisonReportSlug, ComparisonReport> =
         sourceDate: 'Accessed 2026-10-14',
         limitation:
           'Google notes that supported languages and countries, sign-in, age and school-account restrictions affect access; paid subscribers can also use Nano Banana Pro.',
+      },
+    ],
+    revisions: [
+      {
+        recordedOn: '2026-10-14',
+        summary:
+          'The Adobe Firefly review date and Gemini Apps feature and access descriptions were updated after checking the current first-party documentation.',
+        previousRows: [
+          {
+            product: 'Adobe Firefly',
+            documentedUse:
+              'Adobe documents image generation and editing, reference images and multiple partner models, including FLUX, Gemini, GPT Image, Imagen and Ideogram.',
+            sourceLabel: 'Adobe Firefly: What’s new',
+            sourceUrl: 'https://helpx.adobe.com/firefly/web/whats-new/new-features/whats-new.html',
+            sourceDate: 'Updated 2026-09-18',
+            limitation:
+              'Model access, credits and features depend on the current Firefly plan and release; inclusion is not an endorsement.',
+          },
+          {
+            product: 'Gemini Apps',
+            documentedUse:
+              'Google documents Nano Banana 2 image generation and editing, including local edits and edits using one or more uploaded images.',
+            sourceLabel: 'Google: Generate and edit images',
+            sourceUrl: 'https://support.google.com/gemini/answer/14286560?hl=en',
+            sourceDate: 'Accessed 2026-10-14',
+            limitation:
+              'Google notes that language, country, sign-in, age, school-account and plan restrictions can affect availability and output options.',
+          },
+        ],
       },
     ],
     limitations: [
@@ -205,6 +280,43 @@ export function ComparisonReportContent({
           </tbody>
         </table>
       </div>
+
+      {report.revisions.length > 0 && (
+        <section className="mt-8 border-y border-foreground/15 py-5" aria-labelledby={`history-${reportSlug}`}>
+          <h2 id={`history-${reportSlug}`} className="eyebrow text-primary">Previous reviews</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+            Superseded descriptions and citations are retained so editors can inspect what changed.
+          </p>
+          <div className="mt-4 divide-y divide-foreground/10">
+            {report.revisions.map((revision) => (
+              <details key={revision.recordedOn} className="py-3">
+                <summary className="cursor-pointer text-sm font-medium hover:text-primary">
+                  Revision recorded {revision.recordedOn}
+                </summary>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{revision.summary}</p>
+                <div className="mt-4 grid gap-4">
+                  {revision.previousRows.map((row) => (
+                    <article key={row.product} className="border-l-2 border-accent pl-4">
+                      <h3 className="font-serif text-lg">{row.product}</h3>
+                      <p className="mt-1 text-sm leading-6">{row.documentedUse}</p>
+                      <a
+                        href={row.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-block text-sm text-primary underline decoration-primary/40 underline-offset-2"
+                      >
+                        {row.sourceLabel}
+                      </a>
+                      <p className="mt-1 text-xs text-muted-foreground">{row.sourceDate}</p>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">{row.limitation}</p>
+                    </article>
+                  ))}
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mt-8 border-y border-foreground/15 py-5">
         <h2 className="eyebrow text-primary">Affiliate disclosure</h2>
