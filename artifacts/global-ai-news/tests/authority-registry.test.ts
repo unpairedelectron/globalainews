@@ -10,6 +10,7 @@ import {
 } from '../src/authority/registry';
 import { sources, stories } from '../src/content';
 import { indiaAiComputeObservations } from '../src/data/indiaai-compute-observations';
+import { indiaAiComputeReport } from '../src/reports/india-ai-compute-2026';
 
 test('authority registry resolves the report across topics, entities, sources, timeline, and articles', () => {
   assert.deepEqual(validateAuthorityRegistry(), []);
@@ -48,8 +49,10 @@ test('the next authority cluster has reusable structure but is not an indexable 
 });
 
 test('compute observations preserve dated source wording without inventing schedulable capacity', () => {
-  assert.equal(indiaAiComputeObservations.length, 9);
-  assert.ok(indiaAiComputeObservations.every((item) => /^\d{4}-\d{2}-\d{2}$/.test(item.reportedOn)));
+  assert.equal(indiaAiComputeObservations.length, 10);
+  assert.ok(indiaAiComputeObservations.every((item) => item.reportedOn === null || /^\d{4}-\d{2}-\d{2}$/.test(item.reportedOn)));
+  assert.ok(indiaAiComputeObservations.every((item) =>
+    item.stageLabel.length > 0 && item.unit.length > 0 && item.denominator.length > 0 && item.definition.length > 0));
   assert.ok(indiaAiComputeObservations.every((item) => sources.some((source) => source.slug === item.sourceSlug)));
   assert.ok(indiaAiComputeObservations.every((item) => item.schedulable === 'not-established'));
 
@@ -57,6 +60,7 @@ test('compute observations preserve dated source wording without inventing sched
   const access = indiaAiComputeObservations.find((item) => item.status === 'access-reported');
   const installed = indiaAiComputeObservations.find((item) => item.status === 'installed-reported');
   const julyOnboarded = indiaAiComputeObservations.find((item) => item.id === 'onboarded-nearly-38000-july-2026');
+  const providerTable = indiaAiComputeObservations.find((item) => item.id === 'provider-category-total-2026');
   assert.equal(shared?.accessible, 'not-established');
   assert.equal(shared?.asOf, '2026-06');
   assert.equal(shared?.qualifier, 'more-than');
@@ -70,10 +74,21 @@ test('compute observations preserve dated source wording without inventing sched
   assert.equal(julyOnboarded?.quantityLabel, 'nearly 38,000 onboarded');
   assert.equal(julyOnboarded?.qualifier, 'nearly');
   assert.equal(julyOnboarded?.schedulable, 'not-established');
+  assert.ok(providerTable);
+  assert.equal(providerTable.reportedOn, null);
+  assert.equal(providerTable.asOf, null);
+  assert.equal(providerTable.documentCreatedOn, '2026-09-02');
+  assert.equal(providerTable.unit, 'mixed accelerator-category entries');
+  assert.match(providerTable.definition, /Unknown/);
+  assert.match(providerTable.denominator, /14 bidder or consortium rows/);
+  assert.equal(providerTable.schedulable, 'not-established');
+  assert.equal(indiaAiComputeObservations.find((item) => item.id === 'empanelled-plus-additional-2025')?.asOf, null);
+  assert.equal(indiaAiComputeObservations.find((item) => item.id === 'onboarded-2026')?.asOf, null);
+  assert.ok(indiaAiComputeObservations
+    .filter((item) => item.id !== 'provider-category-total-2026')
+    .every((item) => item.acceleratorType === 'not specified by source'));
   assert.ok(indiaAiComputeObservations.every((item) =>
-    item.acceleratorType === 'not specified by source' &&
-    item.installed !== 'established' &&
-    item.deployed !== 'established'));
+    item.installed !== 'established' && item.deployed !== 'established'));
 });
 
 test('sources expose reusable provenance metadata without guessing missing publication dates', () => {
@@ -101,8 +116,9 @@ test('data product keeps dated observations, provenance, limitations, and update
   const india = topicRecords.find((topic) => topic.slug === 'india');
   assert.ok(dataProduct && india);
   assert.equal(dataProduct.evidenceType, 'dated-public-source-claims');
-  assert.equal(dataProduct.observations.length, 9);
-  assert.equal(dataProduct.updatedAt, '2026-10-04');
+  assert.match(dataProduct.unit, /mixed accelerator-category entries/);
+  assert.equal(dataProduct.observations.length, 10);
+  assert.equal(dataProduct.updatedAt, indiaAiComputeReport.dateModified);
   assert.ok(dataProduct.sourceSlugs.length >= 6);
   assert.ok(dataProduct.methodology.length > 40);
   assert.ok(dataProduct.limitations.length >= 3);

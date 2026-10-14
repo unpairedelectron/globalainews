@@ -1641,6 +1641,8 @@ async function checkThemeRegression() {
             bodyColor: body.color,
             surfaceBackground: surface ? getComputedStyle(surface).backgroundColor : null,
             togglePressed: toggle?.getAttribute('aria-pressed'),
+            themeToggleCount: document.querySelectorAll('[data-testid="button-theme-toggle"]').length,
+            mainCount: document.querySelectorAll('main').length,
             documentWidth: document.documentElement.scrollWidth,
             viewportWidth: window.innerWidth,
           };
@@ -1653,6 +1655,8 @@ async function checkThemeRegression() {
           `${route}: ${theme} mode activated the wrong background token.`,
         );
         assert.equal(visualState.togglePressed, String(theme === 'dark'), `${route}: theme toggle state is wrong in ${theme} mode.`);
+        assert.equal(visualState.themeToggleCount, 1, `${route}: expected exactly one theme toggle in ${theme} mode.`);
+        assert.equal(visualState.mainCount, 1, `${route}: expected exactly one main landmark in ${theme} mode.`);
         assert.ok(
           visualState.documentWidth <= visualState.viewportWidth,
           `${route}: ${theme} mode introduces horizontal overflow (${visualState.documentWidth}px > ${visualState.viewportWidth}px).`,
@@ -3021,7 +3025,8 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
         }[story.classification];
         assert.ok(body.includes(`${story.category} · ${contentTypeLabel}`), `${route}: reader-facing content type label is missing`);
         if (story.slug === 'india-ai-compute-access-2026') {
-          assert.match(body, /45,000\+ GPUs/, 'report first response is missing dated IndiaAI capacity evidence');
+          assert.match(body, /45,000\+ shared/, 'report first response is missing the source-stated shared-capacity stage');
+          assert.match(body, /2026-06/, 'report first response is missing the source-stated capacity snapshot month');
           assert.match(body, /components sum to 8\.65 GW, not 8\.33 GW/, 'report first response is missing the pipeline reconciliation caveat');
           assert.match(body, /<table\b/, 'report first response is missing the capacity comparison table');
           assert.match(body, /Source 1:/, 'report first response is missing numbered source citations');

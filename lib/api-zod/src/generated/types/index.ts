@@ -51,7 +51,6 @@ export * from './publicNewsroomComputeObservationQualifier';
 export * from './publicNewsroomComputeObservationSchedulable';
 export * from './publicNewsroomComputeObservationSourceKind';
 export * from './publicNewsroomComputeObservationStatus';
-export * from './publicNewsroomComputeObservationUnit';
 export * from './publicNewsroomDataProduct';
 export * from './publicNewsroomDataProductEvidenceType';
 export * from './publicNewsroomDataProductStatus';

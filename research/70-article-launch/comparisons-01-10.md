@@ -3,7 +3,7 @@
 **Status:** provisional research drafts. Nothing here is approved for publication or added to maintained newsroom records.
 **Research date:** 4 October 2026.
 **Citation convention:** Inline `[@key]` references resolve through `comparison-source-map.md`; keys are research-only.
-**Byline:** unassigned; do not invent a named author or credentials.
+**Byline:** Global AI News Editorial Desk (organization).
 
 ## 51. GPT-6 Sol or Luna? Compare the published roles
 

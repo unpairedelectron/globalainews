@@ -3,7 +3,7 @@
 **Status:** provisional research drafts; none approved for publication or integrated into newsroom records.
 **Research date:** 4 October 2026.
 **Citation convention:** Inline `[@key]` references map through `explainer-source-map.md`; they are not live newsroom source IDs.
-**Byline:** unassigned; do not invent a named author or credentials.
+**Byline:** Global AI News Editorial Desk (organization).
 
 ## 21. What does “schedulable GPU capacity” actually mean?
 

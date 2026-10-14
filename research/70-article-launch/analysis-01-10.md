@@ -3,7 +3,7 @@
 **Status:** ten provisional research drafts. None is approved for publication.
 **Research date:** 4 October 2026.
 **Citation convention:** Inline `[@key]` references map through `analysis-source-map.md`; they are not live newsroom source IDs.
-**Byline:** unassigned; do not invent a named author or credentials.
+**Byline:** Global AI News Editorial Desk (organization).
 
 ## 11. IndiaAI compute access is a monthly application process, not just a GPU count
 

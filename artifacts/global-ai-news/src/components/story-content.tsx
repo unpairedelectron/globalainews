@@ -71,7 +71,7 @@ export function StoryBody({ story, sources }: { story: Story; sources: Source[] 
           )}
           {section.table && (
             <div className="not-prose my-8 overflow-x-auto border border-foreground/15">
-              <table className="w-full min-w-[44rem] border-collapse text-left text-sm">
+              <table className={`w-full ${section.table.headers.includes('Source-stated snapshot date') ? 'min-w-[72rem]' : 'min-w-[44rem]'} border-collapse text-left text-sm`}>
                 {section.table.caption && (
                   <caption className="border-b border-foreground/15 bg-surface-muted px-4 py-3 text-left font-serif text-lg">
                     {section.table.caption}

@@ -1,7 +1,7 @@
 {
   "version": 4,
-  "auditDate": "2026-10-06",
-  "scope": "Workspace-only quality audit of the eight story records returned by the local public-story snapshot on 2026-10-06. This is not a production inventory, baseline, or parity claim; production editorial records were not changed.",
+  "auditDate": "2026-10-12",
+  "scope": "Workspace-only quality audit of the eight story records returned by the local public-story snapshot on 2026-10-12. This is not a production inventory, baseline, or parity claim; production editorial records were not changed.",
   "measurement": {
     "bodyWordCount": "Whitespace-separated words in story-body headings and paragraphs; summaries, takeaways, and metadata are excluded.",
     "editorialWordCount": "getStoryWordCount(): dek, body paragraphs, bottom line, why it matters, key takeaways, and what changes.",
@@ -15,13 +15,13 @@
       "slug": "india-ai-compute-access-2026",
       "title": "India’s AI compute gap is now a measurement problem",
       "date": "2026-10-03",
-      "dateModified": "2026-10-04",
+      "dateModified": "2026-10-12",
       "classification": "synthesis",
       "contentType": "Report",
       "workspaceState": "public in local snapshot",
       "bodyWords": 4140,
       "editorialWordCount": 4437,
-      "readTime": "20 min read",
+      "readTime": "21 min read",
       "sourceCount": 22,
       "sourceSlugs": [
         "indiaai-compute-allocation-register-2026",

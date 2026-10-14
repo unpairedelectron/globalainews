@@ -2,6 +2,7 @@
 
 **Status:** source-checked editorial drafts; not part of maintained public content and not approved for publication.
 **Research date:** 4 October 2026.
+**Byline:** Global AI News Editorial Desk (organization).
 **Citation convention:** `[@source-slug]` keys are intended to map to maintained source records after the portfolio passes its full review.
 
 ## 1. India’s data-centre pipeline is not operational capacity

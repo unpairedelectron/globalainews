@@ -172,6 +172,9 @@ export function ResearchRecordPage() {
 function ObservationStatus({ label, value }: { label: string; value: string }) {
   return <div className="border-t border-foreground/10 pt-3"><p className="eyebrow text-muted-foreground">{label}</p><p className="mt-2 text-sm capitalize">{value.replaceAll('-', ' ')}</p></div>;
 }
+function ObservationMetadata({ label, value }: { label: string; value: string }) {
+  return <div className="border-t border-foreground/10 pt-3"><dt className="eyebrow text-muted-foreground">{label}</dt><dd className="mt-2 text-sm leading-6">{value}</dd></div>;
+}
 
 export function DataProductPage() {
   const { slug = '' } = useParams<{ slug: string }>();
@@ -189,12 +192,20 @@ export function DataProductPage() {
       <section className="py-10"><div className="flex flex-wrap items-end justify-between gap-4"><div><SectionLabel aside={`${product.observations.length} observations`}>Recorded observations</SectionLabel><p className="max-w-2xl text-sm leading-6 text-muted-foreground">These are dated claims, not a live inventory. Stages are kept distinct; announcement does not establish installation, deployment, access or scheduling.</p></div><Database className="mb-1 text-primary" size={24} strokeWidth={1.4} /></div>
         {product.observations.length ? <div className="mt-6 grid gap-px border border-foreground/15 bg-foreground/15 md:grid-cols-2">
           {product.observations.map((item) => <article key={item.id} data-testid={`observation-${item.id}`} className="bg-background p-6 md:p-8">
-            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-foreground/15 pb-5"><div><p className="eyebrow text-primary">{item.status.replaceAll('-', ' ')}</p><h2 className="mt-3 font-serif text-4xl leading-none">{item.quantityLabel}</h2></div><span className="border border-foreground/15 px-2 py-1 font-mono text-[10px] uppercase tracking-widest">{item.qualifier}</span></div>
+            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-foreground/15 pb-5"><div><p className="eyebrow text-primary">{item.stageLabel}</p><h2 className="mt-3 font-serif text-4xl leading-none">{item.quantityLabel}</h2></div><span className="border border-foreground/15 px-2 py-1 font-mono text-[10px] uppercase tracking-widest">{item.qualifier}</span></div>
             <p className="mt-4 text-sm">{[item.organization, item.facility, item.location, item.geography].filter(Boolean).join(' · ')}</p>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">{item.acceleratorType}{item.providerCount !== undefined ? ` · ${item.providerCount} providers` : ''}</p>
+            <dl className="mt-6 grid gap-x-5 gap-y-4 sm:grid-cols-2">
+              <ObservationMetadata label="Source/report date" value={item.reportedOn ? date(item.reportedOn) : 'Not stated by source'} />
+              <ObservationMetadata label="Source-stated snapshot date" value={item.asOf ? item.asOf === '2026-06' ? 'June 2026' : date(item.asOf) : 'Not stated by source'} />
+              {item.documentCreatedOn && <ObservationMetadata label="Document metadata date (not snapshot date)" value={date(item.documentCreatedOn)} />}
+              <ObservationMetadata label="Count unit" value={item.unit} />
+              <ObservationMetadata label="Denominator / count basis" value={item.denominator} />
+              <ObservationMetadata label="Source definition" value={item.definition} />
+            </dl>
             <div className="mt-6 grid grid-cols-2 gap-x-5 gap-y-4"><ObservationStatus label="Installed" value={item.installed} /><ObservationStatus label="Deployed" value={item.deployed} /><ObservationStatus label="Accessible" value={item.accessible} /><ObservationStatus label="Schedulable" value={item.schedulable} /></div>
             <div className="mt-6 border-l-2 border-accent pl-4"><p className="eyebrow text-muted-foreground">Scope limitation</p><p className="mt-2 text-xs leading-5 text-muted-foreground">{item.limitation}</p></div>
-            <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Reported {date(item.reportedOn)}{item.asOf ? ` · as of ${date(item.asOf)}` : ''} · {item.sourceKind} source</p>
+            <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{item.sourceKind} source</p>
             <Link href={`/source/${item.sourceSlug}`} className="mt-4 inline-flex items-center gap-2 border-b border-primary/40 pb-1 text-xs text-primary">Open citation record <ArrowUpRight size={13} /></Link>
           </article>)}
         </div> : <div className="mt-5 border border-dashed border-foreground/20 p-7 text-sm text-muted-foreground">No observations are recorded in this published product.</div>}

@@ -2,6 +2,7 @@
 
 **Status:** source-checked editorial drafts; not part of maintained public content and not approved for publication.
 **Research date:** 4 October 2026.
+**Byline:** Global AI News Editorial Desk (organization).
 **Citation convention:** Inline `[@key]` references map through `brief-source-map.md`; they are not live newsroom source IDs.
 
 ## 6. Grok 4.7 expands beyond xAI’s own products

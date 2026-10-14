@@ -18,4 +18,5 @@ export const PublicNewsroomComputeObservationStatus = {
   onboarded: 'onboarded',
   'shared-capacity-reported': 'shared-capacity-reported',
   'access-reported': 'access-reported',
+  'provider-category-total-reported': 'provider-category-total-reported',
 } as const;

@@ -12,19 +12,26 @@ import type { PublicNewsroomComputeObservationQualifier } from './publicNewsroom
 import type { PublicNewsroomComputeObservationSchedulable } from './publicNewsroomComputeObservationSchedulable';
 import type { PublicNewsroomComputeObservationSourceKind } from './publicNewsroomComputeObservationSourceKind';
 import type { PublicNewsroomComputeObservationStatus } from './publicNewsroomComputeObservationStatus';
-import type { PublicNewsroomComputeObservationUnit } from './publicNewsroomComputeObservationUnit';
 
 export interface PublicNewsroomComputeObservation {
   id: string;
+  /**
+     * @nullable
+     * @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+     */
+  reportedOn: string | null;
   /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
-  reportedOn: string;
+  documentCreatedOn?: string;
   /** @nullable */
   asOf: string | null;
   quantity: number;
   quantityLabel: string;
   qualifier: PublicNewsroomComputeObservationQualifier;
-  unit: PublicNewsroomComputeObservationUnit;
+  unit: string;
   status: PublicNewsroomComputeObservationStatus;
+  stageLabel: string;
+  denominator: string;
+  definition: string;
   sourceSlug: string;
   sourceKind: PublicNewsroomComputeObservationSourceKind;
   geography: string;

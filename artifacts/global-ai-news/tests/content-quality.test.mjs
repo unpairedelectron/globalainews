@@ -72,7 +72,7 @@ test('the three revised scheduled stories are sourced, classified, and correctly
 });
 
 test('every public story has complete, registered inline citations and a derived read time', () => {
-  const publicStories = getPublishedStories(new Date('2026-10-06T23:59:59.999Z'));
+  const publicStories = getPublishedStories(new Date('2026-10-12T23:59:59.999Z'));
   const publicStorySlugs = new Set(publicStories.map((story) => story.slug));
   const sourceSlugs = new Set(sources.map((source) => source.slug));
 
@@ -157,7 +157,7 @@ test('the all-story audit matrix matches the local snapshot without asserting pr
   const publicStories = getPublishedStories(new Date('2026-10-06T23:59:59.999Z'));
   const rowsBySlug = new Map(matrix.rows.map((row) => [row.slug, row]));
 
-  assert.equal(matrix.auditDate, '2026-10-06');
+  assert.equal(matrix.auditDate, '2026-10-12');
   assert.equal(matrix.publicationQualityGate.publicStoriesAudited, publicStories.length);
   assert.equal(matrix.publicationQualityGate.storiesMeetingEditorialMinimum, publicStories.length);
   assert.equal(matrix.publicationQualityGate.productionEditorialRecordsChanged, false);

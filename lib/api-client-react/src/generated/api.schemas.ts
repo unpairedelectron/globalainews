@@ -430,13 +430,6 @@ export const PublicNewsroomComputeObservationQualifier = {
   nearly: 'nearly',
 } as const;
 
-export type PublicNewsroomComputeObservationUnit = typeof PublicNewsroomComputeObservationUnit[keyof typeof PublicNewsroomComputeObservationUnit];
-
-
-export const PublicNewsroomComputeObservationUnit = {
-  GPUs: 'GPUs',
-} as const;
-
 export type PublicNewsroomComputeObservationStatus = typeof PublicNewsroomComputeObservationStatus[keyof typeof PublicNewsroomComputeObservationStatus];
 
 
@@ -449,6 +442,7 @@ export const PublicNewsroomComputeObservationStatus = {
   onboarded: 'onboarded',
   'shared-capacity-reported': 'shared-capacity-reported',
   'access-reported': 'access-reported',
+  'provider-category-total-reported': 'provider-category-total-reported',
 } as const;
 
 export type PublicNewsroomComputeObservationSourceKind = typeof PublicNewsroomComputeObservationSourceKind[keyof typeof PublicNewsroomComputeObservationSourceKind];
@@ -497,15 +491,23 @@ export const PublicNewsroomComputeObservationSchedulable = {
 
 export interface PublicNewsroomComputeObservation {
   id: string;
+  /**
+     * @nullable
+     * @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+     */
+  reportedOn: string | null;
   /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
-  reportedOn: string;
+  documentCreatedOn?: string;
   /** @nullable */
   asOf: string | null;
   quantity: number;
   quantityLabel: string;
   qualifier: PublicNewsroomComputeObservationQualifier;
-  unit: PublicNewsroomComputeObservationUnit;
+  unit: string;
   status: PublicNewsroomComputeObservationStatus;
+  stageLabel: string;
+  denominator: string;
+  definition: string;
   sourceSlug: string;
   sourceKind: PublicNewsroomComputeObservationSourceKind;
   geography: string;

@@ -1,4 +1,15 @@
 import type { Story } from '../content';
+import { indiaAiComputeObservations } from '../data/indiaai-compute-observations';
+
+const sourceObservationRows = indiaAiComputeObservations.map((item) => ({
+  cells: [
+    item.reportedOn ?? `Not stated${item.documentCreatedOn ? ` · file metadata created ${item.documentCreatedOn}` : ''}`,
+    item.asOf ?? 'Not stated by source',
+    `${item.stageLabel} · ${item.quantityLabel}`,
+    `${item.unit} · ${item.denominator}`,
+    `${item.definition} [@${item.sourceSlug}]`,
+  ],
+}));
 
 export const indiaAiComputeReport: Story = {
   slug: 'india-ai-compute-access-2026',
@@ -7,8 +18,8 @@ export const indiaAiComputeReport: Story = {
   title: 'India’s AI compute gap is now a measurement problem',
   dek: 'Official releases show a larger shared GPU pool and millions of reported GPU-hours. They still do not put commitments, live availability and measured use on one public ledger.',
   date: '2026-10-03',
-  dateModified: '2026-10-04',
-  readTime: '19 min read',
+  dateModified: '2026-10-12',
+  readTime: '21 min read',
   author: 'ananya-rao',
   evidence: 'Medium confidence · 14 primary records · 8 independent or market sources',
   evidenceSummary: {
@@ -93,23 +104,15 @@ export const indiaAiComputeReport: Story = {
         'The cleanest reading is to preserve the words each source used. A target is not a purchase; empanelment is not installation; onboarding is not proof of live availability; allocation is not proof that a user started; shared capacity is not the same as free capacity; and reported GPU-hours are not metered consumption unless the source defines them that way. [@indiaai-cabinet-approval-2024] [@indiaai-compute-allocation-register-2026] [@pib-capacity-and-use-factsheet-2026] [@ettech-indiaai-recalibration-2026]',
       ],
       table: {
-        caption: 'Publicly reported IndiaAI compute figures, kept at the stage named by each source',
-        headers: ['Date / status', 'Reported figure', 'What the source establishes'],
+        caption: 'Public IndiaAI compute claims with report date, source-stated snapshot date, stage, unit, count basis and definition kept separate. “Not stated” means the source does not supply that field.',
+        headers: ['Source/report date', 'Source-stated snapshot date', 'Stage · reported figure', 'Count unit · denominator/basis', 'Source definition and boundary'],
         rows: [
-          { cells: ['March 2024 · mission target', '10,000+ GPUs', 'Approved common-compute target; not delivered supply. [@indiaai-cabinet-approval-2024]'] },
-          { cells: ['January 2025 · rollout description', 'About 10,000 initial; 8,693 more to be added', 'The release described additional capacity as forthcoming, not confirmed as live. [@pib-initial-compute-2025]'] },
-          { cells: ['May 2025 · empanelled + additional', '34,333 GPUs', '18,417 are labelled empanelled and 15,916 additional; operational status is not defined. [@pib-common-compute-34000-2025]'] },
-          { cells: ['Apr–May 2025 · project allocations', 'Dated user-level allocation rows', 'Rows identify GPU count/type, provider, project duration and required start-by date; no total or evidence of actual start is inferred. [@indiaai-compute-allocation-register-2026]'] },
-          { cells: ['June 2025 · installation reported by ET', 'A little over 17,300 GPUs', 'Secondary reporting attributes this early figure to a 16 June provider review; it is not a current official inventory. [@ettech-indiaai-installed-2025]'] },
-          { cells: ['March 2026 · onboarded', '38,231 GPUs across 14 providers', 'Government wording is “onboarded”; no per-provider live inventory is given. [@pib-compute-onboarded-2026]'] },
-          { cells: ['July 2026 · onboarded, rounded', 'Nearly 38,000 GPUs', 'A later PIB release repeats the stage label but gives no exact update or status crosswalk. [@pib-onboarded-nearly-38000-2026]'] },
-          { cells: ['August 2026 publication · shared as of June', '45,000+ GPUs', 'Government factsheet wording; not reconciled to either onboarded statement or the earlier installation report. [@pib-capacity-and-use-factsheet-2026]'] },
-          { cells: ['August 2026 · activity reported', '237 projects; 93.18 lakh GPU-hours', 'The factsheet describes hours as accessed/covering; the metering state is unspecified. [@pib-capacity-and-use-factsheet-2026]'] },
-          { cells: ['2 Sep 2026 · PDF metadata date', '45,081 shown in 14 provider/consortium rows', 'IndiaAI-hosted provider/category table; no printed snapshot date, status definition or count denominator. It combines NVIDIA/AMD GPU models with Intel, AWS and Google accelerator categories, so it is not an operational GPU inventory. [@indiaai-provider-accelerator-table-2026]'] },
-          { cells: ['October 2026 · access reported by ETtech', 'About 30,000 against a 45,000 commitment', 'Secondary reporting; not a provider-level inventory or schedulable count. [@ettech-indiaai-recalibration-2026]'] },
-          { cells: ['Current schedulable GPUs', 'Not established', 'No reviewed source publishes a dated count of devices free for new jobs. [@indiaai-compute-allocation-register-2026] [@pib-capacity-and-use-factsheet-2026]'] },
-          { cells: ['Current active reservations', 'Not established', 'Historical project allocations are not an aggregate of active reservations. [@indiaai-compute-allocation-register-2026]'] },
-          { cells: ['Metered GPU-hours consumed', 'Not established', 'The 93.18 lakh reported hours are not defined as metered runtime or consumption. [@pib-capacity-and-use-factsheet-2026]'] },
+          ...sourceObservationRows,
+          { cells: ['2025-04 to 2025-05 · portal records', 'Individual project dates vary', 'Project allocations · dated user-level rows', 'GPU allocation per project; not a programme-wide denominator', 'Rows identify GPU count/type, provider, project duration and start-by date; they do not establish a total, actual start or active reservation. [@indiaai-compute-allocation-register-2026]'] },
+          { cells: ['2026-08-13 · factsheet', 'August 2026 reporting period', 'Activity reported · 237 projects; 93.18 lakh GPU-hours', 'GPU-hours across reported projects; denominator and metering state unknown', 'The factsheet uses “accessed/covering” language but does not define the hours as approved, reserved, provisioned, metered or completed. [@pib-capacity-and-use-factsheet-2026]'] },
+          { cells: ['Current status', 'Not established', 'Schedulable GPUs · not established', 'No count or denominator published', 'No reviewed source publishes a dated count of devices free for new jobs. [@indiaai-compute-allocation-register-2026] [@pib-capacity-and-use-factsheet-2026]'] },
+          { cells: ['Current status', 'Not established', 'Active reservations · not established', 'No aggregate denominator published', 'Historical project allocations are not an aggregate of active reservations. [@indiaai-compute-allocation-register-2026]'] },
+          { cells: ['Current status', 'Not established', 'Metered GPU-hours consumed · not established', 'No defined metering denominator', 'The reported 93.18 lakh GPU-hours are not defined as metered runtime or consumption. [@pib-capacity-and-use-factsheet-2026]'] },
         ],
       },
     },

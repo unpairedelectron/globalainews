@@ -493,12 +493,20 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
               {product.observations.map((item) => {
                 const source = sources.find((candidate) => candidate.slug === item.sourceSlug);
                 return <article key={item.id} className="bg-background p-6 md:p-8">
-                  <div className="flex flex-wrap items-start justify-between gap-4 border-b border-foreground/15 pb-5"><div><p className="eyebrow text-primary">{item.status.replaceAll('-', ' ')}</p><h3 className="mt-3 font-serif text-4xl leading-none">{item.quantityLabel}</h3></div><span className="border border-foreground/15 px-2 py-1 font-mono text-[10px] uppercase tracking-widest">{item.qualifier}</span></div>
+                  <div className="flex flex-wrap items-start justify-between gap-4 border-b border-foreground/15 pb-5"><div><p className="eyebrow text-primary">{item.stageLabel}</p><h3 className="mt-3 font-serif text-4xl leading-none">{item.quantityLabel}</h3></div><span className="border border-foreground/15 px-2 py-1 font-mono text-[10px] uppercase tracking-widest">{item.qualifier}</span></div>
                   <p className="mt-4 text-sm">{[item.organization, item.facility, item.location, item.geography].filter(Boolean).join(' · ')}</p>
                   <p className="mt-2 text-xs leading-5 text-muted-foreground">{item.acceleratorType}{item.providerCount !== undefined ? ` · ${item.providerCount} providers` : ''}</p>
+                  <dl className="mt-6 grid grid-cols-2 gap-x-5 gap-y-4">{[
+                    ['Source/report date', item.reportedOn ? formatEditorialDate(item.reportedOn) : 'Not stated by source'],
+                    ['Source-stated snapshot date', item.asOf ? item.asOf === '2026-06' ? 'June 2026' : formatEditorialDate(item.asOf) : 'Not stated by source'],
+                    ...(item.documentCreatedOn ? [['Document metadata date (not snapshot date)', formatEditorialDate(item.documentCreatedOn)]] : []),
+                    ['Count unit', item.unit],
+                    ['Denominator / count basis', item.denominator],
+                    ['Source definition', item.definition],
+                  ].map(([label, value]) => <div key={label} className="border-t border-foreground/10 pt-3"><dt className="eyebrow text-muted-foreground">{label}</dt><dd className="mt-2 text-sm leading-6">{value}</dd></div>)}</dl>
                   <dl className="mt-6 grid grid-cols-2 gap-x-5 gap-y-4">{[['Installed', item.installed], ['Deployed', item.deployed], ['Accessible', item.accessible], ['Schedulable', item.schedulable]].map(([label, value]) => <div key={label} className="border-t border-foreground/10 pt-3"><dt className="eyebrow text-muted-foreground">{label}</dt><dd className="mt-2 text-sm capitalize">{String(value).replaceAll('-', ' ')}</dd></div>)}</dl>
                   <div className="mt-6 border-l-2 border-accent pl-4"><p className="eyebrow text-muted-foreground">Scope limitation</p><p className="mt-2 text-xs leading-5 text-muted-foreground">{item.limitation}</p></div>
-                  <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Reported {formatEditorialDate(item.reportedOn)}{item.asOf ? ` · as of ${formatEditorialDate(item.asOf)}` : ''} · {item.sourceKind} source</p>
+                  <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{item.sourceKind} source</p>
                   {source && <p className="mt-3 text-xs"><a href={`/source/${source.slug}/`} className="text-primary hover:underline">{source.name} · {source.publisher}</a></p>}
                 </article>;
               })}

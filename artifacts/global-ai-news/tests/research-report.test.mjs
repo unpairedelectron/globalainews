@@ -52,6 +52,16 @@ test('India AI compute flagship report meets the word-count and source-trail req
     assert.ok(source.url.startsWith('https://'), `${slug} must have a public HTTPS URL`);
   }
 
+  const snapshotTable = report.body.flatMap((section) => section.table ? [section.table] : [])
+    .find((table) => table.headers.includes('Source-stated snapshot date'));
+  assert.ok(snapshotTable, 'report table should identify source-stated snapshot dates');
+  assert.ok(snapshotTable.headers.includes('Count unit · denominator/basis'));
+  assert.ok(snapshotTable.headers.includes('Source definition and boundary'));
+  const tableText = snapshotTable.rows.flatMap((row) => row.cells).join(' ');
+  assert.match(tableText, /Not stated by source/);
+  assert.match(tableText, /45,081 combined entries/);
+  assert.match(tableText, /Schedulable GPUs · not established/);
+
   for (const section of report.body) {
     for (const paragraph of section.paragraphs) {
       assert.match(paragraph, /\[@[a-z0-9-]+\]/, `paragraph under "${section.heading}" lacks an inline source marker`);

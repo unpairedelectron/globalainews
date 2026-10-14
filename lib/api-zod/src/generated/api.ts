@@ -34,6 +34,7 @@ export const getNewsroomContentResponseResearchRecordsItemUpdateHistoryItemDateR
 export const getNewsroomContentResponseDataProductsItemUpdatedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseDataProductsItemUpdateHistoryItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseDataProductsItemObservationsItemReportedOnRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseDataProductsItemObservationsItemDocumentCreatedOnRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseAskGlobalAnswersItemAsOfRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 
 
@@ -250,13 +251,17 @@ export const GetNewsroomContentResponse = zod.object({
 })),
   "observations": zod.array(zod.object({
   "id": zod.string(),
-  "reportedOn": zod.string().regex(getNewsroomContentResponseDataProductsItemObservationsItemReportedOnRegExp),
+  "reportedOn": zod.string().regex(getNewsroomContentResponseDataProductsItemObservationsItemReportedOnRegExp).nullable(),
+  "documentCreatedOn": zod.string().regex(getNewsroomContentResponseDataProductsItemObservationsItemDocumentCreatedOnRegExp).optional(),
   "asOf": zod.string().nullable(),
   "quantity": zod.number().int(),
   "quantityLabel": zod.string(),
   "qualifier": zod.enum(['exact', 'about', 'more-than', 'nearly']),
-  "unit": zod.enum(['GPUs']),
-  "status": zod.enum(['mission-target', 'initial-capacity-reported', 'additional-capacity-announced', 'empanelled-plus-additional-reported', 'installed-reported', 'onboarded', 'shared-capacity-reported', 'access-reported']),
+  "unit": zod.string(),
+  "status": zod.enum(['mission-target', 'initial-capacity-reported', 'additional-capacity-announced', 'empanelled-plus-additional-reported', 'installed-reported', 'onboarded', 'shared-capacity-reported', 'access-reported', 'provider-category-total-reported']),
+  "stageLabel": zod.string(),
+  "denominator": zod.string(),
+  "definition": zod.string(),
   "sourceSlug": zod.string(),
   "sourceKind": zod.enum(['primary', 'independent']),
   "geography": zod.string(),

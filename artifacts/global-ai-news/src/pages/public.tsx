@@ -426,6 +426,11 @@ export function ArticlePage() {
           <section className="not-prose border-l-2 border-primary bg-secondary/50 p-6"><p className="eyebrow text-primary">The bottom line</p><p className="mt-3 font-serif text-3xl leading-none"><StoryCitedText text={story.bottomLine} story={story} sources={snapshot.sources} /></p></section>
           <section className="not-prose mt-10"><p className="eyebrow text-primary">Why this matters</p><p className="mt-3 text-lg leading-8"><StoryCitedText text={story.whyItMatters} story={story} sources={snapshot.sources} /></p></section>
           <section className="not-prose mt-10 border-y border-foreground/15 py-6"><p className="eyebrow text-primary">Key takeaways</p><ul className="mt-4 grid gap-3 text-sm">{story.keyTakeaways.map((item) => <li key={item} className="flex gap-3"><span className="text-primary">—</span><span><StoryCitedText text={item} story={story} sources={snapshot.sources} /></span></li>)}</ul></section>
+          {story.slug === 'india-ai-compute-access-2026' && dataProducts.map((product) => <section key={`compute-metadata-${product.slug}`} className="not-prose mt-8 border-l-2 border-primary bg-secondary/40 p-5">
+            <p className="eyebrow text-primary">Reading the IndiaAI totals</p>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">The comparison keeps each source’s report date separate from its snapshot date, and shows stage, unit, count basis and source definition beside the figure. Dates or definitions the source does not provide are marked as not stated or unknown; schedulable capacity remains unestablished.</p>
+            <Link href={`/data/${product.slug}`} className="mt-4 inline-flex min-h-11 items-center gap-2 border-b border-primary/40 pb-1 text-sm text-primary hover:border-primary">Open source-by-source compute observations <ArrowUpRight size={14} aria-hidden="true" /></Link>
+          </section>)}
           <StoryBody story={story} sources={snapshot.sources} />
           <section className="not-prose mt-10 border-t border-foreground/15 pt-6"><p className="eyebrow text-primary">What changes</p><p className="mt-3 text-lg leading-8"><StoryCitedText text={story.whatChanges} story={story} sources={snapshot.sources} /></p></section>
           {story.sources.length > 0 && <StorySourceList story={story} sources={snapshot.sources} />}

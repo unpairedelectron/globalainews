@@ -57,6 +57,7 @@ const chromium = process.env.CHROMIUM_BIN || '/repl/tools/bin/chromium';
 const UNKNOWN = 'UNKNOWN / NOT AVAILABLE';
 const FIXTURE_NOW = new Date('2026-10-05T00:00:00.000Z');
 const FIXTURE_DATE = FIXTURE_NOW.toISOString().slice(0, 10);
+const persistWorkspaceDraftStage = process.env.DISPOSABLE_70_ARTICLE_PERSIST_STAGE === '1';
 const HOUSE_AUTHOR = {
   slug: 'global-ai-news-editorial-desk',
   name: 'Global AI News Editorial Desk',
@@ -1560,7 +1561,7 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         result.bylinePresentInFirstResponse = bylinePresentInFirstResponse;
         result.fixturePublicationDatePresent = jsonLdDatePresent;
         result.actualAuthorStatus = HOUSE_AUTHOR.name;
-        result.seoStatus = 'PASS IN DISPOSABLE PUBLISHED-ROUTE FIXTURE; staged record remains a private draft';
+        result.seoStatus = 'PASS IN DISPOSABLE PUBLISHED-ROUTE FIXTURE; candidate remains private and unpublished';
         result.ampStatus = result.amp
           ? 'PASS — candidate-specific article-to-AMP relationship in disposable fixture'
           : 'FAIL — AMP route contract';
@@ -1571,7 +1572,9 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
           ? 'PASS — first response carries the organization byline; fixture publication date is test-only'
           : 'FAIL — first-response structural contract';
         result.qualityStatus = `PASS — reviewed sources, ${draft.typeFit.status}, distinct organization byline, draft publication metadata`;
-        result.stagingStatus = 'STAGED — workspace-only draft; publishedAt remains null';
+        result.stagingStatus = persistWorkspaceDraftStage
+          ? 'STAGED — workspace-only draft; publishedAt remains null'
+          : 'NOT STAGED — private in-memory validation only; publishedAt remains null';
         result.unresolvedRelatedReferences = unresolvedRelated
           .filter((item) => item.slug === draft.slug)
           .map((item) => item.reference);
@@ -1618,14 +1621,16 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
     mobileBrowser = await launchMobileBrowser();
     const typedBrowser = mobileBrowser;
     await typedBrowser.navigate(`${proxyOrigin}/`);
-    const expectedHomeStoryCount = snapshot.stories.length;
+    const expectedHomeStoryTitle = snapshot.stories[0]?.title;
+    assert.ok(expectedHomeStoryTitle, 'the fixture snapshot must include a published story for the homepage');
+    const expectedHomeStoryTitleJson = JSON.stringify(expectedHomeStoryTitle);
     const homepageState = await typedBrowser.evaluate(`new Promise((resolve) => {
       let attempts = 0;
+      const expectedTitle = ${expectedHomeStoryTitleJson};
       const inspect = () => {
         const text = document.body?.innerText ?? "";
-        const match = text.match(/\\b(\\d+)\\s+published stories\\b/i);
-        if (match || attempts >= 100) {
-          resolve({ storyCount: match ? Number(match[1]) : null, excerpt: text.slice(0, 600) });
+        if (text.includes(expectedTitle) || attempts >= 100) {
+          resolve({ text, excerpt: text.slice(0, 600) });
           return;
         }
         attempts += 1;
@@ -1633,16 +1638,43 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
       };
       inspect();
     })`);
-    assert.equal(
-      homepageState.storyCount,
-      expectedHomeStoryCount,
-      `the hydrated homepage should reflect the fixture snapshot; visible text: ${homepageState.excerpt}`,
+    assert.ok(
+      homepageState.text.includes(expectedHomeStoryTitle),
+      `the hydrated homepage should show the first story in the fixture snapshot (${expectedHomeStoryTitle}); visible text: ${homepageState.excerpt}`,
     );
     const firstByType = new Set<EditorialContentType>();
     for (const draft of eligibleDrafts) {
       const result = candidateResults.get(draft.slug)!;
       try {
         await typedBrowser.navigate(`${proxyOrigin}/article/${draft.slug}`);
+        const expectedTitleJson = JSON.stringify(draft.title);
+        const expectedSnippetJson = JSON.stringify(draft.firstBodySnippet.slice(0, 50));
+        const articleReady = await typedBrowser.evaluate(`new Promise((resolve) => {
+          let attempts = 0;
+          let stableSince = null;
+          const expectedTitle = ${expectedTitleJson};
+          const expectedSnippet = ${expectedSnippetJson};
+          const inspect = () => {
+            const h1 = document.querySelector('h1');
+            const main = document.querySelector('main');
+            const ready = h1?.innerText?.trim() === expectedTitle
+              && parseFloat(getComputedStyle(h1).fontSize) > 0
+              && (main?.innerText ?? "").includes(expectedSnippet);
+            if (ready) {
+              stableSince ??= Date.now();
+            } else {
+              stableSince = null;
+            }
+            if ((stableSince !== null && Date.now() - stableSince >= 400) || attempts >= 100) {
+              resolve(stableSince !== null);
+              return;
+            }
+            attempts += 1;
+            setTimeout(inspect, 50);
+          };
+          inspect();
+        })`);
+        assert.equal(articleReady, true, `article route did not hydrate for ${draft.slug}`);
         const metrics = await typedBrowser.evaluate(`(() => {
           const h1 = document.querySelector('h1');
           const main = document.querySelector('main');
@@ -2124,14 +2156,21 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         smallModelsCluster: /small model|compact model|efficient ai|local inference|on-device|serious workflow/i.test(`${draft.title} ${draft.dek} ${draft.topic}`)
           ? 'RELEVANT BY TITLE/DEK; candidate-only link not published'
           : 'NOT FLAGGED — no direct title/dek evidence',
-        publicationEligibility: 'DRAFT — workspace staging only; awaiting a human Publish action',
+        publicationEligibility: persistWorkspaceDraftStage
+          ? 'DRAFT — workspace staging only; awaiting a human Publish action'
+          : 'PRIVATE — in-memory validation only; not staged or published',
         actualAuthor: HOUSE_AUTHOR.name,
         authorType: HOUSE_AUTHOR.authorType,
         actualPublicationDate: draft.actualPublicationDate,
+        actualPublicationDateStatus: draft.actualPublicationDate === null
+          ? 'UNKNOWN / NOT AVAILABLE — no approved article publication date'
+          : 'CONFIRMED',
         wordCount: draft.wordCount,
         sourceFile: draft.file,
         evidenceNote: draft.evidenceNote || UNKNOWN,
-        stagingStatus: 'STAGED — workspace-only draft; publishedAt:null',
+        stagingStatus: persistWorkspaceDraftStage
+          ? 'STAGED — workspace-only draft; publishedAt:null'
+          : 'NOT STAGED — private in-memory validation only; publishedAt:null',
         technicalIssues: result.technicalIssues ?? [],
       };
     });
@@ -2300,12 +2339,16 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
       productionEditorialDataChanged: false,
       articles: stagedArticles,
     };
-    writeFileSync(stagingManifestFile, `${JSON.stringify(stagedManifest, null, 2)}\n`);
+    if (persistWorkspaceDraftStage) {
+      writeFileSync(stagingManifestFile, `${JSON.stringify(stagedManifest, null, 2)}\n`);
+    }
     const fullSmokeStatus = process.env.RELEASE_FULL_SMOKE_STATUS ?? 'NOT RUN';
     const stagedDraftCount = stagedArticles.filter((article) =>
       article.publication_state === 'draft' && article.publishedAt === null,
     ).length;
-    const releaseReady = stagedDraftCount === 70
+    const releaseReady = persistWorkspaceDraftStage
+      && stagedDraftCount === 70
+      && drafts.every((draft) => draft.actualPublicationDate !== null)
       && fullSmokeStatus === 'PASS'
       && securityReleaseGatePassed
       && semanticReview.unresolvedAClassCount === 0
@@ -2324,7 +2367,7 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         productionWrites: false,
         staticAssetTreeUnchanged: hashTree(publicPath) === publicAssetHash,
         fixtureRenderDate: FIXTURE_NOW.toISOString(),
-        simulationWarning: 'The fixture date exists only to exercise public-route rendering. It is omitted from all 70 staged drafts, whose publishedAt is null.',
+        simulationWarning: 'The fixture date exists only to exercise private route rendering and is not used as a draft publication date; all candidate publishedAt values are null.',
         eligibleCandidateCount: eligibleDrafts.length,
         totalCandidateCount: drafts.length,
       },
@@ -2343,8 +2386,8 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
         authorityGraphIssues: graphIssues,
         technicalRouteIssues: matrixRows.flatMap((row) => row.technicalIssues.map((issue) => `${row.slug}: ${issue}`)),
         unavailableAuthors: 0,
-        unavailablePublicationDates: 0,
-        stagedDrafts: stagedDraftCount,
+        unavailablePublicationDates: drafts.filter((draft) => draft.actualPublicationDate === null).length,
+        stagedDrafts: persistWorkspaceDraftStage ? stagedDraftCount : 0,
         nullPublishedAtDrafts: stagedArticles.filter((article) => article.publishedAt === null).length,
       },
       sourceMetadata: {
@@ -2384,6 +2427,10 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
       releaseDecision: {
         status: releaseReady ? 'READY FOR HUMAN PUBLISH' : 'BLOCKED — one or more validation/security gates did not pass',
         blockers: [
+          ...(persistWorkspaceDraftStage ? [] : ['Workspace staging is disabled; all candidates remain private fixture data.']),
+          ...(drafts.every((draft) => draft.actualPublicationDate !== null)
+            ? []
+            : ['Approved article publication dates are unavailable for one or more drafts.']),
           ...(fullSmokeStatus === 'PASS' ? [] : ['Full regression smoke suite has not passed in the current validation run.']),
           ...(securityReleaseGatePassed ? [] : ['Security scanners have unresolved findings and no validated non-runtime exception.']),
           ...(stagedDraftCount === 70 ? [] : [`Only ${stagedDraftCount}/70 records are staged as drafts.`]),
@@ -2402,7 +2449,7 @@ test('candidate-specific 70-article validation runs against a disposable in-memo
           publicationDateManufactured: false,
           humanPublishRequired: true,
         },
-        workspaceOnlyManifest: path.basename(stagingManifestFile),
+        workspaceOnlyManifest: persistWorkspaceDraftStage ? path.basename(stagingManifestFile) : null,
         productionEditorialDataChanged: false,
         automationTriggered: false,
       },

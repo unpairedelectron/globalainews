@@ -3,7 +3,7 @@
 **Status:** provisional draft set. Drafts 41–50 are included; none is approved for publication or integrated into newsroom records.
 **Research date:** 4 October 2026.
 **Citation convention:** Inline `[@key]` references map through `report-source-map.md`; these are research-only keys, not live newsroom source IDs.
-**Byline:** unassigned; do not invent a named author or credentials.
+**Byline:** Global AI News Editorial Desk (organization).
 
 ## 41. India data centres: operational capacity, hubs, and announced pipeline
 
