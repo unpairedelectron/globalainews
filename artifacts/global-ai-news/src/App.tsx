@@ -26,6 +26,7 @@ const TimelinePage = lazy(() => import('./pages/public').then((module) => ({ def
 const EditorialInputPage = lazy(() => import('./pages/public').then((module) => ({ default: module.EditorialInputPage })));
 const ReportsIndexPage = lazy(() => import('./pages/reports-index').then((module) => ({ default: module.ReportsIndexPage })));
 const ComparisonReportPage = lazy(() => import('./pages/comparison-report').then((module) => ({ default: module.ComparisonReportPage })));
+const GlucoSmartPrivacyPage = lazy(() => import('./pages/glucosmart-privacy').then((module) => ({ default: module.GlucoSmartPrivacyPage })));
 const ResearchIndexPage = lazy(() => import('./pages/authority-pages').then((module) => ({ default: module.ResearchIndexPage })));
 const ResearchRecordPage = lazy(() => import('./pages/authority-pages').then((module) => ({ default: module.ResearchRecordPage })));
 const DataIndexPage = lazy(() => import('./pages/authority-pages').then((module) => ({ default: module.DataIndexPage })));
@@ -90,6 +91,7 @@ function AppRoutes() {
     <Route path="/timeline/:slug" component={TimelinePage} />
     <Route path="/reports/ai-assistants-compared"><ComparisonReportPage reportSlug="ai-assistants-compared" /></Route>
     <Route path="/reports/ai-image-tools-compared"><ComparisonReportPage reportSlug="ai-image-tools-compared" /></Route>
+    <Route path="/glucosmart-privacy" component={GlucoSmartPrivacyPage} />
     <Route path="/reports" component={ReportsIndexPage} />
     <Route path="/topics" component={TopicsIndexPage} />
     <Route path="/archive"><EditorialInputPage title="Archive" path="/archive" /></Route>

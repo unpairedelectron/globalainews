@@ -1,0 +1,68 @@
+Option 1: Copy-Paste Text (For Google Sites / WordPress)
+Privacy Policy for GlucoSmart
+Effective Date: October 14, 2026
+
+Last Updated: October 14, 2026
+
+Developer / Owner: Shiv Shakti Mishra
+
+Welcome to GlucoSmart ("we," "our," or "us"). GlucoSmart is operated by Shiv Shakti Mishra. We are committed to protecting your privacy and ensuring you have complete control over your personal wellness and nutrition data. This Privacy Policy explains how GlucoSmart handles, stores, and protects your information when you use our mobile application and web services.
+
+1. General Wellness & Non-Medical Disclaimer
+GlucoSmart is a general wellness, hydration, and nutrition-planning application designed for self-tracking and habit formation. GlucoSmart is not a medical device, and it does not provide medical advice, clinical diagnoses, lab interpretations, or treatment recommendations. All blood glucose trend summaries, calorie targets, and meal suggestions are for informational and educational purposes only. Always consult a qualified healthcare professional before making changes to your diet, medication, or diabetes management plan.
+
+2. Information You Provide (Stored Locally on Your Device)
+By default, GlucoSmart operates on a Local-First Privacy Architecture. The information you enter into the app is stored locally on your device using on-device storage and is not automatically uploaded to external cloud servers. This includes:
+
+Biometric & Profile Preferences: Name, age, biological sex, height, weight, activity level, and personal wellness goals used to calculate estimated calorie, macro, and hydration targets.
+
+Dietary & Cultural Preferences: Saved dietary preferences (e.g., Vegetarian, Eggetarian), regional cuisines (North Indian, South Indian, Maharashtrian, Bengali, or Any), and meal styles (Everyday, Jain-style, Navratri-style vrat, Ekadashi-style fast).
+
+Self-Logged Wellness Data: Manually entered fasting blood glucose readings, personal target ranges, daily water intake counts, and completed meal/walk habit check-ins.
+
+Grocery & Meal Plans: Custom weekly meal schedules and checked shopping list items.
+
+3. How We Use Your Information
+All data entered into GlucoSmart is processed locally on your device solely to provide core app functionality:
+
+To calculate personalized portion multipliers, hydration goals, and non-repeating daily meal schedules.
+
+To generate 1-week-in-advance grocery lists that adapt when you swap meals.
+
+To display non-diagnostic, descriptive historical summaries of your self-logged fasting blood glucose entries (such as 7-day, 14-day, and 30-day rolling averages).
+
+To trigger local device reminders for scheduled meals, hydration check-ins, and post-meal walks.
+
+4. Data Sharing & User-Initiated Exports
+No Third-Party Selling or Advertising: We do not sell, rent, trade, or share your personal data, biometric data, or self-logged blood glucose readings with advertising networks, data brokers, or third parties.
+
+User-Initiated Sharing (OS Share Sheet): When you choose to share a Kitchen Recipe Card, Grocery List, or Data Export using your phone's native share sheet (e.g., via WhatsApp, Email, or Notes), that action is initiated solely by you and governed by the privacy policy of the app you choose to share with.
+
+5. Device Permissions
+GlucoSmart may request minimal device permissions strictly to support your experience:
+
+Notifications / Alarms: Used exclusively to send local reminders for your scheduled meals, hydration, and movement windows.
+
+Local Storage: Used to save your profile preferences, glucose logs, and grocery lists on your device.
+
+6. Data Retention, Export, and Deletion (Your Rights)
+You have full ownership and control over your data at all times:
+
+Export Your Data: You can export your saved profile preferences, meal history, and logged glucose entries directly from the app’s settings in a portable format.
+
+Delete Your Data: Because your data is stored locally on your device, you can permanently delete individual logs, reset your meal memory, or clear all app data at any time using the in-app Reset / Delete Data controls, or by clearing the app’s storage / uninstalling GlucoSmart from your device.
+
+7. Children’s Privacy
+GlucoSmart is intended for general audiences aged 18 and older. We do not knowingly collect personal information from children under the age of 13.
+
+8. Changes to This Privacy Policy
+We may update this Privacy Policy from time to time to reflect new app features or regulatory requirements. Any updates will be posted on this page with an updated "Last Updated" date.
+
+9. Contact Us
+If you have any questions, concerns, or requests regarding this Privacy Policy or how GlucoSmart handles your data, please contact the owner directly:
+
+Owner / Developer Name: Shiv Shakti Mishra
+
+Email: samfischer14aug@gmail.com
+
+Location: Pune, Maharashtra, India

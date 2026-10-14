@@ -94,6 +94,11 @@ const staticMetadata: Record<string, SeoMetadata> = {
     description: 'Interim disclosure of what the Daily Brief signup collects and which privacy-policy details still need publisher confirmation.',
     path: '/privacy',
   },
+  '/glucosmart-privacy': {
+    title: 'GlucoSmart Privacy Policy — Global AI News',
+    description: 'Privacy Policy for GlucoSmart, covering locally stored wellness data, app features, sharing, permissions, export, and deletion.',
+    path: '/glucosmart-privacy',
+  },
   '/terms': {
     title: 'Terms of use — Global AI News',
     description: 'Interim notice that publisher-approved terms of use have not yet been supplied.',
