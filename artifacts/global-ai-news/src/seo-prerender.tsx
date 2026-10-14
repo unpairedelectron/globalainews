@@ -19,6 +19,7 @@ import {
   ComparisonReportContent,
   type ComparisonReportSlug,
 } from './components/comparison-reports';
+import { GlucoSmartPrivacyContent } from './components/glucosmart-privacy-content';
 
 interface SeoPrerenderProps {
   route: string;
@@ -682,6 +683,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
     '/corrections': 'Corrections',
     '/contact-us': 'Contact us',
     '/privacy': 'Privacy notice',
+    '/glucosmart-privacy': 'GlucoSmart Privacy Policy',
     '/terms': 'Terms of use',
     '/authors': 'Authors',
   };
@@ -698,6 +700,17 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             <button className="min-h-11 px-3 font-mono text-[10px] uppercase tracking-widest text-primary">Search</button>
           </form>
         </main>
+      </div>
+    );
+  }
+  if (route === '/glucosmart-privacy') {
+    return (
+      <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
+        <header className="flex items-center justify-between border-b border-foreground/20 py-5">
+          <a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a>
+          <a href="/brief/" className="eyebrow text-primary">The Daily Brief</a>
+        </header>
+        <GlucoSmartPrivacyContent />
       </div>
     );
   }
