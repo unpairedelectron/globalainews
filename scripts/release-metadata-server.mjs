@@ -1,6 +1,5 @@
 import { createServer } from 'node:http';
 
-import { db, editorialReleasesTable } from '../lib/db/src/index.ts';
 import {
   askGlobalAnswers,
   authors,
@@ -8,14 +7,9 @@ import {
   essays,
   evidenceSummaries,
   getEditorialSchedule,
-  mergeEligiblePublishedStories,
-  getReleaseWordCount,
-  getStoryWordCount,
-  isPublicArticle,
-  resolveMaintainedReleaseStory,
+  getPublishedStories,
   indiaIndex,
   industryMap,
-  scheduledStories,
   signals,
   sources as maintainedSources,
   timelineEvents,
@@ -27,7 +21,6 @@ import {
   topicRecords,
 } from '../artifacts/global-ai-news/src/authority/registry.ts';
 import { getSeoMetadataManifest } from '../artifacts/global-ai-news/src/seo-metadata.ts';
-import { getDynamicSourceRecords } from '../artifacts/api-server/src/editorial/automation.ts';
 
 const port = Number(process.env.PORT);
 
@@ -36,61 +29,18 @@ if (!Number.isInteger(port) || port <= 0) {
 }
 
 async function getPublishedStoriesForBuild() {
-  const rows = await db
-    .select()
-    .from(editorialReleasesTable);
   const now = new Date();
-  const schedule = rows.flatMap((row) => {
-    const storedStory = row.story ?? {};
-    const maintainedStory = scheduledStories.find((candidate) => candidate.slug === row.slug);
-    const useMaintainedStory =
-      Boolean(maintainedStory) && storedStory.editorialSource !== 'editor';
-    const story = resolveMaintainedReleaseStory(
-      {
-        ...storedStory,
-        slug: row.slug,
-        title: row.title,
-        publishAt: row.publishAt.toISOString(),
-        date: row.publishAt.toISOString().slice(0, 10),
-        updatedAt: row.updatedAt.toISOString(),
-      },
-      maintainedStory,
-    );
-    const scheduledStory = {
-      ...story,
-      slug: row.slug,
-      title: useMaintainedStory ? story.title : row.title,
-      publishAt: row.publishAt.toISOString(),
-      cadence: row.cadence,
-      date: row.publishAt.toISOString().slice(0, 10),
-      dateModified: useMaintainedStory
-        ? maintainedStory?.dateModified ?? storedStory.dateModified
-        : storedStory.dateModified,
-      updatedAt: row.updatedAt.toISOString(),
-    };
-    const wordCount =
-      storedStory.editorialSource === 'editor' || !maintainedStory
-        ? getReleaseWordCount(storedStory.dek, storedStory.body)
-        : getStoryWordCount(maintainedStory);
-    return isPublicArticle({
-      status: row.status,
-      publishAt: row.publishAt,
-      wordCount,
-    }, now)
-      ? [scheduledStory]
-      : [];
-  });
+  const stories = getPublishedStories(now);
   return {
-    stories: mergeEligiblePublishedStories(now, schedule),
-    schedule: getEditorialSchedule(now, schedule),
+    stories,
+    schedule: getEditorialSchedule(now),
     now,
   };
 }
 
 async function getNewsroomContentForBuild() {
-  const [{ stories, schedule, now }, dynamicSources] = await Promise.all([
+  const [{ stories, schedule, now }] = await Promise.all([
     getPublishedStoriesForBuild(),
-    getDynamicSourceRecords(),
   ]);
   const publishedStorySlugs = new Set(stories.map((story) => story.slug));
   const publicResearchRecords = researchRecords.filter(
@@ -112,11 +62,6 @@ async function getNewsroomContentForBuild() {
   ]);
   const sourceRecords = [
     ...maintainedSources.filter((source) => citedSourceSlugs.has(source.slug)),
-    ...dynamicSources.filter(
-      (source) =>
-        citedSourceSlugs.has(source.slug) &&
-        !maintainedSources.some((existing) => existing.slug === source.slug),
-    ),
   ].map((source) => ({
     ...source,
     title: source.title ?? source.name,

@@ -26,16 +26,14 @@ import {
 
 const DAILY_UTC_HOUR = 7;
 const DAILY_UTC_MINUTE = 30;
-const AUTOMATION_INTERVAL_MS = 30 * 60 * 1000;
+const DAILY_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const SOURCE_LOOKBACK_MS = 14 * 24 * 60 * 60 * 1000;
 const DRAFT_MODEL = process.env.EDITORIAL_DRAFT_MODEL ?? "gpt-5-mini";
 const VERIFICATION_MODEL = process.env.EDITORIAL_VERIFICATION_MODEL ?? "gpt-5.6-terra";
 
 function isEditorialAutomationEnabled(): boolean {
   const configuredValue = process.env.EDITORIAL_AUTOMATION_ENABLED;
-  if (configuredValue === "true") return true;
-  if (configuredValue === "false") return false;
-  return process.env.NODE_ENV === "production";
+  return configuredValue === "true";
 }
 
 export const editorialModelConfiguration = Object.freeze({
@@ -715,12 +713,14 @@ export async function getAutomationRuns(limit = 50, filters: AutomationRunFilter
 
 export function startEditorialAutomation(): void {
   if (!isEditorialAutomationEnabled() || scheduler) return;
-  scheduler = setInterval(() => {
-    void runEditorialAutomation("scheduled");
-  }, AUTOMATION_INTERVAL_MS);
+  const scheduleNextRun = (): void => {
+    scheduler = setTimeout(() => {
+      void runEditorialAutomation("scheduled").finally(scheduleNextRun);
+    }, DAILY_INTERVAL_MS);
+  };
+  scheduleNextRun();
   scheduler.unref();
-  setTimeout(() => void runEditorialAutomation("startup"), 10_000).unref();
-  log("scheduler_started", { intervalMinutes: AUTOMATION_INTERVAL_MS / 60_000 });
+  log("scheduler_started", { intervalHours: DAILY_INTERVAL_MS / 3_600_000 });
 }
 
 export async function getDynamicSourceRecords() {
