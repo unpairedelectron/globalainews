@@ -5,6 +5,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { promisify } from 'node:util';
 import path from 'node:path';
 import { once } from 'node:events';
+import AxeBuilder from '@axe-core/playwright';
+import { chromium } from 'playwright-core';
 
 const execFileAsync = promisify(execFile);
 const root = path.resolve(import.meta.dirname, '..', '..', '..');
@@ -765,10 +767,50 @@ async function assertContactAlias() {
     const publicTrustPage = await fetch(`${webOrigin}${route}`);
     const html = await publicTrustPage.text();
     assert.equal(publicTrustPage.status, 200, `${route} must render a complete first response`);
-    assert.equal(publicTrustPage.headers.get('x-robots-tag'), null, `${route} must remain indexable`);
-    assert.doesNotMatch(html, /name="robots" content="noindex/i, `${route} must not emit noindex metadata`);
+    assert.equal(publicTrustPage.headers.get('x-robots-tag'), 'noindex', `${route} must be noindex until approved text exists`);
+    assert.match(html, /name="robots" content="noindex,follow"/i, `${route} must emit noindex metadata`);
     assert.match(html, /<main\b/, `${route} must include page content in its first response`);
     assert.match(html, /id="global-ai-prerender"/, `${route} must include its prerender marker`);
+  }
+
+  const sitemapResponse = await fetch(`${webOrigin}/sitemap.xml`);
+  assert.equal(sitemapResponse.status, 200, 'sitemap route must be available for redirect coverage');
+  const sitemapXml = await sitemapResponse.text();
+  const sitemapPaths = [...sitemapXml.matchAll(/<loc>https:\/\/www\.globalainews\.in([^<]*)<\/loc>/g)]
+    .map((match) => new URL(match[1], 'https://www.globalainews.in').pathname);
+  assert.ok(sitemapPaths.length > 0, 'sitemap must contain canonical routes');
+  for (const route of sitemapPaths) {
+    const canonicalResponse = await fetch(`${webOrigin}${route}`, {
+      headers: { 'x-forwarded-host': 'www.globalainews.in', 'x-forwarded-proto': 'https' },
+      redirect: 'manual',
+    });
+    assert.equal(canonicalResponse.status, 200, `${route} must return directly at its sitemap URL`);
+    assert.equal(canonicalResponse.headers.get('location'), null, `${route} must not redirect from its canonical URL`);
+  }
+
+  const canonicalArticles = [...new Set(sitemapPaths.filter((route) => /^\/article\/[^/]+\/$/.test(route)))];
+  for (const route of canonicalArticles) {
+    const variants = [
+      { pathname: route.slice(0, -1), host: 'www.globalainews.in', protocol: 'https' },
+      { pathname: route, host: 'globalainews.in', protocol: 'http' },
+    ];
+    for (const variant of variants) {
+      const firstResponse = await fetch(`${webOrigin}${variant.pathname}`, {
+        headers: { 'x-forwarded-host': variant.host, 'x-forwarded-proto': variant.protocol },
+        redirect: 'manual',
+      });
+      assert.equal(firstResponse.status, 301, `${variant.host} ${variant.pathname} must redirect once`);
+      assert.equal(
+        firstResponse.headers.get('location'),
+        `https://www.globalainews.in${route}`,
+        `${variant.host} ${variant.pathname} must redirect directly to the canonical article`,
+      );
+      const finalResponse = await fetch(`${webOrigin}${route}`, {
+        headers: { 'x-forwarded-host': 'www.globalainews.in', 'x-forwarded-proto': 'https' },
+        redirect: 'manual',
+      });
+      assert.equal(finalResponse.status, 200, `${route} must finish at a 200 after at most one redirect`);
+    }
   }
 
   const authorDirectoryResponse = await fetch(`${webOrigin}/authors/`);
@@ -832,6 +874,76 @@ async function assertContactAlias() {
     assert.doesNotMatch(html, /name="robots" content="noindex,follow"/i, `${route} should remain indexable`);
     assert.match(html, copy, `${route} must render its shared editorial copy`);
   }
+}
+
+async function assertContrastAcrossPublicPages() {
+  const contentResponse = await fetch(`${apiOrigin}/api/newsroom/content`);
+  assert.equal(contentResponse.status, 200, 'contrast audit requires the maintained public snapshot');
+  const publicSnapshot = await contentResponse.json();
+  const routes = [
+    '/',
+    '/brief/',
+    '/article/india-ai-compute-access-2026/',
+    '/article/ai-models-antibiotic-discovery/',
+    '/data/',
+    '/research/',
+    '/reports/',
+    '/signals/',
+    '/industry/',
+    '/models/',
+    '/policy/',
+    '/india/',
+    '/essays/',
+  ];
+  const browser = await chromium.launch({
+    executablePath: process.env.CHROMIUM_PATH ?? '/repl/tools/bin/chromium',
+    headless: true,
+    args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+  });
+  const failures = [];
+  try {
+    for (const theme of ['light', 'dark']) {
+      const context = await browser.newContext({ viewport: { width: 360, height: 900 } });
+      await context.addInitScript((selectedTheme) => {
+        localStorage.setItem('global-ai-news-theme', selectedTheme);
+      }, theme);
+      const page = await context.newPage();
+      await page.route('**/api/newsroom/content*', (route) => route.fulfill({
+        status: 200,
+        headers: { 'content-type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(publicSnapshot),
+      }));
+      try {
+        for (const width of [360, 768, 1440]) {
+          await page.setViewportSize({ width, height: 1000 });
+          for (const route of routes) {
+            const response = await page.goto(`${webOrigin}${route}`, { waitUntil: 'domcontentloaded' });
+            assert.equal(response?.status(), 200, `${route} must load for the ${theme} contrast audit at ${width}px`);
+            await page.locator('main').first().waitFor({ state: 'visible', timeout: 10_000 });
+            await page.evaluate(() => document.fonts.ready);
+            const result = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
+            for (const violation of result.violations) {
+              failures.push({
+                route,
+                theme,
+                width,
+                id: violation.id,
+                nodes: violation.nodes.map((node) => ({
+                  target: node.target,
+                  summary: node.failureSummary,
+                })),
+              });
+            }
+          }
+        }
+      } finally {
+        await context.close();
+      }
+    }
+  } finally {
+    await browser.close();
+  }
+  assert.deepEqual(failures, [], `axe-core color-contrast violations:\n${JSON.stringify(failures, null, 2)}`);
 }
 
 async function cleanupFixtures() {
@@ -1308,6 +1420,7 @@ async function main() {
     await testRawArticleResponses();
     await assertArticleFailureResponses();
     await assertContactAlias();
+    await assertContrastAcrossPublicPages();
     process.stdout.write('PASS: article first-response raw HTML in production and Vite development, publication gates, and crawler parity\n');
   } finally {
     await Promise.all([

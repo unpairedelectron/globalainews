@@ -13,7 +13,7 @@ const adsensePublisherId = adsenseConfig.match(/export const ADSENSE_PUBLISHER_I
 if (!adsensePublisherId || !/^pub-\d+$/.test(adsensePublisherId)) {
   throw new Error('ADSENSE_PUBLISHER_ID is missing or invalid.');
 }
-const expectedAdsTxt = `google.com, ${adsensePublisherId}, DIRECT, f08c47fec0942fa0\n`;
+const expectedAdsTxt = `google.com, ${adsensePublisherId}, DIRECT, f08c47fec0942fa0`;
 if (readFileSync(adsTxtPath, 'utf8') !== expectedAdsTxt) {
   throw new Error('public/ads.txt must match ADSENSE_PUBLISHER_ID exactly.');
 }

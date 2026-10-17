@@ -7,6 +7,23 @@ export function getLatestStory<T extends Pick<Story, 'date'>>(items: T[]): T | u
   );
 }
 
+export function isWithinLatestWindow(
+  value: string,
+  now = new Date(),
+  maxAgeDays = 14,
+): boolean {
+  const storyDate = new Date(`${value.slice(0, 10)}T00:00:00.000Z`);
+  if (!Number.isFinite(storyDate.getTime())) return false;
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const publishedDay = Date.UTC(
+    storyDate.getUTCFullYear(),
+    storyDate.getUTCMonth(),
+    storyDate.getUTCDate(),
+  );
+  const ageDays = Math.floor((today - publishedDay) / 86_400_000);
+  return ageDays >= 0 && ageDays <= maxAgeDays;
+}
+
 export function formatEditorialDate(value: string): string {
   const date = new Date(`${value.slice(0, 10)}T00:00:00.000Z`);
   if (!Number.isFinite(date.getTime())) return 'Date unavailable';

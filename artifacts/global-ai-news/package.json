@@ -13,6 +13,7 @@
     "audit:links": "node scripts/audit-links.mjs",
     "typecheck": "pnpm --filter @workspace/api-client-react exec tsc --build && tsc -p tsconfig.json --noEmit",
     "test:release-metadata": "node tests/release-metadata.test.mjs",
+    "test:ads": "node tests/ads-config.test.mjs",
     "test:release-history": "node tests/release-history.test.mjs",
     "test:theme": "node tests/theme.test.mjs",
     "test:content-quality": "pnpm exec tsx --test tests/content-quality.test.mjs",
@@ -26,9 +27,10 @@
     "test:visual": "node --test --test-name-pattern=\"light and dark themes stay readable across key public and newsroom routes\" tests/seo-smoke.test.mjs",
     "update:visual-baselines": "UPDATE_VISUAL_BASELINES=1 pnpm run test:visual",
     "test:publication-safety": "pnpm exec tsx --test tests/publication-safety.test.ts",
-    "test:smoke": "pnpm --filter @workspace/api-server run build && pnpm run test:publication-safety && pnpm --filter @workspace/api-server run test:security && pnpm --filter @workspace/api-server run test:gzip && pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:content-quality && pnpm run test:research-report && pnpm run test:authority-registry && pnpm run test:seo-date-stability && pnpm run build:production && pnpm run test:publication-fixture && pnpm run test:article-first-response && pnpm run test:article-snapshot-resilience && pnpm run audit:links && node --test tests/seo-smoke.test.mjs"
+    "test:smoke": "pnpm --filter @workspace/api-server run build && pnpm run test:publication-safety && pnpm --filter @workspace/api-server run test:security && pnpm --filter @workspace/api-server run test:gzip && pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:content-quality && pnpm run test:research-report && pnpm run test:authority-registry && pnpm run test:seo-date-stability && pnpm run build:production && pnpm run test:ads && pnpm run test:publication-fixture && pnpm run test:article-first-response && pnpm run test:article-snapshot-resilience && pnpm run audit:links && node --test tests/seo-smoke.test.mjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.4",
     "@radix-ui/react-alert-dialog": "^1.1.7",
@@ -78,6 +80,7 @@
     "input-otp": "^1.4.2",
     "lucide-react": "catalog:",
     "next-themes": "^0.4.6",
+    "playwright-core": "^1.64.1",
     "react": "catalog:",
     "react-day-picker": "^9.11.1",
     "react-dom": "catalog:",

@@ -22,6 +22,8 @@ assert.match(storyContent, /role="region"/);
 assert.match(storyContent, /aria-label=\{section\.table\.caption \?\? `Scrollable data table in \$\{section\.heading\}`\}/);
 assert.match(storyContent, /tabIndex=\{0\}/);
 assert.match(storyContent, /scope: 'row'/);
+assert.match(storyContent, /data-label=\{section\.table!\.headers\[cellIndex\]\}/);
+assert.match(css, /@media \(max-width: 699px\)[\s\S]*table-scroll-region td::before/);
 assert.match(site, /className=\{`story-image \$\{className\}`\}/);
 assert.match(site, /className="article-hero-image"/);
 

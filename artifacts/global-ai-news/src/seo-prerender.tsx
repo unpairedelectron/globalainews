@@ -8,8 +8,9 @@ import {
   type NewsroomContentSnapshot,
   type Story,
 } from './content';
-import { formatEditorialDate, getLatestStory } from './editorial-date';
+import { formatEditorialDate, getLatestStory, isWithinLatestWindow } from './editorial-date';
 import type { SeoMetadata } from './seo-metadata';
+import { getQualifiedSectionNavigation } from './content-rules';
 import { getEditorialPageCopy } from './editorial-pages';
 import { getEditorialImagePath } from './editorial-images';
 import { StoryBody, StoryCitedText, StorySourceList } from './components/story-content';
@@ -53,7 +54,7 @@ function StoryList({
           <div>
             <p className="eyebrow text-primary">{story.category} · {getStoryReadTime(story)}</p>
             <h2 className="mt-3 max-w-3xl font-serif text-3xl leading-[.95]">
-              <a href={`/article/${story.slug}/`} className="hover:text-primary">{story.title}</a>
+              <a href={`/article/${story.slug}/`} className="text-foreground hover:text-primary">{story.title}</a>
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{story.dek}</p>
             <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -137,13 +138,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             <a href="/brief/" className="eyebrow text-primary">The Daily Brief</a>
           </div>
           <nav aria-label="Main navigation" className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-foreground/10 pt-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            <a href="/brief/" className="min-h-11 inline-flex items-center hover:text-primary">Brief</a>
-            <a href="/research/" className="min-h-11 inline-flex items-center hover:text-primary">Research</a>
-            <a href="/data/" className="min-h-11 inline-flex items-center hover:text-primary">Data</a>
-            <a href="/reports/" className="min-h-11 inline-flex items-center hover:text-primary">Reports</a>
-            <a href="/signals/" className="min-h-11 inline-flex items-center hover:text-primary">Signals</a>
-            <a href="/industry/" className="min-h-11 inline-flex items-center hover:text-primary">Industry</a>
-            <a href="/india/" className="min-h-11 inline-flex items-center hover:text-primary">India</a>
+            {getQualifiedSectionNavigation(snapshot).map(([label, path]) => <a key={path} href={`${path}/`} className="min-h-11 inline-flex items-center hover:text-primary">{label}</a>)}
           </nav>
         </header>
         <main className="mx-auto max-w-4xl">
@@ -759,18 +754,6 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
       </div>
     );
   }
-  if (metadata.indexable === false) {
-    return (
-      <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
-        <header className="flex items-center justify-between border-b border-foreground/20 py-5"><a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a><a href="/brief/" className="eyebrow text-primary">The Daily Brief</a></header>
-        <main className="mx-auto min-h-[60vh] max-w-[1180px] py-20 md:py-28">
-          <p className="eyebrow text-primary">Global AI News</p>
-          <h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">{heading}</h1>
-          <p className="mt-8 max-w-xl border-t border-foreground/15 pt-5 text-lg leading-8 text-muted-foreground">{metadata.description}</p>
-        </main>
-      </div>
-    );
-  }
   if (route === '/') {
     const latestStory = getLatestStory(stories);
     const orderedStories = latestStory
@@ -782,11 +765,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
         <header className="flex items-center justify-between border-b border-foreground/20 py-5">
           <a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a>
           <nav aria-label="Main navigation" className="hidden items-center gap-4 xl:flex">
-            {[
-              ['Brief', '/brief/'], ['Signals', '/signals/'], ['Research', '/research/'], ['Data', '/data/'],
-              ['Reports', '/reports/'], ['Industry', '/industry/'], ['Models', '/models/'],
-              ['Policy', '/policy/'], ['India', '/india/'], ['Essays', '/essays/'],
-            ].map(([label, href]) => <a key={href} href={href} className="eyebrow text-muted-foreground hover:text-primary">{label}</a>)}
+            {getQualifiedSectionNavigation(snapshot).map(([label, path]) => <a key={path} href={`${path}/`} className="eyebrow text-muted-foreground hover:text-primary">{label}</a>)}
           </nav>
           <div className="flex items-center gap-3">
             <a href="/search/" className="eyebrow inline-flex min-h-11 items-center text-muted-foreground hover:text-primary">Search</a>
@@ -794,11 +773,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             <details className="relative xl:hidden">
               <summary className="min-h-11 cursor-pointer list-none border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Explore</summary>
               <nav aria-label="Compact primary navigation" className="absolute right-0 z-20 mt-2 grid min-w-52 gap-3 border border-foreground/15 bg-background p-4 shadow-lg">
-                {[
-                  ['Brief', '/brief/'], ['Signals', '/signals/'], ['Research', '/research/'], ['Data', '/data/'],
-                  ['Reports', '/reports/'], ['Industry', '/industry/'], ['Models', '/models/'],
-                  ['Policy', '/policy/'], ['India', '/india/'], ['Essays', '/essays/'],
-                ].map(([label, href]) => <a key={href} href={href} className="flex min-h-11 items-center text-sm hover:text-primary">{label}</a>)}
+                {getQualifiedSectionNavigation(snapshot).map(([label, path]) => <a key={path} href={`${path}/`} className="flex min-h-11 items-center text-sm hover:text-primary">{label}</a>)}
               </nav>
             </details>
           </div>
@@ -807,7 +782,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
           <section className="border-b border-foreground/20 py-10 md:py-16">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-foreground/15 pb-4">
               <p className="eyebrow text-primary">Global AI News · The evidence desk</p>
-              {latestStory && <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Latest published · <time dateTime={latestStory.date}>{formatEditorialDate(latestStory.date)}</time></p>}
+              {latestStory && isWithinLatestWindow(latestStory.date) && <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Latest published · <time dateTime={latestStory.date}>{formatEditorialDate(latestStory.date)}</time></p>}
             </div>
             <div className="grid gap-10 pt-8 lg:grid-cols-[.82fr_1.18fr] lg:gap-16">
               <div className="flex flex-col justify-between">
@@ -853,7 +828,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
   return (
     <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
       <header className="flex items-center justify-between border-b border-foreground/20 py-5">
-        <a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a>
+        <a href="/" className="font-serif text-2xl tracking-tight text-foreground">Global AI News</a>
         <a href="/brief/" className="eyebrow text-primary">The Daily Brief</a>
       </header>
       <main>

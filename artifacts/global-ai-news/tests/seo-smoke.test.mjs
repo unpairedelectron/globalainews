@@ -451,6 +451,14 @@ async function serveFile(response, filePath) {
   const extension = path.extname(filePath).toLowerCase();
   response.statusCode = 200;
   response.setHeader('Content-Type', mimeTypes[extension] ?? 'application/octet-stream');
+  if (
+    extension === '.html' &&
+    /<meta\b(?=[^>]*\bname=["']robots["'])(?=[^>]*\bcontent=["']noindex(?:,follow)?["'])[^>]*>/i.test(
+      await readFile(filePath, 'utf8'),
+    )
+  ) {
+    response.setHeader('X-Robots-Tag', 'noindex');
+  }
   const socialDirectory = path.join(distDir, 'social', 'articles');
   if (
     extension === '.png' &&
@@ -2884,45 +2892,44 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.doesNotMatch(archiveBody, /name="robots" content="noindex,follow"/);
   const topicsMetadata = metadataManifest.routes.find((metadata) => metadata.path === '/topics');
   assert.ok(topicsMetadata, 'Topics index is missing public SEO metadata');
-  assert.notEqual(topicsMetadata.indexable, false, 'Topics index must be indexable when connected topic records exist');
-  assert.ok(routes.includes('/topics'), 'Topics index is missing from the sitemap');
+  assert.equal(topicsMetadata.indexable, false, 'Topics index must remain noindex until a topic meets the five-story threshold');
+  assert.ok(!routes.includes('/topics'), 'unqualified Topics index must be removed from the sitemap');
   const { response: topicsResponse, body: topicsBody } = await fetchText('/topics');
   assert.equal(topicsResponse.status, 200, 'Topics index is not reachable');
   assert.match(topicsBody, /<h1[^>]*>Topics that/, 'Topics index is missing its prerendered heading');
   assert.match(topicsBody, /data-testid="topics-index"/, 'Topics index is missing connected topic records');
   assert.match(topicsBody, /href="\/topic\/(?:ai|india)\//, 'Topics index is missing links to topic detail pages');
-  assert.doesNotMatch(topicsBody, /editorial-input-required|name="robots" content="noindex,follow"/, 'Topics index must not ship as an unpublished placeholder');
+  assert.match(topicsBody, /name="robots" content="noindex,follow"/, 'under-threshold Topics index must be noindex');
   const reportsMetadata = metadataManifest.routes.find((metadata) => metadata.path === '/reports');
   assert.ok(reportsMetadata, 'Reports index is missing public SEO metadata');
-  assert.notEqual(reportsMetadata.indexable, false, 'Reports index must be indexable once maintained reports are available');
-  assert.ok(routes.includes('/reports'), 'Reports index is missing from the sitemap');
+  assert.equal(reportsMetadata.indexable, false, 'Reports index must remain noindex until six published reports are available');
+  assert.ok(!routes.includes('/reports'), 'under-threshold Reports index must be removed from the sitemap');
   const { response: reportsResponse, body: reportsBody } = await fetchText('/reports');
   assert.equal(reportsResponse.status, 200, 'Reports index is not reachable');
   assert.match(reportsBody, /<h1[^>]*>Reports/, 'Reports index is missing its prerendered heading');
   assert.match(reportsBody, /india-ai-compute-access-2026/, 'Reports index does not link to the maintained flagship report');
   assert.match(reportsBody, /data-testid="reports-authority-network"/, 'Reports index is missing its research/data/topic/entity connections');
   assert.match(reportsBody, /Published research records|Research/, 'Reports index is missing its research context');
-  assert.doesNotMatch(reportsBody, /name="robots" content="noindex,follow"/, 'Reports index must not ship with a noindex directive');
+  assert.match(reportsBody, /name="robots" content="noindex,follow"/, 'under-threshold Reports index must ship with a noindex directive');
   const publishedResearch = newsroomContent.researchRecords.find((record) => record.status === 'published');
   const publishedDataProduct = newsroomContent.dataProducts.find((product) => product.status === 'published');
   assert.ok(publishedResearch, 'newsroom snapshot is missing its published research record');
   assert.ok(publishedDataProduct, 'newsroom snapshot is missing its published data product');
-  for (const route of [
-    '/research',
-    `/research/${publishedResearch.slug}`,
-    `/data/${publishedDataProduct.slug}`,
-  ]) {
-    assert.notEqual(
-      metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable,
-      false,
-      `${route}: published authority page must be indexable`,
-    );
-    assert.ok(routes.includes(route), `${route}: published authority page is missing from the sitemap`);
+  for (const route of [`/research/${publishedResearch.slug}`, `/data/${publishedDataProduct.slug}`]) {
+    assert.notEqual(metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable, false);
+    assert.ok(routes.includes(route), `${route}: published authority record is missing from the sitemap`);
     const { response, body } = await fetchText(route);
     assert.equal(response.status, 200, `${route}: direct first response is not reachable`);
     assert.match(body, /<h1\b/, `${route}: first response is missing its prerendered heading`);
     assert.match(body, /id="global-ai-prerender"/, `${route}: first response is missing the hydration marker`);
-    assert.doesNotMatch(body, /name="robots" content="noindex,follow"/, `${route}: published authority page must not be noindex`);
+    assert.doesNotMatch(body, /name="robots" content="noindex,follow"/, `${route}: published authority record must not be noindex`);
+  }
+  for (const route of ['/research', '/data']) {
+    assert.equal(metadataManifest.routes.find((metadata) => metadata.path === route)?.indexable, false);
+    assert.ok(!routes.includes(route), `${route}: under-threshold section must be removed from the sitemap`);
+    const { response, body } = await fetchText(route);
+    assert.equal(response.status, 200, `${route}: section must remain directly reachable`);
+    assert.match(body, /name="robots" content="noindex,follow"/);
   }
   const researchBody = (await fetchText(`/research/${publishedResearch.slug}`)).body;
   assert.match(researchBody, /Research record/, 'research detail first response is missing its record context');

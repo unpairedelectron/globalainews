@@ -21,6 +21,8 @@ import {
   withdrawnStorySlugs,
 } from '../src/content.ts';
 import { editorialPageCopy } from '../src/editorial-pages.ts';
+import { CONTENT_RULES, getQualifiedSectionNavigation, getSectionItemCount } from '../src/content-rules.ts';
+import { isWithinLatestWindow } from '../src/editorial-date.ts';
 
 test('all maintained and scheduled stories meet the minimum word count', () => {
   const allStories = [...stories, ...scheduledStories];
@@ -290,4 +292,36 @@ test('footer policy and standards pages provide substantive, page-specific infor
     assert.ok(page.sections.length >= 4, `${path} needs at least four specific sections`);
     assert.ok(wordCount >= 150, `${path} has only ${wordCount} words of useful copy`);
   }
+});
+
+test('section and topic visibility follows the published-content thresholds', () => {
+  const sixStories = Array.from({ length: 6 }, (_, index) => ({
+    slug: `published-${index}`,
+    category: 'The Edge',
+    contentType: 'Brief',
+    classification: 'reported',
+    topic: 'AI',
+  }));
+  const snapshot = {
+    stories: sixStories,
+    researchRecords: [],
+    dataProducts: [],
+    topics: [],
+    entities: [],
+    signals: [],
+  };
+  assert.equal(CONTENT_RULES.sectionMinimumItems, 6);
+  assert.equal(CONTENT_RULES.railMinimumItems, 3);
+  assert.equal(CONTENT_RULES.topicMinimumStories, 5);
+  assert.equal(getSectionItemCount('/brief', snapshot), 6);
+  assert.deepEqual(getQualifiedSectionNavigation(snapshot), [['Brief', '/brief']]);
+  assert.equal(getQualifiedSectionNavigation({ ...snapshot, stories: sixStories.slice(0, 5) }).length, 0);
+  assert.ok(getQualifiedSectionNavigation(snapshot).length <= CONTENT_RULES.maxPrimaryNavigationItems);
+});
+
+test('latest-story strips use a calendar-day freshness window', () => {
+  const now = new Date('2026-10-17T18:00:00Z');
+  assert.equal(isWithinLatestWindow('2026-10-03', now), true);
+  assert.equal(isWithinLatestWindow('2026-10-02', now), false);
+  assert.equal(isWithinLatestWindow('2026-10-18', now), false);
 });

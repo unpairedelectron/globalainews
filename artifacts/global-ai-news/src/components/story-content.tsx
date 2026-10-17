@@ -70,6 +70,16 @@ export function StoryBody({ story, sources }: { story: Story; sources: Source[] 
             </blockquote>
           )}
           {section.table && (
+            (() => {
+              const citedSourceSlugs = [...new Set(
+                section.table!.rows.flatMap((row) =>
+                  row.cells.flatMap((cell) => [...cell.matchAll(/\[@([a-z0-9-]+)\]/g)].map((match) => match[1])),
+                ),
+              )];
+              const citedSourceNames = citedSourceSlugs
+                .map((slug) => sources.find((source) => source.slug === slug)?.name)
+                .filter((name): name is string => Boolean(name));
+              return (
             <div
               className="table-scroll-region not-prose my-8 border border-foreground/15"
               role="region"
@@ -103,6 +113,7 @@ export function StoryBody({ story, sources }: { story: Story; sources: Source[] 
                           <Cell
                             key={`${story.slug}-table-${rowIndex}-${cellIndex}`}
                             {...(cellIndex === 0 ? { scope: 'row' as const } : {})}
+                            data-label={section.table!.headers[cellIndex]}
                             className="border-b border-foreground/10 px-4 py-3 text-left leading-6"
                           >
                             <CitedText text={cell} story={story} sources={sources} />
@@ -113,7 +124,14 @@ export function StoryBody({ story, sources }: { story: Story; sources: Source[] 
                   ))}
                 </tbody>
               </table>
+              <p className="border-t border-foreground/10 px-4 py-2 text-xs leading-5 text-muted-foreground">
+                {citedSourceNames.length
+                  ? `Table source${citedSourceNames.length === 1 ? '' : 's'}: ${citedSourceNames.join('; ')}.`
+                  : 'Source note: see the story’s Sources list below; this table has no table-specific citation.'}
+              </p>
             </div>
+              );
+            })()
           )}
         </section>
       ))}

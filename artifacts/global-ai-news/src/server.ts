@@ -97,7 +97,9 @@ app.use((request, response, next) => {
   const canonicalOrigin = 'https://www.globalainews.in';
   const managedHost = host === 'globalainews.in' || host === 'www.globalainews.in';
   const isCanonicalHost = host === 'www.globalainews.in' && protocol === 'https';
-  const canonicalArticlePath = managedHost && /^\/article\/[^/]+$/.test(cleanPath)
+  const canonicalArticlePath = managedHost
+    && /^\/article\/[^/]+$/.test(cleanPath)
+    && pathname !== `${cleanPath}/`
     ? `${cleanPath}/`
     : undefined;
 
@@ -303,6 +305,12 @@ app.get(pendingEditorialRoutes, async (request, response): Promise<void> => {
       '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page temporarily unavailable — Global AI News</title></head><body><main><h1>Page temporarily unavailable</h1></main></body></html>',
     );
   }
+});
+
+app.use((request, response, next) => {
+  const route = new URL(request.originalUrl, 'http://localhost').pathname.replace(/\/+$/, '') || '/';
+  if (getSeoMetadata(route).indexable === false) response.setHeader('X-Robots-Tag', 'noindex');
+  next();
 });
 
 app.use(express.static(publicDirectory, { fallthrough: true }));

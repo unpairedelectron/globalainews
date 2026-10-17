@@ -7,7 +7,7 @@ import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter,
 import { StoryBody, StoryCitedText, StorySourceList } from '@/components/story-content';
 import { AuthorDirectory } from '@/components/author-directory';
 import { useNewsroomSnapshot } from '@/newsroom';
-import { formatEditorialDate, getLatestStory } from '@/editorial-date';
+import { formatEditorialDate, getLatestStory, isWithinLatestWindow } from '@/editorial-date';
 import { getEditorialPageCopy } from '@/editorial-pages';
 import { AdSlot } from '@/components/monetization';
 import NotFound from '@/pages/not-found';
@@ -33,7 +33,7 @@ export function HomePage() {
      <section className="border-b border-foreground/20 py-10 md:py-16">
        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-foreground/15 pb-4">
          <p className="eyebrow text-primary">Global AI News · The evidence desk</p>
-         {latestStory && <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Latest published · <time dateTime={latestStory.date}>{formatEditorialDate(latestStory.date)}</time></p>}
+          {latestStory && isWithinLatestWindow(latestStory.date) && <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Latest published · <time dateTime={latestStory.date}>{formatEditorialDate(latestStory.date)}</time></p>}
        </div>
        <div className="grid gap-10 pt-8 lg:grid-cols-[.82fr_1.18fr] lg:gap-16">
          <div className="flex flex-col justify-between">

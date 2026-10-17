@@ -1,5 +1,6 @@
-import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, getStoryAuthorIdentity, indiaIndex, sources, timelineEvents, type Author, type NewsroomContentSnapshot, type Source, type Story } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, getStoryAuthorIdentity, indiaIndex, signals, sources, timelineEvents, type Author, type NewsroomContentSnapshot, type Source, type Story } from './content';
 import { dataProductRecords, researchRecords, topicRecords } from './authority/registry';
+import { CONTENT_RULES, getSectionItemCount } from './content-rules';
 
 export const SITE_URL = 'https://www.globalainews.in';
 
@@ -262,22 +263,26 @@ export function getSeoMetadata(
   const dataProductList = authoritySnapshot?.dataProducts ?? dataProductRecords;
   const topicRecordList = authoritySnapshot?.topics ?? topicRecords;
   const publishedStorySlugs = new Set(publishedStories.map((story) => story.slug));
+  const sectionSource = {
+    stories: publishedStories,
+    researchRecords: researchRecordList,
+    dataProducts: dataProductList,
+    topics: topicRecordList,
+    entities: entityRecords,
+    signals: authoritySnapshot?.signals ?? signals,
+  };
 
   if (cleanPath === '/research') {
     return {
       ...staticMetadata['/research'],
-      indexable: researchRecordList.some(
-        (record) => record.status === 'published' && publishedStorySlugs.has(record.storySlug),
-      ),
+      indexable: getSectionItemCount('/research', sectionSource) >= CONTENT_RULES.sectionMinimumItems,
     };
   }
 
   if (cleanPath === '/data') {
     return {
       ...staticMetadata['/data'],
-      indexable: dataProductList.some(
-        (product) => product.status === 'published' && product.storySlugs.some((slug) => publishedStorySlugs.has(slug)),
-      ),
+      indexable: getSectionItemCount('/data', sectionSource) >= CONTENT_RULES.sectionMinimumItems,
     };
   }
 
@@ -365,7 +370,7 @@ export function getSeoMetadata(
         title: `${label} — Global AI News`,
         description: getArticleDescription({ dek: topic.description }),
         path: topic.route,
-        indexable: topic.indexable && visibleStorySlugs.length > 0,
+        indexable: topic.indexable && visibleStorySlugs.length >= CONTENT_RULES.topicMinimumStories,
       };
     }
   }
@@ -385,7 +390,16 @@ export function getSeoMetadata(
   }
 
   const staticPage = staticMetadata[cleanPath];
-  if (staticPage) return staticPage;
+  if (staticPage) {
+    const sectionPaths = ['/brief', '/reports', '/signals', '/industry', '/models', '/policy', '/india', '/essays', '/topics'];
+    if (sectionPaths.includes(cleanPath)) {
+      return {
+        ...staticPage,
+        indexable: getSectionItemCount(cleanPath, sectionSource) >= CONTENT_RULES.sectionMinimumItems,
+      };
+    }
+    return staticPage;
+  }
 
   const timelineMatch = cleanPath.match(/^\/timeline\/([^/]+)$/);
   if (timelineMatch) {

@@ -27,4 +27,5 @@
 - [Vite post-build metadata](vite-post-build-metadata.md) — use `writeBundle` when processing emitted files and test with external temporary output directories.
 - [Documentation checkpoints and build fingerprints](documentation-checkpoints-and-build-fingerprints.md) — distinguish build-time revisions from later documentation-only Git commits.
 - [Article-render diagnostic whitelist](article-render-diagnostic-whitelist.md) — log correlation, route, timings, failure/cache state, and status; exclude bodies, payload sizes/counts, and editorial fields.
+- [Noindex route prerendering](noindex-route-prerendering.md) — known noindex pages still need first-response content; unknown article slugs must stay unrendered and 404.
 - [Release severity gates](release-severity-gates.md) — only demonstrated P0 defects block; record P1/P2 findings and proceed once current artifacts and P0 checks pass.

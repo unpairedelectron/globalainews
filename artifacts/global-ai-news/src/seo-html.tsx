@@ -20,6 +20,16 @@ const prerenderPublicNoindexRoutes = new Set([
   '/privacy',
   '/terms',
   '/authors',
+  '/reports',
+  '/topics',
+  '/research',
+  '/data',
+  '/signals',
+  '/industry',
+  '/models',
+  '/policy',
+  '/india',
+  '/essays',
 ]);
 
 function escapeHtml(value: string): string {

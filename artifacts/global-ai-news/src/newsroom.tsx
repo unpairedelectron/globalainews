@@ -82,14 +82,6 @@ export function NewsroomProvider({ children }: { children: ReactNode }) {
 
   return (
     <snapshotContext.Provider value={snapshot}>
-      {snapshot.stale && (
-        <div
-          data-testid="status-content-stale"
-          className="border-b border-warning/40 bg-warning/10 px-5 py-2 text-center font-mono text-[10px] uppercase tracking-widest text-warning"
-        >
-          Editorial source last refreshed outside the current publishing window
-        </div>
-      )}
       {children}
     </snapshotContext.Provider>
   );
