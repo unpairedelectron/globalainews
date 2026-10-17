@@ -19,6 +19,7 @@ export interface NewsletterSubscriptionInput {
      * @maxLength 320
      */
   email: string;
+  website?: string;
 }
 
 export type NewsletterSubscriptionStatus = typeof NewsletterSubscriptionStatus[keyof typeof NewsletterSubscriptionStatus];

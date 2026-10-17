@@ -692,6 +692,28 @@ function routeMetadataPlugin() {
       if (!contentSnapshot || !publishedStories) {
         throw new Error('Cannot generate publication assets without the API newsroom content snapshot.');
       }
+      const searchIndex = publishedStories.map((story) => {
+        const author = contentSnapshot.authors.find(
+          (candidate) => candidate.slug === story.author,
+        );
+        const entityNames = story.entities
+          .map((slug) => contentSnapshot.entities.find((entity) => entity.slug === slug)?.name ?? '')
+          .join(' ');
+        const text = [
+          story.title,
+          story.dek,
+          story.body.flatMap((section) => [section.heading, ...section.paragraphs]).join(' '),
+          story.topic,
+          story.category,
+          author?.name ?? '',
+          entityNames,
+        ].join(' ').toLocaleLowerCase();
+        return { slug: story.slug, text };
+      });
+      writeFileSync(
+        path.join(outputDir, 'search-index.json'),
+        JSON.stringify(searchIndex),
+      );
       const baseHtml = readFileSync(path.join(outputDir, 'index.html'), 'utf8');
       const serverOutputDir = path.resolve(outputDir, '..', 'server');
       mkdirSync(serverOutputDir, { recursive: true });

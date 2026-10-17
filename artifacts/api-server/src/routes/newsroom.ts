@@ -77,7 +77,6 @@ import { renderSocialPreviewPng } from "../lib/social-preview-png";
 import {
   getAutomationStatus,
   getAutomationRuns,
-  getDynamicSourceRecords,
   runEditorialAutomation,
   type AutomationRunFilters,
   type AutomationRunOutcome,
@@ -88,7 +87,8 @@ const router: IRouter = Router();
 type ReleaseRow = typeof editorialReleasesTable.$inferSelect;
 type ReleaseHistoryInsert = typeof editorialReleaseHistoryTable.$inferInsert;
 type PublicNewsroomContentSnapshot = ReturnType<typeof GetNewsroomContentResponse.parse>;
-const NEWSROOM_CONTENT_CACHE_TTL_MS = 1_000;
+const NEWSROOM_CONTENT_CACHE_TTL_MS = 60 * 60 * 1000;
+let publishedReleaseSnapshot: Story[] = [];
 let publicNewsroomContentCache:
   | { snapshot: PublicNewsroomContentSnapshot; cachedAt: number }
   | undefined;
@@ -236,10 +236,23 @@ async function ensureSeeded(): Promise<void> {
 
 async function getReleaseRows(): Promise<ReleaseRow[]> {
   if (shouldSeedDefaultSchedule()) await ensureSeeded();
-  return db
+  const rows = await db
     .select()
     .from(editorialReleasesTable)
     .orderBy(asc(editorialReleasesTable.position), asc(editorialReleasesTable.publishAt));
+  const now = new Date();
+  publishedReleaseSnapshot = rows.flatMap((row) => {
+    const story = toScheduledStory(row);
+    return isPublicArticle({
+      status: row.status,
+      publishAt: story.publishAt,
+      wordCount: releaseWordCount(story, row.slug),
+    }, now)
+      ? [story]
+      : [];
+  });
+  invalidatePublicNewsroomContentCache();
+  return rows;
 }
 
 function toScheduledStory(row: ReleaseRow): EditorialReleaseStory {
@@ -304,20 +317,8 @@ function toReleaseResponse(row: ReleaseRow, now = new Date()) {
   };
 }
 
-async function getPublishedStoriesFromDatabase(): Promise<Story[]> {
-  const rows = await getReleaseRows();
-  const now = new Date();
-  const schedule = rows.flatMap((row) => {
-    const story = toScheduledStory(row);
-    return isPublicArticle({
-      status: row.status,
-      publishAt: story.publishAt,
-      wordCount: releaseWordCount(story, row.slug),
-    }, now)
-      ? [story]
-      : [];
-  });
-  return mergeEligiblePublishedStories(now, schedule);
+async function getPublishedStoriesFromSnapshot(): Promise<Story[]> {
+  return mergeEligiblePublishedStories(new Date(), publishedReleaseSnapshot);
 }
 
 function rejectShortRelease(
@@ -489,7 +490,7 @@ export async function serveNewsroomSitemap(
   res: ExpressResponse,
 ): Promise<void> {
   try {
-    const publishedStories = await getPublishedStoriesFromDatabase();
+    const publishedStories = await getPublishedStoriesFromSnapshot();
     const metadataManifest = getSeoMetadataManifest(publishedStories);
     const routes = metadataManifest.routes.filter(
       (metadata) => metadata.indexable !== false,
@@ -526,7 +527,7 @@ router.get("/newsroom/sitemap.xml", serveNewsroomSitemap);
 
 export async function serveNewsroomFeed(_req: Request, res: ExpressResponse): Promise<void> {
   try {
-    const publishedStories = await getPublishedStoriesFromDatabase();
+    const publishedStories = await getPublishedStoriesFromSnapshot();
     const items = publishedStories.slice(0, 30).map((story) => {
       const url = escapeXml(getCanonicalUrl(`/article/${story.slug}`));
       return `    <item><title>${escapeXml(story.title)}</title><link>${url}</link><guid>${url}</guid><pubDate>${new Date(`${story.date}T07:30:00Z`).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`;
@@ -545,7 +546,7 @@ router.get("/newsroom/feed.xml", serveNewsroomFeed);
 
 router.get("/newsroom/social/articles/:slug.svg", async (req, res): Promise<void> => {
   try {
-    const publishedStories = await getPublishedStoriesFromDatabase();
+    const publishedStories = await getPublishedStoriesFromSnapshot();
     const story = publishedStories.find((candidate) => candidate.slug === req.params.slug);
     if (!story) {
       res.status(404).type("text/plain").send("Social preview not found.");
@@ -560,7 +561,7 @@ router.get("/newsroom/social/articles/:slug.svg", async (req, res): Promise<void
 
 router.get("/newsroom/social/articles/:slug.png", async (req, res): Promise<void> => {
   try {
-    const publishedStories = await getPublishedStoriesFromDatabase();
+    const publishedStories = await getPublishedStoriesFromSnapshot();
     const story = publishedStories.find((candidate) => candidate.slug === req.params.slug);
     if (!story) {
       res.status(404).type("text/plain").send("Social preview not found.");
@@ -618,7 +619,7 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
   let snapshotValidationMs = 0;
   try {
     const publishedStoriesStartedAt = Date.now();
-    const publishedStories = await getPublishedStoriesFromDatabase();
+    const publishedStories = await getPublishedStoriesFromSnapshot();
     publishedStoriesMs = Date.now() - publishedStoriesStartedAt;
     const publishedStorySlugs = new Set(publishedStories.map((story) => story.slug));
     const publicTimelineEvents = timelineEvents.filter(
@@ -660,18 +661,10 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
       ...publicDataProducts.flatMap((record) => record.sourceSlugs),
       ...publicTopics.flatMap((record) => record.sourceSlugs),
     ]);
-    phase = "dynamic_sources";
-    const dynamicSourcesStartedAt = Date.now();
-    const dynamicSources = (await getDynamicSourceRecords()).filter((source) =>
+    phase = "source_index";
+    const sourceRecords: Source[] = maintainedSources.filter((source) =>
       citedSourceSlugs.has(source.slug),
     );
-    dynamicSourcesMs = Date.now() - dynamicSourcesStartedAt;
-    const sourceRecords: Source[] = [
-      ...maintainedSources.filter((source) => citedSourceSlugs.has(source.slug)),
-      ...dynamicSources.filter(
-        (source) => !maintainedSources.some((existing) => existing.slug === source.slug),
-      ),
-    ];
     const publicSources = sourceRecords.map((source) => ({
       ...source,
       title: source.title ?? source.name,
@@ -790,14 +783,8 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
 
 router.get("/newsroom/metadata", async (req, res): Promise<void> => {
   try {
-    const publishedStories = await getPublishedStoriesFromDatabase();
-    const dynamicSources = await getDynamicSourceRecords();
-    const sourceRecords: Source[] = [
-      ...maintainedSources,
-      ...dynamicSources.filter(
-        (source) => !maintainedSources.some((existing) => existing.slug === source.slug),
-      ),
-    ];
+    const publishedStories = await getPublishedStoriesFromSnapshot();
+    const sourceRecords: Source[] = maintainedSources;
     res.setHeader("Cache-Control", "no-store");
     res.setHeader("X-Robots-Tag", "noindex");
     res.json(
@@ -912,6 +899,7 @@ router.post("/newsroom/releases", requireEditorAuth, async (req, res): Promise<v
       );
       return release;
     });
+    await getReleaseRows();
     invalidatePublicNewsroomContentCache();
     res.status(201).json(CreateNewsroomReleaseResponse.parse(toReleaseResponse(created)));
   } catch (error: unknown) {

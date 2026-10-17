@@ -6,7 +6,6 @@ import {
   entities,
   essays,
   evidenceSummaries,
-  getEditorialSchedule,
   getPublishedStories,
   indiaIndex,
   industryMap,
@@ -33,13 +32,12 @@ async function getPublishedStoriesForBuild() {
   const stories = getPublishedStories(now);
   return {
     stories,
-    schedule: getEditorialSchedule(now),
     now,
   };
 }
 
 async function getNewsroomContentForBuild() {
-  const [{ stories, schedule, now }] = await Promise.all([
+  const [{ stories, now }] = await Promise.all([
     getPublishedStoriesForBuild(),
   ]);
   const publishedStorySlugs = new Set(stories.map((story) => story.slug));
@@ -103,7 +101,6 @@ async function getNewsroomContentForBuild() {
     indiaIndex,
     essays,
     askGlobalAnswers,
-    schedule,
   };
 }
 

@@ -3,11 +3,11 @@ name: Published route source of truth
 description: Static publishing files and newsroom metadata must agree on every public article route.
 ---
 
-The root sitemap and RSS feed should be served from the live API so they reflect newly published releases without a web rebuild. Static article HTML and route metadata remain build-time snapshots. Production and Vite development must preserve existing pre-rendered article HTML unchanged; only missing article files use API-backed first-response rendering so post-build slugs load without shadowing prior releases.
+Public newsroom GETs (content, metadata, sitemap, RSS, and social previews) must use maintained static content plus a process-local published-release snapshot, never PostgreSQL. Authenticated editor release reads and writes refresh that snapshot. Static article HTML and build metadata remain build-time snapshots. Production and Vite development must preserve existing pre-rendered article HTML unchanged; only missing article files use API-backed first-response rendering so post-build slugs load without shadowing prior releases.
 
 **Why:** Replit static rewrites preserve an existing matching file and only rewrite missing paths. Vite's source public directory does not contain the built release articles, so development must also consult the publication output or it can render over a pre-rendered route. The missing-file fallback lets readers open a newly published route, but its first HTML response still carries generic build-time metadata until browser JavaScript runs; social crawlers and non-JavaScript clients may not see the article-specific title, canonical, or structured data.
 
-**How to apply:** Keep the public API snapshot free of editorial scheduling data and use it for hydrated article content, the root sitemap, and RSS. Preserve existing release HTML before applying request-time rendering in both Express and Vite, and verify new and pre-rendered routes over raw HTTP without executing JavaScript.
+**How to apply:** Keep database reads on authenticated editor paths; public handlers consume only maintained records and the refreshed in-memory snapshot. That snapshot is lost on API restart until an editor release read refreshes it, so do not treat it as durable publication storage. Preserve existing release HTML before applying request-time rendering in both Express and Vite, and verify new and pre-rendered routes over raw HTTP without executing JavaScript.
 
 After publishing a change that spans the web and API artifacts, a successful-build status alone does not prove that every live route is running the current workspace revision. Compare the public routes directly on the production URLs.
 

@@ -1414,6 +1414,7 @@ async function main() {
       );
     }
     await setReleaseStates();
+    await requestApi('/api/newsroom/releases');
 
     await startWeb();
     await startDevWeb();

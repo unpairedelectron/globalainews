@@ -588,7 +588,8 @@ export const subscribeNewsletterBodyEmailMax = 320;
 
 
 export const SubscribeNewsletterBody = zod.object({
-  "email": zod.string().email().min(subscribeNewsletterBodyEmailMin).max(subscribeNewsletterBodyEmailMax)
+  "email": zod.string().email().min(subscribeNewsletterBodyEmailMin).max(subscribeNewsletterBodyEmailMax),
+  "website": zod.string().max(500).optional()
 })
 
 export const SubscribeNewsletterResponse = zod.object({

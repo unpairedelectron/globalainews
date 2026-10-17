@@ -444,6 +444,10 @@ components:
           format: email
           minLength: 3
           maxLength: 320
+        website:
+          type: string
+          maxLength: 500
+          description: Honeypot field for automated signup spam detection.
       required:
         - email
     NewsletterSubscription:

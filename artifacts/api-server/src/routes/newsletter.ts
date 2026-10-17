@@ -7,6 +7,9 @@ import {
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
+const SIGNUP_WINDOW_MS = 60 * 60 * 1000;
+const MAX_SIGNUPS_PER_WINDOW = 4;
+const signupWindows = new Map<string, { count: number; resetsAt: number }>();
 
 type ProviderResult = {
   status: "subscribed" | "queued";
@@ -75,6 +78,29 @@ async function deliverToProvider(email: string): Promise<ProviderResult> {
 }
 
 router.post("/newsletter/subscriptions", async (req, res): Promise<void> => {
+  const now = Date.now();
+  const clientKey = req.ip || req.socket.remoteAddress || "unknown";
+  for (const [key, window] of signupWindows) {
+    if (window.resetsAt <= now) signupWindows.delete(key);
+  }
+  const window = signupWindows.get(clientKey);
+  if (window && window.count >= MAX_SIGNUPS_PER_WINDOW && window.resetsAt > now) {
+    res.setHeader("Retry-After", String(Math.ceil((window.resetsAt - now) / 1000)));
+    res.status(429).json({ error: "Please try again later." });
+    return;
+  }
+  signupWindows.set(clientKey, window && window.resetsAt > now
+    ? { count: window.count + 1, resetsAt: window.resetsAt }
+    : { count: 1, resetsAt: now + SIGNUP_WINDOW_MS });
+
+  if (typeof req.body?.website === "string" && req.body.website.trim().length > 0) {
+    res.status(202).json(SubscribeNewsletterResponse.parse({
+      status: "queued",
+      provider: "database-queue",
+      message: "You’re on the list. Your subscription is queued for the next delivery run.",
+    }));
+    return;
+  }
   const parsed = SubscribeNewsletterBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Enter a valid email address." });

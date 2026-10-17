@@ -5,6 +5,7 @@ import { clerkMiddleware } from "@clerk/express";
 import { publishableKeyFromHost } from "@clerk/shared/keys";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import { databaseRequestContext } from "@workspace/db";
 import {
   CLERK_PROXY_PATH,
   clerkProxyMiddleware,
@@ -63,6 +64,16 @@ app.use(
     },
   }),
 );
+app.use((request, _response, next) => {
+  databaseRequestContext.run(
+    {
+      caller: "api-request",
+      route: `${request.method} ${request.path}`,
+      userAgent: request.get("user-agent")?.slice(0, 180),
+    },
+    next,
+  );
+});
 app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());

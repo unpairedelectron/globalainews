@@ -36,6 +36,13 @@ function isEditorialAutomationEnabled(): boolean {
   return configuredValue === "true";
 }
 
+function millisecondsUntilNextDailySlot(now = new Date()): number {
+  const next = new Date(now);
+  next.setUTCHours(DAILY_UTC_HOUR, DAILY_UTC_MINUTE, 0, 0);
+  if (next.getTime() <= now.getTime()) next.setUTCDate(next.getUTCDate() + 1);
+  return next.getTime() - now.getTime();
+}
+
 export const editorialModelConfiguration = Object.freeze({
   draftModel: DRAFT_MODEL,
   verificationModel: VERIFICATION_MODEL,
@@ -595,7 +602,7 @@ export async function getAutomationStatus(): Promise<Record<string, unknown>> {
     .limit(1);
   return {
     enabled: isEditorialAutomationEnabled(),
-    intervalMinutes: AUTOMATION_INTERVAL_MS / 60_000,
+    intervalHours: DAILY_INTERVAL_MS / 3_600_000,
     dailySlotUtc: `${String(DAILY_UTC_HOUR).padStart(2, "0")}:${String(DAILY_UTC_MINUTE).padStart(2, "0")}`,
     ...editorialModelConfiguration,
     openSourceFeeds: openSourceFeeds.map((source) => source.publisher),
@@ -714,12 +721,13 @@ export async function getAutomationRuns(limit = 50, filters: AutomationRunFilter
 export function startEditorialAutomation(): void {
   if (!isEditorialAutomationEnabled() || scheduler) return;
   const scheduleNextRun = (): void => {
-    scheduler = setTimeout(() => {
+    const timer = setTimeout(() => {
       void runEditorialAutomation("scheduled").finally(scheduleNextRun);
-    }, DAILY_INTERVAL_MS);
+    }, millisecondsUntilNextDailySlot());
+    scheduler = timer;
+    timer.unref();
   };
   scheduleNextRun();
-  scheduler.unref();
   log("scheduler_started", { intervalHours: DAILY_INTERVAL_MS / 3_600_000 });
 }
 

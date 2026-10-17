@@ -12,4 +12,5 @@ export interface NewsletterSubscriptionInput {
      * @maxLength 320
      */
   email: string;
+  website?: string;
 }

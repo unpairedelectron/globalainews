@@ -119,29 +119,55 @@ export function SearchPage() {
   const snapshot = useNewsroomSnapshot();
   const query = new URLSearchParams(location.split('?')[1] ?? '').get('q') ?? '';
   const [searchText, setSearchText] = useState(query);
+  const [searchIndex, setSearchIndex] = useState<Array<{ slug: string; text: string }> | null>(null);
 
   useEffect(() => setSearchText(query), [query]);
+
+  useEffect(() => {
+    let active = true;
+    fetch(`${import.meta.env.BASE_URL}search-index.json`, { cache: 'force-cache' })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Search index returned HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((value: unknown) => {
+        if (!Array.isArray(value)) throw new Error('Search index is not an array.');
+        const entries = value.filter(
+          (entry): entry is { slug: string; text: string } =>
+            typeof entry?.slug === 'string' && typeof entry?.text === 'string',
+        );
+        if (active) setSearchIndex(entries);
+      })
+      .catch(() => {
+        if (active) setSearchIndex(null);
+      });
+    return () => { active = false; };
+  }, []);
 
   const results = useMemo(() => {
     const term = query.trim().toLocaleLowerCase();
     if (!term) return [];
-    return snapshot.stories.filter((story) => {
+    const entries = searchIndex ?? snapshot.stories.map((story) => {
       const author = getStoryAuthorIdentity(story, snapshot.authors);
       const relatedEntities = story.entities
         .map((slug) => snapshot.entities.find((entity) => entity.slug === slug)?.name ?? '')
         .join(' ');
-      const searchableText = [
-        story.title,
-        story.dek,
-        story.body.flatMap((section) => [section.heading, ...section.paragraphs]).join(' '),
-        story.topic,
-        story.category,
-        author.name,
-        relatedEntities,
-      ].join(' ').toLocaleLowerCase();
-      return searchableText.includes(term);
+      return {
+        slug: story.slug,
+        text: [
+          story.title,
+          story.dek,
+          story.body.flatMap((section) => [section.heading, ...section.paragraphs]).join(' '),
+          story.topic,
+          story.category,
+          author.name,
+          relatedEntities,
+        ].join(' ').toLocaleLowerCase(),
+      };
     });
-  }, [query, snapshot.authors, snapshot.entities, snapshot.stories]);
+    const matches = new Set(entries.filter((entry) => entry.text.includes(term)).map((entry) => entry.slug));
+    return snapshot.stories.filter((story) => matches.has(story.slug));
+  }, [query, searchIndex, snapshot.authors, snapshot.entities, snapshot.stories]);
 
   return <Shell><SeoHead title="Search — Global AI News" description="Search published Global AI News stories." path="/search" /><main className={`${container} max-w-[1180px]`}><section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Search published stories</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">Find the<br /><em className="text-primary">record.</em></h1><form onSubmit={(event) => { event.preventDefault(); const nextQuery = searchText.trim(); setLocation(nextQuery ? `/search?q=${encodeURIComponent(nextQuery)}` : '/search'); }} className="mt-9 flex max-w-2xl gap-3 border-b border-foreground/40 py-3"><Search size={18} className="mt-1 text-primary" /><input data-testid="input-search-page" value={searchText} onChange={(event) => setSearchText(event.target.value)} aria-label="Search published stories" placeholder="Search stories, topics and authors" className="min-w-0 flex-1 bg-transparent outline-none" /><button data-testid="button-search-page" className="min-h-11 px-3 font-mono text-[10px] uppercase tracking-widest text-primary">Search</button></form></section><section className="grid gap-10 py-12 md:grid-cols-[1fr_280px]"><div>{query ? <><p className="eyebrow mb-5 text-primary">{results.length} {results.length === 1 ? 'result' : 'results'} for “{query}”</p>{results.length ? results.map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} />) : <p className="border-t border-foreground/15 py-6 text-sm text-muted-foreground">No published stories match that search.</p>}</> : <p className="border-t border-foreground/15 py-6 text-sm text-muted-foreground">Enter a term to search published story titles, summaries, body text, topics, and authors.</p>}</div><aside className="md:border-l md:border-foreground/15 md:pl-7"><SectionLabel>Search scope</SectionLabel><p className="text-sm leading-6 text-muted-foreground">Results include published stories only. Editorial drafts and scheduled releases are not searchable here.</p></aside></section></main></Shell>;
 }
