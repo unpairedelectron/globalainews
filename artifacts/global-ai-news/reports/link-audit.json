@@ -3,7 +3,7 @@
     "url": "https://www.globalainews.in/about-us",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -27,7 +27,7 @@
     "url": "https://www.globalainews.in/code-of-ethics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/about-us",
     "issue": ""
   },
@@ -35,7 +35,7 @@
     "url": "https://www.globalainews.in/corrections/",
     "status": "200",
     "canonical": "https://www.globalainews.in/corrections/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/about-us",
     "issue": ""
   },
@@ -43,7 +43,7 @@
     "url": "https://www.globalainews.in/contact-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/about-us",
     "issue": ""
   },
@@ -1275,7 +1275,7 @@
     "url": "https://www.globalainews.in/about-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/authors",
     "issue": ""
   },
@@ -1283,7 +1283,7 @@
     "url": "https://www.globalainews.in/code-of-ethics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/authors",
     "issue": ""
   },
@@ -1371,7 +1371,7 @@
     "url": "https://www.globalainews.in/code-of-ethics",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -1395,7 +1395,7 @@
     "url": "https://www.globalainews.in/about-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/code-of-ethics",
     "issue": ""
   },
@@ -1403,7 +1403,7 @@
     "url": "https://www.globalainews.in/corrections/",
     "status": "200",
     "canonical": "https://www.globalainews.in/corrections/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/code-of-ethics",
     "issue": ""
   },
@@ -1411,7 +1411,7 @@
     "url": "https://www.globalainews.in/contact-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/code-of-ethics",
     "issue": ""
   },
@@ -1515,7 +1515,7 @@
     "url": "https://www.globalainews.in/contact-us",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -1539,7 +1539,7 @@
     "url": "https://www.globalainews.in/corrections/",
     "status": "200",
     "canonical": "https://www.globalainews.in/corrections/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/contact-us",
     "issue": ""
   },
@@ -1547,7 +1547,7 @@
     "url": "https://www.globalainews.in/code-of-ethics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/contact-us",
     "issue": ""
   },
@@ -1555,7 +1555,7 @@
     "url": "https://www.globalainews.in/about-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/contact-us",
     "issue": ""
   },
@@ -1563,7 +1563,7 @@
     "url": "https://www.globalainews.in/corrections",
     "status": "200",
     "canonical": "https://www.globalainews.in/corrections/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "built route",
     "issue": ""
   },
@@ -1587,7 +1587,7 @@
     "url": "https://www.globalainews.in/code-of-ethics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/corrections",
     "issue": ""
   },
@@ -1595,7 +1595,7 @@
     "url": "https://www.globalainews.in/about-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/about-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/corrections",
     "issue": ""
   },
@@ -1603,7 +1603,7 @@
     "url": "https://www.globalainews.in/contact-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/corrections",
     "issue": ""
   },
@@ -2635,7 +2635,7 @@
     "url": "https://www.globalainews.in/contact-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/privacy",
     "issue": ""
   },
@@ -3571,7 +3571,7 @@
     "url": "https://www.globalainews.in/contact-us/",
     "status": "200",
     "canonical": "https://www.globalainews.in/contact-us/",
-    "indexability": "noindex",
+    "indexability": "indexable",
     "linkSource": "/terms",
     "issue": ""
   },
