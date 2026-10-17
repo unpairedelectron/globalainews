@@ -1,10 +1,22 @@
 import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:net';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const workspaceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const metadataServerPath = path.join(workspaceRoot, 'scripts', 'release-metadata-server.mjs');
+const adsenseConfigPath = path.join(workspaceRoot, 'artifacts/global-ai-news/src/adsense-config.ts');
+const adsTxtPath = path.join(workspaceRoot, 'artifacts/global-ai-news/public/ads.txt');
+const adsenseConfig = readFileSync(adsenseConfigPath, 'utf8');
+const adsensePublisherId = adsenseConfig.match(/export const ADSENSE_PUBLISHER_ID = '([^']+)';/)?.[1];
+if (!adsensePublisherId || !/^pub-\d+$/.test(adsensePublisherId)) {
+  throw new Error('ADSENSE_PUBLISHER_ID is missing or invalid.');
+}
+const expectedAdsTxt = `google.com, ${adsensePublisherId}, DIRECT, f08c47fec0942fa0\n`;
+if (readFileSync(adsTxtPath, 'utf8') !== expectedAdsTxt) {
+  throw new Error('public/ads.txt must match ADSENSE_PUBLISHER_ID exactly.');
+}
 
 function findFreePort() {
   return new Promise((resolve, reject) => {

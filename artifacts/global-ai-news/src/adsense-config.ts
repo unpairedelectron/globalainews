@@ -1,0 +1,1 @@
+export const ADSENSE_PUBLISHER_ID = 'pub-3766621537317806';

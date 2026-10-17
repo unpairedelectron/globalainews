@@ -55,6 +55,11 @@ app.use((_request, response, next) => {
 });
 app.use(gzipResponseMiddleware());
 
+const adsTxtBody = readFileSync(path.join(publicDirectory, 'ads.txt'), 'utf8');
+app.get('/ads.txt', (_request, response) => {
+  response.status(200).type('text/plain').send(adsTxtBody);
+});
+
 const permanentRouteAliases = new Map([
   ['/about', '/about-us/'],
   ['/ethics', '/code-of-ethics/'],

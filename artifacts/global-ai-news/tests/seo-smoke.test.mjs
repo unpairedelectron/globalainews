@@ -2843,12 +2843,12 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   for (const route of publicTrustRoutes) {
     const routeMetadata = metadataManifest.routes.find((metadata) => metadata.path === route);
     assert.ok(routeMetadata, `${route}: route metadata is missing`);
-    assert.notEqual(routeMetadata.indexable, false, `${route}: factual trust information should be indexable`);
-    assert.ok(routes.includes(route), `${route}: indexable trust page is missing from sitemap.xml`);
+    assert.equal(routeMetadata.indexable, false, `${route}: incomplete legal or author placeholder must be noindex`);
+    assert.ok(!routes.includes(route), `${route}: noindex placeholder must not appear in sitemap.xml`);
     const { response, body } = await fetchText(route);
     assert.equal(response.status, 200, `${route}: direct trust page failed`);
-    assert.equal(response.headers.get('x-robots-tag'), null, `${route}: indexable page must not send noindex header`);
-    assert.doesNotMatch(body, /<meta name="robots" content="noindex,follow"/, `${route}: indexable page must not emit noindex metadata`);
+    assert.equal(response.headers.get('x-robots-tag'), 'noindex', `${route}: placeholder must send noindex header`);
+    assert.match(body, /<meta name="robots" content="noindex,follow"/, `${route}: placeholder must emit noindex metadata`);
     assert.match(body, /<main\b/, `${route}: initial HTML is missing page content`);
     assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing the newsroom bootstrap marker`);
   }

@@ -89,6 +89,7 @@ const staticMetadata: Record<string, SeoMetadata> = {
     title: 'Privacy notice — Global AI News',
     description: 'Interim disclosure of what the Daily Brief signup collects and which privacy-policy details still need publisher confirmation.',
     path: '/privacy',
+    indexable: false,
   },
   '/glucosmart-privacy': {
     title: 'GlucoSmart Privacy Policy — Global AI News',
@@ -99,11 +100,13 @@ const staticMetadata: Record<string, SeoMetadata> = {
     title: 'Terms of use — Global AI News',
     description: 'Interim notice that publisher-approved terms of use have not yet been supplied.',
     path: '/terms',
+    indexable: false,
   },
   '/authors': {
     title: 'Authors — Global AI News',
     description: 'Current Global AI News bylines and the status of verified individual contributor profiles.',
     path: '/authors',
+    indexable: false,
   },
   '/signals': {
     title: 'Signals on file — Global AI News',

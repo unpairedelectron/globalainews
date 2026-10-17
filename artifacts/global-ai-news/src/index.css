@@ -187,8 +187,8 @@
   --border: 50 7% 77%;
   --input: 50 7% 77%;
   --ring: 218 82% 46%;
-  --card: 0 0% 100%;
-  --surface: 0 0% 100%;
+   --card: 45 28% 98%;
+   --surface: 45 28% 98%;
   --surface-muted: 48 15% 91%;
   --card-foreground: 204 21% 8%;
   --primary: 218 82% 46%;
@@ -227,8 +227,8 @@
   --foreground: 45 25% 96%;
   --border: 200 8% 31%;
   --input: 200 8% 31%;
-  --card: 204 18% 12%;
-  --surface: 204 18% 12%;
+   --card: 204 18% 12%;
+   --surface: 204 18% 12%;
   --surface-muted: 210 16% 18%;
   --card-foreground: 45 25% 96%;
   --primary: 218 100% 74%;
@@ -308,10 +308,94 @@
 .editorial-page table { font-variant-numeric: tabular-nums; }
 .editorial-page .eyebrow { line-height: 1.5; }
 .editorial-page ::marker { color: hsl(var(--primary)); }
+
+/* The publication is designed as a reading surface, not a browser default. */
+.editorial-page :is(.prose, .article-copy) {
+  color: hsl(var(--foreground));
+  font-size: 1.075rem;
+  line-height: 1.82;
+  overflow-wrap: anywhere;
+}
+.editorial-page :is(.prose, .article-copy) p {
+  color: hsl(var(--foreground) / .92);
+  line-height: 1.82;
+  margin-block: 1.2em;
+}
+.editorial-page :is(.prose, .article-copy) h2 {
+  color: hsl(var(--foreground));
+  margin-top: 2.15em;
+  margin-bottom: .65em;
+  line-height: 1.12;
+}
+.editorial-page :is(.prose, .article-copy) blockquote {
+  border-inline-start-color: hsl(var(--primary));
+  color: hsl(var(--foreground) / .9);
+}
+.editorial-page :is(.prose, .article-copy) a {
+  color: hsl(var(--primary));
+  text-decoration-color: hsl(var(--primary) / .55);
+  text-underline-offset: .18em;
+}
+.editorial-page .table-scroll-region {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: hsl(var(--primary) / .55) hsl(var(--surface-muted));
+}
+.editorial-page .table-scroll-region:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+.editorial-page .table-scroll-region table {
+  width: 100%;
+  color: hsl(var(--foreground));
+}
+.editorial-page .table-scroll-region th {
+  color: hsl(var(--foreground));
+  background: hsl(var(--surface-muted));
+  text-align: left;
+}
+.editorial-page .table-scroll-region tbody tr:nth-child(even) {
+  background: hsl(var(--surface-muted) / .38);
+}
+.editorial-page .table-scroll-region td,
+.editorial-page .table-scroll-region th {
+  border-color: hsl(var(--foreground) / .16);
+}
+.editorial-page figure > img,
+.editorial-page img.story-image {
+  display: block;
+  max-width: 100%;
+  object-position: center;
+}
+.editorial-page figure > img {
+  height: auto;
+}
+.editorial-page .article-hero-image {
+  width: 100%;
+  aspect-ratio: 1.91 / 1;
+  object-fit: cover;
+}
+.editorial-page :is(a, button, input, textarea, select) {
+  scroll-margin-top: 6rem;
+}
+@media (prefers-contrast: more) {
+  :root {
+    --muted-foreground: 204 14% 26%;
+    --border: 204 12% 45%;
+  }
+  .dark {
+    --muted-foreground: 201 14% 84%;
+    --border: 200 10% 52%;
+  }
+}
 @media (max-width: 767px) {
   .editorial-page { overflow-wrap: anywhere; }
   .editorial-page h1 { max-width: 100%; font-size: clamp(3.4rem, 17vw, 6rem); }
   .editorial-page h2 { text-wrap: balance; }
+  .editorial-page :is(.prose, .article-copy) { font-size: 1rem; line-height: 1.78; }
+  .editorial-page .table-scroll-region table { font-size: .84rem; }
 }
 @keyframes atlas-pulse { 0%,100% { box-shadow: 0 0 0 0 hsl(var(--primary) / .35); } 50% { box-shadow: 0 0 0 10px hsl(var(--primary) / 0); } }
 .atlas-pulse { animation: atlas-pulse 1.8s ease-in-out infinite; }

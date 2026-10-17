@@ -70,12 +70,20 @@ export function StoryBody({ story, sources }: { story: Story; sources: Source[] 
             </blockquote>
           )}
           {section.table && (
-            <div className="not-prose my-8 overflow-x-auto border border-foreground/15">
-              <table className={`w-full ${section.table.headers.includes('Source-stated snapshot date') ? 'min-w-[72rem]' : 'min-w-[44rem]'} border-collapse text-left text-sm`}>
+            <div
+              className="table-scroll-region not-prose my-8 border border-foreground/15"
+              role="region"
+              aria-label={section.table.caption ?? `Scrollable data table in ${section.heading}`}
+              tabIndex={0}
+            >
+              <table className={`${section.table.headers.includes('Source-stated snapshot date') ? 'min-w-[72rem]' : 'min-w-[44rem]'} border-collapse text-left text-sm`}>
                 {section.table.caption && (
                   <caption className="border-b border-foreground/15 bg-surface-muted px-4 py-3 text-left font-serif text-lg">
                     {section.table.caption}
                   </caption>
+                )}
+                {!section.table.caption && (
+                  <caption className="sr-only">{`Data table in ${section.heading}`}</caption>
                 )}
                 <thead className="bg-secondary/50">
                   <tr>
@@ -89,14 +97,18 @@ export function StoryBody({ story, sources }: { story: Story; sources: Source[] 
                 <tbody>
                   {section.table.rows.map((row, rowIndex) => (
                     <tr key={`${story.slug}-table-row-${rowIndex}`} className="align-top">
-                      {row.cells.map((cell, cellIndex) => (
-                        <td
-                          key={`${story.slug}-table-${rowIndex}-${cellIndex}`}
-                          className="border-b border-foreground/10 px-4 py-3 leading-6"
-                        >
-                          <CitedText text={cell} story={story} sources={sources} />
-                        </td>
-                      ))}
+                      {row.cells.map((cell, cellIndex) => {
+                        const Cell = cellIndex === 0 ? 'th' : 'td';
+                        return (
+                          <Cell
+                            key={`${story.slug}-table-${rowIndex}-${cellIndex}`}
+                            {...(cellIndex === 0 ? { scope: 'row' as const } : {})}
+                            className="border-b border-foreground/10 px-4 py-3 text-left leading-6"
+                          >
+                            <CitedText text={cell} story={story} sources={sources} />
+                          </Cell>
+                        );
+                      })}
                     </tr>
                   ))}
                 </tbody>

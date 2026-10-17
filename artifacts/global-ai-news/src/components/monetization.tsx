@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { ADSENSE_PUBLISHER_ID } from '../adsense-config';
 
 declare global {
   interface Window {
@@ -6,8 +7,7 @@ declare global {
   }
 }
 
-const PUBLISHER_ID = 'pub-8304305694694077';
-const ADSENSE_CLIENT_ID = `ca-${PUBLISHER_ID}`;
+const ADSENSE_CLIENT_ID = `ca-${ADSENSE_PUBLISHER_ID}`;
 const adsenseEnabled =
   import.meta.env?.VITE_ENABLE_ADSENSE === 'true' &&
   import.meta.env?.VITE_ADSENSE_CLIENT_ID === ADSENSE_CLIENT_ID;
@@ -48,6 +48,7 @@ export function AdSlot({ placement }: { placement: AdPlacement }) {
   }, [active, placement, slotId]);
 
   return (
+    active &&
     <aside
       data-testid={`ad-slot-${placement}`}
       data-ad-placement={placement}
@@ -66,11 +67,7 @@ export function AdSlot({ placement }: { placement: AdPlacement }) {
           data-ad-format="auto"
           data-full-width-responsive="true"
         />
-      ) : (
-        <p className="mt-2 flex min-h-[72px] items-center justify-center text-xs text-muted-foreground">
-          Advertising is not currently enabled.
-        </p>
-      )}
+      ) : null}
     </aside>
   );
 }

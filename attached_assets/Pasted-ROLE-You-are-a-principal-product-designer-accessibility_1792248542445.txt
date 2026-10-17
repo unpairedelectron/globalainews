@@ -1,0 +1,64 @@
+ROLE
+You are a principal product designer, accessibility engineer and senior full-stack engineer. Fix globalainews.in in ONE run. Do not stop for approval or ask questions: decide, log each decision in /docs/FIX_LOG.md, continue. Work from the real production build.
+
+HARD RULES
+- Reversible actions only. Never delete DB rows, unpublish the site, or drop tables. Snapshot the DB to /docs/snapshot/ first.
+- Cost guard: do not change deployment type or machine size, never use a Reserved VM, no always-on workers. Generate images and derived assets at build time, never per request. Crawlers must never wake heavy compute: pages are prerendered or cached.
+- Never invent people, credentials, quotes, statistics, sources, contact details or images. Where information is missing, leave it out of the public site and list it in /docs/MISSING_INPUTS.md.
+- Do not publish drafts. Do not assign bylines or dates to drafts. Do not add stories to pad sections.
+- Do not promise rankings in code, copy or the report.
+- End by running the full test suite and presenting the app for publishing. Maximum 2 refinement passes in total, then stop.
+
+PART 1 — ADS.TXT (root cause: wrong publisher ID)
+1. Live /ads.txt currently contains pub-8304305694694077. The AdSense account for this site is pub-3766621537317806. The file must contain exactly:
+   google.com, pub-3766621537317806, DIRECT, f08c47fec0942fa0
+   Remove the other ID unless /docs/MISSING_INPUTS.md says the owner confirmed it.
+2. Source the publisher ID from one config constant, ADSENSE_PUBLISHER_ID = "pub-3766621537317806", used by both ads.txt and any future ad script. No other place may hard-code an ID.
+3. Serve /ads.txt as text/plain; charset=utf-8, HTTP 200, no redirect, before any catch-all route, on BOTH globalainews.in and www.globalainews.in (Host header tests). All other apex paths 301 to www.
+4. Tests: assert exact body equality on both hosts, assert the file exists in production build output, and fail the build if the ID in ads.txt differs from the constant.
+5. Remove the public text "Advertising is not currently enabled." and any visible ad placeholder when ads are off. Render nothing and reserve no empty space.
+6. Write /docs/ADS_TXT_STATUS.md with the checks I must do outside the code (Replit Domains shows both hosts linked, then AdSense "Check for updates").
+
+PART 2 — REDIRECT LOOP CHECK
+Article URLs returned "Too many redirects" to a cookie-less client. Reproduce with curl -sIL --max-redirs 10 (no cookies) against every article URL, with and without the trailing slash, on http, https, apex and www. Redirect decisions must depend only on the URL and Host, never on cookies, headers like Accept-Language, or user agent. Every article returns exactly one 200 at its canonical trailing-slash URL; non-canonical variants return a single 301. Add a cookie-less test over every sitemap URL asserting at most one redirect and a final 200.
+
+PART 3 — DARK MODE AND CONTRAST (articles are hardly readable)
+1. Define colour tokens for light and dark. Dark: background #0F1318 or similar, primary text at least #E6E9EE, secondary text at least #B4BBC6 on the page background, borders visible but quiet. No text may use opacity or a colour that falls under WCAG AA: 4.5:1 for body text and table text, 3:1 for large text and UI borders.
+2. Find and fix every low-contrast element: table cells and headers, captions, footnotes, tags, timestamps, source lists, key-takeaway boxes, code and data values, form fields, links (distinguishable without relying on colour alone), focus rings.
+3. Respect prefers-color-scheme by default; the theme toggle persists the choice, with no flash of the wrong theme on load.
+4. Automate it: run axe-core with Playwright on the homepage, brief, article (long report and short brief), data page, research page, and every section page, in both themes at 360, 768 and 1440px. The build fails on any contrast violation.
+
+PART 4 — TABLES (clipped on the right edge, text cut mid-word)
+1. Wrap every table in a container with overflow-x: auto, a visible but unobtrusive scroll shadow, tabindex=0 and an accessible label. No column may ever be clipped by the page container.
+2. Desktop: sensible min-widths per column, wrapped text, sticky header row, readable row separators, font size at least 14px, tabular numerals for numbers.
+3. Under 700px: convert each row into a stacked record card (label above value) using data-label attributes, with no horizontal scroll needed for the primary content.
+4. Add a caption and source note to each table. Apply to the IndiaAI compute table and every data table in articles, research and data pages.
+
+PART 5 — IMAGE SYSTEM (no crops that cut meaning)
+1. Root cause: fixed-ratio boxes with object-fit: cover crop maps and diagrams. Audit every image and give each a record: kind (illustration | photo | map | chart | diagram), fit (cover | contain), focal point (x,y 0–1), alt text, caption/credit.
+2. Maps, charts and diagrams: fit=contain. Render them at their native aspect ratio on a neutral matching background, never cropped, never in a fixed-height box. For maps, also add alt text and a short caption.
+3. Illustrations and photos: generate dedicated crops at build time with sharp (position from the focal point) for these ratios: 16:9 hero, 3:2 card, 1:1 thumbnail, 1.91:1 Open Graph. Never rely on CSS cropping alone. Keep the main subject inside the central safe area; if the subject cannot survive a ratio, use contain for that slot.
+4. Responsive delivery: AVIF and WebP with a JPEG fallback, srcset and sizes, explicit width and height (no layout shift), loading=lazy below the fold, fetchpriority=high on the lead image. Images in articles never overflow the column on small screens.
+5. Replace the generic abstract art on data and research stories with charts rendered from each story's own dataset where possible. Keep the "Editorial illustration" label on illustrations.
+6. Tests: every image URL on every public page returns 200 with the right content type; no image box has a computed aspect ratio that differs from its asset's ratio unless the record says fit=cover; screenshot the India compute article at 360, 768 and 1440px and attach to /docs.
+7. The OG image for each story must be correct, readable at small size and not cropped.
+
+PART 6 — PAGE CHROME AND ARTICLE LAYOUT
+1. Remove the "LATEST · date · headline" bar from article pages (it duplicates the story being read). Keep a latest-story strip only on the homepage and brief, and hide it if the newest story is older than 14 days.
+2. Navigation: show only sections with at least 6 published items, plus Brief, Data and India if they qualify, with a max of 6 items; everything else goes in the footer. Hidden sections stay reachable by URL, set to noindex and removed from the sitemap until they qualify (config in content-rules.ts: section ≥ 6, rail ≥ 3, topic ≥ 5).
+3. Article page: serif headline, sans body at 18–20px, line-height 1.6, 60–72ch measure; hero image with caption; byline, published and updated dates, reading time; "Key takeaways" (3 bullets drawn from the article's own text, no invented facts); a sticky table of contents for long reports; a Sources list; related stories; next/previous. Long reports (over 15 minutes) get a summary block above the fold with the key chart or table.
+4. Replace the all-caps monospace micro-labels used throughout with normal-case sans labels; keep monospace only for data values.
+5. Homepage: compact masthead, one lead story with image, two secondary stories, a "Latest" stream of 8–12 items, section rails that meet thresholds, and one data module using a real chart from the IndiaAI dataset. No empty blocks, no filler, no hidden-stale banners.
+6. Remove internal workflow text from every public page (publishing-window warnings, "not enabled" notes, build or status text). Route it to an admin-only page or logs.
+
+PART 7 — TRUST AND AUTHORSHIP (no invention)
+1. Support per-article authors from DB records. If no real author record exists, keep the byline as it is but add an About/Editorial policy link; list in /docs/MISSING_INPUTS.md the exact author names, bios and contact details I must supply.
+2. Keep the legal and author placeholder pages noindex until real text exists.
+
+PART 8 — SEO INTEGRITY (must remain intact)
+One canonical host (https://www.globalainews.in) with 301s from http and the apex; self-referencing canonicals; sitemap only with 200 indexable canonical URLs and real lastmod dates; robots.txt references that sitemap only; retired URLs return 410; NewsArticle, Dataset and BreadcrumbList JSON-LD valid, with the image array present; AMP canonicals point to the normal article.
+
+PART 9 — VERIFY
+1. Playwright screenshots of homepage, brief, an article with a table, a short brief, the data page and a section page at 360, 768 and 1440px in light and dark. Review each against Parts 3–6 and fix. Maximum 2 passes.
+2. Run the full test suite, three times, and report all three results. Fix flaky tests instead of ignoring them.
+3. Write /docs/FIX_RESULTS.md: what changed, what is hidden and why, tests added, and the manual steps for me. Then present the app for publishing.

@@ -249,13 +249,13 @@ export function StoryImage({ slug, alt, className, loading = 'lazy', fetchPriori
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [slug]);
   const imagePath = failed ? EDITORIAL_IMAGE_FALLBACK : getEditorialImagePath(slug);
-  return <img src={imagePath} alt={alt} width={1200} height={675} loading={loading} fetchPriority={fetchPriority} className={className} onError={() => setFailed(true)} />;
+  return <img src={imagePath} alt={alt} width={1200} height={675} loading={loading} fetchPriority={fetchPriority} className={`story-image ${className}`} onError={() => setFailed(true)} />;
 }
 
 export function EditorialImage({ treatment = 'editorial-abstract', alt, caption, large = false, storySlug }: { treatment?: string; alt: string; caption?: string; large?: boolean; storySlug?: string }) {
-  return <figure className={`editorial-visual overflow-hidden border border-foreground/15 ${large ? 'min-h-[300px] md:min-h-[540px]' : 'min-h-[180px]'}`}>
+  return <figure className={`editorial-visual overflow-hidden border border-foreground/15 ${storySlug ? '' : large ? 'min-h-[300px] md:min-h-[540px]' : 'min-h-[180px]'}`}>
     {storySlug
-      ? <StoryImage slug={storySlug} alt={alt} className="aspect-[1.91/1] h-full w-full object-cover" loading={large ? 'eager' : 'lazy'} fetchPriority={large ? 'high' : undefined} />
+      ? <StoryImage slug={storySlug} alt={alt} className="article-hero-image" loading={large ? 'eager' : 'lazy'} fetchPriority={large ? 'high' : undefined} />
       : <div role="img" aria-label={alt} className="relative h-full min-h-[inherit] overflow-hidden p-6 md:p-10"><div className="editorial-visual-ring absolute right-10 top-10 h-28 w-28 rounded-full border" /><div className="editorial-visual-accent absolute right-20 top-20 h-16 w-16 rounded-full border" /><div className="editorial-visual-rule absolute bottom-12 left-12 h-px w-3/4" /><div className="editorial-visual-accent absolute bottom-20 left-20 h-px w-1/2 rotate-[-14deg]" /><div className="relative flex h-full min-h-[inherit] flex-col justify-between"><span className="editorial-visual-muted eyebrow">{treatment.replace('-', ' ')} / field note</span><div><p className="max-w-sm font-serif text-4xl leading-[.9] md:text-6xl">{treatment === 'data-graphic' ? 'The map follows the constraint.' : 'A new map of the invisible.'}</p><p className="editorial-visual-muted mt-4 max-w-xs text-xs leading-5">Global AI News · editorial visual</p></div></div></div>}
     {caption && <figcaption className="editorial-visual-caption border-t px-6 py-3 text-xs">Editorial illustration · {caption}</figcaption>}
   </figure>;

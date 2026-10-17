@@ -131,9 +131,20 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
 
     return (
       <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
-        <header className="flex items-center justify-between border-b border-foreground/20 py-5">
-          <a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a>
-          <a href="/brief/" className="eyebrow text-primary">The Daily Brief</a>
+        <header className="border-b border-foreground/20 py-5">
+          <div className="flex items-center justify-between gap-4">
+            <a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a>
+            <a href="/brief/" className="eyebrow text-primary">The Daily Brief</a>
+          </div>
+          <nav aria-label="Main navigation" className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-foreground/10 pt-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <a href="/brief/" className="min-h-11 inline-flex items-center hover:text-primary">Brief</a>
+            <a href="/research/" className="min-h-11 inline-flex items-center hover:text-primary">Research</a>
+            <a href="/data/" className="min-h-11 inline-flex items-center hover:text-primary">Data</a>
+            <a href="/reports/" className="min-h-11 inline-flex items-center hover:text-primary">Reports</a>
+            <a href="/signals/" className="min-h-11 inline-flex items-center hover:text-primary">Signals</a>
+            <a href="/industry/" className="min-h-11 inline-flex items-center hover:text-primary">Industry</a>
+            <a href="/india/" className="min-h-11 inline-flex items-center hover:text-primary">India</a>
+          </nav>
         </header>
         <main className="mx-auto max-w-4xl">
             <nav aria-label="Breadcrumb" className="flex flex-wrap items-center pt-10 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -169,7 +180,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
                 width={1200}
                 height={630}
                 fetchPriority="high"
-                className="aspect-[1.91/1] w-full object-cover"
+                className="article-hero-image"
               />
               <figcaption className="border-t border-foreground/15 px-4 py-3 text-xs leading-5 text-muted-foreground">
                 Editorial illustration · {story.imageTreatment.caption}
@@ -208,6 +219,17 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             </section>
           )}
         </main>
+        <footer className="mt-16 border-t border-foreground/15 py-8">
+          <nav aria-label="Publication information" className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
+            <a href="/about-us/" className="min-h-11 inline-flex items-center hover:text-primary">About</a>
+            <a href="/code-of-ethics/" className="min-h-11 inline-flex items-center hover:text-primary">Editorial standards</a>
+            <a href="/corrections/" className="min-h-11 inline-flex items-center hover:text-primary">Corrections</a>
+            <a href="/contact-us/" className="min-h-11 inline-flex items-center hover:text-primary">Contact</a>
+            <a href="/privacy/" className="min-h-11 inline-flex items-center hover:text-primary">Privacy</a>
+            <a href="/terms/" className="min-h-11 inline-flex items-center hover:text-primary">Terms</a>
+          </nav>
+          <p className="mt-4 border-t border-foreground/10 pt-4 text-xs text-muted-foreground">© {new Date().getFullYear()} Global AI News</p>
+        </footer>
       </div>
     );
   }
