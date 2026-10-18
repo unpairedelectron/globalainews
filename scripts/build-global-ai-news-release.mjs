@@ -71,22 +71,26 @@ async function waitForMetadata(url, processHandle) {
   throw new Error(`Newsroom metadata API did not become ready: ${lastError}.`);
 }
 
-const metadataPort = await findFreePort();
-const metadataUrl = `http://127.0.0.1:${metadataPort}/api/newsroom/metadata`;
-const metadataProcess = spawn(
-  'pnpm',
-  ['--filter', '@workspace/scripts', 'exec', 'tsx', metadataServerPath],
-  {
-    cwd: workspaceRoot,
-    detached: true,
-    env: {
-      ...process.env,
-      NODE_ENV: 'production',
-      PORT: String(metadataPort),
+let metadataUrl = process.env.NEWSROOM_METADATA_URL;
+let metadataProcess;
+if (!metadataUrl) {
+  const metadataPort = await findFreePort();
+  metadataUrl = `http://127.0.0.1:${metadataPort}/api/newsroom/metadata`;
+  metadataProcess = spawn(
+    'pnpm',
+    ['--filter', '@workspace/scripts', 'exec', 'tsx', metadataServerPath],
+    {
+      cwd: workspaceRoot,
+      detached: true,
+      env: {
+        ...process.env,
+        NODE_ENV: 'production',
+        PORT: String(metadataPort),
+      },
+      stdio: ['ignore', 'inherit', 'inherit'],
     },
-    stdio: ['ignore', 'inherit', 'inherit'],
-  },
-);
+  );
+}
 
 try {
   await waitForMetadata(metadataUrl, metadataProcess);

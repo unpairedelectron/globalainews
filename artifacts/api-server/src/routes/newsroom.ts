@@ -317,8 +317,20 @@ function toReleaseResponse(row: ReleaseRow, now = new Date()) {
   };
 }
 
+function newsroomPublicationNow(): Date {
+  const fixedNow = process.env.NODE_ENV === "test"
+    ? process.env.NEWSROOM_TEST_PUBLICATION_NOW
+    : undefined;
+  if (!fixedNow) return new Date();
+  const parsed = new Date(fixedNow);
+  if (!Number.isFinite(parsed.getTime())) {
+    throw new Error("NEWSROOM_TEST_PUBLICATION_NOW must be a valid date.");
+  }
+  return parsed;
+}
+
 async function getPublishedStoriesFromSnapshot(): Promise<Story[]> {
-  return mergeEligiblePublishedStories(new Date(), publishedReleaseSnapshot);
+  return mergeEligiblePublishedStories(newsroomPublicationNow(), publishedReleaseSnapshot);
 }
 
 function rejectShortRelease(

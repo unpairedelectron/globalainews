@@ -2495,6 +2495,7 @@ async function startApiServer() {
       ...process.env,
       NODE_ENV: 'test',
       NEWSROOM_TEST_EDITOR_ID: smokeEditorId,
+      NEWSROOM_TEST_PUBLICATION_NOW: new Date(Date.now() + 5 * 60_000).toISOString(),
       PORT: '19820',
     },
     stdio: ['ignore', 'ignore', 'pipe'],
@@ -2665,11 +2666,25 @@ function assertMetadataMatchesManifest(document, route, manifest) {
   assert.ok(expected, `${route}: API metadata manifest is missing this route`);
   assert.equal(htmlText(tagContent(document, 'title')), expected.title, `${route}: initial title drifted from the API metadata manifest`);
   assert.equal(metaContent(document, 'name', 'description'), expected.description, `${route}: initial description drifted from the API metadata manifest`);
+  assert.equal(
+    metaContent(document, 'name', 'robots'),
+    expected.indexable === false ? 'noindex,follow' : '',
+    `${route}: initial robots directive drifted from the API metadata manifest`,
+  );
 }
 
 before(async () => {
-  await stat(path.join(distDir, 'index.html'));
   await startApiServer();
+  execFileSync('pnpm', ['run', 'build:release'], {
+    cwd: root,
+    env: {
+      ...process.env,
+      NODE_ENV: 'production',
+      NEWSROOM_METADATA_URL: `${apiOrigin}/api/newsroom/metadata`,
+    },
+    stdio: 'inherit',
+  });
+  await stat(path.join(distDir, 'index.html'));
   await startStaticServer();
   await startDevServer();
 });
@@ -2763,6 +2778,12 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   const metadataManifest = JSON.parse(metadataBody);
   assert.equal(metadataManifest.source, 'maintained-editorial-source', 'newsroom metadata manifest has an unexpected source');
   assert.ok(Array.isArray(metadataManifest.routes), 'newsroom metadata manifest is missing routes');
+  const signalsMetadata = metadataManifest.routes.find((metadata) => metadata.path === '/signals');
+  assert.ok(signalsMetadata, 'Signals index is missing public SEO metadata');
+  const { response: signalsResponse, body: signalsBody } = await fetchText('/signals');
+  assert.equal(signalsResponse.status, 200, 'Signals index is not reachable');
+  assert.match(signalsBody, /<h1\b/, 'Signals index is missing its prerendered heading');
+  assertMetadataMatchesManifest(signalsBody, '/signals', metadataManifest);
   const { response: contentResponse, body: contentBody } = await fetchText('/api/newsroom/content');
   assert.equal(contentResponse.status, 200, 'newsroom content snapshot is not reachable');
   const newsroomContent = JSON.parse(contentBody);
