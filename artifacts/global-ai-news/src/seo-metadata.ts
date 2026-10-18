@@ -391,7 +391,9 @@ export function getSeoMetadata(
 
   const staticPage = staticMetadata[cleanPath];
   if (staticPage) {
-    const sectionPaths = ['/brief', '/reports', '/signals', '/industry', '/models', '/policy', '/india', '/essays', '/topics'];
+    // The Daily Brief is a primary newsroom landing page and remains indexable
+    // even when its current edition has fewer stories than other section indexes.
+    const sectionPaths = ['/reports', '/signals', '/industry', '/models', '/policy', '/india', '/essays', '/topics'];
     if (sectionPaths.includes(cleanPath)) {
       return {
         ...staticPage,

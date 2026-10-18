@@ -1488,6 +1488,9 @@ function contrastRatio(first, second) {
 }
 
 function visualBaselinePath(name, theme) {
+  // The homepage/Brief latest-story strip is intentionally freshness-gated.
+  // Refresh affected baselines when a maintained lead ages out; do not weaken
+  // the freshness rule just to preserve pixels from an older edition.
   return path.join(screenshotDir, `${name}-${theme}.png`);
 }
 

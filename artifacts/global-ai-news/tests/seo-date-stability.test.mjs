@@ -131,6 +131,18 @@ test('article dates stay editorial when identical content is built on different 
   }
 });
 
+test('the Daily Brief remains indexable when its current edition has fewer than six stories', () => {
+  const briefMetadata = getSeoMetadata('/brief', maintainedStories.slice(0, 5));
+  const manifest = getSeoMetadataManifest(maintainedStories.slice(0, 5), '2026-10-18T06:00:00.000Z');
+
+  assert.notEqual(briefMetadata.indexable, false);
+  assert.notEqual(
+    manifest.routes.find((metadata) => metadata.path === '/brief')?.indexable,
+    false,
+    'the primary Daily Brief landing page must not become noindex solely because of edition size',
+  );
+});
+
 test('unknown article URLs are noindex instead of inheriting an unrelated story', () => {
   const stories = getPublishedStories(new Date('2026-10-01T00:00:00.000Z'));
   const metadata = getSeoMetadata('/article/not-a-published-story', stories);
