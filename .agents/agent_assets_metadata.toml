@@ -140,3 +140,17 @@ mtime_ms = 1791803137471
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/fdbf9777-9f82-401b-97e8-05ac17c26e3f/e28f28de-13ac-425a-819f-77bc3e2ebd17"
 storage_version_token = "1791803393303609"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "wp3tMeawgyZsAnyWTCeZb"
+uri = "file://docs/editorial-imports/global-ai-news-60-starter-drafts-2026-10-18.json"
+type = "unspecified"
+title = "Global AI News — 60-story draft import"
+description = "Non-production editorial handoff containing all 60 starter records, their section counts, and source-review statuses. Nothing is published or imported into the database."
+logical_id = "d3e332f8-2ed5-4e65-b4f2-670024712146"
+content_hash = "sha256:9e58e54dba6d312a5ce9a455e952963865d8423fdd62aa3059728291d8d369f2"
+size = 149718
+mtime_ms = 1792302264257
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:4479258a-9a4c-4a30-b723-d13089b5b527/d3e332f8-2ed5-4e65-b4f2-670024712146/2c10a084-6d85-4ea5-8e96-f685e878004c"
+storage_version_token = "1792302309258713"
+content_type = "application/octet-stream"
