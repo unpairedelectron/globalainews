@@ -1,0 +1,519 @@
+# GLOBAL AI NEWS — FINAL EXECUTION ORDER: VERIFY, FIX, TEST AND PUBLISH ALL 18 ARTICLES
+
+## MISSION
+
+Act as the principal software engineer, senior AI-news editor, source-verification researcher, technical SEO auditor and production release manager for https://globalainews.in/.
+
+Complete the publication of all 18 articles across the first three newsroom batches:
+
+- **Batch 1 — Brief:** 6 current AI news articles.
+- **Batch 2 — Research:** 6 AI research and scientific-development articles.
+- **Batch 3 — Data:** 6 dataset, benchmark and AI data-product articles.
+
+The previous attempts have repeatedly completed engineering checks while leaving source verification, article readiness and publication unfinished.
+
+This execution must complete the actual work. Do not produce another strategy document, another generic checklist, or another report describing tasks that remain undone.
+
+**The required deliverable is 18 factually verified, technically validated, actually published articles whose live URLs have been checked.**
+
+Work independently. Inspect the existing repository, preserve completed work, make the necessary corrections, run the complete validation suite, use the authorized publication workflow and provide evidence of completion.
+
+Do not ask unnecessary questions. Do not require individual approval for every article. Use existing project conventions and the explicit requirements in this prompt.
+
+---
+
+# PART 1 — PRESERVE EXISTING WORK AND INSPECT THE PROJECT
+
+## 1. Inspect the actual repository
+
+Before changing anything, inspect:
+
+- Current Git branch, working tree and recent commits.
+- The latest Markdown and JSON records for all three batches.
+- Any original starter imports and previously expanded articles.
+- The CMS schema and current release-validation logic.
+- The real production word-count implementation.
+- The existing newsroom metadata configuration.
+- The `/signals/` route and its initial HTML response.
+- SEO metadata, canonical URL generation and sitemap configuration.
+- Existing editorial policies and source-review records.
+- The supported authenticated editor and publishing workflow.
+- Current tests and the latest smoke-test results.
+
+Locate files using the actual repository state. Do not assume that a filename, commit or path from an earlier report still exists.
+
+Preserve all valid prior changes, including the `/signals/` metadata fix, screenshot baselines, freshness-gated latest-story strip and all passing tests.
+
+Do not reset, clean, force-checkout, discard or overwrite unrelated work.
+
+Do not waste time rerunning expensive checks that are known to be unaffected. However, every affected test must be rerun after its corresponding changes, and the complete release suite must pass before publication.
+
+## 2. Establish the authoritative set of 18 articles
+
+Create or update one release inventory containing all six articles in each section.
+
+Verify that the Markdown, JSON, source links, article titles and slugs correspond to the same versions.
+
+Check for duplicates in existing public content, private drafts, scheduled records and the current batch files.
+
+Do not assume that a valid JSON file is a CMS record, that a missing public route proves a slug is unused, or that local validation proves an article is published.
+
+Do not silently replace content or overwrite existing articles to satisfy the target count.
+
+---
+
+# PART 2 — ENFORCE THE AUTHORISED EDITORIAL RULES
+
+## 3. Apply the section-specific word-count policy
+
+I explicitly authorize the following word-count requirements for this release:
+
+| Section | Required length |
+|---|---|
+| Brief | 120–220 words |
+| Research | Minimum 800 words |
+| Data | Minimum 800 words |
+
+These rules supersede the previous assumption that every article must contain at least 800 words.
+
+Use the actual production CMS word-count function, including its existing treatment of the dek. Inspect how the counter works. Do not substitute the SEO meta description for a dek unless the CMS explicitly defines it that way.
+
+Implement the authorized Brief exception in the real section-aware release validator.
+
+Add regression tests for:
+
+- Brief articles below 120 words.
+- Brief articles at 120 words.
+- Brief articles at 220 words.
+- Brief articles above 220 words.
+- Research and Data articles below and at the 800-word threshold.
+- Correct treatment of empty and populated deks.
+
+Retain the 800-word minimum for Research and Data.
+
+Do not bypass validation, modify unrelated release policies or add generic filler to satisfy word counts.
+
+Verify that the actual production release system uses the corrected rule, not merely the local code. Apply any required migration or deployment through the project's established process.
+
+## 4. Fix the `/signals/` metadata mismatch
+
+The prior smoke suite identified a mismatch between newsroom metadata and the first-response HTML for `/signals/`.
+
+The latest changes reportedly fixed the smoke-build configuration, but verify the current implementation rather than relying on that report.
+
+Determine whether `/signals/` is intended to be indexable or non-indexable based on the existing newsroom configuration and intended product behaviour.
+
+Ensure that:
+
+- The metadata API and rendered HTML agree.
+- The initial server response uses the intended title, description and robots directive.
+- Client hydration does not contradict server metadata.
+- Build-time configuration uses the intended metadata source.
+- Homepage navigation to `/signals/` works.
+- Production and smoke builds use consistent configuration.
+
+Do not make an important public newsroom section non-indexable merely to pass a test.
+
+Do not weaken the test simply to obtain a green result.
+
+Add regression coverage and verify the final HTML.
+
+---
+
+# PART 3 — COMPLETE THE CLAIM-LEVEL SOURCE AUDIT
+
+## 5. Audit every material claim in all 18 articles
+
+This is mandatory and is the primary editorial deliverable.
+
+The previous attempts did not complete it. Correct that failure now.
+
+Read every article from beginning to end. Open every supplied source URL and inspect the actual source material.
+
+Use primary research, original papers, official documentation, model cards, repositories, government material and company announcements when they directly substantiate a claim. Use reputable independent reporting to corroborate consequential claims where appropriate.
+
+For every material factual claim, determine:
+
+1. Exactly what the article asserts.
+2. Which source supports it.
+3. Whether that source actually establishes the claim.
+4. The relevant event date and source publication date.
+5. The exact numbers, units, comparisons and conditions involved.
+6. Whether the source is independent or has a commercial interest in the claim.
+7. Whether the finding is preliminary, peer-reviewed, formally verified or independently replicated.
+8. What language must be corrected, qualified or removed.
+
+### Required persistent evidence ledger
+
+Create a claim-evidence ledger for all 18 articles in the existing editorial-review system or in a clearly named, version-controlled release-review directory.
+
+Each article's record must contain:
+
+- Article title and slug.
+- Source URL.
+- Source title and publisher.
+- Source type.
+- Relevant claim or factual assertion.
+- Evidence supporting that claim.
+- Relevant event date and original publication date.
+- Verification result.
+- Corrective action taken.
+- Remaining uncertainty.
+- Final reviewer status.
+- Actual review timestamp.
+
+Record the evidence, not merely the URL.
+
+Do not set `claim_level_reviewed: true` simply because a source was opened or because a draft was edited. Update review flags only after the documented claim-level review is complete.
+
+Where applicable, preserve source snippets or precise relevant passages in the internal review record in accordance with copyright and project policy. Do not copy large source articles into Global AI News.
+
+### Prohibited editorial shortcuts
+
+Never invent or extrapolate:
+
+- Statistics, dates, study results or benchmark scores.
+- Funding figures, commercial terms or product pricing.
+- Quotes, interviews or expert endorsements.
+- Authors, reviewers, credentials or first-hand reporting.
+- Product availability, download links or licences.
+- Dataset contents or methodology.
+- Government actions or legal status.
+- Independent validation, scientific consensus or causal conclusions.
+
+Do not treat a search-result snippet as sufficient verification of a material quantitative claim.
+
+If a source is unavailable or subscription-gated, find a reliable accessible source or corroborating evidence. If a material claim remains unsupported, correct or remove it. If the central story cannot be established, replace it with a verified alternative or keep it out of publication until the evidence exists.
+
+The purpose is to finish the audit, not to convert every article into an approved record regardless of evidence.
+
+## 6. Distinguish facts from claims and interpretation
+
+Apply these rules consistently:
+
+- Attribute a company's stated results to the company unless independently established.
+- Distinguish preliminary research from peer-reviewed work.
+- Distinguish formal mathematical verification from an unverified proposal.
+- Distinguish an experimental demonstration from a generally available capability.
+- Distinguish an announced dataset from a downloadable public resource.
+- Distinguish a vendor-created benchmark from an independent industry standard.
+- Distinguish proposals from enacted law.
+- Distinguish predictions from observed outcomes.
+- Distinguish correlation from causation.
+
+Preserve important limitations and counterevidence in the final article.
+
+For health-related AI research, do not present experimental findings as medical guidance or clinical validation.
+
+For cryptography and AI-security articles, accurately describe the demonstrated findings and limitations. Do not imply that a standard has been broken unless evidence establishes that conclusion.
+
+For economic and labour-market reporting, distinguish changes in job postings from actual employment changes and avoid unsupported causal claims.
+
+---
+
+# PART 4 — FINISH EACH BATCH
+
+## 7. Batch 1: Brief — six current AI news articles
+
+Complete the source and claim audit for all six Brief records.
+
+Immediately before publication, recheck the current time and the 24-hour reporting window.
+
+For every story:
+
+1. Confirm that the actual event or report falls inside the allowed 24 hours preceding publication.
+2. Distinguish the event date from the source publication date.
+3. Check whether subsequent reporting has corrected or superseded the story.
+4. Verify every material factual claim.
+5. Rewrite the article to 120–220 words.
+6. Use a compelling but accurate headline.
+7. Include the relevant verified context and source links.
+8. Make clear which statements are reported facts, company claims or analysis.
+9. Run the production CMS word counter.
+10. Record the final evidence in the ledger.
+
+The prior audit identified an October 16 Reuters story that was outside the intended window for an October 18 review. Recheck every Brief story independently.
+
+Replace outdated stories only with genuine, verifiable AI developments that satisfy the time window. Do not rewrite an old story to make it appear new.
+
+If no suitable replacement can be verified, do not publish a false breaking-news article. Continue work on every other article.
+
+## 8. Batch 2: Research — six articles
+
+Complete claim-level verification for all six Research articles and expand each to at least 800 CMS-counted words.
+
+Verify the original research paper, official research page, repository or technical report.
+
+Check:
+
+- Methodology.
+- Sample sizes and experimental conditions.
+- Comparison baselines.
+- Exact reported metrics.
+- Limitations and unresolved questions.
+- Peer-review status.
+- Formal verification status.
+- Independent replication, where claimed.
+- Whether the work establishes the conclusion presented in the headline.
+
+For the quantum-circuit article, explain the actual optimisation task and the reported results without claiming that AI has solved quantum computing.
+
+For the NIST elliptic-curve seed article, verify the claimed reconstruction and clearly distinguish seed provenance from a demonstrated cryptographic vulnerability.
+
+For the AI-expectations survey, verify the survey methodology and distinguish respondent beliefs from measured AI capabilities or economic forecasts.
+
+For the workplace article, distinguish reported internal agent runtime and productivity signals from proven economy-wide job displacement or causal effects.
+
+For the Meta health-research article, accurately describe the human oversight, evidence quality, manuscript status and limitations. Do not present the experiment as clinical validation.
+
+For the OpenAI mathematics article, verify the exact repository and research results. Do not imply that every result has been formally proved or independently accepted if that is not the case.
+
+Do not expand these articles with unsupported numbers, speculative conclusions or generic filler.
+
+## 9. Batch 3: Data — six articles
+
+Complete claim-level verification for all six Data articles and expand each to at least 800 CMS-counted words.
+
+Check:
+
+- Actual dataset, benchmark or API availability.
+- Source documentation and release status.
+- Licence and usage terms.
+- Access restrictions and credentials.
+- Sample composition and coverage.
+- What is actually measured.
+- Reproducibility and evaluation limitations.
+- Whether the claimed resource can be accessed as described.
+
+For MentalHealthBench, distinguish a benchmark from certification of clinical safety.
+
+For WAXAL, verify languages, licensing, source access and coverage limitations.
+
+For the Google agriculture API, verify access requirements, geography, output types and the distinction between model outputs and ground-truth measurements.
+
+For ThinkingBox-Bench, verify benchmark task counts, evaluation design and actual use restrictions.
+
+For the OpenAI–Ironclad story, do not describe the research collaboration as a downloadable public dataset unless the relevant artifacts are demonstrably available.
+
+For Google Earth AI, distinguish experimental capabilities, benchmark results and actual availability of underlying models and data.
+
+Do not describe proprietary or restricted resources as open datasets. Retain relevant licensing and usage limitations in the article.
+
+---
+
+# PART 5 — ARTICLE QUALITY, SEO AND DEDUPLICATION
+
+## 10. Correct the content
+
+Review every article for:
+
+- Unsupported factual claims.
+- Duplicate or near-duplicate passages.
+- Generic AI-written filler.
+- Repetitive subheadings.
+- Exaggerated or misleading headlines.
+- Incorrect terminology.
+- Inconsistent dates.
+- Misleading source attribution.
+- Broken links.
+- Unsupported conclusions.
+- Inaccurate SEO metadata.
+
+Every article should tell a coherent story: what happened or was discovered, why it matters, what the evidence establishes, what remains uncertain, and what readers should take away.
+
+Maintain a professional journalistic tone.
+
+Use original prose based on the evidence. Do not copy external source articles.
+
+Do not publish an article simply because its word count is correct.
+
+## 11. Validate SEO metadata
+
+For all 18 records, verify:
+
+- Correct newsroom section.
+- Unique, approved title and slug.
+- Accurate SEO title.
+- Accurate meta description.
+- Natural keyword usage.
+- Clear H1 and logical H2/H3 hierarchy.
+- Correct canonical URL.
+- Appropriate internal links.
+- Working external source links.
+- Accurate author and publisher metadata.
+- Valid article structured data.
+- Accurate publication and modification dates.
+- Appropriate and rights-cleared imagery, if used.
+
+Metadata must match visible content.
+
+Do not invent author credentials, expert review, publication dates, source details or image provenance.
+
+Do not force every story into a keyword template at the expense of editorial accuracy.
+
+## 12. Check duplication
+
+Compare all 18 records against:
+
+- Each other.
+- Existing published articles.
+- Existing private and scheduled records.
+- Existing titles and slugs.
+- Similar story angles.
+- Repeated article bodies.
+- Relevant existing website content.
+
+Every article must have a unique title and slug.
+
+Where two stories overlap substantially, give them genuinely distinct editorial purposes or retain the stronger article and replace the redundant one with a verified alternative.
+
+Do not create duplicate CMS records during retries.
+
+---
+
+# PART 6 — CMS RECORDS AND AUTHORIZED PUBLICATION
+
+## 13. Check slugs and private records
+
+Previous attempts could not inspect private or scheduled records because the production endpoint required an authenticated editor session.
+
+Use the application's established editor workflow.
+
+For each proposed article:
+
+- Check existing public, private and scheduled records.
+- Verify slug availability.
+- Preserve established canonical URLs for existing articles.
+- Record approved slugs.
+- Avoid overwriting unrelated content.
+- Ensure release operations are safe to retry.
+
+Do not assume that the absence of an article in the public metadata manifest proves the slug is unused.
+
+Do not fabricate approval records or change slug approval status without the required evidence and authorized workflow.
+
+## 14. Publish through the real production workflow
+
+After editorial and technical verification, publish all eligible articles through the application's existing authenticated release mechanism.
+
+Do not claim that a file is published because it exists locally, a JSON schema passes or a CMS import payload has been generated.
+
+Before every release operation, ensure that:
+
+1. The source audit is complete.
+2. The claim-evidence ledger is recorded.
+3. The content meets its section-specific word count.
+4. The article has passed technical validation.
+5. The slug and target record have been checked.
+6. The metadata and citations are correct.
+7. The release cannot create an unintended duplicate.
+8. The article is intended for public publication.
+
+Use a valid authenticated editor session through the supported interface. Do not bypass Clerk, write directly to production storage, expose credentials, manufacture approval or request that passwords and tokens be pasted into chat.
+
+If an authentication action is needed, request only that specific action through the normal workflow and resume the release when authorization is available. Continue completing all independent editorial and technical tasks in the meantime.
+
+Do not release any article that has unresolved material factual claims simply to meet the target count.
+
+---
+
+# PART 7 — FULL TECHNICAL QA
+
+## 15. Run the real validation suite
+
+Use the project's existing commands and test infrastructure.
+
+At minimum, validate:
+
+- Typecheck and lint.
+- Production build.
+- Full smoke workflow.
+- Section-specific word-count rules.
+- Source-evidence ledger completeness.
+- Article schema compatibility.
+- Unique titles and slugs.
+- Duplicate detection.
+- Link integrity.
+- Rendering and first-response metadata.
+- Robots and canonical directives.
+- Structured data.
+- Sitemap inclusion and exclusion rules.
+- Light and dark theme rendering.
+- Article routes and section navigation.
+- CMS release compatibility.
+- Retry safety and duplicate-publication safeguards.
+
+The previous smoke audit covered public routes, mobile routes, AMP pages and internal links. Preserve those checks and verify the results after the final changes.
+
+Fix actual failures, then rerun affected tests. Do not suppress failures or arbitrarily enlarge screenshot tolerances.
+
+Clearly distinguish passed, failed, skipped and externally blocked tests.
+
+## 16. Verify the live articles
+
+After publication, fetch every actual public URL and inspect the rendered article.
+
+Verify:
+
+- The intended content is visible.
+- Title, dek and body are correct.
+- Section and category are correct.
+- Citations work.
+- Canonical and robots metadata are correct.
+- Structured data matches the rendered content.
+- Author and date fields are accurate.
+- Internal navigation and article cards point to the correct route.
+- The sitemap handles published articles correctly.
+- No blocked draft is accidentally exposed.
+
+Do not claim Google has indexed an article unless Search Console evidence establishes that result.
+
+---
+
+# PART 8 — FINAL EVIDENCE REPORT
+
+Maintain an article-by-article inventory of all 18 records.
+
+For each article, record its section, title, final word count, claim-review completion, sources verified, slug validation, SEO status, technical status, publication state and actual public URL.
+
+The final report must contain:
+
+### 1. Article publication inventory
+
+All 18 articles, including their final word counts and public URLs.
+
+### 2. Claim-evidence audit
+
+Actual counts of material claims reviewed, verified, corrected, removed and unresolved. Include the evidence-ledger location and explain significant limitations.
+
+### 3. Technical validation
+
+Exact commands run and their real results. Confirm the `/signals/` behaviour and the section-specific word-count rules.
+
+### 4. CMS release evidence
+
+Actual records created or updated, slug checks performed, publication results and public pages verified.
+
+### 5. Changed files and Git state
+
+List important changed files, tests, commits if any and the final working-tree state. Preserve unrelated work.
+
+Never invent test outcomes, evidence counts, CMS operations or public URLs.
+
+---
+
+# FINAL ACCEPTANCE CRITERION
+
+The only acceptable completion status is:
+
+**`ALL 18 PUBLISHED AND VERIFIED`**
+
+Do not use alternative completion-status labels.
+
+Do not declare completion until all 18 articles have passed their editorial and technical gates, been published through the authorized CMS workflow, and had their actual public URLs verified.
+
+If an unavoidable authenticated editor action is required, request that specific action through the normal interface and resume immediately after authorization. Do not bypass authentication or falsely claim publication.
+
+Do not finish with another audit-only report, another plan, or a list of uncompleted tasks.
+
+**Complete the editorial evidence audit for all 18 articles. Correct every resolvable issue. Pass the actual release checks. Publish and verify the articles. Deliver the completed site changes and factual evidence of the release.**

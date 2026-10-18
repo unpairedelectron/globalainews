@@ -43,6 +43,7 @@ import {
   getStoryReadTime,
   getReleaseDraftWordCount,
   getReleaseWordCount,
+  getEditorialWordCountBounds,
   getPublishedStories,
   mergeEligiblePublishedStories,
   isPublicArticle,
@@ -57,6 +58,7 @@ import {
   stories,
   timelineEvents,
   type EditorialCadence,
+  type EditorialSection,
   type Source,
   type ScheduledStory,
   type Story,
@@ -106,6 +108,7 @@ type ReleaseInput = {
   category: string;
   author: string;
   body: string;
+  section?: EditorialSection;
 };
 type ReleaseUpdate = Partial<Omit<ReleaseInput, "slug">>;
 type EditorialReleaseStory = ScheduledStory & {
@@ -198,6 +201,7 @@ function storyFromInput(
       heading: index === 0 ? "The signal" : "What changes",
       paragraphs: [paragraph],
     })),
+    ...(input.section ? { section: input.section } : {}),
     editorialSource: "editor",
   };
 }
@@ -290,15 +294,25 @@ function releaseWordCount(story: EditorialReleaseStory, slug = story.slug): numb
   return getStoryWordCount(maintainedStory);
 }
 
+function releaseSection(story: EditorialReleaseStory): EditorialSection | undefined {
+  return story.section === "Brief" || story.section === "Research" || story.section === "Data"
+    ? story.section
+    : undefined;
+}
+
 function toReleaseResponse(row: ReleaseRow, now = new Date()) {
   const story = toScheduledStory(row);
   const wordCount = releaseWordCount(story, row.slug);
-  const publishable = wordCount >= MINIMUM_STORY_WORDS;
+  const section = releaseSection(story);
+  const bounds = getEditorialWordCountBounds(section);
+  const publishable = wordCount >= bounds.minimum
+    && (bounds.maximum === undefined || wordCount <= bounds.maximum);
   const status = getEditorialLifecycleStatus(
     row.status,
     story.publishAt,
     wordCount,
     now,
+    section,
   );
   return {
     id: row.id,
@@ -311,7 +325,10 @@ function toReleaseResponse(row: ReleaseRow, now = new Date()) {
     position: row.position,
     story: story as unknown as Record<string, unknown>,
     wordCount,
-    remainingWords: Math.max(0, MINIMUM_STORY_WORDS - wordCount),
+    minimumWordCount: bounds.minimum,
+    ...(bounds.maximum === undefined ? {} : { maximumWordCount: bounds.maximum }),
+    ...(section ? { section } : {}),
+    remainingWords: Math.max(0, bounds.minimum - wordCount),
     publishable,
     updatedAt: row.updatedAt,
   };
@@ -335,15 +352,21 @@ async function getPublishedStoriesFromSnapshot(): Promise<Story[]> {
 
 function rejectShortRelease(
   res: ExpressResponse,
+  section: EditorialSection | undefined,
   dek: string,
   body: string,
 ): boolean {
   const wordCount = getReleaseDraftWordCount(dek, body);
-  if (wordCount >= MINIMUM_STORY_WORDS) return false;
+  const bounds = getEditorialWordCountBounds(section);
+  if (wordCount >= bounds.minimum && (bounds.maximum === undefined || wordCount <= bounds.maximum)) return false;
+  const reason = wordCount < bounds.minimum
+    ? `A ${section ?? "Research"} release needs at least ${bounds.minimum} editorial words`
+    : `A Brief release must not exceed ${bounds.maximum} editorial words`;
   res.status(422).json({
-    error: `A release needs at least ${MINIMUM_STORY_WORDS} editorial words before it can enter the queue. This draft has ${wordCount}.`,
+    error: `${reason} before it can enter the queue. This draft has ${wordCount}.`,
     wordCount,
-    minimumWordCount: MINIMUM_STORY_WORDS,
+    minimumWordCount: bounds.minimum,
+    maximumWordCount: bounds.maximum,
   });
   return true;
 }
@@ -886,7 +909,7 @@ router.post("/newsroom/releases", requireEditorAuth, async (req, res): Promise<v
       return;
     }
     const story = storyFromInput(parsed.data as ReleaseInput);
-    if (rejectShortRelease(res, story.dek, storyBodyText(story))) return;
+    if (rejectShortRelease(res, story.section, story.dek, storyBodyText(story))) return;
     const created = await db.transaction(async (tx) => {
       const [release] = await tx
         .insert(editorialReleasesTable)
@@ -997,7 +1020,7 @@ router.patch("/newsroom/releases/:slug", requireEditorAuth, async (req, res): Pr
     const story = storyFromInput({ ...parsed.data, slug: existing.slug } as ReleaseUpdate, currentStory);
     const nextStory = { ...currentStory, ...story, slug: existing.slug };
     const nextPublishAt = new Date(nextStory.publishAt);
-    if (rejectShortRelease(res, nextStory.dek, storyBodyText(nextStory))) return;
+    if (rejectShortRelease(res, nextStory.section, nextStory.dek, storyBodyText(nextStory))) return;
     const changedFields = [
       existing.title !== nextStory.title ? "title" : null,
       (existing.story as Partial<ScheduledStory>).dek !== nextStory.dek ? "dek" : null,

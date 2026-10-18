@@ -20,6 +20,7 @@ export type EditorialContentType =
   | 'Report'
   | 'Comparison'
   | 'Essay';
+export type EditorialSection = 'Brief' | 'Research' | 'Data';
 export type EntityKind =
   | 'company'
   | 'lab'
@@ -180,6 +181,7 @@ export interface Story {
   evidenceSummary: EvidenceSummary;
   classification: 'reported' | 'analysis' | 'opinion' | 'synthesis';
   contentType?: EditorialContentType;
+  section?: EditorialSection;
   entities: string[];
   timeline: string[];
   relatedStories: string[];
@@ -227,6 +229,17 @@ export function getReaderFacingContentType(classification: Story['classification
 }
 
 export const MINIMUM_STORY_WORDS = 800;
+export const MINIMUM_BRIEF_WORDS = 120;
+export const MAXIMUM_BRIEF_WORDS = 220;
+
+export function getEditorialWordCountBounds(section?: string): {
+  minimum: number;
+  maximum?: number;
+} {
+  return section === 'Brief'
+    ? { minimum: MINIMUM_BRIEF_WORDS, maximum: MAXIMUM_BRIEF_WORDS }
+    : { minimum: MINIMUM_STORY_WORDS };
+}
 
 export function getPublicDateModified(
   story: Pick<Story, 'date' | 'dateModified'>,
@@ -254,6 +267,7 @@ export interface PublicArticleEligibilityInput {
   status?: string;
   publishAt?: string | Date;
   wordCount?: number;
+  section?: EditorialSection;
   date?: string | Date;
 }
 
@@ -273,9 +287,11 @@ export function isPublicArticle(article: PublicArticleEligibilityInput, now = ne
     const publishTime = article.publishAt instanceof Date
       ? article.publishAt.getTime()
       : Date.parse(article.publishAt);
+    const bounds = getEditorialWordCountBounds(article.section);
     return Number.isFinite(publishTime)
       && publishTime <= now.getTime()
-      && article.wordCount >= MINIMUM_STORY_WORDS;
+      && article.wordCount >= bounds.minimum
+      && (bounds.maximum === undefined || article.wordCount <= bounds.maximum);
   }
 
   const publicationTime = article.date instanceof Date
@@ -298,12 +314,13 @@ export function getEditorialLifecycleStatus(
   publishAt: string | Date,
   wordCount: number,
   now = new Date(),
+  section?: EditorialSection,
 ): EditorialLifecycleStatus {
   if (status === 'draft' || status === 'unpublished' || status === 'archived' || status === 'canceled') {
     return status;
   }
   if (status !== 'scheduled' && status !== 'published') return 'unpublished';
-  return isPublicArticle({ status, publishAt, wordCount }, now)
+  return isPublicArticle({ status, publishAt, wordCount, section }, now)
     ? 'published'
     : 'scheduled';
 }
@@ -1242,6 +1259,7 @@ export function getPublishedStories(now = new Date(), schedule = scheduledStorie
         status: 'scheduled',
         publishAt: story.publishAt,
         wordCount: getStoryWordCount(story),
+        section: story.section,
       }, now),
   );
   return mergeEligiblePublishedStories(now, newlyPublished);

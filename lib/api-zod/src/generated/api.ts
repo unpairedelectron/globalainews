@@ -406,6 +406,9 @@ export const GetNewsroomReleasesResponseItem = zod.object({
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
+  "minimumWordCount": zod.number().int().optional(),
+  "maximumWordCount": zod.number().int().optional(),
+  "section": zod.enum(['Brief', 'Research', 'Data']).optional(),
   "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
   "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
   "updatedAt": zod.coerce.date()
@@ -438,7 +441,8 @@ export const CreateNewsroomReleaseBody = zod.object({
   "cadence": zod.enum(['daily', 'weekly']),
   "category": zod.string().min(1),
   "author": zod.string().min(1),
-  "body": zod.string().min(1)
+  "body": zod.string().min(1),
+  "section": zod.enum(['Brief', 'Research', 'Data']).optional()
 })
 
 export const CreateNewsroomReleaseResponse = zod.object({
@@ -452,6 +456,9 @@ export const CreateNewsroomReleaseResponse = zod.object({
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
+  "minimumWordCount": zod.number().int(),
+  "maximumWordCount": zod.number().int().optional(),
+  "section": zod.enum(['Brief', 'Research', 'Data']).optional(),
   "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
   "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
   "updatedAt": zod.coerce.date()
@@ -505,6 +512,9 @@ export const ReorderNewsroomReleasesResponseItem = zod.object({
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
+  "minimumWordCount": zod.number().int().optional(),
+  "maximumWordCount": zod.number().int().optional(),
+  "section": zod.enum(['Brief', 'Research', 'Data']).optional(),
   "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
   "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
   "updatedAt": zod.coerce.date()
@@ -535,7 +545,8 @@ export const UpdateNewsroomReleaseBody = zod.object({
   "cadence": zod.enum(['daily', 'weekly']).optional(),
   "category": zod.string().min(1).optional(),
   "author": zod.string().min(1).optional(),
-  "body": zod.string().min(1).optional()
+  "body": zod.string().min(1).optional(),
+  "section": zod.enum(['Brief', 'Research', 'Data']).optional()
 })
 
 export const UpdateNewsroomReleaseResponse = zod.object({
@@ -549,6 +560,9 @@ export const UpdateNewsroomReleaseResponse = zod.object({
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
+  "minimumWordCount": zod.number().int().optional(),
+  "maximumWordCount": zod.number().int().optional(),
+  "section": zod.enum(['Brief', 'Research', 'Data']).optional(),
   "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
   "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
   "updatedAt": zod.coerce.date()

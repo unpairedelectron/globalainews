@@ -3,7 +3,7 @@ import { ArrowDown, ArrowUp, ArrowUpRight, Pencil, Plus, RefreshCw, Search, X } 
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation, useSearch } from 'wouter';
 import { Link } from '@/components/canonical-link';
-import { authors, getReleaseDraftWordCount, MINIMUM_STORY_WORDS, type Story } from '@/content';
+import { authors, getEditorialWordCountBounds, getReleaseDraftWordCount, type EditorialSection, type Story } from '@/content';
 import { BRAND_COLORS } from '@/brand';
 import { EditorialSealGlyph } from '@/components/brand-mark';
 import { layoutPreviewTitle, socialPreviewAccent, socialPreviewFooterY, socialPreviewHeight, socialPreviewTitleStartY, socialPreviewTitleX, socialPreviewWidth } from '@/social-preview';
@@ -55,6 +55,7 @@ type ReleaseFormValue = {
   category: string;
   author: string;
   body: string;
+  section: EditorialSection;
 };
 
 type ReleaseQueueFilter = 'all' | 'blocked';
@@ -82,6 +83,7 @@ function releaseToForm(release: EditorialRelease): ReleaseFormValue {
     category: typeof release.story.category === 'string' ? release.story.category : 'Field Notes',
     author: typeof release.story.author === 'string' ? release.story.author : '',
     body: releaseBody(release),
+    section: (release.story.section as EditorialSection | undefined) ?? release.section ?? 'Research',
   };
 }
 
@@ -108,6 +110,7 @@ function defaultReleaseForm(story?: Story): ReleaseFormValue {
     category: story?.category ?? 'Field Notes',
     author: story?.author ?? '',
     body: story?.body.flatMap((section) => section.paragraphs).join('\n\n') ?? '',
+    section: 'Research',
   };
 }
 
@@ -142,8 +145,10 @@ function ReleaseEditor({
   const [value, setValue] = useState(initialValue);
   const update = (field: keyof ReleaseFormValue, next: string) => setValue((current) => ({ ...current, [field]: next }));
   const wordCount = getReleaseDraftWordCount(value.dek, value.body);
-  const remainingWords = Math.max(0, MINIMUM_STORY_WORDS - wordCount);
-  const publishable = remainingWords === 0;
+  const bounds = getEditorialWordCountBounds(value.section);
+  const remainingWords = Math.max(0, bounds.minimum - wordCount);
+  const overMaximum = bounds.maximum !== undefined && wordCount > bounds.maximum;
+  const publishable = remainingWords === 0 && !overMaximum;
   return <form data-testid={editing ? 'form-edit-release' : 'form-create-release'} onSubmit={(event) => { event.preventDefault(); onSubmit(value); }} className="border border-primary/30 bg-surface-muted p-5 md:p-7">
     <div className="flex items-start justify-between gap-5 border-b border-foreground/15 pb-5">
       <div><p className="eyebrow text-primary">{editing ? 'Edit prepared article' : 'New prepared article'}</p><h3 className="mt-2 font-serif text-3xl leading-none">{editing ? 'Keep the handoff precise.' : 'Prepare the next edition.'}</h3></div>
@@ -155,11 +160,12 @@ function ReleaseEditor({
       <label className={editing ? 'md:col-span-2' : ''}><span className="eyebrow text-muted-foreground">Standfirst</span><input data-testid="input-release-dek" required maxLength={500} value={value.dek} onChange={(event) => update('dek', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary" /></label>
       <label><span className="eyebrow text-muted-foreground">Release time · UTC</span><input data-testid="input-release-publish-at" required type="datetime-local" value={value.publishAt} onChange={(event) => update('publishAt', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary" /></label>
       <label><span className="eyebrow text-muted-foreground">Cadence</span><select data-testid="select-release-cadence" value={value.cadence} onChange={(event) => update('cadence', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary"><option value="daily">Daily edition</option><option value="weekly">Weekly edition</option></select></label>
+       <label><span className="eyebrow text-muted-foreground">Editorial section</span><select data-testid="select-release-section" value={value.section} onChange={(event) => update('section', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary"><option value="Brief">Brief · 120–220 words</option><option value="Research">Research · at least 800 words</option><option value="Data">Data · at least 800 words</option></select></label>
       <label><span className="eyebrow text-muted-foreground">Desk</span><select data-testid="select-release-category" required value={value.category} onChange={(event) => update('category', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary">{categories.map((category) => <option value={category} key={category}>{category}</option>)}</select></label>
       <label><span className="eyebrow text-muted-foreground">Author · choose a verified record</span><select data-testid="select-release-author" required value={value.author} onChange={(event) => update('author', event.target.value)} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-2 text-sm outline-none focus:border-primary"><option value="" disabled>Select an author</option>{authors.map((author) => <option value={author.slug} key={author.slug}>{author.name}</option>)}</select></label>
       <label className="md:col-span-2"><span className="eyebrow text-muted-foreground">Working copy</span><textarea data-testid="textarea-release-body" required minLength={1} value={value.body} onChange={(event) => update('body', event.target.value)} rows={7} className="mt-2 w-full resize-y border border-foreground/20 bg-background p-3 text-sm leading-6 outline-none focus:border-primary" /></label>
     </div>
-    <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-foreground/15 pt-5"><div className="max-w-md text-xs leading-5 text-muted-foreground"><p data-testid="release-word-count" className="font-mono text-primary">{wordCount} / {MINIMUM_STORY_WORDS} words{remainingWords > 0 ? ` · ${remainingWords} more needed` : ' · minimum met'}</p>{!publishable ? <p data-testid="release-publish-blocked" className="mt-2 text-destructive">Publishing is unavailable until this release reaches at least {MINIMUM_STORY_WORDS} words of visible copy.</p> : <p>The article will enter the durable release queue and remain editable until it publishes.</p>}</div><div className="flex gap-2"><button data-testid="button-cancel-release-editor" type="button" onClick={onCancel} className="border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest hover:border-primary">Discard</button><button data-testid="button-save-release" type="submit" disabled={saving || !publishable} className="inline-flex items-center gap-2 bg-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-background disabled:cursor-not-allowed disabled:opacity-50">{saving ? 'Saving…' : editing ? 'Save changes' : 'Add to queue'}</button></div></div>
+     <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-foreground/15 pt-5"><div className="max-w-md text-xs leading-5 text-muted-foreground"><p data-testid="release-word-count" className="font-mono text-primary">{wordCount} / {bounds.minimum}{bounds.maximum ? `–${bounds.maximum}` : '+'} words{overMaximum ? ' · over limit' : remainingWords > 0 ? ` · ${remainingWords} more needed` : ' · length met'}</p>{!publishable ? <p data-testid="release-publish-blocked" className="mt-2 text-destructive">{overMaximum ? `Briefs cannot exceed ${bounds.maximum} words.` : `${value.section} releases need at least ${bounds.minimum} words of visible copy.`}</p> : <p>The article will enter the durable release queue and remain editable until it publishes.</p>}</div><div className="flex gap-2"><button data-testid="button-cancel-release-editor" type="button" onClick={onCancel} className="border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest hover:border-primary">Discard</button><button data-testid="button-save-release" type="submit" disabled={saving || !publishable} className="inline-flex items-center gap-2 bg-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-background disabled:cursor-not-allowed disabled:opacity-50">{saving ? 'Saving…' : editing ? 'Save changes' : 'Add to queue'}</button></div></div>
   </form>;
 }
 
