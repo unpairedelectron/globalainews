@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { EditorialCadence } from './editorialCadence';
+import type { EditorialReleaseSection } from './editorialReleaseSection';
 import type { EditorialReleaseStatus } from './editorialReleaseStatus';
 import type { EditorialStory } from './editorialStory';
 
@@ -21,6 +22,11 @@ export interface EditorialRelease {
   story: EditorialStory;
   /** Number of words in the release standfirst and working copy. */
   wordCount: number;
+  /** Minimum visible-copy length for the selected editorial section. */
+  minimumWordCount: number;
+  /** Maximum visible-copy length when the selected section has an upper limit. */
+  maximumWordCount?: number;
+  section?: EditorialReleaseSection;
   /** Number of words still needed before the release can publish. */
   remainingWords: number;
   /** Whether the release meets the minimum visible-copy length. */

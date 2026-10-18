@@ -1,0 +1,2263 @@
+{
+  "schemaVersion": 1,
+  "scope": "18 expanded drafts in Brief, Research, and Data batches",
+  "reviewedAt": "2026-10-18T07:54:06.521Z",
+  "reviewMethod": "Direct source URLs were fetched and a model-assisted pass extracted candidate claims and evidence excerpts. This is a first pass, not a complete manual claim audit or publication approval.",
+  "acceptanceStatus": "INCOMPLETE — all 16 versioned candidate copies and two unchanged longform drafts pass section word-count limits using the newsroom production counter. Three Briefs remain held for paywalled-source gaps; remaining freshness checks, final human editorial sign-off, private CMS slug checks, authenticated publication and live URL verification remain open.",
+  "limitations": [
+    "Extracted date strings are retained separately and are not assumed to be event dates.",
+    "Source publication dates are candidate extractions and must be checked against the original source.",
+    "Company claims remain attributable; independent replication is not inferred.",
+    "Paywalled or inaccessible source material requires accessible corroboration before approval.",
+    "This ledger does not certify every sentence as manually reviewed, does not alter draft review flags, and does not authorize publication."
+  ],
+  "articles": [
+    {
+      "section": "Brief",
+      "title": "DeepSeek Opens Search and Fetch APIs, Adding a Retrieval Layer for AI Agents",
+      "slug": "deepseek-opens-search-and-fetch-apis-for-ai-agents",
+      "reportedWordCount": null,
+      "sourceReviewNote": "Official DeepSeek changelog/release pages checked on 2026-10-18. Search-engine quality statements are attributed to DeepSeek, not treated as independently verified. Recheck pricing before publication.",
+      "claims": [
+        {
+          "assertion": "DeepSeek announced the availability of Search and Fetch APIs on 17 October.",
+          "source": {
+            "url": "https://api-docs.deepseek.com/updates/?release=deepseek-coder",
+            "title": "Change Log",
+            "publisher": "DeepSeek",
+            "type": "primary/company source",
+            "sourcePublicationDate": "2026-10-17",
+            "dateStatus": "extracted; confirm against source",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Candidate date extracted from page text; verify it is the original publication date."
+          },
+          "evidenceExcerpt": "Date: 2026-10-17 ... Opening up the in-house search API",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "See article-level correctionsNeeded; no copy correction has yet been applied.",
+          "remainingUncertainty": [
+            "The source text is limited to official DeepSeek documentation and changelogs, representing only vendor-provided information."
+          ],
+          "dateDetailsAsExtracted": "2026-10-17",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The Search API returns structured web results, and the Fetch API returns page content as Markdown.",
+          "source": {
+            "url": "https://api-docs.deepseek.com/guides/search/",
+            "title": "Search & Fetch",
+            "publisher": "DeepSeek",
+            "type": "primary/company source",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Search API finds web pages for a query and returns structured results. ... Fetch API retrieves a single web page and returns its content as Markdown.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "See article-level correctionsNeeded; no copy correction has yet been applied.",
+          "remainingUncertainty": [
+            "The source text is limited to official DeepSeek documentation and changelogs, representing only vendor-provided information."
+          ],
+          "dateDetailsAsExtracted": "N/A",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The price for the Search and Fetch endpoints is $0.75 per 1,000 calls.",
+          "source": {
+            "url": "https://api-docs.deepseek.com/news/news261017/",
+            "title": "DeepSeek-V4.1-Flash-1017: Wish-Driven Programming Made Real",
+            "publisher": "DeepSeek",
+            "type": "primary/company source",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Each endpoint: $0.75 per 1,000 calls.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "See article-level correctionsNeeded; no copy correction has yet been applied.",
+          "remainingUncertainty": [
+            "The source text is limited to official DeepSeek documentation and changelogs, representing only vendor-provided information."
+          ],
+          "dateDetailsAsExtracted": "N/A",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Search & Fetch calls via server-side tools in DeepSeek Harness, Claude Code, and Codex are free until 31 October 2026 at 16:00 UTC.",
+          "source": {
+            "url": "https://api-docs.deepseek.com/news/news261017/",
+            "title": "DeepSeek-V4.1-Flash-1017: Wish-Driven Programming Made Real",
+            "publisher": "DeepSeek",
+            "type": "primary/company source",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Search & Fetch calls via server-side tools in DeepSeek Harness, Claude Code, and Codex are currently free for DeepSeek API users. Billing starts Oct 31, 2026, at 16:00 UTC.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "See article-level correctionsNeeded; no copy correction has yet been applied.",
+          "remainingUncertainty": [
+            "The source text is limited to official DeepSeek documentation and changelogs, representing only vendor-provided information."
+          ],
+          "dateDetailsAsExtracted": "2026-10-31",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The search engine indexes hundreds of billions of pages and filters low-quality material.",
+          "source": {
+            "url": "https://api-docs.deepseek.com/updates/?release=deepseek-coder",
+            "title": "Change Log",
+            "publisher": "DeepSeek",
+            "type": "primary/company source",
+            "sourcePublicationDate": "2026-10-17",
+            "dateStatus": "extracted; confirm against source",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Candidate date extracted from page text; verify it is the original publication date."
+          },
+          "evidenceExcerpt": "DeepSeek Search is an AI-native general-purpose search engine that indexes hundreds of billions of web pages... It filters SEO spam, GEO manipulation, and low-quality AIGC",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "See article-level correctionsNeeded; no copy correction has yet been applied.",
+          "remainingUncertainty": [
+            "The source text is limited to official DeepSeek documentation and changelogs, representing only vendor-provided information."
+          ],
+          "dateDetailsAsExtracted": "N/A",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [
+        "The draft claims billing starts on 31 October 2026, but the source text states 'Billing starts Oct 31, 2026, at 16:00 UTC' as a deadline for when it is free, and the changelog/guides suggest billing starts after that point."
+      ],
+      "unresolved": [],
+      "sourceLimitations": [
+        "The source text is limited to official DeepSeek documentation and changelogs, representing only vendor-provided information."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 281 exceeds Brief maximum 220; trim before release.",
+      "cmsWordCount": 281,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 175,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/brief-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Brief",
+      "title": "Anthropic Turns to Legal Experts as AI Agents Move Into Negotiation",
+      "slug": "anthropic-legal-experts-ai-agents-negotiation",
+      "reportedWordCount": null,
+      "sourceReviewNote": "The FT headline and accessible indexed summary support the broad story. The full article is subscription-gated in the current retrieval. Hold for editor with full-text access to confirm details of the experiments and any attributed views before publication.",
+      "claims": [
+        {
+          "assertion": "Anthropic is consulting with legal experts regarding AI agents and negotiation strategies.",
+          "source": {
+            "url": "https://www.ft.com/content/f7c26ac0-f5f2-443a-86b2-39d62f7920a9",
+            "title": "Anthropic turns to lawyers to help AI agents strike deals",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Anthropic is in talks with legal groups about how to solve a novel problem: how AI agents should negotiate",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The specific identity of the 'two people familiar with Anthropic’s thinking' is not disclosed.",
+            "The full scope of 'negotiation norms' explored by Anthropic is not detailed beyond provided anecdotes.",
+            "The article contains promotional and site-navigation text alongside reportage.",
+            "Some details rely on anonymous sources familiar with the company's internal thinking."
+          ],
+          "dateDetailsAsExtracted": "October 2024",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Anthropic conducted experiments where AI agents bought and sold books on a virtual trading floor.",
+          "source": {
+            "url": "https://www.ft.com/content/f7c26ac0-f5f2-443a-86b2-39d62f7920a9",
+            "title": "Anthropic turns to lawyers to help AI agents strike deals",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "In September, Anthropic employees engaged in an experiment to buy and sell books, using AI agents on a virtual trading floor",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The specific identity of the 'two people familiar with Anthropic’s thinking' is not disclosed.",
+            "The full scope of 'negotiation norms' explored by Anthropic is not detailed beyond provided anecdotes.",
+            "The article contains promotional and site-navigation text alongside reportage.",
+            "Some details rely on anonymous sources familiar with the company's internal thinking."
+          ],
+          "dateDetailsAsExtracted": "September 2024",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Anthropic's research indicates that 'ruthless' agents secured slightly better outcomes in negotiation experiments.",
+          "source": {
+            "url": "https://www.ft.com/content/f7c26ac0-f5f2-443a-86b2-39d62f7920a9",
+            "title": "Anthropic turns to lawyers to help AI agents strike deals",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The study found that agents that were instructed to be “ruthless” came out “slightly ahead” of other agents in securing a better outcome.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The specific identity of the 'two people familiar with Anthropic’s thinking' is not disclosed.",
+            "The full scope of 'negotiation norms' explored by Anthropic is not detailed beyond provided anecdotes.",
+            "The article contains promotional and site-navigation text alongside reportage.",
+            "Some details rely on anonymous sources familiar with the company's internal thinking."
+          ],
+          "dateDetailsAsExtracted": "2024",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [
+        "The specific identity of the 'two people familiar with Anthropic’s thinking' is not disclosed.",
+        "The full scope of 'negotiation norms' explored by Anthropic is not detailed beyond provided anecdotes."
+      ],
+      "sourceLimitations": [
+        "The article contains promotional and site-navigation text alongside reportage.",
+        "Some details rely on anonymous sources familiar with the company's internal thinking."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "HOLD — source access/full-text gap; corroborate consequential claims with accessible evidence before approval.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 257 exceeds Brief maximum 220; trim before release.",
+      "cmsWordCount": 257,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 182,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/brief-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Brief",
+      "title": "Anthropic Executive Warns AI's Economic Upside Could Outrun Safety Rules",
+      "slug": "anthropic-executive-ai-economic-upside-safety-rules",
+      "reportedWordCount": null,
+      "sourceReviewNote": "Reuters article opened and reviewed on 2026-10-18. $44 trillion is explicitly framed as an internal conditional scenario, not a forecast.",
+      "claims": [
+        {
+          "assertion": "Jack Clark spoke at the IMF and World Bank meetings in Bangkok.",
+          "source": {
+            "url": "https://www.reuters.com/world/china/anthropics-clark-says-ais-impact-accelerating-quickly-could-vastly-boost-us-gdp-2026-10-17/",
+            "title": "Source title not extracted",
+            "publisher": "Reuters",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Clark, speaking at IMF and World Bank annual meetings in Bangkok",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source is a single journalistic report of a speech and internal model, which the article itself notes should not be considered an established forecast."
+          ],
+          "dateDetailsAsExtracted": "October 17, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "An internal Anthropic model forecasts US GDP could reach $44 trillion by 2030 under certain conditions.",
+          "source": {
+            "url": "https://www.reuters.com/world/china/anthropics-clark-says-ais-impact-accelerating-quickly-could-vastly-boost-us-gdp-2026-10-17/",
+            "title": "Source title not extracted",
+            "publisher": "Reuters",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "one of the company's internal models ‌forecasting that under certain conditions it could increase US economic output by almost 50% by 2030",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source is a single journalistic report of a speech and internal model, which the article itself notes should not be considered an established forecast."
+          ],
+          "dateDetailsAsExtracted": "October 17, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Clark warned that the window to impose AI safeguards is shrinking.",
+          "source": {
+            "url": "https://www.reuters.com/world/china/anthropics-clark-says-ais-impact-accelerating-quickly-could-vastly-boost-us-gdp-2026-10-17/",
+            "title": "Source title not extracted",
+            "publisher": "Reuters",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "the window to ⁠impose safeguards ​was shrinking as AI became more capable and was now \"a small number of years.\"",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source is a single journalistic report of a speech and internal model, which the article itself notes should not be considered an established forecast."
+          ],
+          "dateDetailsAsExtracted": "October 17, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Clark acknowledged AI is causing job losses in some fields while potentially creating new ones.",
+          "source": {
+            "url": "https://www.reuters.com/world/china/anthropics-clark-says-ais-impact-accelerating-quickly-could-vastly-boost-us-gdp-2026-10-17/",
+            "title": "Source title not extracted",
+            "publisher": "Reuters",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Clark ​also acknowledged that AI was causing job losses in some fields... a major unknown was its potential to create jobs in completely new industries.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source is a single journalistic report of a speech and internal model, which the article itself notes should not be considered an established forecast."
+          ],
+          "dateDetailsAsExtracted": "October 17, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [],
+      "sourceLimitations": [
+        "The source is a single journalistic report of a speech and internal model, which the article itself notes should not be considered an established forecast."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 265 exceeds Brief maximum 220; trim before release.",
+      "cmsWordCount": 265,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 175,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/brief-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Brief",
+      "title": "AI Data-Centre Expansion Faces a Reality Check From Delays, Financing and Local Opposition",
+      "slug": "ai-data-centre-expansion-faces-delays-financing-and-local-opposition",
+      "reportedWordCount": null,
+      "sourceReviewNote": "FT headline and accessible indexed summary support the broad trend. Full text is subscription-gated in current retrieval; do not add the reported project count, moratoria count or credibility percentage without verifying definitions and scope in the full report.",
+      "claims": [
+        {
+          "assertion": "A Financial Times report was published on 18 October describing strain in the US data-centre expansion.",
+          "source": {
+            "url": "https://www.ft.com/content/9ea5a37d-15c9-4d5b-94d6-719048c9cd3c",
+            "title": "America’s $10tn AI infrastructure boom is starting to fray",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "A Financial Times report published on 18 October describes growing strain in the US data-centre expansion",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The provided source text contains repetitive navigation text and redundant social sharing blocks due to web scraping artifacts.",
+            "The source is subscription-gated, though sufficient content was provided for verification."
+          ],
+          "dateDetailsAsExtracted": "18 October",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "At least 47 large data centre projects have been delayed, withdrawn or blocked in 2026.",
+          "source": {
+            "url": "https://www.ft.com/content/9ea5a37d-15c9-4d5b-94d6-719048c9cd3c",
+            "title": "America’s $10tn AI infrastructure boom is starting to fray",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "At least 47 large projects have been delayed, withdrawn or blocked in 2026",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The provided source text contains repetitive navigation text and redundant social sharing blocks due to web scraping artifacts.",
+            "The source is subscription-gated, though sufficient content was provided for verification."
+          ],
+          "dateDetailsAsExtracted": "2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Analysts at Bernstein estimated only 35 per cent of the planned US data centre pipeline is credible.",
+          "source": {
+            "url": "https://www.ft.com/content/9ea5a37d-15c9-4d5b-94d6-719048c9cd3c",
+            "title": "America’s $10tn AI infrastructure boom is starting to fray",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Analysts at Bernstein this month estimated only about 35 per cent of the planned US data centre pipeline was credible.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The provided source text contains repetitive navigation text and redundant social sharing blocks due to web scraping artifacts.",
+            "The source is subscription-gated, though sufficient content was provided for verification."
+          ],
+          "dateDetailsAsExtracted": "October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "More than 1,000 communities across the US have tried to introduce moratoria or other restrictions on AI infrastructure this year.",
+          "source": {
+            "url": "https://www.ft.com/content/9ea5a37d-15c9-4d5b-94d6-719048c9cd3c",
+            "title": "America’s $10tn AI infrastructure boom is starting to fray",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "More than 1,000 communities across the US have tried to introduce moratoria or other restrictions on AI infrastructure this year",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The provided source text contains repetitive navigation text and redundant social sharing blocks due to web scraping artifacts.",
+            "The source is subscription-gated, though sufficient content was provided for verification."
+          ],
+          "dateDetailsAsExtracted": "2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "US spending on AI infrastructure is projected to surpass $10tn between 2025 and 2032.",
+          "source": {
+            "url": "https://www.ft.com/content/9ea5a37d-15c9-4d5b-94d6-719048c9cd3c",
+            "title": "America’s $10tn AI infrastructure boom is starting to fray",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "US spending is projected to surpass $10tn between 2025 and 2032, according to estimates by Stijn van Nieuwerburgh",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The provided source text contains repetitive navigation text and redundant social sharing blocks due to web scraping artifacts.",
+            "The source is subscription-gated, though sufficient content was provided for verification."
+          ],
+          "dateDetailsAsExtracted": "2025-2032",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [],
+      "sourceLimitations": [
+        "The provided source text contains repetitive navigation text and redundant social sharing blocks due to web scraping artifacts.",
+        "The source is subscription-gated, though sufficient content was provided for verification."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "HOLD — source access/full-text gap; corroborate consequential claims with accessible evidence before approval.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 280 exceeds Brief maximum 220; trim before release.",
+      "cmsWordCount": 280,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 164,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/brief-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Brief",
+      "title": "Economists Say AI's Growth Dividend Will Depend on Adoption, Not Just Frontier Models",
+      "slug": "economists-ai-growth-dividend-depends-on-adoption",
+      "reportedWordCount": null,
+      "sourceReviewNote": "FT headline and indexed summary support the survey size and broad findings. Full article and detailed methodology were not accessible in the current retrieval; hold exact percentages and detailed methodology claims for confirmation.",
+      "claims": [
+        {
+          "assertion": "A Financial Times survey of 94 economists across Asia, the US, and Europe indicates optimism regarding AI-driven economic and productivity growth.",
+          "source": {
+            "url": "https://www.ft.com/content/c6aeb3a1-1874-4947-8ffc-4d993301244a",
+            "title": "Global economy set for AI-driven surge, FT survey suggests",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "In the poll of 94 economists across Asia, the US and Europe, 54 per cent of respondents said many or nearly all G20 countries would see significant economic and productivity gains",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source article is behind a subscription paywall, limiting full verification of all survey data nuances.",
+            "The article does not provide a specific publication date beyond 'an hour ago'."
+          ],
+          "dateDetailsAsExtracted": "Not explicitly stated (survey date context is October)",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The FT survey suggests AI productivity gains will be driven by widespread adoption rather than just being concentrated in frontier-model countries.",
+          "source": {
+            "url": "https://www.ft.com/content/c6aeb3a1-1874-4947-8ffc-4d993301244a",
+            "title": "Global economy set for AI-driven surge, FT survey suggests",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "the FT poll suggested that AI’s productivity gains would be driven by widespread and effective adoption of the technology by businesses around the world",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source article is behind a subscription paywall, limiting full verification of all survey data nuances.",
+            "The article does not provide a specific publication date beyond 'an hour ago'."
+          ],
+          "dateDetailsAsExtracted": "Not explicitly stated",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Economists identified Nigeria, Somalia, and Ethiopia as being at risk of falling behind due to weaker infrastructure.",
+          "source": {
+            "url": "https://www.ft.com/content/c6aeb3a1-1874-4947-8ffc-4d993301244a",
+            "title": "Global economy set for AI-driven surge, FT survey suggests",
+            "publisher": "Financial Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "African countries in particular are at risk of falling behind because of weaker infrastructure, 32 respondents warned, with Nigeria, Somalia and Ethiopia among those singled out.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source article is behind a subscription paywall, limiting full verification of all survey data nuances.",
+            "The article does not provide a specific publication date beyond 'an hour ago'."
+          ],
+          "dateDetailsAsExtracted": "Not explicitly stated",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [],
+      "sourceLimitations": [
+        "The source article is behind a subscription paywall, limiting full verification of all survey data nuances.",
+        "The article does not provide a specific publication date beyond 'an hour ago'."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "HOLD — source access/full-text gap; corroborate consequential claims with accessible evidence before approval.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 297 exceeds Brief maximum 220; trim before release.",
+      "cmsWordCount": 297,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 176,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/brief-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Brief",
+      "title": "DeepSeek Releases V4.1-Flash-1017 Update With Higher Vendor Benchmark Scores",
+      "slug": "deepseek-releases-v41-flash-1017-update",
+      "reportedWordCount": null,
+      "sourceReviewNote": "Hugging Face records the model upload at 2026-10-17 05:46:55 UTC. The Economic Times page, carrying Bloomberg reporting, was published 2026-10-17 21:53:21 IST. Keep release-event and reporting-publication dates distinct; recheck source freshness immediately before publication.",
+      "claims": [
+        {
+          "assertion": "DeepSeek released the V4.1-Flash-1017 model update on 17 October 2026.",
+          "source": {
+            "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017/commits/main",
+            "title": "DeepSeek-V4.1-Flash-1017 release history",
+            "publisher": "DeepSeek via Hugging Face",
+            "type": "primary model release record",
+            "sourcePublicationDate": "2026-10-17",
+            "dateStatus": "date visible; exact timezone/timestamp pending confirmation",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Commit listing shows Oct 17; confirm primary timestamp before publication."
+          },
+          "evidenceExcerpt": "Commit history lists the Release DeepSeek-V4.1-Flash-1017 on Oct 17.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction; release identity supported.",
+          "remainingUncertainty": [
+            "Exact timestamp and timezone for the primary release must be checked against the rolling 24-hour publication window."
+          ],
+          "dateDetailsAsExtracted": "2026-10-17",
+          "eventDateStatus": "Release date is distinct from current publication date; exact time not established."
+        },
+        {
+          "assertion": "The model card describes the update as improving reasoning, coding, agentic tasks and visual benchmarks.",
+          "source": {
+            "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+            "title": "DeepSeek-V4.1-Flash-1017 model card",
+            "publisher": "DeepSeek",
+            "type": "primary/company source",
+            "sourcePublicationDate": "2026-10-17",
+            "dateStatus": "model release date; exact time pending",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Model card lists release and vendor description."
+          },
+          "evidenceExcerpt": "A minor update ... delivering substantial improvements across reasoning, coding, agentic tasks, and visual benchmarks.",
+          "eventDate": null,
+          "verificationResult": "supported_as_vendor_claim",
+          "correctiveAction": "Keep explicitly attributed to DeepSeek; do not present as independent evaluation.",
+          "remainingUncertainty": [
+            "No independent benchmark replication assessed in this review."
+          ],
+          "dateDetailsAsExtracted": "2026-10-17",
+          "eventDateStatus": "Not applicable."
+        },
+        {
+          "assertion": "The vendor comparison table shows 42.6 on HLE without tools, 42.3 on Terminal-Bench 4.0 and 77.0 on DeepSWE v1.1.",
+          "source": {
+            "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+            "title": "DeepSeek-V4.1-Flash-1017 model card",
+            "publisher": "DeepSeek",
+            "type": "primary/company source",
+            "sourcePublicationDate": "2026-10-17",
+            "dateStatus": "model release date; exact time pending",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Table values are company-reported; methodology requires further inspection."
+          },
+          "evidenceExcerpt": "HLE w/o tools 42.6; Terminal-Bench 4.0 42.3; DeepSWE v1.1 77.0.",
+          "eventDate": null,
+          "verificationResult": "supported_as_vendor_claim",
+          "correctiveAction": "State that these are scores in DeepSeek’s own comparison table; do not infer overall superiority.",
+          "remainingUncertainty": [
+            "Benchmark setup, scoring protocol and independent replication not established in this first pass."
+          ],
+          "dateDetailsAsExtracted": "2026-10-17",
+          "eventDateStatus": "Not applicable."
+        },
+        {
+          "assertion": "The updated model was available through DeepSeek’s web, app and developer platform.",
+          "source": {
+            "url": "https://m.economictimes.com/tech/artificial-intelligence/deepseek-pushes-out-updated-ai-model-it-says-is-faster-leaner/articleshow/135016984.cms",
+            "title": "DeepSeek pushes out updated AI model it says is faster, leaner",
+            "publisher": "The Economic Times",
+            "type": "independent reporting",
+            "sourcePublicationDate": "2026-10-17T21:53:00+05:30",
+            "dateStatus": "displayed publication time; confirm source clock and current recency immediately before release",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Search result showed 17 Oct 2026, 09:53 PM IST; re-open source for final check."
+          },
+          "evidenceExcerpt": "The model is live across the web, on DeepSeek’s app and its platform for developers.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "Attribute availability report to The Economic Times.",
+          "remainingUncertainty": [
+            "Independent report time is not a substitute for verifying the primary model-release timestamp."
+          ],
+          "dateDetailsAsExtracted": "17 Oct 2026, 09:53 PM IST",
+          "eventDateStatus": "Availability reported on 17 October; exact release time remains open."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [
+        "Confirm primary release timestamp against rolling 24-hour window.",
+        "The vendor benchmark comparisons and evaluation methodology have not been independently validated."
+      ],
+      "sourceLimitations": [
+        "Performance scores are reported by DeepSeek; no independent benchmark reproduction established."
+      ],
+      "firstPassAssessment": "source_checked_vendor_claims_attributed",
+      "finalReviewerStatus": "PENDING — confirm primary release timestamp and 24-hour eligibility, complete editorial sign-off, private CMS slug check and authenticated publication.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "CANDIDATE PASS: 151 words with dek using production counter; not yet approved.",
+      "cmsWordCount": 151,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "Candidate title/slug/source URLs recorded in versioned handoff.",
+      "localSlugCheck": "Not checked for replacement slug against current local routes/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 151,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/brief-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Research",
+      "title": "Claude Finds Lean-Checked Shortcuts for Designing More Efficient Quantum Circuits",
+      "slug": "claude-finds-lean-checked-shortcuts-for-designing-more-efficient-quantum-circuits",
+      "reportedWordCount": 743,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "Anthropic researchers used Claude to redesign quantum circuits across eight computational tasks.",
+          "source": {
+            "url": "https://www.anthropic.com/research/designing-efficient-quantum-circuits",
+            "title": "Designing more efficient quantum circuits with Claude",
+            "publisher": "Anthropic",
+            "type": "Primary research explanation",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "We gave Claude plain-language specifications for eight such circuits... Claude discovered novel designs that used both fewer qubits and fewer gates",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Independent replication of the results.",
+            "Real-world performance of the redesigned circuits on fault-tolerant hardware.",
+            "The research is presented as an arXiv preprint and has not undergone independent peer review [L2].",
+            "Results reflect estimated resource use rather than performance on functional hardware [L2]."
+          ],
+          "dateDetailsAsExtracted": "16 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "In seven of eight tasks, designs reduced both Toffoli-gate counts and qubit requirements.",
+          "source": {
+            "url": "https://arxiv.org/abs/2610.22367",
+            "title": "Quantum Physics",
+            "publisher": "arXiv",
+            "type": "Preprint",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "In seven of the eight tasks, the discovered circuits significantly reduce both Toffoli and qubit counts relative to the state of the art.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Independent replication of the results.",
+            "Real-world performance of the redesigned circuits on fault-tolerant hardware.",
+            "The research is presented as an arXiv preprint and has not undergone independent peer review [L2].",
+            "Results reflect estimated resource use rather than performance on functional hardware [L2]."
+          ],
+          "dateDetailsAsExtracted": "15 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "One decoder used in a quantum optimization method required about 12 times fewer gates.",
+          "source": {
+            "url": "https://www.anthropic.com/research/designing-efficient-quantum-circuits",
+            "title": "Designing more efficient quantum circuits with Claude",
+            "publisher": "Anthropic",
+            "type": "Primary research explanation",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "these optimizations reduced the number of gates in the decoder by a factor of 12",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Independent replication of the results.",
+            "Real-world performance of the redesigned circuits on fault-tolerant hardware.",
+            "The research is presented as an arXiv preprint and has not undergone independent peer review [L2].",
+            "Results reflect estimated resource use rather than performance on functional hardware [L2]."
+          ],
+          "dateDetailsAsExtracted": "16 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [
+        "Independent replication of the results.",
+        "Real-world performance of the redesigned circuits on fault-tolerant hardware."
+      ],
+      "sourceLimitations": [
+        "The research is presented as an arXiv preprint and has not undergone independent peer review [L2].",
+        "Results reflect estimated resource use rather than performance on functional hardware [L2]."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 775 below 800; expand with source-backed material.",
+      "cmsWordCount": 775,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 817,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/longform-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Research",
+      "title": "Claude Traces the Origins of Several NIST Curve Seeds—but Leaves Cryptographic Questions Open",
+      "slug": "claude-traces-the-origins-of-several-nist-curve-seeds-but-leaves-cryptographic-questions-open",
+      "reportedWordCount": 686,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "Anthropic's internal Claude research model traced five NIST prime-field curve seeds to a C-library pseudorandom-number generator initialized with a Unix timestamp.",
+          "source": {
+            "url": "https://www.anthropic.com/research/ecdsa-curve-origins",
+            "title": "Claude reveals ECDSA curve origins",
+            "publisher": "Anthropic",
+            "type": "Primary research explanation",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Claude discovered the origins of the NIST P-192, P-224, P-256, P-384, and P-521 seeds... output of the C library’s lrand48 random-number generator, seeded with a Unix timestamp!",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Criteria for skipped candidate curves remain unknown.",
+            "Explanation for the B-163 binary-curve seed remains unknown.",
+            "Method for generating base points for NIST curves P-224, P-256, P-384, and P-521 remains unknown.",
+            "The report is limited to the author's internal interpretation of the findings regarding skipped candidate curves.",
+            "The findings are not independently endorsed by third-party standards bodies."
+          ],
+          "dateDetailsAsExtracted": "16 October, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The finding does not break ECDSA, reveal a practical vulnerability, or require users to change how they use the curves.",
+          "source": {
+            "url": "https://www.anthropic.com/research/ecdsa-curve-origins",
+            "title": "Claude reveals ECDSA curve origins",
+            "publisher": "Anthropic",
+            "type": "Primary research explanation",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "This is not a cryptographic break, new attack, or weakness in the ECDSA curves.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Criteria for skipped candidate curves remain unknown.",
+            "Explanation for the B-163 binary-curve seed remains unknown.",
+            "Method for generating base points for NIST curves P-224, P-256, P-384, and P-521 remains unknown.",
+            "The report is limited to the author's internal interpretation of the findings regarding skipped candidate curves.",
+            "The findings are not independently endorsed by third-party standards bodies."
+          ],
+          "dateDetailsAsExtracted": "16 October, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The origin of the B-163 binary-curve seed remains unexplained.",
+          "source": {
+            "url": "https://www.anthropic.com/research/ecdsa-curve-origins",
+            "title": "Claude reveals ECDSA curve origins",
+            "publisher": "Anthropic",
+            "type": "Primary research explanation",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The fifth binary seed, B-163, fits nothing Claude has tried and remains unexplained.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Criteria for skipped candidate curves remain unknown.",
+            "Explanation for the B-163 binary-curve seed remains unknown.",
+            "Method for generating base points for NIST curves P-224, P-256, P-384, and P-521 remains unknown.",
+            "The report is limited to the author's internal interpretation of the findings regarding skipped candidate curves.",
+            "The findings are not independently endorsed by third-party standards bodies."
+          ],
+          "dateDetailsAsExtracted": "16 October, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The team could not explain the base points for several NIST curves, including P-224, P-256, P-384 and P-521.",
+          "source": {
+            "url": "https://www.anthropic.com/research/ecdsa-curve-origins",
+            "title": "Claude reveals ECDSA curve origins",
+            "publisher": "Anthropic",
+            "type": "Primary research explanation",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The base points of P-224, P-256, P-384, and P-521 don’t fit this recipe; we weren’t able to explain how they were selected.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Criteria for skipped candidate curves remain unknown.",
+            "Explanation for the B-163 binary-curve seed remains unknown.",
+            "Method for generating base points for NIST curves P-224, P-256, P-384, and P-521 remains unknown.",
+            "The report is limited to the author's internal interpretation of the findings regarding skipped candidate curves.",
+            "The findings are not independently endorsed by third-party standards bodies."
+          ],
+          "dateDetailsAsExtracted": "16 October, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [
+        "Criteria for skipped candidate curves remain unknown.",
+        "Explanation for the B-163 binary-curve seed remains unknown.",
+        "Method for generating base points for NIST curves P-224, P-256, P-384, and P-521 remains unknown."
+      ],
+      "sourceLimitations": [
+        "The report is limited to the author's internal interpretation of the findings regarding skipped candidate curves.",
+        "The findings are not independently endorsed by third-party standards bodies."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 710 below 800; expand with source-backed material.",
+      "cmsWordCount": 710,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 811,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/longform-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Research",
+      "title": "The AI Expectations Gap: Why an AI Lab Sees a Different Future From the Public",
+      "slug": "the-ai-expectations-gap-why-an-ai-lab-sees-a-different-future-from-the-public",
+      "reportedWordCount": 775,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "91% of Anthropic staff and 39% of US adults expected AI to make a Nobel-level scientific discovery by 2030.",
+          "source": {
+            "url": "https://www.anthropic.com/research/ai-expectations-gap",
+            "title": "The AI expectations gap",
+            "publisher": "Anthropic",
+            "type": "Primary study",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "91% of staff expect AI to be able to make a Nobel-level discovery by 2030, compared to 39% of US adults.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The extent to which demographic weighting fails to correct for the non-representative nature of the online opt-in panel used for the US adult survey.",
+            "The US adult survey used an online opt-in panel, which may not be fully representative of the population.",
+            "The Anthropic staff survey was an unweighted internal poll, not representing the broader workforce.",
+            "Survey results reflect expectations and beliefs, not forecasts of future outcomes or verified model capabilities."
+          ],
+          "dateDetailsAsExtracted": "16 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Anthropic staff expect AI to be able to perform an average of 75% of their current work hours by 2030.",
+          "source": {
+            "url": "https://www.anthropic.com/research/ai-expectations-gap",
+            "title": "The AI expectations gap",
+            "publisher": "Anthropic",
+            "type": "Primary study",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "On average, staff members expect AI to be able to do 75% of their current work by 2030",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The extent to which demographic weighting fails to correct for the non-representative nature of the online opt-in panel used for the US adult survey.",
+            "The US adult survey used an online opt-in panel, which may not be fully representative of the population.",
+            "The Anthropic staff survey was an unweighted internal poll, not representing the broader workforce.",
+            "Survey results reflect expectations and beliefs, not forecasts of future outcomes or verified model capabilities."
+          ],
+          "dateDetailsAsExtracted": "16 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Employed US respondents estimated AI could perform 28% of their work hours by 2030.",
+          "source": {
+            "url": "https://www.anthropic.com/research/ai-expectations-gap",
+            "title": "The AI expectations gap",
+            "publisher": "Anthropic",
+            "type": "Primary study",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "US workers (respondents who report having a job) put the share at 28% on average",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The extent to which demographic weighting fails to correct for the non-representative nature of the online opt-in panel used for the US adult survey.",
+            "The US adult survey used an online opt-in panel, which may not be fully representative of the population.",
+            "The Anthropic staff survey was an unweighted internal poll, not representing the broader workforce.",
+            "Survey results reflect expectations and beliefs, not forecasts of future outcomes or verified model capabilities."
+          ],
+          "dateDetailsAsExtracted": "16 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "26% of US AI-using adults said a task took a quarter of the time or less with AI, compared to 59% of Anthropic staff.",
+          "source": {
+            "url": "https://www.anthropic.com/research/ai-expectations-gap",
+            "title": "The AI expectations gap",
+            "publisher": "Anthropic",
+            "type": "Primary study",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "26% of those who use AI at work say a task takes a quarter of the time or less... For staff, that share is 59%",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The extent to which demographic weighting fails to correct for the non-representative nature of the online opt-in panel used for the US adult survey.",
+            "The US adult survey used an online opt-in panel, which may not be fully representative of the population.",
+            "The Anthropic staff survey was an unweighted internal poll, not representing the broader workforce.",
+            "Survey results reflect expectations and beliefs, not forecasts of future outcomes or verified model capabilities."
+          ],
+          "dateDetailsAsExtracted": "16 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [
+        "The extent to which demographic weighting fails to correct for the non-representative nature of the online opt-in panel used for the US adult survey."
+      ],
+      "sourceLimitations": [
+        "The US adult survey used an online opt-in panel, which may not be fully representative of the population.",
+        "The Anthropic staff survey was an unweighted internal poll, not representing the broader workforce.",
+        "Survey results reflect expectations and beliefs, not forecasts of future outcomes or verified model capabilities."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — section word count passes; final claim review and remaining release gates are open.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "PASS: at least 800.",
+      "cmsWordCount": 801,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null
+    },
+    {
+      "section": "Research",
+      "title": "Inside Anthropic’s AI-Heavy Workplace, Agents Produce More Work—and Create a New Bottleneck",
+      "slug": "inside-anthropics-ai-heavy-workplace-agents-produce-more-work-and-create-a-new-bottleneck",
+      "reportedWordCount": 708,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "By August 2026, interactive AI agent hours at Anthropic were six times employee hours.",
+          "source": {
+            "url": "https://www.anthropic.com/research/employment-at-anthropic",
+            "title": "How employment is changing at Anthropic",
+            "publisher": "Anthropic",
+            "type": "Primary workplace study",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "By August interactive AI agent hours outnumbered employees’ six to one.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "See article-level correctionsNeeded; no copy correction has yet been applied.",
+          "remainingUncertainty": [
+            "The study does not definitively prove that every measured change in productivity or output resulted in a better financial return or product quality.",
+            "Anthropic's workflow is described as 'AI-intensive' and may not generalize to other employers.",
+            "Survey results from Anthropic staff are based on internal polls and reflect personal beliefs rather than official company forecasts.",
+            "US adult surveys were administered to opt-in panelists, potentially excluding those without internet access.",
+            "The reported ratio of agent-to-human hours does not account for the 'useful' value of those hours, as agent runtime and human work hours are not identical measures."
+          ],
+          "dateDetailsAsExtracted": "August 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The share of junior employees in Anthropic's technical departments fell from 21% to 14% since early 2025.",
+          "source": {
+            "url": "https://www.anthropic.com/research/employment-at-anthropic",
+            "title": "How employment is changing at Anthropic",
+            "publisher": "Anthropic",
+            "type": "Primary workplace study",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "the share of junior-level employees in technical departments at Anthropic slipped from 21% to 14% since early 2025.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "See article-level correctionsNeeded; no copy correction has yet been applied.",
+          "remainingUncertainty": [
+            "The study does not definitively prove that every measured change in productivity or output resulted in a better financial return or product quality.",
+            "Anthropic's workflow is described as 'AI-intensive' and may not generalize to other employers.",
+            "Survey results from Anthropic staff are based on internal polls and reflect personal beliefs rather than official company forecasts.",
+            "US adult surveys were administered to opt-in panelists, potentially excluding those without internet access.",
+            "The reported ratio of agent-to-human hours does not account for the 'useful' value of those hours, as agent runtime and human work hours are not identical measures."
+          ],
+          "dateDetailsAsExtracted": "2025-2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Anthropic employees expect AI to be able to do 75% of their work by 2030.",
+          "source": {
+            "url": "https://www.anthropic.com/research/ai-expectations-gap",
+            "title": "The AI expectations gap",
+            "publisher": "Anthropic",
+            "type": "Related survey",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "On average, Anthropic staff members say AI will be able to do 75% of their current work hours by 2030.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "See article-level correctionsNeeded; no copy correction has yet been applied.",
+          "remainingUncertainty": [
+            "The study does not definitively prove that every measured change in productivity or output resulted in a better financial return or product quality.",
+            "Anthropic's workflow is described as 'AI-intensive' and may not generalize to other employers.",
+            "Survey results from Anthropic staff are based on internal polls and reflect personal beliefs rather than official company forecasts.",
+            "US adult surveys were administered to opt-in panelists, potentially excluding those without internet access.",
+            "The reported ratio of agent-to-human hours does not account for the 'useful' value of those hours, as agent runtime and human work hours are not identical measures."
+          ],
+          "dateDetailsAsExtracted": "August 2026 (survey date); 2030 (forecast)",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The report provides proof of economy-wide junior technical job collapse.",
+          "source": {
+            "url": "https://www.anthropic.com/research/employment-at-anthropic",
+            "title": "How employment is changing at Anthropic",
+            "publisher": "Anthropic",
+            "type": "Primary workplace study",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "This is a signal for graduates and early-career workers to watch, not evidence that junior technical employment across the entire economy has collapsed.",
+          "eventDate": null,
+          "verificationResult": "unsupported",
+          "correctiveAction": "See article-level correctionsNeeded; no copy correction has yet been applied.",
+          "remainingUncertainty": [
+            "The study does not definitively prove that every measured change in productivity or output resulted in a better financial return or product quality.",
+            "Anthropic's workflow is described as 'AI-intensive' and may not generalize to other employers.",
+            "Survey results from Anthropic staff are based on internal polls and reflect personal beliefs rather than official company forecasts.",
+            "US adult surveys were administered to opt-in panelists, potentially excluding those without internet access.",
+            "The reported ratio of agent-to-human hours does not account for the 'useful' value of those hours, as agent runtime and human work hours are not identical measures."
+          ],
+          "dateDetailsAsExtracted": "October 16, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [
+        "The draft correctly identifies that the Anthropic report is not evidence of economy-wide job losses, but it should explicitly clarify this distinction as requested in the editorial note.",
+        "The draft must explicitly include the caveat that 'agent hours' are not a productivity multiplier."
+      ],
+      "unresolved": [
+        "The study does not definitively prove that every measured change in productivity or output resulted in a better financial return or product quality."
+      ],
+      "sourceLimitations": [
+        "Anthropic's workflow is described as 'AI-intensive' and may not generalize to other employers.",
+        "Survey results from Anthropic staff are based on internal polls and reflect personal beliefs rather than official company forecasts.",
+        "US adult surveys were administered to opt-in panelists, potentially excluding those without internet access.",
+        "The reported ratio of agent-to-human hours does not account for the 'useful' value of those hours, as agent runtime and human work hours are not identical measures."
+      ],
+      "firstPassAssessment": "needs-correction",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 741 below 800; expand with source-backed material.",
+      "cmsWordCount": 741,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 810,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/longform-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Research",
+      "title": "Meta’s Four-Week Health-Research Experiment Shows Both the Promise and Limits of AI-Assisted Science",
+      "slug": "metas-four-week-health-research-experiment-shows-both-the-promise-and-limits-of-ai-assisted-science",
+      "reportedWordCount": 743,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "A cohort of medical researchers used Muse-powered tools to develop ten research manuscripts in four weeks.",
+          "source": {
+            "url": "https://research.meta.ai/blog/accelerating-scientific-research-in-health-data-science-with-muse-models",
+            "title": "Source title not extracted",
+            "publisher": "Meta AI Research",
+            "type": "Primary research announcement and manuscript summaries",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "We recruited a cohort of medical researchers... who used the coding scaffold to conduct original research over the course of just four weeks.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The extent to which the retrospective nature of the study limits the applicability of the findings to clinical practice.",
+            "Whether the productivity gains observed are generalizable beyond Meta's specific experiment.",
+            "The reported observations originate from a company-led experiment rather than a randomized comparison across institutions.",
+            "The study is limited to retrospective analyses, which cannot establish causality or determine current standard of care."
+          ],
+          "dateDetailsAsExtracted": "14 October",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Meta's internal coding workflow accessed a licensed database of five million de-identified electronic health records.",
+          "source": {
+            "url": "https://research.meta.ai/blog/accelerating-scientific-research-in-health-data-science-with-muse-models",
+            "title": "Source title not extracted",
+            "publisher": "Meta AI Research",
+            "type": "Primary research announcement and manuscript summaries",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "We built an internal coding scaffold... that could access both publicly available data as well as a licensed retrospective database of five million de-identified electronic health records.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The extent to which the retrospective nature of the study limits the applicability of the findings to clinical practice.",
+            "Whether the productivity gains observed are generalizable beyond Meta's specific experiment.",
+            "The reported observations originate from a company-led experiment rather than a randomized comparison across institutions.",
+            "The study is limited to retrospective analyses, which cannot establish causality or determine current standard of care."
+          ],
+          "dateDetailsAsExtracted": "14 October",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Some manuscripts progressed from prompt to written draft in less than two weeks.",
+          "source": {
+            "url": "https://research.meta.ai/blog/accelerating-scientific-research-in-health-data-science-with-muse-models",
+            "title": "Source title not extracted",
+            "publisher": "Meta AI Research",
+            "type": "Primary research announcement and manuscript summaries",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The experts generated the manuscripts from the first prompt of the model to a manuscript being written in less than two weeks",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The extent to which the retrospective nature of the study limits the applicability of the findings to clinical practice.",
+            "Whether the productivity gains observed are generalizable beyond Meta's specific experiment.",
+            "The reported observations originate from a company-led experiment rather than a randomized comparison across institutions.",
+            "The study is limited to retrospective analyses, which cannot establish causality or determine current standard of care."
+          ],
+          "dateDetailsAsExtracted": "14 October",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [
+        "The extent to which the retrospective nature of the study limits the applicability of the findings to clinical practice.",
+        "Whether the productivity gains observed are generalizable beyond Meta's specific experiment."
+      ],
+      "sourceLimitations": [
+        "The reported observations originate from a company-led experiment rather than a randomized comparison across institutions.",
+        "The study is limited to retrospective analyses, which cannot establish causality or determine current standard of care."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 771 below 800; expand with source-backed material.",
+      "cmsWordCount": 771,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 843,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/longform-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Research",
+      "title": "OpenAI’s Mathematics Release Puts Formal Proofs Beside AI-Generated Results",
+      "slug": "openais-mathematics-release-puts-formal-proofs-beside-ai-generated-results",
+      "reportedWordCount": 749,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "OpenAI released mathematical results from an internal frontier model on 6 October.",
+          "source": {
+            "url": "https://openai.com/index/sharing-ai-progress-in-mathematics/",
+            "title": "Sharing AI progress in mathematics",
+            "publisher": "OpenAI",
+            "type": "Primary research announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "6 October, 2026 ... We’re releasing a broad range of new mathematical results produced by an internal frontier model",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The repository includes results at different stages of verification, and unformalized results may contain issues.",
+            "OpenAI's compute accounting is based on its internal processes rather than a universal benchmark for mathematical discovery."
+          ],
+          "dateDetailsAsExtracted": "6 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The repository contains 719 manuscripts organized into 372 families.",
+          "source": {
+            "url": "https://github.com/openai/math",
+            "title": "Readme",
+            "publisher": "GitHub",
+            "type": "Primary research repository",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The current catalogue contains 719 manuscripts organized into 372 families.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The repository includes results at different stages of verification, and unformalized results may contain issues.",
+            "OpenAI's compute accounting is based on its internal processes rather than a universal benchmark for mathematical discovery."
+          ],
+          "dateDetailsAsExtracted": "N/A",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Approximately 42% of the top-line results have been formalized in Lean.",
+          "source": {
+            "url": "https://github.com/openai/math",
+            "title": "Readme",
+            "publisher": "GitHub",
+            "type": "Primary research repository",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The repository has ~42% top-line results formalized.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The repository includes results at different stages of verification, and unformalized results may contain issues.",
+            "OpenAI's compute accounting is based on its internal processes rather than a universal benchmark for mathematical discovery."
+          ],
+          "dateDetailsAsExtracted": "N/A",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The model was evaluated on approximately 4,000 problems.",
+          "source": {
+            "url": "https://github.com/openai/math",
+            "title": "Readme",
+            "publisher": "GitHub",
+            "type": "Primary research repository",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Over the course of the evaluation, the model was posed approximately 4,000 problems.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The repository includes results at different stages of verification, and unformalized results may contain issues.",
+            "OpenAI's compute accounting is based on its internal processes rather than a universal benchmark for mathematical discovery."
+          ],
+          "dateDetailsAsExtracted": "N/A",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Each result used an average of roughly three hours of ChatGPT Pro thinking-equivalent compute.",
+          "source": {
+            "url": "https://openai.com/index/sharing-ai-progress-in-mathematics/",
+            "title": "Sharing AI progress in mathematics",
+            "publisher": "OpenAI",
+            "type": "Primary research announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The average result used the equivalent compute of roughly three hours of ChatGPT Pro thinking.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The repository includes results at different stages of verification, and unformalized results may contain issues.",
+            "OpenAI's compute accounting is based on its internal processes rather than a universal benchmark for mathematical discovery."
+          ],
+          "dateDetailsAsExtracted": "N/A",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "OpenAI contributed $5 million to a Simons Foundation initiative.",
+          "source": {
+            "url": "https://openai.com/index/sharing-ai-progress-in-mathematics/",
+            "title": "Sharing AI progress in mathematics",
+            "publisher": "OpenAI",
+            "type": "Primary research announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "we are contributing $5 million to a new Simons Foundation initiative",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The repository includes results at different stages of verification, and unformalized results may contain issues.",
+            "OpenAI's compute accounting is based on its internal processes rather than a universal benchmark for mathematical discovery."
+          ],
+          "dateDetailsAsExtracted": "15 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [],
+      "sourceLimitations": [
+        "The repository includes results at different stages of verification, and unformalized results may contain issues.",
+        "OpenAI's compute accounting is based on its internal processes rather than a universal benchmark for mathematical discovery."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 780 below 800; expand with source-backed material.",
+      "cmsWordCount": 780,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 844,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/longform-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Data",
+      "title": "MentalHealthBench Tests AI Support Beyond Crisis Refusals",
+      "slug": "mentalhealthbench-tests-ai-support-beyond-crisis-refusals",
+      "reportedWordCount": 719,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "MentalHealthBench contains 1,215 synthetic mental-health conversations.",
+          "source": {
+            "url": "https://cdn.openai.com/ctf-cdn/MentalHealthBench_A_Comprehensive_Benchmark_of_AI_Capabilities_in_Realistic_Mental_Health_Conversations.pdf",
+            "title": "MentalHealthBench: An Expert-Informed Benchmark of AI Capabilities in Realistic Mental Health Conversations",
+            "publisher": "OpenAI",
+            "type": "Technical paper",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "partial-fetch",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "We introduce MentalHealthBench, a benchmark of 1,215 realistic mental health conversations",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source content mentions that MentalHealthBench includes non-English languages (Hindi, Arabic, etc.), but notes that language comparisons are descriptive and cannot isolate effects of language from other variables [L13].",
+            "How to best combine expert clinical rubrics with user lived-experience preferences remains an open research question [L13].",
+            "The benchmark relies on synthetic conversations rather than real user data to preserve privacy [L2, L13].",
+            "The evaluation uses GPT-5.6 Sol as a grader, meaning performance reflects both the model being tested and the benchmark's own scoring assumptions [L2].",
+            "The benchmark does not certify products as therapy-ready or establish clinical outcomes [L2].",
+            "Source content was truncated during serialization [L13]."
+          ],
+          "dateDetailsAsExtracted": "September 23, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "More than 80 licensed psychologists and psychiatrists from over 20 countries developed the evaluation criteria.",
+          "source": {
+            "url": "https://openai.com/index/introducing-mentalhealthbench/",
+            "title": "Introducing MentalHealthBench",
+            "publisher": "OpenAI",
+            "type": "Primary announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "co-created with a global cohort of more than 80 licensed mental health experts from 22 countries.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source content mentions that MentalHealthBench includes non-English languages (Hindi, Arabic, etc.), but notes that language comparisons are descriptive and cannot isolate effects of language from other variables [L13].",
+            "How to best combine expert clinical rubrics with user lived-experience preferences remains an open research question [L13].",
+            "The benchmark relies on synthetic conversations rather than real user data to preserve privacy [L2, L13].",
+            "The evaluation uses GPT-5.6 Sol as a grader, meaning performance reflects both the model being tested and the benchmark's own scoring assumptions [L2].",
+            "The benchmark does not certify products as therapy-ready or establish clinical outcomes [L2].",
+            "Source content was truncated during serialization [L13]."
+          ],
+          "dateDetailsAsExtracted": "September 23, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The benchmark covers conversations in 19 languages.",
+          "source": {
+            "url": "https://cdn.openai.com/ctf-cdn/MentalHealthBench_A_Comprehensive_Benchmark_of_AI_Capabilities_in_Realistic_Mental_Health_Conversations.pdf",
+            "title": "MentalHealthBench: An Expert-Informed Benchmark of AI Capabilities in Realistic Mental Health Conversations",
+            "publisher": "OpenAI",
+            "type": "Technical paper",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "partial-fetch",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The benchmark reflects the guidance of more than 80 psychologists and psychiatrists who collectively speak 19 languages",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source content mentions that MentalHealthBench includes non-English languages (Hindi, Arabic, etc.), but notes that language comparisons are descriptive and cannot isolate effects of language from other variables [L13].",
+            "How to best combine expert clinical rubrics with user lived-experience preferences remains an open research question [L13].",
+            "The benchmark relies on synthetic conversations rather than real user data to preserve privacy [L2, L13].",
+            "The evaluation uses GPT-5.6 Sol as a grader, meaning performance reflects both the model being tested and the benchmark's own scoring assumptions [L2].",
+            "The benchmark does not certify products as therapy-ready or establish clinical outcomes [L2].",
+            "Source content was truncated during serialization [L13]."
+          ],
+          "dateDetailsAsExtracted": "September 23, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The benchmark was published on 23 September 2026.",
+          "source": {
+            "url": "https://openai.com/index/introducing-mentalhealthbench/",
+            "title": "Introducing MentalHealthBench",
+            "publisher": "OpenAI",
+            "type": "Primary announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "September 23, 2026",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source content mentions that MentalHealthBench includes non-English languages (Hindi, Arabic, etc.), but notes that language comparisons are descriptive and cannot isolate effects of language from other variables [L13].",
+            "How to best combine expert clinical rubrics with user lived-experience preferences remains an open research question [L13].",
+            "The benchmark relies on synthetic conversations rather than real user data to preserve privacy [L2, L13].",
+            "The evaluation uses GPT-5.6 Sol as a grader, meaning performance reflects both the model being tested and the benchmark's own scoring assumptions [L2].",
+            "The benchmark does not certify products as therapy-ready or establish clinical outcomes [L2].",
+            "Source content was truncated during serialization [L13]."
+          ],
+          "dateDetailsAsExtracted": "September 23, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [
+        "The source content mentions that MentalHealthBench includes non-English languages (Hindi, Arabic, etc.), but notes that language comparisons are descriptive and cannot isolate effects of language from other variables [L13].",
+        "How to best combine expert clinical rubrics with user lived-experience preferences remains an open research question [L13]."
+      ],
+      "sourceLimitations": [
+        "The benchmark relies on synthetic conversations rather than real user data to preserve privacy [L2, L13].",
+        "The evaluation uses GPT-5.6 Sol as a grader, meaning performance reflects both the model being tested and the benchmark's own scoring assumptions [L2].",
+        "The benchmark does not certify products as therapy-ready or establish clinical outcomes [L2].",
+        "Source content was truncated during serialization [L13]."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 744 below 800; expand with source-backed material.",
+      "cmsWordCount": 744,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 816,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/longform-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Data",
+      "title": "WAXAL Opens Speech Data for 21 African Languages—but Coverage Still Matters",
+      "slug": "waxal-opens-speech-data-for-21-african-languages-but-coverage-still-matters",
+      "reportedWordCount": 738,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "WAXAL is an open speech dataset announced by Google Research on 2 February 2026.",
+          "source": {
+            "url": "https://blog.google/intl/en-africa/company-news/outreach-and-initiatives/introducing-waxal-a-new-open-dataset-for-african-speech-technology/",
+            "title": "Introducing WAXAL: A New Open Dataset for African Speech Technology",
+            "publisher": "Google",
+            "type": "Primary announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Feb 02, 2026... Today we unveiled WAXAL, a new open dataset for 21 African languages",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The dataset card notes the hours, languages and partner roles are reported by Google and advises confirming current license and language/subset metadata."
+          ],
+          "dateDetailsAsExtracted": "February 2, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The dataset contains over 11,000 hours of speech from nearly 2 million recordings, with 1,250 hours transcribed for ASR and 20 hours of studio TTS.",
+          "source": {
+            "url": "https://blog.google/intl/en-africa/company-news/outreach-and-initiatives/introducing-waxal-a-new-open-dataset-for-african-speech-technology/",
+            "title": "Introducing WAXAL: A New Open Dataset for African Speech Technology",
+            "publisher": "Google",
+            "type": "Primary announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "contains over 11,000 hours of speech data... 1,250 hours of transcribed speech... over 20 hours of studio recordings for text-to-speech",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The dataset card notes the hours, languages and partner roles are reported by Google and advises confirming current license and language/subset metadata."
+          ],
+          "dateDetailsAsExtracted": "February 2, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "WAXAL covers 21 languages.",
+          "source": {
+            "url": "https://blog.google/intl/en-africa/company-news/outreach-and-initiatives/introducing-waxal-a-new-open-dataset-for-african-speech-technology/",
+            "title": "Introducing WAXAL: A New Open Dataset for African Speech Technology",
+            "publisher": "Google",
+            "type": "Primary announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The collection provides data for 21 languages",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The dataset card notes the hours, languages and partner roles are reported by Google and advises confirming current license and language/subset metadata."
+          ],
+          "dateDetailsAsExtracted": "February 2, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Development of the dataset took three years.",
+          "source": {
+            "url": "https://blog.google/intl/en-africa/company-news/outreach-and-initiatives/introducing-waxal-a-new-open-dataset-for-african-speech-technology/",
+            "title": "Introducing WAXAL: A New Open Dataset for African Speech Technology",
+            "publisher": "Google",
+            "type": "Primary announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "this dataset was developed over three years",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The dataset card notes the hours, languages and partner roles are reported by Google and advises confirming current license and language/subset metadata."
+          ],
+          "dateDetailsAsExtracted": "February 2, 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [],
+      "sourceLimitations": [
+        "The dataset card notes the hours, languages and partner roles are reported by Google and advises confirming current license and language/subset metadata."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 747 below 800; expand with source-backed material.",
+      "cmsWordCount": 747,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 818,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/longform-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Data",
+      "title": "Google’s Agricultural Understanding API Brings Field-Level Crop Signals to Developers",
+      "slug": "googles-agricultural-understanding-api-brings-field-level-crop-signals-to-developers",
+      "reportedWordCount": 780,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "Google’s Agricultural Understanding platform provides field-level agricultural signals through an API.",
+          "source": {
+            "url": "https://developers.google.com/agricultural-understanding/api",
+            "title": "API overview Stay organized with collections Save and categorize content based on your preferences.",
+            "publisher": "Google Developers",
+            "type": "Primary developer documentation",
+            "sourcePublicationDate": "2026-10-09",
+            "dateStatus": "extracted; confirm against source",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Candidate date extracted from page text; verify it is the original publication date."
+          },
+          "evidenceExcerpt": "The Agricultural Understanding API provides a REST interface through Google Cloud API to retrieve data such as landscape features and crop predictions.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Deployment figures are reported by the company and its partner, not independently audited for yield or income impacts.",
+            "The API does not perform server-side spatial aggregation; users must handle this.",
+            "Polygons may extend beyond level-13 S2 cell boundaries due to indexing methods."
+          ],
+          "dateDetailsAsExtracted": "2026-10-09",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The API outputs structured vector features like GeoJSON rather than raw satellite images.",
+          "source": {
+            "url": "https://developers.google.com/agricultural-understanding/api",
+            "title": "API overview Stay organized with collections Save and categorize content based on your preferences.",
+            "publisher": "Google Developers",
+            "type": "Primary developer documentation",
+            "sourcePublicationDate": "2026-10-09",
+            "dateStatus": "extracted; confirm against source",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Candidate date extracted from page text; verify it is the original publication date."
+          },
+          "evidenceExcerpt": "The API delivers vector features (boundaries, point coordinates, metadata) and does not provide raw satellite imagery.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Deployment figures are reported by the company and its partner, not independently audited for yield or income impacts.",
+            "The API does not perform server-side spatial aggregation; users must handle this.",
+            "Polygons may extend beyond level-13 S2 cell boundaries due to indexing methods."
+          ],
+          "dateDetailsAsExtracted": "2026-10-09",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Amnex’s integration with Gujarat’s Krushi Pragati platform used the API to support over 900 million SMS advisories for over 600,000 farmers in the preceding year.",
+          "source": {
+            "url": "https://blog.google/intl/en-in/company-news/from-lab-to-impact-advancing-ai-for-real-world-progress-in-india/",
+            "title": "From lab to impact: Advancing AI for real-world progress in India",
+            "publisher": "Google",
+            "type": "Company deployment account",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Amnex has integrated our agri model APIs into the Government of Gujarat’s Krushi Pragati crop intelligence platform, supporting over 900 million SMS-based advisories",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Deployment figures are reported by the company and its partner, not independently audited for yield or income impacts.",
+            "The API does not perform server-side spatial aggregation; users must handle this.",
+            "Polygons may extend beyond level-13 S2 cell boundaries due to indexing methods."
+          ],
+          "dateDetailsAsExtracted": "2026-10-15",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The Krushi Pragati platform advisories spanned more than 14 million hectares.",
+          "source": {
+            "url": "https://blog.google/intl/en-in/company-news/from-lab-to-impact-advancing-ai-for-real-world-progress-in-india/",
+            "title": "From lab to impact: Advancing AI for real-world progress in India",
+            "publisher": "Google",
+            "type": "Company deployment account",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Such advisories, spanning crop and soil health... have been assisting field productivity and farmer livelihood across over 14 million hectares of land.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Deployment figures are reported by the company and its partner, not independently audited for yield or income impacts.",
+            "The API does not perform server-side spatial aggregation; users must handle this.",
+            "Polygons may extend beyond level-13 S2 cell boundaries due to indexing methods."
+          ],
+          "dateDetailsAsExtracted": "2026-10-15",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The API requires allowlisting via a Google Cloud project.",
+          "source": {
+            "url": "https://developers.google.com/agricultural-understanding/api",
+            "title": "API overview Stay organized with collections Save and categorize content based on your preferences.",
+            "publisher": "Google Developers",
+            "type": "Primary developer documentation",
+            "sourcePublicationDate": "2026-10-09",
+            "dateStatus": "extracted; confirm against source",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Candidate date extracted from page text; verify it is the original publication date."
+          },
+          "evidenceExcerpt": "Request API quota. Because the API requires allowlisting, submit an allowlisting request",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Deployment figures are reported by the company and its partner, not independently audited for yield or income impacts.",
+            "The API does not perform server-side spatial aggregation; users must handle this.",
+            "Polygons may extend beyond level-13 S2 cell boundaries due to indexing methods."
+          ],
+          "dateDetailsAsExtracted": "2026-10-09",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [],
+      "sourceLimitations": [
+        "Deployment figures are reported by the company and its partner, not independently audited for yield or income impacts.",
+        "The API does not perform server-side spatial aggregation; users must handle this.",
+        "Polygons may extend beyond level-13 S2 cell boundaries due to indexing methods."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 785 below 800; expand with source-backed material.",
+      "cmsWordCount": 785,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 843,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/longform-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Data",
+      "title": "ThinkingBox-Bench Grades AI Agents on What Actually Changed in the System",
+      "slug": "thinkingbox-bench-grades-ai-agents-on-what-actually-changed-in-the-system",
+      "reportedWordCount": 781,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "ThinkingBox-Bench version 1.0 contains 507 tasks across five business areas.",
+          "source": {
+            "url": "https://huggingface.co/datasets/microsoft/ThinkingBox-Bench",
+            "title": "ThinkingBox-Bench\\",
+            "publisher": "Hugging Face",
+            "type": "Dataset card",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "partial-fetch",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "ThinkingBox-Bench version 1.0 contains 507 tasks across five business areas: retail and e-commerce, travel and hospitality, auto insurance, neobank support, and consulting IT/HR support.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The dataset viewer and Parquet files are for browsing and analysis, not the executable runtime; using them as a complete evaluation environment is incorrect.",
+            "Benchmark results are specific to the authors' evaluation framework and methodology; they are not an independent certification standard.",
+            "Benchmark tasks are synthetic reconstructions; they do not guarantee performance in production environments with real-world latency, data, or permission constraints."
+          ],
+          "dateDetailsAsExtracted": "Not specified",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The benchmark dataset is licensed under the CDLA-Permissive-2.0.",
+          "source": {
+            "url": "https://huggingface.co/datasets/microsoft/ThinkingBox-Bench",
+            "title": "ThinkingBox-Bench\\",
+            "publisher": "Hugging Face",
+            "type": "Dataset card",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "partial-fetch",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The dataset card lists the Community Data License Agreement—Permissive, Version 2.0 (CDLA-Permissive-2.0).",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The dataset viewer and Parquet files are for browsing and analysis, not the executable runtime; using them as a complete evaluation environment is incorrect.",
+            "Benchmark results are specific to the authors' evaluation framework and methodology; they are not an independent certification standard.",
+            "Benchmark tasks are synthetic reconstructions; they do not guarantee performance in production environments with real-world latency, data, or permission constraints."
+          ],
+          "dateDetailsAsExtracted": "Not specified",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The benchmark is intended exclusively for evaluation and not for model optimization like fine-tuning or reinforcement learning.",
+          "source": {
+            "url": "https://huggingface.co/datasets/microsoft/ThinkingBox-Bench",
+            "title": "ThinkingBox-Bench\\",
+            "publisher": "Hugging Face",
+            "type": "Dataset card",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "partial-fetch",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "ThinkingBox-Bench v1.0 is intended exclusively for evaluation. Do not use its task content... for prompt optimization, fine-tuning, reinforcement learning, reward-model training.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The dataset viewer and Parquet files are for browsing and analysis, not the executable runtime; using them as a complete evaluation environment is incorrect.",
+            "Benchmark results are specific to the authors' evaluation framework and methodology; they are not an independent certification standard.",
+            "Benchmark tasks are synthetic reconstructions; they do not guarantee performance in production environments with real-world latency, data, or permission constraints."
+          ],
+          "dateDetailsAsExtracted": "Not specified",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [],
+      "sourceLimitations": [
+        "The dataset viewer and Parquet files are for browsing and analysis, not the executable runtime; using them as a complete evaluation environment is incorrect.",
+        "Benchmark results are specific to the authors' evaluation framework and methodology; they are not an independent certification standard.",
+        "Benchmark tasks are synthetic reconstructions; they do not guarantee performance in production environments with real-world latency, data, or permission constraints."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 791 below 800; expand with source-backed material.",
+      "cmsWordCount": 791,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 835,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/longform-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Data",
+      "title": "OpenAI and Ironclad Turn Contract Workflows Into AI-Agent Tests—not a Public Dataset",
+      "slug": "openai-and-ironclad-turn-contract-workflows-into-ai-agent-tests-not-a-public-dataset",
+      "reportedWordCount": 714,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "OpenAI announced a research collaboration with Ironclad on October 6, 2026.",
+          "source": {
+            "url": "https://openai.com/index/advancing-computer-use-with-ironclad/",
+            "title": "Advancing computer use with Ironclad",
+            "publisher": "OpenAI",
+            "type": "Primary research announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Advancing computer use with Ironclad October 6, 2026",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source specifies that time figures are simulated estimates, not measured customer time savings.",
+            "The source notes that results cover 11 research tasks only, not all Ironclad workflows."
+          ],
+          "dateDetailsAsExtracted": "6 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "GPT-6 Astra scored 32% higher than GPT-5.6 Sol on the research evaluation.",
+          "source": {
+            "url": "https://openai.com/index/advancing-computer-use-with-ironclad/",
+            "title": "Advancing computer use with Ironclad",
+            "publisher": "OpenAI",
+            "type": "Primary research announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Astra’s average score was 55.0%, compared with 41.6% for GPT‑5.6 Sol",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source specifies that time figures are simulated estimates, not measured customer time savings.",
+            "The source notes that results cover 11 research tasks only, not all Ironclad workflows."
+          ],
+          "dateDetailsAsExtracted": "6 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Estimated time per attempt for GPT-6 Astra was 48% lower than GPT-5.6 Sol.",
+          "source": {
+            "url": "https://openai.com/index/advancing-computer-use-with-ironclad/",
+            "title": "Advancing computer use with Ironclad",
+            "publisher": "OpenAI",
+            "type": "Primary research announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "estimated average time per attempt fell from 37.0 minutes for Sol to 19.2 minutes for Astra",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source specifies that time figures are simulated estimates, not measured customer time savings.",
+            "The source notes that results cover 11 research tasks only, not all Ironclad workflows."
+          ],
+          "dateDetailsAsExtracted": "6 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "Simulated tasks were created from publicly available contracts in the SEC’s EDGAR database.",
+          "source": {
+            "url": "https://openai.com/index/advancing-computer-use-with-ironclad/",
+            "title": "Advancing computer use with Ironclad",
+            "publisher": "OpenAI",
+            "type": "Primary research announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "We created simulated tasks from contracts publicly available in the SEC’s EDGAR database",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "The source specifies that time figures are simulated estimates, not measured customer time savings.",
+            "The source notes that results cover 11 research tasks only, not all Ironclad workflows."
+          ],
+          "dateDetailsAsExtracted": "6 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [],
+      "sourceLimitations": [
+        "The source specifies that time figures are simulated estimates, not measured customer time savings.",
+        "The source notes that results cover 11 research tasks only, not all Ironclad workflows."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — CMS word count fails; revise copy and complete remaining editorial/slug/CMS gates.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "FAIL: 742 below 800; expand with source-backed material.",
+      "cmsWordCount": 742,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null,
+      "revisionCandidateCmsWordCount": 815,
+      "revisionCandidatePath": "artifacts/global-ai-news/reports/release-review-2026-10-18/longform-revision-candidates.json",
+      "revisionCandidateStatus": "Production CMS recount passed; final manual claim review and remaining release gates are pending."
+    },
+    {
+      "section": "Data",
+      "title": "Google Earth AI Adds Geospatial Benchmarks for Agents Working Across Planet-Scale Data",
+      "slug": "google-earth-ai-adds-geospatial-benchmarks-for-agents-working-across-planet-scale-data",
+      "reportedWordCount": 795,
+      "sourceReviewNote": null,
+      "claims": [
+        {
+          "assertion": "Google Research released a geospatial reasoning agent and two new benchmarks, GeoKTools and GeoExpertQueries, on October 14, 2026.",
+          "source": {
+            "url": "https://research.google/blog/putting-earth-ai-to-work-geospatial-agents-for-our-planets-biggest-challenges/",
+            "title": "Putting Earth AI to work: Geospatial agents for our planet's biggest challenges",
+            "publisher": "Google Research",
+            "type": "Primary research announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "Google Research said the agent combines domain-specific foundation models, spatial tools and upfront planning... including two new resources—GeoKTools and GeoExpertQueries",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Partner outcomes described in the text are partner-reported tests rather than independent assessments.",
+            "Benchmark performance is dependent on specific tasks, tools, and scoring criteria rather than a generalized capability metric.",
+            "The technical report relies on an autorater for GeoExpertQueries that compares performance to expert workflows rather than objective final answers."
+          ],
+          "dateDetailsAsExtracted": "14 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The Earth AI geospatial agent access is experimental and limited to a select group of users.",
+          "source": {
+            "url": "https://research.google/blog/putting-earth-ai-to-work-geospatial-agents-for-our-planets-biggest-challenges/",
+            "title": "Putting Earth AI to work: Geospatial agents for our planet's biggest challenges",
+            "publisher": "Google Research",
+            "type": "Primary research announcement",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "The announcement characterizes both as experimental and describes access for a limited group of early users.",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Partner outcomes described in the text are partner-reported tests rather than independent assessments.",
+            "Benchmark performance is dependent on specific tasks, tools, and scoring criteria rather than a generalized capability metric.",
+            "The technical report relies on an autorater for GeoExpertQueries that compares performance to expert workflows rather than objective final answers."
+          ],
+          "dateDetailsAsExtracted": "14 October 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        },
+        {
+          "assertion": "The Geospatial Reasoning agent uses Gemini models.",
+          "source": {
+            "url": "https://arxiv.org/abs/2610.15750",
+            "title": "Computer Science > Artificial Intelligence",
+            "publisher": "arXiv",
+            "type": "Technical report preprint",
+            "sourcePublicationDate": null,
+            "dateStatus": "not explicitly captured; verify before publication",
+            "accessStatus": "fetched",
+            "sourcePublicationDateStatus": "Not captured; verify against the source."
+          },
+          "evidenceExcerpt": "GRA, a Gemini-powered research system",
+          "eventDate": null,
+          "verificationResult": "supported",
+          "correctiveAction": "No correction applied in this first pass; confirm against all material claims before approval.",
+          "remainingUncertainty": [
+            "Partner outcomes described in the text are partner-reported tests rather than independent assessments.",
+            "Benchmark performance is dependent on specific tasks, tools, and scoring criteria rather than a generalized capability metric.",
+            "The technical report relies on an autorater for GeoExpertQueries that compares performance to expert workflows rather than objective final answers."
+          ],
+          "dateDetailsAsExtracted": "11 Oct 2026",
+          "eventDateStatus": "Not independently separated from source-publication date; verify event date before release."
+        }
+      ],
+      "correctionsNeeded": [],
+      "unresolved": [],
+      "sourceLimitations": [
+        "Partner outcomes described in the text are partner-reported tests rather than independent assessments.",
+        "Benchmark performance is dependent on specific tasks, tools, and scoring criteria rather than a generalized capability metric.",
+        "The technical report relies on an autorater for GeoExpertQueries that compares performance to expert workflows rather than objective final answers."
+      ],
+      "firstPassAssessment": "verified",
+      "finalReviewerStatus": "PENDING — section word count passes; final claim review and remaining release gates are open.",
+      "reviewedAt": "2026-10-18T07:54:06.521Z",
+      "wordCountStatus": "PASS: at least 800.",
+      "cmsWordCount": 818,
+      "wordCountMethod": "getReleaseDraftWordCount(dek, body), actual newsroom production function; populated deks included.",
+      "markdownJsonParity": "PASS: same title, slug, and all declared source URLs verified in paired handoff.",
+      "localSlugCheck": "No conflict in local public/scheduled records.",
+      "privateCmsSlugCheck": "Not checked; authenticated CMS access required.",
+      "liveUrl": null
+    }
+  ],
+  "wordCountPolicy": {
+    "Brief": "120–220",
+    "Research": "at least 800",
+    "Data": "at least 800",
+    "counter": "getReleaseDraftWordCount(dek, body); dek included"
+  },
+  "validationSnapshot": {
+    "markdownJsonTitleSlugAndSourceUrlParity": "PASS for all 18 using per-slug article ranges.",
+    "duplicateBatchSlugs": "PASS: none.",
+    "localPublicAndScheduledSlugCheck": "PASS: no conflicts found in maintained local stories/scheduledStories.",
+    "privateOrProductionDraftSlugCheck": "BLOCKED: requires authenticated newsroom CMS session.",
+    "cmsWordCounter": "getReleaseDraftWordCount(dek, body); attached deks were included."
+  },
+  "revisionInventory": {
+    "longformCandidates": 10,
+    "longformProductionCounterPasses": 10,
+    "briefCandidates": 6,
+    "briefProductionCounterPasses": 6,
+    "totalCandidates": 16,
+    "unchangedLongformPassThroughs": 2,
+    "totalRecordsMeetingSectionWordCount": 18,
+    "manualApprovalPending": true,
+    "markdownPaired": true
+  }
+}

@@ -406,8 +406,8 @@ export const GetNewsroomReleasesResponseItem = zod.object({
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
-  "minimumWordCount": zod.number().int().optional(),
-  "maximumWordCount": zod.number().int().optional(),
+  "minimumWordCount": zod.number().int().describe('Minimum visible-copy length for the selected editorial section.'),
+  "maximumWordCount": zod.number().int().optional().describe('Maximum visible-copy length when the selected section has an upper limit.'),
   "section": zod.enum(['Brief', 'Research', 'Data']).optional(),
   "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
   "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
@@ -456,8 +456,8 @@ export const CreateNewsroomReleaseResponse = zod.object({
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
-  "minimumWordCount": zod.number().int(),
-  "maximumWordCount": zod.number().int().optional(),
+  "minimumWordCount": zod.number().int().describe('Minimum visible-copy length for the selected editorial section.'),
+  "maximumWordCount": zod.number().int().optional().describe('Maximum visible-copy length when the selected section has an upper limit.'),
   "section": zod.enum(['Brief', 'Research', 'Data']).optional(),
   "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
   "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
@@ -512,8 +512,8 @@ export const ReorderNewsroomReleasesResponseItem = zod.object({
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
-  "minimumWordCount": zod.number().int().optional(),
-  "maximumWordCount": zod.number().int().optional(),
+  "minimumWordCount": zod.number().int().describe('Minimum visible-copy length for the selected editorial section.'),
+  "maximumWordCount": zod.number().int().optional().describe('Maximum visible-copy length when the selected section has an upper limit.'),
   "section": zod.enum(['Brief', 'Research', 'Data']).optional(),
   "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
   "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
@@ -560,8 +560,8 @@ export const UpdateNewsroomReleaseResponse = zod.object({
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
-  "minimumWordCount": zod.number().int().optional(),
-  "maximumWordCount": zod.number().int().optional(),
+  "minimumWordCount": zod.number().int().describe('Minimum visible-copy length for the selected editorial section.'),
+  "maximumWordCount": zod.number().int().optional().describe('Maximum visible-copy length when the selected section has an upper limit.'),
   "section": zod.enum(['Brief', 'Research', 'Data']).optional(),
   "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
   "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
@@ -587,6 +587,9 @@ export const CancelNewsroomReleaseResponse = zod.object({
   "position": zod.number().int(),
   "story": zod.record(zod.string(), zod.unknown()),
   "wordCount": zod.number().int().describe('Number of words in the release standfirst and working copy.'),
+  "minimumWordCount": zod.number().int().describe('Minimum visible-copy length for the selected editorial section.'),
+  "maximumWordCount": zod.number().int().optional().describe('Maximum visible-copy length when the selected section has an upper limit.'),
+  "section": zod.enum(['Brief', 'Research', 'Data']).optional(),
   "remainingWords": zod.number().int().describe('Number of words still needed before the release can publish.'),
   "publishable": zod.boolean().describe('Whether the release meets the minimum visible-copy length.'),
   "updatedAt": zod.coerce.date()
@@ -599,11 +602,13 @@ export const CancelNewsroomReleaseResponse = zod.object({
 export const subscribeNewsletterBodyEmailMin = 3;
 export const subscribeNewsletterBodyEmailMax = 320;
 
+export const subscribeNewsletterBodyWebsiteMax = 500;
+
 
 
 export const SubscribeNewsletterBody = zod.object({
   "email": zod.string().email().min(subscribeNewsletterBodyEmailMin).max(subscribeNewsletterBodyEmailMax),
-  "website": zod.string().max(500).optional()
+  "website": zod.string().max(subscribeNewsletterBodyWebsiteMax).optional().describe('Honeypot field for automated signup spam detection.')
 })
 
 export const SubscribeNewsletterResponse = zod.object({

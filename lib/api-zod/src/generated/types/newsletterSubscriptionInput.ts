@@ -12,5 +12,9 @@ export interface NewsletterSubscriptionInput {
      * @maxLength 320
      */
   email: string;
+  /**
+     * Honeypot field for automated signup spam detection.
+     * @maxLength 500
+     */
   website?: string;
 }

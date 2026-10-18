@@ -19,6 +19,10 @@ export interface NewsletterSubscriptionInput {
      * @maxLength 320
      */
   email: string;
+  /**
+     * Honeypot field for automated signup spam detection.
+     * @maxLength 500
+     */
   website?: string;
 }
 
@@ -701,6 +705,15 @@ export interface EditorialScheduleItem {
   story?: EditorialStory;
 }
 
+export type EditorialReleaseSection = typeof EditorialReleaseSection[keyof typeof EditorialReleaseSection];
+
+
+export const EditorialReleaseSection = {
+  Brief: 'Brief',
+  Research: 'Research',
+  Data: 'Data',
+} as const;
+
 export interface EditorialRelease {
   id: number;
   slug: string;
@@ -713,12 +726,26 @@ export interface EditorialRelease {
   story: EditorialStory;
   /** Number of words in the release standfirst and working copy. */
   wordCount: number;
+  /** Minimum visible-copy length for the selected editorial section. */
+  minimumWordCount: number;
+  /** Maximum visible-copy length when the selected section has an upper limit. */
+  maximumWordCount?: number;
+  section?: EditorialReleaseSection;
   /** Number of words still needed before the release can publish. */
   remainingWords: number;
   /** Whether the release meets the minimum visible-copy length. */
   publishable: boolean;
   updatedAt: string;
 }
+
+export type EditorialReleaseInputSection = typeof EditorialReleaseInputSection[keyof typeof EditorialReleaseInputSection];
+
+
+export const EditorialReleaseInputSection = {
+  Brief: 'Brief',
+  Research: 'Research',
+  Data: 'Data',
+} as const;
 
 export interface EditorialReleaseInput {
   /**
@@ -745,7 +772,17 @@ export interface EditorialReleaseInput {
   author: string;
   /** @minLength 1 */
   body: string;
+  section?: EditorialReleaseInputSection;
 }
+
+export type EditorialReleaseUpdateSection = typeof EditorialReleaseUpdateSection[keyof typeof EditorialReleaseUpdateSection];
+
+
+export const EditorialReleaseUpdateSection = {
+  Brief: 'Brief',
+  Research: 'Research',
+  Data: 'Data',
+} as const;
 
 export interface EditorialReleaseUpdate {
   /**
@@ -766,6 +803,7 @@ export interface EditorialReleaseUpdate {
   author?: string;
   /** @minLength 1 */
   body?: string;
+  section?: EditorialReleaseUpdateSection;
 }
 
 export interface EditorialReleaseReorderInput {

@@ -14,6 +14,7 @@ const slug = `task-38-release-history-${process.pid}-${Date.now()}`;
 const shortSlug = `task-85-short-release-${process.pid}-${Date.now()}`;
 const legacySlug = `task-88-legacy-release-${process.pid}-${Date.now()}`;
 const publishedSlug = `release-revalidation-${process.pid}-${Date.now()}`;
+const sectionBoundarySlugs = [];
 const title = 'Restart-safe newsroom history fixture';
 const publishAt = '2042-04-05T06:07:08.000Z';
 const shortCopy = 'This copy is intentionally too short to enter the newsroom release queue.';
@@ -120,9 +121,42 @@ async function assertShortReleaseRejected(route, options, label) {
   assert.equal(response.status, 422, `${label} should reject short release copy`);
   assert.match(
     body.error,
-    /at least 800 editorial words before it can enter the queue/i,
+    /editorial words before it can enter the queue/i,
     `${label} should explain why publication is blocked`,
   );
+}
+
+async function assertSectionWordCountBoundaries() {
+  const cases = [
+    ['Brief', 119, false], ['Brief', 120, true], ['Brief', 220, true], ['Brief', 221, false],
+    ['Research', 799, false], ['Research', 800, true], ['Data', 799, false], ['Data', 800, true],
+  ];
+  for (const [section, totalWords, expected] of cases) {
+    const fixtureSlug = `word-limit-${section.toLowerCase()}-${totalWords}-${process.pid}-${Date.now()}`;
+    const { response, body } = await requestJsonAllowingError('/api/newsroom/releases', {
+      method: 'POST',
+      headers: testEditorHeader,
+      body: JSON.stringify({
+        slug: fixtureSlug,
+        title: `${section} word limit boundary ${totalWords}`,
+        dek: 'dek',
+        publishAt,
+        cadence: 'daily',
+        category: 'Field Notes',
+        author: 'global-ai-news',
+        body: Array(totalWords - 1).fill('copy').join(' '),
+        section,
+      }),
+    });
+    if (expected) {
+      assert.ok(response.ok, `${section} at ${totalWords} words should be accepted: ${body.error ?? response.status}`);
+      assert.equal(body.wordCount, totalWords);
+      assert.equal(body.publishable, true);
+      sectionBoundarySlugs.push(fixtureSlug);
+    } else {
+      assert.equal(response.status, 422, `${section} at ${totalWords} words should be rejected`);
+    }
+  }
 }
 
 async function markAsLegacyShortRelease(story) {
@@ -306,7 +340,7 @@ async function cleanupFixture() {
       cwd: root,
       env: {
         ...process.env,
-        RELEASE_HISTORY_FIXTURE_SLUGS: JSON.stringify([slug, legacySlug, publishedSlug]),
+        RELEASE_HISTORY_FIXTURE_SLUGS: JSON.stringify([slug, legacySlug, publishedSlug, ...sectionBoundarySlugs]),
       },
       maxBuffer: 2 * 1024 * 1024,
     },
@@ -438,6 +472,7 @@ try {
   await assertPrivateRoutesRemainAvailableToEditors();
   await assertPublicContentContract();
   await assertPublishedStoryFlowsThroughLivePublicSurfaces();
+  await assertSectionWordCountBoundaries();
   await assertShortReleaseRejected(
     '/api/newsroom/releases',
     {

@@ -3,7 +3,10 @@ import test from 'node:test';
 
 import {
   getPublishedStories,
+  getEditorialWordCountBounds,
+  getReleaseDraftWordCount,
   getStoryWordCount,
+  isPublicArticle,
   resolveMaintainedReleaseStory,
   scheduledStories,
   type ScheduledStory,
@@ -21,6 +24,28 @@ test('default schedule seeding is limited to tests and explicit development opt-
   assert.equal(shouldSeedDefaultSchedule('test', undefined), true);
   assert.equal(shouldSeedDefaultSchedule('development', 'true'), true);
   assert.equal(shouldSeedDefaultSchedule('development', 'false'), false);
+});
+
+test('CMS release word limits enforce Brief 120–220 and Research/Data 800-word minimums', () => {
+  const now = new Date('2026-10-18T00:00:00.000Z');
+  const publishAt = '2026-10-17T00:00:00.000Z';
+  const eligible = (section: 'Brief' | 'Research' | 'Data', wordCount: number) =>
+    isPublicArticle({ status: 'scheduled', publishAt, wordCount, section }, now);
+
+  assert.equal(getEditorialWordCountBounds('Brief').minimum, 120);
+  assert.equal(getEditorialWordCountBounds('Brief').maximum, 220);
+  assert.equal(eligible('Brief', 119), false);
+  assert.equal(eligible('Brief', 120), true);
+  assert.equal(eligible('Brief', 220), true);
+  assert.equal(eligible('Brief', 221), false);
+  assert.equal(eligible('Research', 799), false);
+  assert.equal(eligible('Research', 800), true);
+  assert.equal(eligible('Data', 799), false);
+  assert.equal(eligible('Data', 800), true);
+
+  const body120 = Array(120).fill('copy').join(' ');
+  assert.equal(getReleaseDraftWordCount('', body120), 120);
+  assert.equal(getReleaseDraftWordCount('dek', Array(119).fill('copy').join(' ')), 120);
 });
 
 test('public projections use revised maintained content without overwriting editor-authored releases', () => {

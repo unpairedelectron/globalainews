@@ -49,7 +49,6 @@ import {
   isPublicArticle,
   resolveMaintainedReleaseStory,
   getStoryWordCount,
-  MINIMUM_STORY_WORDS,
   indiaIndex,
   industryMap,
   scheduledStories,
@@ -251,6 +250,7 @@ async function getReleaseRows(): Promise<ReleaseRow[]> {
       status: row.status,
       publishAt: story.publishAt,
       wordCount: releaseWordCount(story, row.slug),
+      section: releaseSection(story),
     }, now)
       ? [story]
       : [];

@@ -990,7 +990,7 @@ async function checkAutomationAuditReleaseLink() {
         testId: `editorial-queue-${scheduledRun.slug}`,
         title: scheduledRun.title,
         status: scheduledRelease.publishable ? scheduledRelease.status : 'blocked',
-        readiness: `${scheduledRelease.wordCount} / 800 words · ${scheduledRelease.remainingWords} remaining${scheduledRelease.publishable ? 'Minimum copy met · ready for publication.' : `Blocked · ${scheduledRelease.remainingWords} more ${scheduledRelease.remainingWords === 1 ? 'word' : 'words'} needed before publishing.`}`,
+        readiness: `${scheduledRelease.wordCount} / 800+ words · ${scheduledRelease.remainingWords} remaining${scheduledRelease.publishable ? 'Minimum copy met · ready for publication.' : `Blocked · ${scheduledRelease.remainingWords} more ${scheduledRelease.remainingWords === 1 ? 'word' : 'words'} needed before publishing.`}`,
         visible: true,
       },
       `The scheduled automation audit link did not open the matching release card: ${JSON.stringify(scheduledCard)}`,
@@ -1384,7 +1384,7 @@ async function checkReleaseReadinessRecovery() {
     })))()`);
     const initialFixtureCard = initialCards.find((card) => card.testId === `editorial-queue-${slug}`);
     assert.ok(initialFixtureCard, 'The initial release cards did not include the readiness fixture.');
-    assert.match(initialFixtureCard.readiness, /800 \/ 800 words/, 'The initial fixture readiness should show the minimum word count.');
+    assert.match(initialFixtureCard.readiness, /800 \/ 800\+ words/, 'The initial fixture readiness should show the minimum word count.');
 
     await cdp.send('Network.setBlockedURLs', { urls: ['*://*/*newsroom/releases'] });
     await evaluateBrowser(cdp, `(() => {
@@ -1437,14 +1437,14 @@ async function checkReleaseReadinessRecovery() {
       `(() => {
         const card = document.querySelector('[data-testid="editorial-queue-${slug}"] [data-testid="release-readiness-${slug}"]');
         return !document.querySelector('[data-testid="release-queue-refresh-error"]')
-          && card?.textContent?.includes('820 / 800 words')
-          && card?.textContent?.includes('Minimum copy met · ready for publication.');
+          && card?.textContent?.includes('820 / 800+ words')
+          && card?.textContent?.includes('Length met · ready for publication.');
       })()`,
       'The successful readiness retry did not clear the outage notice and render fresh queue data.',
     );
     const recoveredReadiness = await evaluateBrowser(cdp, `document.querySelector('[data-testid="editorial-queue-${slug}"] [data-testid="release-readiness-${slug}"]')?.textContent?.trim() ?? ''`);
-    assert.match(recoveredReadiness, /820 \/ 800 words/, 'The recovered card did not replace its stale word count.');
-    assert.match(recoveredReadiness, /Minimum copy met · ready for publication\./, 'The recovered card did not show the updated publishable state.');
+    assert.match(recoveredReadiness, /820 \/ 800\+ words/, 'The recovered card did not replace its stale word count.');
+    assert.match(recoveredReadiness, /Length met · ready for publication\./, 'The recovered card did not show the updated publishable state.');
   } finally {
     cdp?.close();
     browserProcess?.kill('SIGTERM');

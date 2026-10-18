@@ -1435,6 +1435,15 @@ components:
         wordCount:
           type: integer
           description: Number of words in the release standfirst and working copy.
+        minimumWordCount:
+          type: integer
+          description: Minimum visible-copy length for the selected editorial section.
+        maximumWordCount:
+          type: integer
+          description: Maximum visible-copy length when the selected section has an upper limit.
+        section:
+          type: string
+          enum: [Brief, Research, Data]
         remainingWords:
           type: integer
           description: Number of words still needed before the release can publish.
@@ -1444,7 +1453,7 @@ components:
         updatedAt:
           type: string
           format: date-time
-      required: [id, slug, title, dek, publishAt, cadence, status, position, story, wordCount, remainingWords, publishable, updatedAt]
+      required: [id, slug, title, dek, publishAt, cadence, status, position, story, wordCount, minimumWordCount, remainingWords, publishable, updatedAt]
     EditorialReleaseInput:
       type: object
       properties:
@@ -1475,6 +1484,9 @@ components:
         body:
           type: string
           minLength: 1
+        section:
+          type: string
+          enum: [Brief, Research, Data]
       required: [slug, title, dek, publishAt, cadence, category, author, body]
     EditorialReleaseUpdate:
       type: object
@@ -1501,6 +1513,9 @@ components:
         body:
           type: string
           minLength: 1
+        section:
+          type: string
+          enum: [Brief, Research, Data]
       minProperties: 1
     EditorialReleaseReorderInput:
       type: object

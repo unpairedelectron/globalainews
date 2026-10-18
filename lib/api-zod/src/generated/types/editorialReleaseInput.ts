@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { EditorialCadence } from './editorialCadence';
+import type { EditorialReleaseInputSection } from './editorialReleaseInputSection';
 
 export interface EditorialReleaseInput {
   /**
@@ -32,4 +33,5 @@ export interface EditorialReleaseInput {
   author: string;
   /** @minLength 1 */
   body: string;
+  section?: EditorialReleaseInputSection;
 }
