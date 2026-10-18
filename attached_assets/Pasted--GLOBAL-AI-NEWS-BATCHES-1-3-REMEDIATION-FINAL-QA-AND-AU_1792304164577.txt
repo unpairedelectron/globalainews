@@ -1,0 +1,269 @@
+# GLOBAL AI NEWS — BATCHES 1–3 REMEDIATION, FINAL QA AND AUTHORIZED PUBLICATION
+
+## Mission
+
+Complete all outstanding work required to publish the first 18 articles on Global AI News:
+
+- Batch 1: Brief — 6 articles.
+- Batch 2: Research — 6 articles.
+- Batch 3: Data — 6 articles.
+
+The latest audit result was NOT READY. No articles were published, production content was unchanged, and the working tree remained clean.
+
+The reported outstanding issues are:
+
+1. All 18 source-review records still have `claim_level_reviewed: false`.
+2. The 6 Brief articles exceed the 120–220-word editorial target.
+3. Five Research articles are below the reported 800-word production minimum.
+4. Five Data articles are below the reported 800-word production minimum.
+5. All 18 proposed slug changes remain unapproved.
+6. Private CMS records could not be checked because the authenticated editor endpoint returned 401.
+7. The full smoke suite has two failures: the `/brief/#newsletter` robots assertion and the homepage light-theme screenshot comparison.
+8. The production release workflow requires an authenticated editor session.
+
+**Your task is to fix every safely resolvable problem, complete the evidence-based editorial review, rerun the validation suite, and publish only after the mandatory gates pass.**
+
+Do not merely return another audit report.
+
+## 1. Preserve state and inspect the actual implementation
+
+Inspect:
+
+- Current Git branch, `git status` and recent history.
+- The three article batches and their Markdown and JSON sources.
+- The existing CMS schema and article-release endpoint.
+- The actual word-count function used by production.
+- Section-specific editorial rules and existing tests.
+- Slug approval and collision-checking rules.
+- The authentication requirements for editor actions.
+- The smoke-test assertions and screenshot baseline.
+- The published sitemap and article metadata manifest.
+
+Preserve all valid work. Do not reset, clean, force-checkout or overwrite unrelated changes.
+
+Do not assume that a local draft JSON file is a CMS record, that an absent public route proves the slug is unused, or that a successful build proves publication will succeed.
+
+## 2. Resolve the word-count policy conflict before rewriting articles
+
+The audit reports both of these rules:
+
+- Brief editorial target: 120–220 words.
+- Production release minimum: 800 words.
+
+Inspect the repository, CMS release validator, documented editorial configuration and tests to determine the intended policy.
+
+Implement or restore section-aware validation if the existing product design supports distinct word-count requirements:
+
+- **Brief:** 120–220 words, using the exact production counter and its documented inclusion of the dek.
+- **Research:** at least 800 words if that is the confirmed production requirement.
+- **Data:** at least 800 words if that is the confirmed production requirement.
+
+Do not impose the 800-word minimum universally if doing so contradicts an established Brief-section policy.
+
+Do not weaken a release requirement simply to get the articles through validation. If the release contract cannot be reconciled from existing project evidence, document the conflict and keep affected articles unpublished until the policy can be authorized.
+
+Add regression tests for section-specific word counts, including boundary values and dek handling.
+
+## 3. Complete claim-level verification of all 18 articles
+
+Read every draft and inspect every source URL. Verify material claims individually against primary sources and reputable independent reporting where appropriate.
+
+Create a claim-evidence ledger for every article containing:
+
+- Exact claim or a precise summary of it.
+- Source URL and source type.
+- Evidence supporting the claim.
+- Relevant event date and publication date.
+- Verification outcome.
+- Necessary corrections or limitations.
+- Final article paragraph supported by the source.
+
+Distinguish company claims, independent findings, estimates, predictions, preliminary research, peer-reviewed findings, proposals and enacted policy.
+
+Do not use search-result snippets as sufficient verification of material quantitative claims.
+
+For unavailable or paywalled sources, find independent corroboration or an accessible primary source where possible. If a claim cannot be established, remove or qualify it. If it is central to the article and cannot be verified, block the article.
+
+Update `claim_level_reviewed` only after the actual claim-level review is complete and recorded. Do not change the flag merely to pass a validator.
+
+### Brief-specific checks
+
+Recheck the current 24-hour reporting window immediately before publication. Verify that the event or report is within the allowed window, not merely that an old source has a recent search snippet.
+
+Reverify the six existing stories independently. Do not assume any prior review is complete.
+
+The following three articles previously had unresolved source limitations:
+
+- Anthropic's work with legal experts on AI-agent negotiation.
+- AI data-centre construction delays, financing and local opposition.
+- The Financial Times survey of economists' AI-growth expectations.
+
+Use corroborating evidence if available. Do not invent numbers or claim to have read gated source material. Replace an unsupported story with a verifiable current story only if a suitable one can be found; otherwise leave it blocked.
+
+### Research-specific checks
+
+For all six Research articles, verify the original research page, paper or repository. Check methodology, exact reported metrics, validation status, limitations and whether results have been independently replicated.
+
+Do not imply that an unverified result is formally proven, that a preprint is peer reviewed, or that a company experiment establishes an economy-wide outcome.
+
+### Data-specific checks
+
+For all six Data articles, establish whether each dataset, benchmark or API is actually accessible and on what terms.
+
+Verify release status, repository availability, licences, access restrictions, methodology and benchmark scope.
+
+Do not describe a research collaboration as a publicly downloadable dataset without confirming that the files exist and can be accessed.
+
+Clearly distinguish a vendor-authored benchmark from an independent standard. Retain relevant limitations on use, availability and reproducibility.
+
+## 4. Rewrite articles to comply with the verified policy
+
+For every article:
+
+- Preserve the core story when it remains factually supportable.
+- Remove unsupported claims and unnecessary repetition.
+- Maintain an engaging, professional editorial tone.
+- Add evidence-based detail when expansion is required.
+- Do not pad articles with generic AI commentary.
+- Include an accurate headline, dek, SEO title and meta description.
+- Retain useful source citations in the published body.
+- Confirm that the slug and category match the approved record.
+- Use only verified author, reviewer and publication metadata.
+
+Trim Brief articles into the approved word range. Expand Research and Data articles below their confirmed minimum using verified methodology, findings, limitations and useful context.
+
+Recalculate word counts using the actual production release counter, not a different local counting method.
+
+## 5. Resolve slug approval and CMS collision checks
+
+All 18 proposed slug changes remain unapproved.
+
+Do not silently approve them, overwrite existing slugs or assume no collisions exist.
+
+Inspect the supported editorial workflow and determine whether these are:
+
+- New article slugs.
+- Changes to existing draft records.
+- Changes to published canonical URLs.
+
+Preserve existing approved canonical URLs whenever an article already exists.
+
+For genuinely new articles, use the authorized new-article workflow and its established slug rules. Check private and scheduled records through the authenticated CMS before writing.
+
+If a slug change to an existing article requires explicit approval, produce a concise mapping of old slug, proposed slug, reason, canonical/redirect impact and collision result. Leave that specific change pending until authorized.
+
+Do not manufacture approval records or bypass the CMS release controls.
+
+## 6. Fix the two smoke-test failures
+
+### Failure A: `/brief/#newsletter` robots assertion
+
+Investigate the route, fragment navigation, robots metadata, test implementation and intended indexing policy.
+
+A URL fragment is an anchor, not a separate page resource. Determine what the test is meant to validate.
+
+- If the target page is intended to be indexable, correct an incorrect test expectation rather than adding an inappropriate `noindex`.
+- If the page is deliberately non-indexable, implement and verify the correct page-level robots behaviour.
+- Confirm that the intended newsletter anchor still works.
+
+Do not apply `noindex` to an important indexable news listing merely to make the smoke suite pass.
+
+### Failure B: Homepage light-theme screenshot mismatch
+
+The reported difference was 115,022 pixels against an allowance of 28,800.
+
+Inspect the baseline and actual screenshot to determine whether the difference represents a genuine visual regression, unintended theme change, unstable rendering or an outdated snapshot.
+
+Fix any real regression. If the visual change is intentional and consistent with the approved design, update the snapshot only with documented evidence that the new appearance is correct.
+
+Do not blindly enlarge the permitted difference or replace the snapshot merely to turn a failed test green.
+
+After both issues are resolved, rerun the full smoke suite and compare its results with the prior audit.
+
+## 7. Run complete validation
+
+Before any CMS write, run all applicable project checks, using the actual configured commands:
+
+- Typecheck.
+- Lint.
+- Production build.
+- Full smoke suite.
+- Article schema validation.
+- Section-specific word-count validation.
+- Claim-review and source-evidence validation.
+- Title and slug uniqueness checks.
+- CMS schema compatibility.
+- Internal link and route checks.
+- Structured-data checks.
+- Sitemap and indexability checks.
+- Article rendering and first-response checks.
+- Publication idempotency and rollback checks.
+
+Fix newly discovered defects where safe, then rerun the affected checks.
+
+Report skipped tests honestly. Do not treat a test as passed merely because its script ran or because a previous run passed.
+
+## 8. Publish using the authorized editor workflow
+
+After the editorial, technical, slug and schema gates pass, publish the eligible articles through the existing authenticated CMS release mechanism.
+
+Use an authenticated editor session established through the project's normal interface. Do not ask the user to paste credentials into chat, extract secrets from configuration, bypass Clerk, impersonate an editor or write directly to production storage to avoid the release endpoint.
+
+If an authenticated session is not available, finish all possible preparation and validation but stop before production writes. Report that authorization is the remaining blocker.
+
+Before writing:
+
+1. Recheck private and scheduled records for collisions.
+2. Confirm the approved slug and section of every article.
+3. Confirm that the release operation is idempotent.
+4. Preserve an appropriate recovery path.
+5. Ensure no blocked article is included in the release batch.
+
+Publish only articles that have passed every mandatory gate.
+
+After publication, fetch each actual public URL and verify the rendered article, metadata, source links, canonical, robots directives and section listing. Confirm the published sitemap behaves correctly. Do not claim Google indexing has occurred without Search Console evidence.
+
+## 9. Required final report
+
+Return a concise completion report containing:
+
+### A. Final article inventory
+
+Provide 18 rows with section, headline, word count, source-review status, slug approval, test status, publication status and public URL or exact blocker.
+
+### B. Editorial evidence
+
+Summarize the verified primary and secondary sources, material claims corrected or removed, and unresolved source limitations.
+
+### C. Word-count policy
+
+Explain how the conflict between Brief's 120–220-word target and the reported 800-word production minimum was resolved, with the relevant implementation and test evidence.
+
+### D. Smoke-test results
+
+Show the result of both previously failing checks and the final full smoke run.
+
+### E. CMS and production results
+
+Report actual records created or updated, collision checks performed, number published, blocked records, rendered URLs inspected, and any checks requiring an authenticated session.
+
+### F. Changed files and Git state
+
+List important changed files, exact test commands, outcomes and the final working-tree state. Do not discard unrelated work.
+
+### G. Final status
+
+Select exactly one:
+
+- `ALL 18 PUBLISHED AND VERIFIED`
+- `PARTIALLY PUBLISHED — REMAINING ARTICLES BLOCKED`
+- `PUBLICATION BLOCKED — VALIDATION COMPLETE, AUTHORIZATION REQUIRED`
+- `NOT READY — EDITORIAL OR TECHNICAL GATES REMAIN`
+
+Never select the first status unless all 18 articles actually pass the required gates, were published through the authorized workflow and their public pages were verified.
+
+## Final instruction
+
+Begin immediately. Inspect the actual project, reconcile the section-specific word-count policy, verify every claim, repair the smoke failures and prepare the release.
+
+Do not ask unnecessary questions. Do not fabricate evidence or approval. Do not bypass authentication. Publish only what has passed validation and report every remaining blocker accurately.
