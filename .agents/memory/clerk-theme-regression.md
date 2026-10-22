@@ -15,9 +15,9 @@ Clerk's combined sign-in form does not reliably emit local field errors for empt
 
 **How to apply:** Exercise sign-in's empty state through the guard, mark the alert as an explicit live region, use opaque destructive tokens in both themes, and select the visible non-empty error node when Clerk renders duplicate error elements.
 
-Normalize trailing slashes before choosing whether a route needs Clerk context, and explicitly route successful editor sign-ins back to the editor workspace.
+Normalize trailing slashes before choosing whether a route needs Clerk context, and explicitly route successful editor sign-ins back to the editor workspace. The user confirmed Insights opens after signing in.
 
-**Why:** `/insights/` otherwise bypasses an exact `/insights` provider check and crashes on Clerk hooks; an unspecified post-login destination can send editors to the public homepage.
+**Why:** `/insights/` otherwise bypasses an exact `/insights` provider check and crashes on Clerk hooks; an unspecified post-login destination can send editors to the public homepage. The route failure was reproduced and cleared by normalization.
 
 **How to apply:** Test protected routes with and without a trailing slash, and set the sign-in component's success and fallback destinations to the editor route.
 
