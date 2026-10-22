@@ -1732,7 +1732,7 @@ async function checkThemeRegression() {
       }
     }
 
-    const authRoutes = ['/sign-in', '/sign-up'];
+    const authRoutes = ['/sign-in'];
     for (const theme of ['light', 'dark']) {
       for (const route of authRoutes) {
         cdp.events.length = 0;
@@ -3279,6 +3279,29 @@ test('Insights renders with Clerk context whether or not the URL has a trailing 
     assert.equal(pageState.hasQueue, true, `${route}: editor queue is missing`);
     assert.equal(pageState.hasClerkProviderError, false, `${route}: Clerk hooks rendered outside ClerkProvider`);
   }
+});
+
+test('public sign-up route explains that newsroom account creation is restricted', { concurrency: false }, async () => {
+  const cdp = await getRouteBrowser();
+  await cdp.send('Page.navigate', { url: `${baseUrl}/sign-up` });
+  await waitForBrowserCondition(
+    cdp,
+    `Boolean(document.querySelector('#editor-signup-title'))`,
+    'The sign-up route did not render its account restriction notice.',
+  );
+  const state = await evaluateBrowser(cdp, `(() => ({
+    title: document.querySelector('#editor-signup-title')?.textContent?.trim() ?? '',
+    body: document.body?.innerText ?? '',
+    formCount: document.querySelectorAll('form').length,
+    inputCount: document.querySelectorAll('input').length,
+    signInHref: document.querySelector('a[href$="/sign-in"]')?.getAttribute('href') ?? '',
+  }))()`);
+  assert.equal(state.title, 'Accounts are invitation-only.');
+  assert.match(state.body, /Self-service account creation is disabled/i);
+  assert.match(state.body, /approved editors with a verified primary email/i);
+  assert.equal(state.formCount, 0, 'restricted sign-up route must not expose a registration form');
+  assert.equal(state.inputCount, 0, 'restricted sign-up route must not accept account details');
+  assert.equal(state.signInHref, '/sign-in', 'restricted sign-up route should offer a clear sign-in path');
 });
 
 test('signed-in release history filters remain usable at a mobile viewport', { concurrency: false }, async () => {

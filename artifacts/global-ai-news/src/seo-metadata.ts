@@ -167,8 +167,8 @@ const staticMetadata: Record<string, SeoMetadata> = {
     indexable: false,
   },
   '/sign-up': {
-    title: 'Editor access — Global AI News',
-    description: 'Create access to the Global AI News editorial workspace.',
+    title: 'Invitation-only editor access — Global AI News',
+    description: 'Newsroom account creation is restricted to approved editors.',
     path: '/sign-up',
     indexable: false,
   },

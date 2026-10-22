@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ClerkProvider, SignIn, SignUp, useClerk, useSignIn, useUser, useAuth } from '@clerk/react';
+import { ClerkProvider, SignIn, useClerk, useSignIn, useUser, useAuth } from '@clerk/react';
 import { publishableKeyFromHost } from '@clerk/react/internal';
 import { shadcn } from '@clerk/themes';
 import { useLocation } from 'wouter';
@@ -354,9 +354,30 @@ function ForgotPasswordFlow({ onBack }: { onBack: () => void }) {
 
 export function SignUpPage() {
   return (
-    <div className="flex min-h-[100dvh] w-full min-w-0 items-start justify-center overflow-x-hidden overflow-y-auto bg-background px-4 py-8 sm:items-center sm:px-6">
-      <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
-    </div>
+    <main className="flex min-h-[100dvh] w-full min-w-0 items-center justify-center overflow-x-hidden bg-background px-4 py-8 sm:px-6">
+      <section
+        aria-labelledby="editor-signup-title"
+        className="w-full max-w-[440px] border border-border bg-card p-7 text-card-foreground sm:p-10"
+      >
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+          Global AI News · Editor access
+        </p>
+        <h1 id="editor-signup-title" className="mt-5 font-serif text-4xl leading-none">
+          Accounts are invitation-only.
+        </h1>
+        <p className="mt-5 text-sm leading-6 text-muted-foreground">
+          Self-service account creation is disabled. Newsroom access is limited to approved editors
+          with a verified primary email. If you are the approved editor and cannot sign in, contact
+          the newsroom administrator.
+        </p>
+        <a
+          href={`${basePath}/sign-in`}
+          className="mt-8 inline-flex min-h-11 items-center justify-center bg-primary px-5 py-3 font-mono text-[10px] uppercase tracking-widest text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          Return to editor sign-in
+        </a>
+      </section>
+    </main>
   );
 }
 
@@ -374,12 +395,6 @@ export function ClerkProviderWithRoutes({ children }: { children: ReactNode }) {
         start: {
           title: 'Global AI News editor sign-in',
           subtitle: 'Sign in to manage the release desk.',
-        },
-      },
-      signUp: {
-        start: {
-          title: 'Create editor access',
-          subtitle: 'Set up an account for the Global AI News release desk.',
         },
       },
     }}
