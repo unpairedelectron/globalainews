@@ -25,6 +25,8 @@ import {
 import { editorialPageCopy } from '../src/editorial-pages.ts';
 import { CONTENT_RULES, getQualifiedSectionNavigation, getSectionItemCount } from '../src/content-rules.ts';
 import { isWithinLatestWindow } from '../src/editorial-date.ts';
+import { comparisonReports } from '../src/components/comparison-reports.tsx';
+import { getSeoMetadata, getSeoMetadataManifest } from '../src/seo-metadata.ts';
 
 test('all maintained and scheduled stories meet the minimum word count', () => {
   const allStories = [...stories, ...scheduledStories];
@@ -357,4 +359,57 @@ test('public story collections deduplicate canonical slugs and omit generic Indi
     'Official records report 45,000+ shared GPUs, but do not establish live schedulable supply.',
     'story-specific copy supported by the record should remain visible',
   );
+});
+
+test('six comparison reports are substantive, sourced, canonical and included in the sitemap manifest', () => {
+  const expectedSlugs = [
+    'ai-assistants-compared',
+    'ai-image-tools-compared',
+    'coding-agent-benchmarks-compared',
+    'hosted-vs-open-weight-models',
+    'indiaai-vs-commercial-cloud',
+    'provenance-controls-compared',
+  ];
+  const manifest = getSeoMetadataManifest([], '2026-10-22T00:00:00.000Z');
+  const manifestPaths = new Set(manifest.routes.map((route) => route.path));
+
+  assert.deepEqual(Object.keys(comparisonReports).sort(), [...expectedSlugs].sort());
+
+  for (const slug of expectedSlugs) {
+    const report = comparisonReports[slug];
+    const route = `/reports/${slug}`;
+    const wordCount = [
+      report.title,
+      report.description,
+      report.intro,
+      report.criteria,
+      ...report.rows.flatMap((row) => [
+        row.product,
+        row.documentedUse,
+        row.sourceLabel,
+        row.sourceDate,
+        row.limitation,
+      ]),
+      ...report.sections.flatMap((section) => [section.heading, ...section.paragraphs]),
+      report.indiaContext,
+      ...report.keyTakeaways,
+      ...report.limitations,
+    ].join(' ').trim().split(/\s+/u).filter(Boolean).length;
+
+    assert.ok(wordCount >= 1_000, `${route} has only ${wordCount} evidence-led words`);
+    assert.ok(report.rows.length >= 2, `${route} needs at least two compared approaches`);
+    assert.ok(report.sections.length >= 4, `${route} needs structured analysis`);
+    assert.ok(report.keyTakeaways.length >= 3, `${route} needs reader takeaways`);
+    assert.ok(report.indiaContext.length > 80, `${route} needs relevant India context`);
+    assert.ok(
+      report.rows.every((row) => row.sourceUrl.startsWith('https://') && row.sourceDate.length > 0),
+      `${route} needs dated, linked source evidence for every comparison row`,
+    );
+
+    const metadata = getSeoMetadata(route, []);
+    assert.equal(metadata.path, route);
+    assert.equal(metadata.indexable, undefined);
+    assert.ok(metadata.title.includes(report.title), `${route} title must agree with the report`);
+    assert.ok(manifestPaths.has(route), `${route} must be present in the SEO/sitemap manifest`);
+  }
 });

@@ -3024,6 +3024,54 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/reports/coding-agent-benchmarks-compared",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/coding-agent-benchmarks-compared/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/reports/coding-agent-benchmarks-compared",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/",
+    "indexability": "noindex",
+    "linkSource": "/reports/coding-agent-benchmarks-compared",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/hosted-vs-open-weight-models",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/hosted-vs-open-weight-models/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/reports/hosted-vs-open-weight-models",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/",
+    "indexability": "noindex",
+    "linkSource": "/reports/hosted-vs-open-weight-models",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/reports",
     "status": "200",
     "canonical": "https://www.globalainews.in/reports/",
@@ -3101,6 +3149,86 @@
     "canonical": "https://www.globalainews.in/reports/ai-image-tools-compared/",
     "indexability": "indexable",
     "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/coding-agent-benchmarks-compared/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/coding-agent-benchmarks-compared/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/hosted-vs-open-weight-models/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/hosted-vs-open-weight-models/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/indiaai-vs-commercial-cloud/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/indiaai-vs-commercial-cloud/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/provenance-controls-compared/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/provenance-controls-compared/",
+    "indexability": "indexable",
+    "linkSource": "/reports",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/indiaai-vs-commercial-cloud",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/indiaai-vs-commercial-cloud/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/reports/indiaai-vs-commercial-cloud",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/",
+    "indexability": "noindex",
+    "linkSource": "/reports/indiaai-vs-commercial-cloud",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/provenance-controls-compared",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/provenance-controls-compared/",
+    "indexability": "indexable",
+    "linkSource": "built route",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/",
+    "indexability": "indexable",
+    "linkSource": "/reports/provenance-controls-compared",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/reports/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/reports/",
+    "indexability": "noindex",
+    "linkSource": "/reports/provenance-controls-compared",
     "issue": ""
   },
   {

@@ -630,12 +630,15 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
       </div>
     );
   }
-  const comparisonReportSlug: ComparisonReportSlug | undefined =
-    route === '/reports/ai-assistants-compared'
-      ? 'ai-assistants-compared'
-      : route === '/reports/ai-image-tools-compared'
-        ? 'ai-image-tools-compared'
-        : undefined;
+  const comparisonReportSlugByRoute: Record<string, ComparisonReportSlug> = {
+    '/reports/ai-assistants-compared': 'ai-assistants-compared',
+    '/reports/ai-image-tools-compared': 'ai-image-tools-compared',
+    '/reports/coding-agent-benchmarks-compared': 'coding-agent-benchmarks-compared',
+    '/reports/hosted-vs-open-weight-models': 'hosted-vs-open-weight-models',
+    '/reports/indiaai-vs-commercial-cloud': 'indiaai-vs-commercial-cloud',
+    '/reports/provenance-controls-compared': 'provenance-controls-compared',
+  };
+  const comparisonReportSlug = comparisonReportSlugByRoute[route];
   if (comparisonReportSlug) {
     return (
       <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
@@ -688,6 +691,26 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
               <span className="eyebrow text-primary">Comparison report</span>
               <span className="mt-3 block font-serif text-2xl">AI Image Tools Compared</span>
               <span className="mt-2 block text-sm text-muted-foreground">Generation and editing features from current vendor documentation.</span>
+            </a>
+            <a href="/reports/coding-agent-benchmarks-compared/" className="border border-foreground/15 p-5 hover:border-primary">
+              <span className="eyebrow text-primary">Comparison report</span>
+              <span className="mt-3 block font-serif text-2xl">Coding-Agent Benchmarks Compared</span>
+              <span className="mt-2 block text-sm text-muted-foreground">Task design, environments and graders behind two benchmark families.</span>
+            </a>
+            <a href="/reports/hosted-vs-open-weight-models/" className="border border-foreground/15 p-5 hover:border-primary">
+              <span className="eyebrow text-primary">Comparison report</span>
+              <span className="mt-3 block font-serif text-2xl">Hosted APIs vs Open-Weight Models</span>
+              <span className="mt-2 block text-sm text-muted-foreground">Deployment responsibilities, terms and evidence limits.</span>
+            </a>
+            <a href="/reports/indiaai-vs-commercial-cloud/" className="border border-foreground/15 p-5 hover:border-primary">
+              <span className="eyebrow text-primary">Comparison report</span>
+              <span className="mt-3 block font-serif text-2xl">IndiaAI Compute vs Commercial Cloud</span>
+              <span className="mt-2 block text-sm text-muted-foreground">Eligibility, allocation records and billing boundaries.</span>
+            </a>
+            <a href="/reports/provenance-controls-compared/" className="border border-foreground/15 p-5 hover:border-primary">
+              <span className="eyebrow text-primary">Comparison report</span>
+              <span className="mt-3 block font-serif text-2xl">C2PA, Watermarks and Image Detectors</span>
+              <span className="mt-2 block text-sm text-muted-foreground">What provenance and detection signals can—and cannot—establish.</span>
             </a>
           </section>
         </main>

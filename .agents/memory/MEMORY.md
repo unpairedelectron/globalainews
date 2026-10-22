@@ -16,6 +16,7 @@
 - [Autonomous editorial gates](autonomous-editorial-gates.md) — source selection must stay coherent before AI drafting; unrelated citations are a hard rejection, not a confidence downgrade.
 - [Newsroom analytics boundary](newsroom-analytics-boundary.md) — use Replit’s injected analytics for pageviews and safe events; never add a second tracker or send visitor data.
 - [API smoke environment](api-smoke-environment.md) — preserve NODE_ENV=test so synthetic editor auth and deterministic fixtures remain isolated.
+- [Editorial test fixture expiry](editorial-test-fixture-expiry.md) — aged scheduled fixtures can become public after interrupted tests; prune only namespaced test rows before replay.
 - [Published route source of truth](published-route-source-of-truth.md) — live feeds reflect releases, while static article fallbacks still lack first-response SEO for new slugs.
 - [SEO audit reversibility](seo-audit-reversibility.md) — keep production SEO remediation to reversible route/status changes; preserve database rows, deployment type, and compute size.
 - [Static-first route performance](static-first-route-performance.md) — Reports/About use complete server HTML, preserving theme and Web Vitals while skipping the React runtime.

@@ -978,6 +978,44 @@ async function cleanupFixtures() {
   );
 }
 
+async function cleanupStaleFixtures() {
+  const script = `
+    import { and, inArray, like, lt } from "drizzle-orm";
+    import { db, pool, editorialReleaseHistoryTable, editorialReleasesTable } from "@workspace/db";
+    (async () => {
+      const cutoff = new Date(Date.now() - 60 * 60 * 1000);
+      const candidates = await db
+        .select({ slug: editorialReleasesTable.slug })
+        .from(editorialReleasesTable)
+        .where(and(
+          like(editorialReleasesTable.slug, "first-response-%"),
+          lt(editorialReleasesTable.updatedAt, cutoff),
+        ));
+      const slugs = candidates
+        .map(({ slug }) => slug)
+        .filter((slug) => /^first-response-(?:(?:no-author|scheduled|draft|canceled|unpublished|archived)-)?\\d+-\\d+$/.test(slug));
+      if (slugs.length > 0) {
+        await db.delete(editorialReleaseHistoryTable).where(inArray(editorialReleaseHistoryTable.releaseSlug, slugs));
+        await db.delete(editorialReleasesTable).where(inArray(editorialReleasesTable.slug, slugs));
+      }
+      await pool.end();
+    })().catch(async (error) => {
+      console.error(error);
+      await pool.end();
+      process.exitCode = 1;
+    });
+  `;
+  await execFileAsync(
+    'pnpm',
+    ['--filter', '@workspace/db', 'exec', 'tsx', '--eval', script],
+    {
+      cwd: root,
+      env: process.env,
+      maxBuffer: 2 * 1024 * 1024,
+    },
+  );
+}
+
 async function testRawArticleResponses() {
   const publicContentResponse = await fetch(`${apiOrigin}/api/newsroom/content`);
   assert.equal(publicContentResponse.status, 200);
@@ -1391,6 +1429,7 @@ async function main() {
   }
 
   try {
+    await cleanupStaleFixtures();
     await startApi();
     const publishedAt = new Date(Date.now() - 120_000).toISOString();
     const futureAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();

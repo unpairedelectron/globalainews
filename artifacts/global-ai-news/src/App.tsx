@@ -91,6 +91,10 @@ function AppRoutes() {
     <Route path="/timeline/:slug" component={TimelinePage} />
     <Route path="/reports/ai-assistants-compared"><ComparisonReportPage reportSlug="ai-assistants-compared" /></Route>
     <Route path="/reports/ai-image-tools-compared"><ComparisonReportPage reportSlug="ai-image-tools-compared" /></Route>
+    <Route path="/reports/coding-agent-benchmarks-compared"><ComparisonReportPage reportSlug="coding-agent-benchmarks-compared" /></Route>
+    <Route path="/reports/hosted-vs-open-weight-models"><ComparisonReportPage reportSlug="hosted-vs-open-weight-models" /></Route>
+    <Route path="/reports/indiaai-vs-commercial-cloud"><ComparisonReportPage reportSlug="indiaai-vs-commercial-cloud" /></Route>
+    <Route path="/reports/provenance-controls-compared"><ComparisonReportPage reportSlug="provenance-controls-compared" /></Route>
     <Route path="/glucosmart-privacy" component={GlucoSmartPrivacyPage} />
     <Route path="/reports" component={ReportsIndexPage} />
     <Route path="/topics" component={TopicsIndexPage} />

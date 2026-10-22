@@ -56,6 +56,26 @@ const staticMetadata: Record<string, SeoMetadata> = {
     description: 'Compare documented image-generation and editing workflows with current vendor sources and stated limitations.',
     path: '/reports/ai-image-tools-compared',
   },
+  '/reports/coding-agent-benchmarks-compared': {
+    title: 'SWE-bench Verified vs Terminal-Bench — Global AI News',
+    description: 'Compare coding-agent benchmark task designs, environments, graders and limits without treating scores as interchangeable.',
+    path: '/reports/coding-agent-benchmarks-compared',
+  },
+  '/reports/hosted-vs-open-weight-models': {
+    title: 'Hosted APIs vs Open-Weight Models — Global AI News',
+    description: 'Compare documented model access, deployment responsibilities, terms and evidence limits for hosted and open-weight systems.',
+    path: '/reports/hosted-vs-open-weight-models',
+  },
+  '/reports/indiaai-vs-commercial-cloud': {
+    title: 'IndiaAI Shared Compute vs Commercial Cloud — Global AI News',
+    description: 'Compare documented eligibility, allocation and billing without implying equivalent prices or available capacity.',
+    path: '/reports/indiaai-vs-commercial-cloud',
+  },
+  '/reports/provenance-controls-compared': {
+    title: 'C2PA, Watermarks and AI-Image Detectors — Global AI News',
+    description: 'Compare provenance credentials, watermarks and image classifiers by the signals and limitations each establishes.',
+    path: '/reports/provenance-controls-compared',
+  },
   '/topics': {
     title: 'Topics — Global AI News',
     description: 'Explore connected topic records linking published reporting, research, data, sources and timelines.',
