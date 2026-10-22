@@ -52,7 +52,7 @@ export function primeNewsroomContent(snapshot: unknown): void {
 
 function AppRoutes() {
   const [location] = useLocation();
-  const pathname = location.split(/[?#]/, 1)[0];
+  const pathname = location.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
   const needsClerk = pathname === '/insights'
     || pathname.startsWith('/sign-in')
     || pathname.startsWith('/sign-up');

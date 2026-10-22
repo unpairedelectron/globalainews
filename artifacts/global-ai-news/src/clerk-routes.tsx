@@ -103,7 +103,13 @@ export function SignInPage() {
         <ForgotPasswordFlow onBack={() => setRecoveryOpen(false)} />
       ) : (
         <div className="w-full max-w-[440px]">
-          <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
+          <SignIn
+            routing="path"
+            path={`${basePath}/sign-in`}
+            signUpUrl={`${basePath}/sign-up`}
+            forceRedirectUrl={`${basePath}/insights`}
+            fallbackRedirectUrl={`${basePath}/insights`}
+          />
           <button
             type="button"
             data-testid="button-forgot-password"
