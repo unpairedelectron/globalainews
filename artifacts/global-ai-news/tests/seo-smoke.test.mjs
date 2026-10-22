@@ -3259,6 +3259,28 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   console.log(`Smoke checked ${new Set(staticRoutes).size} public routes at desktop, ${mobileRoutes.length} at mobile, plus ${ampStories.length} AMP pages and RSS.`);
 });
 
+test('Insights renders with Clerk context whether or not the URL has a trailing slash', { concurrency: false }, async () => {
+  const cdp = await getRouteBrowser();
+  for (const route of ['/insights', '/insights/']) {
+    await cdp.send('Page.navigate', {
+      url: `${baseUrl}${route}?smoke-editor=1`,
+    });
+    await waitForBrowserCondition(
+      cdp,
+      `location.pathname === '${route}' && Boolean(document.querySelector('[data-testid="editorial-queue"]'))`,
+      `${route}: editor workspace did not render; check that ClerkProvider wraps the Insights route.`,
+    );
+    const pageState = await evaluateBrowser(cdp, `({
+      path: location.pathname,
+      hasQueue: Boolean(document.querySelector('[data-testid="editorial-queue"]')),
+      hasClerkProviderError: (document.body?.innerText ?? '').includes('useAuth can only be used within the <ClerkProvider'),
+    })`);
+    assert.equal(pageState.path, route, `${route}: browser navigation changed the requested path`);
+    assert.equal(pageState.hasQueue, true, `${route}: editor queue is missing`);
+    assert.equal(pageState.hasClerkProviderError, false, `${route}: Clerk hooks rendered outside ClerkProvider`);
+  }
+});
+
 test('signed-in release history filters remain usable at a mobile viewport', { concurrency: false }, async () => {
   await checkMobileEditorHistory();
 });
