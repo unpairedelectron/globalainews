@@ -1,5 +1,5 @@
 import { authors, getStoryAuthorIdentity, getStoryReadTime, type Author, type Source, type Story } from './content';
-import { getCanonicalUrl } from './seo-metadata';
+import { getCanonicalUrl, SITE_URL } from './seo-metadata';
 
 function escapeHtml(value: string): string {
   return value
@@ -134,7 +134,7 @@ export function renderAmpArticleDocument(
         <div class="ad">NATIVE AD · CLEARLY LABELED INVENTORY</div>
       </article>
     </main>
-    <footer>Independent newsroom · No noise by design · <a href="https://www.globalainews.in/">Return to Global AI News</a></footer>
+    <footer>Independent newsroom · No noise by design · <a href="${SITE_URL}/">Return to Global AI News</a></footer>
   </body>
 </html>`;
 }

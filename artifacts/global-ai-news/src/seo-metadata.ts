@@ -2,7 +2,7 @@ import { authors, entities, findEntity, findStory, findTimeline, getPublicDateMo
 import { dataProductRecords, researchRecords, topicRecords } from './authority/registry';
 import { CONTENT_RULES, getSectionItemCount } from './content-rules';
 
-export const SITE_URL = 'https://www.globalainews.in';
+export const SITE_URL = 'https://globalainews.in';
 
 export interface SeoMetadata {
   title: string;

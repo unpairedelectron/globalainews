@@ -73,6 +73,7 @@ import {
 import {
   getCanonicalUrl,
   getSeoMetadataManifest,
+  SITE_URL,
 } from "../../../global-ai-news/src/seo-metadata";
 import { renderSocialPreviewSvg } from "../../../global-ai-news/src/social-preview";
 import { renderSocialPreviewPng } from "../lib/social-preview-png";
@@ -538,7 +539,7 @@ export async function serveNewsroomSitemap(
           ? `<lastmod>${escapeXml(metadata.lastmod)}</lastmod>`
           : "";
         const image = metadata.imagePath
-          ? `<image:image><image:loc>${escapeXml(`https://www.globalainews.in${metadata.imagePath}`)}</image:loc><image:title>${escapeXml(metadata.title)}</image:title></image:image>`
+          ? `<image:image><image:loc>${escapeXml(`${SITE_URL}${metadata.imagePath}`)}</image:loc><image:title>${escapeXml(metadata.title)}</image:title></image:image>`
           : "";
         return `  <url><loc>${escapeXml(getCanonicalUrl(metadata.path))}</loc>${lastmod}${image}</url>`;
       })
@@ -569,7 +570,7 @@ export async function serveNewsroomFeed(_req: Request, res: ExpressResponse): Pr
       const url = escapeXml(getCanonicalUrl(`/article/${story.slug}`));
       return `    <item><title>${escapeXml(story.title)}</title><link>${url}</link><guid>${url}</guid><pubDate>${new Date(`${story.date}T07:30:00Z`).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`;
     });
-    const body = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Global AI News</title><link>https://www.globalainews.in/</link><description>Intelligence for the AI economy.</description><language>en-us</language>\n${items.join("\n")}\n</channel></rss>`;
+    const body = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Global AI News</title><link>${SITE_URL}/</link><description>Intelligence for the AI economy.</description><language>en-us</language>\n${items.join("\n")}\n</channel></rss>`;
     res
       .type("application/rss+xml")
       .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")

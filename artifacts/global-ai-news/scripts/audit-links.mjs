@@ -7,7 +7,7 @@ const outputDir = path.resolve(
   projectRoot,
   process.env.PUBLICATION_OUTPUT_DIR ?? 'dist/public',
 );
-const siteUrl = new URL('https://www.globalainews.in');
+const siteUrl = new URL('https://globalainews.in');
 const showAll = process.argv.includes('--all');
 
 function decodeHtml(value) {

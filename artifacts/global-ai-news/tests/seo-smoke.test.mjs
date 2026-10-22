@@ -10,7 +10,7 @@ import { after, before, test } from 'node:test';
 const root = path.resolve(import.meta.dirname, '..');
 const distDir = path.join(root, 'dist', 'public');
 const publicDir = path.join(root, 'public');
-const site = 'https://www.globalainews.in';
+const site = 'https://globalainews.in';
 const siteOrigin = new URL(site).origin;
 let apiOrigin = process.env.SMOKE_API_ORIGIN ?? 'http://127.0.0.1:19820';
 const chromium = process.env.CHROMIUM_BIN || '/repl/tools/bin/chromium';
@@ -297,10 +297,20 @@ function assertCanonicalSiteUrl(value, message) {
 function assertCanonicalSitemapUrls(xml, label) {
   for (const entry of sitemapEntries(xml)) {
     assertCanonicalSiteUrl(entry.location, `${label} ${entry.route}`);
+    for (const image of entry.images) {
+      const parsed = new URL(image);
+      assert.equal(parsed.hostname, new URL(site).hostname, `${label} ${entry.route}: image URL uses another host`);
+      assert.equal(parsed.protocol, 'https:', `${label} ${entry.route}: image URL is not HTTPS`);
+    }
   }
 }
 
 function assertRssCanonicalUrls(xml, label) {
+  assert.match(
+    xml,
+    /<channel>[\s\S]*?<link>https:\/\/globalainews\.in\/<\/link>/,
+    `${label}: channel link does not use the apex canonical host`,
+  );
   const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)];
   assert.ok(items.length > 0, `${label}: no RSS items were found`);
   for (const [index, match] of items.entries()) {
@@ -2581,6 +2591,8 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
         ? expectedStory.dateModified
         : undefined;
     assert.equal(articleData.image, metaContent(document, 'property', 'og:image'), `${route}: JSON-LD image does not match social preview`);
+    assert.equal(articleData.url, expectedCanonical, `${route}: NewsArticle URL does not match the canonical URL`);
+    assert.equal(articleData.mainEntityOfPage['@id'], expectedCanonical, `${route}: NewsArticle main entity does not match the canonical URL`);
     assert.ok(expectedStory, `${route}: maintained story record is missing for JSON-LD verification`);
     assert.equal(
       articleData.author['@type'],

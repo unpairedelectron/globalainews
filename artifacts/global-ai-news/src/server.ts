@@ -15,7 +15,7 @@ import {
   parseArticleRoutePath,
   renderArticleHtml,
 } from './server/article-html';
-import { getSeoMetadata } from './seo-metadata';
+import { getSeoMetadata, SITE_URL } from './seo-metadata';
 import { renderSeoRouteHtml } from './seo-html';
 import { gzipResponseMiddleware } from './server/gzipResponseMiddleware';
 
@@ -38,7 +38,21 @@ if (!Number.isInteger(port) || port <= 0 || port > 65_535) {
 const app = express();
 app.disable('x-powered-by');
 
-app.use((_request, response, next) => {
+function getRequestHost(request: Request): string {
+  const forwardedHost = request.get('x-forwarded-host')?.split(',')[0]?.trim();
+  return (forwardedHost ?? request.get('host') ?? '').toLowerCase().replace(/:\d+$/, '');
+}
+
+function setRobotsTag(response: Response, value = 'noindex'): void {
+  response.setHeader(
+    'X-Robots-Tag',
+    response.locals.isPreviewHost === true ? 'noindex, nofollow' : value,
+  );
+}
+
+app.use((request, response, next) => {
+  response.locals.isPreviewHost = getRequestHost(request) === 'global-ai-media.replit.app';
+  if (response.locals.isPreviewHost) setRobotsTag(response, 'noindex, nofollow');
   response.setHeader(
     'X-GAN-Source-Revision',
     process.env.GAN_BUILD_SOURCE_REVISION ?? 'unavailable',
@@ -77,12 +91,12 @@ app.use((request, response, next) => {
     return;
   }
 
-  const requestedUrl = new URL(request.originalUrl, 'https://www.globalainews.in');
+  const requestedUrl = new URL(request.originalUrl, SITE_URL);
   const pathname = requestedUrl.pathname;
   if (uuidArticlePath.test(pathname)) {
     response
       .status(410)
-      .set('X-Robots-Tag', 'noindex')
+      .set('X-Robots-Tag', response.locals.isPreviewHost === true ? 'noindex, nofollow' : 'noindex')
       .type('text/plain')
       .send('This legacy article URL is no longer available.');
     return;
@@ -90,13 +104,12 @@ app.use((request, response, next) => {
 
   const cleanPath = pathname.replace(/\/+$/, '') || '/';
   const routeAlias = retiredStoryRedirects.get(cleanPath) ?? permanentRouteAliases.get(cleanPath);
-  const forwardedHost = request.get('x-forwarded-host')?.split(',')[0]?.trim();
-  const host = (forwardedHost ?? request.get('host') ?? '').toLowerCase().replace(/:\d+$/, '');
+  const host = getRequestHost(request);
   const forwardedProtocol = request.get('x-forwarded-proto')?.split(',')[0]?.trim().toLowerCase();
   const protocol = forwardedProtocol ?? (request.secure ? 'https' : 'http');
-  const canonicalOrigin = 'https://www.globalainews.in';
+  const canonicalOrigin = SITE_URL;
   const managedHost = host === 'globalainews.in' || host === 'www.globalainews.in';
-  const isCanonicalHost = host === 'www.globalainews.in' && protocol === 'https';
+  const isCanonicalHost = host === 'globalainews.in' && protocol === 'https';
   const canonicalArticlePath = managedHost
     && /^\/article\/[^/]+$/.test(cleanPath)
     && pathname !== `${cleanPath}/`
@@ -174,7 +187,7 @@ app.use((request, response, next) => {
     response.status(404);
     response.setHeader('Cache-Control', 'no-store');
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
-    response.setHeader('X-Robots-Tag', 'noindex');
+    setRobotsTag(response);
     response.send(request.method === 'HEAD' ? undefined : ARTICLE_NOT_FOUND_HTML);
     return;
   }
@@ -245,7 +258,7 @@ app.use((request, response, next) => {
     response.status(result.status);
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Cache-Control', 'no-store');
-    if (result.status === 404) response.setHeader('X-Robots-Tag', 'noindex');
+    if (result.status === 404) setRobotsTag(response);
     response.send(result.html);
   })().catch((error: unknown) => {
     routeStatus = 503;
@@ -266,7 +279,7 @@ app.use((request, response, next) => {
     response.status(503);
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Cache-Control', 'no-store');
-    response.setHeader('X-Robots-Tag', 'noindex');
+    setRobotsTag(response);
     response.send(
       '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Article temporarily unavailable — Global AI News</title></head><body><main><h1>Article temporarily unavailable</h1></main></body></html>',
     );
@@ -291,7 +304,7 @@ app.get(pendingEditorialRoutes, async (request, response): Promise<void> => {
     response.status(200);
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Cache-Control', 'no-store');
-    if (metadata.indexable === false) response.setHeader('X-Robots-Tag', 'noindex');
+    if (metadata.indexable === false) setRobotsTag(response);
     response.send(renderSeoRouteHtml(baseHtml, route, metadata, snapshot));
   } catch (error) {
     process.stderr.write(
@@ -300,7 +313,7 @@ app.get(pendingEditorialRoutes, async (request, response): Promise<void> => {
     response.status(503);
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Cache-Control', 'no-store');
-    response.setHeader('X-Robots-Tag', 'noindex');
+    setRobotsTag(response);
     response.send(
       '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page temporarily unavailable — Global AI News</title></head><body><main><h1>Page temporarily unavailable</h1></main></body></html>',
     );
@@ -309,7 +322,7 @@ app.get(pendingEditorialRoutes, async (request, response): Promise<void> => {
 
 app.use((request, response, next) => {
   const route = new URL(request.originalUrl, 'http://localhost').pathname.replace(/\/+$/, '') || '/';
-  if (getSeoMetadata(route).indexable === false) response.setHeader('X-Robots-Tag', 'noindex');
+  if (getSeoMetadata(route).indexable === false) setRobotsTag(response);
   next();
 });
 
@@ -320,7 +333,7 @@ app.get('/amp/article/:slug', (request, response) => {
   if (!slug || slug.includes('/') || slug.includes('\\')) {
     response.status(404);
     response.setHeader('Cache-Control', 'no-store');
-    response.setHeader('X-Robots-Tag', 'noindex');
+    setRobotsTag(response);
     response.type('html').send(
       '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
     );
@@ -333,7 +346,7 @@ app.get('/amp/article/:slug', (request, response) => {
     if (!story) {
       response.status(404);
       response.setHeader('Cache-Control', 'no-store');
-      response.setHeader('X-Robots-Tag', 'noindex');
+      setRobotsTag(response);
       response.type('html').send(
         '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
       );
@@ -355,7 +368,7 @@ app.get('/amp/article/:slug', (request, response) => {
     response.status(503);
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Cache-Control', 'no-store');
-    response.setHeader('X-Robots-Tag', 'noindex');
+    setRobotsTag(response);
     response.send(
       '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>AMP article temporarily unavailable — Global AI News</title></head><body><main><h1>AMP article temporarily unavailable</h1></main></body></html>',
     );
@@ -370,7 +383,7 @@ app.use((request, response) => {
       if (!error || response.headersSent) return;
       response.status(404);
       response.setHeader('Cache-Control', 'no-store');
-      response.setHeader('X-Robots-Tag', 'noindex');
+      setRobotsTag(response);
       response.type('html').send(
         '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
       );
@@ -380,7 +393,7 @@ app.use((request, response) => {
 
   response.status(404);
   response.setHeader('Cache-Control', 'no-store');
-  response.setHeader('X-Robots-Tag', 'noindex');
+  setRobotsTag(response);
   response.type('html').send(
     '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
   );

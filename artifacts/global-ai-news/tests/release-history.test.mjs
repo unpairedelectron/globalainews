@@ -302,7 +302,7 @@ async function assertPublishedStoryFlowsThroughLivePublicSurfaces() {
   const metadata = await requestJson('/api/newsroom/metadata');
   assert.ok(metadata.routes.some((route) => route.path === `/article/${publishedSlug}` && route.article), 'published article metadata did not refresh');
 
-  const expectedUrl = `https://www.globalainews.in/article/${publishedSlug}/`;
+  const expectedUrl = `https://globalainews.in/article/${publishedSlug}/`;
   const sitemapResponse = await fetch(`${apiOrigin}/api/newsroom/sitemap.xml`);
   const sitemap = await sitemapResponse.text();
   assert.equal(sitemapResponse.status, 200, 'live API sitemap failed after publication');

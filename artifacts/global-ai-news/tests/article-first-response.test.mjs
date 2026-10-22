@@ -713,8 +713,8 @@ async function assertPublishedOnlyFeeds() {
 
   assert.ok(publishedSlugs.has(slugs.published), 'published fixture is absent from public content');
   assert.ok(articlePaths.has(`/article/${slugs.published}`), 'published fixture is absent from metadata');
-  assert.ok(sitemap.includes(`https://www.globalainews.in/article/${slugs.published}/`));
-  assert.ok(feed.includes(`https://www.globalainews.in/article/${slugs.published}/`));
+  assert.ok(sitemap.includes(`https://globalainews.in/article/${slugs.published}/`));
+  assert.ok(feed.includes(`https://globalainews.in/article/${slugs.published}/`));
 
   for (const slug of forbiddenSlugs) {
     assert.equal(publishedSlugs.has(slug), false, `${slug} leaked into public content`);
@@ -746,8 +746,18 @@ async function assertContactAlias() {
   assert.equal(canonicalHost.status, 301);
   assert.equal(
     canonicalHost.headers.get('location'),
-    'https://www.globalainews.in/contact-us/?from=apex',
+    'https://globalainews.in/contact-us/?from=apex',
     'host and known-route redirects must be combined and preserve the query',
+  );
+  const wwwHost = await fetch(`${webOrigin}/contact-us/?from=www`, {
+    headers: { 'x-forwarded-host': 'www.globalainews.in', 'x-forwarded-proto': 'https' },
+    redirect: 'manual',
+  });
+  assert.equal(wwwHost.status, 301, 'HTTPS www must redirect permanently to the apex');
+  assert.equal(
+    wwwHost.headers.get('location'),
+    'https://globalainews.in/contact-us/?from=www',
+    'HTTPS www must redirect directly to the apex and preserve the query',
   );
 
   for (const route of [
@@ -776,12 +786,12 @@ async function assertContactAlias() {
   const sitemapResponse = await fetch(`${webOrigin}/sitemap.xml`);
   assert.equal(sitemapResponse.status, 200, 'sitemap route must be available for redirect coverage');
   const sitemapXml = await sitemapResponse.text();
-  const sitemapPaths = [...sitemapXml.matchAll(/<loc>https:\/\/www\.globalainews\.in([^<]*)<\/loc>/g)]
-    .map((match) => new URL(match[1], 'https://www.globalainews.in').pathname);
+  const sitemapPaths = [...sitemapXml.matchAll(/<loc>https:\/\/globalainews\.in([^<]*)<\/loc>/g)]
+    .map((match) => new URL(match[1], 'https://globalainews.in').pathname);
   assert.ok(sitemapPaths.length > 0, 'sitemap must contain canonical routes');
   for (const route of sitemapPaths) {
     const canonicalResponse = await fetch(`${webOrigin}${route}`, {
-      headers: { 'x-forwarded-host': 'www.globalainews.in', 'x-forwarded-proto': 'https' },
+      headers: { 'x-forwarded-host': 'globalainews.in', 'x-forwarded-proto': 'https' },
       redirect: 'manual',
     });
     assert.equal(canonicalResponse.status, 200, `${route} must return directly at its sitemap URL`);
@@ -802,11 +812,11 @@ async function assertContactAlias() {
       assert.equal(firstResponse.status, 301, `${variant.host} ${variant.pathname} must redirect once`);
       assert.equal(
         firstResponse.headers.get('location'),
-        `https://www.globalainews.in${route}`,
+        `https://globalainews.in${route}`,
         `${variant.host} ${variant.pathname} must redirect directly to the canonical article`,
       );
       const finalResponse = await fetch(`${webOrigin}${route}`, {
-        headers: { 'x-forwarded-host': 'www.globalainews.in', 'x-forwarded-proto': 'https' },
+        headers: { 'x-forwarded-host': 'globalainews.in', 'x-forwarded-proto': 'https' },
         redirect: 'manual',
       });
       assert.equal(finalResponse.status, 200, `${route} must finish at a 200 after at most one redirect`);
@@ -1176,7 +1186,7 @@ async function testRawArticleResponses() {
   assert.equal(preRenderedResponse.status, 200);
   assert.equal(
     metaValue(preRenderedHtml, 'og:image'),
-    `https://www.globalainews.in/social/articles/${preRenderedStory.slug}.png`,
+    `https://globalainews.in/social/articles/${preRenderedStory.slug}.png`,
     'existing pre-rendered article image URLs must remain unchanged',
   );
   assert.ok(
@@ -1204,7 +1214,7 @@ async function testRawArticleResponses() {
   );
   assert.match(devPreRenderedHtml, /id="global-ai-prerender"/, 'Vite development article is missing its prerender marker');
 
-  const canonical = `https://www.globalainews.in/article/${slugs.published}/`;
+  const canonical = `https://globalainews.in/article/${slugs.published}/`;
   const response = await getArticle(slugs.published);
   const html = await response.text();
   assert.equal(response.status, 200);
@@ -1224,6 +1234,29 @@ async function testRawArticleResponses() {
     html.match(/<link\b[^>]*rel=["']canonical["'][^>]*>/i)?.[0],
     `<link rel="canonical" href="${canonical}" />`,
   );
+  for (const method of ['GET', 'HEAD']) {
+    const previewArticle = await fetch(`${webOrigin}/article/${slugs.published}`, {
+      method,
+      headers: {
+        'x-forwarded-host': 'global-ai-media.replit.app',
+        'x-forwarded-proto': 'https',
+      },
+    });
+    assert.equal(previewArticle.status, 200, `preview-host ${method} article response must remain available`);
+    assert.equal(
+      previewArticle.headers.get('x-robots-tag'),
+      'noindex, nofollow',
+      `preview-host ${method} dynamic article response must be excluded from indexing`,
+    );
+    if (method === 'GET') {
+      const previewHtml = await previewArticle.text();
+      assert.equal(
+        previewHtml.match(/<link\b[^>]*rel=["']canonical["'][^>]*>/i)?.[0],
+        `<link rel="canonical" href="${canonical}" />`,
+        'preview-host article must still declare the apex canonical URL',
+      );
+    }
+  }
   assert.equal(metaValue(html, 'og:title'), `${publishedTitle} — Global AI News`);
   assert.equal(metaValue(html, 'og:description'), publishedDek);
   assert.equal(metaValue(html, 'og:url'), canonical);
@@ -1232,14 +1265,14 @@ async function testRawArticleResponses() {
   const dynamicImagePath = `/api/newsroom/social/articles/${slugs.published}.png`;
   assert.equal(
     metaValue(html, 'og:image'),
-    `https://www.globalainews.in${dynamicImagePath}`,
+    `https://globalainews.in${dynamicImagePath}`,
   );
   assert.equal(metaValue(html, 'twitter:card', 'name'), 'summary_large_image');
   assert.equal(metaValue(html, 'twitter:title', 'name'), `${publishedTitle} — Global AI News`);
   assert.equal(metaValue(html, 'twitter:description', 'name'), publishedDek);
   assert.equal(
     metaValue(html, 'twitter:image', 'name'),
-    `https://www.globalainews.in${dynamicImagePath}`,
+    `https://globalainews.in${dynamicImagePath}`,
   );
   assert.ok(existsSync(path.join(webDist, 'public', 'social', 'global-ai-news-default.png')));
 
@@ -1295,7 +1328,7 @@ async function testRawArticleResponses() {
   assert.ok(ampLinkTag, 'newly published article is missing its AMP link');
   const ampHref = htmlAttribute(ampLinkTag, 'href');
   assert.ok(ampHref, 'newly published article AMP link has no href');
-  const ampPath = new URL(ampHref, 'https://www.globalainews.in').pathname;
+  const ampPath = new URL(ampHref, 'https://globalainews.in').pathname;
   assert.equal(ampPath, `/amp/article/${story.slug}/`, 'new article AMP link must be derived from its own slug');
   const ampResponse = await fetch(`${webOrigin}${ampPath}`);
   const ampHtml = await ampResponse.text();
@@ -1303,7 +1336,7 @@ async function testRawArticleResponses() {
   const ampCanonicalTag = ampHtml.match(/<link\b[^>]*\brel=["']canonical["'][^>]*>/i)?.[0];
   assert.equal(
     htmlAttribute(ampCanonicalTag, 'href'),
-    `https://www.globalainews.in/article/${story.slug}/`,
+    `https://globalainews.in/article/${story.slug}/`,
   );
   assert.equal(ampHtml.match(/<title>([\s\S]*?)<\/title>/i)?.[1], story.title);
   assert.equal(ampHtml.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1], story.title);
@@ -1339,6 +1372,7 @@ async function testRawArticleResponses() {
   assert.equal(articleSchema.headline, story.title);
   assert.equal(articleSchema.description, publishedDek);
   assert.equal(articleSchema.datePublished, story.date);
+  assert.equal(articleSchema.url, canonical, 'NewsArticle URL must use the first-response canonical host');
   assert.equal(articleSchema.mainEntityOfPage['@id'], canonical);
   assert.equal(
     articleSchema.author.name,
@@ -1347,8 +1381,8 @@ async function testRawArticleResponses() {
   assert.equal(
     articleSchema.author.url,
     hasVerifiedPublicAuthor
-      ? `https://www.globalainews.in/person/${story.author}/`
-      : 'https://www.globalainews.in',
+      ? `https://globalainews.in/person/${story.author}/`
+      : 'https://globalainews.in',
   );
   assert.equal(articleSchema.publisher.name, 'Global AI News');
   assert.equal(Object.hasOwn(articleSchema, 'dateModified'), false);

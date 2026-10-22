@@ -4,4 +4,4 @@ Disallow: /api/
 Disallow: /insights/
 Disallow: /sign-in/
 Disallow: /sign-up/
-Sitemap: https://www.globalainews.in/sitemap.xml
+Sitemap: https://globalainews.in/sitemap.xml
