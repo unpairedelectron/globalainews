@@ -4,7 +4,7 @@ import { Link } from '@/components/canonical-link';
 import { Footer, Header, SectionLabel, SeoHead } from '@/components/site';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { formatEditorialDate } from '@/editorial-date';
-import { getStoryAuthorIdentity } from '@/content';
+import { getStoryAuthorIdentity, uniqueStoriesByCanonicalSlug } from '@/content';
 import { getResearchSeoTitle } from '@/seo-metadata';
 import { useParams } from 'wouter';
 import NotFound from '@/pages/not-found';
@@ -252,10 +252,10 @@ export function TopicsIndexPage() {
     .filter((topic) => topic.indexable)
     .map((topic) => ({
       topic,
-      stories: topic.storySlugs.flatMap((slug) => {
+      stories: uniqueStoriesByCanonicalSlug(topic.storySlugs.flatMap((slug) => {
         const story = snapshot.stories.find((item) => item.slug === slug);
         return story ? [story] : [];
-      }),
+      })),
     }))
     .filter(({ stories }) => stories.length > 0)
     .sort((left, right) => right.stories.length - left.stories.length || left.topic.label.localeCompare(right.topic.label));

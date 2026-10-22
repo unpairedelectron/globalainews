@@ -4,9 +4,11 @@ import {
   getStoryAuthorIdentity,
   getStoryReadTime,
   getPublicDateModified,
+  getPublicStoryDek,
   getReaderFacingContentType,
   type NewsroomContentSnapshot,
   type Story,
+  uniqueStoriesByCanonicalSlug,
 } from './content';
 import { formatEditorialDate, getLatestStory, isWithinLatestWindow } from './editorial-date';
 import type { SeoMetadata } from './seo-metadata';
@@ -56,7 +58,7 @@ function StoryList({
             <h2 className="mt-3 max-w-3xl font-serif text-3xl leading-[.95]">
               <a href={`/article/${story.slug}/`} className="text-foreground hover:text-primary">{story.title}</a>
             </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{story.dek}</p>
+            {getPublicStoryDek(story) && <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{getPublicStoryDek(story)}</p>}
             <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               <time dateTime={story.date}>{formatEditorialDate(story.date)}</time>
               {' · '}
@@ -551,10 +553,10 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
   if (topicMatch) {
     const topic = snapshot.topics.find((candidate) => candidate.slug === topicMatch[1]);
     if (topic) {
-      const topicStories = topic.storySlugs.flatMap((slug) => {
+      const topicStories = uniqueStoriesByCanonicalSlug(topic.storySlugs.flatMap((slug) => {
         const story = stories.find((item) => item.slug === slug);
         return story ? [story] : [];
-      });
+      }));
       const topicResearch = snapshot.researchRecords.filter(
         (record) => record.status === 'published' && topic.researchSlugs.includes(record.slug),
       );
@@ -755,9 +757,10 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
     );
   }
   if (route === '/') {
-    const latestStory = getLatestStory(stories);
+    const publicStories = uniqueStoriesByCanonicalSlug(stories);
+    const latestStory = getLatestStory(publicStories);
     const orderedStories = latestStory
-      ? [latestStory, ...stories.filter((story) => story.slug !== latestStory.slug).sort((a, b) => b.date.localeCompare(a.date))]
+      ? [latestStory, ...publicStories.filter((story) => story.slug !== latestStory.slug)]
       : [];
     const [lead, ...remainingStories] = orderedStories;
     return (
@@ -819,6 +822,37 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
                   <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p></div>
               </article>)}
             </div>
+          </section>
+        </main>
+      </div>
+    );
+  }
+
+  if (route === '/brief') {
+    const briefStories = uniqueStoriesByCanonicalSlug(stories);
+    const latestStory = getLatestStory(briefStories);
+    return (
+      <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
+        <header className="flex items-center justify-between border-b border-foreground/20 py-5">
+          <a href="/" className="font-serif text-2xl tracking-tight">Global AI News</a>
+          <a href="/brief/" className="eyebrow text-primary">The Daily Brief</a>
+        </header>
+        <main className="mx-auto max-w-[1180px]">
+          <section className="border-b border-foreground/20 py-14 md:py-20">
+            <p data-testid="brief-edition-metadata" className="eyebrow text-primary">
+              {latestStory
+                ? <>Latest edition · <time dateTime={latestStory.date}>{formatEditorialDate(latestStory.date)}</time> · {briefStories.length} {briefStories.length === 1 ? 'story' : 'stories'}</>
+                : 'No published edition'}
+            </p>
+            <h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">The Daily<br /><em className="text-primary">Brief.</em></h1>
+            <p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A three-minute read on the decisions, releases and quiet shifts changing the AI industry.</p>
+          </section>
+          <section className="py-10 md:py-14">
+            <StoryList stories={briefStories} authors={authors} idPrefix="brief" />
+          </section>
+          <section id="newsletter" className="border-y border-foreground/15 py-8">
+            <p className="eyebrow text-primary">The Daily Brief · email edition</p>
+            <h2 className="mt-3 font-serif text-4xl">Know what changed.</h2>
           </section>
         </main>
       </div>

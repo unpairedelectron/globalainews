@@ -10,6 +10,7 @@ import {
   findEntity,
   findStory,
   getPublishedStories,
+  getPublicStoryDek,
   MINIMUM_STORY_WORDS,
   getStoryAuthorIdentity,
   getStoryReadTime,
@@ -18,6 +19,7 @@ import {
   sources,
   stories,
   timelineEvents,
+  uniqueStoriesByCanonicalSlug,
   withdrawnStorySlugs,
 } from '../src/content.ts';
 import { editorialPageCopy } from '../src/editorial-pages.ts';
@@ -324,4 +326,35 @@ test('latest-story strips use a calendar-day freshness window', () => {
   assert.equal(isWithinLatestWindow('2026-10-03', now), true);
   assert.equal(isWithinLatestWindow('2026-10-02', now), false);
   assert.equal(isWithinLatestWindow('2026-10-18', now), false);
+});
+
+test('public story collections deduplicate canonical slugs and omit generic India Watch copy', () => {
+  const indiaStory = stories.find((story) => story.category === 'India Watch');
+  assert.ok(indiaStory, 'the maintained snapshot should include an India Watch story');
+  const newerSnapshotRecord = {
+    ...indiaStory,
+    date: '2026-10-21',
+    title: 'Updated India Watch snapshot story',
+  };
+  const unique = uniqueStoriesByCanonicalSlug([indiaStory, newerSnapshotRecord, newerSnapshotRecord]);
+
+  assert.equal(unique.length, 1);
+  assert.equal(unique[0].title, newerSnapshotRecord.title);
+  assert.equal(unique[0].date, newerSnapshotRecord.date);
+  assert.equal(
+    getPublicStoryDek({
+      category: 'India Watch',
+      dek: 'Relevant for professionals tracking industry developments.',
+    }),
+    undefined,
+    'the repeated generic placeholder should be omitted rather than republished',
+  );
+  assert.equal(
+    getPublicStoryDek({
+      category: 'India Watch',
+      dek: 'Official records report 45,000+ shared GPUs, but do not establish live schedulable supply.',
+    }),
+    'Official records report 45,000+ shared GPUs, but do not establish live schedulable supply.',
+    'story-specific copy supported by the record should remain visible',
+  );
 });

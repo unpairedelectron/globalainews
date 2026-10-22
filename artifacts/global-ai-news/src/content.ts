@@ -194,6 +194,48 @@ export interface Story {
   whatChanges: string;
 }
 
+const genericIndiaWatchDek =
+  'relevant for professionals tracking industry developments';
+
+export function getPublicStoryDek(
+  story: Pick<Story, 'category' | 'dek'>,
+): string | undefined {
+  const dek = story.dek.trim();
+  if (!dek) return undefined;
+  if (
+    story.category === 'India Watch'
+    && dek.toLocaleLowerCase().replace(/[.!?]+$/u, '') === genericIndiaWatchDek
+  ) {
+    return undefined;
+  }
+  return dek;
+}
+
+/**
+ * Collapse duplicate public story records by their canonical article route.
+ * When duplicate snapshots disagree, retain the newest editorial date and
+ * prefer the canonical record over an alias on a same-date tie.
+ */
+export function uniqueStoriesByCanonicalSlug<T extends Pick<Story, 'slug' | 'date'>>(
+  storyRecords: readonly T[],
+): T[] {
+  const byCanonicalSlug = new Map<string, T>();
+  for (const story of storyRecords) {
+    const canonicalSlug = canonicalStorySlug(story.slug);
+    const previous = byCanonicalSlug.get(canonicalSlug);
+    if (
+      !previous
+      || story.date > previous.date
+      || (story.date === previous.date && story.slug === canonicalSlug && previous.slug !== canonicalSlug)
+    ) {
+      byCanonicalSlug.set(canonicalSlug, story);
+    }
+  }
+  return [...byCanonicalSlug.values()].sort((left, right) =>
+    right.date.localeCompare(left.date) || left.slug.localeCompare(right.slug),
+  );
+}
+
 export function getStoryReadTime(
   story: Pick<Story, 'title' | 'dek' | 'body' | 'bottomLine' | 'whyItMatters' | 'keyTakeaways' | 'whatChanges'>,
 ): string {
@@ -1233,18 +1275,20 @@ export function mergeEligiblePublishedStories(now = new Date(), schedule: Story[
   );
   const eligibleStories = [...publishedStories, ...eligibleReleases];
   const eligibleSlugs = new Set(eligibleStories.map((story) => story.slug));
-  return eligibleStories
-    .map((story) => ({
-      ...story,
-      readTime: getStoryReadTime(story),
-      relatedStories: story.relatedStories
-        .map(canonicalStorySlug)
-        .filter((slug) => eligibleSlugs.has(slug)),
-    }))
-    .sort((left, right) => {
-      if (left.date !== right.date) return right.date.localeCompare(left.date);
-      return left.slug.localeCompare(right.slug);
-    });
+  const normalizedStories = eligibleStories
+    .map((story) => {
+      const dek = getPublicStoryDek(story) ?? '';
+      const publicStory = { ...story, dek };
+      return {
+        ...publicStory,
+        readTime: getStoryReadTime(publicStory),
+        relatedStories: story.relatedStories
+          .map(canonicalStorySlug)
+          .filter((slug) => eligibleSlugs.has(slug)),
+      };
+    })
+    .sort((left, right) => right.date.localeCompare(left.date) || left.slug.localeCompare(right.slug));
+  return uniqueStoriesByCanonicalSlug(normalizedStories);
 }
 
 export function getPublishedStories(now = new Date(), schedule = scheduledStories): Story[] {

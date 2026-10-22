@@ -7,11 +7,13 @@ import {
   getStoryWordCount,
   getPublishedStories,
   getPublicDateModified,
+  getPublicStoryDek,
   isPublicArticle,
   MINIMUM_STORY_WORDS,
   scheduledStories,
   sources,
   stories as maintainedStories,
+  uniqueStoriesByCanonicalSlug,
   withdrawnStorySlugs,
 } from '../src/content.ts';
 import { getSeoMetadata, getSeoMetadataManifest, getStructuredData } from '../src/seo-metadata.ts';
@@ -140,6 +142,82 @@ test('the Daily Brief remains indexable when its current edition has fewer than 
     manifest.routes.find((metadata) => metadata.path === '/brief')?.indexable,
     false,
     'the primary Daily Brief landing page must not become noindex solely because of edition size',
+  );
+});
+
+test('the first response uses the latest snapshot edition and omits duplicate India Watch cards', () => {
+  const indiaStory = maintainedStories.find((story) => story.category === 'India Watch');
+  assert.ok(indiaStory, 'the maintained snapshot should include an India Watch story');
+  const updatedStory = {
+    ...indiaStory,
+    title: 'Updated India Watch snapshot story',
+    date: '2026-10-21',
+    dek: 'Relevant for professionals tracking industry developments.',
+  };
+  const fixtureStories = uniqueStoriesByCanonicalSlug([
+    ...maintainedStories,
+    updatedStory,
+    updatedStory,
+  ]);
+  const snapshot = {
+    authors,
+    sources,
+    evidenceSummaries: {},
+    entities: [],
+    timelineEvents: [],
+    stories: [...maintainedStories, updatedStory, updatedStory],
+    researchRecords: [],
+    dataProducts: [],
+    topics: [{
+      slug: 'india',
+      label: 'India',
+      route: '/topic/india',
+      description: 'AI policy and compute infrastructure connected to India.',
+      storySlugs: [updatedStory.slug, updatedStory.slug],
+      importantDevelopments: [updatedStory.title, updatedStory.title],
+      entitySlugs: [],
+      researchSlugs: [],
+      dataProductSlugs: [],
+      sourceSlugs: [],
+      timelineSlugs: [],
+    }],
+    signals: [],
+    industryMap: [],
+    indiaIndex: [],
+    essays: [],
+    askGlobalAnswers: [],
+  };
+  const briefMetadata = getSeoMetadata('/brief', fixtureStories);
+  const briefHtml = renderToStaticMarkup(createElement(SeoPrerender, {
+    route: '/brief',
+    metadata: briefMetadata,
+    snapshot,
+  }));
+  assert.match(briefHtml, /data-testid="brief-edition-metadata"[^>]*>Latest edition · <time dateTime="2026-10-21">21 Oct 2026<\/time> · \d+ stories/);
+  assert.equal((briefHtml.match(/id="brief-0"/g) ?? []).length, 1);
+  assert.equal(
+    (briefHtml.match(new RegExp(`href="/article/${updatedStory.slug}/"`, 'g')) ?? []).length,
+    2,
+    'first-response Daily Brief should render one story card with its image and title links',
+  );
+  assert.doesNotMatch(briefHtml, /Relevant for professionals tracking industry developments/i);
+
+  const indiaMetadata = getSeoMetadata('/topic/india', fixtureStories);
+  const indiaHtml = renderToStaticMarkup(createElement(SeoPrerender, {
+    route: '/topic/india',
+    metadata: indiaMetadata,
+    snapshot,
+  }));
+  assert.equal(
+    (indiaHtml.match(new RegExp(`href="/article/${updatedStory.slug}/"`, 'g')) ?? []).length,
+    2,
+    'first-response India Watch should render one story card with its image and title links',
+  );
+  assert.doesNotMatch(indiaHtml, /Relevant for professionals tracking industry developments/i);
+  assert.equal(
+    getPublicStoryDek(updatedStory),
+    undefined,
+    'the exact generic placeholder must not be treated as editorial copy',
   );
 });
 

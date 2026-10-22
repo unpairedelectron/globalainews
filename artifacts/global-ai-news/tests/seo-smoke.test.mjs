@@ -43,6 +43,7 @@ let routeBrowserProcess;
 let routeBrowserCdp;
 let routeBrowserPromise;
 let routeBrowserStderr = '';
+let newsroomContentFixture;
 
 const mimeTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -493,6 +494,13 @@ async function startStaticServer() {
             : undefined;
       if (apiPath) {
         try {
+          if (requestPath === '/api/newsroom/content' && newsroomContentFixture) {
+            response.statusCode = 200;
+            response.setHeader('Content-Type', 'application/json; charset=utf-8');
+            response.setHeader('Cache-Control', 'no-store');
+            response.end(JSON.stringify(newsroomContentFixture));
+            return;
+          }
           const isEditorApiRequest = requestPath.startsWith('/api/');
           const apiResponse = await fetch(`${apiOrigin}${apiPath}${parsedUrl.search}`, {
             headers: isEditorApiRequest
@@ -3257,6 +3265,53 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.equal(unknownDevAmpResponse.headers.get('x-robots-tag'), 'noindex');
 
   console.log(`Smoke checked ${new Set(staticRoutes).size} public routes at desktop, ${mobileRoutes.length} at mobile, plus ${ampStories.length} AMP pages and RSS.`);
+});
+
+test('hydrated Daily Brief and India Watch use a duplicate-free updated snapshot', { concurrency: false }, async () => {
+  const response = await fetch(`${apiOrigin}/api/newsroom/content`);
+  assert.equal(response.status, 200, 'the newsroom snapshot fixture source is unavailable');
+  const snapshot = await response.json();
+  const indiaStory = snapshot.stories.find((story) => story.category === 'India Watch');
+  assert.ok(indiaStory, 'the newsroom snapshot is missing its India Watch story');
+  const updatedStory = {
+    ...indiaStory,
+    title: 'Updated India Watch snapshot story',
+    date: '2026-10-21',
+    dek: 'Relevant for professionals tracking industry developments.',
+  };
+  newsroomContentFixture = {
+    ...snapshot,
+    stories: [...snapshot.stories, updatedStory, updatedStory],
+  };
+
+  try {
+    const briefHtml = await renderRoute('/brief', 1440, 1000);
+    assert.match(briefHtml, /data-testid="brief-edition-metadata"[^>]*>Latest edition · <time dateTime="2026-10-21">21 Oct 2026<\/time>/i);
+    assert.equal(
+      (briefHtml.match(new RegExp(`data-testid="card-story-${indiaStory.slug}"`, 'g')) ?? []).length,
+      1,
+      'hydrated Daily Brief rendered the duplicate story card more than once',
+    );
+    const briefStoryTitle = await evaluateBrowser(
+      await getRouteBrowser(),
+      `document.querySelector('[data-testid="link-story-${indiaStory.slug}"]')?.textContent?.trim() ?? ''`,
+    );
+    assert.equal(briefStoryTitle, updatedStory.title, 'hydrated Daily Brief did not use the latest duplicate record');
+
+    const indiaHtml = await renderRoute('/topic/india', 1440, 1000);
+    assert.equal(
+      (indiaHtml.match(new RegExp(`data-testid="card-story-${indiaStory.slug}"`, 'g')) ?? []).length,
+      1,
+      'hydrated India Watch rendered the duplicate story card more than once',
+    );
+    assert.doesNotMatch(
+      indiaHtml,
+      /Relevant for professionals tracking industry developments/i,
+      'hydrated India Watch exposed generic placeholder copy',
+    );
+  } finally {
+    newsroomContentFixture = undefined;
+  }
 });
 
 test('Insights renders with Clerk context whether or not the URL has a trailing slash', { concurrency: false }, async () => {

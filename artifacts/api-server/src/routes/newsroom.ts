@@ -44,6 +44,7 @@ import {
   getReleaseDraftWordCount,
   getReleaseWordCount,
   getEditorialWordCountBounds,
+  getPublicStoryDek,
   getPublishedStories,
   mergeEligiblePublishedStories,
   isPublicArticle,
@@ -118,6 +119,7 @@ function toPublicStory(
   story: Story,
   publicStorySlugs: ReadonlySet<string>,
 ): Omit<Story, "updatedAt"> {
+  const dek = getPublicStoryDek(story) ?? "";
   const dateModified = getPublicDateModified(story);
   const author = getStoryAuthorIdentity(story, authors);
   const isVerifiedPerson = author.type === "Person" && Boolean(author.slug);
@@ -125,11 +127,11 @@ function toPublicStory(
     slug: story.slug,
     category: story.category,
     title: story.title,
-    dek: story.dek,
+    dek,
     body: story.body,
     date: story.date,
     ...(dateModified ? { dateModified } : {}),
-    readTime: getStoryReadTime(story),
+    readTime: getStoryReadTime({ ...story, dek }),
     author: author.slug ?? "global-ai-news-editorial-desk",
     authorType: isVerifiedPerson ? "person" : "organization",
     authorName: author.name,

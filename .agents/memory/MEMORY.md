@@ -29,3 +29,4 @@
 - [Article-render diagnostic whitelist](article-render-diagnostic-whitelist.md) — log correlation, route, timings, failure/cache state, and status; exclude bodies, payload sizes/counts, and editorial fields.
 - [Noindex route prerendering](noindex-route-prerendering.md) — known noindex pages still need first-response content; unknown article slugs must stay unrendered and 404.
 - [Release severity gates](release-severity-gates.md) — only demonstrated P0 defects block; record P1/P2 findings and proceed once current artifacts and P0 checks pass.
+- [Snapshot dedup selection](daily-brief-snapshot-dedup.md) — verify that the chosen latest record renders, not only that duplicate cards disappear.

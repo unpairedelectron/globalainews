@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ArrowUpRight, Bookmark, BookmarkCheck, Menu, Moon, Search, Share2, Sun, X } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { Link } from '@/components/canonical-link';
-import { findStory, getPublicDateModified, getStoryAuthorIdentity, getStoryReadTime, timelineEvents } from '@/content';
+import { canonicalStorySlug, findStory, getPublicDateModified, getPublicStoryDek, getStoryAuthorIdentity, getStoryReadTime, timelineEvents, uniqueStoriesByCanonicalSlug } from '@/content';
 import { formatEditorialDate, getLatestStory, isWithinLatestWindow } from '@/editorial-date';
 import { useNewsroomSnapshot } from '@/newsroom';
 import { useTheme } from '@/theme';
@@ -268,14 +268,17 @@ export function EditorialImage({ treatment = 'editorial-abstract', alt, caption,
 
 export function StoryRow({ slug, rank, compact = false }: { slug: string; rank?: number; compact?: boolean }) {
   const snapshot = useNewsroomSnapshot();
-  const story = snapshot.stories.find((item) => item.slug === slug) ?? findStory(slug);
+  const story = uniqueStoriesByCanonicalSlug(snapshot.stories)
+    .find((item) => canonicalStorySlug(item.slug) === canonicalStorySlug(slug))
+    ?? findStory(slug);
   const [saved, setSaved] = useState(false);
   if (!story) return null;
   const author = getStoryAuthorIdentity(story, snapshot.authors);
   const authorLabel = author?.type === 'Person' && author.slug
     ? <Link data-testid={`link-story-author-${story.slug}`} href={`/person/${author.slug}`} className="underline decoration-foreground/30 underline-offset-2 hover:text-primary">{author.name}</Link>
     : author?.name;
-  return <article data-testid={`card-story-${slug}`} className={`group -mx-3 border-t border-foreground/15 px-3 py-5 transition-colors hover:bg-primary/[.035] ${compact ? '' : 'md:py-7'}`}><div className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-4"><span className="font-serif text-3xl leading-none text-primary/70">{rank ? `0${rank}` : '—'}</span><div className="min-w-0"><StoryImage slug={story.slug} alt={story.imageTreatment.alt} className="mb-4 aspect-[16/9] w-full object-cover" /><div className="flex flex-wrap items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span className="h-1 w-1 rounded-full bg-accent" /><span className="text-xs text-muted-foreground">{getStoryReadTime(story)}</span></div><Link data-testid={`link-story-${slug}`} href={`/article/${story.slug}`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] transition-colors group-hover:text-primary md:text-3xl">{story.title}</Link><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p><p className="mt-4 text-xs text-muted-foreground">By {authorLabel} · <time dateTime={story.date}>{formatEditorialDate(story.date)}</time></p></div><button data-testid={`button-bookmark-${slug}`} type="button" aria-label={saved ? 'Remove bookmark' : 'Bookmark story'} onClick={() => { const nextSaved = !saved; setSaved(nextSaved); trackEvent(nextSaved ? 'story_bookmarked' : 'story_unbookmarked', { story_slug: story.slug }); }} className="inline-flex min-h-11 min-w-11 self-start items-center justify-center rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary">{saved ? <BookmarkCheck size={17} /> : <Bookmark size={17} />}</button></div></article>;
+  const dek = getPublicStoryDek(story);
+  return <article data-testid={`card-story-${slug}`} className={`group -mx-3 border-t border-foreground/15 px-3 py-5 transition-colors hover:bg-primary/[.035] ${compact ? '' : 'md:py-7'}`}><div className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-4"><span className="font-serif text-3xl leading-none text-primary/70">{rank ? `0${rank}` : '—'}</span><div className="min-w-0"><StoryImage slug={story.slug} alt={story.imageTreatment.alt} className="mb-4 aspect-[16/9] w-full object-cover" /><div className="flex flex-wrap items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span className="h-1 w-1 rounded-full bg-accent" /><span className="text-xs text-muted-foreground">{getStoryReadTime(story)}</span></div><Link data-testid={`link-story-${slug}`} href={`/article/${story.slug}`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] transition-colors group-hover:text-primary md:text-3xl">{story.title}</Link>{dek && <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">{dek}</p>}<p className="mt-4 text-xs text-muted-foreground">By {authorLabel} · <time dateTime={story.date}>{formatEditorialDate(story.date)}</time></p></div><button data-testid={`button-bookmark-${slug}`} type="button" aria-label={saved ? 'Remove bookmark' : 'Bookmark story'} onClick={() => { const nextSaved = !saved; setSaved(nextSaved); trackEvent(nextSaved ? 'story_bookmarked' : 'story_unbookmarked', { story_slug: story.slug }); }} className="inline-flex min-h-11 min-w-11 self-start items-center justify-center rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary">{saved ? <BookmarkCheck size={17} /> : <Bookmark size={17} />}</button></div></article>;
 }
 
 export function EvidencePanel({ storySlug }: { storySlug: string }) {

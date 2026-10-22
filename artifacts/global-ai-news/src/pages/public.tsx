@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ArrowUpRight, Search, Share2 } from 'lucide-react';
 import { useLocation, useParams } from 'wouter';
 import { Link } from '@/components/canonical-link';
-import { authors, canonicalStorySlug, entities, findEntity, findStory, findTimeline, getPublicDateModified, getReaderFacingContentType, getStoryAuthorIdentity, getStoryReadTime, industryMap, signals, sources, timelineEvents, type Story } from '@/content';
+import { authors, canonicalStorySlug, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublicStoryDek, getReaderFacingContentType, getStoryAuthorIdentity, getStoryReadTime, industryMap, signals, sources, timelineEvents, uniqueStoriesByCanonicalSlug, type Story } from '@/content';
 import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryImage, StoryRow, TimelineList } from '@/components/site';
 import { StoryBody, StoryCitedText, StorySourceList } from '@/components/story-content';
 import { AuthorDirectory } from '@/components/author-directory';
@@ -17,9 +17,9 @@ function Shell({ children }: { children: ReactNode }) { return <><a href="#main-
 function storyHref(slug: string) { return `/article/${findStory(slug)?.slug ?? slug}`; }
 export function HomePage() {
   const snapshot = useNewsroomSnapshot();
-  const orderedStories = [...snapshot.stories].sort((a, b) => b.date.localeCompare(a.date));
+  const orderedStories = uniqueStoriesByCanonicalSlug(snapshot.stories);
   const [leadStory, ...topStories] = orderedStories;
-  const latestStory = getLatestStory(snapshot.stories);
+  const latestStory = getLatestStory(orderedStories);
   const analysisStories = orderedStories.filter((story) => story.contentType === 'Analysis' || story.classification === 'analysis');
   const reportStories = orderedStories.filter((story) => story.contentType === 'Report');
   const publishedResearch = snapshot.researchRecords.filter((record) => record.status === 'published');
@@ -108,10 +108,11 @@ export function HomePage() {
 export function BriefPage() {
   const [location] = useLocation();
   const snapshot = useNewsroomSnapshot();
-  const latestStory = getLatestStory(snapshot.stories);
+  const briefStories = useMemo(() => uniqueStoriesByCanonicalSlug(snapshot.stories), [snapshot.stories]);
+  const latestStory = getLatestStory(briefStories);
   const query = new URLSearchParams(location.split('?')[1] ?? '').get('q') ?? '';
-  const results = useMemo(() => query ? snapshot.stories.filter((story) => `${story.title} ${story.dek} ${story.category}`.toLowerCase().includes(query.toLowerCase())) : snapshot.stories, [query, snapshot.stories]);
-  return <Shell><SeoHead title="The Daily Brief — Global AI News" description="A three-minute editorial briefing on what changed across the AI economy." path="/brief" /><main className={`${container} max-w-[1180px]`}><section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">{latestStory ? `Latest edition · ${formatEditorialDate(latestStory.date)} · ${snapshot.stories.length} stories` : 'No published edition'}</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">The Daily<br /><em className="text-primary">Brief.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A three-minute read on the decisions, releases and quiet shifts changing the AI industry.</p></section>{query && <section className="border-b border-foreground/15 py-6"><p className="eyebrow text-primary">Search results for “{query}”</p>{results.length === 0 && <p className="mt-3 text-sm text-muted-foreground">No result yet. Try an entity, desk or story title.</p>}</section>}<section className="grid gap-12 py-12 md:grid-cols-[1fr_280px]"><article>{results.map((story, index) => <div id={`brief-${index}`} key={story.slug}><StoryRow slug={story.slug} rank={index + 1} /></div>)}</article><aside className="md:border-l md:border-foreground/15 md:pl-7"><SectionLabel>{query ? 'Matching stories' : 'In this edition'}</SectionLabel><div className="grid gap-3 text-sm">{results.slice(0, 5).map((story, index) => <a href={`#brief-${index}`} key={story.slug} className="border-b border-foreground/15 pb-3 hover:text-primary">{String(index + 1).padStart(2, '0')} / {story.title}</a>)}</div><div className="mt-10 border-t border-foreground/15 pt-5"><p className="eyebrow text-muted-foreground">Editor’s note</p><p className="mt-3 text-sm leading-6">We separate reported fact, analysis and synthesis so you can move quickly without losing the thread.</p></div></aside></section><Newsletter compact /></main></Shell>;
+  const results = useMemo(() => query ? briefStories.filter((story) => `${story.title} ${getPublicStoryDek(story) ?? ''} ${story.category}`.toLowerCase().includes(query.toLowerCase())) : briefStories, [query, briefStories]);
+  return <Shell><SeoHead title="The Daily Brief — Global AI News" description="A three-minute editorial briefing on what changed across the AI economy." path="/brief" /><main className={`${container} max-w-[1180px]`}><section className="border-b border-foreground/20 py-14 md:py-20"><p data-testid="brief-edition-metadata" className="eyebrow text-primary">{latestStory ? <>Latest edition · <time dateTime={latestStory.date}>{formatEditorialDate(latestStory.date)}</time> · {briefStories.length} {briefStories.length === 1 ? 'story' : 'stories'}</> : 'No published edition'}</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">The Daily<br /><em className="text-primary">Brief.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A three-minute read on the decisions, releases and quiet shifts changing the AI industry.</p></section>{query && <section className="border-b border-foreground/15 py-6"><p className="eyebrow text-primary">Search results for “{query}”</p>{results.length === 0 && <p className="mt-3 text-sm text-muted-foreground">No result yet. Try an entity, desk or story title.</p>}</section>}<section className="grid gap-12 py-12 md:grid-cols-[1fr_280px]"><article>{results.map((story, index) => <div id={`brief-${index}`} key={story.slug}><StoryRow slug={story.slug} rank={index + 1} /></div>)}</article><aside className="md:border-l md:border-foreground/15 md:pl-7"><SectionLabel>{query ? 'Matching stories' : 'In this edition'}</SectionLabel><div className="grid gap-3 text-sm">{results.slice(0, 5).map((story, index) => <a href={`#brief-${index}`} key={story.slug} className="border-b border-foreground/15 pb-3 hover:text-primary">{String(index + 1).padStart(2, '0')} / {story.title}</a>)}</div><div className="mt-10 border-t border-foreground/15 pt-5"><p className="eyebrow text-muted-foreground">Editor’s note</p><p className="mt-3 text-sm leading-6">We separate reported fact, analysis and synthesis so you can move quickly without losing the thread.</p></div></aside></section><Newsletter compact /></main></Shell>;
 }
 
 export function SearchPage() {
@@ -308,7 +309,7 @@ export function FocusIndexPage({ kind }: { kind: 'models' | 'policy' }) {
 
 export function IndiaPage() {
   const snapshot = useNewsroomSnapshot();
-  const indiaStories = snapshot.stories.filter((story) => story.topic === 'India');
+  const indiaStories = uniqueStoriesByCanonicalSlug(snapshot.stories.filter((story) => story.topic === 'India' || story.category === 'India Watch'));
   const policyEntities = snapshot.entities.filter((entity) => entity.kind === 'policy');
 
   return (
@@ -533,7 +534,11 @@ export function TimelinePage() {
 export function TopicPage({ kind }: { kind: 'ai' | 'india' }) {
   const snapshot = useNewsroomSnapshot();
   const topic = snapshot.topics.find((record) => record.slug === kind);
-  const list = (topic?.storySlugs ?? []).map((slug) => snapshot.stories.find((story) => story.slug === slug)).filter((story): story is Story => Boolean(story));
+  const snapshotStories = uniqueStoriesByCanonicalSlug(snapshot.stories);
+  const list = uniqueStoriesByCanonicalSlug((topic?.storySlugs ?? []).flatMap((slug) => {
+    const story = snapshotStories.find((candidate) => canonicalStorySlug(candidate.slug) === canonicalStorySlug(slug));
+    return story ? [story] : [];
+  }));
   const topicEntityLinks = (topic?.entitySlugs ?? []).flatMap((slug) => { const entity = snapshot.entities.find((item) => item.slug === slug); return entity && ['company', 'lab', 'model', 'person', 'technology', 'institution', 'policy', 'dataset', 'infrastructure'].includes(entity.kind) ? [{ href: `/${entity.kind}/${slug}`, label: entity.name }] : []; });
   const sourcesForTopic = (topic?.sourceSlugs ?? []).flatMap((slug) => { const source = snapshot.sources.find((item) => item.slug === slug); return source ? [{ href: `/source/${slug}`, label: source.name }] : []; });
   const topicResearch = (topic?.researchSlugs ?? []).flatMap((slug) => { const record = snapshot.researchRecords.find((item) => item.slug === slug && item.status === 'published'); return record ? [{ href: `/research/${slug}`, label: record.title }] : []; });
