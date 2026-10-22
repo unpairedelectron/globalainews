@@ -10,7 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:automation": "node --experimental-strip-types --test tests/automation-contract.test.ts",
     "test:gzip": "node --experimental-strip-types --test tests/gzip-response.test.mjs",
-    "test:security": "node --test tests/braces-depth-security.test.mjs tests/clerk-proxy.test.mjs",
+    "test:security": "node --test tests/braces-depth-security.test.mjs tests/clerk-proxy.test.mjs tests/editor-auth.test.mjs",
     "replay:automation": "pnpm run build && node ./dist/editorial/replay-command.mjs"
   },
   "dependencies": {

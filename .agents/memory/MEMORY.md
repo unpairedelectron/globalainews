@@ -8,7 +8,7 @@
 - [Page visual baselines](page-visual-baselines.md) — wait for fonts, tolerate antialiasing, give each Chromium launch a generous CDP deadline, and probe Vite root for readiness.
 - [Unused UI providers](unused-ui-providers.md) — mount shared UI providers only when the current app has active consumers; unused Radix providers can surface upstream sourcemap warnings.
 - [Editorial publishing queue](editorial-publishing-queue.md) — release prepared stories by publish time at the API boundary; client polling makes publication restart-safe.
-- [Editorial Clerk transport](editorial-clerk-transport.md) — browser editor mutations use Clerk session cookies plus the production proxy; do not add bearer-token handling to web calls.
+- [Editorial Clerk transport](editorial-clerk-transport.md) — browser editor calls use Clerk cookies; server access requires the configured, verified primary email.
 - [Editorial release history](editorial-release-history.md) — audit changes durably; authenticated Clerk identity is the actor source for editor mutations.
 - [Editorial trust boundaries](editorial-trust-boundaries.md) — disclose missing contact/legal facts without invention; keep useful trust pages indexable and utilities noindex.
 - [Mobile browser smoke scrolling](mobile-browser-smoke.md) — use CDP DOM scrolling for viewport assertions when headless mobile emulation ignores script and wheel scrolling.
