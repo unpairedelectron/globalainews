@@ -3,8 +3,8 @@ name: Newsroom analytics boundary
 description: Safe measurement rules for the Global AI News website.
 ---
 
-Use the platform-injected website analytics for pageviews and add only low-risk custom events for meaningful outcomes such as newsletter subscriptions, search submissions, bookmarks, and browser performance metrics. Do not add a second analytics script, website identifier, or visitor-level data collection.
+Use platform-injected website analytics as the source for pageview and conversion totals. Microsoft Clarity may be used for secondary behavior insights, but do not send it custom pageview or conversion events. Mask user-submitted inputs and results, exclude editor/account routes and URLs or referrers with queries/fragments, and keep free-text search out of URLs.
 
-**Why:** The platform already owns pageview collection and may only inject the tracker after publishing. A duplicate tracker creates conflicting counts, while visitor data is unnecessary for the newsroom’s growth decisions.
+**Why:** Clarity can observe URLs and page interactions, so user text and private editor routes must stay outside its capture scope. Static-first pages do not run the React app entrypoint, while the platform-injected analytics remains the established source for totals.
 
-**How to apply:** Keep analytics calls behind a no-op-safe wrapper, restrict event properties to non-PII strings/numbers/booleans, and treat missing development analytics as normal.
+**How to apply:** Keep the Clarity privacy gate in the shared document head so static pages are covered, and keep any app-side fallback consistent. Keep existing analytics calls behind a no-op-safe wrapper, restrict event properties to non-PII values, and treat missing development analytics as normal.

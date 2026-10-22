@@ -2733,6 +2733,45 @@ after(async () => {
   if (devProcess) devProcess.kill('SIGTERM');
 });
 
+test('Clarity loads once on public pages, stays out of query URLs, and cannot block rendering', { concurrency: false }, async () => {
+  const cdp = await getRouteBrowser();
+  await cdp.send('Network.enable');
+  await cdp.send('Network.setBlockedURLs', {
+    urls: ['*://www.clarity.ms/tag/*', '*://www.clarity.ms/collect*'],
+  });
+
+  // The shared smoke browser may have just visited an editor URL. Visit a
+  // clean public route first so that the eligible page has a safe referrer.
+  await cdp.send('Page.navigate', { url: `${baseUrl}/` });
+  await waitForBrowserCondition(cdp, `!!document.querySelector('main h1')`, 'The public home page did not render.');
+  await cdp.send('Page.navigate', { url: `${baseUrl}/about-us` });
+  await waitForBrowserCondition(
+    cdp,
+    `!!document.querySelector('main h1') && document.querySelectorAll('script[data-clarity-project="x8gfztdtd7"]').length === 1`,
+    'The public page did not render with one asynchronously loaded Clarity script when the provider was blocked.',
+  );
+  const publicPageClarity = await evaluateBrowser(cdp, `(() => {
+    const scripts = [...document.querySelectorAll('script[data-clarity-project="x8gfztdtd7"]')];
+    return { count: scripts.length, async: scripts[0]?.async, src: scripts[0]?.src };
+  })()`);
+  assert.deepEqual(publicPageClarity, {
+    count: 1,
+    async: true,
+    src: 'https://www.clarity.ms/tag/x8gfztdtd7',
+  });
+
+  await cdp.send('Page.navigate', {
+    url: `${baseUrl}/search?q=${encodeURIComponent('private search phrase')}`,
+  });
+  await waitForBrowserCondition(
+    cdp,
+    `!!document.querySelector('main h1')`,
+    'The search page did not remain usable when entered directly with a query string.',
+  );
+  const queryPageClarity = await evaluateBrowser(cdp, `document.querySelectorAll('script[data-clarity-project="x8gfztdtd7"]').length`);
+  assert.equal(queryPageClarity, 0, 'A page with user-controlled query text must not load Clarity.');
+});
+
 test('public routes, metadata, structured data, links, images, AMP, RSS, and responsive pages pass', async () => {
   const [
     { response: sitemapResponse, body: sitemap },
@@ -2908,6 +2947,9 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.match(privacyPage, /provisional disclosure, not a complete privacy policy/i);
   assert.match(privacyPage, /asks for an email address/i);
   assert.match(privacyPage, /retention period/i);
+  assert.match(privacyPage, /Microsoft Clarity on eligible public pages/i);
+  assert.match(privacyPage, /No custom signup or conversion event is sent to Clarity/i);
+  assert.match(privacyPage, /has not supplied approved details about consent, retention, data transfers/i);
   const termsPage = (await fetchText('/terms')).body;
   assert.match(termsPage, /placeholder, not a complete agreement/i);
   assert.match(termsPage, /No approved terms covering permitted use, intellectual property, attribution, warranties, liability, governing law, or dispute handling/i);

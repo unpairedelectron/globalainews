@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client';
 
 import { ErrorBoundary } from '@/components/error-boundary';
 import { initializeTheme } from './theme';
-import { trackEvent } from './analytics';
+import { initializeClarity, trackEvent } from './analytics';
 import { STATIC_PRERENDER_ROUTES } from './static-prerender-routes';
 
 import './index.css';
@@ -45,6 +45,11 @@ async function startApp(): Promise<void> {
     ? window.location.pathname.slice(basePath.length)
     : window.location.pathname;
   const route = pathname.replace(/\/+$/, '') || '/';
+  initializeClarity(window, document, {
+    pathname: route,
+    search: window.location.search,
+    hash: window.location.hash,
+  });
 
   // These complete, link-only pages intentionally stay server-rendered. Their
   // client routes have a different shell, so createRoot would replace the

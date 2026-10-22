@@ -344,10 +344,18 @@ async function runMobilePerformanceAudit(origin: string) {
       if (['/reports', '/about-us'].includes(route)) {
         assert.equal(pageMetrics.result.value.moduleScriptCount, 0, `${route}: static first response must not boot the mismatched SPA shell`);
         assert.equal(pageMetrics.result.value.prerenderMarkerPresent, true, `${route}: static first response lost its prerender marker`);
+        const unexpectedScripts = jsResources.filter((resource) => {
+          const scriptUrl = new URL(resource.url);
+          const isClarityTag = scriptUrl.origin === 'https://www.clarity.ms'
+            && scriptUrl.pathname === '/tag/x8gfztdtd7';
+          const isClaritySdk = scriptUrl.origin === 'https://scripts.clarity.ms'
+            && scriptUrl.pathname.endsWith('/clarity.js');
+          return !isClarityTag && !isClaritySdk;
+        });
         assert.equal(
-          jsResources.length,
+          unexpectedScripts.length,
           0,
-          `${route}: static first response unexpectedly downloaded JavaScript: ${jsResources.map((resource) => resource.url).join(', ')}`,
+          `${route}: static first response unexpectedly downloaded application JavaScript: ${unexpectedScripts.map((resource) => resource.url).join(', ')}`,
         );
         assert.ok(
           measuredPageMetrics.lcpMs !== null && measuredPageMetrics.lcpMs <= 2_200,

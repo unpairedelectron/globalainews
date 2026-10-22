@@ -16,6 +16,7 @@
     "test:ads": "node tests/ads-config.test.mjs",
     "test:release-history": "node tests/release-history.test.mjs",
     "test:theme": "node tests/theme.test.mjs",
+    "test:analytics-privacy": "pnpm exec tsx --test tests/analytics-privacy.test.ts",
     "test:content-quality": "pnpm exec tsx --test tests/content-quality.test.mjs",
     "test:research-report": "pnpm exec tsx --test tests/research-report.test.mjs",
     "test:authority-registry": "pnpm exec tsx --test tests/authority-registry.test.ts",
@@ -27,7 +28,7 @@
     "test:visual": "node --test --test-name-pattern=\"light and dark themes stay readable across key public and newsroom routes\" tests/seo-smoke.test.mjs",
     "update:visual-baselines": "UPDATE_VISUAL_BASELINES=1 pnpm run test:visual",
     "test:publication-safety": "pnpm exec tsx --test tests/publication-safety.test.ts",
-    "test:smoke": "pnpm --filter @workspace/api-server run build && pnpm run test:publication-safety && pnpm --filter @workspace/api-server run test:security && pnpm --filter @workspace/api-server run test:gzip && pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:content-quality && pnpm run test:research-report && pnpm run test:authority-registry && pnpm run test:seo-date-stability && pnpm run build:production && pnpm run test:ads && pnpm run test:publication-fixture && pnpm run test:article-first-response && pnpm run test:article-snapshot-resilience && pnpm run audit:links && node --test tests/seo-smoke.test.mjs"
+    "test:smoke": "pnpm --filter @workspace/api-server run build && pnpm run test:publication-safety && pnpm --filter @workspace/api-server run test:security && pnpm --filter @workspace/api-server run test:gzip && pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:analytics-privacy && pnpm run test:content-quality && pnpm run test:research-report && pnpm run test:authority-registry && pnpm run test:seo-date-stability && pnpm run build:production && pnpm run test:ads && pnpm run test:publication-fixture && pnpm run test:article-first-response && pnpm run test:article-snapshot-resilience && pnpm run audit:links && node --test tests/seo-smoke.test.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

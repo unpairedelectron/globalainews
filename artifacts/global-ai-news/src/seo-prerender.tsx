@@ -736,7 +736,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
         <main className="mx-auto max-w-[1180px] py-14 md:py-20">
           <p className="eyebrow text-primary">Search published stories</p>
           <h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">Find the<br /><em className="text-primary">record.</em></h1>
-          <form action="/search/" method="get" className="mt-9 flex max-w-2xl gap-3 border-b border-foreground/40 py-3">
+          <form action="/search/" method="get" data-clarity-mask="true" className="mt-9 flex max-w-2xl gap-3 border-b border-foreground/40 py-3">
             <label htmlFor="prerender-search-query" className="sr-only">Search published stories</label>
             <input id="prerender-search-query" name="q" className="min-w-0 flex-1 bg-transparent outline-none" placeholder="Search stories, topics and authors" />
             <button className="min-h-11 px-3 font-mono text-[10px] uppercase tracking-widest text-primary">Search</button>
