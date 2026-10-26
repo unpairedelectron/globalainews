@@ -89,6 +89,12 @@ export const GetNewsroomContentResponse = zod.object({
 })).optional(),
   "profileReviewedAt": zod.coerce.date().optional().describe('Editorial date when this profile\'s primary references and key claims were checked.'),
   "profileStatus": zod.enum(['maintained', 'historical']).optional().describe('Whether this is a maintained organizational record or an explicitly historical model snapshot.'),
+  "profileReviewHistory": zod.array(zod.object({
+  "reviewedAt": zod.coerce.date(),
+  "triggeringUpdate": zod.string(),
+  "referencesChecked": zod.array(zod.string().url()),
+  "claimChangeSummary": zod.string()
+})).optional().describe('Editorial review records for the profile, distinct from the current freshness status.'),
   "headquarters": zod.string().optional(),
   "founded": zod.string().optional(),
   "relatedOrganizations": zod.array(zod.string()),

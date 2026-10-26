@@ -8,6 +8,7 @@
 import type { PublicNewsroomEntityKeyMetricsItem } from './publicNewsroomEntityKeyMetricsItem';
 import type { PublicNewsroomEntityKind } from './publicNewsroomEntityKind';
 import type { PublicNewsroomEntityPrimaryReferencesItem } from './publicNewsroomEntityPrimaryReferencesItem';
+import type { PublicNewsroomEntityProfileReviewHistoryItem } from './publicNewsroomEntityProfileReviewHistoryItem';
 import type { PublicNewsroomEntityProfileSectionsItem } from './publicNewsroomEntityProfileSectionsItem';
 import type { PublicNewsroomEntityProfileStatus } from './publicNewsroomEntityProfileStatus';
 
@@ -23,6 +24,8 @@ export interface PublicNewsroomEntity {
   profileReviewedAt?: Date;
   /** Whether this is a maintained organizational record or an explicitly historical model snapshot. */
   profileStatus?: PublicNewsroomEntityProfileStatus;
+  /** Editorial review records for the profile, distinct from the current freshness status. */
+  profileReviewHistory?: PublicNewsroomEntityProfileReviewHistoryItem[];
   headquarters?: string;
   founded?: string;
   relatedOrganizations: string[];

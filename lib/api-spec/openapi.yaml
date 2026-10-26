@@ -693,6 +693,26 @@ components:
           type: string
           enum: [maintained, historical]
           description: Whether this is a maintained organizational record or an explicitly historical model snapshot.
+        profileReviewHistory:
+          type: array
+          description: Editorial review records for the profile, distinct from the current freshness status.
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              reviewedAt:
+                type: string
+                format: date
+              triggeringUpdate:
+                type: string
+              referencesChecked:
+                type: array
+                items:
+                  type: string
+                  format: uri
+              claimChangeSummary:
+                type: string
+            required: [reviewedAt, triggeringUpdate, referencesChecked, claimChangeSummary]
         headquarters:
           type: string
         founded:

@@ -5,6 +5,7 @@ import {
   ENTITY_PROFILE_REVIEW_INTERVAL_DAYS,
   getEntityProfileReviewReason,
   isEntityProfileReviewDue,
+  normalizeEntityProfileReviews,
 } from '../src/content';
 
 test('every expanded profile records its review date, status, and supporting primary references', () => {
@@ -18,6 +19,12 @@ test('every expanded profile records its review date, status, and supporting pri
     assert.ok(profile.profileStatus === 'maintained' || profile.profileStatus === 'historical', profile.slug);
     assert.ok((profile.primaryReferences?.length ?? 0) > 0, profile.slug);
     assert.ok(profile.primaryReferences?.every((reference) => /^https:\/\//u.test(reference.url)), profile.slug);
+    assert.equal(profile.profileReviewHistory?.length, 1, profile.slug);
+    const [initialReview] = profile.profileReviewHistory ?? [];
+    assert.equal(initialReview.reviewedAt, profile.profileReviewedAt, profile.slug);
+    assert.deepEqual(initialReview.referencesChecked, profile.primaryReferences?.map((reference) => reference.url), profile.slug);
+    assert.match(initialReview.triggeringUpdate, /baseline review/i, profile.slug);
+    assert.match(initialReview.claimChangeSummary, /no earlier profile snapshot/i, profile.slug);
   }
 
   assert.equal(entities.find((entity) => entity.slug === 'gpt-5')?.profileStatus, 'historical');
@@ -48,4 +55,27 @@ test('a newer linked timeline record flags a profile for immediate editorial rev
 
   assert.equal(isEntityProfileReviewDue(profile, new Date('2026-10-26T00:00:00Z'), events), true);
   assert.equal(getEntityProfileReviewReason(profile, new Date('2026-10-26T00:00:00Z'), events), 'linked-update');
+});
+
+test('the newest review remains current while earlier review records are retained', () => {
+  const profile = entities.find((entity) => entity.slug === 'openai');
+  assert.ok(profile?.profileReviewHistory);
+
+  const updated = normalizeEntityProfileReviews({
+    ...profile,
+    profileReviewHistory: [
+      ...profile.profileReviewHistory,
+      {
+        reviewedAt: '2026-10-15',
+        triggeringUpdate: 'OpenAI announces GPT-5.5',
+        referencesChecked: ['https://openai.com/index/introducing-gpt-5-5/'],
+        claimChangeSummary: 'Updated the current-model context after the newer release.',
+      },
+    ],
+  });
+
+  assert.equal(updated.profileReviewedAt, '2026-10-15');
+  assert.equal(updated.profileReviewHistory?.length, 2);
+  assert.equal(updated.profileReviewHistory?.[0].reviewedAt, '2026-10-06');
+  assert.equal(updated.profileReviewHistory?.[1].reviewedAt, '2026-10-15');
 });

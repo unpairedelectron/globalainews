@@ -159,6 +159,12 @@ export interface Entity {
   primaryReferences?: { label: string; url: string }[];
   profileReviewedAt?: string;
   profileStatus?: 'maintained' | 'historical';
+  profileReviewHistory?: {
+    reviewedAt: string;
+    triggeringUpdate: string;
+    referencesChecked: string[];
+    claimChangeSummary: string;
+  }[];
   headquarters?: string;
   founded?: string;
   relatedOrganizations: string[];
@@ -167,6 +173,29 @@ export interface Entity {
   timeline: string[];
   signals: string[];
   recentStories: string[];
+}
+
+export function normalizeEntityProfileReviews(entity: Entity): Entity {
+  if (!entity.profileSections?.length) return entity;
+  const profileReviewHistory = entity.profileReviewHistory?.length
+    ? entity.profileReviewHistory
+    : entity.profileReviewedAt && entity.primaryReferences?.length
+      ? [{
+        reviewedAt: entity.profileReviewedAt,
+        triggeringUpdate: 'Baseline review; no specific timeline update was recorded.',
+        referencesChecked: entity.primaryReferences.map((reference) => reference.url),
+        claimChangeSummary: 'First recorded review. No earlier profile snapshot is retained to verify claim-by-claim changes.',
+      }]
+      : [];
+  if (!profileReviewHistory.length) return entity;
+  const latestReview = profileReviewHistory.reduce((latest, review) =>
+    review.reviewedAt.slice(0, 10) > latest.reviewedAt.slice(0, 10) ? review : latest,
+  );
+  return {
+    ...entity,
+    profileReviewedAt: latestReview.reviewedAt,
+    profileReviewHistory,
+  };
 }
 
 export const ENTITY_PROFILE_REVIEW_INTERVAL_DAYS = 90;
@@ -601,7 +630,7 @@ export const evidenceSummaries: Record<string, EvidenceSummary> = {
   infrastructure: { primarySources: 4, independentConfirmations: 5, confidence: 'HIGH', note: 'Grid data, permitting records and operator announcements show regional concentration.' },
 };
 
-export let entities: Entity[] = [
+export let entities: Entity[] = ([
   {
     slug: 'openai', name: 'OpenAI', kind: 'company', strapline: 'A model developer and product company whose research reaches consumers, developers and organizations.',
     profileReviewedAt: '2026-10-06', profileStatus: 'maintained',
@@ -722,7 +751,7 @@ export let entities: Entity[] = [
     primaryReferences: [{ label: 'C2PA — Technical Specifications 2.4', url: 'https://spec.c2pa.org/specifications/specifications/2.4/index.html' }, { label: 'C2PA — Deployment guidance', url: 'https://c2pa.org/wp-content/uploads/sites/33/2026/07/Content-Credentials-Deployment-Guidance.pdf' }, { label: 'European Commission — AI transparency guidelines', url: 'https://digital-strategy.ec.europa.eu/en/policies/guidelines-ai-transparency-obligations' }, { label: 'EU AI Act — Article 50', url: 'https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50' }],
     relatedOrganizations: [], keyMetrics: [{ label: 'Primary function', value: 'Media provenance', context: 'Signed assertions about origin and editing history' }, { label: 'Not a function', value: 'Truth certification', context: 'Credentials do not prove the depicted event is authentic' }], latestDevelopments: ['EU AI Act Article 50 duties apply to specified actors and contexts; the Commission’s Code of Practice is voluntary.'], timeline: ['watermarking-code'], signals: ['provenance-rules'], recentStories: ['watermarking']
   },
-];
+] satisfies Entity[]).map(normalizeEntityProfileReviews);
 
 export let timelineEvents: TimelineEvent[] = [
   { slug: 'indiaai-compute-target-2024', date: '2024-03-07', title: 'IndiaAI Mission sets a common-compute target', description: 'The Cabinet approval sets a target of more than 10,000 GPUs; it is a programme target, not evidence of delivered capacity.', entities: ['indiaai-mission'], story: 'india-ai-compute-access-2026', sourceSlugs: ['indiaai-cabinet-approval-2024'], topicSlugs: ['india'], researchSlugs: ['india-ai-compute-2026'], reportSlugs: ['india-ai-compute-access-2026'], dataProductSlugs: ['india-ai-compute-snapshots'] },

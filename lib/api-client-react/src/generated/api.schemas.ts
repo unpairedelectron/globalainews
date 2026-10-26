@@ -225,6 +225,13 @@ export const PublicNewsroomEntityProfileStatus = {
   historical: 'historical',
 } as const;
 
+export type PublicNewsroomEntityProfileReviewHistoryItem = {
+  reviewedAt: string;
+  triggeringUpdate: string;
+  referencesChecked: string[];
+  claimChangeSummary: string;
+};
+
 export type PublicNewsroomEntityKeyMetricsItem = {
   label: string;
   value: string;
@@ -243,6 +250,8 @@ export interface PublicNewsroomEntity {
   profileReviewedAt?: string;
   /** Whether this is a maintained organizational record or an explicitly historical model snapshot. */
   profileStatus?: PublicNewsroomEntityProfileStatus;
+  /** Editorial review records for the profile, distinct from the current freshness status. */
+  profileReviewHistory?: PublicNewsroomEntityProfileReviewHistoryItem[];
   headquarters?: string;
   founded?: string;
   relatedOrganizations: string[];
