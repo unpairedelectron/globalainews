@@ -87,6 +87,8 @@ export const GetNewsroomContentResponse = zod.object({
   "label": zod.string(),
   "url": zod.string().url()
 })).optional(),
+  "profileReviewedAt": zod.coerce.date().optional().describe('Editorial date when this profile\'s primary references and key claims were checked.'),
+  "profileStatus": zod.enum(['maintained', 'historical']).optional().describe('Whether this is a maintained organizational record or an explicitly historical model snapshot.'),
   "headquarters": zod.string().optional(),
   "founded": zod.string().optional(),
   "relatedOrganizations": zod.array(zod.string()),

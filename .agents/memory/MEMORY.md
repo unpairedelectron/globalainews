@@ -33,3 +33,4 @@
 - [Release severity gates](release-severity-gates.md) — only demonstrated P0 defects block; record P1/P2 findings and proceed once current artifacts and P0 checks pass.
 - [Snapshot dedup selection](daily-brief-snapshot-dedup.md) — verify that the chosen latest record renders, not only that duplicate cards disappear.
 - [Workspace test runners](workspace-test-runners.md) — invoke package-local test tools through the workspace filter when root-level `pnpm exec` cannot resolve them.
+- [API date-field normalization](api-date-field-normalization.md) — API responses may serialize date-only values as midnight UTC timestamps; normalize before calendar-day comparisons.

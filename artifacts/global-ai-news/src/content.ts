@@ -157,6 +157,8 @@ export interface Entity {
   overview: string;
   profileSections?: { heading: string; paragraphs: string[] }[];
   primaryReferences?: { label: string; url: string }[];
+  profileReviewedAt?: string;
+  profileStatus?: 'maintained' | 'historical';
   headquarters?: string;
   founded?: string;
   relatedOrganizations: string[];
@@ -165,6 +167,50 @@ export interface Entity {
   timeline: string[];
   signals: string[];
   recentStories: string[];
+}
+
+export const ENTITY_PROFILE_REVIEW_INTERVAL_DAYS = 90;
+
+export type EntityProfileReviewReason = 'linked-update' | 'interval' | 'invalid-date';
+
+export function getEntityProfileReviewReason(
+  profile: Pick<Entity, 'profileReviewedAt' | 'timeline'>,
+  now = new Date(),
+  events: readonly TimelineEvent[] = timelineEvents,
+): EntityProfileReviewReason | undefined {
+  const reviewedAt = profile.profileReviewedAt;
+  const reviewedDayText = reviewedAt?.slice(0, 10);
+  if (
+    !reviewedAt
+    || !reviewedDayText
+    || !/^\d{4}-\d{2}-\d{2}$/u.test(reviewedDayText)
+    || (reviewedAt.length > 10 && !Number.isFinite(Date.parse(reviewedAt)))
+  ) return 'invalid-date';
+
+  const reviewedDate = new Date(`${reviewedDayText}T00:00:00.000Z`);
+  if (!Number.isFinite(reviewedDate.getTime()) || reviewedDate.toISOString().slice(0, 10) !== reviewedDayText) {
+    return 'invalid-date';
+  }
+
+  const linkedUpdateAfterReview = events.some((event) =>
+    profile.timeline.includes(event.slug) && event.date.slice(0, 10) > reviewedDayText,
+  );
+  if (linkedUpdateAfterReview) return 'linked-update';
+
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const reviewedDay = Date.UTC(reviewedDate.getUTCFullYear(), reviewedDate.getUTCMonth(), reviewedDate.getUTCDate());
+  const daysSinceReview = Math.floor((today - reviewedDay) / 86_400_000);
+  return daysSinceReview < 0 || daysSinceReview >= ENTITY_PROFILE_REVIEW_INTERVAL_DAYS
+    ? 'interval'
+    : undefined;
+}
+
+export function isEntityProfileReviewDue(
+  profile: Pick<Entity, 'profileReviewedAt' | 'timeline'>,
+  now = new Date(),
+  events: readonly TimelineEvent[] = timelineEvents,
+): boolean {
+  return getEntityProfileReviewReason(profile, now, events) !== undefined;
 }
 export interface Story {
   slug: string;
@@ -558,6 +604,7 @@ export const evidenceSummaries: Record<string, EvidenceSummary> = {
 export let entities: Entity[] = [
   {
     slug: 'openai', name: 'OpenAI', kind: 'company', strapline: 'A model developer and product company whose research reaches consumers, developers and organizations.',
+    profileReviewedAt: '2026-10-06', profileStatus: 'maintained',
     overview: 'OpenAI builds foundation models and products including ChatGPT and developer APIs. Its public record spans model releases, deployment, safety evaluations and a corporate structure that combines a nonprofit foundation with a public benefit corporation.',
     profileSections: [
       { heading: 'What the company does', paragraphs: ['OpenAI develops general-purpose AI models and makes them available through consumer products, business offerings and developer interfaces. Those are different deployment contexts: a capability shown in a model announcement is not automatically present in every ChatGPT plan or API endpoint.', 'The company describes its mission as ensuring that artificial general intelligence benefits all of humanity. Its October 2025 restructuring made the nonprofit OpenAI Foundation the controlling organization of OpenAI Group PBC. This is the company’s stated structure; it does not by itself establish how any specific product decision will be governed.'] },
@@ -569,6 +616,7 @@ export let entities: Entity[] = [
   },
   {
     slug: 'anthropic', name: 'Anthropic', kind: 'company', strapline: 'A public-benefit AI company building Claude products and conducting frontier-model research.',
+    profileReviewedAt: '2026-10-06', profileStatus: 'maintained',
     overview: 'Anthropic develops the Claude model family and related tools for individuals, developers and organizations. The company says it focuses on reliable, interpretable and steerable AI, and publishes research on model behavior and safety.',
     profileSections: [
       { heading: 'Products and research', paragraphs: ['Anthropic’s public products include Claude for direct use, the Claude API and developer tools such as Claude Code. Model releases, product features and API access are related but not interchangeable: an announcement about one Claude model does not establish the features or limits of every Claude product.', 'Anthropic describes itself as a public benefit corporation. Its research program includes interpretability, alignment and evaluations of model behavior. Company-authored papers and system cards document its methods and findings, but should be identified as provider evidence rather than independent confirmation.'] },
@@ -580,6 +628,7 @@ export let entities: Entity[] = [
   },
   {
     slug: 'microsoft', name: 'Microsoft', kind: 'company', strapline: 'A software, cloud and AI platform company bringing models into widely used work products.',
+    profileReviewedAt: '2026-10-06', profileStatus: 'maintained',
     overview: 'Microsoft’s AI activity spans Azure infrastructure and services, developer tools, Microsoft 365 Copilot and other products. Its role is not only model development: distribution, cloud hosting, enterprise identity, security and software integration shape how AI reaches organizations.',
     profileSections: [
       { heading: 'The layers of Microsoft AI', paragraphs: ['Microsoft offers cloud infrastructure and AI services through Azure, developer experiences such as GitHub Copilot, and assistants embedded in Microsoft products. These surfaces have different model choices, data flows, controls and pricing. “Microsoft AI” is therefore not one model or one product.', 'The company’s product documentation describes how particular services handle prompts, organizational data and permissions. Those commitments are service-specific; customers should review the current terms and configuration for the exact product and region they use.'] },
@@ -591,6 +640,7 @@ export let entities: Entity[] = [
   },
   {
     slug: 'google-deepmind', name: 'Google DeepMind', kind: 'lab', strapline: 'Google’s AI research organization working across foundation models, science and embodied systems.',
+    profileReviewedAt: '2026-10-06', profileStatus: 'maintained',
     overview: 'Google DeepMind brings together Google Brain and DeepMind research teams. Its work connects research models such as Gemini with Google products and scientific or robotics projects; not every research result is a generally available product.',
     profileSections: [
       { heading: 'Research and product are related, not identical', paragraphs: ['Google DeepMind publishes work across machine learning, science, robotics and other disciplines. The research portfolio includes both general-purpose systems and specialized tools. A research demonstration or paper should not be read as evidence that a capability is available in a consumer product or can be reproduced outside the reported setup.', 'Gemini is Google’s family of multimodal models and products. Model variants, APIs and consumer experiences can differ; technical documentation and model cards are the right place to confirm limits, modalities and access for a specific version.'] },
@@ -602,6 +652,7 @@ export let entities: Entity[] = [
   },
   {
     slug: 'gpt-5', name: 'GPT-5', kind: 'model', strapline: 'OpenAI’s August 2025 model release: a unified system with fast and reasoning modes.',
+    profileReviewedAt: '2026-10-06', profileStatus: 'historical',
     overview: 'GPT-5 is a specific OpenAI model generation, introduced in August 2025. OpenAI described a system that routes between a fast model and deeper reasoning for harder prompts. The GPT-5 name covers product and API variants; it is not a single universal specification.',
     profileSections: [
       { heading: 'What OpenAI announced', paragraphs: ['OpenAI’s launch described GPT-5 as a unified system combining a fast model with a deeper reasoning model, selected according to task difficulty. The system card documents the model configurations and evaluations used for the release. This is provider-reported documentation, not an independent benchmark audit.', 'GPT-5 was later followed by additional GPT-5-series releases, including GPT-5.5 in April 2026. This page preserves GPT-5 as a historical model record. Check current OpenAI documentation before choosing a model for a new product or comparing it with a current competitor.'] },
@@ -613,6 +664,7 @@ export let entities: Entity[] = [
   },
   {
     slug: 'claude-4', name: 'Claude 4', kind: 'model', strapline: 'Anthropic’s May 2025 Claude Opus 4 and Sonnet 4 release family.',
+    profileReviewedAt: '2026-10-06', profileStatus: 'historical',
     overview: 'Claude 4 refers to Anthropic’s Opus 4 and Sonnet 4 models announced in May 2025. Anthropic emphasized coding, advanced reasoning and agent workflows. This page describes that release generation, not every current Claude model or product.',
     profileSections: [
       { heading: 'The release family', paragraphs: ['Anthropic introduced Claude Opus 4 and Claude Sonnet 4 together. The company positioned Opus for complex, long-running tasks and Sonnet as a faster model with improved coding and reasoning relative to its predecessor. These are launch claims and should be read alongside the model’s exact system card and current documentation.', 'Anthropic also announced Claude Code as generally available at the time of the release. Product access, model aliases and feature availability can change; current Anthropic documentation takes precedence over an older launch article.'] },
@@ -624,6 +676,7 @@ export let entities: Entity[] = [
   },
   {
     slug: 'indiaai-mission', name: 'IndiaAI Mission', kind: 'policy', strapline: 'India’s multi-year public programme for compute, datasets, skills, innovation and responsible AI.',
+    profileReviewedAt: '2026-10-06', profileStatus: 'maintained',
     overview: 'The Union Cabinet approved the IndiaAI Mission on 7 March 2024 with an outlay of ₹10,371.92 crore over five years. The programme is organized around seven pillars. Announced targets and reported capacity figures are not, by themselves, evidence of installed or currently schedulable infrastructure.',
     profileSections: [
       { heading: 'Seven pillars, not just GPUs', paragraphs: ['The approved mission covers IndiaAI Compute Capacity, the IndiaAI Innovation Centre, datasets and platforms, application development, FutureSkills, startup financing and Safe & Trusted AI. This wider scope matters: the mission is an ecosystem programme, not simply a procurement contract for accelerators.', 'The original Cabinet announcement described a target of 10,000 or more GPUs through a public-private partnership. Later government releases report larger pool, onboarding or shared-capacity counts. Those terms describe different stages and must not be treated as one continuous installed-hardware inventory.'] },
@@ -635,6 +688,7 @@ export let entities: Entity[] = [
   },
   {
     slug: 'sarvam-ai', name: 'Sarvam AI', kind: 'company', strapline: 'An Indian AI company building language, speech and multimodal systems for Indian users and developers.',
+    profileReviewedAt: '2026-10-06', profileStatus: 'maintained',
     overview: 'Sarvam AI develops models and products with a focus on Indian languages, speech and document understanding. The company’s own catalog describes multiple model types and product surfaces; availability and technical specifications vary by release.',
     profileSections: [
       { heading: 'What Sarvam builds', paragraphs: ['Sarvam’s published catalog includes language, speech, vision and translation systems, alongside products for developers and end users. The company positions its work around Indian languages and use cases. That positioning is a product focus, not independent evidence that every language or task has equivalent quality.', 'A model catalog is a starting point for evaluation. For a particular release, check supported languages, input/output formats, license, deployment method, throughput, latency and whether the model is generally available or marked as upcoming.'] },
@@ -646,6 +700,7 @@ export let entities: Entity[] = [
   },
   {
     slug: 'antibiotic-discovery', name: 'AI antibiotic discovery', kind: 'technology', strapline: 'Using machine learning to prioritize antimicrobial candidates for laboratory testing.',
+    profileReviewedAt: '2026-10-06', profileStatus: 'maintained',
     overview: 'AI-assisted antibiotic discovery can search chemical or biological sequence spaces, estimate candidate properties and prioritize experiments. A model output is a hypothesis: a candidate must be synthesized or produced, tested in relevant assays and validated through further preclinical and clinical work.',
     profileSections: [
       { heading: 'The evidence ladder', paragraphs: ['A typical research pipeline moves from computational proposal or screening to synthesis, in-vitro assays, animal models, toxicology and—if justified—human trials. Each stage answers different questions. A candidate that inhibits bacteria in a laboratory assay is not yet a medicine, and animal efficacy does not establish human safety or benefit.', 'The linked ProteoGPT paper studies antimicrobial peptides, not conventional small-molecule antibiotics. It describes model-assisted mining and generation followed by experiments against specified resistant bacteria. Keeping the molecule class and evidence stage explicit prevents a broad “AI discovered a cure” claim from outrunning the study.'] },
@@ -657,6 +712,7 @@ export let entities: Entity[] = [
   },
   {
     slug: 'content-credentials', name: 'Content Credentials', kind: 'technology', strapline: 'A technical standard for recording signed provenance and edit history for digital media.',
+    profileReviewedAt: '2026-10-06', profileStatus: 'maintained',
     overview: 'Content Credentials are built on the C2PA standard. A credential can carry signed assertions about an asset’s origin and edits. It does not prove that the depicted scene is true, and a missing credential does not prove that an asset is fake.',
     profileSections: [
       { heading: 'What the technology records', paragraphs: ['C2PA manifests can contain assertions about how digital content was created or changed, with cryptographic signatures that allow a compatible verifier to check whether the manifest has been altered and whether the signing credential chains to a trust source. The exact information depends on the tools and workflow that create the credential.', 'Provenance is not truth verification. A credential can help answer “what does this file’s recorded history say?” It cannot independently establish that a depicted event happened, that a source statement is accurate or that every edit was disclosed.'] },

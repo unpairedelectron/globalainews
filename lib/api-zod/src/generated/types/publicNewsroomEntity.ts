@@ -9,6 +9,7 @@ import type { PublicNewsroomEntityKeyMetricsItem } from './publicNewsroomEntityK
 import type { PublicNewsroomEntityKind } from './publicNewsroomEntityKind';
 import type { PublicNewsroomEntityPrimaryReferencesItem } from './publicNewsroomEntityPrimaryReferencesItem';
 import type { PublicNewsroomEntityProfileSectionsItem } from './publicNewsroomEntityProfileSectionsItem';
+import type { PublicNewsroomEntityProfileStatus } from './publicNewsroomEntityProfileStatus';
 
 export interface PublicNewsroomEntity {
   slug: string;
@@ -18,6 +19,10 @@ export interface PublicNewsroomEntity {
   overview: string;
   profileSections?: PublicNewsroomEntityProfileSectionsItem[];
   primaryReferences?: PublicNewsroomEntityPrimaryReferencesItem[];
+  /** Editorial date when this profile's primary references and key claims were checked. */
+  profileReviewedAt?: Date;
+  /** Whether this is a maintained organizational record or an explicitly historical model snapshot. */
+  profileStatus?: PublicNewsroomEntityProfileStatus;
   headquarters?: string;
   founded?: string;
   relatedOrganizations: string[];

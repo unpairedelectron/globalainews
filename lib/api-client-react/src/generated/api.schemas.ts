@@ -214,6 +214,17 @@ export type PublicNewsroomEntityPrimaryReferencesItem = {
   url: string;
 };
 
+/**
+ * Whether this is a maintained organizational record or an explicitly historical model snapshot.
+ */
+export type PublicNewsroomEntityProfileStatus = typeof PublicNewsroomEntityProfileStatus[keyof typeof PublicNewsroomEntityProfileStatus];
+
+
+export const PublicNewsroomEntityProfileStatus = {
+  maintained: 'maintained',
+  historical: 'historical',
+} as const;
+
 export type PublicNewsroomEntityKeyMetricsItem = {
   label: string;
   value: string;
@@ -228,6 +239,10 @@ export interface PublicNewsroomEntity {
   overview: string;
   profileSections?: PublicNewsroomEntityProfileSectionsItem[];
   primaryReferences?: PublicNewsroomEntityPrimaryReferencesItem[];
+  /** Editorial date when this profile's primary references and key claims were checked. */
+  profileReviewedAt?: string;
+  /** Whether this is a maintained organizational record or an explicitly historical model snapshot. */
+  profileStatus?: PublicNewsroomEntityProfileStatus;
   headquarters?: string;
   founded?: string;
   relatedOrganizations: string[];

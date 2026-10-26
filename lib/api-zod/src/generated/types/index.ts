@@ -62,6 +62,7 @@ export * from './publicNewsroomEntityKeyMetricsItem';
 export * from './publicNewsroomEntityKind';
 export * from './publicNewsroomEntityPrimaryReferencesItem';
 export * from './publicNewsroomEntityProfileSectionsItem';
+export * from './publicNewsroomEntityProfileStatus';
 export * from './publicNewsroomEssay';
 export * from './publicNewsroomEvidenceSummary';
 export * from './publicNewsroomEvidenceSummaryConfidence';

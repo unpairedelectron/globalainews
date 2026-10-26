@@ -685,6 +685,14 @@ components:
                 type: string
                 format: uri
             required: [label, url]
+        profileReviewedAt:
+          type: string
+          format: date
+          description: Editorial date when this profile's primary references and key claims were checked.
+        profileStatus:
+          type: string
+          enum: [maintained, historical]
+          description: Whether this is a maintained organizational record or an explicitly historical model snapshot.
         headquarters:
           type: string
         founded:
