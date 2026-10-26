@@ -660,6 +660,31 @@ components:
           type: string
         overview:
           type: string
+        profileSections:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              heading:
+                type: string
+              paragraphs:
+                type: array
+                items:
+                  type: string
+            required: [heading, paragraphs]
+        primaryReferences:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              label:
+                type: string
+              url:
+                type: string
+                format: uri
+            required: [label, url]
         headquarters:
           type: string
         founded:

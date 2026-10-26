@@ -79,6 +79,14 @@ export const GetNewsroomContentResponse = zod.object({
   "kind": zod.enum(['company', 'lab', 'model', 'person', 'technology', 'institution', 'policy', 'dataset', 'infrastructure']),
   "strapline": zod.string(),
   "overview": zod.string(),
+  "profileSections": zod.array(zod.object({
+  "heading": zod.string(),
+  "paragraphs": zod.array(zod.string())
+})).optional(),
+  "primaryReferences": zod.array(zod.object({
+  "label": zod.string(),
+  "url": zod.string().url()
+})).optional(),
   "headquarters": zod.string().optional(),
   "founded": zod.string().optional(),
   "relatedOrganizations": zod.array(zod.string()),

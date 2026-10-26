@@ -448,6 +448,7 @@
 @keyframes atlas-pulse { 0%,100% { box-shadow: 0 0 0 0 hsl(var(--primary) / .35); } 50% { box-shadow: 0 0 0 10px hsl(var(--primary) / 0); } }
 .atlas-pulse { animation: atlas-pulse 1.8s ease-in-out infinite; }
 button, a { -webkit-tap-highlight-color: transparent; }
+main.editorial-page h1 { line-height: .96; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
 @media (max-width: 639px) {
   .editorial-page > section:not(#newsletter):hover { background-color: transparent; }

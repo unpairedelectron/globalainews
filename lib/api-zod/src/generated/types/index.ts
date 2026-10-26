@@ -60,6 +60,8 @@ export * from './publicNewsroomDataProductStatus';
 export * from './publicNewsroomEntity';
 export * from './publicNewsroomEntityKeyMetricsItem';
 export * from './publicNewsroomEntityKind';
+export * from './publicNewsroomEntityPrimaryReferencesItem';
+export * from './publicNewsroomEntityProfileSectionsItem';
 export * from './publicNewsroomEssay';
 export * from './publicNewsroomEvidenceSummary';
 export * from './publicNewsroomEvidenceSummaryConfidence';

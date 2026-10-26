@@ -204,6 +204,16 @@ export const PublicNewsroomEntityKind = {
   infrastructure: 'infrastructure',
 } as const;
 
+export type PublicNewsroomEntityProfileSectionsItem = {
+  heading: string;
+  paragraphs: string[];
+};
+
+export type PublicNewsroomEntityPrimaryReferencesItem = {
+  label: string;
+  url: string;
+};
+
 export type PublicNewsroomEntityKeyMetricsItem = {
   label: string;
   value: string;
@@ -216,6 +226,8 @@ export interface PublicNewsroomEntity {
   kind: PublicNewsroomEntityKind;
   strapline: string;
   overview: string;
+  profileSections?: PublicNewsroomEntityProfileSectionsItem[];
+  primaryReferences?: PublicNewsroomEntityPrimaryReferencesItem[];
   headquarters?: string;
   founded?: string;
   relatedOrganizations: string[];

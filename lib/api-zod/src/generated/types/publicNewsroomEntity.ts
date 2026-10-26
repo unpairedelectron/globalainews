@@ -7,6 +7,8 @@
  */
 import type { PublicNewsroomEntityKeyMetricsItem } from './publicNewsroomEntityKeyMetricsItem';
 import type { PublicNewsroomEntityKind } from './publicNewsroomEntityKind';
+import type { PublicNewsroomEntityPrimaryReferencesItem } from './publicNewsroomEntityPrimaryReferencesItem';
+import type { PublicNewsroomEntityProfileSectionsItem } from './publicNewsroomEntityProfileSectionsItem';
 
 export interface PublicNewsroomEntity {
   slug: string;
@@ -14,6 +16,8 @@ export interface PublicNewsroomEntity {
   kind: PublicNewsroomEntityKind;
   strapline: string;
   overview: string;
+  profileSections?: PublicNewsroomEntityProfileSectionsItem[];
+  primaryReferences?: PublicNewsroomEntityPrimaryReferencesItem[];
   headquarters?: string;
   founded?: string;
   relatedOrganizations: string[];
