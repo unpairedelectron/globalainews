@@ -362,6 +362,65 @@ export const GetNewsroomMetadataResponse = zod.object({
 
 
 /**
+ * @summary Get profiles due or nearing their editorial review date
+ */
+export const getNewsroomProfileReviewsResponseProfilesItemReviewedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomProfileReviewsResponseProfilesItemDueAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomProfileReviewsResponseProfilesItemNewerTimelineEventsItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+
+
+export const GetNewsroomProfileReviewsResponse = zod.object({
+  "profiles": zod.array(zod.object({
+  "slug": zod.string(),
+  "name": zod.string(),
+  "kind": zod.enum(['company', 'lab', 'model', 'person', 'technology', 'institution', 'policy', 'dataset', 'infrastructure']),
+  "url": zod.string(),
+  "reviewedAt": zod.string().regex(getNewsroomProfileReviewsResponseProfilesItemReviewedAtRegExp).nullable(),
+  "dueAt": zod.string().regex(getNewsroomProfileReviewsResponseProfilesItemDueAtRegExp).nullable(),
+  "daysUntilDue": zod.number().int().nullable(),
+  "reason": zod.enum(['linked-update', 'interval', 'invalid-date', 'upcoming']),
+  "primaryReferences": zod.array(zod.object({
+  "label": zod.string(),
+  "url": zod.string().url()
+})),
+  "newerTimelineEvents": zod.array(zod.object({
+  "slug": zod.string(),
+  "title": zod.string(),
+  "date": zod.string().regex(getNewsroomProfileReviewsResponseProfilesItemNewerTimelineEventsItemDateRegExp),
+  "url": zod.string(),
+  "references": zod.array(zod.object({
+  "label": zod.string(),
+  "url": zod.string().url()
+}))
+}))
+}))
+})
+
+
+/**
+ * @summary Record an explicit editorial review date for a profile
+ */
+export const UpdateNewsroomProfileReviewParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const updateNewsroomProfileReviewBodyReviewedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+
+
+export const UpdateNewsroomProfileReviewBody = zod.object({
+  "reviewedAt": zod.string().regex(updateNewsroomProfileReviewBodyReviewedAtRegExp)
+})
+
+export const updateNewsroomProfileReviewResponseReviewedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+
+
+export const UpdateNewsroomProfileReviewResponse = zod.object({
+  "slug": zod.string(),
+  "reviewedAt": zod.string().regex(updateNewsroomProfileReviewResponseReviewedAtRegExp)
+})
+
+
+/**
  * Returns sanitized editor-facing outcomes for recent autonomous drafting and verification runs.
  * @summary Get recent autonomous editorial run audits
  */

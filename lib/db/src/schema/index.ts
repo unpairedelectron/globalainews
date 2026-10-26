@@ -3,6 +3,7 @@ export * from "./editorial-releases";
 export * from "./editorial-release-history";
 export * from "./editorial-automation";
 export * from "./comparison-source-reviews";
+export * from "./profile-review-dates";
 
 export const newsletterSubscribersTable = pgTable(
   "newsletter_subscribers",

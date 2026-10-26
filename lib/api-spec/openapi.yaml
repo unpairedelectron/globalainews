@@ -66,6 +66,82 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/profile-reviews:
+    get:
+      operationId: getNewsroomProfileReviews
+      tags: [newsroom]
+      summary: Get profiles due or nearing their editorial review date
+      security:
+        - clerkSession: []
+      responses:
+        "200":
+          description: Profiles due for editorial review
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileReviewQueue"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Profile review queue unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/profile-reviews/{slug}:
+    patch:
+      operationId: updateNewsroomProfileReview
+      tags: [newsroom]
+      summary: Record an explicit editorial review date for a profile
+      security:
+        - clerkSession: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileReviewUpdate"
+      responses:
+        "200":
+          description: Profile review date saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileReviewDate"
+        "400":
+          description: Invalid review date
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Profile review date could not be saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /newsroom/automation/runs:
     get:
       operationId: getNewsroomAutomationRuns
@@ -436,6 +512,94 @@ components:
           type: string
       required:
         - error
+    ProfileReviewUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        reviewedAt:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+      required: [reviewedAt]
+    ProfileReviewDate:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        reviewedAt:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+      required: [slug, reviewedAt]
+    ProfileReviewReference:
+      type: object
+      additionalProperties: false
+      properties:
+        label:
+          type: string
+        url:
+          type: string
+          format: uri
+      required: [label, url]
+    ProfileReviewTimelineEvent:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        date:
+          type: string
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        url:
+          type: string
+        references:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProfileReviewReference"
+      required: [slug, title, date, url, references]
+    ProfileReviewQueueItem:
+      type: object
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        kind:
+          type: string
+          enum: [company, lab, model, person, technology, institution, policy, dataset, infrastructure]
+        url:
+          type: string
+        reviewedAt:
+          type: ["string", "null"]
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        dueAt:
+          type: ["string", "null"]
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        daysUntilDue:
+          type: ["integer", "null"]
+        reason:
+          type: string
+          enum: [linked-update, interval, invalid-date, upcoming]
+        primaryReferences:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProfileReviewReference"
+        newerTimelineEvents:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProfileReviewTimelineEvent"
+      required: [slug, name, kind, url, reviewedAt, dueAt, daysUntilDue, reason, primaryReferences, newerTimelineEvents]
+    ProfileReviewQueue:
+      type: object
+      additionalProperties: false
+      properties:
+        profiles:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProfileReviewQueueItem"
+      required: [profiles]
     NewsletterSubscriptionInput:
       type: object
       properties:

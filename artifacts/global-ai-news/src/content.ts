@@ -212,8 +212,16 @@ export function normalizeEntityProfileReviews(entity: Entity): Entity {
 }
 
 export const ENTITY_PROFILE_REVIEW_INTERVAL_DAYS = 90;
+export const ENTITY_PROFILE_REVIEW_UPCOMING_DAYS = 21;
 
 export type EntityProfileReviewReason = 'linked-update' | 'interval' | 'invalid-date';
+export type EntityProfileReviewQueueReason = EntityProfileReviewReason | 'upcoming';
+
+export interface EntityProfileReviewQueueState {
+  reason: EntityProfileReviewQueueReason;
+  dueAt: string | null;
+  daysUntilDue: number | null;
+}
 
 export function getEntityProfileReviewReason(
   profile: Pick<Entity, 'profileReviewedAt' | 'timeline'>,
@@ -253,6 +261,30 @@ export function isEntityProfileReviewDue(
   events: readonly TimelineEvent[] = timelineEvents,
 ): boolean {
   return getEntityProfileReviewReason(profile, now, events) !== undefined;
+}
+
+export function getEntityProfileReviewQueueState(
+  profile: Pick<Entity, 'profileReviewedAt' | 'timeline'>,
+  now = new Date(),
+  events: readonly TimelineEvent[] = timelineEvents,
+): EntityProfileReviewQueueState | undefined {
+  const reviewReason = getEntityProfileReviewReason(profile, now, events);
+  const reviewedDay = profile.profileReviewedAt?.slice(0, 10);
+  if (reviewReason === 'invalid-date' || !reviewedDay) {
+    return { reason: 'invalid-date', dueAt: null, daysUntilDue: null };
+  }
+
+  const dueDate = new Date(`${reviewedDay}T00:00:00.000Z`);
+  dueDate.setUTCDate(dueDate.getUTCDate() + ENTITY_PROFILE_REVIEW_INTERVAL_DAYS);
+  const dueAt = dueDate.toISOString().slice(0, 10);
+  const dueDay = Date.UTC(dueDate.getUTCFullYear(), dueDate.getUTCMonth(), dueDate.getUTCDate());
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const daysUntilDue = Math.round((dueDay - today) / 86_400_000);
+  const reason = reviewReason
+    ?? (daysUntilDue >= 0 && daysUntilDue <= ENTITY_PROFILE_REVIEW_UPCOMING_DAYS
+      ? 'upcoming'
+      : undefined);
+  return reason ? { reason, dueAt, daysUntilDue } : undefined;
 }
 export interface Story {
   slug: string;

@@ -894,6 +894,33 @@ async function getReleaseQueueForSmoke() {
   return response.json();
 }
 
+async function verifyProfileReviewQueueForSmoke() {
+  const headers = { 'x-newsroom-test-editor': smokeEditorId };
+  const response = await fetch(`${apiOrigin}/api/newsroom/profile-reviews`, { headers });
+  assert.equal(response.status, 200, 'The profile review queue endpoint did not respond for the smoke editor.');
+  const queue = await response.json();
+  assert.ok(Array.isArray(queue.profiles), 'The profile review response did not contain a profiles array.');
+  for (const profile of queue.profiles) {
+    assert.match(profile.url, /^\/[a-z-]+\/[a-z0-9-]+$/u, `The ${profile.slug} profile route was missing.`);
+    assert.ok(Array.isArray(profile.primaryReferences), `The ${profile.slug} primary references were missing.`);
+    assert.ok(Array.isArray(profile.newerTimelineEvents), `The ${profile.slug} timeline updates were missing.`);
+  }
+
+  const missingDateResponse = await fetch(`${apiOrigin}/api/newsroom/profile-reviews/openai`, {
+    method: 'PATCH',
+    headers: { ...headers, 'content-type': 'application/json' },
+    body: JSON.stringify({}),
+  });
+  assert.equal(missingDateResponse.status, 400, 'A profile review was accepted without an explicit review date.');
+  const futureDateResponse = await fetch(`${apiOrigin}/api/newsroom/profile-reviews/openai`, {
+    method: 'PATCH',
+    headers: { ...headers, 'content-type': 'application/json' },
+    body: JSON.stringify({ reviewedAt: '9999-12-31' }),
+  });
+  assert.equal(futureDateResponse.status, 400, 'A future profile review date was accepted.');
+  return queue;
+}
+
 async function ensureScheduledAutomationRunForSmoke() {
   let runs = await getAutomationRunsForSmoke();
   let releases = await getReleaseQueueForSmoke();
@@ -962,12 +989,18 @@ async function checkAutomationAuditReleaseLink() {
       deviceScaleFactor: 1,
       mobile: false,
     });
+    await verifyProfileReviewQueueForSmoke();
     await cdp.send('Page.navigate', { url: `${baseUrl}/insights?smoke-editor=1` });
     const runTestId = `automation-run-${scheduledRun.id}`;
     await waitForBrowserCondition(
       cdp,
       `Boolean(document.querySelector('[data-testid="${runTestId}"] a'))`,
       `The scheduled automation audit run ${scheduledRun.id} did not render its release link.`,
+    );
+    await waitForBrowserCondition(
+      cdp,
+      `Boolean(document.querySelector('[data-testid="profile-review-queue"]'))`,
+      'The editor workspace did not render the profile review queue.',
     );
 
     await evaluateBrowser(cdp, `(() => {

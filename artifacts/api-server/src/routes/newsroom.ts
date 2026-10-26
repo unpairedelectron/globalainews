@@ -14,6 +14,7 @@ import {
   editorialReleaseHistoryTable,
   editorialReleasesTable,
   comparisonSourceReviewsTable,
+  profileReviewDatesTable,
 } from "@workspace/db";
 import {
   CancelNewsroomReleaseResponse,
@@ -30,6 +31,10 @@ import {
   UpdateNewsroomReleaseBody,
   UpdateNewsroomReleaseParams,
   UpdateNewsroomReleaseResponse,
+  GetNewsroomProfileReviewsResponse,
+  UpdateNewsroomProfileReviewBody,
+  UpdateNewsroomProfileReviewParams,
+  UpdateNewsroomProfileReviewResponse,
 } from "@workspace/api-zod";
 import {
   askGlobalAnswers,
@@ -45,6 +50,7 @@ import {
   getReleaseDraftWordCount,
   getReleaseWordCount,
   getEditorialWordCountBounds,
+  getEntityProfileReviewQueueState,
   getPublicStoryDek,
   getPublishedStories,
   mergeEligiblePublishedStories,
@@ -107,6 +113,12 @@ let publicNewsroomContentCache:
   | { snapshot: PublicNewsroomContentSnapshot; cachedAt: number; expiresAt: number }
   | undefined;
 let publicNewsroomContentRefresh: Promise<void> | undefined;
+
+function isValidProfileReviewDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/u.test(value)) return false;
+  const parsed = new Date(`${value}T00:00:00.000Z`);
+  return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
 
 function invalidatePublicNewsroomContentCache(): void {
   publicNewsroomContentCache = undefined;
@@ -805,6 +817,15 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
       Date.now() - Date.parse(`${latestPublishedAt}T23:59:59Z`) > 36 * 60 * 60 * 1000;
     phase = "snapshot_validation";
     const snapshotValidationStartedAt = Date.now();
+    const savedProfileReviews = await db
+      .select({
+        profileSlug: profileReviewDatesTable.profileSlug,
+        reviewedAt: profileReviewDatesTable.reviewedAt,
+      })
+      .from(profileReviewDatesTable);
+    const profileReviewDatesBySlug = new Map(
+      savedProfileReviews.map((review) => [review.profileSlug, review.reviewedAt]),
+    );
     const snapshot = GetNewsroomContentResponse.parse({
       generatedAt: new Date().toISOString(),
       source: "maintained-editorial-source",
@@ -814,6 +835,9 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
       evidenceSummaries,
       entities: entities.map((entity) => ({
         ...entity,
+        ...(profileReviewDatesBySlug.has(entity.slug)
+          ? { profileReviewedAt: profileReviewDatesBySlug.get(entity.slug) }
+          : {}),
         timeline: entity.timeline.filter((slug) => publicTimelineSlugs.has(slug)),
         signals: entity.signals.filter((slug) => signals.some((signal) => signal.slug === slug)),
         recentStories: entity.recentStories
@@ -915,6 +939,125 @@ router.get("/newsroom/metadata", async (req, res): Promise<void> => {
     res.status(500).json({ error: "Newsroom metadata source unavailable." });
   }
 });
+
+router.get(
+  "/newsroom/profile-reviews",
+  requireEditorAuth,
+  async (req, res): Promise<void> => {
+    try {
+      const savedReviewDates = await db
+        .select({
+          profileSlug: profileReviewDatesTable.profileSlug,
+          reviewedAt: profileReviewDatesTable.reviewedAt,
+        })
+        .from(profileReviewDatesTable);
+      const savedBySlug = new Map(savedReviewDates.map((item) => [item.profileSlug, item.reviewedAt]));
+      const now = new Date();
+      const profiles = entities.flatMap((entity) => {
+        if (!entity.profileStatus) return [];
+        const reviewedAt = savedBySlug.get(entity.slug) ?? entity.profileReviewedAt ?? null;
+        const reviewState = getEntityProfileReviewQueueState(
+          { profileReviewedAt: reviewedAt ?? undefined, timeline: entity.timeline },
+          now,
+          timelineEvents,
+        );
+        if (!reviewState) return [];
+        const newerTimelineEvents = reviewedAt && isValidProfileReviewDate(reviewedAt)
+          ? entity.timeline.flatMap((slug) => {
+            const event = timelineEvents.find((candidate) =>
+              candidate.slug === slug && candidate.date.slice(0, 10) > reviewedAt,
+            );
+            if (!event) return [];
+            return [{
+              slug: event.slug,
+              title: event.title,
+              date: event.date.slice(0, 10),
+              url: `/timeline/${event.slug}`,
+              references: (event.sourceSlugs ?? []).flatMap((sourceSlug) => {
+                const source = maintainedSources.find((candidate) => candidate.slug === sourceSlug);
+                return source ? [{ label: source.title ?? source.name, url: source.url }] : [];
+              }),
+            }];
+          })
+          : [];
+        return [{
+          slug: entity.slug,
+          name: entity.name,
+          kind: entity.kind,
+          url: `/${entity.kind}/${entity.slug}`,
+          reviewedAt,
+          dueAt: reviewState.dueAt,
+          daysUntilDue: reviewState.daysUntilDue,
+          reason: reviewState.reason,
+          primaryReferences: entity.primaryReferences ?? [],
+          newerTimelineEvents,
+        }];
+      }).sort((left, right) => {
+        const leftDays = left.daysUntilDue ?? Number.NEGATIVE_INFINITY;
+        const rightDays = right.daysUntilDue ?? Number.NEGATIVE_INFINITY;
+        return leftDays - rightDays || left.name.localeCompare(right.name);
+      });
+
+      res.setHeader("Cache-Control", "no-store");
+      res.json(GetNewsroomProfileReviewsResponse.parse({ profiles }));
+    } catch (error) {
+      req.log.error({ err: error }, "Profile review queue unavailable");
+      res.status(500).json({ error: "Profile review queue unavailable." });
+    }
+  },
+);
+
+router.patch(
+  "/newsroom/profile-reviews/:slug",
+  requireEditorAuth,
+  async (req, res): Promise<void> => {
+    const params = UpdateNewsroomProfileReviewParams.safeParse(req.params);
+    if (!params.success) {
+      res.status(400).json({ error: params.error.message });
+      return;
+    }
+    const body = UpdateNewsroomProfileReviewBody.safeParse(req.body);
+    if (!body.success) {
+      res.status(400).json({ error: body.error.message });
+      return;
+    }
+    const entity = entities.find((item) => item.slug === params.data.slug && item.profileStatus);
+    if (!entity) {
+      res.status(404).json({ error: "Profile not found." });
+      return;
+    }
+    const reviewedAt = body.data.reviewedAt;
+    const today = new Date().toISOString().slice(0, 10);
+    if (!isValidProfileReviewDate(reviewedAt) || reviewedAt > today) {
+      res.status(400).json({ error: "Enter a valid review date that is not in the future." });
+      return;
+    }
+
+    try {
+      await db
+        .insert(profileReviewDatesTable)
+        .values({
+          profileSlug: entity.slug,
+          reviewedAt,
+          updatedBy: String(res.locals.editorUserId),
+        })
+        .onConflictDoUpdate({
+          target: profileReviewDatesTable.profileSlug,
+          set: {
+            reviewedAt,
+            updatedBy: String(res.locals.editorUserId),
+            updatedAt: new Date(),
+          },
+        });
+      invalidatePublicNewsroomContentCache();
+      res.setHeader("Cache-Control", "no-store");
+      res.json(UpdateNewsroomProfileReviewResponse.parse({ slug: entity.slug, reviewedAt }));
+    } catch (error) {
+      req.log.error({ err: error, profileSlug: entity.slug }, "Profile review date could not be saved");
+      res.status(500).json({ error: "The profile review date could not be saved." });
+    }
+  },
+);
 
 router.get("/newsroom/comparison-reviews", async (req, res): Promise<void> => {
   try {

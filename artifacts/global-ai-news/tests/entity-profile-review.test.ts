@@ -6,6 +6,7 @@ import {
   getEntityProfileReviewReason,
   isEntityProfileReviewDue,
   normalizeEntityProfileReviews,
+  getEntityProfileReviewQueueState,
 } from '../src/content';
 
 test('every expanded profile records its review date, status, and supporting primary references', () => {
@@ -61,6 +62,23 @@ test('a newer linked timeline record flags a profile for immediate editorial rev
 
   assert.equal(isEntityProfileReviewDue(profile, new Date('2026-10-26T00:00:00Z'), events), true);
   assert.equal(getEntityProfileReviewReason(profile, new Date('2026-10-26T00:00:00Z'), events), 'linked-update');
+});
+
+test('the editorial queue includes profiles due within 21 days and excludes later reviews', () => {
+  const profile = { profileReviewedAt: '2026-10-01', timeline: [] };
+
+  assert.deepEqual(
+    getEntityProfileReviewQueueState(profile, new Date('2026-12-09T00:00:00Z'), []),
+    { reason: 'upcoming', dueAt: '2026-12-30', daysUntilDue: 21 },
+  );
+  assert.equal(
+    getEntityProfileReviewQueueState(profile, new Date('2026-12-08T00:00:00Z'), []),
+    undefined,
+  );
+  assert.deepEqual(
+    getEntityProfileReviewQueueState(profile, new Date('2026-12-30T00:00:00Z'), []),
+    { reason: 'interval', dueAt: '2026-12-30', daysUntilDue: 0 },
+  );
 });
 
 test('the newest review remains current while earlier review records are retained', () => {

@@ -13,6 +13,82 @@ export interface ErrorResponse {
   error: string;
 }
 
+export interface ProfileReviewUpdate {
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  reviewedAt: string;
+}
+
+export interface ProfileReviewDate {
+  slug: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  reviewedAt: string;
+}
+
+export interface ProfileReviewReference {
+  label: string;
+  url: string;
+}
+
+export interface ProfileReviewTimelineEvent {
+  slug: string;
+  title: string;
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  date: string;
+  url: string;
+  references: ProfileReviewReference[];
+}
+
+export type ProfileReviewQueueItemKind = typeof ProfileReviewQueueItemKind[keyof typeof ProfileReviewQueueItemKind];
+
+
+export const ProfileReviewQueueItemKind = {
+  company: 'company',
+  lab: 'lab',
+  model: 'model',
+  person: 'person',
+  technology: 'technology',
+  institution: 'institution',
+  policy: 'policy',
+  dataset: 'dataset',
+  infrastructure: 'infrastructure',
+} as const;
+
+export type ProfileReviewQueueItemReason = typeof ProfileReviewQueueItemReason[keyof typeof ProfileReviewQueueItemReason];
+
+
+export const ProfileReviewQueueItemReason = {
+  'linked-update': 'linked-update',
+  interval: 'interval',
+  'invalid-date': 'invalid-date',
+  upcoming: 'upcoming',
+} as const;
+
+export interface ProfileReviewQueueItem {
+  slug: string;
+  name: string;
+  kind: ProfileReviewQueueItemKind;
+  url: string;
+  /**
+     * @nullable
+     * @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+     */
+  reviewedAt: string | null;
+  /**
+     * @nullable
+     * @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+     */
+  dueAt: string | null;
+  /** @nullable */
+  daysUntilDue: number | null;
+  reason: ProfileReviewQueueItemReason;
+  primaryReferences: ProfileReviewReference[];
+  newerTimelineEvents: ProfileReviewTimelineEvent[];
+}
+
+export interface ProfileReviewQueue {
+  profiles: ProfileReviewQueueItem[];
+}
+
 export interface NewsletterSubscriptionInput {
   /**
      * @minLength 3
