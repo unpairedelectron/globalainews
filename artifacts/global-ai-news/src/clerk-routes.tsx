@@ -414,6 +414,7 @@ export function ClerkInsightsPage() {
     <InsightsPage
       editorAuth={{
         isSignedIn,
+        userId: user?.id,
         userLabel: user?.primaryEmailAddress?.emailAddress ?? user?.fullName ?? 'Signed-in editor',
         onSignOut: () => void signOut({ redirectUrl: `${basePath || ''}/insights` }),
       }}

@@ -3413,6 +3413,27 @@ test('public sign-up route explains that newsroom account creation is restricted
   assert.equal(state.signInHref, '/sign-in', 'restricted sign-up route should offer a clear sign-in path');
 });
 
+test('signed-in non-editors see an access denial instead of release controls', { concurrency: false }, async () => {
+  const cdp = await getRouteBrowser();
+  await cdp.send('Page.navigate', { url: `${baseUrl}/insights?smoke-editor-denied=1` });
+  await waitForBrowserCondition(
+    cdp,
+    `Boolean(document.querySelector('[data-testid="editor-access-denied-state"]'))`,
+    'A signed-in non-editor did not receive the restricted-access explanation.',
+  );
+  const state = await evaluateBrowser(cdp, `(() => ({
+    denial: document.querySelector('[data-testid="editor-access-denied-state"]')?.innerText ?? '',
+    editorControls: document.querySelectorAll('[data-testid="editorial-queue"], [data-testid="button-new-release"], [data-testid="editor-session"]').length,
+    signOut: document.querySelector('[data-testid="editor-access-denied-state"] button')?.textContent?.trim() ?? '',
+    returnHref: document.querySelector('[data-testid="editor-access-denied-state"] a')?.getAttribute('href') ?? '',
+  }))()`);
+  assert.match(state.denial, /not approved to edit releases/i);
+  assert.match(state.denial, /verified primary email/i);
+  assert.equal(state.editorControls, 0, 'unauthorized accounts must not see release controls');
+  assert.equal(state.signOut, 'Sign out');
+  assert.equal(state.returnHref, '/');
+});
+
 test('editor sign-in stays separate from newsletter signup on desktop and mobile', { concurrency: false }, async () => {
   const cdp = await getRouteBrowser();
   await cdp.send('Emulation.setDeviceMetricsOverride', {

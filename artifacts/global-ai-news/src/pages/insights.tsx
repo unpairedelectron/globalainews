@@ -124,6 +124,12 @@ function releaseError(error: unknown): string {
   return 'The release could not be saved. Check the fields and try again.';
 }
 
+function getHttpStatus(error: unknown): number | undefined {
+  if (!error || typeof error !== 'object' || !('status' in error)) return undefined;
+  const status = Number((error as { status?: unknown }).status);
+  return Number.isInteger(status) ? status : undefined;
+}
+
 function EditorSessionBar({ userLabel, onSignOut }: { userLabel: string; onSignOut: () => void }) {
   return <div data-testid="editor-session" className="mb-8 flex flex-wrap items-center justify-between gap-3 border border-primary/25 bg-primary/5 px-4 py-3 text-sm"><span>Signed in as <strong>{userLabel}</strong></span><button type="button" onClick={onSignOut} className="border-b border-primary pb-1 font-mono text-[10px] uppercase tracking-widest text-primary">Sign out</button></div>;
 }
@@ -270,19 +276,40 @@ function AutomationAudit() {
 
 export type InsightsEditorAuth = {
   isSignedIn?: boolean;
+  userId?: string;
   userLabel: string;
   onSignOut: () => void;
 };
 
 export function InsightsPage({ editorAuth }: { editorAuth?: InsightsEditorAuth }) {
-  const smokeEditorSession = window.location.hostname === '127.0.0.1'
+  const localSmokeHost = window.location.hostname === '127.0.0.1';
+  const smokeEditorSession = localSmokeHost
     && new URLSearchParams(window.location.search).get('smoke-editor') === '1';
-  const editorSessionActive = smokeEditorSession || editorAuth?.isSignedIn;
+  const smokeEditorDenied = localSmokeHost
+    && new URLSearchParams(window.location.search).get('smoke-editor-denied') === '1';
+  const editorSignedIn = smokeEditorSession || smokeEditorDenied || editorAuth?.isSignedIn === true;
   const snapshot = useNewsroomSnapshot();
   const { stories: newsroomStories } = snapshot;
   const [previewSlug, setPreviewSlug] = useState(newsroomStories[0]?.slug ?? '');
   const previewStory = newsroomStories.find((story) => story.slug === previewSlug) ?? newsroomStories[0];
-  const releasesQuery = useGetNewsroomReleases({ query: { queryKey: getGetNewsroomReleasesQueryKey(), staleTime: 0, refetchOnMount: true, refetchOnWindowFocus: true, refetchInterval: RELEASE_QUEUE_REFRESH_INTERVAL, refetchIntervalInBackground: false, retry: 1 } });
+  const releasesQueryKey = useMemo(
+    () => [...getGetNewsroomReleasesQueryKey(), editorAuth?.userId ?? 'smoke-session'] as const,
+    [editorAuth?.userId],
+  );
+  const releasesQuery = useGetNewsroomReleases({ query: { queryKey: releasesQueryKey, enabled: editorSignedIn && !smokeEditorDenied, staleTime: 0, refetchOnMount: true, refetchOnWindowFocus: true, refetchInterval: RELEASE_QUEUE_REFRESH_INTERVAL, refetchIntervalInBackground: false, retry: 1 } });
+  const editorAccessError = smokeEditorDenied ? { status: 403 } : releasesQuery.error;
+  const editorAccessDenied = editorSignedIn && getHttpStatus(editorAccessError) === 403;
+  const editorSessionActive = smokeEditorSession || (
+    editorAuth?.isSignedIn === true && releasesQuery.isSuccess && !editorAccessDenied
+  );
+  const editorAccessCheckFailed = editorSignedIn
+    && !editorAccessDenied
+    && !editorSessionActive
+    && releasesQuery.isError;
+  const editorAccessCheckPending = editorSignedIn
+    && !editorAccessDenied
+    && !editorSessionActive
+    && !editorAccessCheckFailed;
   const [location, setLocation] = useLocation();
   const historySearch = useSearch();
   const historyUrl = useMemo(() => {
@@ -298,7 +325,7 @@ export function InsightsPage({ editorAuth }: { editorAuth?: InsightsEditorAuth }
     action: historyAction || undefined,
     actor: historyActor.trim() || undefined,
   };
-  const historyQuery = useGetNewsroomReleaseHistory(historyFilters, { query: { queryKey: getGetNewsroomReleaseHistoryQueryKey(historyFilters), staleTime: 0, refetchOnMount: true, retry: 1 } });
+  const historyQuery = useGetNewsroomReleaseHistory(historyFilters, { query: { queryKey: getGetNewsroomReleaseHistoryQueryKey(historyFilters), enabled: editorSessionActive, staleTime: 0, refetchOnMount: true, retry: 1 } });
   const createRelease = useCreateNewsroomRelease();
   const updateRelease = useUpdateNewsroomRelease();
   const cancelRelease = useCancelNewsroomRelease();
@@ -354,7 +381,7 @@ export function InsightsPage({ editorAuth }: { editorAuth?: InsightsEditorAuth }
   };
   const syncQueue = (next: EditorialRelease[]) => {
     const sorted = [...next].sort((a, b) => a.position - b.position);
-    queryClient.setQueryData(getGetNewsroomReleasesQueryKey(), sorted);
+    queryClient.setQueryData(releasesQueryKey, sorted);
     void releasesQuery.refetch();
     void historyQuery.refetch();
   };
@@ -418,7 +445,10 @@ export function InsightsPage({ editorAuth }: { editorAuth?: InsightsEditorAuth }
   return <Shell><SeoHead title="Publisher workspace — Global AI News" description="Internal editorial intelligence workspace." path="/insights" /><main className={container}>
     <section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Internal editorial surface</p><h1 className="mt-6 max-w-5xl font-serif text-7xl leading-[.84] md:text-[9rem]">The room<br /><em className="text-primary">is reading.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">Review the maintained public snapshot, prepared releases and editorial changes. Counts below come from the current published newsroom records, not audience estimates.</p></section>
     <section aria-label="Current published newsroom records" className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 sm:grid-cols-2 lg:grid-cols-4">{snapshotMetrics.map(({ value, label }) => <div data-testid={`metric-${label.toLowerCase().replace(/\s/g, '-')}`} key={label} className="bg-background p-6"><p className="eyebrow text-muted-foreground">{label}</p><p className="mt-7 font-serif text-4xl">{value}</p><p className="mt-2 text-xs text-muted-foreground">Current public snapshot</p></div>)}</section>
-     {!editorSessionActive && <section data-testid="editor-signed-out-state" className="border-b border-foreground/20 py-10"><div className="border border-primary/25 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8"><div><p className="eyebrow text-primary">Editor access</p><h2 className="mt-3 font-serif text-3xl leading-none">Sign in before changing the release desk.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">Public stories stay open to every reader. Release creation, sequencing, edits and cancellations require an authenticated editor session.</p></div><Link href="/sign-in" className="mt-6 inline-flex shrink-0 items-center gap-2 bg-foreground px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-background md:mt-0">Sign in as editor <ArrowUpRight size={14} /></Link></div></section>}
+      {!editorSignedIn && <section data-testid="editor-signed-out-state" className="border-b border-foreground/20 py-10"><div className="border border-primary/25 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8"><div><p className="eyebrow text-primary">Editor access</p><h2 className="mt-3 font-serif text-3xl leading-none">Sign in before changing the release desk.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">Public stories stay open to every reader. Release creation, sequencing, edits and cancellations require an authenticated editor session.</p></div><Link href="/sign-in" className="mt-6 inline-flex shrink-0 items-center gap-2 bg-foreground px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-background md:mt-0">Sign in as editor <ArrowUpRight size={14} /></Link></div></section>}
+      {editorAccessDenied && <section data-testid="editor-access-denied-state" className="border-b border-foreground/20 py-10"><div className="border border-destructive/35 bg-destructive/5 p-6 md:flex md:items-center md:justify-between md:gap-8"><div><p className="eyebrow text-destructive">Restricted editor access</p><h2 className="mt-3 font-serif text-3xl leading-none">This account is not approved to edit releases.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">The release desk is limited to the approved editor account with a verified primary email. Your account is still signed in, but editor controls are unavailable.</p></div><div className="mt-6 flex shrink-0 flex-wrap items-center gap-4 md:mt-0"><button type="button" onClick={editorAuth?.onSignOut} className="border-b border-primary pb-1 font-mono text-[10px] uppercase tracking-widest text-primary">Sign out</button><Link href="/" className="inline-flex min-h-11 items-center bg-foreground px-4 font-mono text-[10px] uppercase tracking-widest text-background">Return to newsroom</Link></div></div></section>}
+      {editorAccessCheckPending && <p data-testid="editor-access-check" role="status" className="border-b border-foreground/20 py-8 text-sm text-muted-foreground">Checking editor access…</p>}
+      {editorAccessCheckFailed && <div data-testid="editor-access-check-error" role="alert" className="border-b border-foreground/20 py-8"><p className="text-sm text-destructive">We could not verify editor access right now. The release desk remains unavailable.</p><button type="button" onClick={() => void releasesQuery.refetch()} className="mt-4 border-b border-primary pb-1 font-mono text-[10px] uppercase tracking-widest text-primary">Try again</button></div>}
      {editorSessionActive && <><EditorSessionBar userLabel={editorAuth?.userLabel ?? 'Signed-in editor'} onSignOut={editorAuth?.onSignOut ?? (() => undefined)} /><ComparisonReviewReminder /><section data-testid="editorial-queue" className="border-b border-foreground/20 py-14">
        <div className="flex flex-wrap items-end justify-between gap-5"><div><SectionLabel>Durable release desk</SectionLabel><h2 className="mt-3 max-w-xl font-serif text-5xl leading-[.9]">Prepare the next edition.</h2><p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground">Create, sequence and reschedule prepared articles without changing the publication build.</p></div><div className="flex flex-wrap items-center justify-end gap-2"><span data-testid="release-queue-refresh-status" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{releasesQuery.isFetching ? 'Updating readiness…' : 'Queue refreshes every five minutes'}</span><button data-testid="button-refresh-releases" type="button" onClick={() => { void releasesQuery.refetch(); void historyQuery.refetch(); }} className="inline-flex items-center gap-2 border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary"><RefreshCw size={13} />Refresh</button><button data-testid="button-new-release" type="button" onClick={openCreate} className="inline-flex items-center gap-2 bg-foreground px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-background"><Plus size={14} />New release</button></div></div>
       {editor && <div className="mt-8"><ReleaseEditor key={editor.release?.slug ?? 'new-release'} initialValue={editor.value} editing={Boolean(editor.release)} categories={Array.from(new Set([...categories, editor.value.category]))} onCancel={() => setEditor(null)} onSubmit={saveRelease} saving={busy === 'create' || Boolean(editor.release && busy === `save-${editor.release.slug}`)} /></div>}
