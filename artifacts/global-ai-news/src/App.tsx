@@ -54,8 +54,8 @@ function AppRoutes() {
   const [location] = useLocation();
   const pathname = location.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
   const needsClerk = pathname === '/insights'
-    || pathname.startsWith('/sign-in')
-    || pathname.startsWith('/sign-up');
+    || /^\/sign-in(?:\/|$)/.test(pathname)
+    || /^\/sign-up(?:\/|$)/.test(pathname);
   const routes = <Switch>
     <Route path="/sign-in/*?" component={SignInPage} />
     <Route path="/sign-up/*?" component={SignUpPage} />

@@ -3392,25 +3392,42 @@ test('Insights renders with Clerk context whether or not the URL has a trailing 
 
 test('public sign-up route explains that newsroom account creation is restricted', { concurrency: false }, async () => {
   const cdp = await getRouteBrowser();
-  await cdp.send('Page.navigate', { url: `${baseUrl}/sign-up` });
-  await waitForBrowserCondition(
-    cdp,
-    `Boolean(document.querySelector('#editor-signup-title'))`,
-    'The sign-up route did not render its account restriction notice.',
-  );
-  const state = await evaluateBrowser(cdp, `(() => ({
-    title: document.querySelector('#editor-signup-title')?.textContent?.trim() ?? '',
-    body: document.body?.innerText ?? '',
-    formCount: document.querySelectorAll('form').length,
-    inputCount: document.querySelectorAll('input').length,
-    signInHref: document.querySelector('a[href$="/sign-in"]')?.getAttribute('href') ?? '',
-  }))()`);
-  assert.equal(state.title, 'Accounts are invitation-only.');
-  assert.match(state.body, /Self-service account creation is disabled/i);
-  assert.match(state.body, /approved editors with a verified primary email/i);
-  assert.equal(state.formCount, 0, 'restricted sign-up route must not expose a registration form');
-  assert.equal(state.inputCount, 0, 'restricted sign-up route must not accept account details');
-  assert.equal(state.signInHref, '/sign-in', 'restricted sign-up route should offer a clear sign-in path');
+  for (const route of ['/sign-up', '/sign-up/']) {
+    cdp.events.length = 0;
+    await cdp.send('Page.navigate', { url: `${baseUrl}${route}` });
+    await waitForBrowserCondition(
+      cdp,
+      `location.pathname === '${route}' && Boolean(document.querySelector('#editor-signup-title'))`,
+      `${route}: the account restriction notice did not render.`,
+    );
+    const state = await evaluateBrowser(cdp, `(() => ({
+      path: location.pathname,
+      title: document.querySelector('#editor-signup-title')?.textContent?.trim() ?? '',
+      body: document.body?.innerText ?? '',
+      formCount: document.querySelectorAll('form').length,
+      inputCount: document.querySelectorAll('input').length,
+      signInHref: document.querySelector('a[href$="/sign-in"]')?.getAttribute('href') ?? '',
+      hasClerkProviderError: (document.body?.innerText ?? '').includes('useAuth can only be used within the <ClerkProvider'),
+    }))()`);
+    assert.equal(state.path, route, `${route}: browser navigation changed the requested path`);
+    assert.equal(state.title, 'Accounts are invitation-only.', `${route}: restriction heading is missing`);
+    assert.match(state.body, /Self-service account creation is disabled/i, `${route}: account restriction explanation is missing`);
+    assert.match(state.body, /approved editors with a verified primary email/i, `${route}: editor approval guidance is missing`);
+    assert.equal(state.formCount, 0, `${route}: restricted sign-up route must not expose a registration form`);
+    assert.equal(state.inputCount, 0, `${route}: restricted sign-up route must not accept account details`);
+    assert.equal(state.signInHref, '/sign-in', `${route}: restricted sign-up route should offer a clear sign-in path`);
+    assert.equal(state.hasClerkProviderError, false, `${route}: Clerk hooks rendered outside ClerkProvider`);
+    const providerErrors = cdp.events
+      .filter((event) => (
+        (event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
+        || event.method === 'Runtime.exceptionThrown'
+      ))
+      .map((event) => event.method === 'Runtime.exceptionThrown'
+        ? event.params.exceptionDetails?.text ?? 'Unhandled browser exception'
+        : event.params.args?.map((argument) => argument.value ?? argument.description ?? '').join(' ') ?? 'Browser console error')
+      .filter((message) => /useAuth can only be used within the <ClerkProvider/i.test(message));
+    assert.deepEqual(providerErrors, [], `${route}: browser reported Clerk hooks outside ClerkProvider`);
+  }
 });
 
 test('signed-in non-editors see an access denial instead of release controls', { concurrency: false }, async () => {
