@@ -162,7 +162,15 @@ export interface Entity {
   profileReviewHistory?: {
     reviewedAt: string;
     triggeringUpdate: string;
-    referencesChecked: string[];
+    referencesChecked: {
+      label: string;
+      url: string;
+      captureStatus: 'snapshot' | 'fingerprinted' | 'not-captured' | 'failed';
+      capturedAt?: string;
+      contentHash?: string;
+      snapshotUrl?: string;
+      captureNote?: string;
+    }[];
     claimChangeSummary: string;
   }[];
   headquarters?: string;
@@ -183,7 +191,12 @@ export function normalizeEntityProfileReviews(entity: Entity): Entity {
       ? [{
         reviewedAt: entity.profileReviewedAt,
         triggeringUpdate: 'Baseline review; no specific timeline update was recorded.',
-        referencesChecked: entity.primaryReferences.map((reference) => reference.url),
+        referencesChecked: entity.primaryReferences.map((reference) => ({
+          label: reference.label,
+          url: reference.url,
+          captureStatus: 'not-captured' as const,
+          captureNote: 'The original review did not retain a dated copy or content fingerprint.',
+        })),
         claimChangeSummary: 'First recorded review. No earlier profile snapshot is retained to verify claim-by-claim changes.',
       }]
       : [];

@@ -22,7 +22,13 @@ test('every expanded profile records its review date, status, and supporting pri
     assert.equal(profile.profileReviewHistory?.length, 1, profile.slug);
     const [initialReview] = profile.profileReviewHistory ?? [];
     assert.equal(initialReview.reviewedAt, profile.profileReviewedAt, profile.slug);
-    assert.deepEqual(initialReview.referencesChecked, profile.primaryReferences?.map((reference) => reference.url), profile.slug);
+    assert.deepEqual(initialReview.referencesChecked.map((reference) => reference.url), profile.primaryReferences?.map((reference) => reference.url), profile.slug);
+    assert.ok(initialReview.referencesChecked.every((reference) =>
+      reference.captureStatus === 'not-captured'
+      && !reference.capturedAt
+      && !reference.contentHash
+      && /did not retain/u.test(reference.captureNote ?? ''),
+    ), profile.slug);
     assert.match(initialReview.triggeringUpdate, /baseline review/i, profile.slug);
     assert.match(initialReview.claimChangeSummary, /no earlier profile snapshot/i, profile.slug);
   }
@@ -68,7 +74,13 @@ test('the newest review remains current while earlier review records are retaine
       {
         reviewedAt: '2026-10-15',
         triggeringUpdate: 'OpenAI announces GPT-5.5',
-        referencesChecked: ['https://openai.com/index/introducing-gpt-5-5/'],
+        referencesChecked: [{
+          label: 'OpenAI — Introducing GPT-5.5',
+          url: 'https://openai.com/index/introducing-gpt-5-5/',
+          captureStatus: 'fingerprinted',
+          capturedAt: '2026-10-15T12:00:00.000Z',
+          contentHash: 'a'.repeat(64),
+        }],
         claimChangeSummary: 'Updated the current-model context after the newer release.',
       },
     ],
@@ -78,4 +90,6 @@ test('the newest review remains current while earlier review records are retaine
   assert.equal(updated.profileReviewHistory?.length, 2);
   assert.equal(updated.profileReviewHistory?.[0].reviewedAt, '2026-10-06');
   assert.equal(updated.profileReviewHistory?.[1].reviewedAt, '2026-10-15');
+  assert.equal(updated.profileReviewHistory?.[1].referencesChecked[0].captureStatus, 'fingerprinted');
+  assert.equal(updated.profileReviewHistory?.[1].referencesChecked[0].contentHash, 'a'.repeat(64));
 });

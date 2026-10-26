@@ -24,6 +24,7 @@ export const HealthCheckResponse = zod.object({
 export const getNewsroomContentResponseGeneratedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]+)?Z$');
 export const getNewsroomContentResponseSourcesItemAccessedRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseSourcesItemPublicationDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getNewsroomContentResponseEntitiesItemProfileReviewHistoryItemReferencesCheckedItemContentHashRegExp = new RegExp('^[a-f0-9]{64}$');
 export const getNewsroomContentResponseTimelineEventsItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseStoriesItemDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 export const getNewsroomContentResponseStoriesItemDateModifiedRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
@@ -92,7 +93,15 @@ export const GetNewsroomContentResponse = zod.object({
   "profileReviewHistory": zod.array(zod.object({
   "reviewedAt": zod.coerce.date(),
   "triggeringUpdate": zod.string(),
-  "referencesChecked": zod.array(zod.string().url()),
+  "referencesChecked": zod.array(zod.object({
+  "label": zod.string(),
+  "url": zod.string().url(),
+  "captureStatus": zod.enum(['snapshot', 'fingerprinted', 'not-captured', 'failed']),
+  "capturedAt": zod.coerce.date().optional(),
+  "contentHash": zod.string().regex(getNewsroomContentResponseEntitiesItemProfileReviewHistoryItemReferencesCheckedItemContentHashRegExp).optional().describe('Lowercase SHA-256 fingerprint of the captured source body.'),
+  "snapshotUrl": zod.string().url().optional(),
+  "captureNote": zod.string().optional()
+})),
   "claimChangeSummary": zod.string()
 })).optional().describe('Editorial review records for the profile, distinct from the current freshness status.'),
   "headquarters": zod.string().optional(),

@@ -708,8 +708,30 @@ components:
               referencesChecked:
                 type: array
                 items:
-                  type: string
-                  format: uri
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    label:
+                      type: string
+                    url:
+                      type: string
+                      format: uri
+                    captureStatus:
+                      type: string
+                      enum: [snapshot, fingerprinted, not-captured, failed]
+                    capturedAt:
+                      type: string
+                      format: date-time
+                    contentHash:
+                      type: string
+                      pattern: '^[a-f0-9]{64}$'
+                      description: Lowercase SHA-256 fingerprint of the captured source body.
+                    snapshotUrl:
+                      type: string
+                      format: uri
+                    captureNote:
+                      type: string
+                  required: [label, url, captureStatus]
               claimChangeSummary:
                 type: string
             required: [reviewedAt, triggeringUpdate, referencesChecked, claimChangeSummary]

@@ -5,10 +5,11 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItem } from './publicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItem';
 
 export type PublicNewsroomEntityProfileReviewHistoryItem = {
   reviewedAt: Date;
   triggeringUpdate: string;
-  referencesChecked: string[];
+  referencesChecked: PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItem[];
   claimChangeSummary: string;
 };

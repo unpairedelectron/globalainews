@@ -225,10 +225,34 @@ export const PublicNewsroomEntityProfileStatus = {
   historical: 'historical',
 } as const;
 
+export type PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItemCaptureStatus = typeof PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItemCaptureStatus[keyof typeof PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItemCaptureStatus];
+
+
+export const PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItemCaptureStatus = {
+  snapshot: 'snapshot',
+  fingerprinted: 'fingerprinted',
+  'not-captured': 'not-captured',
+  failed: 'failed',
+} as const;
+
+export type PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItem = {
+  label: string;
+  url: string;
+  captureStatus: PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItemCaptureStatus;
+  capturedAt?: string;
+  /**
+     * Lowercase SHA-256 fingerprint of the captured source body.
+     * @pattern ^[a-f0-9]{64}$
+     */
+  contentHash?: string;
+  snapshotUrl?: string;
+  captureNote?: string;
+};
+
 export type PublicNewsroomEntityProfileReviewHistoryItem = {
   reviewedAt: string;
   triggeringUpdate: string;
-  referencesChecked: string[];
+  referencesChecked: PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItem[];
   claimChangeSummary: string;
 };
 
