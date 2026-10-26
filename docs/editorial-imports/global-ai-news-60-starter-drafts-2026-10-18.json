@@ -1848,12 +1848,12 @@
       }
     },
     {
-      "staging_status": "blocked_for_verification",
+      "staging_status": "starter_only_needs_expansion_and_claim_review",
       "publication_status": "draft_not_publication_ready",
       "source_review": {
-        "claim_level_reviewed": false,
-        "blocked": true,
-        "note": "The supplied Reuters URL returned a page-not-found response during source access; replace or verify the source before expansion."
+        "claim_level_reviewed": true,
+        "blocked": false,
+        "note": "Corrected Reuters report opened and supports the time-bound first-half 2026 figures: Nvidia 34%/678,000 shipments and Huawei 28%/572,000. Attribute the figures to IDC as reported by Reuters; IDC did not specify which Nvidia products made up its share, so do not imply chip-level equivalence or a global ranking."
       },
       "starter": {
         "section": "Industry",
@@ -1871,7 +1871,7 @@
         "replit_expansion_brief": "Cite IDC as the attributed source if used, confirm reporting period and shipments versus market share, and avoid implying that China's domestic hardware is interchangeable with every Nvidia system.",
         "factual_guardrails": "Verify each factual statement against the linked source before publishing. Clearly separate established facts, company claims, analysis and forecasts.",
         "sources": [
-          "https://www.reuters.com/business/retail-consumer/nvidias-china-ai-chip-share-falls-as-huawei-closes-gap-report-finds-2026-10-13/"
+          "https://www.reuters.com/business/retail-consumer/nvidias-china-ai-chip-share-falls-huawei-closes-gap-report-finds-2026-10-13/"
         ]
       }
     },
@@ -1989,12 +1989,12 @@
       }
     },
     {
-      "staging_status": "blocked_for_verification",
+      "staging_status": "starter_only_needs_expansion_and_claim_review",
       "publication_status": "draft_not_publication_ready",
       "source_review": {
-        "claim_level_reviewed": false,
-        "blocked": true,
-        "note": "The supplied Google DeepMind URL returned a page-does-not-exist response during source access; replace or verify the source before expansion."
+        "claim_level_reviewed": true,
+        "blocked": false,
+        "note": "Google's announcement and the European Commission's RAISE page confirm the pledge, up-to-200 scope, $3 million in credits and named models; DeepMind pages support the cited science areas. The sources do not specify participant selection, credit distribution, access dates or research outcomes, so keep this framed as a pledge rather than universal access or achieved results."
       },
       "starter": {
         "section": "Industry",
@@ -2012,7 +2012,12 @@
         "replit_expansion_brief": "Use the company's precise scope and quantities. Do not imply every European scientist receives access or that research outcomes are already proven.",
         "factual_guardrails": "Verify each factual statement against the linked source before publishing. Clearly separate established facts, company claims, analysis and forecasts.",
         "sources": [
-          "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/were-powering-european-scientific-discovery-with-advanced-ai-compute-frontier-models/"
+          "https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy/raise-resource-ai-science-europe/raise-pledging-initiative-ai-science-enablers_en",
+          "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/were-powering-european-scientific-discovery-with-advanced-ai-compute-frontier-models/",
+          "https://deepmind.google/science/alphafold/",
+          "https://deepmind.google/science/weathernext/",
+          "https://deepmind.google/science/alphagenome",
+          "https://deepmind.google/blog/alphaearth-foundations-helps-map-our-planet-in-unprecedented-detail"
         ]
       }
     },
@@ -2045,12 +2050,12 @@
       }
     },
     {
-      "staging_status": "blocked_for_verification",
+      "staging_status": "starter_only_needs_expansion_and_claim_review",
       "publication_status": "draft_not_publication_ready",
       "source_review": {
-        "claim_level_reviewed": false,
-        "blocked": true,
-        "note": "The supplied URL is a general Meta Research homepage, not a direct Muse Spark release or model-card source; provide direct evidence before expansion."
+        "claim_level_reviewed": true,
+        "blocked": false,
+        "note": "Meta's direct release confirms the open-weight release, download and inference routes; its model card confirms model details and the Muse Model License. The license includes conditions and limited commercial terms, so describe this as open-weight—not unrestricted or fully open-source—and do not imply independent reproduction."
       },
       "starter": {
         "section": "Models",
@@ -2068,7 +2073,8 @@
         "replit_expansion_brief": "Link to the exact release post and model repository. Verify licensing, parameter count, active parameter count, context window and recommended hardware from the model card; do not infer them from third-party summaries.",
         "factual_guardrails": "Verify each factual statement against the linked source before publishing. Clearly separate established facts, company claims, analysis and forecasts.",
         "sources": [
-          "https://research.meta.ai/"
+          "https://research.meta.ai/blog/muse-spark-open",
+          "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
         ]
       }
     },
