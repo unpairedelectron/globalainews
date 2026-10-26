@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { ADSENSE_PUBLISHER_ID } from '../adsense-config';
+import { activateAdSlot, isAdSlotActive, type AdPlacement } from './adsense-policy';
 
 declare global {
   interface Window {
@@ -8,11 +9,8 @@ declare global {
 }
 
 const ADSENSE_CLIENT_ID = `ca-${ADSENSE_PUBLISHER_ID}`;
-const adsenseEnabled =
-  import.meta.env?.VITE_ENABLE_ADSENSE === 'true' &&
-  import.meta.env?.VITE_ADSENSE_CLIENT_ID === ADSENSE_CLIENT_ID;
-
-type AdPlacement = 'home' | 'article';
+const adsenseEnabled = import.meta.env?.VITE_ENABLE_ADSENSE === 'true';
+const configuredClientId = import.meta.env?.VITE_ADSENSE_CLIENT_ID;
 
 const slotIds: Record<AdPlacement, string | undefined> = {
   home: import.meta.env?.VITE_ADSENSE_HOME_SLOT,
@@ -21,30 +19,15 @@ const slotIds: Record<AdPlacement, string | undefined> = {
 
 export function AdSlot({ placement }: { placement: AdPlacement }) {
   const slotId = slotIds[placement];
-  const active =
-    adsenseEnabled && typeof slotId === 'string' && /^\d+$/.test(slotId);
+  const active = isAdSlotActive({
+    enabled: adsenseEnabled,
+    publisherId: ADSENSE_PUBLISHER_ID,
+    clientId: configuredClientId,
+    slotId,
+  });
 
   useEffect(() => {
-    if (!active || !slotId) return;
-
-    const scriptId = 'global-ai-news-adsense';
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement('script');
-      script.id = scriptId;
-      script.async = true;
-      script.crossOrigin = 'anonymous';
-      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`;
-      document.head.appendChild(script);
-    }
-
-    const ad = document.querySelector<HTMLElement>(
-      `[data-ad-placement="${placement}"] .adsbygoogle`,
-    );
-    if (!ad || ad.dataset.adRequested === 'true') return;
-
-    ad.dataset.adRequested = 'true';
-    window.adsbygoogle = window.adsbygoogle ?? [];
-    window.adsbygoogle.push({});
+    activateAdSlot(placement, slotId, active, ADSENSE_CLIENT_ID);
   }, [active, placement, slotId]);
 
   return (

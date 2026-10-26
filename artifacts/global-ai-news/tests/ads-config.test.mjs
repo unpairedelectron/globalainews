@@ -22,6 +22,15 @@ for (const adsFile of [
 
 const appSource = readFileSync(path.join(artifactDir, 'src/components/monetization.tsx'), 'utf8');
 assert.doesNotMatch(appSource, /pub-\d{10,}/, 'the ad client must not hard-code a second publisher ID');
+assert.match(appSource, /isAdSlotActive\(/, 'the component must use the shared publisher approval policy');
+assert.match(appSource, /activateAdSlot\(/, 'the component must use the guarded ad activation path');
+
+const builtHtml = readFileSync(path.join(artifactDir, 'dist/public/index.html'), 'utf8');
+assert.doesNotMatch(
+  builtHtml,
+  /pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js/,
+  'the built HTML must not preload AdSense before client-side configuration is approved',
+);
 
 const portServer = createServer();
 const port = await new Promise((resolve, reject) => {

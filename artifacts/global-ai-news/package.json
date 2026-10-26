@@ -13,7 +13,7 @@
     "audit:links": "node scripts/audit-links.mjs",
     "typecheck": "pnpm --filter @workspace/api-client-react exec tsc --build && tsc -p tsconfig.json --noEmit",
     "test:release-metadata": "node tests/release-metadata.test.mjs",
-    "test:ads": "node tests/ads-config.test.mjs",
+    "test:ads": "pnpm exec tsx --test tests/ads-activation.test.ts && node tests/ads-config.test.mjs",
     "test:release-history": "node tests/release-history.test.mjs",
     "test:theme": "node tests/theme.test.mjs",
     "test:analytics-privacy": "pnpm exec tsx --test tests/analytics-privacy.test.ts",
