@@ -15,6 +15,13 @@ import { gzipResponseMiddleware } from "./middlewares/gzipResponseMiddleware";
 
 const app: Express = express();
 
+// Fail closed: private reads and every mutation are never shared-cached unless
+// an explicitly public GET route replaces this header.
+app.use((_request, response, next) => {
+  response.setHeader("Cache-Control", "no-store");
+  next();
+});
+
 app.use((_request, response, next) => {
   response.setHeader(
     "X-GAN-Source-Revision",

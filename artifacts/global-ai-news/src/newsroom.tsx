@@ -9,8 +9,7 @@ import {
 } from '@/content';
 
 const snapshotContext = createContext<NewsroomContentSnapshot | null>(null);
-// Reduce database wakeups; an already-open page can show new stories up to 12 hours later.
-const NEWSROOM_CONTENT_REFRESH_INTERVAL_MS = 12 * 60 * 60_000;
+const NEWSROOM_CONTENT_STALE_TIME_MS = 10 * 60_000;
 
 function StatusPanel({ title, detail, retry }: { title: string; detail: string; retry?: () => void }) {
   return (
@@ -36,9 +35,9 @@ export function NewsroomProvider({ children }: { children: ReactNode }) {
   const query = useGetNewsroomContent({
     query: {
       queryKey: getGetNewsroomContentQueryKey(),
-      staleTime: NEWSROOM_CONTENT_REFRESH_INTERVAL_MS,
-      refetchInterval: NEWSROOM_CONTENT_REFRESH_INTERVAL_MS,
-      refetchIntervalInBackground: false,
+      staleTime: NEWSROOM_CONTENT_STALE_TIME_MS,
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
       retry: 2,
     },
   });

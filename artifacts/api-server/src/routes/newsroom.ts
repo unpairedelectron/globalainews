@@ -78,6 +78,11 @@ import {
 import { renderSocialPreviewSvg } from "../../../global-ai-news/src/social-preview";
 import { renderSocialPreviewPng } from "../lib/social-preview-png";
 import {
+  isPublicNewsroomCacheFresh,
+  publicNewsroomCacheControl,
+  publicNewsroomSnapshotExpiresAt,
+} from "../lib/public-newsroom-cache";
+import {
   getAutomationStatus,
   getAutomationRuns,
   runEditorialAutomation,
@@ -90,11 +95,11 @@ const router: IRouter = Router();
 type ReleaseRow = typeof editorialReleasesTable.$inferSelect;
 type ReleaseHistoryInsert = typeof editorialReleaseHistoryTable.$inferInsert;
 type PublicNewsroomContentSnapshot = ReturnType<typeof GetNewsroomContentResponse.parse>;
-const NEWSROOM_CONTENT_CACHE_TTL_MS = 60 * 60 * 1000;
-let publishedReleaseSnapshot: Story[] = [];
+let publishedReleaseSnapshot: EditorialReleaseStory[] = [];
 let publicNewsroomContentCache:
-  | { snapshot: PublicNewsroomContentSnapshot; cachedAt: number }
+  | { snapshot: PublicNewsroomContentSnapshot; cachedAt: number; expiresAt: number }
   | undefined;
+let publicNewsroomContentRefresh: Promise<void> | undefined;
 
 function invalidatePublicNewsroomContentCache(): void {
   publicNewsroomContentCache = undefined;
@@ -249,14 +254,15 @@ async function getReleaseRows(): Promise<ReleaseRow[]> {
   const now = new Date();
   publishedReleaseSnapshot = rows.flatMap((row) => {
     const story = toScheduledStory(row);
-    return isPublicArticle({
-      status: row.status,
-      publishAt: story.publishAt,
-      wordCount: releaseWordCount(story, row.slug),
-      section: releaseSection(story),
-    }, now)
-      ? [story]
-      : [];
+    const wordCount = releaseWordCount(story, row.slug);
+    const bounds = getEditorialWordCountBounds(releaseSection(story));
+    const publishAt = Date.parse(story.publishAt);
+    return (
+      (row.status === "scheduled" || row.status === "published") &&
+      Number.isFinite(publishAt) &&
+      wordCount >= bounds.minimum &&
+      (bounds.maximum === undefined || wordCount <= bounds.maximum)
+    ) ? [story] : [];
   });
   invalidatePublicNewsroomContentCache();
   return rows;
@@ -350,7 +356,32 @@ function newsroomPublicationNow(): Date {
 }
 
 async function getPublishedStoriesFromSnapshot(): Promise<Story[]> {
-  return mergeEligiblePublishedStories(newsroomPublicationNow(), publishedReleaseSnapshot);
+  const now = newsroomPublicationNow();
+  const eligibleReleases = publishedReleaseSnapshot.filter((story) =>
+    isPublicArticle({
+      status: "scheduled",
+      publishAt: story.publishAt,
+      wordCount: releaseWordCount(story, story.slug),
+      section: releaseSection(story),
+    }, now),
+  );
+  return mergeEligiblePublishedStories(now, eligibleReleases);
+}
+
+function nextScheduledPublicationAt(now: number): number | undefined {
+  const upcoming = publishedReleaseSnapshot
+    .map((story) => Date.parse(story.publishAt))
+    .filter((publishAt) => Number.isFinite(publishAt) && publishAt > now);
+  return upcoming.length > 0 ? Math.min(...upcoming) : undefined;
+}
+
+function setPublicNewsroomContentHeaders(
+  res: ExpressResponse,
+  expiresAt: number,
+  now: number,
+): void {
+  res.setHeader("X-Robots-Tag", "noindex");
+  res.setHeader("Cache-Control", publicNewsroomCacheControl(expiresAt, now));
 }
 
 function rejectShortRelease(
@@ -630,9 +661,7 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
   const cacheAgeMs = cachedSnapshot ? startedAt - cachedSnapshot.cachedAt : undefined;
   if (
     cachedSnapshot &&
-    cacheAgeMs !== undefined &&
-    cacheAgeMs >= 0 &&
-    cacheAgeMs <= NEWSROOM_CONTENT_CACHE_TTL_MS
+    isPublicNewsroomCacheFresh(cachedSnapshot, startedAt)
   ) {
     req.log.info(
       {
@@ -645,12 +674,42 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
       },
       "Served cached public newsroom snapshot",
     );
-    res.setHeader("X-Robots-Tag", "noindex");
-    res.setHeader("Cache-Control", "no-store");
+    setPublicNewsroomContentHeaders(res, cachedSnapshot.expiresAt, startedAt);
     res.json(cachedSnapshot.snapshot);
     return;
   }
 
+  if (publicNewsroomContentRefresh) {
+    await publicNewsroomContentRefresh;
+    const refreshedSnapshot = publicNewsroomContentCache;
+    const resumedAt = Date.now();
+    if (refreshedSnapshot && isPublicNewsroomCacheFresh(refreshedSnapshot, resumedAt)) {
+      req.log.info(
+        {
+          event: "newsroom_content_snapshot_cache_hit",
+          route: "/api/newsroom/content",
+          webRequestId: safeWebRequestId,
+          elapsedMs: resumedAt - startedAt,
+          cacheAgeMs: resumedAt - refreshedSnapshot.cachedAt,
+          storyCount: refreshedSnapshot.snapshot.stories.length,
+          joinedRefresh: true,
+        },
+        "Served newsroom snapshot from a concurrent refresh",
+      );
+      setPublicNewsroomContentHeaders(res, refreshedSnapshot.expiresAt, resumedAt);
+      res.json(refreshedSnapshot.snapshot);
+      return;
+    }
+    res.setHeader("Cache-Control", "no-store");
+    res.status(500).json({ error: "Newsroom content source unavailable." });
+    return;
+  }
+
+  let completeRefresh!: () => void;
+  const refreshPromise = new Promise<void>((resolve) => {
+    completeRefresh = resolve;
+  });
+  publicNewsroomContentRefresh = refreshPromise;
   let phase = "published_stories";
   let publishedStoriesMs = 0;
   let dynamicSourcesMs = 0;
@@ -776,10 +835,14 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
         .filter((answer) => answer.citedStories.length > 0),
     });
     snapshotValidationMs = Date.now() - snapshotValidationStartedAt;
-    publicNewsroomContentCache = { snapshot, cachedAt: Date.now() };
+    const cachedAt = Date.now();
+    const expiresAt = publicNewsroomSnapshotExpiresAt(
+      cachedAt,
+      nextScheduledPublicationAt(cachedAt),
+    );
+    publicNewsroomContentCache = { snapshot, cachedAt, expiresAt };
 
-    res.setHeader("X-Robots-Tag", "noindex");
-    res.setHeader("Cache-Control", "no-store");
+    setPublicNewsroomContentHeaders(res, expiresAt, cachedAt);
     res.json(snapshot);
     req.log.info(
       {
@@ -815,7 +878,13 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
       },
       "Failed to generate public newsroom snapshot",
     );
+    res.setHeader("Cache-Control", "no-store");
     res.status(500).json({ error: "Newsroom content source unavailable." });
+  } finally {
+    completeRefresh();
+    if (publicNewsroomContentRefresh === refreshPromise) {
+      publicNewsroomContentRefresh = undefined;
+    }
   }
 });
 
@@ -1076,6 +1145,7 @@ router.patch("/newsroom/releases/:slug", requireEditorAuth, async (req, res): Pr
       }
       return release;
     });
+    await getReleaseRows();
     invalidatePublicNewsroomContentCache();
     res.json(UpdateNewsroomReleaseResponse.parse(toReleaseResponse(updated)));
   } catch (error) {
@@ -1114,6 +1184,7 @@ router.delete("/newsroom/releases/:slug", requireEditorAuth, async (req, res): P
       res.status(404).json({ error: "Release not found." });
       return;
     }
+    await getReleaseRows();
     invalidatePublicNewsroomContentCache();
     res.json(CancelNewsroomReleaseResponse.parse(toReleaseResponse(updated)));
   } catch (error) {

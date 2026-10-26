@@ -150,6 +150,64 @@ test('request correlation IDs are forwarded to the public content API', async (c
   assert.deepEqual(requestIds, [requestId]);
 });
 
+test('simultaneous snapshot requests share one upstream refresh', async (context) => {
+  let requestCount = 0;
+  const { server, origin } = await startSnapshotServer((_request, response) => {
+    requestCount += 1;
+    setTimeout(() => {
+      if (response.destroyed) return;
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end(JSON.stringify(snapshot));
+    }, 50);
+  });
+  context.after(() => closeServer(server));
+
+  const [first, second] = await Promise.all([
+    fetchNewsroomContentSnapshot(origin, { timeoutMs: 500 }),
+    fetchNewsroomContentSnapshot(origin, { timeoutMs: 500 }),
+  ]);
+
+  assert.equal(first.stories[0]?.slug, article.slug);
+  assert.equal(second.stories[0]?.slug, article.slug);
+  assert.equal(requestCount, 1);
+});
+
+test('article renders reject a failed refresh instead of using the last known good snapshot', async (context) => {
+  let slow = false;
+  const { server, origin } = await startSnapshotServer((_request, response) => {
+    if (slow) {
+      setTimeout(() => {
+        if (response.destroyed) return;
+        response.writeHead(200, { 'content-type': 'application/json' });
+        response.end(JSON.stringify(snapshot));
+      }, 250);
+      return;
+    }
+    response.writeHead(200, { 'content-type': 'application/json' });
+    response.end(JSON.stringify(snapshot));
+  });
+  context.after(() => closeServer(server));
+
+  await fetchNewsroomContentSnapshot(origin, { timeoutMs: 500 });
+  await new Promise((resolve) => setTimeout(resolve, 1_050));
+  slow = true;
+  const events: Array<Record<string, unknown>> = [];
+
+  await assert.rejects(
+    fetchNewsroomContentSnapshot(origin, {
+      timeoutMs: 40,
+      allowLastKnownGood: false,
+      onEvent: (event) => events.push(event),
+    }),
+    (error: unknown) =>
+      error instanceof NewsroomSnapshotFetchError && error.code === 'timeout',
+  );
+  assert.equal(
+    events.some((event) => event.phase === 'snapshot_last_known_good_fallback'),
+    false,
+  );
+});
+
 test('a cold renderer fails explicitly when no safe public snapshot exists', async (context) => {
   const { server, origin } = await startSnapshotServer((_request, response) => {
     setTimeout(() => {

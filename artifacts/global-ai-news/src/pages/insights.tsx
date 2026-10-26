@@ -31,7 +31,7 @@ import {
 } from '@workspace/api-client-react';
 
 const container = 'editorial-page mx-auto max-w-[1440px] px-5 md:px-10';
-const RELEASE_QUEUE_REFRESH_INTERVAL = 60_000;
+const RELEASE_QUEUE_REFRESH_INTERVAL = 5 * 60_000;
 function Shell({ children }: { children: ReactNode }) { return <><Header />{children}<Footer /></>; }
 function formatScheduleTime(publishAt: string): string {
   return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' }).format(new Date(publishAt)).replace(',', '') + ' UTC';
@@ -191,9 +191,9 @@ function AutomationAudit() {
   }, {
     query: {
       queryKey: getGetNewsroomAutomationRunsQueryKey(automationFilters),
-      staleTime: 0,
+      staleTime: 60_000,
       refetchOnMount: true,
-      refetchInterval: 60_000,
+      refetchOnWindowFocus: true,
       retry: 1,
     },
   });
@@ -281,7 +281,7 @@ export function InsightsPage({ editorAuth }: { editorAuth?: InsightsEditorAuth }
   const { stories: newsroomStories } = snapshot;
   const [previewSlug, setPreviewSlug] = useState(newsroomStories[0]?.slug ?? '');
   const previewStory = newsroomStories.find((story) => story.slug === previewSlug) ?? newsroomStories[0];
-  const releasesQuery = useGetNewsroomReleases({ query: { queryKey: getGetNewsroomReleasesQueryKey(), staleTime: 0, refetchOnMount: true, refetchInterval: RELEASE_QUEUE_REFRESH_INTERVAL, refetchIntervalInBackground: false, retry: 1 } });
+  const releasesQuery = useGetNewsroomReleases({ query: { queryKey: getGetNewsroomReleasesQueryKey(), staleTime: 0, refetchOnMount: true, refetchOnWindowFocus: true, refetchInterval: RELEASE_QUEUE_REFRESH_INTERVAL, refetchIntervalInBackground: false, retry: 1 } });
   const [location, setLocation] = useLocation();
   const historySearch = useSearch();
   const historyUrl = useMemo(() => {
@@ -419,7 +419,7 @@ export function InsightsPage({ editorAuth }: { editorAuth?: InsightsEditorAuth }
     <section aria-label="Current published newsroom records" className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 sm:grid-cols-2 lg:grid-cols-4">{snapshotMetrics.map(({ value, label }) => <div data-testid={`metric-${label.toLowerCase().replace(/\s/g, '-')}`} key={label} className="bg-background p-6"><p className="eyebrow text-muted-foreground">{label}</p><p className="mt-7 font-serif text-4xl">{value}</p><p className="mt-2 text-xs text-muted-foreground">Current public snapshot</p></div>)}</section>
      {!editorSessionActive && <section data-testid="editor-signed-out-state" className="border-b border-foreground/20 py-10"><div className="border border-primary/25 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8"><div><p className="eyebrow text-primary">Editor access</p><h2 className="mt-3 font-serif text-3xl leading-none">Sign in before changing the release desk.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">Public stories stay open to every reader. Release creation, sequencing, edits and cancellations require an authenticated editor session.</p></div><Link href="/sign-in" className="mt-6 inline-flex shrink-0 items-center gap-2 bg-foreground px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-background md:mt-0">Sign in as editor <ArrowUpRight size={14} /></Link></div></section>}
       {editorSessionActive && <><EditorSessionBar userLabel={editorAuth?.userLabel ?? 'Signed-in editor'} onSignOut={editorAuth?.onSignOut ?? (() => undefined)} /><section data-testid="editorial-queue" className="border-b border-foreground/20 py-14">
-       <div className="flex flex-wrap items-end justify-between gap-5"><div><SectionLabel>Durable release desk</SectionLabel><h2 className="mt-3 max-w-xl font-serif text-5xl leading-[.9]">Prepare the next edition.</h2><p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground">Create, sequence and reschedule prepared articles without changing the publication build.</p></div><div className="flex flex-wrap items-center justify-end gap-2"><span data-testid="release-queue-refresh-status" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{releasesQuery.isFetching ? 'Updating readiness…' : 'Readiness updates automatically'}</span><button data-testid="button-refresh-releases" type="button" onClick={() => { void releasesQuery.refetch(); void historyQuery.refetch(); }} className="inline-flex items-center gap-2 border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary"><RefreshCw size={13} />Refresh</button><button data-testid="button-new-release" type="button" onClick={openCreate} className="inline-flex items-center gap-2 bg-foreground px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-background"><Plus size={14} />New release</button></div></div>
+       <div className="flex flex-wrap items-end justify-between gap-5"><div><SectionLabel>Durable release desk</SectionLabel><h2 className="mt-3 max-w-xl font-serif text-5xl leading-[.9]">Prepare the next edition.</h2><p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground">Create, sequence and reschedule prepared articles without changing the publication build.</p></div><div className="flex flex-wrap items-center justify-end gap-2"><span data-testid="release-queue-refresh-status" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{releasesQuery.isFetching ? 'Updating readiness…' : 'Queue refreshes every five minutes'}</span><button data-testid="button-refresh-releases" type="button" onClick={() => { void releasesQuery.refetch(); void historyQuery.refetch(); }} className="inline-flex items-center gap-2 border border-foreground/20 px-3 py-2 font-mono text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary"><RefreshCw size={13} />Refresh</button><button data-testid="button-new-release" type="button" onClick={openCreate} className="inline-flex items-center gap-2 bg-foreground px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-background"><Plus size={14} />New release</button></div></div>
       {editor && <div className="mt-8"><ReleaseEditor key={editor.release?.slug ?? 'new-release'} initialValue={editor.value} editing={Boolean(editor.release)} categories={Array.from(new Set([...categories, editor.value.category]))} onCancel={() => setEditor(null)} onSubmit={saveRelease} saving={busy === 'create' || Boolean(editor.release && busy === `save-${editor.release.slug}`)} /></div>}
       {actionError && <div role="alert" className="mt-5 flex items-center justify-between gap-4 border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm"><span>{actionError}</span><button type="button" onClick={() => setActionError(null)} aria-label="Dismiss release error"><X size={15} /></button></div>}
       {releasesQuery.isLoading && <div className="mt-8 grid gap-px border border-foreground/15 bg-foreground/15 md:grid-cols-3">{[1, 2, 3].map((item) => <div key={item} className="h-48 animate-pulse bg-background/70 p-6"><div className="h-3 w-20 bg-foreground/10" /><div className="mt-8 h-8 w-4/5 bg-foreground/10" /><div className="mt-8 h-3 w-2/5 bg-foreground/10" /></div>)}</div>}

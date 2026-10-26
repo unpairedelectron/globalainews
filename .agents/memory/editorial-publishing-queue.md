@@ -3,8 +3,8 @@ name: Editorial publishing queue
 description: The newsroom’s current restart-safe cadence for prepared editorial releases.
 ---
 
-Prepared editorial records should become public based on their scheduled publish time when the API builds a newsroom snapshot. The client can poll that snapshot to reflect releases without requiring a long-running timer or a server restart.
+Prepared editorial records should become public based on their scheduled publish time when the API builds a newsroom snapshot. Keep future publishable records in the process snapshot and cap the content cache at ten minutes, shortened to the next known publication time. Public snapshots and the automation audit refresh on mount/focus; the editor release queue can refresh every five foreground minutes, plus explicit refreshes and mutations.
 
-**Why:** The newsroom has a maintained editorial source rather than an external feed, so a time-based release decision is more reliable than an in-memory scheduler and keeps the public/API snapshot aligned.
+**Why:** This reduces recurring API and database requests without letting a cached snapshot cover a scheduled release boundary. The publication decision remains at the API boundary and does not require a long-running timer.
 
-**How to apply:** Keep future records out of the live story collection until their publish time. When this queue grows beyond code-managed seed content, move the records to durable editor-managed storage while preserving the same API-boundary publication rule.
+**How to apply:** Keep future records out of the public story collection until their publish time, expire any snapshot cache no later than the next scheduled release, and preserve durable run keys and queue records. Process-local release snapshots still need the authenticated editor queue read after an API restart; do not add public database reads to compensate without revisiting this boundary.

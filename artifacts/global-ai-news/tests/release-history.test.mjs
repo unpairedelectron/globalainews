@@ -297,7 +297,17 @@ async function assertPublishedStoryFlowsThroughLivePublicSurfaces() {
   const content = await contentResponse.json();
   assert.ok(contentResponse.ok, 'public newsroom content stopped serving after a release was published');
   assert.ok(content.stories.some((story) => story.slug === publishedSlug), 'published story did not appear in live reader content');
-  assert.equal(contentResponse.headers.get('cache-control'), 'no-store', 'live reader content should not be cached after publication');
+  const contentCacheControl = contentResponse.headers.get('cache-control') ?? '';
+  const sharedMaxAge = Number(contentCacheControl.match(/s-maxage=(\d+)/)?.[1]);
+  assert.match(
+    contentCacheControl,
+    /^public, max-age=0, s-maxage=\d+$/,
+    'live reader content should use the bounded public snapshot cache',
+  );
+  assert.ok(
+    Number.isFinite(sharedMaxAge) && sharedMaxAge <= 300,
+    'live reader content shared-cache freshness must stay at or below five minutes',
+  );
 
   const metadata = await requestJson('/api/newsroom/metadata');
   assert.ok(metadata.routes.some((route) => route.path === `/article/${publishedSlug}` && route.article), 'published article metadata did not refresh');

@@ -68,6 +68,7 @@ const PUBLIC_SNAPSHOT_FRESH_MS = 1_000;
 const PUBLIC_SNAPSHOT_MAX_STALE_MS = 60_000;
 const DEFAULT_NEWSROOM_API_TIMEOUT_MS = 5_000;
 const MAX_NEWSROOM_SNAPSHOT_BYTES = 12 * 1024 * 1024;
+const MAX_PUBLIC_SNAPSHOT_ORIGINS = 4;
 
 const publicSnapshotCache = new Map<
   string,
@@ -77,6 +78,19 @@ const pendingSnapshotRequests = new Map<
   string,
   { promise: Promise<NewsroomContentSnapshot>; requestId?: string }
 >();
+
+function cachePublicSnapshot(
+  cacheKey: string,
+  snapshot: NewsroomContentSnapshot,
+): void {
+  publicSnapshotCache.delete(cacheKey);
+  publicSnapshotCache.set(cacheKey, { snapshot, fetchedAt: Date.now() });
+  while (publicSnapshotCache.size > MAX_PUBLIC_SNAPSHOT_ORIGINS) {
+    const oldestKey = publicSnapshotCache.keys().next().value;
+    if (oldestKey === undefined) break;
+    publicSnapshotCache.delete(oldestKey);
+  }
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -342,10 +356,7 @@ export async function fetchNewsroomContentSnapshot(
         throw new NewsroomSnapshotFetchError(failureCode, response.status);
       }
 
-      publicSnapshotCache.set(cacheKey, {
-        snapshot: parsedSnapshot,
-        fetchedAt: Date.now(),
-      });
+      cachePublicSnapshot(cacheKey, parsedSnapshot);
       options.onEvent?.({
         phase: 'snapshot_validated',
         statusCode: response.status,
