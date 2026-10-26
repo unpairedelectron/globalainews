@@ -10,7 +10,7 @@ import { after, before, test } from 'node:test';
 const root = path.resolve(import.meta.dirname, '..');
 const distDir = path.join(root, 'dist', 'public');
 const publicDir = path.join(root, 'public');
-const site = 'https://globalainews.in';
+const site = 'https://www.globalainews.in';
 const siteOrigin = new URL(site).origin;
 let apiOrigin = process.env.SMOKE_API_ORIGIN ?? 'http://127.0.0.1:19820';
 const chromium = process.env.CHROMIUM_BIN || '/repl/tools/bin/chromium';
@@ -308,8 +308,8 @@ function assertCanonicalSitemapUrls(xml, label) {
 function assertRssCanonicalUrls(xml, label) {
   assert.match(
     xml,
-    /<channel>[\s\S]*?<link>https:\/\/globalainews\.in\/<\/link>/,
-    `${label}: channel link does not use the apex canonical host`,
+    /<channel>[\s\S]*?<link>https:\/\/www\.globalainews\.in\/<\/link>/,
+    `${label}: channel link does not use the www canonical host`,
   );
   const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)];
   assert.ok(items.length > 0, `${label}: no RSS items were found`);

@@ -72,34 +72,36 @@ try {
   assert.ok(ready, `web server did not become ready: ${stderr}`);
 
   for (const method of ['GET', 'HEAD']) {
-    const apex = await request('/?host-check=1', 'globalainews.in', 'https', method);
-    assert.equal(apex.status, 200, `apex HTTPS ${method} / must serve directly`);
-    assert.equal(apex.headers.get('location'), null, `apex HTTPS ${method} / must not redirect to www`);
-    assert.equal(apex.headers.get('x-robots-tag'), null, `canonical apex ${method} / must remain indexable`);
-    if (method === 'GET') assert.match(await apex.text(), /<link rel="canonical" href="https:\/\/globalainews\.in\/"/);
+    const apex = await request('/ads.txt?host-check=1', 'globalainews.in', 'https', method);
+    assert.equal(apex.status, 301, `apex HTTPS ${method} /ads.txt must redirect permanently to www`);
+    assert.equal(apex.headers.get('location'), 'https://www.globalainews.in/ads.txt?host-check=1');
 
-    const www = await request('/about-us/?from=www&x=1', 'www.globalainews.in', 'https', method);
-    assert.equal(www.status, 301, `www HTTPS ${method} must redirect permanently`);
+    const www = await request('/ads.txt?from=www&x=1', 'www.globalainews.in', 'https', method);
+    assert.equal(www.status, 200, `canonical www HTTPS ${method} /ads.txt must serve directly`);
     assert.equal(
       www.headers.get('location'),
-      'https://globalainews.in/about-us/?from=www&x=1',
-      `www HTTPS ${method} must go directly to the apex and preserve path and query`,
+      null,
+      `canonical www HTTPS ${method} must not redirect`,
     );
     const redirectedApex = await request(
-      '/about-us/?from=www&x=1',
+      '/ads.txt?from=www&x=1',
       'globalainews.in',
       'https',
       method,
     );
-    assert.notEqual(redirectedApex.status, 301, `apex ${method} redirect destination must not start another redirect`);
-    assert.equal(redirectedApex.headers.get('location'), null, `apex ${method} redirect destination must not create a host chain`);
+    assert.equal(redirectedApex.status, 301, `apex ${method} must redirect directly to www`);
+    assert.equal(
+      redirectedApex.headers.get('location'),
+      'https://www.globalainews.in/ads.txt?from=www&x=1',
+      `apex ${method} must preserve path and query when redirecting to www`,
+    );
 
     const apexHttp = await request('/about-us/?from=http', 'globalainews.in', 'http', method);
     assert.equal(apexHttp.status, 301, `apex HTTP ${method} must upgrade directly to HTTPS`);
     assert.equal(
       apexHttp.headers.get('location'),
-      'https://globalainews.in/about-us/?from=http',
-      `apex HTTP ${method} must not introduce a www redirect`,
+      'https://www.globalainews.in/about-us/?from=http',
+      `apex HTTP ${method} must redirect directly to the canonical www host`,
     );
 
     for (const [route, contentType] of [
@@ -112,8 +114,8 @@ try {
       if (route === '/') assert.match(preview.headers.get('content-type') ?? '', contentType);
     }
 
-    const robots = await request('/robots.txt', 'globalainews.in', 'https', method);
-    assert.equal(robots.status, 200, `apex ${method} /robots.txt must be served`);
+    const robots = await request('/robots.txt', 'www.globalainews.in', 'https', method);
+    assert.equal(robots.status, 200, `canonical www ${method} /robots.txt must be served`);
     assert.notEqual(
       robots.headers.get('x-robots-tag'),
       'noindex, nofollow',
@@ -122,7 +124,18 @@ try {
     if (method === 'GET') {
       const robotsBody = await robots.text();
       assert.match(robotsBody, /^User-agent: \*/m);
-      assert.match(robotsBody, /^Sitemap: https:\/\/globalainews\.in\/sitemap\.xml$/m);
+      assert.match(robotsBody, /^Sitemap: https:\/\/www\.globalainews\.in\/sitemap\.xml$/m);
+    }
+
+    const signup = await request('/sign-up/', 'www.globalainews.in', 'https', method);
+    assert.equal(signup.status, 200, `restricted ${method} sign-up page must render`);
+    assert.equal(signup.headers.get('x-robots-tag'), 'noindex,follow');
+    assert.equal(signup.headers.get('cache-control'), 'no-store');
+    if (method === 'GET') {
+      const signupBody = await signup.text();
+      assert.match(signupBody, /Accounts are invitation-only\./);
+      assert.match(signupBody, /Self-service account creation is disabled\./);
+      assert.doesNotMatch(signupBody, /<form\b|<input\b|<script\b/i);
     }
   }
 
@@ -130,8 +143,8 @@ try {
   assert.equal(retiredStory.status, 301, 'retired story alias must preserve its permanent redirect behavior');
   assert.equal(
     retiredStory.headers.get('location'),
-    'https://globalainews.in/article/india-ai-compute-access-2026/?source=old',
-    'retired story redirect must go directly to the apex canonical URL',
+    'https://www.globalainews.in/article/india-ai-compute-access-2026/?source=old',
+    'retired story redirect must go directly to the canonical www URL',
   );
   const expiredUuid = await request('/article/123e4567-e89b-12d3-a456-426614174000', 'globalainews.in', 'https');
   assert.equal(expiredUuid.status, 410, 'retired UUID article routes must retain their 410 status');

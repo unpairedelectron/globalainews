@@ -93,6 +93,10 @@ try {
       `${slug} must have API-backed metadata for its public article route`,
     );
   }
+  assert.ok(
+    apiManifest.routes.some((metadata) => metadata.path === '/signals' && metadata.indexable !== false),
+    'the indexable Signals page must be represented in the API metadata manifest',
+  );
   const sitemapResponse = await fetch(`${apiUrl}/api/newsroom/sitemap.xml`);
   const sitemap = await sitemapResponse.text();
   assert.equal(sitemapResponse.status, 200, 'API sitemap should be available');
@@ -102,6 +106,7 @@ try {
       `${slug} must be present in the sitemap with its public API route`,
     );
   }
+  assert.ok(sitemap.includes('/signals/'), 'the indexable Signals page must be present in the sitemap');
   const editedTitle = 'Edited by the newsroom before release — Global AI News';
   const editedDescription =
     'An API editorial update reaches the crawler-visible first response before publication.';

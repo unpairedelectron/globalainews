@@ -50,6 +50,37 @@ function setRobotsTag(response: Response, value = 'noindex'): void {
   );
 }
 
+function renderRestrictedSignupDocument(): string {
+  const canonical = new URL('/sign-up/', SITE_URL).toString();
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,follow">
+    <title>Editor access — Global AI News</title>
+    <link rel="canonical" href="${canonical}">
+    <style>
+      :root{color-scheme:light;--paper:#f7f6f2;--ink:#17232b;--blue:#1555a6;--muted:#4b5962;--rule:#d6d3ca}
+      *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,sans-serif}
+      main{width:min(100%,500px);border:1px solid var(--rule);background:#fffefa;padding:clamp(28px,7vw,48px)}
+      p{margin:0} .eyebrow{color:var(--blue);font:600 12px/1.5 ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase}
+      h1{margin:24px 0 16px;font:400 clamp(34px,8vw,48px)/1 Georgia,serif;letter-spacing:-.03em}
+      .detail{color:var(--muted)}a{display:inline-flex;min-height:44px;align-items:center;margin-top:28px;padding:10px 18px;background:var(--blue);color:#fff;text-decoration:none;font:600 12px/1.4 ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
+      a:focus-visible{outline:3px solid #17232b;outline-offset:3px}
+    </style>
+  </head>
+  <body>
+    <main aria-labelledby="editor-signup-title">
+      <p class="eyebrow">Global AI News · Editor access</p>
+      <h1 id="editor-signup-title">Accounts are invitation-only.</h1>
+      <p class="detail">Self-service account creation is disabled. Newsroom access is limited to approved editors with a verified primary email. If you are an approved editor and cannot sign in, contact the newsroom administrator.</p>
+      <a href="/sign-in/">Return to editor sign-in</a>
+    </main>
+  </body>
+</html>`;
+}
+
 app.use((request, response, next) => {
   response.locals.isPreviewHost = getRequestHost(request) === 'global-ai-media.replit.app';
   if (response.locals.isPreviewHost) setRobotsTag(response, 'noindex, nofollow');
@@ -68,11 +99,6 @@ app.use((request, response, next) => {
   next();
 });
 app.use(gzipResponseMiddleware());
-
-const adsTxtBody = readFileSync(path.join(publicDirectory, 'ads.txt'), 'utf8');
-app.get('/ads.txt', (_request, response) => {
-  response.status(200).type('text/plain').send(adsTxtBody);
-});
 
 const permanentRouteAliases = new Map([
   ['/about', '/about-us/'],
@@ -109,7 +135,7 @@ app.use((request, response, next) => {
   const protocol = forwardedProtocol ?? (request.secure ? 'https' : 'http');
   const canonicalOrigin = SITE_URL;
   const managedHost = host === 'globalainews.in' || host === 'www.globalainews.in';
-  const isCanonicalHost = host === 'globalainews.in' && protocol === 'https';
+  const isCanonicalHost = host === 'www.globalainews.in' && protocol === 'https';
   const canonicalArticlePath = managedHost
     && /^\/article\/[^/]+$/.test(cleanPath)
     && pathname !== `${cleanPath}/`
@@ -125,6 +151,27 @@ app.use((request, response, next) => {
     return;
   }
   next();
+});
+
+app.use((request, response, next) => {
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    next();
+    return;
+  }
+  const pathname = new URL(request.originalUrl, SITE_URL).pathname;
+  if (!/^\/sign-up(?:\/.*)?$/.test(pathname)) {
+    next();
+    return;
+  }
+  response.status(200).setHeader('Content-Type', 'text/html; charset=utf-8');
+  response.setHeader('Cache-Control', 'no-store');
+  setRobotsTag(response, 'noindex,follow');
+  response.send(renderRestrictedSignupDocument());
+});
+
+const adsTxtBody = readFileSync(path.join(publicDirectory, 'ads.txt'), 'utf8');
+app.get('/ads.txt', (_request, response) => {
+  response.status(200).type('text/plain').send(adsTxtBody);
 });
 
 function proxyNewsroomXmlDocument(apiPath: string, defaultContentType: string) {

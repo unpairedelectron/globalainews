@@ -1,4 +1,5 @@
 - [AMP preview routing](amp-preview-routing.md) — nested static HTML needs a preview-safe route alongside the production public file.
+- [Canonical host middleware order](canonical-host-middleware-order.md) — enforce the canonical host before any handler that can respond, including static files.
 - [Global AI News institutional direction](global-ai-news-atlas-direction.md) — use warm ivory, restrained blue, and connected intelligence surfaces for the publication.
 - [Newsroom delivery boundary](newsroom-delivery-boundary.md) — public pages consume the maintained API snapshot; newsletter delivery uses a configured provider with a durable queue fallback.
 - [Newsroom metadata source](newsroom-metadata-source.md) — initial HTML and hydrated SEO should consume the API-backed metadata manifest for the same published route records.
