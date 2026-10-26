@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "hello": "tsx ./src/hello.ts",
+    "validate:starter-import": "node ./validate-global-ai-news-starter-import.mjs",
+    "test:starter-import": "node --test ./tests/validate-global-ai-news-starter-import.test.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
