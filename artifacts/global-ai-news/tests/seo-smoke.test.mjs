@@ -3413,6 +3413,73 @@ test('public sign-up route explains that newsroom account creation is restricted
   assert.equal(state.signInHref, '/sign-in', 'restricted sign-up route should offer a clear sign-in path');
 });
 
+test('editor sign-in stays separate from newsletter signup on desktop and mobile', { concurrency: false }, async () => {
+  const cdp = await getRouteBrowser();
+  await cdp.send('Emulation.setDeviceMetricsOverride', {
+    width: 1440,
+    height: 900,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+  await cdp.send('Page.navigate', { url: `${baseUrl}/` });
+  await waitForBrowserCondition(
+    cdp,
+    `Boolean(document.querySelector('[data-testid="link-editor-sign-in"]')) && Boolean(document.querySelector('[data-testid="link-join-brief"]'))`,
+    'The desktop header is missing the editor sign-in or newsletter link.',
+  );
+  const desktop = await evaluateBrowser(cdp, `(() => {
+    const signIn = document.querySelector('[data-testid="link-editor-sign-in"]');
+    const newsletter = document.querySelector('[data-testid="link-join-brief"]');
+    return {
+      signInHref: signIn?.getAttribute('href') ?? '',
+      signInLabel: signIn?.textContent?.trim() ?? '',
+      signInDisplay: signIn ? getComputedStyle(signIn).display : 'missing',
+      adjacentToNewsletter: signIn?.nextElementSibling === newsletter,
+      newsletterHref: newsletter?.getAttribute('href') ?? '',
+      newsletterLabel: newsletter?.textContent?.trim() ?? '',
+    };
+  })()`);
+  assert.equal(desktop.signInHref, '/sign-in/');
+  assert.equal(desktop.signInLabel, 'Editor sign-in');
+  assert.notEqual(desktop.signInDisplay, 'none', 'desktop editor sign-in must be visible');
+  assert.equal(desktop.adjacentToNewsletter, true, 'editor sign-in must sit beside the newsletter CTA');
+  assert.equal(desktop.newsletterHref, '/brief/#newsletter');
+  assert.equal(desktop.newsletterLabel, 'Join the brief', 'newsletter CTA must remain unchanged');
+
+  await cdp.send('Emulation.setDeviceMetricsOverride', {
+    width: 390,
+    height: 844,
+    deviceScaleFactor: 1,
+    mobile: true,
+  });
+  await cdp.send('Page.navigate', { url: `${baseUrl}/` });
+  await waitForBrowserCondition(
+    cdp,
+    `Boolean(document.querySelector('[data-testid="button-mobile-menu"]'))`,
+    'The mobile navigation control is missing.',
+  );
+  await evaluateBrowser(cdp, `document.querySelector('[data-testid="button-mobile-menu"]').click()`);
+  await waitForBrowserCondition(
+    cdp,
+    `Boolean(document.querySelector('[data-testid="link-mobile-editor-sign-in"]'))`,
+    'The mobile navigation menu is missing the editor sign-in link.',
+  );
+  const mobile = await evaluateBrowser(cdp, `(() => {
+    const signIn = document.querySelector('[data-testid="link-mobile-editor-sign-in"]');
+    return {
+      href: signIn?.getAttribute('href') ?? '',
+      label: signIn?.textContent?.trim() ?? '',
+      display: signIn ? getComputedStyle(signIn).display : 'missing',
+      inNavigation: signIn?.closest('#mobile-primary-navigation') !== null,
+    };
+  })()`);
+  assert.equal(mobile.href, '/sign-in/');
+  assert.equal(mobile.label, 'Editor sign-in');
+  assert.notEqual(mobile.display, 'none', 'mobile editor sign-in must be visible in the open menu');
+  assert.equal(mobile.inNavigation, true);
+  await cdp.send('Emulation.clearDeviceMetricsOverride');
+});
+
 test('signed-in release history filters remain usable at a mobile viewport', { concurrency: false }, async () => {
   await checkMobileEditorHistory();
 });
