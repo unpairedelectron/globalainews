@@ -2,6 +2,7 @@ import { pgTable, serial, text, timestamp, uniqueIndex } from "drizzle-orm/pg-co
 export * from "./editorial-releases";
 export * from "./editorial-release-history";
 export * from "./editorial-automation";
+export * from "./comparison-source-reviews";
 
 export const newsletterSubscribersTable = pgTable(
   "newsletter_subscribers",

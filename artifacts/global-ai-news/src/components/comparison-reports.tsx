@@ -1,4 +1,5 @@
 import React from 'react';
+import { ComparisonReportReviewDates } from './comparison-source-review';
 
 export type ComparisonReportSlug =
   | 'ai-assistants-compared'
@@ -648,7 +649,7 @@ export function ComparisonReportContent({
       <div className="mt-10 overflow-x-auto border border-foreground/15">
         <table className="w-full min-w-[760px] border-collapse text-left text-sm">
           <caption className="bg-surface-muted px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {report.title} · sources checked {report.sourcesReviewedOn} · {report.sourceReviewCadence.toLowerCase()} review · next due {report.nextSourceReviewDue}
+            <ComparisonReportReviewDates reportSlug={reportSlug} />
           </caption>
           <thead className="bg-secondary/50">
             <tr>

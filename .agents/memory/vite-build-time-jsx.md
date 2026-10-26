@@ -7,4 +7,4 @@ TSX rendered from Vite's Node configuration must account for that configuration'
 
 **Why:** The browser build and TypeScript check passed, but release-time `renderToStaticMarkup` failed with `React is not defined`.
 
-**How to apply:** Give each imported TSX component invoked by build-time SSR an explicit React binding when required, not just the top-level renderer. Verify a full release build in addition to typechecking and the browser development server.
+**How to apply:** Give each imported TSX component invoked by build-time SSR an explicit React binding when required, not just the top-level renderer. Use relative imports for config-loaded modules where app aliases are not resolved. Verify a full release build in addition to typechecking and the browser development server.

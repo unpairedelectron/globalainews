@@ -13,6 +13,7 @@ import {
   editorialAutomationRunsTable,
   editorialReleaseHistoryTable,
   editorialReleasesTable,
+  comparisonSourceReviewsTable,
 } from "@workspace/db";
 import {
   CancelNewsroomReleaseResponse,
@@ -89,6 +90,12 @@ import {
   type AutomationRunFilters,
   type AutomationRunOutcome,
 } from "../editorial/automation";
+import {
+  addOneCalendarMonth,
+  isMonitoredComparisonSlug,
+  monitoredComparisonSlugs,
+  type MonitoredComparisonSlug,
+} from "../editorial/comparison-source-reviews";
 
 const router: IRouter = Router();
 
@@ -908,6 +915,69 @@ router.get("/newsroom/metadata", async (req, res): Promise<void> => {
     res.status(500).json({ error: "Newsroom metadata source unavailable." });
   }
 });
+
+router.get("/newsroom/comparison-reviews", async (req, res): Promise<void> => {
+  try {
+    const savedReviews = await db
+      .select({
+        reportSlug: comparisonSourceReviewsTable.reportSlug,
+        checkedOn: comparisonSourceReviewsTable.checkedOn,
+        nextDue: comparisonSourceReviewsTable.nextDue,
+      })
+      .from(comparisonSourceReviewsTable);
+    const reports = savedReviews.filter((review) =>
+      isMonitoredComparisonSlug(review.reportSlug),
+    );
+    res.setHeader("Cache-Control", "no-store");
+    res.json({ reports });
+  } catch (error) {
+    req.log.error({ err: error }, "Comparison source review dates unavailable");
+    res.status(500).json({ error: "Comparison review dates are unavailable." });
+  }
+});
+
+router.post(
+  "/newsroom/comparison-reviews/:reportSlug/complete",
+  requireEditorAuth,
+  async (req, res): Promise<void> => {
+    const requestedSlug = Array.isArray(req.params.reportSlug)
+      ? req.params.reportSlug[0]
+      : req.params.reportSlug;
+    if (!isMonitoredComparisonSlug(requestedSlug)) {
+      res.status(404).json({ error: "Comparison report not found." });
+      return;
+    }
+    const reportSlug: MonitoredComparisonSlug = requestedSlug;
+
+    const now = new Date();
+    const checkedOn = now.toISOString().slice(0, 10);
+    const nextDue = addOneCalendarMonth(now);
+    try {
+      await db
+        .insert(comparisonSourceReviewsTable)
+        .values({
+          reportSlug,
+          checkedOn,
+          nextDue,
+          updatedBy: String(res.locals.editorUserId),
+        })
+        .onConflictDoUpdate({
+          target: comparisonSourceReviewsTable.reportSlug,
+          set: {
+            checkedOn,
+            nextDue,
+            updatedBy: String(res.locals.editorUserId),
+            updatedAt: now,
+          },
+        });
+      res.setHeader("Cache-Control", "no-store");
+      res.json({ reportSlug, checkedOn, nextDue });
+    } catch (error) {
+      req.log.error({ err: error, reportSlug }, "Comparison source review could not be saved");
+      res.status(500).json({ error: "The comparison review could not be saved." });
+    }
+  },
+);
 
 router.get("/newsroom/releases", requireEditorAuth, async (req, res): Promise<void> => {
   try {
