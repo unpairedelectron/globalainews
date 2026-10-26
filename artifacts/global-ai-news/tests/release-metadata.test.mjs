@@ -62,7 +62,11 @@ const apiPort = await findFreePort();
 const apiProcess = spawn('pnpm', ['--filter', '@workspace/api-server', 'run', 'dev'], {
   cwd: root,
   detached: true,
-  env: { ...process.env, PORT: String(apiPort) },
+  env: {
+    ...process.env,
+    PORT: String(apiPort),
+    NEWSROOM_ALLOW_DEFAULT_SCHEDULE_SEED: 'false',
+  },
   stdio: ['ignore', 'inherit', 'inherit'],
 });
 
@@ -75,6 +79,29 @@ try {
   await waitFor(`${apiUrl}/api/healthz`, apiProcess);
   const apiManifest = await (await fetch(`${apiUrl}/api/newsroom/metadata`)).json();
   const apiContent = await (await fetch(`${apiUrl}/api/newsroom/content`)).json();
+  const publicArticleSlugs = [
+    'reliability-is-the-new-ai-moat',
+    'weekly-deep-dive-cost-of-intelligence',
+  ];
+  for (const slug of publicArticleSlugs) {
+    assert.ok(
+      apiContent.stories.some((story) => story.slug === slug),
+      `${slug} must be in the public API snapshot even when no default editor releases are seeded`,
+    );
+    assert.ok(
+      apiManifest.routes.some((metadata) => metadata.path === `/article/${slug}`),
+      `${slug} must have API-backed metadata for its public article route`,
+    );
+  }
+  const sitemapResponse = await fetch(`${apiUrl}/api/newsroom/sitemap.xml`);
+  const sitemap = await sitemapResponse.text();
+  assert.equal(sitemapResponse.status, 200, 'API sitemap should be available');
+  for (const slug of publicArticleSlugs) {
+    assert.ok(
+      sitemap.includes(`/article/${slug}/`),
+      `${slug} must be present in the sitemap with its public API route`,
+    );
+  }
   const editedTitle = 'Edited by the newsroom before release — Global AI News';
   const editedDescription =
     'An API editorial update reaches the crawler-visible first response before publication.';

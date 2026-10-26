@@ -357,6 +357,7 @@ function newsroomPublicationNow(): Date {
 
 async function getPublishedStoriesFromSnapshot(): Promise<Story[]> {
   const now = newsroomPublicationNow();
+  const maintainedPublishedStories = getPublishedStories(now);
   const eligibleReleases = publishedReleaseSnapshot.filter((story) =>
     isPublicArticle({
       status: "scheduled",
@@ -365,7 +366,10 @@ async function getPublishedStoriesFromSnapshot(): Promise<Story[]> {
       section: releaseSection(story),
     }, now),
   );
-  return mergeEligiblePublishedStories(now, eligibleReleases);
+  return mergeEligiblePublishedStories(now, [
+    ...maintainedPublishedStories,
+    ...eligibleReleases,
+  ]);
 }
 
 function nextScheduledPublicationAt(now: number): number | undefined {
