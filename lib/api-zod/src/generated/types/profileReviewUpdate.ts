@@ -9,4 +9,10 @@
 export interface ProfileReviewUpdate {
   /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
   reviewedAt: string;
+  /**
+     * Short editorial reason or event that prompted this review.
+     * @minLength 1
+     * @maxLength 200
+     */
+  triggeringUpdate: string;
 }

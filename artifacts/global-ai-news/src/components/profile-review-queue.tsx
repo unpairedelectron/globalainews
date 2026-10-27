@@ -28,6 +28,7 @@ function reasonLabel(profile: ProfileReviewQueueItem): string {
 export function ProfileReviewQueue({ enabled }: { enabled: boolean }) {
   const queryClient = useQueryClient();
   const [reviewDates, setReviewDates] = useState<Record<string, string>>({});
+  const [reviewTriggers, setReviewTriggers] = useState<Record<string, string>>({});
   const [busySlug, setBusySlug] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -50,23 +51,29 @@ export function ProfileReviewQueue({ enabled }: { enabled: boolean }) {
   const recordReview = async (event: FormEvent<HTMLFormElement>, profile: ProfileReviewQueueItem) => {
     event.preventDefault();
     const reviewedAt = reviewDates[profile.slug] ?? '';
+    const triggeringUpdate = reviewTriggers[profile.slug]?.trim() ?? '';
     if (!reviewedAt) {
       setError('Choose the date you reviewed this profile before saving.');
+      return;
+    }
+    if (!triggeringUpdate) {
+      setError('Add the event or reason that prompted this review before saving.');
       return;
     }
     setBusySlug(profile.slug);
     setError(null);
     setNotice(null);
     try {
-      await updateReview.mutateAsync({ slug: profile.slug, data: { reviewedAt } });
+      await updateReview.mutateAsync({ slug: profile.slug, data: { reviewedAt, triggeringUpdate } });
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: getGetNewsroomProfileReviewsQueryKey() }),
         queryClient.invalidateQueries({ queryKey: getGetNewsroomContentQueryKey() }),
       ]);
       setReviewDates((current) => ({ ...current, [profile.slug]: '' }));
-      setNotice(`${profile.name} review date and profile version saved.`);
+      setReviewTriggers((current) => ({ ...current, [profile.slug]: '' }));
+      setNotice(`${profile.name} review and trigger saved.`);
     } catch {
-      setError('The profile review date could not be saved. Try again when the newsroom API is available.');
+      setError('The profile review and trigger could not be saved. Try again when the newsroom API is available.');
     } finally {
       setBusySlug(null);
     }
@@ -197,6 +204,20 @@ export function ProfileReviewQueue({ enabled }: { enabled: boolean }) {
                     max={today}
                     value={reviewDates[profile.slug] ?? ''}
                     onChange={(event) => setReviewDates((current) => ({ ...current, [profile.slug]: event.target.value }))}
+                    className="mt-2 min-h-11 w-full border border-foreground/20 bg-background px-3 text-sm"
+                  />
+                </label>
+                <label className="min-w-[240px] flex-[2]">
+                  <span className="eyebrow text-muted-foreground">Review trigger</span>
+                  <input
+                    data-testid={`input-profile-review-trigger-${profile.slug}`}
+                    type="text"
+                    name="triggeringUpdate"
+                    required
+                    maxLength={200}
+                    placeholder="New release, policy change, scheduled check…"
+                    value={reviewTriggers[profile.slug] ?? ''}
+                    onChange={(event) => setReviewTriggers((current) => ({ ...current, [profile.slug]: event.target.value }))}
                     className="mt-2 min-h-11 w-full border border-foreground/20 bg-background px-3 text-sm"
                   />
                 </label>

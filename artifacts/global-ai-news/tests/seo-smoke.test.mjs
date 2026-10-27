@@ -912,10 +912,28 @@ async function verifyProfileReviewQueueForSmoke() {
     body: JSON.stringify({}),
   });
   assert.equal(missingDateResponse.status, 400, 'A profile review was accepted without an explicit review date.');
+  const missingTriggerResponse = await fetch(`${apiOrigin}/api/newsroom/profile-reviews/openai`, {
+    method: 'PATCH',
+    headers: { ...headers, 'content-type': 'application/json' },
+    body: JSON.stringify({ reviewedAt: '2026-10-26' }),
+  });
+  assert.equal(missingTriggerResponse.status, 400, 'A profile review was accepted without its trigger.');
+  const blankTriggerResponse = await fetch(`${apiOrigin}/api/newsroom/profile-reviews/openai`, {
+    method: 'PATCH',
+    headers: { ...headers, 'content-type': 'application/json' },
+    body: JSON.stringify({ reviewedAt: '2026-10-26', triggeringUpdate: '   ' }),
+  });
+  assert.equal(blankTriggerResponse.status, 400, 'A whitespace-only profile review trigger was accepted.');
+  const longTriggerResponse = await fetch(`${apiOrigin}/api/newsroom/profile-reviews/openai`, {
+    method: 'PATCH',
+    headers: { ...headers, 'content-type': 'application/json' },
+    body: JSON.stringify({ reviewedAt: '2026-10-26', triggeringUpdate: 'x'.repeat(201) }),
+  });
+  assert.equal(longTriggerResponse.status, 400, 'An overlong profile review trigger was accepted.');
   const futureDateResponse = await fetch(`${apiOrigin}/api/newsroom/profile-reviews/openai`, {
     method: 'PATCH',
     headers: { ...headers, 'content-type': 'application/json' },
-    body: JSON.stringify({ reviewedAt: '9999-12-31' }),
+    body: JSON.stringify({ reviewedAt: '9999-12-31', triggeringUpdate: 'New product announcement' }),
   });
   assert.equal(futureDateResponse.status, 400, 'A future profile review date was accepted.');
   return queue;
@@ -989,7 +1007,7 @@ async function checkAutomationAuditReleaseLink() {
       deviceScaleFactor: 1,
       mobile: false,
     });
-    await verifyProfileReviewQueueForSmoke();
+    const profileReviewQueue = await verifyProfileReviewQueueForSmoke();
     await cdp.send('Page.navigate', { url: `${baseUrl}/insights?smoke-editor=1` });
     const runTestId = `automation-run-${scheduledRun.id}`;
     await waitForBrowserCondition(
@@ -1002,6 +1020,15 @@ async function checkAutomationAuditReleaseLink() {
       `Boolean(document.querySelector('[data-testid="profile-review-queue"]'))`,
       'The editor workspace did not render the profile review queue.',
     );
+    const firstDueProfile = profileReviewQueue.profiles[0];
+    if (firstDueProfile) {
+      const triggerInputTestId = `input-profile-review-trigger-${firstDueProfile.slug}`;
+      await waitForBrowserCondition(
+        cdp,
+        `(() => { const input = document.querySelector('[data-testid="${triggerInputTestId}"]'); return input instanceof HTMLInputElement && input.required && input.maxLength === 200; })()`,
+        `The ${firstDueProfile.slug} review form did not render a required, length-limited trigger field.`,
+      );
+    }
 
     await evaluateBrowser(cdp, `(() => {
       const link = document.querySelector('[data-testid="${runTestId}"] a');

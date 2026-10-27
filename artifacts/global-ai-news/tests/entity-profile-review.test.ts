@@ -110,6 +110,7 @@ test('the newest review remains current while earlier review records are retaine
   assert.equal(updated.profileReviewHistory?.length, 2);
   assert.equal(updated.profileReviewHistory?.[0].reviewedAt, '2026-10-06');
   assert.equal(updated.profileReviewHistory?.[1].reviewedAt, '2026-10-15');
+  assert.equal(updated.profileReviewHistory?.[1].triggeringUpdate, 'OpenAI announces GPT-5.5');
   assert.equal(updated.profileReviewHistory?.[1].referencesChecked[0].captureStatus, 'fingerprinted');
   assert.equal(updated.profileReviewHistory?.[1].referencesChecked[0].contentHash, 'a'.repeat(64));
 });

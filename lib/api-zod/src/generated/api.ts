@@ -407,17 +407,20 @@ export const GetNewsroomProfileReviewsResponse = zod.object({
 
 
 /**
- * @summary Record an explicit editorial review date for a profile
+ * @summary Record an editorial review date and its trigger
  */
 export const UpdateNewsroomProfileReviewParams = zod.object({
   "slug": zod.coerce.string()
 })
 
 export const updateNewsroomProfileReviewBodyReviewedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const updateNewsroomProfileReviewBodyTriggeringUpdateMax = 200;
+
 
 
 export const UpdateNewsroomProfileReviewBody = zod.object({
-  "reviewedAt": zod.string().regex(updateNewsroomProfileReviewBodyReviewedAtRegExp)
+  "reviewedAt": zod.string().regex(updateNewsroomProfileReviewBodyReviewedAtRegExp),
+  "triggeringUpdate": zod.string().min(1).max(updateNewsroomProfileReviewBodyTriggeringUpdateMax).describe('Short editorial reason or event that prompted this review.')
 })
 
 export const updateNewsroomProfileReviewResponseReviewedAtRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');

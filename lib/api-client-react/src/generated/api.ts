@@ -389,7 +389,7 @@ export const getUpdateNewsroomProfileReviewUrl = (slug: string,) => {
 }
 
 /**
- * @summary Record an explicit editorial review date for a profile
+ * @summary Record an editorial review date and its trigger
  */
 export const updateNewsroomProfileReview = async (slug: string,
     profileReviewUpdate: ProfileReviewUpdate, options?: Parameters<typeof customFetch>[1]): Promise<ProfileReviewDate> => {
@@ -456,7 +456,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type UpdateNewsroomProfileReviewMutationVariables = {slug: string;data: BodyType<ProfileReviewUpdate>}
 
     /**
- * @summary Record an explicit editorial review date for a profile
+ * @summary Record an editorial review date and its trigger
  */
 export const useUpdateNewsroomProfileReview = <TError = ErrorType<ErrorResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNewsroomProfileReview>>, TError,UpdateNewsroomProfileReviewMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}

@@ -851,7 +851,7 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
                 ...(entity.profileReviewHistory ?? []),
                 ...(profileReviewHistoryBySlug.get(entity.slug) ?? []).map((review) => ({
                   reviewedAt: review.reviewedAt,
-                  triggeringUpdate: "Editorial review recorded from the newsroom queue.",
+                  triggeringUpdate: review.triggeringUpdate ?? "Editorial review recorded from the newsroom queue.",
                   referencesChecked: [],
                   claimChangeSummary: summarizeEntityProfileClaimComparison(review.claimComparison),
                   claimComparison: review.claimComparison,
@@ -1048,9 +1048,14 @@ router.patch(
       return;
     }
     const reviewedAt = body.data.reviewedAt;
+    const triggeringUpdate = body.data.triggeringUpdate.trim();
     const today = new Date().toISOString().slice(0, 10);
     if (!isValidProfileReviewDate(reviewedAt) || reviewedAt > today) {
       res.status(400).json({ error: "Enter a valid review date that is not in the future." });
+      return;
+    }
+    if (!triggeringUpdate) {
+      res.status(400).json({ error: "Enter the event or reason that prompted this review." });
       return;
     }
 
@@ -1065,7 +1070,7 @@ router.patch(
         const currentClaims = getEntityProfileClaims(entity);
         const reviewVersions = (savedProfile?.reviewHistory ?? [])
           .filter((review) => review.reviewedAt !== reviewedAt)
-          .concat({ reviewedAt, claims: currentClaims, claimComparison: { status: "no-prior-version", changes: [] } })
+          .concat({ reviewedAt, triggeringUpdate, claims: currentClaims, claimComparison: { status: "no-prior-version", changes: [] } })
           .sort((left, right) => left.reviewedAt.localeCompare(right.reviewedAt))
           .map((review, index, reviews) => ({
             ...review,

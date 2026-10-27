@@ -9,6 +9,7 @@ export type ProfileReviewClaimChange = {
 };
 export type ProfileReviewVersion = {
   reviewedAt: string;
+  triggeringUpdate?: string;
   claims: ProfileReviewClaimSnapshot[];
   claimComparison: {
     status: "compared" | "no-prior-version";

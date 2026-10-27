@@ -931,6 +931,7 @@ async function assertContrastAcrossPublicPages() {
             assert.equal(response?.status(), 200, `${route} must load for the ${theme} contrast audit at ${width}px`);
             await page.locator('main').first().waitFor({ state: 'visible', timeout: 10_000 });
             await page.evaluate(() => document.fonts.ready);
+            await page.addStyleTag({ content: '*, *::before, *::after { transition: none !important; animation: none !important; }' });
             const result = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
             for (const violation of result.violations) {
               failures.push({
