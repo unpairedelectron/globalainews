@@ -3,11 +3,14 @@ import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { copyFileSync, createReadStream, existsSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { execFileSync, spawn, spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import os from 'node:os';
 import { after, before, test } from 'node:test';
 
 const root = path.resolve(import.meta.dirname, '..');
+const dbRequire = createRequire(path.resolve(root, '../../lib/db/package.json'));
+const { Client: PostgresClient } = dbRequire('pg');
 const distDir = path.join(root, 'dist', 'public');
 const publicDir = path.join(root, 'public');
 const site = 'https://www.globalainews.in';
@@ -2595,6 +2598,58 @@ async function startApiServer() {
   throw new Error('The smoke test API server did not become ready within 60 seconds.');
 }
 
+async function stopApiServer() {
+  const child = apiProcess;
+  if (!child) return;
+  apiProcess = undefined;
+  const gracefulExit = waitForChildExit(child, 10_000);
+  try {
+    if (child.pid) process.kill(-child.pid, 'SIGTERM');
+    else child.kill('SIGTERM');
+  } catch {
+    child.kill('SIGTERM');
+  }
+  if (await gracefulExit) return;
+
+  const forcedExit = waitForChildExit(child, 5_000);
+  try {
+    if (child.pid) process.kill(-child.pid, 'SIGKILL');
+    else child.kill('SIGKILL');
+  } catch {
+    child.kill('SIGKILL');
+  }
+  await forcedExit;
+}
+
+function getProfileClaimSnapshot(entity) {
+  return [
+    { section: 'Profile summary', text: entity.strapline },
+    { section: 'Overview', text: entity.overview },
+    ...(entity.headquarters ? [{ section: 'Headquarters', text: entity.headquarters }] : []),
+    ...(entity.founded ? [{ section: 'Founded', text: entity.founded }] : []),
+    ...(entity.profileSections ?? []).flatMap((section) =>
+      section.paragraphs.map((text) => ({ section: section.heading, text })),
+    ),
+    ...(entity.keyMetrics ?? []).map((metric) => ({
+      section: `Key metric: ${metric.label}`,
+      text: `${metric.value} — ${metric.context}`,
+    })),
+    ...(entity.latestDevelopments ?? []).map((text) => ({
+      section: 'Latest developments',
+      text,
+    })),
+  ];
+}
+
+async function saveProfileReviewDate(slug, reviewedAt, headers) {
+  const response = await fetch(`${apiOrigin}/api/newsroom/profile-reviews/${encodeURIComponent(slug)}`, {
+    method: 'PATCH',
+    headers: { ...headers, 'content-type': 'application/json' },
+    body: JSON.stringify({ reviewedAt, triggeringUpdate: 'Smoke test profile claim comparison persistence' }),
+  });
+  return { response, body: await response.json() };
+}
+
 function expectedPrimaryType(route, article) {
   if (route.startsWith('/person/')) return 'ProfilePage';
   if (article) return 'NewsArticle';
@@ -2776,20 +2831,7 @@ after(async () => {
   routeBrowserProcess = undefined;
   routeBrowserPromise = undefined;
   await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
-  if (apiProcess?.pid) {
-    try {
-      process.kill(-apiProcess.pid, 'SIGTERM');
-    } catch {
-      apiProcess.kill('SIGTERM');
-    }
-    await new Promise((resolve) => {
-      if (apiProcess.killed || apiProcess.exitCode !== null) {
-        resolve();
-      } else {
-        apiProcess.once('exit', resolve);
-      }
-    });
-  }
+  await stopApiServer();
   if (devProcess) devProcess.kill('SIGTERM');
 });
 
@@ -3425,6 +3467,185 @@ test('hydrated Daily Brief and India Watch use a duplicate-free updated snapshot
     );
   } finally {
     newsroomContentFixture = undefined;
+  }
+});
+
+test('saved profile claim comparisons persist through API restart and public page reload', {
+  concurrency: false,
+  skip: Boolean(process.env.SMOKE_API_ORIGIN),
+}, async () => {
+  assert.ok(process.env.DATABASE_URL, 'The profile review persistence smoke test requires DATABASE_URL.');
+  const db = new PostgresClient({ connectionString: process.env.DATABASE_URL });
+  const profileSlug = 'openai';
+  const headers = { 'x-newsroom-test-editor': smokeEditorId };
+  const today = new Date().toISOString().slice(0, 10);
+  const firstReviewedAt = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  let originalRow;
+  let originalRowCaptured = false;
+  let apiWasRestarted = false;
+
+  const restoreProfileReviewRow = async () => {
+    if (!originalRowCaptured) return;
+    if (!originalRow) {
+      await db.query('DELETE FROM profile_review_dates WHERE profile_slug = $1', [profileSlug]);
+      return;
+    }
+    await db.query(
+      `INSERT INTO profile_review_dates (profile_slug, reviewed_at, review_history, updated_by, updated_at)
+       VALUES ($1, $2, $3::jsonb, $4, $5)
+       ON CONFLICT (profile_slug) DO UPDATE SET
+         reviewed_at = EXCLUDED.reviewed_at,
+         review_history = EXCLUDED.review_history,
+         updated_by = EXCLUDED.updated_by,
+         updated_at = EXCLUDED.updated_at`,
+      [
+        originalRow.profile_slug,
+        originalRow.reviewed_at,
+        JSON.stringify(originalRow.review_history),
+        originalRow.updated_by,
+        originalRow.updated_at,
+      ],
+    );
+  };
+
+  await db.connect();
+  try {
+    const savedRow = await db.query(
+      `SELECT profile_slug, reviewed_at, review_history, updated_by, updated_at
+       FROM profile_review_dates WHERE profile_slug = $1`,
+      [profileSlug],
+    );
+    originalRow = savedRow.rows[0];
+    originalRowCaptured = true;
+
+    const initialContentResponse = await fetch(`${apiOrigin}/api/newsroom/content`);
+    assert.equal(initialContentResponse.status, 200, 'The public profile snapshot was unavailable before the review.');
+    const initialContent = await initialContentResponse.json();
+    const entity = initialContent.entities.find((candidate) => candidate.slug === profileSlug);
+    assert.ok(entity, 'The OpenAI profile was missing from the public newsroom response.');
+    const currentClaims = getProfileClaimSnapshot(entity);
+    assert.ok(currentClaims.length >= 2, 'The profile did not provide enough claims for a comparison.');
+
+    const unauthorized = await saveProfileReviewDate(profileSlug, firstReviewedAt, {});
+    assert.equal(unauthorized.response.status, 401, 'An unauthenticated profile review was accepted.');
+
+    await db.query('DELETE FROM profile_review_dates WHERE profile_slug = $1', [profileSlug]);
+    const firstSave = await saveProfileReviewDate(profileSlug, firstReviewedAt, headers);
+    assert.equal(firstSave.response.status, 200, `The authenticated first profile review failed: ${JSON.stringify(firstSave.body)}`);
+    assert.deepEqual(firstSave.body, { slug: profileSlug, reviewedAt: firstReviewedAt });
+
+    const firstSavedRow = await db.query(
+      'SELECT review_history FROM profile_review_dates WHERE profile_slug = $1',
+      [profileSlug],
+    );
+    const firstReview = firstSavedRow.rows[0]?.review_history?.[0];
+    assert.deepEqual(firstReview?.claims, currentClaims, 'The first authenticated review did not persist the current claim snapshot.');
+    assert.deepEqual(firstReview?.claimComparison, {
+      status: 'no-prior-version',
+      changes: [],
+    }, 'The first saved review did not preserve its no-prior-version status.');
+
+    const previousClaims = currentClaims
+      .filter((_, index) => index !== 1)
+      .map((claim, index) => index === 0
+        ? { ...claim, text: 'Prior saved profile summary for persistence verification.' }
+        : claim);
+    previousClaims.push({
+      section: 'Regression-only section',
+      text: 'This claim existed only in the previous saved profile.',
+    });
+    const seededHistory = [{ ...firstReview, claims: previousClaims }];
+    await db.query(
+      'UPDATE profile_review_dates SET review_history = $1::jsonb WHERE profile_slug = $2',
+      [JSON.stringify(seededHistory), profileSlug],
+    );
+
+    const secondSave = await saveProfileReviewDate(profileSlug, today, headers);
+    assert.equal(secondSave.response.status, 200, `The subsequent profile review failed: ${JSON.stringify(secondSave.body)}`);
+    const secondSavedRow = await db.query(
+      'SELECT reviewed_at, review_history FROM profile_review_dates WHERE profile_slug = $1',
+      [profileSlug],
+    );
+    const savedHistory = secondSavedRow.rows[0]?.review_history;
+    const savedSecondReview = savedHistory?.find((review) => review.reviewedAt === today);
+    assert.deepEqual(
+      savedSecondReview?.claims,
+      currentClaims,
+      'The later authenticated review did not persist its current claim snapshot.',
+    );
+    assert.deepEqual(
+      new Set(savedSecondReview?.claimComparison?.changes.map((change) => change.status)),
+      new Set(['added', 'revised', 'removed']),
+      'The later saved review did not retain added, revised, and removed claim changes.',
+    );
+    assert.equal(
+      savedHistory?.find((review) => review.reviewedAt === firstReviewedAt)?.claimComparison?.status,
+      'no-prior-version',
+      'Recomputing review history changed the first review into a misleading comparison.',
+    );
+
+    await stopApiServer();
+    await startApiServer();
+    apiWasRestarted = true;
+
+    const restartedContentResponse = await fetch(`${apiOrigin}/api/newsroom/content`);
+    assert.equal(restartedContentResponse.status, 200, 'The public profile snapshot failed after restarting the API.');
+    const restartedContent = await restartedContentResponse.json();
+    const restartedEntity = restartedContent.entities.find((candidate) => candidate.slug === profileSlug);
+    const publicHistory = restartedEntity?.profileReviewHistory ?? [];
+    const publicReviewDate = (review) => String(review.reviewedAt).slice(0, 10);
+    const publicFirstReview = publicHistory.find((review) => publicReviewDate(review) === firstReviewedAt);
+    const publicSecondReview = publicHistory.find((review) => publicReviewDate(review) === today);
+    assert.ok(
+      publicFirstReview,
+      `The public profile omitted its first saved review after the API restart (dates: ${publicHistory.map((review) => review.reviewedAt).join(', ')}).`,
+    );
+    assert.equal(publicFirstReview.claimComparison?.status, 'no-prior-version');
+    assert.ok(publicSecondReview, 'The public profile omitted its later saved review after the API restart.');
+    assert.deepEqual(
+      new Set(publicSecondReview.claimComparison?.changes.map((change) => change.status)),
+      new Set(['added', 'revised', 'removed']),
+      'The public API dropped structured claim changes after the API restart.',
+    );
+    assert.match(publicSecondReview.claimChangeSummary, /1 added, 1 revised, 1 removed/u);
+
+    const profilePath = `/${entity.kind}/${profileSlug}/`;
+    const renderedBeforeReload = await renderRoute(profilePath, 1440, 1000);
+    assert.match(renderedBeforeReload, /aria-label="OpenAI profile review history"/u);
+    assert.match(renderedBeforeReload, /revised · Profile summary/u);
+    assert.match(renderedBeforeReload, /added · Overview/u);
+    assert.match(renderedBeforeReload, /removed · Regression-only section/u);
+    assert.match(renderedBeforeReload, /No comparison available\./u);
+
+    const cdp = await getRouteBrowser();
+    await cdp.send('Page.reload', { ignoreCache: true });
+    await waitForBrowserCondition(
+      cdp,
+      `location.pathname === ${JSON.stringify(profilePath)} && document.readyState === 'complete' && performance.getEntriesByType('resource').some((entry) => new URL(entry.name, location.href).pathname.endsWith('/api/newsroom/content') && entry.responseEnd > 0) && Boolean(document.querySelector('[aria-label="OpenAI profile review history"]'))`,
+      'The public profile lost its saved comparison after a full page reload.',
+    );
+    const renderedAfterReload = await evaluateBrowser(cdp, 'document.documentElement.outerHTML');
+    assert.match(renderedAfterReload, /revised · Profile summary/u);
+    assert.match(renderedAfterReload, /added · Overview/u);
+    assert.match(renderedAfterReload, /removed · Regression-only section/u);
+    assert.match(renderedAfterReload, /No comparison available\./u);
+  } finally {
+    try {
+      await restoreProfileReviewRow();
+      if (apiWasRestarted || apiProcess) {
+        const cacheBustingSave = await saveProfileReviewDate(profileSlug, firstReviewedAt, headers);
+        assert.equal(
+          cacheBustingSave.response.status,
+          200,
+          `Could not invalidate the public profile snapshot during fixture cleanup: ${JSON.stringify(cacheBustingSave.body)}`,
+        );
+        await restoreProfileReviewRow();
+        const restoredContentResponse = await fetch(`${apiOrigin}/api/newsroom/content`);
+        assert.equal(restoredContentResponse.status, 200, 'Could not refresh the restored public profile snapshot.');
+      }
+    } finally {
+      await db.end();
+    }
   }
 });
 
