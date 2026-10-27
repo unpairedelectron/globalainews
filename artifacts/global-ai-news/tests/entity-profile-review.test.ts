@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   entities,
+  compareEntityProfileClaims,
   ENTITY_PROFILE_REVIEW_INTERVAL_DAYS,
+  getEntityProfileClaims,
   getEntityProfileReviewReason,
   isEntityProfileReviewDue,
   normalizeEntityProfileReviews,
@@ -110,4 +112,81 @@ test('the newest review remains current while earlier review records are retaine
   assert.equal(updated.profileReviewHistory?.[1].reviewedAt, '2026-10-15');
   assert.equal(updated.profileReviewHistory?.[1].referencesChecked[0].captureStatus, 'fingerprinted');
   assert.equal(updated.profileReviewHistory?.[1].referencesChecked[0].contentHash, 'a'.repeat(64));
+});
+
+test('profile claim comparison identifies additions, revisions, and removals', () => {
+  const baseProfile = {
+    strapline: 'Summary.',
+    overview: 'Opening overview.',
+    keyMetrics: [],
+    latestDevelopments: [],
+  };
+  const previous = getEntityProfileClaims({
+    ...baseProfile,
+    profileSections: [
+      { heading: 'Overview', paragraphs: ['First claim.', 'Claim to revise.', 'Claim to remove.'] },
+      { heading: 'Work', paragraphs: ['Unchanged claim.'] },
+    ],
+  });
+  const current = getEntityProfileClaims({
+    ...baseProfile,
+    profileSections: [
+      { heading: 'Overview', paragraphs: ['First claim.', 'Revised claim.', 'New claim.'] },
+      { heading: 'Work', paragraphs: ['Unchanged claim.'] },
+    ],
+  });
+  const comparison = compareEntityProfileClaims(previous, current);
+
+  assert.equal(comparison.status, 'compared');
+  assert.deepEqual(comparison.changes, [
+    {
+      section: 'Overview',
+      status: 'revised',
+      previousText: 'Claim to revise.',
+      currentText: 'Revised claim.',
+    },
+    {
+      section: 'Overview',
+      status: 'revised',
+      previousText: 'Claim to remove.',
+      currentText: 'New claim.',
+    },
+  ]);
+});
+
+test('profile comparison preserves unchanged claims and labels missing prior versions', () => {
+  const baseProfile = {
+    strapline: 'Summary.',
+    overview: 'Opening overview.',
+    keyMetrics: [],
+    latestDevelopments: [],
+  };
+  const previous = getEntityProfileClaims({
+    ...baseProfile,
+    profileSections: [{ heading: 'Overview', paragraphs: ['Keep.', 'Remove.'] }],
+  });
+  const withAddition = getEntityProfileClaims({
+    ...baseProfile,
+    profileSections: [{ heading: 'Overview', paragraphs: ['Keep.', 'Remove.', 'Add.'] }],
+  });
+  const withRemoval = getEntityProfileClaims({
+    ...baseProfile,
+    profileSections: [{ heading: 'Overview', paragraphs: ['Keep.'] }],
+  });
+  const unchanged = compareEntityProfileClaims(previous, getEntityProfileClaims({
+    ...baseProfile,
+    profileSections: [{ heading: 'Overview', paragraphs: ['Keep.', 'Remove.'] }],
+  }));
+
+  assert.deepEqual(compareEntityProfileClaims(undefined, withAddition), {
+    status: 'no-prior-version',
+    changes: [],
+  });
+  assert.deepEqual(compareEntityProfileClaims(previous, withAddition).changes, [
+    { section: 'Overview', status: 'added', previousText: null, currentText: 'Add.' },
+  ]);
+  assert.deepEqual(compareEntityProfileClaims(previous, withRemoval).changes, [
+    { section: 'Overview', status: 'removed', previousText: 'Remove.', currentText: null },
+  ]);
+  assert.deepEqual(unchanged, { status: 'compared', changes: [] });
 });

@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { ProfileClaimComparison } from './profileClaimComparison';
 import type { PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItem } from './publicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItem';
 
 export type PublicNewsroomEntityProfileReviewHistoryItem = {
@@ -12,4 +13,5 @@ export type PublicNewsroomEntityProfileReviewHistoryItem = {
   triggeringUpdate: string;
   referencesChecked: PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItem[];
   claimChangeSummary: string;
+  claimComparison?: ProfileClaimComparison;
 };

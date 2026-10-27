@@ -102,7 +102,16 @@ export const GetNewsroomContentResponse = zod.object({
   "snapshotUrl": zod.string().url().optional(),
   "captureNote": zod.string().optional()
 })),
-  "claimChangeSummary": zod.string()
+  "claimChangeSummary": zod.string(),
+  "claimComparison": zod.object({
+  "status": zod.enum(['compared', 'no-prior-version']),
+  "changes": zod.array(zod.object({
+  "section": zod.string(),
+  "status": zod.enum(['added', 'revised', 'removed']),
+  "previousText": zod.string().nullable(),
+  "currentText": zod.string().nullable()
+}))
+}).optional()
 })).optional().describe('Editorial review records for the profile, distinct from the current freshness status.'),
   "headquarters": zod.string().optional(),
   "founded": zod.string().optional(),

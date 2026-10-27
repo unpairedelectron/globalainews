@@ -511,6 +511,32 @@ function ProfileReviewReferenceRow({ reference }: { reference: ProfileReviewRefe
   </li>;
 }
 
+function ProfileReviewClaimChanges({ comparison }: {
+  comparison: NonNullable<NonNullable<Entity['profileReviewHistory']>[number]['claimComparison']>;
+}) {
+  if (comparison.status === 'no-prior-version') {
+    return <p className="mt-2 border-l-2 border-foreground/25 pl-3 text-xs leading-5 text-muted-foreground">
+      No comparison available. The earlier profile version was not retained.
+    </p>;
+  }
+  if (comparison.changes.length === 0) {
+    return <p className="mt-2 text-xs leading-5 text-muted-foreground">No claim text changed since the previous saved review.</p>;
+  }
+  return <ul className="mt-2 grid gap-3">
+    {comparison.changes.map((change, index) => (
+      <li key={`${change.section}-${change.status}-${index}`} className={`border-l-2 pl-3 ${change.status === 'added' ? 'border-emerald-700 dark:border-emerald-400' : change.status === 'removed' ? 'border-rose-700 dark:border-rose-400' : 'border-amber-700 dark:border-amber-400'}`}>
+        <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          {change.status} · {change.section}
+        </p>
+        {change.status === 'revised' ? <>
+          <p className="mt-1 text-xs text-muted-foreground"><span className="font-medium">Before:</span> {change.previousText}</p>
+          <p className="mt-1 text-xs"><span className="font-medium">After:</span> {change.currentText}</p>
+        </> : <p className="mt-1 text-xs">{change.status === 'added' ? change.currentText : change.previousText}</p>}
+      </li>
+    ))}
+  </ul>;
+}
+
 export function EntityPage({ kind }: { kind: string }) {
   const { slug = '' } = useParams<{ slug: string }>();
   const snapshot = useNewsroomSnapshot();
@@ -539,7 +565,7 @@ export function EntityPage({ kind }: { kind: string }) {
     <section className="grid gap-10 border-b border-foreground/15 py-12 md:grid-cols-[.65fr_1.35fr]"><div><SectionLabel>Key metrics</SectionLabel>{entity.keyMetrics.map((metric) => <div key={metric.label} className="border-b border-foreground/15 py-4"><p className="eyebrow text-primary">{metric.label}</p><p className="mt-2 font-serif text-3xl">{metric.value}</p><p className="mt-1 text-xs text-muted-foreground">{metric.context}</p></div>)}</div><div><SectionLabel>Latest developments</SectionLabel>{entity.latestDevelopments.map((item) => <p key={item} className="border-b border-foreground/15 py-4 text-sm leading-6">{item}</p>)}<div className="mt-8"><SectionLabel>Related organizations</SectionLabel><EntityLinks slugs={entity.relatedOrganizations} /></div></div></section>
     <section className="grid gap-10 border-b border-foreground/15 py-12 md:grid-cols-2"><div><SectionLabel>Recent reporting</SectionLabel>{entity.recentStories.map((storySlug, index) => <StoryRow key={storySlug} slug={storySlug} rank={index + 1} compact />)}</div><div><SectionLabel>Timeline</SectionLabel><TimelineList slugs={entity.timeline} /></div></section>
       {entity.primaryReferences?.length ? <section className="border-b border-foreground/15 py-10"><SectionLabel>Primary references</SectionLabel><div className="grid gap-x-8 border-t border-foreground/15 sm:grid-cols-2">{entity.primaryReferences.map((reference) => <a key={reference.url} href={reference.url} target="_blank" rel="noopener noreferrer" className="flex items-start justify-between gap-4 border-b border-foreground/15 py-4 text-sm leading-6 hover:text-primary"><span>{reference.label}<span className="mt-1 block break-all font-mono text-[10px] text-muted-foreground">{new URL(reference.url).hostname}</span></span><ArrowUpRight size={15} aria-hidden="true" className="mt-1 shrink-0" /></a>)}</div><p className="mt-4 text-xs leading-5 text-muted-foreground">Primary references document what organizations publish about themselves. They are not independent verification of every claim.</p></section> : null}
-      {entity.profileReviewHistory?.length ? <section aria-label={`${entity.name} profile review history`} className="border-b border-foreground/15 py-10"><SectionLabel>{entity.profileStatus === 'historical' ? 'Historical model record · review history' : 'Profile review history'}</SectionLabel><p className="mb-5 max-w-3xl text-xs leading-5 text-muted-foreground">Past editorial checks are listed separately from the current freshness status above.</p><ol className="border-t border-foreground/15">{[...entity.profileReviewHistory].sort((a, b) => b.reviewedAt.localeCompare(a.reviewedAt)).map((review, index) => <li key={`${review.reviewedAt}-${index}`} className="grid gap-4 border-b border-foreground/15 py-5 md:grid-cols-[180px_1fr]"><div><time dateTime={review.reviewedAt} className="font-mono text-xs">{formatEditorialDate(review.reviewedAt)}</time><p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{entity.profileStatus === 'historical' ? 'Historical model record' : 'Maintained profile'}</p></div><div className="space-y-3 text-sm leading-6"><p><span className="font-medium">Triggering update:</span> {review.triggeringUpdate}</p><p><span className="font-medium">Claim changes:</span> {review.claimChangeSummary}</p><div><p className="font-medium">References checked</p><ul>{review.referencesChecked.map((reference) => <ProfileReviewReferenceRow key={reference.url} reference={reference} />)}</ul></div></div></li>)}</ol></section> : null}
+      {entity.profileReviewHistory?.length ? <section aria-label={`${entity.name} profile review history`} className="border-b border-foreground/15 py-10"><SectionLabel>{entity.profileStatus === 'historical' ? 'Historical model record · review history' : 'Profile review history'}</SectionLabel><p className="mb-5 max-w-3xl text-xs leading-5 text-muted-foreground">Past editorial checks are listed separately from the current freshness status above.</p><ol className="border-t border-foreground/15">{[...entity.profileReviewHistory].sort((a, b) => b.reviewedAt.localeCompare(a.reviewedAt)).map((review, index) => <li key={`${review.reviewedAt}-${index}`} className="grid gap-4 border-b border-foreground/15 py-5 md:grid-cols-[180px_1fr]"><div><time dateTime={review.reviewedAt} className="font-mono text-xs">{formatEditorialDate(review.reviewedAt)}</time><p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{entity.profileStatus === 'historical' ? 'Historical model record' : 'Maintained profile'}</p></div><div className="space-y-3 text-sm leading-6"><p><span className="font-medium">Triggering update:</span> {review.triggeringUpdate}</p><p><span className="font-medium">Claim changes:</span> {review.claimChangeSummary}</p><div><p className="font-medium">Claim-by-claim comparison</p><ProfileReviewClaimChanges comparison={review.claimComparison ?? { status: 'no-prior-version', changes: [] }} /></div><div><p className="font-medium">References checked</p>{review.referencesChecked.length > 0 ? <ul>{review.referencesChecked.map((reference) => <ProfileReviewReferenceRow key={reference.url} reference={reference} />)}</ul> : <p className="mt-2 text-xs leading-5 text-muted-foreground">No references were recorded for this review.</p>}</div></div></li>)}</ol></section> : null}
      {(entityResearch.length || entityData.length || entityTopics.length || entitySources.length) > 0 && <section className="grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
       {entityResearch.length > 0 && <div><SectionLabel>Research</SectionLabel>{entityResearch.map((record) => <Link key={record.slug} href={`/research/${record.slug}`} className="block border-b border-foreground/15 py-3 text-sm hover:text-primary">{record.title}</Link>)}</div>}
       {entityData.length > 0 && <div><SectionLabel>Data products</SectionLabel>{entityData.map((record) => <Link key={record.slug} href={`/data/${record.slug}`} className="block border-b border-foreground/15 py-3 text-sm hover:text-primary">{record.title}</Link>)}</div>}

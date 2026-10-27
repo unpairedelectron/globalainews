@@ -265,6 +265,37 @@ export interface PublicNewsroomTimelineEvent {
   dataProductSlugs?: string[];
 }
 
+export type ProfileClaimChangeStatus = typeof ProfileClaimChangeStatus[keyof typeof ProfileClaimChangeStatus];
+
+
+export const ProfileClaimChangeStatus = {
+  added: 'added',
+  revised: 'revised',
+  removed: 'removed',
+} as const;
+
+export interface ProfileClaimChange {
+  section: string;
+  status: ProfileClaimChangeStatus;
+  /** @nullable */
+  previousText: string | null;
+  /** @nullable */
+  currentText: string | null;
+}
+
+export type ProfileClaimComparisonStatus = typeof ProfileClaimComparisonStatus[keyof typeof ProfileClaimComparisonStatus];
+
+
+export const ProfileClaimComparisonStatus = {
+  compared: 'compared',
+  'no-prior-version': 'no-prior-version',
+} as const;
+
+export interface ProfileClaimComparison {
+  status: ProfileClaimComparisonStatus;
+  changes: ProfileClaimChange[];
+}
+
 export type PublicNewsroomEntityKind = typeof PublicNewsroomEntityKind[keyof typeof PublicNewsroomEntityKind];
 
 
@@ -330,6 +361,7 @@ export type PublicNewsroomEntityProfileReviewHistoryItem = {
   triggeringUpdate: string;
   referencesChecked: PublicNewsroomEntityProfileReviewHistoryItemReferencesCheckedItem[];
   claimChangeSummary: string;
+  claimComparison?: ProfileClaimComparison;
 };
 
 export type PublicNewsroomEntityKeyMetricsItem = {

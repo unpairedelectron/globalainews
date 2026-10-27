@@ -809,6 +809,32 @@ components:
           items:
             type: string
       required: [slug, date, title, description, entities]
+    ProfileClaimChange:
+      type: object
+      additionalProperties: false
+      properties:
+        section:
+          type: string
+        status:
+          type: string
+          enum: [added, revised, removed]
+        previousText:
+          type: ["string", "null"]
+        currentText:
+          type: ["string", "null"]
+      required: [section, status, previousText, currentText]
+    ProfileClaimComparison:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum: [compared, no-prior-version]
+        changes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProfileClaimChange"
+      required: [status, changes]
     PublicNewsroomEntity:
       type: object
       additionalProperties: false
@@ -898,6 +924,8 @@ components:
                   required: [label, url, captureStatus]
               claimChangeSummary:
                 type: string
+              claimComparison:
+                $ref: "#/components/schemas/ProfileClaimComparison"
             required: [reviewedAt, triggeringUpdate, referencesChecked, claimChangeSummary]
         headquarters:
           type: string

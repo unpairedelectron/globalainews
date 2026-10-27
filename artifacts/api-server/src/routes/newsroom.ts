@@ -1,4 +1,4 @@
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { gzipSync } from "node:zlib";
 import {
   Router,
@@ -51,6 +51,9 @@ import {
   getReleaseWordCount,
   getEditorialWordCountBounds,
   getEntityProfileReviewQueueState,
+  getEntityProfileClaims,
+  compareEntityProfileClaims,
+  summarizeEntityProfileClaimComparison,
   getPublicStoryDek,
   getPublishedStories,
   mergeEligiblePublishedStories,
@@ -821,10 +824,14 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
       .select({
         profileSlug: profileReviewDatesTable.profileSlug,
         reviewedAt: profileReviewDatesTable.reviewedAt,
+        reviewHistory: profileReviewDatesTable.reviewHistory,
       })
       .from(profileReviewDatesTable);
     const profileReviewDatesBySlug = new Map(
       savedProfileReviews.map((review) => [review.profileSlug, review.reviewedAt]),
+    );
+    const profileReviewHistoryBySlug = new Map(
+      savedProfileReviews.map((review) => [review.profileSlug, review.reviewHistory]),
     );
     const snapshot = GetNewsroomContentResponse.parse({
       generatedAt: new Date().toISOString(),
@@ -837,6 +844,20 @@ router.get("/newsroom/content", async (req, res): Promise<void> => {
         ...entity,
         ...(profileReviewDatesBySlug.has(entity.slug)
           ? { profileReviewedAt: profileReviewDatesBySlug.get(entity.slug) }
+          : {}),
+        ...(profileReviewHistoryBySlug.has(entity.slug)
+          ? {
+              profileReviewHistory: [
+                ...(entity.profileReviewHistory ?? []),
+                ...(profileReviewHistoryBySlug.get(entity.slug) ?? []).map((review) => ({
+                  reviewedAt: review.reviewedAt,
+                  triggeringUpdate: "Editorial review recorded from the newsroom queue.",
+                  referencesChecked: [],
+                  claimChangeSummary: summarizeEntityProfileClaimComparison(review.claimComparison),
+                  claimComparison: review.claimComparison,
+                })),
+              ],
+            }
           : {}),
         timeline: entity.timeline.filter((slug) => publicTimelineSlugs.has(slug)),
         signals: entity.signals.filter((slug) => signals.some((signal) => signal.slug === slug)),
@@ -1034,21 +1055,43 @@ router.patch(
     }
 
     try {
-      await db
-        .insert(profileReviewDatesTable)
-        .values({
-          profileSlug: entity.slug,
-          reviewedAt,
-          updatedBy: String(res.locals.editorUserId),
-        })
-        .onConflictDoUpdate({
-          target: profileReviewDatesTable.profileSlug,
-          set: {
+      await db.transaction(async (transaction) => {
+        await transaction.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${entity.slug}, 0))`);
+        const [savedProfile] = await transaction
+          .select({ reviewHistory: profileReviewDatesTable.reviewHistory })
+          .from(profileReviewDatesTable)
+          .where(eq(profileReviewDatesTable.profileSlug, entity.slug))
+          .limit(1);
+        const currentClaims = getEntityProfileClaims(entity);
+        const reviewVersions = (savedProfile?.reviewHistory ?? [])
+          .filter((review) => review.reviewedAt !== reviewedAt)
+          .concat({ reviewedAt, claims: currentClaims, claimComparison: { status: "no-prior-version", changes: [] } })
+          .sort((left, right) => left.reviewedAt.localeCompare(right.reviewedAt))
+          .map((review, index, reviews) => ({
+            ...review,
+            claimComparison: compareEntityProfileClaims(
+              index > 0 ? reviews[index - 1].claims : undefined,
+              review.claims,
+            ),
+          }));
+        await transaction
+          .insert(profileReviewDatesTable)
+          .values({
+            profileSlug: entity.slug,
             reviewedAt,
+            reviewHistory: reviewVersions,
             updatedBy: String(res.locals.editorUserId),
-            updatedAt: new Date(),
-          },
-        });
+          })
+          .onConflictDoUpdate({
+            target: profileReviewDatesTable.profileSlug,
+            set: {
+              reviewedAt,
+              reviewHistory: reviewVersions,
+              updatedBy: String(res.locals.editorUserId),
+              updatedAt: new Date(),
+            },
+          });
+      });
       invalidatePublicNewsroomContentCache();
       res.setHeader("Cache-Control", "no-store");
       res.json(UpdateNewsroomProfileReviewResponse.parse({ slug: entity.slug, reviewedAt }));

@@ -64,7 +64,7 @@ export function ProfileReviewQueue({ enabled }: { enabled: boolean }) {
         queryClient.invalidateQueries({ queryKey: getGetNewsroomContentQueryKey() }),
       ]);
       setReviewDates((current) => ({ ...current, [profile.slug]: '' }));
-      setNotice(`${profile.name} review date saved.`);
+      setNotice(`${profile.name} review date and profile version saved.`);
     } catch {
       setError('The profile review date could not be saved. Try again when the newsroom API is available.');
     } finally {
@@ -87,7 +87,8 @@ export function ProfileReviewQueue({ enabled }: { enabled: boolean }) {
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
             Profiles appear when a linked timeline entry is newer than their review, the 90-day
             review is due, or it is due within 21 days. Record the date you actually reviewed each
-            profile; the date is never filled in automatically.
+            profile; saving also retains that profile version and compares its claims with the
+            previous saved review when one is available.
           </p>
         </div>
         <div className="flex items-center gap-3">

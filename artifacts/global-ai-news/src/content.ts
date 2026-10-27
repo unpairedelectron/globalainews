@@ -172,6 +172,15 @@ export interface Entity {
       captureNote?: string;
     }[];
     claimChangeSummary: string;
+    claimComparison?: {
+      status: 'compared' | 'no-prior-version';
+      changes: {
+        section: string;
+        status: 'added' | 'revised' | 'removed';
+        previousText: string | null;
+        currentText: string | null;
+      }[];
+    };
   }[];
   headquarters?: string;
   founded?: string;
@@ -181,6 +190,132 @@ export interface Entity {
   timeline: string[];
   signals: string[];
   recentStories: string[];
+}
+
+export interface EntityProfileClaim {
+  section: string;
+  text: string;
+}
+
+export interface EntityProfileClaimChange {
+  section: string;
+  status: 'added' | 'revised' | 'removed';
+  previousText: string | null;
+  currentText: string | null;
+}
+
+export interface EntityProfileClaimComparison {
+  status: 'compared' | 'no-prior-version';
+  changes: EntityProfileClaimChange[];
+}
+
+export function getEntityProfileClaims(
+  profile: Pick<Entity, 'strapline' | 'overview' | 'profileSections' | 'headquarters' | 'founded' | 'keyMetrics' | 'latestDevelopments'>,
+): EntityProfileClaim[] {
+  return [
+    { section: 'Profile summary', text: profile.strapline },
+    { section: 'Overview', text: profile.overview },
+    ...(profile.headquarters ? [{ section: 'Headquarters', text: profile.headquarters }] : []),
+    ...(profile.founded ? [{ section: 'Founded', text: profile.founded }] : []),
+    ...(profile.profileSections ?? []).flatMap((section) =>
+      section.paragraphs.map((text) => ({ section: section.heading, text })),
+    ),
+    ...profile.keyMetrics.map((metric) => ({
+      section: `Key metric: ${metric.label}`,
+      text: `${metric.value} — ${metric.context}`,
+    })),
+    ...profile.latestDevelopments.map((text) => ({ section: 'Latest developments', text })),
+  ];
+}
+
+export function compareEntityProfileClaims(
+  previousClaims: EntityProfileClaim[] | undefined,
+  currentClaims: EntityProfileClaim[],
+): EntityProfileClaimComparison {
+  if (!previousClaims) return { status: 'no-prior-version', changes: [] };
+
+  const sectionOrder = [...new Set([
+    ...currentClaims.map((claim) => claim.section),
+    ...previousClaims.map((claim) => claim.section),
+  ])];
+  const changes: EntityProfileClaimChange[] = [];
+
+  for (const section of sectionOrder) {
+    const previous = previousClaims.filter((claim) => claim.section === section).map((claim) => claim.text);
+    const current = currentClaims.filter((claim) => claim.section === section).map((claim) => claim.text);
+    const lcs = Array.from({ length: previous.length + 1 }, () =>
+      Array<number>(current.length + 1).fill(0),
+    );
+    for (let oldIndex = previous.length - 1; oldIndex >= 0; oldIndex -= 1) {
+      for (let newIndex = current.length - 1; newIndex >= 0; newIndex -= 1) {
+        lcs[oldIndex][newIndex] = previous[oldIndex] === current[newIndex]
+          ? lcs[oldIndex + 1][newIndex + 1] + 1
+          : Math.max(lcs[oldIndex + 1][newIndex], lcs[oldIndex][newIndex + 1]);
+      }
+    }
+
+    const matches: Array<[number, number]> = [];
+    let oldIndex = 0;
+    let newIndex = 0;
+    while (oldIndex < previous.length && newIndex < current.length) {
+      if (previous[oldIndex] === current[newIndex]) {
+        matches.push([oldIndex, newIndex]);
+        oldIndex += 1;
+        newIndex += 1;
+      } else if (lcs[oldIndex + 1][newIndex] >= lcs[oldIndex][newIndex + 1]) {
+        oldIndex += 1;
+      } else {
+        newIndex += 1;
+      }
+    }
+
+    let oldCursor = 0;
+    let newCursor = 0;
+    for (let matchIndex = 0; matchIndex <= matches.length; matchIndex += 1) {
+      const [nextOld, nextNew] = matches[matchIndex] ?? [previous.length, current.length];
+      const removed = previous.slice(oldCursor, nextOld);
+      const added = current.slice(newCursor, nextNew);
+      const revisedCount = Math.min(removed.length, added.length);
+      for (let index = 0; index < revisedCount; index += 1) {
+        changes.push({
+          section,
+          status: 'revised',
+          previousText: removed[index],
+          currentText: added[index],
+        });
+      }
+      for (const text of removed.slice(revisedCount)) {
+        changes.push({ section, status: 'removed', previousText: text, currentText: null });
+      }
+      for (const text of added.slice(revisedCount)) {
+        changes.push({ section, status: 'added', previousText: null, currentText: text });
+      }
+      oldCursor = nextOld + 1;
+      newCursor = nextNew + 1;
+    }
+  }
+
+  return { status: 'compared', changes };
+}
+
+export function summarizeEntityProfileClaimComparison(
+  comparison: EntityProfileClaimComparison,
+): string {
+  if (comparison.status === 'no-prior-version') {
+    return 'No earlier saved profile version is available for comparison.';
+  }
+  if (comparison.changes.length === 0) {
+    return 'No claim text changed since the previous saved review.';
+  }
+  const counts = {
+    added: comparison.changes.filter((change) => change.status === 'added').length,
+    revised: comparison.changes.filter((change) => change.status === 'revised').length,
+    removed: comparison.changes.filter((change) => change.status === 'removed').length,
+  };
+  const parts = (['added', 'revised', 'removed'] as const)
+    .filter((status) => counts[status] > 0)
+    .map((status) => `${counts[status]} ${status}`);
+  return `Compared with the previous saved review: ${parts.join(', ')} ${comparison.changes.length === 1 ? 'claim' : 'claims'} changed.`;
 }
 
 export function normalizeEntityProfileReviews(entity: Entity): Entity {
