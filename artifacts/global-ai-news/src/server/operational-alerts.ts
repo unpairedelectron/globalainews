@@ -14,12 +14,23 @@ type AlertOptions = {
   fetcher?: typeof fetch;
   log?: (event: string, fields: Record<string, unknown>) => void;
   now?: () => number;
+  sleep?: (milliseconds: number) => Promise<void>;
 };
 
 const API_FAILURE_THRESHOLD = 3;
 const ARTICLE_FAILURE_THRESHOLD = 5;
 const ARTICLE_FAILURE_WINDOW_MS = 5 * 60_000;
 const ALERT_COOLDOWN_MS = 15 * 60_000;
+const DELIVERY_MAX_ATTEMPTS = 3;
+const DELIVERY_BACKOFF_MS = [100, 300] as const;
+
+function sleep(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+function isRetryableStatus(status: number): boolean {
+  return status === 408 || status === 429 || (status >= 500 && status <= 599);
+}
 
 function safeRoute(route: string): string {
   if (route.length > 200 || !/^\/[a-zA-Z0-9/_~.-]*$/.test(route)) {
@@ -33,6 +44,7 @@ export class OperationalAlertManager {
   private readonly fetcher: typeof fetch;
   private readonly log: NonNullable<AlertOptions['log']>;
   private readonly now: () => number;
+  private readonly sleep: NonNullable<AlertOptions['sleep']>;
   private consecutiveApiFailures = 0;
   private articleFailures: Array<{ at: number; route: string; requestId: string }> = [];
   private readonly lastAlertAt = new Map<OperationalAlert['event'], number>();
@@ -44,6 +56,7 @@ export class OperationalAlertManager {
       process.stderr.write(`${JSON.stringify({ event, ...fields })}\n`);
     });
     this.now = options.now ?? Date.now;
+    this.sleep = options.sleep ?? sleep;
   }
 
   async recordApiHealthFailure(requestId: string): Promise<void> {
@@ -97,28 +110,42 @@ export class OperationalAlertManager {
       return;
     }
 
-    try {
-      const response = await this.fetcher(this.webhookUrl, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          text: `${alert.summary} Route: ${alert.route}. Reference: ${alert.requestId}.`,
-          alert,
-        }),
-        signal: AbortSignal.timeout(5_000),
-      });
-      if (!response.ok) {
-        this.log('operational_alert_delivery_failed', {
-          event: alert.event,
-          statusCode: response.status,
-          requestId: alert.requestId,
+    const request: RequestInit = {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        text: `${alert.summary} Route: ${alert.route}. Reference: ${alert.requestId}.`,
+        alert,
+      }),
+    };
+
+    for (let attempt = 1; attempt <= DELIVERY_MAX_ATTEMPTS; attempt += 1) {
+      let statusCode: number | undefined;
+      let retryable = true;
+      try {
+        const response = await this.fetcher(this.webhookUrl, {
+          ...request,
+          signal: AbortSignal.timeout(5_000),
         });
+        if (response.ok) return;
+        statusCode = response.status;
+        retryable = isRetryableStatus(response.status);
+        await response.body?.cancel().catch(() => undefined);
+      } catch {
+        // Network errors and timeouts are transient; never log exception contents.
       }
-    } catch {
+
+      const willRetry = retryable && attempt < DELIVERY_MAX_ATTEMPTS;
       this.log('operational_alert_delivery_failed', {
         event: alert.event,
+        attempt,
+        maxAttempts: DELIVERY_MAX_ATTEMPTS,
+        ...(statusCode === undefined ? {} : { statusCode }),
+        willRetry,
         requestId: alert.requestId,
       });
+      if (!willRetry) return;
+      await this.sleep(DELIVERY_BACKOFF_MS[attempt - 1]);
     }
   }
 }

@@ -6,20 +6,37 @@ import {
   OperationalAlertManager,
 } from '../src/server/operational-alerts';
 
-function createHarness(now = 1_800_000_000_000) {
+function createHarness(
+  now = 1_800_000_000_000,
+  options: { fetcher?: typeof fetch } = {},
+) {
   const deliveries: Array<{ url: string | URL | Request; body: string }> = [];
   const logs: Array<{ event: string; fields: Record<string, unknown> }> = [];
+  const backoffDelays: number[] = [];
+  let currentNow = now;
   const fetcher: typeof fetch = async (input, init) => {
     deliveries.push({ url: input, body: String(init?.body ?? '') });
+    if (options.fetcher) return options.fetcher(input, init);
     return new Response(null, { status: 204 });
   };
   const alerts = new OperationalAlertManager({
     webhookUrl: 'https://alerts.example.test/secret-path',
     fetcher,
-    now: () => now,
+    now: () => currentNow,
+    sleep: async (milliseconds) => {
+      backoffDelays.push(milliseconds);
+    },
     log: (event, fields) => logs.push({ event, fields }),
   });
-  return { alerts, deliveries, logs };
+  return {
+    alerts,
+    deliveries,
+    logs,
+    backoffDelays,
+    setNow: (value: number) => {
+      currentNow = value;
+    },
+  };
 }
 
 test('API health alerts only after three consecutive failures and resets on recovery', async () => {
@@ -90,4 +107,95 @@ test('health probe alerts on unhealthy API responses without forwarding response
   assert.equal(deliveries.length, 1);
   assert.doesNotMatch(deliveries[0].body, /not for alert|private/);
   assert.match(deliveries[0].body, /health-check|api_health_degraded/);
+});
+
+test('temporary webhook failures retry with bounded backoff and sanitized logs', async () => {
+  let calls = 0;
+  const { alerts, deliveries, logs, backoffDelays } = createHarness(undefined, {
+    fetcher: async () => {
+      calls += 1;
+      if (calls === 1) return new Response(null, { status: 503 });
+      if (calls === 2) throw new Error('private payload and secret-path details');
+      return new Response(null, { status: 204 });
+    },
+  });
+
+  for (let index = 0; index < 3; index += 1) {
+    await alerts.recordApiHealthFailure(`health-retry-${index}`);
+  }
+
+  assert.equal(calls, 3);
+  assert.deepEqual(backoffDelays, [100, 300]);
+  assert.equal(deliveries.length, 3);
+  assert.equal(new Set(deliveries.map(({ body }) => body)).size, 1);
+  assert.equal(logs.length, 2);
+  assert.deepEqual(
+    logs.map(({ fields }) => ({
+      attempt: fields.attempt,
+      maxAttempts: fields.maxAttempts,
+      statusCode: fields.statusCode,
+      willRetry: fields.willRetry,
+    })),
+    [
+      { attempt: 1, maxAttempts: 3, statusCode: 503, willRetry: true },
+      { attempt: 2, maxAttempts: 3, statusCode: undefined, willRetry: true },
+    ],
+  );
+  assert.doesNotMatch(JSON.stringify(logs), /private payload|secret-path|alerts\.example\.test/i);
+  assert.deepEqual(
+    deliveries.map(({ url }) => String(url)),
+    Array(3).fill('https://alerts.example.test/secret-path'),
+  );
+  assert.doesNotMatch(
+    JSON.stringify(deliveries.map(({ body }) => body)),
+    /private payload|secret-path|alerts\.example\.test/i,
+  );
+});
+
+test('permanent webhook failures stop immediately and stay in cooldown', async () => {
+  let calls = 0;
+  const { alerts, deliveries, logs, backoffDelays, setNow } = createHarness(undefined, {
+    fetcher: async () => {
+      calls += 1;
+      return new Response(null, { status: 400 });
+    },
+  });
+  for (let index = 0; index < 3; index += 1) {
+    await alerts.recordApiHealthFailure(`health-permanent-${index}`);
+  }
+
+  assert.equal(calls, 1);
+  assert.equal(deliveries.length, 1);
+  assert.deepEqual(backoffDelays, []);
+  assert.deepEqual(logs.map(({ fields }) => ({
+    attempt: fields.attempt,
+    statusCode: fields.statusCode,
+    willRetry: fields.willRetry,
+  })), [{ attempt: 1, statusCode: 400, willRetry: false }]);
+
+  setNow(1_800_000_000_000 + 15 * 60_000);
+  await alerts.recordApiHealthFailure('health-permanent-4');
+  assert.equal(calls, 2, 'a new alert can be delivered after cooldown expires');
+});
+
+test('network failures stop after the maximum attempts without logging exception content', async () => {
+  let calls = 0;
+  const { alerts, deliveries, logs, backoffDelays } = createHarness(undefined, {
+    fetcher: async () => {
+      calls += 1;
+      throw new Error('sensitive request body must never be logged');
+    },
+  });
+  for (let index = 0; index < 3; index += 1) {
+    await alerts.recordApiHealthFailure(`health-network-${index}`);
+  }
+
+  assert.equal(calls, 3);
+  assert.equal(deliveries.length, 3);
+  assert.deepEqual(backoffDelays, [100, 300]);
+  assert.equal(logs.length, 3);
+  assert.equal(logs.at(-1)?.fields.willRetry, false);
+  assert.equal(logs.at(-1)?.fields.attempt, 3);
+  assert.doesNotMatch(JSON.stringify(logs), /sensitive request body/i);
+  assert.doesNotMatch(JSON.stringify(deliveries), /sensitive request body/i);
 });
