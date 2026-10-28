@@ -320,10 +320,11 @@ export function getArticleSeoMetadata(
   imagePath = `/social/articles/${story.slug}.png`,
   imageAlt = `${story.title} — Global AI News editorial preview`,
 ): SeoMetadata {
+  const route = `/article/${story.slug}`;
   return {
-    title: articleTitle(story.title),
+    title: seoTitleOverrides[route] ?? articleTitle(story.title),
     description: getArticleDescription(story),
-    path: `/article/${story.slug}`,
+    path: route,
     lastmod: getPublicDateModified(story),
     article: true,
     ampPath: `/amp/article/${story.slug}/`,

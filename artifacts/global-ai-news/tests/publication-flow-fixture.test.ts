@@ -515,7 +515,7 @@ function createInMemoryApi(getStories: () => Story[]): Server {
         .end(`<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Global AI News</title>${entries}</channel></rss>`);
     } else if (route === '/api/newsroom/sitemap-index.xml') {
       const links = ['articles', 'topics', 'authors', 'static']
-        .map((group) => `<sitemap><loc>${SITE_URL}/sitemap-${group}.xml</loc></sitemap>`).join('');
+        .map((group) => `<sitemap><loc>${new URL(getCanonicalUrl('/')).origin}/sitemap-${group}.xml</loc></sitemap>`).join('');
       response.writeHead(200, { 'content-type': 'application/xml; charset=utf-8' })
         .end(`<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${links}</sitemapindex>`);
     } else if (route === '/api/newsroom/sitemap-articles.xml') {

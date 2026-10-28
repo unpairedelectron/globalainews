@@ -521,7 +521,7 @@ async function assertMalformedArticleResponses(origin, environment) {
     assert.equal(response.status, 404, `${environment} ${rawPath} must return HTTP 404`);
     assert.equal(response.headers['x-robots-tag'], 'noindex', `${environment} ${rawPath} must send noindex`);
     assert.match(response.headers['content-type'] ?? '', /text\/html/i);
-    assert.match(response.body, /<title>Article not found — Global AI News<\/title>/);
+    assert.match(response.body, /<title>Page not found — Global AI News<\/title>/);
     assert.match(response.body, /<meta name="robots" content="noindex,follow">/i);
     assert.doesNotMatch(response.body, /id=["']root["']/i, `${environment} ${rawPath} must not return the SPA root`);
     assert.doesNotMatch(response.body, /type=["']module["']/i, `${environment} ${rawPath} must not return app scripts`);
@@ -569,6 +569,7 @@ async function assertPublishedOnlyFeeds() {
     contentResponse,
     metadataResponse,
     sitemapResponse,
+    apiSitemapIndexResponse,
     feedResponse,
     apiRootSitemapResponse,
     apiRootFeedResponse,
@@ -578,6 +579,7 @@ async function assertPublishedOnlyFeeds() {
     fetch(`${apiOrigin}/api/newsroom/content`),
     fetch(`${apiOrigin}/api/newsroom/metadata`),
     fetch(`${apiOrigin}/api/newsroom/sitemap.xml`),
+    fetch(`${apiOrigin}/api/newsroom/sitemap-index.xml`),
     fetch(`${apiOrigin}/api/newsroom/feed.xml`),
     fetch(`${apiOrigin}/sitemap.xml`),
     fetch(`${apiOrigin}/feed.xml`),
@@ -588,6 +590,7 @@ async function assertPublishedOnlyFeeds() {
     contentResponse,
     metadataResponse,
     sitemapResponse,
+    apiSitemapIndexResponse,
     feedResponse,
     webSitemapResponse,
     webFeedResponse,
@@ -609,15 +612,28 @@ async function assertPublishedOnlyFeeds() {
 
   const content = await contentResponse.json();
   const metadata = await metadataResponse.json();
-  const [sitemap, feed, webSitemap, webFeed] = await Promise.all([
+  const [sitemap, apiSitemapIndex, feed, webSitemap, webFeed] = await Promise.all([
     sitemapResponse.text(),
+    apiSitemapIndexResponse.text(),
     feedResponse.text(),
     webSitemapResponse.text(),
     webFeedResponse.text(),
   ]);
+  const [apiArticleSitemapResponse, webArticleSitemapResponse] = await Promise.all([
+    fetch(`${apiOrigin}/api/newsroom/sitemap-articles.xml`),
+    fetch(`${webOrigin}/sitemap-articles.xml`),
+  ]);
+  assert.equal(apiArticleSitemapResponse.status, 200);
+  assert.equal(webArticleSitemapResponse.status, 200);
+  const [apiArticleSitemap, webArticleSitemap] = await Promise.all([
+    apiArticleSitemapResponse.text(),
+    webArticleSitemapResponse.text(),
+  ]);
   assert.match(webSitemapResponse.headers.get('content-type') ?? '', /application\/xml/i);
   assert.match(webFeedResponse.headers.get('content-type') ?? '', /application\/rss\+xml/i);
-  assert.equal(webSitemap, sitemap, 'web sitemap must proxy the current API sitemap');
+  assert.match(webSitemap, /<sitemapindex\b/, 'web sitemap must be a sitemap index');
+  assert.equal(webSitemap, apiSitemapIndex, 'web sitemap must proxy the current API sitemap index');
+  assert.equal(webArticleSitemap, apiArticleSitemap, 'web article sitemap must proxy the current API article sitemap');
   assert.equal(webFeed, feed, 'web RSS must proxy the current API feed');
   const publishedSlugs = new Set(content.stories.map((story) => story.slug));
   const flagshipReport = content.stories.find((story) => story.slug === 'india-ai-compute-access-2026');
@@ -651,7 +667,7 @@ async function assertPublishedOnlyFeeds() {
     assert.ok(metadata.routes.some((route) => route.path === `/article/${expected.slug}`));
     assert.ok(sitemap.includes(`/article/${expected.slug}/`));
     assert.ok(feed.includes(`/article/${expected.slug}/`));
-    assert.ok(webSitemap.includes(`/article/${expected.slug}/`));
+    assert.ok(webArticleSitemap.includes(`/article/${expected.slug}/`));
     assert.ok(webFeed.includes(`/article/${expected.slug}/`));
 
     const articleResponse = await fetch(`${webOrigin}/article/${expected.slug}`);
@@ -669,6 +685,7 @@ async function assertPublishedOnlyFeeds() {
   );
   for (const [surface, body] of [
     ['API sitemap', sitemap],
+    ['web article sitemap', webArticleSitemap],
     ['API feed', feed],
     ['web sitemap', webSitemap],
     ['web feed', webFeed],
@@ -1392,7 +1409,7 @@ async function testRawArticleResponses() {
     articleSchema.author.url,
     hasVerifiedPublicAuthor
       ? `https://www.globalainews.in/person/${story.author}/`
-      : 'https://www.globalainews.in',
+      : 'https://www.globalainews.in/authors/',
   );
   assert.equal(articleSchema.publisher.name, 'Global AI News');
   assert.equal(Object.hasOwn(articleSchema, 'dateModified'), false);
@@ -1432,7 +1449,8 @@ async function testRawArticleResponses() {
     assert.match(articleHtml, /<h1[^>]*>/, `${candidate.slug} must have a visible first-response H1`);
     assert.match(articleHtml, /Published <time\b/i, `${candidate.slug} must have a visible publication date`);
     const articleSchema = articleJsonLd(articleHtml)['@graph']
-      .find((item) => item['@type'] === 'NewsArticle');
+      .find((item) => item['@type'] === (candidate.contentType === 'Report' ? 'Article' : 'NewsArticle'));
+    assert.ok(articleSchema, `${candidate.slug} must expose its matching article schema type`);
     assert.equal(articleSchema.headline, candidate.title);
     assert.equal(articleSchema.datePublished, candidate.date);
   }

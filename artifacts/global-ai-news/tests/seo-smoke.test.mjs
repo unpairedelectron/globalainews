@@ -498,13 +498,21 @@ async function startStaticServer() {
     try {
       const parsedUrl = new URL(request.url ?? '/', 'http://127.0.0.1');
       const requestPath = decodeURIComponent(parsedUrl.pathname);
+      const publicNewsroomPaths = new Map([
+        ['/feed.xml', '/api/newsroom/feed.xml'],
+        ['/feed.json', '/api/newsroom/feed.json'],
+        ['/sitemap.xml', '/api/newsroom/sitemap-index.xml'],
+        ['/sitemap-articles.xml', '/api/newsroom/sitemap-articles.xml'],
+        ['/sitemap-topics.xml', '/api/newsroom/sitemap-topics.xml'],
+        ['/sitemap-authors.xml', '/api/newsroom/sitemap-authors.xml'],
+        ['/sitemap-static.xml', '/api/newsroom/sitemap-static.xml'],
+        ['/news-sitemap.xml', '/api/newsroom/news-sitemap.xml'],
+      ]);
+      const topicFeed = requestPath.match(/^\/topics\/([^/]+)\/feed\.xml$/);
       const apiPath = requestPath.startsWith('/api/')
         ? requestPath
-        : requestPath === '/feed.xml'
-          ? '/api/newsroom/feed.xml'
-          : requestPath === '/sitemap.xml'
-            ? '/api/newsroom/sitemap.xml'
-            : undefined;
+        : publicNewsroomPaths.get(requestPath)
+          ?? (topicFeed ? `/api/newsroom/topic/${topicFeed[1]}/feed.xml` : undefined);
       if (apiPath) {
         try {
           if (requestPath === '/api/newsroom/content' && newsroomContentFixture) {
@@ -2650,9 +2658,14 @@ async function saveProfileReviewDate(slug, reviewedAt, headers) {
   return { response, body: await response.json() };
 }
 
-function expectedPrimaryType(route, article) {
+function expectedPrimaryType(route, article, stories = []) {
   if (route.startsWith('/person/')) return 'ProfilePage';
-  if (article) return 'NewsArticle';
+  if (article) {
+    const slug = route.split('/')[2];
+    return stories.find((story) => story.slug === slug)?.contentType === 'Report'
+      ? 'Article'
+      : 'NewsArticle';
+  }
   if (route.startsWith('/research/')) return 'Report';
   if (route.startsWith('/data/')) return 'Dataset';
   if (route.startsWith('/topic/')) return 'CollectionPage';
@@ -2685,13 +2698,14 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
   const structuredData = JSON.parse(structuredDataText);
   assert.equal(structuredData['@context'], 'https://schema.org', `${route}: JSON-LD context is invalid`);
   assert.ok(Array.isArray(structuredData['@graph']), `${route}: JSON-LD graph is missing`);
-  const primaryType = expectedPrimaryType(route, article);
+  const primaryType = expectedPrimaryType(route, article, stories);
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === primaryType), `${route}: expected primary JSON-LD type is missing`);
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === 'BreadcrumbList'), `${route}: breadcrumb JSON-LD is missing`);
 
   if (article) {
     assertSocialPreviewMetadata(document, route);
-    const articleData = structuredData['@graph'].find((entry) => entry['@type'] === 'NewsArticle');
+    const articleData = structuredData['@graph'].find((entry) => entry['@type'] === primaryType);
+    assert.ok(articleData, `${route}: article JSON-LD is missing`);
     const slug = route.split('/')[2];
     const expectedStory = stories.find((story) => story.slug === slug);
     const expectedAuthor = expectedStory && authors.find(
@@ -2705,9 +2719,13 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
       expectedStory.dateModified >= expectedStory.date
         ? expectedStory.dateModified
         : undefined;
-    assert.equal(articleData.image, metaContent(document, 'property', 'og:image'), `${route}: JSON-LD image does not match social preview`);
-    assert.equal(articleData.url, expectedCanonical, `${route}: NewsArticle URL does not match the canonical URL`);
-    assert.equal(articleData.mainEntityOfPage['@id'], expectedCanonical, `${route}: NewsArticle main entity does not match the canonical URL`);
+    const articleImages = Array.isArray(articleData.image) ? articleData.image : [articleData.image];
+    assert.ok(
+      articleImages.includes(metaContent(document, 'property', 'og:image')),
+      `${route}: JSON-LD image array does not include the social preview`,
+    );
+    assert.equal(articleData.url, expectedCanonical, `${route}: article URL does not match the canonical URL`);
+    assert.equal(articleData.mainEntityOfPage['@id'], expectedCanonical, `${route}: article main entity does not match the canonical URL`);
     assert.ok(expectedStory, `${route}: maintained story record is missing for JSON-LD verification`);
     assert.equal(
       articleData.author['@type'],
@@ -2721,7 +2739,7 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
     );
     assert.equal(
       articleData.author.url,
-      expectedAuthor ? `${site}/person/${expectedAuthor.slug}/` : site,
+      expectedAuthor ? `${site}/person/${expectedAuthor.slug}/` : `${site}/authors/`,
       `${route}: JSON-LD author URL does not match its public attribution`,
     );
     assert.equal(articleData.datePublished, expectedStory.date, `${route}: JSON-LD publication date drifted from the maintained story record`);
@@ -2759,7 +2777,7 @@ function assertSeoDocument(document, route, { article = false, stories = [], aut
   }
 }
 
-function assertInitialSeoDocument(document, route, { article = false, ampPath = '' } = {}) {
+function assertInitialSeoDocument(document, route, { article = false, ampPath = '', stories = [] } = {}) {
   const title = htmlText(tagContent(document, 'title'));
   const description = metaContent(document, 'name', 'description');
   const canonical = linkHref(document, 'canonical');
@@ -2777,7 +2795,7 @@ function assertInitialSeoDocument(document, route, { article = false, ampPath = 
   assert.ok(structuredDataText, `${route}: initial JSON-LD is missing`);
   const structuredData = JSON.parse(structuredDataText);
   assert.equal(structuredData['@context'], 'https://schema.org', `${route}: initial JSON-LD context is invalid`);
-  const primaryType = expectedPrimaryType(route, article);
+  const primaryType = expectedPrimaryType(route, article, stories);
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === primaryType), `${route}: initial primary JSON-LD type is missing`);
   assert.ok(structuredData['@graph'].some((entry) => entry['@type'] === 'BreadcrumbList'), `${route}: initial breadcrumb JSON-LD is missing`);
 
@@ -2803,7 +2821,11 @@ function assertMetadataMatchesManifest(document, route, manifest) {
   assert.equal(metaContent(document, 'name', 'description'), expected.description, `${route}: initial description drifted from the API metadata manifest`);
   assert.equal(
     metaContent(document, 'name', 'robots'),
-    expected.indexable === false ? 'noindex,follow' : '',
+    expected.indexable === false
+      ? 'noindex,follow'
+      : expected.article
+        ? 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'
+        : '',
     `${route}: initial robots directive drifted from the API metadata manifest`,
   );
 }
@@ -3167,7 +3189,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
     newsroomContent.stories.length,
     'article metadata and AMP coverage must include every currently public article',
   );
-  const entries = sitemapEntries(sitemap);
+  const entries = sitemapEntries(rootSitemapContents);
   for (const articleRoute of articleRoutes) {
     const entry = entries.find((candidate) => candidate.route === articleRoute);
     const slug = articleRoute.split('/')[2];
@@ -3271,6 +3293,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
      assertInitialSeoDocument(body, route, {
        article: route.startsWith('/article/'),
        ampPath: metadataManifest.routes.find((metadata) => metadata.path === route)?.ampPath ?? '',
+        stories: newsroomContent.stories,
      });
     assertMetadataMatchesManifest(body, route, metadataManifest);
     assert.doesNotMatch(
