@@ -76,22 +76,6 @@
 }
 
 @font-face {
-  font-family: 'DM Mono';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/dm-mono-400.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'DM Mono';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/fonts/dm-mono-500.woff2') format('woff2');
-}
-
-@font-face {
   font-family: 'Instrument Serif';
   font-style: normal;
   font-weight: 400;
@@ -218,7 +202,7 @@
   --editorial-visual-accent: 43 76% 60%;
   --app-font-sans: 'DM Sans', sans-serif;
   --app-font-serif: 'Instrument Serif', Georgia, serif;
-  --app-font-mono: 'DM Mono', monospace;
+  --app-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius: 0.15rem;
 }
 

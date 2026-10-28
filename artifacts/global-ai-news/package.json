@@ -9,6 +9,7 @@
     "build:release": "node ../../scripts/build-global-ai-news-release.mjs",
     "build:server": "vite build --config vite.server.config.ts",
     "build:production": "pnpm run build:release && pnpm run build:server",
+    "images:optimize": "node scripts/optimize-editorial-images.mjs",
     "serve": "node --enable-source-maps dist/server/server.mjs",
     "audit:links": "node scripts/audit-links.mjs",
     "typecheck": "pnpm --filter @workspace/api-client-react exec tsc --build && tsc -p tsconfig.json --noEmit",

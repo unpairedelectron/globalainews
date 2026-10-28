@@ -49,7 +49,7 @@ export function HomePage() {
            </div>
          </div>
           {leadStory ? <article className="flex flex-col justify-center border-l border-foreground/20 py-4 pl-6 md:pl-9">
-            <StoryImage slug={leadStory.slug} alt={leadStory.imageTreatment.alt} className="mb-5 aspect-[16/9] w-full object-cover" loading="eager" fetchPriority="high" />
+             <StoryImage slug={leadStory.slug} alt={leadStory.imageTreatment.alt} className="mb-5 aspect-[16/9] w-full object-cover" loading="eager" fetchPriority="high" sizes="(min-width: 1440px) 760px, (min-width: 1024px) 58vw, calc(100vw - 40px)" />
             <p className="eyebrow text-primary">{leadStory.contentType ?? getReaderFacingContentType(leadStory.classification)} · {leadStory.category}</p>
             <Link href={`/article/${leadStory.slug}`} className="group block">
               <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-[.95] transition-colors group-hover:text-primary md:text-6xl">{leadStory.title}</h2>
@@ -68,7 +68,7 @@ export function HomePage() {
        <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.75fr_1.25fr] md:py-16">
         <div><SectionLabel aside={`${topStories.length} stories`}>Latest</SectionLabel><h2 className="max-w-sm font-serif text-5xl leading-[.9]">The useful read, not the loudest read.</h2><p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">A running file of what moved, with the date and reporting attached.</p><Link href="/brief" className="mt-8 inline-flex min-h-11 items-center border-b border-primary pb-2 text-sm text-primary">Read the Daily Brief <ArrowUpRight size={14} className="ml-2" /></Link></div>
         <div>{topStories.slice(0, 5).map((story, index) => <article key={story.slug} className="grid gap-4 border-t border-foreground/15 py-5 first:border-t-0 first:pt-0 sm:grid-cols-[128px_1fr]">
-          <StoryImage slug={story.slug} alt={story.imageTreatment.alt} className="aspect-[4/3] w-full object-cover" />
+           <StoryImage slug={story.slug} alt={story.imageTreatment.alt} className="aspect-[4/3] w-full object-cover" sizes="(min-width: 640px) 128px, calc(100vw - 40px)" />
           <div><div className="flex items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span aria-hidden="true" className="h-1 w-1 rounded-full bg-accent" /><time className="text-xs text-muted-foreground" dateTime={story.date}>{formatEditorialDate(story.date)}</time></div><Link href={`/article/${story.slug}`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] hover:text-primary md:text-3xl">{story.title}</Link><p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p></div>
         </article>)}</div>
       </section>

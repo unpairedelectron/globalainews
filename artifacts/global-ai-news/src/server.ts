@@ -37,6 +37,8 @@ if (!Number.isInteger(port) || port <= 0 || port > 65_535) {
 
 const app = express();
 app.disable('x-powered-by');
+const publicDocumentCacheControl =
+  'public, max-age=0, s-maxage=60, stale-while-revalidate=300';
 
 function getRequestHost(request: Request): string {
   const forwardedHost = request.get('x-forwarded-host')?.split(',')[0]?.trim();
@@ -314,7 +316,15 @@ app.use((request, response, next) => {
     routeStatus = result.status;
     response.status(result.status);
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
-    response.setHeader('Cache-Control', 'no-store');
+    const cacheablePublicArticle =
+      result.status === 200 &&
+      request.method === 'GET' &&
+      !request.originalUrl.includes('?') &&
+      response.locals.isPreviewHost !== true;
+    response.setHeader(
+      'Cache-Control',
+      cacheablePublicArticle ? publicDocumentCacheControl : 'no-store',
+    );
     if (result.status === 404) setRobotsTag(response);
     response.send(result.html);
   })().catch((error: unknown) => {
@@ -383,7 +393,17 @@ app.use((request, response, next) => {
   next();
 });
 
-app.use(express.static(publicDirectory, { fallthrough: true }));
+app.use(express.static(publicDirectory, {
+  fallthrough: true,
+  setHeaders(response, filePath) {
+    const relativePath = path.relative(publicDirectory, filePath).split(path.sep).join('/');
+    if (/^assets\/.+-[A-Za-z0-9_-]{8,}\.(?:css|js)$/.test(relativePath)) {
+      response.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    } else if (/^images\/editorial\/.+-(?:480|768|1024)\.(?:avif|webp)$/.test(relativePath)) {
+      response.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+    }
+  },
+}));
 
 app.get('/amp/article/:slug', (request, response) => {
   const slug = request.params.slug;

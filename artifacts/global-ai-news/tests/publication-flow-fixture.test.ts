@@ -336,6 +336,14 @@ async function runMobilePerformanceAudit(origin: string) {
         .filter((resource) => resource.origin !== origin)
         .map((resource) => resource.origin))];
       const { rootText, ...measuredPageMetrics } = pageMetrics.result.value;
+      process.stdout.write(`MOBILE ROUTE ${route}: ${JSON.stringify({
+        lcpMs: measuredPageMetrics.lcpMs,
+        lcpElement: measuredPageMetrics.lcpElement,
+        imageBytes: measuredPageMetrics.imageBytesFromTiming,
+        imageCount: measuredPageMetrics.imageResourceCount,
+        jsBytes: measuredPageMetrics.jsBytesFromTiming,
+        resourceCount: measuredPageMetrics.resourceTimingCount,
+      })}\n`);
       if (route === '/reports') {
         assert.match(rootText, /Reports\./, 'Reports first-response content was replaced or lost');
       } else if (route === '/about-us') {

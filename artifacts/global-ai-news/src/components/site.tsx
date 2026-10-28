@@ -11,9 +11,9 @@ import { getCanonicalUrl, getSeoMetadata, getStructuredData, SITE_URL } from '@/
 import { getQualifiedSectionNavigation } from '@/content-rules';
 import { GlobalAiNewsLockup } from '@/components/brand-mark';
 import { AdSlot } from '@/components/monetization';
+import { ResponsiveEditorialImage } from '@/components/responsive-editorial-image';
 import { trackEvent } from '@/analytics';
 import { handoffSearchQuery } from '@/search-handoff';
-import { EDITORIAL_IMAGE_FALLBACK, getEditorialImagePath } from '@/editorial-images';
 
 export const SITE = SITE_URL;
 
@@ -260,11 +260,8 @@ export function Newsletter({ compact = false }: { compact?: boolean }) {
 
 export function SectionLabel({ children, aside }: { children: ReactNode; aside?: ReactNode }) { return <div className="section-label mb-5 flex items-center justify-between border-b border-foreground/15 pb-3"><p className="eyebrow flex items-center text-primary"><span aria-hidden="true" className="mr-2 h-1.5 w-1.5 rounded-full bg-primary" />{children}</p>{aside && <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{aside}</span>}</div>; }
 
-export function StoryImage({ slug, alt, className, loading = 'lazy', fetchPriority }: { slug: string; alt: string; className: string; loading?: 'eager' | 'lazy'; fetchPriority?: 'high' | 'low' | 'auto' }) {
-  const [failed, setFailed] = useState(false);
-  useEffect(() => setFailed(false), [slug]);
-  const imagePath = failed ? EDITORIAL_IMAGE_FALLBACK : getEditorialImagePath(slug);
-  return <img src={imagePath} alt={alt} width={1200} height={675} loading={loading} fetchPriority={fetchPriority} className={`story-image ${className}`} onError={() => setFailed(true)} />;
+export function StoryImage({ slug, alt, className, loading = 'lazy', fetchPriority, sizes }: { slug: string; alt: string; className: string; loading?: 'eager' | 'lazy'; fetchPriority?: 'high' | 'low' | 'auto'; sizes?: string }) {
+  return <ResponsiveEditorialImage slug={slug} alt={alt} loading={loading} fetchPriority={fetchPriority} sizes={sizes} className={`story-image ${className}`} />;
 }
 
 export function EditorialImage({ treatment = 'editorial-abstract', alt, caption, large = false, storySlug }: { treatment?: string; alt: string; caption?: string; large?: boolean; storySlug?: string }) {

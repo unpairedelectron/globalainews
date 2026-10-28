@@ -3951,6 +3951,9 @@ test('headline pixels stay readable and inside the card at every supported title
 test('homepage and article body serve local editorial images with a working fallback', async () => {
   const home = await fetchText('/');
   assert.equal(home.response.status, 200);
+  assert.match(home.body, /<source[^>]+type="image\/avif"[^>]+srcset="[^"]+-480\.avif 480w/);
+  assert.match(home.body, /<source[^>]+type="image\/webp"[^>]+srcset="[^"]+-480\.webp 480w/);
+  assert.doesNotMatch(home.body, /<img\b[^>]+src=["']\/social\/articles\//i, 'social-card PNGs must not appear in page UI');
   const homeImage = openingTags(home.body, 'img')
     .find((tag) => (attributeValue(tag, 'src') ?? '').startsWith('/images/editorial/'));
   assert.ok(homeImage, 'homepage lead story is missing its local editorial image');
@@ -3985,5 +3988,16 @@ test('homepage and article body serve local editorial images with a working fall
     const bytes = new Uint8Array(await response.arrayBuffer());
     assert.ok(bytes.length > 10_000, `${imagePath}: image is unexpectedly small`);
     assert.deepEqual([...bytes.slice(0, 3)], [0xff, 0xd8, 0xff], `${imagePath}: response is not a valid JPEG`);
+  }
+  for (const slug of ['fallback', ...storySlugs]) {
+    for (const width of [480, 768, 1024]) {
+      for (const format of ['avif', 'webp']) {
+        const imagePath = `/images/editorial/${slug}-${width}.${format}`;
+        const response = await fetch(`${baseUrl}${imagePath}`);
+        assert.equal(response.status, 200, `${imagePath}: responsive image candidate did not load`);
+        assert.match(response.headers.get('content-type') ?? '', new RegExp(`image/${format}`));
+        assert.ok(Number(response.headers.get('content-length')) > 0, `${imagePath}: candidate is empty`);
+      }
+    }
   }
 });

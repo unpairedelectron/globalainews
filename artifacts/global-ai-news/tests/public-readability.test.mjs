@@ -24,7 +24,7 @@ assert.match(storyContent, /tabIndex=\{0\}/);
 assert.match(storyContent, /scope: 'row'/);
 assert.match(storyContent, /data-label=\{section\.table!\.headers\[cellIndex\]\}/);
 assert.match(css, /@media \(max-width: 699px\)[\s\S]*table-scroll-region td::before/);
-assert.match(site, /className=\{`story-image \$\{className\}`\}/);
+assert.match(site, /<ResponsiveEditorialImage[^>]+className=\{`story-image \$\{className\}`\}/);
 assert.match(site, /className="article-hero-image"/);
 
 assert.match(prerender, /aria-label="Main navigation"/);

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createServer, request as httpRequest } from "node:http";
-import { gunzipSync } from "node:zlib";
+import { brotliDecompressSync, gunzipSync } from "node:zlib";
 import express from "express";
 import { test } from "node:test";
 
@@ -116,6 +116,20 @@ for (const { service, create, hasPathAllowlist } of middlewareFactories) {
       gunzipSync(response.body).toString(),
       `<main>${"x".repeat(5_000)}</main>`,
     );
+  });
+
+  test(`${service} prefers Brotli when supported and respects encoding quality`, async () => {
+    const brotli = await getResponse(create, "/large", "gzip;q=0.8, br;q=1");
+    assert.equal(brotli.headers["content-encoding"], "br");
+    assert.match(brotli.headers.vary ?? "", /Accept-Encoding/i);
+    assert.equal(
+      brotliDecompressSync(brotli.body).toString(),
+      `<main>${"x".repeat(5_000)}</main>`,
+    );
+
+    const gzipOnly = await getResponse(create, "/large", "br;q=0, gzip;q=1");
+    assert.equal(gzipOnly.headers["content-encoding"], "gzip");
+    assert.equal(gunzipSync(gzipOnly.body).toString(), `<main>${"x".repeat(5_000)}</main>`);
   });
 
   test(`${service} compression respects opt-out, method, content type, and size bounds`, async () => {

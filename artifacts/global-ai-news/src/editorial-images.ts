@@ -9,8 +9,22 @@ const publishedEditorialImages = new Set([
 ]);
 
 export const EDITORIAL_IMAGE_FALLBACK = '/images/editorial/fallback.jpg';
+export const EDITORIAL_IMAGE_WIDTHS = [480, 768, 1024] as const;
 
 export function getEditorialImagePath(slug: string): string {
   const imageName = publishedEditorialImages.has(slug) ? slug : 'fallback';
   return `/images/editorial/${imageName}.jpg`;
+}
+
+export function getEditorialImageSources(slug: string) {
+  const imageName = publishedEditorialImages.has(slug) ? slug : 'fallback';
+  const srcSet = (format: 'avif' | 'webp') =>
+    EDITORIAL_IMAGE_WIDTHS
+      .map((width) => `/images/editorial/${imageName}-${width}.${format} ${width}w`)
+      .join(', ');
+
+  return {
+    avif: srcSet('avif'),
+    webp: srcSet('webp'),
+  };
 }

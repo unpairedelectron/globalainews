@@ -1,4 +1,4 @@
-import { gzipSync } from "node:zlib";
+import { brotliCompressSync, constants as zlibConstants, gzipSync } from "node:zlib";
 import type { RequestHandler } from "express";
 
 const MINIMUM_COMPRESSIBLE_BYTES = 1_024;
@@ -10,8 +10,10 @@ export type GzipResponseMiddlewareOptions = {
   paths?: readonly string[];
 };
 
-function acceptsGzip(header: string | undefined): boolean {
-  if (!header) return false;
+type CompressionEncoding = "br" | "gzip";
+
+function encodingQuality(header: string | undefined, requested: CompressionEncoding): number {
+  if (!header) return 0;
   let wildcardQuality: number | undefined;
 
   for (const part of header.split(",")) {
@@ -22,13 +24,20 @@ function acceptsGzip(header: string | undefined): boolean {
     const quality = qualityParameter
       ? Number(qualityParameter.trim().slice(2))
       : 1;
-    const accepted = Number.isFinite(quality) && quality > 0;
+    const normalizedQuality = Number.isFinite(quality) ? Math.max(0, quality) : 0;
 
-    if (encoding === "gzip") return accepted;
-    if (encoding === "*") wildcardQuality = accepted ? quality : 0;
+    if (encoding === requested) return normalizedQuality;
+    if (encoding === "*") wildcardQuality = normalizedQuality;
   }
 
-  return wildcardQuality !== undefined && wildcardQuality > 0;
+  return wildcardQuality ?? 0;
+}
+
+function selectCompressionEncoding(header: string | undefined): CompressionEncoding | undefined {
+  const brotliQuality = encodingQuality(header, "br");
+  const gzipQuality = encodingQuality(header, "gzip");
+  if (brotliQuality <= 0 && gzipQuality <= 0) return undefined;
+  return brotliQuality >= gzipQuality && brotliQuality > 0 ? "br" : "gzip";
 }
 
 function isCompressibleContentType(header: string | number | string[] | undefined): boolean {
@@ -65,8 +74,9 @@ export function gzipResponseMiddleware(
   const allowedPaths = options.paths ? new Set(options.paths) : undefined;
 
   return (request, response, next) => {
+    const compressionEncoding = selectCompressionEncoding(request.headers["accept-encoding"]);
     if (
-      !acceptsGzip(request.headers["accept-encoding"]) ||
+      !compressionEncoding ||
       request.method !== "GET" ||
       (allowedPaths && !allowedPaths.has(request.path)) ||
       request.headers.range
@@ -159,9 +169,14 @@ export function gzipResponseMiddleware(
 
       passedThrough = true;
       if (shouldCompress) {
-        const compressedBody = gzipSync(Buffer.concat(bufferedChunks));
+        const sourceBody = Buffer.concat(bufferedChunks);
+        const compressedBody = compressionEncoding === "br"
+          ? brotliCompressSync(sourceBody, {
+            params: { [zlibConstants.BROTLI_PARAM_QUALITY]: 4 },
+          })
+          : gzipSync(sourceBody);
         response.vary("Accept-Encoding");
-        response.setHeader("Content-Encoding", "gzip");
+        response.setHeader("Content-Encoding", compressionEncoding);
         response.setHeader("Content-Length", compressedBody.byteLength);
         bufferedChunks = [];
         bufferedBytes = 0;
