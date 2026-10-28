@@ -4,4 +4,19 @@ Disallow: /api/
 Disallow: /insights/
 Disallow: /sign-in/
 Disallow: /sign-up/
+
+User-agent: Googlebot-News
+Allow: /
+Disallow: /api/
+Disallow: /insights/
+Disallow: /sign-in/
+Disallow: /sign-up/
+
+User-agent: Googlebot-Image
+Allow: /
+Disallow: /api/
+Disallow: /insights/
+Disallow: /sign-in/
+Disallow: /sign-up/
+
 Sitemap: https://www.globalainews.in/sitemap.xml

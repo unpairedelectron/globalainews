@@ -53,7 +53,7 @@ function setRobotsTag(response: Response, value = 'noindex'): void {
 function renderRestrictedSignupDocument(): string {
   const canonical = new URL('/sign-up/', SITE_URL).toString();
   return `<!doctype html>
-<html lang="en">
+<html lang="en-IN">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -215,7 +215,17 @@ function proxyNewsroomXmlDocument(apiPath: string, defaultContentType: string) {
 }
 
 app.get('/feed.xml', proxyNewsroomXmlDocument('/api/newsroom/feed.xml', 'application/rss+xml'));
-app.get('/sitemap.xml', proxyNewsroomXmlDocument('/api/newsroom/sitemap.xml', 'application/xml'));
+app.get('/feed.json', proxyNewsroomXmlDocument('/api/newsroom/feed.json', 'application/feed+json'));
+app.get('/sitemap.xml', proxyNewsroomXmlDocument('/api/newsroom/sitemap-index.xml', 'application/xml'));
+app.get('/sitemap-articles.xml', proxyNewsroomXmlDocument('/api/newsroom/sitemap-articles.xml', 'application/xml'));
+app.get('/sitemap-topics.xml', proxyNewsroomXmlDocument('/api/newsroom/sitemap-topics.xml', 'application/xml'));
+app.get('/sitemap-authors.xml', proxyNewsroomXmlDocument('/api/newsroom/sitemap-authors.xml', 'application/xml'));
+app.get('/sitemap-static.xml', proxyNewsroomXmlDocument('/api/newsroom/sitemap-static.xml', 'application/xml'));
+app.get('/news-sitemap.xml', proxyNewsroomXmlDocument('/api/newsroom/news-sitemap.xml', 'application/xml'));
+app.get('/topic/:slug/feed.xml', (request, response) => {
+  const slug = encodeURIComponent(request.params.slug);
+  return proxyNewsroomXmlDocument(`/api/newsroom/topic/${slug}/feed.xml`, 'application/rss+xml')(request, response);
+});
 
 function writeStructuredRenderLog(event: string, fields: Record<string, unknown>): void {
   process.stderr.write(
@@ -382,7 +392,7 @@ app.get('/amp/article/:slug', (request, response) => {
     response.setHeader('Cache-Control', 'no-store');
     setRobotsTag(response);
     response.type('html').send(
-      '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
+      ARTICLE_NOT_FOUND_HTML,
     );
     return;
   }
@@ -395,7 +405,7 @@ app.get('/amp/article/:slug', (request, response) => {
       response.setHeader('Cache-Control', 'no-store');
       setRobotsTag(response);
       response.type('html').send(
-        '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
+        ARTICLE_NOT_FOUND_HTML,
       );
       return;
     }
@@ -432,7 +442,7 @@ app.use((request, response) => {
       response.setHeader('Cache-Control', 'no-store');
       setRobotsTag(response);
       response.type('html').send(
-        '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
+        ARTICLE_NOT_FOUND_HTML,
       );
     });
     return;
@@ -442,7 +452,7 @@ app.use((request, response) => {
   response.setHeader('Cache-Control', 'no-store');
   setRobotsTag(response);
   response.type('html').send(
-    '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1></main></body></html>',
+    ARTICLE_NOT_FOUND_HTML,
   );
 });
 

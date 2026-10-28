@@ -73,7 +73,7 @@ export function renderAmpArticleDocument(
     : '';
 
   return `<!doctype html>
-<html amp lang="en">
+<html amp lang="en-IN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />

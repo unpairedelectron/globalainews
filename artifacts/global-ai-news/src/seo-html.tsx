@@ -87,15 +87,18 @@ export function renderSeoRouteHtml(
       ? `<meta property="article:modified_time" content="${escapeHtml(articleDateModified)}" />`
       : ''}
     ${articleAuthor
-      ? `<meta property="article:author" content="${escapeHtml(getCanonicalUrl(articleAuthor.type === 'Person' && articleAuthor.slug ? `/person/${articleAuthor.slug}` : '/'))}" />`
+      ? `<meta property="article:author" content="${escapeHtml(getCanonicalUrl(articleAuthor.type === 'Person' && articleAuthor.slug ? `/person/${articleAuthor.slug}` : '/authors'))}" />`
       : ''}
     <meta property="article:section" content="${escapeHtml(articleStory.category)}" />`
+    : '';
+  const articleTag = articleStory
+    ? `<meta property="article:tag" content="${escapeHtml(articleStory.topic)}" />`
     : '';
 
   const existingHeadMetadata = [
     /<title>[\s\S]*?<\/title>\s*/gi,
     /<meta\b[^>]*name=["']robots["'][^>]*>\s*/gi,
-    /<meta\b[^>]*(?:name|property)=["'](?:description|og:title|og:description|og:url|og:type|og:site_name|og:image|og:image:alt|og:image:type|twitter:title|twitter:description|twitter:card|twitter:image|twitter:image:alt|article:published_time|article:modified_time|article:author|article:section)["'][^>]*>\s*/gi,
+    /<meta\b[^>]*(?:name|property)=["'](?:description|og:title|og:description|og:url|og:type|og:site_name|og:locale|og:image|og:image:alt|og:image:type|twitter:title|twitter:description|twitter:card|twitter:image|twitter:image:alt|article:published_time|article:modified_time|article:author|article:section|article:tag)["'][^>]*>\s*/gi,
     /<link\b[^>]*rel=["'](?:canonical|amphtml)["'][^>]*>\s*/gi,
     /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>\s*/gi,
   ];
@@ -117,16 +120,19 @@ export function renderSeoRouteHtml(
   );
   const headMetadata = `    <title>${title}</title>
     <meta name="description" content="${description}" />
-    ${metadata.indexable === false ? '<meta name="robots" content="noindex,follow" />' : ''}
+    ${metadata.indexable === false ? '<meta name="robots" content="noindex,follow" />' : metadata.article ? '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />' : ''}
     <link rel="canonical" href="${canonicalUrl}" />
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
     <meta property="og:url" content="${canonicalUrl}" />
     <meta property="og:type" content="${metadata.article ? 'article' : 'website'}" />
     <meta property="og:site_name" content="Global AI News" />
+    <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
-    <meta name="twitter:description" content="${description}" />${imageTags}${articleTags}${ampLink}
+    <meta name="twitter:description" content="${description}" />
+    <link rel="alternate" type="application/rss+xml" title="Global AI News RSS" href="${escapeHtml(`${SITE_URL}/feed.xml`)}" />
+    <link rel="alternate" type="application/feed+json" title="Global AI News JSON Feed" href="${escapeHtml(`${SITE_URL}/feed.json`)}" />${imageTags}${articleTags}${articleTag}${ampLink}
     <script type="application/ld+json" data-global-ai-ld>${structuredData}</script>
 `;
   html = html.replace('</head>', `${headMetadata}  </head>`);

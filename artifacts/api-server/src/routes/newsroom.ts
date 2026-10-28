@@ -580,15 +580,53 @@ if (process.env.NODE_ENV === "test") {
   });
 }
 
+type NewsroomSitemapGroup = "all" | "articles" | "topics" | "authors" | "static";
+
+function isSitemapRouteInGroup(path: string, group: NewsroomSitemapGroup): boolean {
+  if (group === "all") return true;
+  if (group === "articles") return path.startsWith("/article/");
+  if (group === "topics") return path.startsWith("/topic/");
+  if (group === "authors") return path.startsWith("/person/");
+  return !path.startsWith("/article/") && !path.startsWith("/topic/") && !path.startsWith("/person/");
+}
+
+function sendSitemapBody(req: Request, res: ExpressResponse, body: string): void {
+  res
+    .status(200)
+    .type("application/xml")
+    .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")
+    .vary("Accept-Encoding");
+  if (req.acceptsEncodings("gzip") === "gzip") {
+    res.setHeader("Content-Encoding", "gzip");
+    res.send(gzipSync(body));
+    return;
+  }
+  res.send(body);
+}
+
+export async function serveNewsroomSitemapIndex(
+  req: Request,
+  res: ExpressResponse,
+): Promise<void> {
+  const groups: NewsroomSitemapGroup[] = ["articles", "topics", "authors", "static"];
+  const entries = groups.map((group) =>
+    `  <sitemap><loc>${escapeXml(`${SITE_URL}/sitemap-${group}.xml`)}</loc></sitemap>`,
+  );
+  entries.push(`  <sitemap><loc>${escapeXml(`${SITE_URL}/news-sitemap.xml`)}</loc></sitemap>`);
+  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join("\n")}\n</sitemapindex>`;
+  sendSitemapBody(req, res, body);
+}
+
 export async function serveNewsroomSitemap(
   req: Request,
   res: ExpressResponse,
+  group: NewsroomSitemapGroup,
 ): Promise<void> {
   try {
     const publishedStories = await getPublishedStoriesFromSnapshot();
     const metadataManifest = getSeoMetadataManifest(publishedStories);
     const routes = metadataManifest.routes.filter(
-      (metadata) => metadata.indexable !== false,
+      (metadata) => metadata.indexable !== false && isSitemapRouteInGroup(metadata.path, group),
     );
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${routes
       .map((metadata) => {
@@ -601,33 +639,46 @@ export async function serveNewsroomSitemap(
         return `  <url><loc>${escapeXml(getCanonicalUrl(metadata.path))}</loc>${lastmod}${image}</url>`;
       })
       .join("\n")}\n</urlset>`;
-    res
-      .status(200)
-      .type("application/xml")
-      .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")
-      .vary("Accept-Encoding");
-    if (req.acceptsEncodings("gzip") === "gzip") {
-      res.setHeader("Content-Encoding", "gzip");
-      res.send(gzipSync(body));
-      return;
-    }
-    res.send(body);
+    sendSitemapBody(req, res, body);
   } catch (error) {
     req.log.error({ err: error }, "Newsroom sitemap failed");
     res.status(500).type("text/plain").send("Sitemap unavailable.");
   }
 }
 
-router.get("/newsroom/sitemap.xml", serveNewsroomSitemap);
+router.get("/newsroom/sitemap.xml", (req, res) => serveNewsroomSitemap(req, res, "all"));
+router.get("/newsroom/sitemap-index.xml", serveNewsroomSitemapIndex);
+router.get("/newsroom/sitemap-articles.xml", (req, res) => serveNewsroomSitemap(req, res, "articles"));
+router.get("/newsroom/sitemap-topics.xml", (req, res) => serveNewsroomSitemap(req, res, "topics"));
+router.get("/newsroom/sitemap-authors.xml", (req, res) => serveNewsroomSitemap(req, res, "authors"));
+router.get("/newsroom/sitemap-static.xml", (req, res) => serveNewsroomSitemap(req, res, "static"));
+
+router.get("/newsroom/news-sitemap.xml", async (req, res): Promise<void> => {
+  try {
+    const recentCutoff = Date.now() - 48 * 60 * 60 * 1000;
+    const recentStories = (await getPublishedStoriesFromSnapshot())
+      .filter((story) => Date.parse(`${story.date}T00:00:00Z`) >= recentCutoff)
+      .map((story) => `  <url><loc>${escapeXml(getCanonicalUrl(`/article/${story.slug}`))}</loc><news:news><news:publication><news:name>Global AI News</news:name><news:language>en</news:language></news:publication><news:publication_date>${escapeXml(`${story.date}T00:00:00Z`)}</news:publication_date><news:title>${escapeXml(story.title)}</news:title></news:news></url>`);
+    const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n${recentStories.join("\n")}\n</urlset>`;
+    sendSitemapBody(req, res, body);
+  } catch (error) {
+    req.log.error({ err: error }, "News sitemap failed");
+    res.status(500).type("text/plain").send("News sitemap unavailable.");
+  }
+});
+
+function renderRssFeed(title: string, feedUrl: string, stories: Story[]): string {
+  const items = stories.map((story) => {
+    const url = escapeXml(getCanonicalUrl(`/article/${story.slug}`));
+    return `    <item><title>${escapeXml(story.title)}</title><link>${url}</link><guid>${url}</guid><pubDate>${new Date(`${story.date}T07:30:00Z`).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`;
+  });
+  return `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>${escapeXml(title)}</title><link>${escapeXml(feedUrl)}</link><description>Evidence-led reporting, research and context from Global AI News.</description><language>en-IN</language>\n${items.join("\n")}\n</channel></rss>`;
+}
 
 export async function serveNewsroomFeed(_req: Request, res: ExpressResponse): Promise<void> {
   try {
     const publishedStories = await getPublishedStoriesFromSnapshot();
-    const items = publishedStories.slice(0, 30).map((story) => {
-      const url = escapeXml(getCanonicalUrl(`/article/${story.slug}`));
-      return `    <item><title>${escapeXml(story.title)}</title><link>${url}</link><guid>${url}</guid><pubDate>${new Date(`${story.date}T07:30:00Z`).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`;
-    });
-    const body = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Global AI News</title><link>${SITE_URL}/</link><description>Intelligence for the AI economy.</description><language>en-us</language>\n${items.join("\n")}\n</channel></rss>`;
+    const body = renderRssFeed("Global AI News", `${SITE_URL}/`, publishedStories);
     res
       .type("application/rss+xml")
       .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")
@@ -638,6 +689,57 @@ export async function serveNewsroomFeed(_req: Request, res: ExpressResponse): Pr
 }
 
 router.get("/newsroom/feed.xml", serveNewsroomFeed);
+router.get("/newsroom/feed.json", async (_req, res): Promise<void> => {
+  try {
+    const stories = await getPublishedStoriesFromSnapshot();
+    res
+      .type("application/feed+json")
+      .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")
+      .json({
+        version: "https://jsonfeed.org/version/1.1",
+        title: "Global AI News",
+        home_page_url: `${SITE_URL}/`,
+        feed_url: `${SITE_URL}/feed.json`,
+        description: "Evidence-led reporting, research and context from Global AI News.",
+        language: "en-IN",
+        items: stories.map((story) => ({
+          id: getCanonicalUrl(`/article/${story.slug}`),
+          url: getCanonicalUrl(`/article/${story.slug}`),
+          title: story.title,
+          content_text: story.dek,
+          summary: story.dek,
+          date_published: new Date(`${story.date}T07:30:00Z`).toISOString(),
+          ...(getPublicDateModified(story)
+            ? { date_modified: new Date(`${getPublicDateModified(story)}T07:30:00Z`).toISOString() }
+            : {}),
+        })),
+      });
+  } catch (error) {
+    _req.log.error({ err: error }, "Newsroom JSON feed failed");
+    res.status(500).type("text/plain").send("Feed unavailable.");
+  }
+});
+router.get("/newsroom/topic/:slug/feed.xml", async (req, res): Promise<void> => {
+  const topic = topicRecords.find((candidate) => candidate.slug === req.params.slug);
+  if (!topic) {
+    res.status(404).type("text/plain").send("Topic feed not found.");
+    return;
+  }
+  try {
+    const publishedStories = await getPublishedStoriesFromSnapshot();
+    const topicStories = topic.storySlugs
+      .map((slug) => publishedStories.find((story) => story.slug === slug))
+      .filter((story): story is Story => Boolean(story));
+    const body = renderRssFeed(topic.label, getCanonicalUrl(topic.route), topicStories);
+    res
+      .type("application/rss+xml")
+      .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")
+      .send(body);
+  } catch (error) {
+    req.log.error({ err: error }, "Topic feed failed");
+    res.status(500).type("text/plain").send("Feed unavailable.");
+  }
+});
 
 router.get("/newsroom/social/articles/:slug.svg", async (req, res): Promise<void> => {
   try {

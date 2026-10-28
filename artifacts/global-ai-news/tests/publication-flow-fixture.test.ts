@@ -513,6 +513,19 @@ function createInMemoryApi(getStories: () => Story[]): Server {
       ).join('');
       response.writeHead(200, { 'content-type': 'application/rss+xml; charset=utf-8' })
         .end(`<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Global AI News</title>${entries}</channel></rss>`);
+    } else if (route === '/api/newsroom/sitemap-index.xml') {
+      const links = ['articles', 'topics', 'authors', 'static']
+        .map((group) => `<sitemap><loc>${SITE_URL}/sitemap-${group}.xml</loc></sitemap>`).join('');
+      response.writeHead(200, { 'content-type': 'application/xml; charset=utf-8' })
+        .end(`<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${links}</sitemapindex>`);
+    } else if (route === '/api/newsroom/sitemap-articles.xml') {
+      const urls = metadata.routes.filter((entry) => entry.indexable !== false && entry.path.startsWith('/article/'))
+        .map((entry) => `<url><loc>${getCanonicalUrl(entry.path)}</loc>${entry.lastmod ? `<lastmod>${entry.lastmod}</lastmod>` : ''}</url>`).join('');
+      response.writeHead(200, { 'content-type': 'application/xml; charset=utf-8' })
+        .end(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`);
+    } else if (route === '/api/newsroom/sitemap-topics.xml' || route === '/api/newsroom/sitemap-authors.xml' || route === '/api/newsroom/sitemap-static.xml') {
+      response.writeHead(200, { 'content-type': 'application/xml; charset=utf-8' })
+        .end('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>');
     } else if (route === '/api/newsroom/sitemap.xml') {
       const urls = metadata.routes.filter((entry) => entry.indexable !== false)
         .map((entry) => `<url><loc>${getCanonicalUrl(entry.path)}</loc>${entry.lastmod ? `<lastmod>${entry.lastmod}</lastmod>` : ''}</url>`).join('');
@@ -601,16 +614,19 @@ test('isolated publication reaches article, homepage, RSS, and sitemap without a
       assert.doesNotMatch(html, /<link\b[^>]*\brel=["']modulepreload["']/i, `${route}: should not preload unused application modules`);
     }
 
-    const [apiFeed, rootFeed, apiSitemap, rootSitemap] = await Promise.all([
+    const [apiFeed, rootFeed, apiSitemap, rootSitemap, apiArticleSitemap, rootArticleSitemap] = await Promise.all([
       fetch(`${apiOrigin}/api/newsroom/feed.xml`).then((response) => response.text()),
       fetch(`${webOrigin}/feed.xml`).then((response) => response.text()),
-      fetch(`${apiOrigin}/api/newsroom/sitemap.xml`).then((response) => response.text()),
+      fetch(`${apiOrigin}/api/newsroom/sitemap-index.xml`).then((response) => response.text()),
       fetch(`${webOrigin}/sitemap.xml`).then((response) => response.text()),
+      fetch(`${apiOrigin}/api/newsroom/sitemap-articles.xml`).then((response) => response.text()),
+      fetch(`${webOrigin}/sitemap-articles.xml`).then((response) => response.text()),
     ]);
     assert.equal(rootFeed, apiFeed);
     assert.equal(rootSitemap, apiSitemap);
+    assert.equal(rootArticleSitemap, apiArticleSitemap);
     assert.ok(apiFeed.includes(getCanonicalUrl(`/article/${story.slug}`)));
-    assert.ok(apiSitemap.includes(getCanonicalUrl(`/article/${story.slug}`)));
+    assert.ok(apiArticleSitemap.includes(getCanonicalUrl(`/article/${story.slug}`)));
 
     const { stdout: homepageHtml } = await execFileAsync(chromium, [
       '--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage',

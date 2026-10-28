@@ -785,7 +785,16 @@ async function assertContactAlias() {
 
   const sitemapResponse = await fetch(`${webOrigin}/sitemap.xml`);
   assert.equal(sitemapResponse.status, 200, 'sitemap route must be available for redirect coverage');
-  const sitemapXml = await sitemapResponse.text();
+  const sitemapIndex = await sitemapResponse.text();
+  assert.match(sitemapIndex, /<sitemapindex\b/, 'public sitemap must be an index');
+  const sitemapDocuments = await Promise.all(
+    ['articles', 'topics', 'authors', 'static'].map(async (group) => {
+      const response = await fetch(`${webOrigin}/sitemap-${group}.xml`);
+      assert.equal(response.status, 200, `${group} sitemap must be reachable`);
+      return response.text();
+    }),
+  );
+  const sitemapXml = sitemapDocuments.join('\n');
   const sitemapPaths = [...sitemapXml.matchAll(/<loc>https:\/\/www\.globalainews\.in([^<]*)<\/loc>/g)]
     .map((match) => new URL(match[1], 'https://www.globalainews.in').pathname);
   assert.ok(sitemapPaths.length > 0, 'sitemap must contain canonical routes');

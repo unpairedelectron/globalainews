@@ -1,4 +1,4 @@
-import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, getStoryAuthorIdentity, indiaIndex, signals, sources, timelineEvents, type Author, type NewsroomContentSnapshot, type Source, type Story } from './content';
+import { authors, entities, findEntity, findStory, findTimeline, getPublicDateModified, getPublishedStories, getStoryAuthorIdentity, getStoryWordCount, indiaIndex, signals, sources, timelineEvents, type Author, type NewsroomContentSnapshot, type Source, type Story } from './content';
 import { dataProductRecords, researchRecords, topicRecords } from './authority/registry';
 import { CONTENT_RULES, getSectionItemCount } from './content-rules';
 
@@ -23,6 +23,24 @@ export interface SeoMetadataManifest {
   stories?: Story[];
   contentSnapshot?: NewsroomContentSnapshot;
 }
+
+const seoTitleOverrides: Record<string, string> = {
+  '/article/india-ai-compute-access-2026': 'India AI compute gap: a measurement problem — Global AI News',
+  '/article/weekly-deep-dive-cost-of-intelligence': 'AI power demand constrains product design — Global AI News',
+  '/article/reliability-is-the-new-ai-moat': 'OSWorld tests AI agent reliability — Global AI News',
+  '/article/study-finds-word-cues-can-override-game-theory-choices-in-llms': 'Preprint: action labels shift LLM choices — Global AI News',
+  '/article/ai-models-antibiotic-discovery': 'ProteoGPT study reports peptide candidates — Global AI News',
+  '/article/quiet-race-watermark-everything-ai-makes': 'C2PA provenance cannot prove content truth — Global AI News',
+  '/article/small-models-serious-workflows': 'Mistral Small 4: active vs full footprint — Global AI News',
+  '/timeline/indiaai-compute-target-2024': 'IndiaAI sets common-compute target — Global AI News',
+  '/timeline/indiaai-compute-initial-capacity-2025': 'IndiaAI outlines initial compute capacity — Global AI News',
+  '/timeline/indiaai-compute-34333-2025': 'Government reports 34,333 shared GPUs — Global AI News',
+  '/timeline/indiaai-compute-installed-reported-2025': 'ET reports IndiaAI GPU installations — Global AI News',
+  '/timeline/indiaai-compute-shared-capacity-2026': 'Factsheet: 45,000+ shared GPUs — Global AI News',
+  '/timeline/indiaai-compute-access-reported-2026': 'Reports put access near 30,000 GPUs — Global AI News',
+  '/timeline/antibiotic-candidates': 'ProteoGPT preclinical results — Global AI News',
+  '/timeline/watermarking-code': 'EU AI Act transparency duties begin — Global AI News',
+};
 
 const staticMetadata: Record<string, SeoMetadata> = {
   '/': {
@@ -250,6 +268,53 @@ export function getArticleDescription(story: Pick<Story, 'dek'>): string {
   return `${safePrefix.replace(/[\s,.;:—-]+$/u, '')}…`;
 }
 
+function normalizeSeoDescription(title: string, description: string): string {
+  const clean = description.replace(/\s+/gu, ' ').trim();
+  const length = (value: string) => Array.from(value).length;
+  if (
+    length(clean) >= 120 &&
+    length(clean) <= 155 &&
+    /[.!?]$/u.test(clean) &&
+    !/[.…]{2,}|…$/u.test(clean)
+  ) {
+    return clean;
+  }
+
+  const completeText = clean.split('…', 1)[0].trim();
+  const sentences = completeText
+    .split(/(?<=[.!?])\s+/u)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+  let base = sentences.find((sentence) => length(sentence) >= 120 && length(sentence) <= 155)
+    ?? sentences.find((sentence) => length(sentence) < 120);
+
+  if (!base) {
+    const titleSeed = title.replace(/\s*—\s*Global AI News$/u, '').trim();
+    const compactSeed = length(titleSeed) > 50
+      ? `${Array.from(titleSeed).slice(0, 47).join('').replace(/\s+\S*$/u, '').trim()}`
+      : titleSeed;
+    base = `Read ${compactSeed || 'this page'} in context.`;
+  }
+  if (length(base) >= 120 && length(base) <= 155 && /[.!?]$/u.test(base)) return base;
+
+  const suffixes = [
+    ' Sources and limits are noted.',
+    ' Read the dated sources and evidence limits.',
+    ' The cited record, context and limits are linked.',
+    ' Explore related reporting, dated evidence and stated limits.',
+    ' Read the source trail, reporting context and stated limitations here.',
+    ' Explore related coverage, sources, dates and evidence limits in context.',
+  ];
+  for (const suffix of suffixes) {
+    const candidate = `${base.replace(/[.!?]$/u, '')}.${suffix}`;
+    if (length(candidate) >= 120 && length(candidate) <= 155) return candidate;
+  }
+
+  const titleSeed = title.replace(/\s*—\s*Global AI News$/u, '').trim();
+  const compactSeed = Array.from(titleSeed).slice(0, 40).join('').replace(/\s+\S*$/u, '').trim();
+  return `Explore ${compactSeed || 'this topic'} with dated sources, context and evidence limits from Global AI News. Supporting reporting and context are linked.`;
+}
+
 export function getArticleSeoMetadata(
   story: Story,
   imagePath = `/social/articles/${story.slug}.png`,
@@ -267,7 +332,7 @@ export function getArticleSeoMetadata(
   };
 }
 
-export function getSeoMetadata(
+function getRawSeoMetadata(
   route: string,
   publishedStories = getPublishedStories(),
   sourceRecords: Source[] = sources,
@@ -473,6 +538,20 @@ export function getSeoMetadata(
   };
 }
 
+export function getSeoMetadata(
+  route: string,
+  publishedStories = getPublishedStories(),
+  sourceRecords: Source[] = sources,
+  authoritySnapshot?: NewsroomContentSnapshot,
+): SeoMetadata {
+  const metadata = getRawSeoMetadata(route, publishedStories, sourceRecords, authoritySnapshot);
+  return {
+    ...metadata,
+    title: seoTitleOverrides[metadata.path] ?? metadata.title,
+    description: normalizeSeoDescription(metadata.title, metadata.description),
+  };
+}
+
 export function getCanonicalUrl(route: string): string {
   const cleanPath = cleanRoute(route);
   const canonicalPath = cleanPath === '/' ? '/' : `${cleanPath}/`;
@@ -577,6 +656,7 @@ export function getStructuredData(
   const articleDateModified = articleStory ? getPublicDateModified(articleStory) : undefined;
   const publisher = {
     '@type': 'Organization',
+    '@id': `${SITE_URL}/#organization`,
     name: 'Global AI News',
     url: SITE_URL,
     logo: {
@@ -584,16 +664,33 @@ export function getStructuredData(
       url: `${SITE_URL}/logo.svg`,
     },
   };
+  const webSite = {
+    '@type': 'WebSite',
+    '@id': `${SITE_URL}/#website`,
+    name: 'Global AI News',
+    url: SITE_URL,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${getCanonicalUrl('/search')}?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+    publisher: { '@id': `${SITE_URL}/#organization` },
+  };
   const primaryEntity = metadata.article
     ? {
-        '@type': 'NewsArticle',
+        '@type': articleStory?.contentType === 'Report' ? 'Article' : 'NewsArticle',
         headline: articleStory?.title ?? metadata.title,
         description: metadata.description,
         url: canonical,
-        ...(metadata.imagePath ? { image: `${SITE_URL}${metadata.imagePath}` } : {}),
+        ...(metadata.imagePath ? { image: [`${SITE_URL}${metadata.imagePath}`] } : {}),
         ...(articleStory
           ? {
               articleSection: articleStory.category,
+              isAccessibleForFree: true,
+              wordCount: getStoryWordCount(articleStory),
+              citation: (authoritySnapshot?.sources ?? sources)
+                .filter((sourceRecord) => articleStory.sources.includes(sourceRecord.slug))
+                .map((sourceRecord) => sourceRecord.url),
               datePublished: articleStory.date,
               ...(articleDateModified ? { dateModified: articleDateModified } : {}),
             }
@@ -605,7 +702,7 @@ export function getStructuredData(
                 name: articleAuthor.name,
                 url: articleAuthor.type === 'Person' && articleAuthor.slug
                   ? getCanonicalUrl(`/person/${articleAuthor.slug}`)
-                  : SITE_URL,
+                  : getCanonicalUrl('/authors'),
               },
             }
           : {}),
@@ -735,8 +832,9 @@ export function getStructuredData(
   return JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
-      primaryEntity,
       publisher,
+      webSite,
+      primaryEntity,
       {
         '@type': 'BreadcrumbList',
         itemListElement: breadcrumbItems,

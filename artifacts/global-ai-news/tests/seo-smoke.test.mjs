@@ -2878,6 +2878,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   const [
     { response: sitemapResponse, body: sitemap },
     { response: apiSitemapResponse, body: apiSitemap },
+    { response: apiSitemapIndexResponse, body: apiSitemapIndex },
     rootApiSitemapResult,
     { response: feedResponse, body: feed },
     { response: apiFeedResponse, body: apiFeed },
@@ -2885,6 +2886,10 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   ] = await Promise.all([
     fetchText('/sitemap.xml'),
     fetch(`${apiOrigin}/api/newsroom/sitemap.xml`).then(async (response) => ({
+      response,
+      body: await response.text(),
+    })),
+    fetch(`${apiOrigin}/api/newsroom/sitemap-index.xml`).then(async (response) => ({
       response,
       body: await response.text(),
     })),
@@ -2904,15 +2909,33 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   ]);
   assert.equal(sitemapResponse.status, 200, 'sitemap.xml is not reachable');
   assert.equal(apiSitemapResponse.status, 200, 'API newsroom sitemap.xml is not reachable');
+  assert.equal(apiSitemapIndexResponse.status, 200, 'API sitemap index is not reachable');
   assert.equal(rootApiSitemapResult.response.status, 404, 'API artifact must not own the root sitemap route');
   assert.equal(feedResponse.status, 200, 'feed.xml is not reachable');
   assert.equal(apiFeedResponse.status, 200, 'API newsroom RSS feed is not reachable');
   assert.equal(rootApiFeedResult.response.status, 404, 'API artifact must not own the root RSS route');
-  assertCanonicalSitemapUrls(sitemap, 'root sitemap');
   assertCanonicalSitemapUrls(apiSitemap, 'API newsroom sitemap');
+  assert.match(sitemap, /<sitemapindex\b/, 'root sitemap.xml must be a sitemap index');
+  assert.equal(sitemap, apiSitemapIndex, 'root sitemap index drifted from the API newsroom sitemap index');
+  const sitemapGroups = ['articles', 'topics', 'authors', 'static'];
+  const [rootChildSitemaps, apiChildSitemaps] = await Promise.all([
+    Promise.all(sitemapGroups.map((group) => fetchText(`/sitemap-${group}.xml`))),
+    Promise.all(sitemapGroups.map((group) =>
+      fetch(`${apiOrigin}/api/newsroom/sitemap-${group}.xml`).then(async (response) => ({
+        response,
+        body: await response.text(),
+      })),
+    )),
+  ]);
+  for (const result of [...rootChildSitemaps, ...apiChildSitemaps]) {
+    assert.equal(result.response.status, 200, 'a sitemap child document is not reachable');
+  }
+  const rootSitemapContents = rootChildSitemaps.map((result) => result.body).join('\n');
+  const apiSitemapContents = apiChildSitemaps.map((result) => result.body).join('\n');
+  assertCanonicalSitemapUrls(rootSitemapContents, 'root sitemap children');
+  assertCanonicalSitemapUrls(apiSitemapContents, 'API sitemap children');
   assertRssCanonicalUrls(feed, 'root RSS feed');
   assertRssCanonicalUrls(apiFeed, 'API newsroom RSS feed');
-  assert.equal(sitemap, apiSitemap, 'root sitemap drifted from the API newsroom sitemap');
   assert.deepEqual(
     feedItems(feed).map((item) => item.guid),
     feedItems(apiFeed).map((item) => item.guid),
@@ -2926,7 +2949,7 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   );
   for (const result of [devSitemapResult, devFeedResult]) {
     assert.equal(result.response.status, 200, `Vite development proxy failed for ${result.route}`);
-    assert.equal(result.body, result.route === '/sitemap.xml' ? apiSitemap : apiFeed, `Vite development proxy drifted for ${result.route}`);
+    assert.equal(result.body, result.route === '/sitemap.xml' ? apiSitemapIndex : apiFeed, `Vite development proxy drifted for ${result.route}`);
   }
 
   const { response: metadataResponse, body: metadataBody } = await fetchText('/api/newsroom/metadata');
@@ -2949,22 +2972,19 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
   assert.equal(contentResponse.status, 200, 'newsroom content snapshot is not reachable');
   const newsroomContent = JSON.parse(contentBody);
 
-  const routes = sitemapRoutes(sitemap);
+  const routes = sitemapRoutes(apiSitemap);
   assert.ok(routes.length >= 15, 'sitemap unexpectedly contains too few public routes');
   assert.equal(new Set(routes).size, routes.length, 'sitemap contains duplicate routes');
   assert.equal(routes[0], '/', 'sitemap should start with the homepage');
   const apiRoutes = sitemapRoutes(apiSitemap);
   assert.ok(apiRoutes.length >= 15, 'API sitemap unexpectedly contains too few public routes');
   assert.equal(new Set(apiRoutes).size, apiRoutes.length, 'API sitemap contains duplicate routes');
-  assertRouteSetsMatch(
-    routes,
-    apiRoutes,
-    'API sitemap routes drifted from the built static sitemap',
-  );
+  assertRouteSetsMatch(routes, sitemapRoutes(rootSitemapContents), 'root sitemap child routes drifted');
+  assertRouteSetsMatch(routes, sitemapRoutes(apiSitemapContents), 'API sitemap child routes drifted');
   assertSitemapDatesMatch(
     apiSitemap,
-    sitemap,
-    'Sitemap last-modified dates drifted between the API and static documents',
+    rootSitemapContents,
+    'Sitemap last-modified dates drifted between the API and public child documents',
   );
   assert.deepEqual(
     [...routes].sort(),

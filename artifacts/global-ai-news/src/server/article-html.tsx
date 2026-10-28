@@ -40,7 +40,7 @@ export class NewsroomSnapshotFetchError extends Error {
 }
 
 export const ARTICLE_NOT_FOUND_HTML =
-  '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Article not found — Global AI News</title></head><body><main><h1>Article not found</h1></main></body></html>';
+  '<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Page not found — Global AI News</title></head><body><main><h1>Page not found</h1><p>This page is not available. Search published reporting or browse the latest stories.</p><p><a href="/search/">Search Global AI News</a> · <a href="/brief/">Latest stories</a></p></main></body></html>';
 
 export function parseArticleRoutePath(
   pathname: string,

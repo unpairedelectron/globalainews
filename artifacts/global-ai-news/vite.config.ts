@@ -58,10 +58,45 @@ const newsroomXmlProxy = {
     changeOrigin: true,
     rewrite: () => '/api/newsroom/feed.xml',
   },
+  '/feed.json': {
+    target: process.env.NEWSROOM_API_ORIGIN ?? 'http://localhost:80',
+    changeOrigin: true,
+    rewrite: () => '/api/newsroom/feed.json',
+  },
   '/sitemap.xml': {
     target: process.env.NEWSROOM_API_ORIGIN ?? 'http://localhost:80',
     changeOrigin: true,
-    rewrite: () => '/api/newsroom/sitemap.xml',
+    rewrite: () => '/api/newsroom/sitemap-index.xml',
+  },
+  '/sitemap-articles.xml': {
+    target: process.env.NEWSROOM_API_ORIGIN ?? 'http://localhost:80',
+    changeOrigin: true,
+    rewrite: () => '/api/newsroom/sitemap-articles.xml',
+  },
+  '/sitemap-topics.xml': {
+    target: process.env.NEWSROOM_API_ORIGIN ?? 'http://localhost:80',
+    changeOrigin: true,
+    rewrite: () => '/api/newsroom/sitemap-topics.xml',
+  },
+  '/sitemap-authors.xml': {
+    target: process.env.NEWSROOM_API_ORIGIN ?? 'http://localhost:80',
+    changeOrigin: true,
+    rewrite: () => '/api/newsroom/sitemap-authors.xml',
+  },
+  '/sitemap-static.xml': {
+    target: process.env.NEWSROOM_API_ORIGIN ?? 'http://localhost:80',
+    changeOrigin: true,
+    rewrite: () => '/api/newsroom/sitemap-static.xml',
+  },
+  '/news-sitemap.xml': {
+    target: process.env.NEWSROOM_API_ORIGIN ?? 'http://localhost:80',
+    changeOrigin: true,
+    rewrite: () => '/api/newsroom/news-sitemap.xml',
+  },
+  '^/topic/[^/]+/feed\\.xml$': {
+    target: process.env.NEWSROOM_API_ORIGIN ?? 'http://localhost:80',
+    changeOrigin: true,
+    rewrite: (path: string) => path.replace(/^\/topic\//, '/api/newsroom/topic/'),
   },
 };
 

@@ -71,6 +71,13 @@ export function SeoHead({ title, description, path, article = false, indexable =
         return el;
       }) as HTMLMetaElement;
       tag.content = 'noindex,follow';
+    } else if (resolvedArticle) {
+      const tag = ensure('meta[name="robots"]', () => {
+        const el = document.createElement('meta');
+        el.name = 'robots';
+        return el;
+      }) as HTMLMetaElement;
+      tag.content = 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
     } else {
       robotsTag?.remove();
     }
@@ -80,6 +87,7 @@ export function SeoHead({ title, description, path, article = false, indexable =
       ['property', 'og:url', canonical],
       ['property', 'og:type', resolvedArticle ? 'article' : 'website'],
       ['property', 'og:site_name', 'Global AI News'],
+      ['property', 'og:locale', 'en_IN'],
       ['name', 'twitter:title', resolvedTitle],
       ['name', 'twitter:description', resolvedDescription],
     ].forEach(([attribute, key, content]) => {
@@ -175,12 +183,13 @@ export function SeoHead({ title, description, path, article = false, indexable =
             ? [['article:modified_time', publicDateModified] as [string, string]]
             : []),
           ...(resolvedAuthor
-            ? [['article:author', getCanonicalUrl(resolvedAuthor.type === 'Person' && resolvedAuthor.slug ? `/person/${resolvedAuthor.slug}` : '/')] as [string, string]]
+            ? [['article:author', getCanonicalUrl(resolvedAuthor.type === 'Person' && resolvedAuthor.slug ? `/person/${resolvedAuthor.slug}` : '/authors')] as [string, string]]
             : []),
           ['article:section', resolvedStory.category],
+          ['article:tag', resolvedStory.topic],
         ]
       : [];
-    ['article:published_time', 'article:modified_time', 'article:author', 'article:section']
+    ['article:published_time', 'article:modified_time', 'article:author', 'article:section', 'article:tag']
       .forEach((property) => {
         if (!articleMeta.some(([key]) => key === property)) {
           document.head.querySelector(`meta[property="${property}"]`)?.remove();
