@@ -18,6 +18,7 @@ import {
 import { getSeoMetadata, SITE_URL } from './seo-metadata';
 import { renderSeoRouteHtml } from './seo-html';
 import { gzipResponseMiddleware } from './server/gzipResponseMiddleware';
+import { checkNewsroomApiHealth, OperationalAlertManager } from './server/operational-alerts';
 
 const serverDirectory = path.dirname(fileURLToPath(import.meta.url));
 const distributionDirectory = path.resolve(serverDirectory, '..');
@@ -37,6 +38,9 @@ if (!Number.isInteger(port) || port <= 0 || port > 65_535) {
 
 const app = express();
 app.disable('x-powered-by');
+const operationalAlerts = new OperationalAlertManager({
+  webhookUrl: process.env.OPS_ALERT_WEBHOOK_URL,
+});
 const publicDocumentCacheControl =
   'public, max-age=0, s-maxage=60, stale-while-revalidate=300';
 
@@ -339,6 +343,7 @@ app.use((request, response, next) => {
       failureCode:
         error instanceof NewsroomSnapshotFetchError ? error.code : 'render_error',
     });
+    void operationalAlerts.recordArticleRenderFailure(pathname, requestId);
     if (response.headersSent) {
       response.destroy();
       return;
@@ -479,6 +484,13 @@ app.use((request, response) => {
 });
 
 app.listen(port, '0.0.0.0', () => {
+  if (process.env.NODE_ENV === 'production') {
+    const healthCheck = () =>
+      void checkNewsroomApiHealth(process.env.NEWSROOM_API_ORIGIN, operationalAlerts);
+    healthCheck();
+    const healthCheckTimer = setInterval(healthCheck, 30_000);
+    healthCheckTimer.unref();
+  }
   const requestId = randomUUID();
   const startedAt = performance.now();
   const route = '<startup-snapshot-warmup>';

@@ -3777,7 +3777,7 @@ test('signed-in non-editors see an access denial instead of release controls', {
   assert.equal(state.returnHref, '/');
 });
 
-test('editor sign-in stays separate from newsletter signup on desktop and mobile', { concurrency: false }, async () => {
+test('public navigation hides editor sign-in while keeping newsletter signup', { concurrency: false }, async () => {
   const cdp = await getRouteBrowser();
   await cdp.send('Emulation.setDeviceMetricsOverride', {
     width: 1440,
@@ -3788,25 +3788,18 @@ test('editor sign-in stays separate from newsletter signup on desktop and mobile
   await cdp.send('Page.navigate', { url: `${baseUrl}/` });
   await waitForBrowserCondition(
     cdp,
-    `Boolean(document.querySelector('[data-testid="link-editor-sign-in"]')) && Boolean(document.querySelector('[data-testid="link-join-brief"]'))`,
-    'The desktop header is missing the editor sign-in or newsletter link.',
+    `Boolean(document.querySelector('[data-testid="link-join-brief"]'))`,
+    'The desktop header is missing the newsletter link.',
   );
   const desktop = await evaluateBrowser(cdp, `(() => {
-    const signIn = document.querySelector('[data-testid="link-editor-sign-in"]');
     const newsletter = document.querySelector('[data-testid="link-join-brief"]');
     return {
-      signInHref: signIn?.getAttribute('href') ?? '',
-      signInLabel: signIn?.textContent?.trim() ?? '',
-      signInDisplay: signIn ? getComputedStyle(signIn).display : 'missing',
-      adjacentToNewsletter: signIn?.nextElementSibling === newsletter,
+      editorSignInCount: document.querySelectorAll('[data-testid="link-editor-sign-in"]').length,
       newsletterHref: newsletter?.getAttribute('href') ?? '',
       newsletterLabel: newsletter?.textContent?.trim() ?? '',
     };
   })()`);
-  assert.equal(desktop.signInHref, '/sign-in/');
-  assert.equal(desktop.signInLabel, 'Editor sign-in');
-  assert.notEqual(desktop.signInDisplay, 'none', 'desktop editor sign-in must be visible');
-  assert.equal(desktop.adjacentToNewsletter, true, 'editor sign-in must sit beside the newsletter CTA');
+  assert.equal(desktop.editorSignInCount, 0, 'desktop public navigation must not expose editor sign-in');
   assert.equal(desktop.newsletterHref, '/brief/#newsletter');
   assert.equal(desktop.newsletterLabel, 'Join the brief', 'newsletter CTA must remain unchanged');
 
@@ -3825,22 +3818,11 @@ test('editor sign-in stays separate from newsletter signup on desktop and mobile
   await evaluateBrowser(cdp, `document.querySelector('[data-testid="button-mobile-menu"]').click()`);
   await waitForBrowserCondition(
     cdp,
-    `Boolean(document.querySelector('[data-testid="link-mobile-editor-sign-in"]'))`,
-    'The mobile navigation menu is missing the editor sign-in link.',
+    `document.querySelectorAll('[data-testid="link-mobile-editor-sign-in"]').length === 0`,
+    'Mobile public navigation must not expose editor sign-in.',
   );
-  const mobile = await evaluateBrowser(cdp, `(() => {
-    const signIn = document.querySelector('[data-testid="link-mobile-editor-sign-in"]');
-    return {
-      href: signIn?.getAttribute('href') ?? '',
-      label: signIn?.textContent?.trim() ?? '',
-      display: signIn ? getComputedStyle(signIn).display : 'missing',
-      inNavigation: signIn?.closest('#mobile-primary-navigation') !== null,
-    };
-  })()`);
-  assert.equal(mobile.href, '/sign-in/');
-  assert.equal(mobile.label, 'Editor sign-in');
-  assert.notEqual(mobile.display, 'none', 'mobile editor sign-in must be visible in the open menu');
-  assert.equal(mobile.inNavigation, true);
+  const mobile = await evaluateBrowser(cdp, `document.querySelectorAll('[data-testid="link-mobile-editor-sign-in"]').length`);
+  assert.equal(mobile, 0, 'mobile public navigation must not expose editor sign-in');
   await cdp.send('Emulation.clearDeviceMetricsOverride');
 });
 
