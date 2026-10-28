@@ -30,6 +30,7 @@ assert.match(cssSource, /\.dark\s*\{[\s\S]*--background:/, 'dark palette variabl
 assert.match(cssSource, /:root\s*\{[\s\S]*--background:/, 'light palette variables are missing');
 assert.match(cssSource, /:focus-visible\s*\{[\s\S]*--ring/, 'keyboard focus styling is missing');
 assert.match(cssSource, /transition: background-color/, 'theme transitions are missing');
+assert.match(cssSource, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*animation-duration:[\s\S]*transition-duration:/, 'reduced-motion preferences are not respected');
 
 assert.match(clerkSource, /getClerkAppearance\(theme\)/, 'Clerk appearance is not synchronized with the active theme');
 assert.match(appSource, /lazy\(\(\) => import\('\.\/clerk-routes'\)/, 'Clerk routes are not loaded lazily');

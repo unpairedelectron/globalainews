@@ -48,6 +48,20 @@ function safeJsonLd(value: string): string {
     .replaceAll('\u2029', '\\u2029');
 }
 
+function addPrerenderSkipLink(markup: string): string {
+  const mainTag = markup.match(/<main\b[^>]*>/i)?.[0];
+  if (!mainTag) throw new Error('Cannot add the skip link: prerendered page has no main landmark.');
+
+  const mainAttributes = mainTag
+    .slice('<main'.length, -1)
+    .replace(/\s+id=(?:"[^"]*"|'[^']*')/i, '')
+    .replace(/\s+tabindex=(?:"[^"]*"|'[^']*')/i, '');
+  const targetableMain = `<main id="main-content" tabindex="-1"${mainAttributes}>`;
+  const accessibleMarkup = markup.replace(mainTag, targetableMain);
+
+  return `<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-primary focus:px-4 focus:py-3 focus:text-primary-foreground">Skip to main content</a>${accessibleMarkup}`;
+}
+
 export function renderSeoRouteHtml(
   baseHtml: string,
   route: string,
@@ -148,13 +162,13 @@ export function renderSeoRouteHtml(
   const shouldPrerender =
     metadata.indexable !== false || prerenderPublicNoindexRoutes.has(route);
   const prerenderedBody = shouldPrerender
-    ? renderToStaticMarkup(
+    ? addPrerenderSkipLink(renderToStaticMarkup(
         createElement(SeoPrerender, {
           route,
           metadata,
           snapshot: contentSnapshot,
         }),
-      )
+      ))
     : '';
   const bootstrapMarker = shouldPrerender
     ? '<script id="global-ai-prerender" type="application/json">{}</script>'

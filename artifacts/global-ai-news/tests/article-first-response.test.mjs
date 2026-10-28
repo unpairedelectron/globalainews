@@ -1254,6 +1254,8 @@ async function testRawArticleResponses() {
   assert.match(html, /The Global AI News Editorial Desk publishes source-linked reporting, analysis, research and reference material/);
   assert.match(html, /The temporary newsroom article contains enough editorial copy/);
   assert.match(html, /id="global-ai-prerender"/);
+  assert.match(html, /<a href="#main-content"[^>]*>Skip to main content<\/a>/);
+  assert.match(html, /<main id="main-content" tabindex="-1"/);
   assert.equal(
     html.match(/<title>([\s\S]*?)<\/title>/i)?.[1],
     `${publishedTitle} — Global AI News`,
