@@ -30,7 +30,7 @@ NODE_ENV = "production"
 NEWSROOM_API_ORIGIN = "https://www.globalainews.in"
 
 [services.production.health.startup]
-path = "/"
+path = "/healthz"
 
 [[services.production.rewrites]]
 from = "/sign-in/*"

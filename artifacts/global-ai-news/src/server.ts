@@ -106,6 +106,14 @@ app.use((request, response, next) => {
 });
 app.use(gzipResponseMiddleware());
 
+app.get('/healthz', (_request, response) => {
+  response
+    .status(200)
+    .set('Cache-Control', 'no-store')
+    .type('json')
+    .send({ status: 'ok' });
+});
+
 const permanentRouteAliases = new Map([
   ['/about', '/about-us/'],
   ['/ethics', '/code-of-ethics/'],
