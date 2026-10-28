@@ -1245,7 +1245,10 @@ async function testRawArticleResponses() {
   const response = await getArticle(slugs.published);
   const html = await response.text();
   assert.equal(response.status, 200);
-  assert.equal(response.headers.get('cache-control'), 'no-store');
+  assert.equal(
+    response.headers.get('cache-control'),
+    'public, max-age=0, s-maxage=60, stale-while-revalidate=300',
+  );
   assert.match(html, /<h1[^>]*>A live article renders before browser scripts run<\/h1>/);
   assert.match(html, /By <strong class="font-semibold">Global AI News Editorial Desk<\/strong>/);
   assert.match(html, /The Global AI News Editorial Desk publishes source-linked reporting, analysis, research and reference material/);
