@@ -30,30 +30,22 @@ export function ResponsiveEditorialImage({
 }: ResponsiveEditorialImageProps) {
   const [failed, setFailed] = useState(false);
   const sources = getEditorialImageSources(slug);
-  const formatSources = fetchPriority === 'high'
-    ? [
-      { type: 'image/webp', srcSet: sources.webp },
-      { type: 'image/avif', srcSet: sources.avif },
-    ]
-    : [
-      { type: 'image/avif', srcSet: sources.avif },
-      { type: 'image/webp', srcSet: sources.webp },
-    ];
 
   useEffect(() => setFailed(false), [slug]);
 
   return (
     <picture className="block w-full">
-      {!failed && formatSources.map((source) => (
-        <source key={source.type} type={source.type} srcSet={source.srcSet} sizes={sizes} />
-      ))}
+      {!failed && fetchPriority !== 'high' && <>
+        <source type="image/avif" srcSet={sources.avif} sizes={sizes} />
+        <source type="image/webp" srcSet={sources.webp} sizes={sizes} />
+      </>}
       <img
         src={failed ? EDITORIAL_IMAGE_FALLBACK : getEditorialImagePath(slug)}
         alt={alt}
         width={width}
         height={height}
         loading={loading}
-        decoding="async"
+        decoding={fetchPriority === 'high' ? undefined : 'async'}
         fetchPriority={fetchPriority}
         className={className}
         onError={() => setFailed(true)}

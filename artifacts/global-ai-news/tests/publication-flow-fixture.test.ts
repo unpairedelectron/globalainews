@@ -305,6 +305,9 @@ async function runMobilePerformanceAudit(origin: string) {
         expression: `(() => {
           const nav = performance.getEntriesByType('navigation')[0];
           const resources = performance.getEntriesByType('resource');
+            const lcpResource = resources.find((resource) =>
+              resource.name === window.__ganMobileAudit?.lcpElement?.url,
+            );
           const js = resources.filter((r) => r.initiatorType === 'script' || /\\.m?js(?:[?#]|$)/i.test(r.name));
           const images = resources.filter((r) => r.initiatorType === 'img' || /\\.(?:png|jpe?g|webp|avif|gif|svg)(?:[?#]|$)/i.test(r.name));
           const bytes = (entries) => entries.reduce((sum, r) => sum + (r.transferSize || r.encodedBodySize || 0), 0);
@@ -313,6 +316,13 @@ async function runMobilePerformanceAudit(origin: string) {
             ttfbMs: nav ? Math.round(nav.responseStart) : null,
             lcpMs: window.__ganMobileAudit?.lcp == null ? null : Math.round(window.__ganMobileAudit.lcp),
             lcpElement: window.__ganMobileAudit?.lcpElement ?? null,
+            lcpResource: lcpResource ? {
+              startTime: Math.round(lcpResource.startTime),
+              responseStart: Math.round(lcpResource.responseStart),
+              responseEnd: Math.round(lcpResource.responseEnd),
+              transferSize: lcpResource.transferSize,
+              encodedBodySize: lcpResource.encodedBodySize,
+            } : null,
             cls: Number((window.__ganMobileAudit?.cls ?? 0).toFixed(4)),
             rootText: document.querySelector('#root')?.textContent ?? '',
             moduleScriptCount: document.querySelectorAll('script[type="module"]').length,
@@ -339,6 +349,7 @@ async function runMobilePerformanceAudit(origin: string) {
       process.stdout.write(`MOBILE ROUTE ${route}: ${JSON.stringify({
         lcpMs: measuredPageMetrics.lcpMs,
         lcpElement: measuredPageMetrics.lcpElement,
+        lcpResource: measuredPageMetrics.lcpResource,
         imageBytes: measuredPageMetrics.imageBytesFromTiming,
         imageCount: measuredPageMetrics.imageResourceCount,
         jsBytes: measuredPageMetrics.jsBytesFromTiming,
@@ -604,9 +615,21 @@ test('isolated publication reaches article, homepage, RSS, and sitemap without a
     const articleResponse = await fetch(`${webOrigin}/article/${story.slug}`);
     const articleHtml = await articleResponse.text();
     assert.equal(articleResponse.status, 200);
+    assert.equal(
+      articleResponse.headers.get('cache-control'),
+      'public, max-age=0, s-maxage=60, stale-while-revalidate=300',
+      'public dynamic articles should use a short shared cache window',
+    );
     assert.match(articleHtml, new RegExp(`<h1[^>]*>${story.title}</h1>`));
     assert.match(articleHtml, /name="description"/);
     assert.match(articleHtml, new RegExp(`<link rel="canonical" href="${getCanonicalUrl(`/article/${story.slug}`)}" \\/>`));
+    const responsiveImageResponse = await fetch(`${webOrigin}/images/editorial/fallback-480.avif`);
+    assert.equal(responsiveImageResponse.status, 200);
+    assert.match(
+      responsiveImageResponse.headers.get('cache-control') ?? '',
+      /public, max-age=86400, stale-while-revalidate=604800/,
+      'responsive editorial images should use a bounded cache window',
+    );
     for (const [route, expectedContent] of [
       ['/reports', /<h1[^>]*>Reports/],
       ['/about-us', /Who speaks for the publication/],

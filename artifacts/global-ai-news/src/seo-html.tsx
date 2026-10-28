@@ -1,9 +1,10 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { getPublicDateModified, getStoryAuthorIdentity, type NewsroomContentSnapshot } from './content';
+import { getPublicDateModified, getStoryAuthorIdentity, uniqueStoriesByCanonicalSlug, type NewsroomContentSnapshot } from './content';
 import { getCanonicalUrl, getStructuredData, SITE_URL, type SeoMetadata } from './seo-metadata';
 import { SeoPrerender } from './seo-prerender';
+import { getEditorialImagePath } from './editorial-images';
 import { STATIC_PRERENDER_ROUTES } from './static-prerender-routes';
 import {
   STATIC_PRERENDER_THEME_BOOTSTRAP,
@@ -94,6 +95,12 @@ export function renderSeoRouteHtml(
   const articleTag = articleStory
     ? `<meta property="article:tag" content="${escapeHtml(articleStory.topic)}" />`
     : '';
+  const leadStory = route === '/'
+    ? uniqueStoriesByCanonicalSlug(contentSnapshot.stories)[0]
+    : articleStory;
+  const priorityImagePreload = leadStory
+    ? `<link rel="preload" as="image" type="image/jpeg" href="${escapeHtml(getEditorialImagePath(leadStory.slug))}" fetchpriority="high" />`
+    : '';
 
   const existingHeadMetadata = [
     /<title>[\s\S]*?<\/title>\s*/gi,
@@ -119,6 +126,7 @@ export function renderSeoRouteHtml(
     getStructuredData(metadata, contentSnapshot.stories, contentSnapshot.authors, contentSnapshot),
   );
   const headMetadata = `    <title>${title}</title>
+    ${priorityImagePreload}
     <meta name="description" content="${description}" />
     ${metadata.indexable === false ? '<meta name="robots" content="noindex,follow" />' : metadata.article ? '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />' : ''}
     <link rel="canonical" href="${canonicalUrl}" />

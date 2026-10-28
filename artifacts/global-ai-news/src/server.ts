@@ -397,6 +397,8 @@ app.use(express.static(publicDirectory, {
   fallthrough: true,
   setHeaders(response, filePath) {
     const relativePath = path.relative(publicDirectory, filePath).split(path.sep).join('/');
+    if (relativePath.endsWith('.avif')) response.setHeader('Content-Type', 'image/avif');
+    if (relativePath.endsWith('.webp')) response.setHeader('Content-Type', 'image/webp');
     if (/^assets\/.+-[A-Za-z0-9_-]{8,}\.(?:css|js)$/.test(relativePath)) {
       response.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     } else if (/^images\/editorial\/.+-(?:480|768|1024)\.(?:avif|webp)$/.test(relativePath)) {

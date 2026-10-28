@@ -49,8 +49,10 @@ let routeBrowserStderr = '';
 let newsroomContentFixture;
 
 const mimeTypes = {
+  '.avif': 'image/avif',
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
+  '.webp': 'image/webp',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
@@ -3951,8 +3953,8 @@ test('headline pixels stay readable and inside the card at every supported title
 test('homepage and article body serve local editorial images with a working fallback', async () => {
   const home = await fetchText('/');
   assert.equal(home.response.status, 200);
-  assert.match(home.body, /<source[^>]+type="image\/avif"[^>]+srcset="[^"]+-480\.avif 480w/);
-  assert.match(home.body, /<source[^>]+type="image\/webp"[^>]+srcset="[^"]+-480\.webp 480w/);
+  assert.match(home.body, /<source[^>]+type="image\/avif"[^>]+srcset="[^"]+-480\.avif 480w/i);
+  assert.match(home.body, /<source[^>]+type="image\/webp"[^>]+srcset="[^"]+-480\.webp 480w/i);
   assert.doesNotMatch(home.body, /<img\b[^>]+src=["']\/social\/articles\//i, 'social-card PNGs must not appear in page UI');
   const homeImage = openingTags(home.body, 'img')
     .find((tag) => (attributeValue(tag, 'src') ?? '').startsWith('/images/editorial/'));
@@ -3996,7 +3998,7 @@ test('homepage and article body serve local editorial images with a working fall
         const response = await fetch(`${baseUrl}${imagePath}`);
         assert.equal(response.status, 200, `${imagePath}: responsive image candidate did not load`);
         assert.match(response.headers.get('content-type') ?? '', new RegExp(`image/${format}`));
-        assert.ok(Number(response.headers.get('content-length')) > 0, `${imagePath}: candidate is empty`);
+        assert.ok((await response.arrayBuffer()).byteLength > 0, `${imagePath}: candidate is empty`);
       }
     }
   }

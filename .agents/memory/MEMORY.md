@@ -6,7 +6,7 @@
 - [Editorial modification dates](editorial-modification-dates.md) — keep article modification dates editorial, preserve them across queue reschedules, and reuse the same value in JSON-LD and sitemap.
 - [Social preview pixel contract](social-preview-pixel-contract.md) — share renderer-owned pixel checks and keep content edits on HMR, not Vite config restarts.
 - [Vite build-time JSX](vite-build-time-jsx.md) — config-side SSR may need explicit React even when app TSX uses the automatic JSX runtime.
-- [Page visual baselines](page-visual-baselines.md) — wait for fonts, tolerate antialiasing, give each Chromium launch a generous CDP deadline, and probe Vite root for readiness.
+- [Page visual baselines](page-visual-baselines.md) — wait for fonts, pair LCP paint with resource timing, tolerate antialiasing, and probe Vite root for readiness.
 - [Unused UI providers](unused-ui-providers.md) — mount shared UI providers only when the current app has active consumers; unused Radix providers can surface upstream sourcemap warnings.
 - [Editorial publishing queue](editorial-publishing-queue.md) — release prepared stories by publish time at the API boundary; client polling makes publication restart-safe.
 - [Editorial Clerk transport](editorial-clerk-transport.md) — browser editor calls use Clerk cookies; server access requires the configured, verified primary email.

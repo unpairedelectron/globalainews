@@ -32,3 +32,9 @@ Keep the main Vite watcher stopped through a production release build and CPU-he
 **Why:** Concurrent hot reloads can race generated assets and compete with Chromium, causing transient image errors or CDP timeouts even when the completed production build and assets are valid.
 
 **How to apply:** Keep the watcher stopped for the build, full smoke suite, and isolated editorial fixture; restart it after those checks, then confirm the Vite root and changed route respond.
+
+For mobile LCP failures, record the exact LCP element URL and its Resource Timing start and response-end alongside the LCP timestamp. If transfer ends materially earlier, investigate decode, rendering, and hydration rather than attributing the gap to image bytes or relaxing the guard.
+
+**Why:** The newsroom fixture repeatedly showed the hero transfer finishing well before its final LCP paint, and changing image formats did not resolve the gap.
+
+**How to apply:** Keep the existing no-regression threshold intact and use paired paint/resource timings to direct the next trace.
