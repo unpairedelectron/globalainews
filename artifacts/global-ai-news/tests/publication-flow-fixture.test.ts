@@ -273,7 +273,7 @@ async function runMobilePerformanceAudit(origin: string) {
     });
 
     const routes = [
-      '/',
+      '/', '/', '/',
       '/article/india-ai-compute-access-2026',
       '/reports',
       '/topic/india',
@@ -281,7 +281,10 @@ async function runMobilePerformanceAudit(origin: string) {
       '/about-us',
     ];
     const measurements = [];
+    const routeAttempts = new Map<string, number>();
     for (const route of routes) {
+      const attempt = (routeAttempts.get(route) ?? 0) + 1;
+      routeAttempts.set(route, attempt);
       currentRoute = route;
       requestInfo = new Map();
       completedResources = [];
@@ -347,6 +350,7 @@ async function runMobilePerformanceAudit(origin: string) {
         .map((resource) => resource.origin))];
       const { rootText, ...measuredPageMetrics } = pageMetrics.result.value;
       process.stdout.write(`MOBILE ROUTE ${route}: ${JSON.stringify({
+        attempt,
         lcpMs: measuredPageMetrics.lcpMs,
         lcpElement: measuredPageMetrics.lcpElement,
         lcpResource: measuredPageMetrics.lcpResource,
@@ -391,9 +395,17 @@ async function runMobilePerformanceAudit(origin: string) {
         );
       }
       if (route === '/' || route.startsWith('/article/')) {
+        const resource = measuredPageMetrics.lcpResource;
+        const lcpMs = measuredPageMetrics.lcpMs;
+        const resourceStartMs = resource?.startTime ?? null;
+        const responseStartMs = resource?.responseStart ?? null;
+        const responseEndMs = resource?.responseEnd ?? null;
+        const timingDiagnosis = resource && lcpMs !== null
+          ? `hero image timing: request started ${resourceStartMs} ms after navigation; before response ${responseStartMs !== null ? responseStartMs - resource.startTime : 'unknown'} ms; during response ${responseStartMs !== null ? resource.responseEnd - responseStartMs : 'unknown'} ms; after response ${responseEndMs !== null ? lcpMs - responseEndMs : 'unknown'} ms until LCP`
+          : `hero image timing unavailable (LCP element: ${JSON.stringify(measuredPageMetrics.lcpElement)}, matching resource: ${JSON.stringify(resource)})`;
         assert.ok(
-          measuredPageMetrics.lcpMs !== null && measuredPageMetrics.lcpMs <= 2_700,
-          `${route}: homepage/article LCP exceeded the no-regression budget (${measuredPageMetrics.lcpMs} ms)`,
+          lcpMs !== null && lcpMs <= 2_700,
+          `${route} (mobile sample ${attempt}): homepage/article LCP exceeded the 2,700 ms no-regression budget (${lcpMs} ms); ${timingDiagnosis}`,
         );
         assert.ok(
           measuredPageMetrics.cls <= 0.05,
@@ -402,6 +414,7 @@ async function runMobilePerformanceAudit(origin: string) {
       }
       measurements.push({
         route,
+        attempt,
         ...measuredPageMetrics,
         inpMs: null,
         inpNote: 'Not measured: this navigation-only run does not include real user interaction.',
