@@ -1,0 +1,8 @@
+name = "global-ai-news-edge"
+main = "src/index.mjs"
+compatibility_date = "2026-10-31"
+workers_dev = false
+preview_urls = false
+
+[vars]
+ORIGIN_URL = "https://global-ai-media.replit.app"
