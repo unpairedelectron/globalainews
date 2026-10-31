@@ -37,3 +37,4 @@
 - [Public sitemap contract](public-sitemap-contract.md) — public crawlers use the sitemap index while the API keeps its flat sitemap for existing consumers.
 - [First-response content parity](first-response-content-parity.md) — audit thin HTML against the hydrated route before expanding copy or changing indexability.
 - [Editorial draft queue boundary](editorial-draft-queue-boundary.md) — the release queue is not a private draft store; scheduled records can become public automatically.
+- [Editorial commercial disclosure](editorial-commercial-disclosure.md) — the owner confirmed no commercial relationship for the current Anthropic, OpenAI, and Google coverage; recheck for other companies or later work.

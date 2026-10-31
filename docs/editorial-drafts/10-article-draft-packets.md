@@ -122,11 +122,11 @@
 
 **Working thesis:** There is no single delayed “AI Act deadline.” Regulation (EU) 2026/1744 distinguishes high-risk systems under Annex III from those under Annex I; a useful explainer needs to keep the obligation and system category attached to each date.
 
-**Verified opening:** The EUR-Lex text for Regulation (EU) 2026/1744 confirms that the application date for obligations in Sections 1, 2, and 3 of Chapter III is 2 December 2027 for systems classified as high-risk under Article 6(2) and Annex III, and 2 August 2028 for systems under Article 6(1) and Annex I. These are different categories and dates.
+**Verified opening:** Regulation (EU) 2026/1744 entered into force on 27 July 2026. Its amended Article 113 keeps distinct dates for different duties: the Article 50(2) marking obligation must be met by 2 December 2026 for AI systems—including general-purpose AI systems—that generate synthetic audio, image, video, or text content and were already on the market before 2 August 2026. The specified new Article 5 provisions on 2026/1744’s prohibited-practice additions also apply from 2 December 2026. Separately, Chapter III Sections 1–3 obligations apply from 2 December 2027 to Article 6(2)/Annex III high-risk systems, and from 2 August 2028 to Article 6(1)/Annex I systems. The delayed dates are not interchangeable.
 
 **Analysis artifact:** A timeline and decision tree keyed to the system’s classification and the specific obligation. Each row should cite the operative provision and say whether the rule applies, is transitional, or is delayed.
 
-**Hold / unknown:** The Article 50(2) transition, the new prohibition’s application date, and the procedural history dates still need to be confirmed in operative text and official notices. Do not summarize all Article 50 duties as deferred. Add the legal-information disclaimer and a dated verification note.
+**Hold / unknown:** Verify the exact scope and exceptions in the amended Article 5 text before explaining the new prohibitions in detail, and check the Official Journal procedural record before adding political approval dates. Do not describe the Article 50(2) transition as a delay of all Article 50 transparency duties. Add the legal-information disclaimer and a dated verification note.
 
 **Source:** EUR-Lex, Regulation (EU) 2026/1744, Official Journal 24 Jul 2026, Tier 1: https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng
 
