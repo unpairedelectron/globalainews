@@ -25,6 +25,30 @@ assert.doesNotMatch(appSource, /pub-\d{10,}/, 'the ad client must not hard-code 
 assert.match(appSource, /isAdSlotActive\(/, 'the component must use the shared publisher approval policy');
 assert.match(appSource, /activateAdSlot\(/, 'the component must use the guarded ad activation path');
 
+const homePageSource = readFileSync(path.join(artifactDir, 'src/pages/public.tsx'), 'utf8');
+const homePage = homePageSource.slice(
+  homePageSource.indexOf('export function HomePage()'),
+  homePageSource.indexOf('export function BriefPage()'),
+);
+assert.ok(
+  homePage.indexOf('topStories.slice(0, 5)') < homePage.indexOf('<AdSlot placement="home"'),
+  'the homepage ad should follow the Latest story list',
+);
+assert.ok(
+  homePage.indexOf('<AdSlot placement="home"') < homePage.indexOf('>Analysis</SectionLabel>'),
+  'the homepage ad should stay between Latest and Analysis',
+);
+
+const prerenderSource = readFileSync(path.join(artifactDir, 'src/seo-prerender.tsx'), 'utf8');
+const homePrerender = prerenderSource.slice(
+  prerenderSource.indexOf("if (route === '/')"),
+  prerenderSource.indexOf("if (route === '/brief')"),
+);
+assert.ok(
+  homePrerender.indexOf('remainingStories.slice(0, 5)') < homePrerender.indexOf('<AdSlot placement="home"'),
+  'the prerendered homepage ad should follow its Latest story list',
+);
+
 const builtHtml = readFileSync(path.join(artifactDir, 'dist/public/index.html'), 'utf8');
 assert.doesNotMatch(
   builtHtml,

@@ -64,7 +64,6 @@ export function HomePage() {
           </article> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">There are no published stories in the newsroom snapshot.</p>}
        </div>
       </section>
-      <AdSlot placement="home" />
        <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.75fr_1.25fr] md:py-16">
         <div><SectionLabel aside={`${topStories.length} stories`}>Latest</SectionLabel><h2 className="max-w-sm font-serif text-5xl leading-[.9]">The useful read, not the loudest read.</h2><p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">A running file of what moved, with the date and reporting attached.</p><Link href="/brief" className="mt-8 inline-flex min-h-11 items-center border-b border-primary pb-2 text-sm text-primary">Read the Daily Brief <ArrowUpRight size={14} className="ml-2" /></Link></div>
         <div>{topStories.slice(0, 5).map((story, index) => <article key={story.slug} className="grid gap-4 border-t border-foreground/15 py-5 first:border-t-0 first:pt-0 sm:grid-cols-[128px_1fr]">
@@ -72,6 +71,7 @@ export function HomePage() {
           <div><div className="flex items-center gap-2"><span className="eyebrow text-primary">{story.category}</span><span aria-hidden="true" className="h-1 w-1 rounded-full bg-accent" /><time className="text-xs text-muted-foreground" dateTime={story.date}>{formatEditorialDate(story.date)}</time></div><Link href={`/article/${story.slug}`} className="mt-2 block max-w-2xl font-serif text-2xl leading-[.98] hover:text-primary md:text-3xl">{story.title}</Link><p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{story.dek}</p></div>
         </article>)}</div>
       </section>
+      <AdSlot placement="home" />
 
       <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.72fr_1.28fr] md:py-16">
         <div><SectionLabel aside={`${analysisStories.length} pieces`}>Analysis</SectionLabel><h2 className="max-w-sm font-serif text-5xl leading-[.9]">What the evidence could mean next.</h2><p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">Interpretation, clearly distinguished from reported fact.</p><Link href="/essays" className="mt-7 inline-flex min-h-11 items-center text-sm text-primary hover:underline">More analysis and essays <ArrowUpRight size={14} className="ml-2" /></Link></div>

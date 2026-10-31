@@ -831,7 +831,6 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
               </article> : <p className="border border-foreground/15 p-6 text-sm text-muted-foreground">There are no published stories in the newsroom snapshot.</p>}
             </div>
           </section>
-           <AdSlot placement="home" />
           <section className="grid gap-10 border-b border-foreground/20 py-12 md:grid-cols-[.75fr_1.25fr] md:py-16">
             <div><p className="eyebrow mb-5 border-b border-foreground/15 pb-3 text-primary">More from the newsroom · {remainingStories.length} stories</p><h2 className="max-w-sm font-serif text-5xl leading-[.9]">The useful read, not the loudest read.</h2><a href="/brief/" className="mt-8 inline-flex border-b border-primary pb-2 text-sm text-primary">Read the Daily Brief <span className="ml-2" aria-hidden="true">↗</span></a></div>
             <div className="grid gap-0">
@@ -843,6 +842,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
               </article>)}
             </div>
           </section>
+          <AdSlot placement="home" />
         </main>
       </div>
     );
