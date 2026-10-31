@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" role="img" aria-labelledby="title desc">
+  <title id="title">Agent-started pull requests compared with the group without detected agent involvement</title>
+  <desc id="desc">GitHub reports about 87 percent versus 79 percent for multi-file changes, and 90 percent versus about 86 percent for merging within two weeks.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:29px;font-weight:700}.label{font-size:25px}.value{font-size:25px;font-weight:700}.muted{font-size:22px;fill:#526574}.a{fill:#287b63}.b{fill:#aab8c4}
+  </style>
+  <text class="title" x="42" y="48">GitHub's September comparison</text>
+  <rect class="a" x="45" y="80" width="24" height="24" rx="4"/><text class="muted" x="80" y="101">Agent-started</text>
+  <rect class="b" x="300" y="80" width="24" height="24" rx="4"/><text class="muted" x="335" y="101">No detected agent involvement</text>
+  <text class="label" x="45" y="155">Changed multiple files</text>
+  <rect class="a" x="45" y="173" width="590" height="42" rx="7"/><text class="value" x="648" y="203">~87%</text>
+  <rect class="b" x="45" y="225" width="536" height="42" rx="7"/><text class="value" x="594" y="255">79%</text>
+  <text class="label" x="45" y="322">Merged within two weeks</text>
+  <rect class="a" x="45" y="340" width="610" height="42" rx="7"/><text class="value" x="668" y="370">90%</text>
+  <rect class="b" x="45" y="392" width="583" height="42" rx="7"/><text class="value" x="642" y="422">~86%</text>
+  <text class="muted" x="45" y="463">Descriptive differences; not evidence of causation or code quality</text>
+</svg>

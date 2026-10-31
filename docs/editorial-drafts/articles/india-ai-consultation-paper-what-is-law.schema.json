@@ -1,0 +1,108 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NewsArticle",
+      "@id": "https://www.globalainews.in/article/india-ai-consultation-paper-what-is-law/#article",
+      "mainEntityOfPage": "https://www.globalainews.in/article/india-ai-consultation-paper-what-is-law/",
+      "headline": "India’s AI consultation paper: law, proposal and expectation",
+      "description": "India’s 2026 IT Rules cover specified synthetic media. Here is what is in force, how the takedown clocks differ, and what remains only an expectation.",
+      "dateModified": "2026-10-31",
+      "author": {
+        "@type": "Organization",
+        "name": "Editorial Desk"
+      },
+      "reviewedBy": {
+        "@type": "Person",
+        "name": "Aman Mishra"
+      },
+      "image": [
+        "https://www.globalainews.in/draft-assets/india-ai-consultation-paper-what-is-law/1200x630.webp",
+        "https://www.globalainews.in/draft-assets/india-ai-consultation-paper-what-is-law/1200x675.webp",
+        "https://www.globalainews.in/draft-assets/india-ai-consultation-paper-what-is-law/1200x1200.webp"
+      ],
+      "citation": [
+        "https://egazette.gov.in/WriteReadData/2026/269993.pdf",
+        "https://www.meity.gov.in/static/uploads/2026/02/550681ab908f8afb135b0ad42816a1c9.pdf",
+        "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2291671&lang=1&reg=48",
+        "https://www.meity.gov.in/static/uploads/2025/10/065b6deb585441b5ccdf8be42502a49c.pdf",
+        "https://www.meity.gov.in/static/uploads/2025/10/8e40cdd134cd92dd783a37556428c370.pdf",
+        "https://www.meity.gov.in/static/uploads/2025/10/9de47fb06522b9e40a61e4731bc7de51.pdf",
+        "https://newsonair.gov.in/ai-regulation-consultation-paper-to-be-floated-within-a-month-ashwini-vaishnaw/",
+        "https://www.medianama.com/2026/10/223-india-ai-regulation-consultation-paper-vaishnaw/"
+      ],
+      "isAccessibleForFree": true,
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.globalainews.in/article/india-ai-consultation-paper-what-is-law/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is India’s AI consultation paper already law?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The timetable reported by news outlets is an expectation attributed to the IT minister. A consultation paper is a policy document, not automatically a binding amendment. The 2026 IT Rules amendment is a separate, notified instrument already in force."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do the rules cover every AI-generated text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The SGI definition in the notified amendment covers audio, visual or audiovisual information meeting a realism test. It does not define every AI-generated text response as SGI. Other laws or rules may still apply to particular text, conduct or services."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is every deepfake complaint subject to a three-hour deadline?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The three-hour change applies to a specified process following a qualifying government or court intimation. The amendment also sets a separate two-hour route for listed sensitive categories of grievances. The trigger and category must be checked."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Did the final rules keep the 10% watermark requirement?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The 10% surface-area and audio-duration formula appears in MeitY’s 2025 draft. It is not stated in the same way in the final February 2026 Gazette text, which uses a prominent-labelling standard and provenance requirements, subject to the operative wording."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the MeitY FAQ replace the Gazette?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. MeitY says the FAQ is explanatory and does not replace, amend or alter the IT Act or Rules. For the legal text, use the notified Gazette amendment and the consolidated Rules."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.globalainews.in/article/india-ai-consultation-paper-what-is-law/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.globalainews.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "India Watch",
+          "item": "https://www.globalainews.in/india-watch/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "India AI Rules: Law and Expectation",
+          "item": "https://www.globalainews.in/article/india-ai-consultation-paper-what-is-law/"
+        }
+      ]
+    }
+  ]
+}

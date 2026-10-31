@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-labelledby="title desc">
+  <title id="title">Gemini 4 Argon and Carbon announcement timeline</title>
+  <desc id="desc">Google announced Gemini 4 Argon on 13 October 2026 and Gemini 4 Carbon on 28 October. The checked official pages on 31 October showed a Carbon evaluation-methodology page but no located Carbon model card or safety report; no public general-access date was supplied.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.date{font-size:26px;font-weight:700}.body{font-size:23px;fill:#526574}.line{stroke:#285b7a;stroke-width:6}.point{fill:#287b63;stroke:#fffdf7;stroke-width:4}.card{fill:#fffdf7;stroke:#b8c7d1;stroke-width:2}
+  </style>
+  <text class="title" x="40" y="48">Two announcements, no Carbon public-release date</text>
+  <line class="line" x1="110" y1="145" x2="790" y2="145"/>
+  <circle class="point" cx="180" cy="145" r="18"/><circle class="point" cx="700" cy="145" r="18"/>
+  <text class="date" x="80" y="112">13 Oct</text><text class="date" x="620" y="112">28 Oct</text>
+  <rect class="card" x="45" y="190" width="390" height="145" rx="15"/>
+  <text class="date" x="72" y="233">Gemini 4 Argon</text>
+  <text class="body" x="72" y="270"><tspan x="72">Launch and Fairwind program</tspan><tspan x="72" dy="30">documentation; Argon safety report.</tspan></text>
+  <rect class="card" x="465" y="190" width="390" height="145" rx="15"/>
+  <text class="date" x="492" y="233">Gemini 4 Carbon</text>
+  <text class="body" x="492" y="270"><tspan x="492">Staged access and evaluation</tspan><tspan x="492" dy="30">methodology; no public GA date.</tspan></text>
+  <text class="body" x="40" y="385">31 October check: no Carbon-specific model card or safety report located.</text>
+</svg>

@@ -1,0 +1,109 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NewsArticle",
+      "@id": "https://www.globalainews.in/article/gated-frontier-models-gemini-4-carbon/#article",
+      "mainEntityOfPage": "https://www.globalainews.in/article/gated-frontier-models-gemini-4-carbon/",
+      "headline": "Gemini 4 Carbon puts gated access at the center",
+      "description": "Google will gate Gemini 4 Carbon to cyber defenders first. We separate access claims, benchmark methods, independent results and missing safety documents.",
+      "dateModified": "2026-10-31",
+      "author": {
+        "@type": "Organization",
+        "name": "Editorial Desk"
+      },
+      "reviewedBy": {
+        "@type": "Person",
+        "name": "Aman Mishra"
+      },
+      "image": [
+        "https://www.globalainews.in/draft-assets/gated-frontier-models-gemini-4-carbon/1200x630.webp",
+        "https://www.globalainews.in/draft-assets/gated-frontier-models-gemini-4-carbon/1200x675.webp",
+        "https://www.globalainews.in/draft-assets/gated-frontier-models-gemini-4-carbon/1200x1200.webp"
+      ],
+      "citation": [
+        "https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model",
+        "https://deepmind.google/models/evals-methodology/gemini-4-carbon",
+        "https://artificialanalysis.ai/articles/gemini-4-carbon-new-number-1",
+        "https://deepmind.google/fairwind-program/",
+        "https://deepmind.google/models/model-cards/gemini-4-argon",
+        "https://storage.googleapis.com/deepmind-media/gemini/gemini_4_safety_report.pdf",
+        "https://openai.com/index/securing-our-frontier-model-training-environment",
+        "https://deepmind.google/blog/gemini-4-argon-our-next-era-of-frontier-intelligence",
+        "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf"
+      ],
+      "isAccessibleForFree": true,
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.globalainews.in/article/gated-frontier-models-gemini-4-carbon/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Gemini 4 Carbon available to everyone?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No public general-availability date was stated in Google’s 28 October announcement. Google said a subset of cyber defenders would receive access first, then additional trusted partners through Fairwind, followed by developers, businesses and consumers through product surfaces “as soon as possible.” The announcement describes a staged sequence, not a public signup date."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are Google’s cybersecurity benchmark results independently verified?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not all in the same way. Google says it self-computed the SEC-bench Pro and ExploitGym results. It says CWE-bench comes from the public leaderboard evaluated by Collinear AI. Artificial Analysis reports a separate general capability index score. These sources provide different kinds of evidence and do not establish identical independent reproduction for each benchmark."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does “without guardrails” mean Carbon will ship without safeguards?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Google says its external cybersecurity evaluations were run without guardrails, and separately says it is iterating on guardrails during the staged rollout. Evaluation conditions describe how a test was run; they do not by themselves establish the safeguards in a future product deployment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Fairwind’s published MFA requirement apply to Carbon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Fairwind page checked for this draft describes controls for Gemini 4 Argon, including phishing-resistant MFA, background checks and restrictions on which teams may use the model. The Carbon announcement refers to staged Fairwind access but does not state that every Argon-specific condition already applies to Carbon. Wait for Carbon-specific terms before assuming they are identical."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the 59 Artificial Analysis score a cybersecurity score?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Artificial Analysis calls it an Intelligence Index v5 score, a broader capability measure. It is separate from SEC-bench Pro, ExploitGym and CWE-bench. It provides an external evaluation reference, but it cannot validate or replace the specialized cybersecurity results."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.globalainews.in/article/gated-frontier-models-gemini-4-carbon/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.globalainews.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Reports",
+          "item": "https://www.globalainews.in/reports/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Gemini 4 Carbon and gated access",
+          "item": "https://www.globalainews.in/article/gated-frontier-models-gemini-4-carbon/"
+        }
+      ]
+    }
+  ]
+}

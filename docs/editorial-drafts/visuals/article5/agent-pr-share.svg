@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" role="img" aria-labelledby="title desc">
+  <title id="title">GitHub's detected agent-started pull request share</title>
+  <desc id="desc">Two reported points only: 17 percent in March 2026 and more than 40 percent in September 2026. The measure is detection-based and is not a continuous monthly series.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.label{font-size:28px}.muted{font-size:24px;fill:#526574}.grid{stroke:#cbd5dc;stroke-width:2}.bar1{fill:#6d88a7}.bar2{fill:#287b63}.line{stroke:#214d68;stroke-width:5;fill:none}
+  </style>
+  <text class="title" x="48" y="52">Detected agent-started pull requests</text>
+  <text class="muted" x="48" y="84">Share of GitHub pull requests · two reported snapshots</text>
+  <line class="grid" x1="130" y1="135" x2="820" y2="135"/><text class="muted" x="58" y="143">50%</text>
+  <line class="grid" x1="130" y1="215" x2="820" y2="215"/><text class="muted" x="58" y="223">35%</text>
+  <line class="grid" x1="130" y1="295" x2="820" y2="295"/><text class="muted" x="58" y="303">20%</text>
+  <line class="grid" x1="130" y1="375" x2="820" y2="375"/><text class="muted" x="58" y="383">5%</text>
+  <line class="grid" x1="130" y1="405" x2="820" y2="405"/>
+  <rect class="bar1" x="270" y="341" width="120" height="64" rx="8"/>
+  <rect class="bar2" x="590" y="175" width="120" height="230" rx="8"/>
+  <path class="line" d="M330 325 L650 159"/>
+  <circle cx="330" cy="325" r="10" fill="#214d68"/><circle cx="650" cy="159" r="10" fill="#214d68"/>
+  <text class="label" x="278" y="324">17%</text><text class="label" x="588" y="151">&gt;40%</text>
+  <text class="label" x="263" y="448">March 2026</text><text class="label" x="582" y="448">September 2026</text>
+  <text class="muted" x="48" y="484">Source: GitHub Octoverse 2026 · two snapshots only</text>
+</svg>

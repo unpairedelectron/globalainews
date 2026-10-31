@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#f4f1e8"/>
+  <path d="M0 0h18v675H0z" fill="#287b63"/>
+  <text x="72" y="92" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="2" fill="#287b63">GLOBAL AI NEWS  /  OCTOVERSE 2026</text>
+  <text x="72" y="215" font-family="Arial,sans-serif" font-size="70" font-weight="700" fill="#172b3a">Agents start 40%+</text>
+  <text x="72" y="300" font-family="Arial,sans-serif" font-size="70" font-weight="700" fill="#172b3a">of GitHub PRs</text>
+  <text x="72" y="370" font-family="Arial,sans-serif" font-size="28" fill="#526574">What the number measures —</text>
+  <text x="72" y="409" font-family="Arial,sans-serif" font-size="28" fill="#526574">and what it misses</text>
+  <text x="72" y="468" font-family="Arial,sans-serif" font-size="24" fill="#526574">GitHub-reported · September 2026</text>
+  <rect x="760" y="125" width="370" height="405" rx="24" fill="#fffdf7" stroke="#cbd5dc" stroke-width="3"/>
+  <text x="800" y="175" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#526574">DETECTED FIRST DRAFTS</text>
+  <line x1="810" y1="445" x2="1080" y2="445" stroke="#aab8c4" stroke-width="3"/>
+  <rect x="835" y="355" width="76" height="90" rx="8" fill="#6d88a7"/>
+  <rect x="985" y="230" width="76" height="215" rx="8" fill="#287b63"/>
+  <path d="M873 339L1023 212" fill="none" stroke="#214d68" stroke-width="5"/>
+  <circle cx="873" cy="339" r="9" fill="#214d68"/><circle cx="1023" cy="212" r="9" fill="#214d68"/>
+  <text x="839" y="319" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#172b3a">17%</text>
+  <text x="981" y="203" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#172b3a">&gt;40%</text>
+  <text x="826" y="490" font-family="Arial,sans-serif" font-size="22" fill="#526574">Mar</text>
+  <text x="980" y="490" font-family="Arial,sans-serif" font-size="22" fill="#526574">Sep 2026</text>
+  <text x="72" y="610" font-family="Arial,sans-serif" font-size="20" fill="#526574">Detection-based platform statistic · not a quality score</text>
+</svg>

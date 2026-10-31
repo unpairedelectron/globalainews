@@ -64,7 +64,7 @@
 
 **Analysis artifact:** An access ladder documenting who can use the model at each stage, what public documentation exists, and whether outside evaluation is possible. Include a checklist readers can apply to vendor-published benchmark claims.
 
-**Hold / unknown:** Treat the benchmark scores and price as Google-reported claims, not independent results. The announcement does not establish independent reproduction; the current Carbon model-card status and the details of Fairwind vetting still need checking against linked primary materials. Compare with other labs only where their primary access policies are verified. Add the commercial-relationship disclosure only after owner confirmation.
+**Hold / unknown:** The official Carbon evaluation-methodology page is now public; distinguish its provenance by benchmark. Google self-computed SEC-bench Pro and ExploitGym; CWE-bench uses the public leaderboard evaluated by Collinear AI; Artificial Analysis reports its own Index v5 score. The Carbon model-card URL returned 404 and no Carbon-specific Safety & Security Report was located on the official model pages checked on 31 October; the Gemini page links Argon's safety report. Fairwind's current program page describes Argon access terms, so do not attribute its 650+ partner count, background checks or MFA conditions specifically to Carbon. Keep the announcement's staged access wording and do not infer a public release date. Owner-confirmed disclosure: no commercial relationship with Google.
 
 **Source:** Google DeepMind, *Gemini 4 Carbon: our next frontier model*, 28 Oct 2026, Tier 1: https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model
 

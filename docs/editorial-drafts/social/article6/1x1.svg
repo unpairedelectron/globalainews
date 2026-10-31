@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
+  <title id="title">India AI rules: law, proposal and expectation</title>
+  <desc id="desc">Square editorial social card with three labeled stages: rules in force, official explanation, and reported consultation expectation.</desc>
+  <rect width="1200" height="1200" fill="#f5f2ea"/>
+  <rect x="70" y="70" width="1060" height="1060" rx="32" fill="#fffdf8" stroke="#d6d8d2" stroke-width="2"/>
+  <text x="112" y="160" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="2" fill="#3158bd">GLOBAL AI NEWS  /  INDIA WATCH</text>
+  <text x="112" y="340" font-family="Arial,sans-serif" font-size="62" font-weight="700" fill="#142b3b">India’s AI rules:</text>
+  <text x="112" y="430" font-family="Arial,sans-serif" font-size="49" fill="#142b3b">what is law, proposal</text>
+  <text x="112" y="495" font-family="Arial,sans-serif" font-size="49" fill="#142b3b">and expectation?</text>
+  <line x1="112" y1="580" x2="1088" y2="580" stroke="#d6d8d2" stroke-width="2"/>
+  <rect x="112" y="640" width="976" height="105" rx="18" fill="#e4efe9"/>
+  <rect x="112" y="785" width="976" height="105" rx="18" fill="#e8eef9"/>
+  <rect x="112" y="930" width="976" height="105" rx="18" fill="#f5ead8"/>
+  <text x="160" y="705" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#17654e">IN FORCE  ·  FEBRUARY 2026 IT RULES</text>
+  <text x="160" y="850" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#3158bd">EXPLAINED  ·  FAQ AND PIB GUIDANCE</text>
+  <text x="160" y="995" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#8a5818">EXPECTED  ·  CONSULTATION PAPER</text>
+</svg>
