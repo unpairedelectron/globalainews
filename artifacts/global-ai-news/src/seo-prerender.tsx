@@ -279,6 +279,26 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             <p className="mt-6 max-w-2xl text-xl leading-8 text-muted-foreground">{entity.strapline}</p>
             <p className="mt-7 max-w-2xl text-base leading-7">{entity.overview}</p>
           </section>
+          {entity.profileSections?.length ? (
+            <section aria-label={`${entity.name} profile guide`} className="border-b border-foreground/15 py-12 md:py-16">
+              <div className="grid gap-10 md:grid-cols-[.55fr_1.45fr]">
+                <div>
+                  <h2 className="eyebrow mb-5 border-b border-foreground/15 pb-3 text-primary">How to understand this record</h2>
+                  <p className="max-w-sm text-sm leading-7 text-muted-foreground">A practical guide to the organization, its work, and what the available evidence can—and cannot—tell you.</p>
+                </div>
+                <div className="space-y-10">
+                  {entity.profileSections.map((section) => (
+                    <article key={section.heading} className="border-t border-foreground/15 pt-5">
+                      <h2 className="font-serif text-3xl leading-tight md:text-4xl">{section.heading}</h2>
+                      <div className="mt-4 grid gap-4">
+                        {section.paragraphs.map((paragraph) => <p key={paragraph} className="max-w-3xl text-base leading-8 text-foreground/85">{paragraph}</p>)}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : null}
           <section className="grid gap-10 py-12 md:grid-cols-2">
             <div>
               <h2 className="eyebrow mb-5 border-b border-foreground/15 pb-3 text-primary">Key metrics</h2>
@@ -291,6 +311,19 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
               <ul className="grid gap-4">{entity.latestDevelopments.map((item) => <li key={item} className="border-b border-foreground/15 pb-4">{item}</li>)}</ul>
             </div>
           </section>
+          {entity.primaryReferences?.length ? (
+            <section className="border-t border-foreground/15 py-10">
+              <h2 className="eyebrow mb-4 text-primary">Primary references</h2>
+              <ul className="grid gap-x-8 border-t border-foreground/15 sm:grid-cols-2">
+                {entity.primaryReferences.map((reference) => (
+                  <li key={reference.url} className="border-b border-foreground/15 py-4">
+                    <a href={reference.url} target="_blank" rel="noopener noreferrer" className="text-sm leading-6 hover:text-primary">{reference.label}</a>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-xs leading-5 text-muted-foreground">Primary references document what organizations publish about themselves. They are not independent verification of every claim.</p>
+            </section>
+          ) : null}
           <section className="border-t border-foreground/15 py-12">
             <h2 className="eyebrow mb-5 border-b border-foreground/15 pb-3 text-primary">Recent stories</h2>
             <StoryList stories={stories.filter((story) => entity.recentStories.includes(story.slug))} authors={authors} />
@@ -305,6 +338,15 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
     ? timelineEvents.find((event) => event.slug === timelineSlug)
     : undefined;
   if (timelineEvent) {
+    const linkedStory = timelineEvent.story
+      ? stories.find((story) => story.slug === timelineEvent.story)
+      : undefined;
+    const relatedResearch = snapshot.researchRecords.filter(
+      (record) => record.status === 'published' && record.timelineSlugs.includes(timelineEvent.slug),
+    );
+    const relatedData = snapshot.dataProducts.filter(
+      (product) => product.status === 'published' && product.timelineSlugs.includes(timelineEvent.slug),
+    );
     return (
       <div className="editorial-page mx-auto min-h-screen max-w-[1440px] px-5 md:px-10">
         <header className="flex items-center justify-between border-b border-foreground/20 py-5">
@@ -317,7 +359,75 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             <h1 className="mt-6 max-w-5xl font-serif text-7xl leading-[.84] md:text-[8rem]">{timelineEvent.title}</h1>
             <p className="mt-8 max-w-2xl text-xl leading-8 text-muted-foreground">{timelineEvent.description}</p>
           </section>
-          {timelineEvent.story && <section className="py-12"><h2 className="eyebrow mb-5 border-b border-foreground/15 pb-3 text-primary">Read the story</h2><StoryList stories={stories.filter((story) => story.slug === timelineEvent.story)} authors={authors} /></section>}
+          <section className="grid gap-12 py-12 md:grid-cols-[minmax(0,1fr)_300px]">
+            <div className="min-w-0">
+              <section className="border-l-2 border-primary bg-secondary/40 p-5 md:p-7">
+                <h2 className="eyebrow text-primary">Why this date matters</h2>
+                <p className="mt-3 max-w-3xl text-base leading-8">{timelineEvent.description}</p>
+                <p className="mt-4 text-xs leading-5 text-muted-foreground">This entry records the event date and the source’s stated significance; it does not imply an outcome beyond the evidence linked here.</p>
+              </section>
+              {linkedStory ? (
+                <article className="mt-12">
+                  <div className="border-b border-foreground/15 pb-4">
+                    <h2 className="eyebrow text-primary">Full reporting and analysis</h2>
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">The complete newsroom account connected to this event, including findings, context and evidence limits.</p>
+                    <a href={`/article/${linkedStory.slug}/`} className="mt-3 inline-flex min-h-11 items-center border-b border-primary/40 text-sm text-primary hover:border-primary">Open article page</a>
+                  </div>
+                  <div className="prose prose-lg mt-8 max-w-none text-foreground">
+                    <StoryBody story={linkedStory} sources={sources} />
+                  </div>
+                  {linkedStory.sources.length > 0 && <StorySourceList story={linkedStory} sources={sources} />}
+                </article>
+              ) : null}
+              {(relatedResearch.length > 0 || relatedData.length > 0) ? (
+                <section className="mt-12 grid gap-8 border-t border-foreground/15 pt-8 sm:grid-cols-2">
+                  {relatedResearch.length > 0 ? (
+                    <div>
+                      <h2 className="eyebrow mb-3 text-primary">Research</h2>
+                      {relatedResearch.map((record) => (
+                        <a key={record.slug} href={`/research/${record.slug}/`} className="block border-b border-foreground/15 py-4 text-sm leading-6 hover:text-primary">
+                          {record.title}<span className="mt-1 block text-xs text-muted-foreground">{record.researchQuestion}</span>
+                        </a>
+                      ))}
+                    </div>
+                  ) : null}
+                  {relatedData.length > 0 ? (
+                    <div>
+                      <h2 className="eyebrow mb-3 text-primary">Data products</h2>
+                      {relatedData.map((product) => (
+                        <a key={product.slug} href={`/data/${product.slug}/`} className="block border-b border-foreground/15 py-4 text-sm leading-6 hover:text-primary">
+                          {product.title}<span className="mt-1 block text-xs text-muted-foreground">{product.description}</span>
+                        </a>
+                      ))}
+                    </div>
+                  ) : null}
+                </section>
+              ) : null}
+            </div>
+            <aside className="space-y-8 md:border-l md:border-foreground/15 md:pl-6">
+              <AuthorityLinkList
+                title="Entities"
+                links={timelineEvent.entities.flatMap((slug) => {
+                  const relatedEntity = entities.find((candidate) => candidate.slug === slug);
+                  const href = relatedEntity ? entityRoute(relatedEntity.kind, slug) : undefined;
+                  return relatedEntity && href && isPublicEntity(relatedEntity)
+                    ? [{ href, label: relatedEntity.name, detail: relatedEntity.strapline }]
+                    : [];
+                })}
+              />
+              <AuthorityLinkList
+                title="Primary sources"
+                links={(timelineEvent.sourceSlugs ?? []).flatMap((slug) => {
+                  const source = sources.find((candidate) => candidate.slug === slug);
+                  return source ? [{
+                    href: `/source/${slug}/`,
+                    label: source.name,
+                    detail: `${source.publisher} · ${source.publicationDate ? formatEditorialDate(source.publicationDate) : 'date not stated'}`,
+                  }] : [];
+                })}
+              />
+            </aside>
+          </section>
         </main>
       </div>
     );

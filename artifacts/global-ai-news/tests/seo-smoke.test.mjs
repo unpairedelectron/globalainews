@@ -3235,6 +3235,31 @@ test('public routes, metadata, structured data, links, images, AMP, RSS, and res
       assert.match(body, /<div id="root">[\s\S]*<main\b/, `${route}: initial HTML is missing prerendered page content`);
       assert.match(body, /<h1\b/, `${route}: initial HTML is missing a prerendered page heading`);
       assert.match(body, /id="global-ai-prerender"/, `${route}: initial HTML is missing its newsroom bootstrap marker`);
+      const timelineMatch = route.match(/^\/timeline\/([^/]+)\/?$/);
+      if (timelineMatch) {
+        const event = newsroomContent.timelineEvents.find((candidate) => candidate.slug === timelineMatch[1]);
+        const story = event?.story
+          ? newsroomContent.stories.find((candidate) => candidate.slug === event.story)
+          : undefined;
+        if (story) {
+          assert.ok(body.includes(story.body[0].heading), `${route}: first response is missing its linked reporting`);
+          assert.match(body, /data-testid="article-sources"/, `${route}: first response is missing the reporting source list`);
+        }
+      }
+      const entityMatch = route.match(/^\/(company|lab|model|technology|institution|policy|dataset|infrastructure)\/([^/]+)\/?$/);
+      if (entityMatch) {
+        const entity = newsroomContent.entities.find(
+          (candidate) => candidate.kind === entityMatch[1] && candidate.slug === entityMatch[2],
+        );
+        if (entity?.profileSections?.length) {
+          assert.match(body, /How to understand this record/, `${route}: first response is missing its editorial profile guide`);
+          for (const section of entity.profileSections) {
+            assert.ok(body.includes(section.heading), `${route}: first response is missing the ${section.heading} section`);
+            assert.ok(body.includes(section.paragraphs[0].slice(0, 64)), `${route}: first response is missing maintained profile copy`);
+          }
+          assert.match(body, /Primary references/, `${route}: first response is missing its source framing`);
+        }
+      }
       if (route.startsWith('/article/')) {
         const slug = route.split('/')[2];
         const story = newsroomContent.stories.find((candidate) => candidate.slug === slug);

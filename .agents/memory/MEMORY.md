@@ -35,3 +35,4 @@
 - [Workspace test runners](workspace-test-runners.md) — invoke package-local test tools through the workspace filter when root-level `pnpm exec` cannot resolve them.
 - [API date-field normalization](api-date-field-normalization.md) — API responses may serialize date-only values as midnight UTC timestamps; normalize before calendar-day comparisons.
 - [Public sitemap contract](public-sitemap-contract.md) — public crawlers use the sitemap index while the API keeps its flat sitemap for existing consumers.
+- [First-response content parity](first-response-content-parity.md) — audit thin HTML against the hydrated route before expanding copy or changing indexability.
