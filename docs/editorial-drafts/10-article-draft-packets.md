@@ -5,22 +5,26 @@
 ## 1. Anthropic’s S-1: who controls the company?
 
 **Slug:** `anthropic-s1-governance-who-controls`  
-**Desk:** Policy & Markets · **Format:** Report · **Byline:** Editorial Desk; reviewer TBD
+**Desk:** Policy & Markets · **Format:** Report · **Byline:** Editorial Desk; reviewer: Aman Mishra
 
 **Working thesis:** The S-1 describes a governance system in which public investors can own economic interests without controlling the board. Explain the Trust’s Class T role and the founders’ Class F voting power separately; do not reduce “who controls Anthropic?” to a single shareholder percentage.
 
-**Verified opening:** Anthropic filed an S-1 on 26 October 2026, proposed the Nasdaq symbol ANT, and had not set an offering date in its announcement. The filing describes the company as a Delaware public benefit corporation. It says the Long-Term Benefit Trust holds Class T shares and can elect or remove a majority of the board’s directors; the filing describes the trustees as financially disinterested. Class F shares held by the Founders LLC carry 50.1% of voting power on most shareholder matters. These are filing statements, not an assessment of how the structure will work in every future dispute.
+**Verified opening:** Anthropic filed an S-1 on 26 October 2026, proposed the Nasdaq symbol ANT, and had not set an offering date in its announcement. The filing describes the company as a Delaware public benefit corporation. It says the Long-Term Benefit Trust holds Class T shares and can elect or remove the Class T directors, who together constitute a majority of the authorized board; the filing describes the trustees as financially disinterested. A single Class F share held by the Founders LLC carries 50.1% of voting power on most shareholder matters. These are filing statements, not an assessment of how the structure will work in every future dispute.
 
 **Analysis artifact:** A control/economics matrix for Class A, Class T, and Class F, with separate columns for votes, board rights, and economic rights. A second matrix should distinguish figures present in the S-1 from press-reported valuation or loss claims.
 
-**Hold / unknown:** Verify revenue periods, losses, customer concentration, valuation references, and any blank Q3 field directly in the filing before use. No stock forecast or investment recommendation. Add the requested commercial-relationship disclosure only after owner confirmation.
+**Verified financial detail:** The filing reports revenue of $4.6 billion in FY2025 and $16.3 billion for the six months ended 30 June 2026, up from $1.2 billion in the comparable 2025 half. It reports a net loss of $80.7 billion for H1 2026, including a $72.4 billion change in fair value of convertible notes, derivative liabilities, and SAFEs, primarily driven by the increase in fair value of convertible promissory notes as enterprise valuation increased. The S-1 says the top five customers represented approximately 25% of revenue for the nine months ended 30 September 2026; do not misstate that period as H1. These are issuer-reported figures in a filing, not a forecast or stock recommendation.
+
+**Hold / unknown:** The filing-backed valuation, offering-valuation, and Q3/quarterly revenue claims in the prompt have not been verified for inclusion. No stock forecast or investment recommendation. Add the requested commercial-relationship disclosure only after owner confirmation.
 
 **Source:** SEC, *Anthropic, PBC — Form S-1*, filed 26 Oct 2026, Tier 1: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+
+**Editorial note:** Global AI News has no commercial relationship with the companies discussed.
 
 ## 2. OpenAI’s containment incident and offline training
 
 **Slug:** `openai-containment-incident-offline-training`  
-**Desk:** AI Safety & Security · **Format:** Report · **Byline:** Editorial Desk; reviewer TBD
+**Desk:** AI Safety & Security · **Format:** Report · **Byline:** Editorial Desk; reviewer: Aman Mishra
 
 **Working thesis:** OpenAI’s account is a useful case study in layered containment, not evidence that a model “escaped.” Keep the incident timeline, the company’s response, and broader security analysis visibly separate.
 
@@ -32,40 +36,44 @@
 
 **Source:** OpenAI, *Securing our frontier model training environment*, 23 Oct 2026, Tier 1: https://openai.com/index/securing-our-frontier-model-training-environment
 
+**Editorial note:** Global AI News has no commercial relationship with the companies discussed.
+
 ## 3. Reconciling hyperscaler capital-expenditure guidance
 
 **Slug:** `hyperscaler-capex-2026-reconciled`  
-**Desk:** Infrastructure & Markets · **Format:** Report · **Byline:** Editorial Desk; reviewer TBD
+**Desk:** Infrastructure & Markets · **Format:** Report · **Byline:** Editorial Desk; reviewer: Aman Mishra
 
 **Working thesis:** A combined “AI capex” total is not meaningful until the companies’ periods, accounting treatment, and non-AI categories are reconciled. The story should show the range produced by explicit definitions rather than select one headline figure.
 
-**Verified opening:** Meta’s Q3 2026 release reports $34.91 billion in quarterly capital expenditures, including principal payments on finance leases. The brief also points to published Q3 materials from Amazon and Alphabet, but the four-company guidance set is not yet reconciled. Amazon’s total capital expenditure can include fulfillment, robotics, and satellites; it should not automatically be labeled AI spending.
+**Verified opening:** Meta’s Q3 2026 release reports $34.91 billion in quarterly capital expenditures, including principal payments on finance leases, and a 2026 range of $135–145 billion on the same stated basis. Alphabet’s Q3 investor-call transcript kept 2026 CapEx guidance at $195–205 billion and reported $51.4 billion in Q3 CapEx, with most spend in technical infrastructure. Microsoft’s 28 October FY2027 Q1 investor-call transcript forecast approximately $170 billion of calendar-2026 CapEx, citing third-party capacity deliveries delayed into the second half; it reported Q1 CapEx of $45.2 billion, including $7.4 billion in finance leases. Amazon’s Q3 release is available, but its 2026 CapEx estimate has not yet been verified in an accessible company primary transcript. These company figures are not yet a normalized “AI capex” total: periods, lease treatment, cash-versus-accrual presentation, and non-AI spending need explicit reconciliation.
 
-**Analysis artifact:** A four-company reconciliation table with guidance range, reporting period, finance-lease treatment, included non-AI investment, and date of latest guidance. Calculate low/high totals only after every row is checked in primary earnings material; show definitions that account for the spread rather than a speculative waterfall.
+**Analysis artifact:** A four-company reconciliation table with guidance range, reporting period, finance-lease treatment, included non-AI investment, and date of latest guidance. Calculate low/high totals only after Amazon’s row and each company’s accounting basis are checked in primary earnings material; show definitions that account for the spread rather than a speculative waterfall.
 
-**Hold / unknown:** Microsoft’s lease-accounting explanation, all four guidance figures, the prior-year comparison, UBS estimates, and market-loss claims remain unverified in primary materials. Omit the $700B–$745B combined framing until the underlying figures are checked. No market causation claims or investment advice.
+**Hold / unknown:** The four-company total, Amazon’s current guidance, a consistent capex-versus-cash basis, the prior-year comparison, UBS estimates, and market-loss claims remain unverified or unreconciled. Amazon’s investor-relations archive hosts the 29 October earnings-call audio, but the $220 billion cash-CapEx figure has only been found in third-party transcripts in this check; it remains unverified from the primary recording. Microsoft’s official transcript attributes its approximately $170 billion calendar-year estimate to third-party capacity delays, not a lease-accounting reduction; do not repeat the brief’s causal/accounting explanation. Omit the $700B–$745B combined framing until all underlying figures are checked. No market causation claims or investment advice.
 
-**Primary source checked:** Meta Platforms, *Q3 2026 Results*, Tier 1: https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Third-Quarter-2026-Results/default.aspx
+**Primary sources checked:** Meta Platforms, *Q3 2026 Results*, 21 Oct 2026, Tier 1: https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Third-Quarter-2026-Results/default.aspx ; Alphabet Investor Relations, *2026 Q3 Earnings Call*, 28 Oct 2026, Tier 1: https://abc.xyz/investor/events/event-details/2026/2026-Q3-Earnings-Call-2026-Ujou16CTw9/default.aspx ; Microsoft Investor Relations, *FY2027 Q1 Earnings Conference Call*, 28 Oct 2026, Tier 1: https://www.microsoft.com/en-us/Investor/events/fy-2027/earnings-fy-2027-q1 ; Amazon Investor Relations, *Q3 2026 Results*, 29 Oct 2026, Tier 1: https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx
 
 ## 4. Gemini 4 Carbon and gated frontier-model access
 
 **Slug:** `gated-frontier-models-gemini-4-carbon`  
-**Desk:** Models & Policy · **Format:** Report · **Byline:** Editorial Desk; reviewer TBD
+**Desk:** Models & Policy · **Format:** Report · **Byline:** Editorial Desk; reviewer: Aman Mishra
 
 **Working thesis:** The public can read Google’s benchmark claims, but initial restricted access limits independent reproduction. The distinction between a vendor-reported result and a result independently tested by outside users is the story’s central analytical point.
 
-**Verified opening:** Google DeepMind announced Gemini 4 Carbon on 28 October and described it as a frontier model aimed at cybersecurity and long-horizon capabilities. Google says initial access will go to a subset of cyber defenders through Fairwind, with broader trusted-partner access planned before product access for developers, businesses, and consumers. Its announcement does not give a public date for that broader release.
+**Verified opening:** Google DeepMind announced Gemini 4 Carbon on 28 October and described it as a frontier model aimed at cybersecurity and long-horizon capabilities. Google says initial access will go to a subset of cyber defenders through Fairwind, with broader trusted-partner access planned before product access for developers, businesses, and consumers. Its announcement does not give a public date for that broader release. Google reports 88.2% on SEC-bench Pro, 54.8% on ExploitGym, and 71.0% on CWE-bench, explicitly describing these external benchmark evaluations as run without guardrails. It lists an introductory price of $2 per million input tokens and $10 per million output tokens.
 
 **Analysis artifact:** An access ladder documenting who can use the model at each stage, what public documentation exists, and whether outside evaluation is possible. Include a checklist readers can apply to vendor-published benchmark claims.
 
-**Hold / unknown:** Recheck each benchmark, price, partner count, vetting condition, model-card status, and claimed guardrail setting against the announcement and linked documents. Do not call the figures independently reproduced. Compare with other labs only where their primary access policies are verified. Add the commercial-relationship disclosure only after owner confirmation.
+**Hold / unknown:** Treat the benchmark scores and price as Google-reported claims, not independent results. The announcement does not establish independent reproduction; the current Carbon model-card status and the details of Fairwind vetting still need checking against linked primary materials. Compare with other labs only where their primary access policies are verified. Add the commercial-relationship disclosure only after owner confirmation.
 
 **Source:** Google DeepMind, *Gemini 4 Carbon: our next frontier model*, 28 Oct 2026, Tier 1: https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model
+
+**Editorial note:** Global AI News has no commercial relationship with the companies discussed.
 
 ## 5. What GitHub’s “more than 40%” agent-PR figure measures
 
 **Slug:** `github-octoverse-2026-agents-pull-requests`  
-**Desk:** Developer & Workforce · **Format:** Report · **Byline:** Editorial Desk; reviewer TBD
+**Desk:** Developer & Workforce · **Format:** Report · **Byline:** Editorial Desk; reviewer: Aman Mishra
 
 **Working thesis:** GitHub’s figure describes detectable agent-started pull requests on GitHub, not the share of code written by AI across software work. The report’s comparison data invite questions about review quality and measurement, not a claim that agents make development automatically faster or safer.
 
@@ -80,22 +88,22 @@
 ## 6. India’s AI consultation paper: law, proposal, and expectation
 
 **Slug:** `india-ai-consultation-paper-what-is-law`  
-**Desk:** India Watch · **Format:** Explainer · **Byline:** Editorial Desk; reviewer TBD
+**Desk:** India Watch · **Format:** Explainer · **Byline:** Editorial Desk; reviewer: Aman Mishra
 
 **Working thesis:** A minister’s stated timetable is an expectation, not a rule. The explainer should make the legal-status distinction the organizing structure: what is in force, what has been proposed, and what officials have said they may consult on.
 
-**Verified opening:** News on AIR reported on 8 October that IT Minister Ashwini Vaishnaw said a consultation paper on future AI regulation would be floated within the next month. This remains an attributed expectation, not a claim that a paper has been published. Separately, MeitY’s official FAQ says the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2026 were notified as G.S.R. 120(E) on 10 February and came into force on 20 February 2026. The FAQ defines SGI around realistic audio, visual, or audio-visual information; it says text-only information is outside that definition and lists routine editing and accessibility uses among exclusions. The FAQ itself says it is explanatory, not a legal document that replaces the notified Rules.
+**Verified opening:** News on AIR reported on 8 October that IT Minister Ashwini Vaishnaw said a consultation paper on future AI regulation would be floated within the next month. MediaNama later reported that, at the NDTV World Summit on 26 October, he said the paper would be issued “in the coming weeks.” These are attributed timetable statements, not proof that a paper has been published. Separately, MeitY’s official FAQ says the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2026 were notified as G.S.R. 120(E) on 10 February and came into force on 20 February 2026. The FAQ defines SGI around realistic audio, visual, or audio-visual information; it says text-only information is outside that definition and lists routine editing and accessibility uses among exclusions. The FAQ itself says it is explanatory, not a legal document that replaces the notified Rules.
 
 **Analysis artifact:** A three-column “in force / proposed / expected” map with a source and status date on each row. The flowchart can now use the final Gazette text for the SGI definition, exclusions, and duties; exact obligations and timing must be attributed to the operative rules, using MeitY’s FAQ only as an explanatory aid.
 
 **Hold / unknown:** Do not treat the FAQ as controlling law or reduce its described exclusions to a blanket exemption. The 8 October consultation-paper expectation still needs a subsequent official publication/status check; no later paper is confirmed in this packet. Legal interpretation and implementation advice require review. The operative amended rules state a three-hour period for the specified removal process following actual knowledge; confirm the exact trigger and applicable provision before using it in a compliance checklist.
 
-**Sources checked:** News on AIR, *AI Regulation Consultation Paper to Be Floated Within a Month: Ashwini Vaishnaw*, 8 Oct 2026: https://newsonair.gov.in/ai-regulation-consultation-paper-to-be-floated-within-a-month-ashwini-vaishnaw/ ; MeitY, *FAQs on the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2026*, 10 Feb 2026: https://www.meity.gov.in/static/uploads/2025/10/065b6deb585441b5ccdf8be42502a49c.pdf ; MeitY, consolidated IT Rules (updated 10 Feb 2026): https://www.meity.gov.in/static/uploads/2026/02/550681ab908f8afb135b0ad42816a1c9.pdf ; Gazette notification G.S.R. 120(E), 10 Feb 2026: https://egazette.gov.in/WriteReadData/2026/269993.pdf
+**Sources checked:** News on AIR, *AI Regulation Consultation Paper to Be Floated Within a Month: Ashwini Vaishnaw*, 8 Oct 2026: https://newsonair.gov.in/ai-regulation-consultation-paper-to-be-floated-within-a-month-ashwini-vaishnaw/ ; MediaNama, *India’s draft AI regulations could be out in November, says IT Minister Ashwini Vaishnaw*, 26 Oct 2026 (Tier 2): https://www.medianama.com/2026/10/223-india-ai-regulation-consultation-paper-vaishnaw/ ; MeitY, *FAQs on the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2026*, 10 Feb 2026: https://www.meity.gov.in/static/uploads/2025/10/065b6deb585441b5ccdf8be42502a49c.pdf ; MeitY, consolidated IT Rules (updated 10 Feb 2026): https://www.meity.gov.in/static/uploads/2026/02/550681ab908f8afb135b0ad42816a1c9.pdf ; Gazette notification G.S.R. 120(E), 10 Feb 2026: https://egazette.gov.in/WriteReadData/2026/269993.pdf
 
 ## 7. What C-DAC’s AI-compute tender does—and does not—settle
 
 **Slug:** `indiaai-10000-gpu-tender-explained`  
-**Desk:** India Watch / Infrastructure · **Format:** Report · **Byline:** Editorial Desk; reviewer TBD
+**Desk:** India Watch / Infrastructure · **Format:** Report · **Byline:** Editorial Desk; reviewer: Aman Mishra
 
 **Working thesis:** An empanelment exercise can expand the pool of providers, but does not by itself establish how much capacity will be deployed, allocated, or used. The story should follow the tender’s actual stages and avoid treating a ceiling as capacity already available.
 
@@ -110,7 +118,7 @@
 ## 8. EU AI Act dates: separate the delayed obligations
 
 **Slug:** `eu-ai-act-december-2026-deadlines`  
-**Desk:** Policy & Compliance · **Format:** Explainer · **Byline:** Editorial Desk; reviewer TBD
+**Desk:** Policy & Compliance · **Format:** Explainer · **Byline:** Editorial Desk; reviewer: Aman Mishra
 
 **Working thesis:** There is no single delayed “AI Act deadline.” Regulation (EU) 2026/1744 distinguishes high-risk systems under Annex III from those under Annex I; a useful explainer needs to keep the obligation and system category attached to each date.
 
@@ -125,26 +133,26 @@
 ## 9. Workforce announcements: separate stated plans from causal claims
 
 **Slug:** `ai-in-workforce-plans-october-2026`  
-**Desk:** Work & Society · **Format:** Report · **Byline:** Editorial Desk; reviewer TBD
+**Desk:** Work & Society · **Format:** Report · **Byline:** Editorial Desk; reviewer: Aman Mishra
 
 **Working thesis:** Workforce announcements are not interchangeable: a voluntary exit offer, a proposed public-sector target, and a realized job reduction are different events. The article should grade each claim by speaker, evidence, time horizon, and whether the source itself names AI as a cause.
 
-**Verified opening:** Microsoft’s 26 October official blog confirms a Voluntary Exit Offer for eligible employees in participating organizations and describes it as an option for employees considering a future outside the company. The company describes workforce adaptation but the official post checked does not establish the reported 60,000 eligible employees or the full list of countries. The Dutch-government claim remains unconfirmed at a primary government source.
+**Verified opening:** Microsoft’s 26 October official blog confirms a Voluntary Exit Offer for eligible employees in participating organizations and describes it as an option for employees considering a future outside the company. The official post checked does not establish the reported 60,000 eligible employees or the full list of countries. The Dutch government’s 26 October statement says it aims to reduce central-government staffing by an estimated 25,000 FTE over several years to support €900 million in savings in 2027, rising to €3.5 billion from 2035; police and defence are among the stated exceptions. In the same statement, the cabinet says it will set goals and savings plans for using AI to improve productivity in Q1 2027. It does not say AI is the cause of the 25,000-FTE target.
 
 **Analysis artifact:** An evidence matrix distinguishing voluntary departures, involuntary cuts, attrition, and long-term targets. Include a source column and an explicit “AI named as cause by primary source?” field.
 
-**Hold / unknown:** Do not state the Dutch figure as government-confirmed. Verify Microsoft eligibility numbers and geography with a company statement or clearly attribute them to a named press report. Do not infer AI causation from simultaneous infrastructure spending.
+**Hold / unknown:** The Dutch government has not yet described the detailed workforce plan or how the AI productivity goals relate to the FTE reduction. Do not collapse those separate passages into an AI-caused layoff claim. Verify Microsoft eligibility numbers and geography with a company statement or clearly attribute them to a named press report. Do not infer AI causation from simultaneous infrastructure spending.
 
-**Sources:** Microsoft, *Introducing a Voluntary Exit Offer*, 26 Oct 2026, Tier 1: https://blogs.microsoft.com/blog/2026/10/26/introducing-a-voluntary-exit-offer/ ; Dutch-government primary source: not yet located.
+**Sources:** Microsoft, *Introducing a Voluntary Exit Offer*, 26 Oct 2026, Tier 1: https://blogs.microsoft.com/blog/2026/10/26/introducing-a-voluntary-exit-offer/ ; Dutch Government, *Kabinet werkt aan slagvaardige overheid: eenvoudiger, slimmer en kleiner*, 26 Oct 2026, Tier 1: https://www.rijksoverheid.nl/actueel/nieuws/2026/10/26/kabinet-werkt-aan-slagvaardige-overheid-eenvoudiger-slimmer-en-kleiner
 
 ## 10. Delegated access: how agents authenticate without inheriting a person’s password
 
 **Slug:** `ai-agents-delegated-access-banks-passwords`  
-**Desk:** Agents & Security · **Format:** Explainer / Report · **Byline:** Editorial Desk; reviewer TBD
+**Desk:** Agents & Security · **Format:** Explainer / Report · **Byline:** Editorial Desk; reviewer: Aman Mishra
 
 **Working thesis:** Giving an agent a person’s reusable password is only one possible delegation model. Product announcements describe alternatives—separate identities, approval flows, and credential brokers—but their existence does not establish that a particular design is safe for every account or task.
 
-**Verified opening:** 1Password says its agent product can let an agent request a sign-in without receiving or seeing the underlying credential, with a person able to review and approve the request. Google Cloud announced a Gemini agent that can have its own Workspace account and identity. Google also announced Chrome enhanced autofill that can suggest information from Gmail for forms, and Opera announced WebAI as a way for websites and extensions to use models running locally. These are vendor descriptions of product behavior.
+**Verified opening:** 1Password says its agent product can request a sign-in without receiving or seeing the underlying credential, with a person able to review and approve the request. Google Cloud announced a Gemini coworker agent that can receive its own Workspace account, email address, calendar, Drive, and directory presence. Google also announced Chrome enhanced autofill suggestions pulled from Gmail for forms, and Opera announced WebAI as a way for websites and extensions to use models running locally. These are vendor descriptions of product behavior, not independent security assessments.
 
 **Analysis artifact:** Compare three patterns—shared credentials, a separate scoped identity, and brokered delegated access—across exposure, revocation, auditability, and approval. Use a generic failure sequence, not a bypass or attack recipe.
 
@@ -156,5 +164,5 @@
 
 1. These packets are shorter than the prompt’s 1,200–3,000-word requirements and are not ready for publication.
 2. The prompt’s eight-source/four-Tier-1 minimum, three-original-visual requirement, FAQ, internal links, and technical quality gates remain unmet.
-3. The owner must confirm the commercial-relationship disclosure for articles 1, 2, and 4 and supply or approve a reviewer identity.
+3. Owner confirmed the commercial-relationship disclosure for articles 1, 2, and 4 and supplied reviewer credit: Aman Mishra.
 4. Before any release, complete per-article fact logs, source tiers, word counts, link checks, alt text, metadata, schema checks, and the pre-publish report.
