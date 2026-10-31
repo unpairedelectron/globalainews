@@ -4,11 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --config vite.config.ts --host 0.0.0.0",
-    "build": "vite build --config vite.config.ts",
-    "build:release": "node ../../scripts/build-global-ai-news-release.mjs",
+    "dev": "pnpm run build:staging && vite --config vite.config.ts --host 0.0.0.0",
+    "build": "pnpm run build:staging && vite build --config vite.config.ts",
+    "build:release": "pnpm run build:staging && node ../../scripts/build-global-ai-news-release.mjs",
     "build:server": "vite build --config vite.server.config.ts",
     "build:production": "pnpm run build:release && pnpm run build:server",
+    "build:staging": "node scripts/build-staging-articles.mjs",
     "images:optimize": "node scripts/optimize-editorial-images.mjs",
     "serve": "node --enable-source-maps dist/server/server.mjs",
     "audit:links": "node scripts/audit-links.mjs",
@@ -104,6 +105,7 @@
   "dependencies": {
     "@clerk/react": "^6.16.1",
     "@clerk/themes": "^2.4.57",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "markdown-it": "^15.0.3"
   }
 }

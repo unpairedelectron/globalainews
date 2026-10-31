@@ -1,7 +1,7 @@
 import path from 'path';
 import { randomUUID } from 'crypto';
 import { execFileSync } from 'child_process';
-import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { performance } from 'perf_hooks';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
@@ -921,12 +921,59 @@ function articleResponsePlugin() {
   };
 }
 
+function stagingPreviewPlugin() {
+  const projectRoot = path.resolve(import.meta.dirname);
+  const stagingRoot = path.join(projectRoot, 'public', 'staging');
+  return {
+    name: 'global-ai-news-staging-preview',
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use((request, response, next) => {
+        const requestUrl = request.url ?? '/';
+        const pathname = new URL(requestUrl, 'http://localhost').pathname;
+        const cleanPath = pathname.replace(/\/+$/, '') || '/';
+        if (cleanPath !== '/staging/articles' && !cleanPath.startsWith('/staging/article/')) {
+          next();
+          return;
+        }
+        if (request.method !== 'GET' && request.method !== 'HEAD') {
+          response.statusCode = 405;
+          response.setHeader('Allow', 'GET, HEAD');
+          response.end();
+          return;
+        }
+
+        const match = cleanPath.match(/^\/staging\/article\/([a-z0-9-]+)$/);
+        const filePath = cleanPath === '/staging/articles'
+          ? path.join(stagingRoot, 'articles', 'index.html')
+          : match
+            ? path.join(stagingRoot, 'article', match[1], 'index.html')
+            : undefined;
+        if (!filePath || !existsSync(filePath)) {
+          response.statusCode = 404;
+          response.setHeader('Cache-Control', 'no-store');
+          response.setHeader('X-Robots-Tag', 'noindex, nofollow');
+          response.setHeader('Content-Type', 'text/plain; charset=utf-8');
+          response.end(request.method === 'HEAD' ? undefined : 'Staging article not found.');
+          return;
+        }
+
+        response.statusCode = 200;
+        response.setHeader('Cache-Control', 'no-store');
+        response.setHeader('X-Robots-Tag', 'noindex, nofollow');
+        response.setHeader('Content-Type', 'text/html; charset=utf-8');
+        response.end(request.method === 'HEAD' ? undefined : readFileSync(filePath));
+      });
+    },
+  };
+}
+
 export default defineConfig({
   base: basePath,
   plugins: [
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
+    stagingPreviewPlugin(),
     articleResponsePlugin(),
     socialPreviewAssetsPlugin(),
     ampArticlePlugin(),

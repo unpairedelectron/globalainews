@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
+  <title id="title">Decision path for synthetic media under India's IT Rules</title>
+  <desc id="desc">Five numbered checks: identify media type, test the SGI definition, assess exclusions, determine the prohibited or permissible status, and identify the intermediary and notice trigger.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:var(--color-text,#172b3a)}.node{fill:var(--color-surface,#fff);stroke:var(--color-border,#a8bac7);stroke-width:2}.num{fill:#dce9f2;stroke:#285b7a;stroke-width:2}.label{font-size:30px;font-weight:700}.sub{font-size:30px;fill:var(--color-muted,#526574)}.line{stroke:#285b7a;stroke-width:3}
+  </style>
+  <g>
+    <rect class="node" x="220" y="22" width="460" height="78" rx="14"/><circle class="num" cx="185" cy="61" r="25"/><text class="label" x="177" y="68">1</text><text class="label" x="245" y="55">Media type?</text><text class="sub" x="245" y="80">Audio, visual, video?</text>
+    <path class="line" d="M450 100v25"/>
+    <rect class="node" x="220" y="125" width="460" height="78" rx="14"/><circle class="num" cx="185" cy="164" r="25"/><text class="label" x="177" y="171">2</text><text class="label" x="245" y="158">SGI test</text><text class="sub" x="245" y="183">Real person or event?</text>
+    <path class="line" d="M450 203v25"/>
+    <rect class="node" x="220" y="228" width="460" height="78" rx="14"/><circle class="num" cx="185" cy="267" r="25"/><text class="label" x="177" y="274">3</text><text class="label" x="245" y="261">Exclusions?</text><text class="sub" x="245" y="286">Check rule conditions</text>
+    <path class="line" d="M450 306v25"/>
+    <rect class="node" x="220" y="331" width="460" height="78" rx="14"/><circle class="num" cx="185" cy="370" r="25"/><text class="label" x="177" y="377">4</text><text class="label" x="245" y="364">Content status</text><text class="sub" x="245" y="389">Unlawful or permitted?</text>
+    <path class="line" d="M450 409v25"/>
+    <rect class="node" x="220" y="434" width="460" height="92" rx="14"/><circle class="num" cx="185" cy="480" r="25"/><text class="label" x="177" y="487">5</text><text class="label" x="245" y="469">Next step</text><text class="sub" x="245" y="496">Role + notice trigger</text>
+  </g>
+</svg>

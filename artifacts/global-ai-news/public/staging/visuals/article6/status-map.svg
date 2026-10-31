@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-labelledby="title desc">
+  <title id="title">India AI policy: law, explanation and expectation</title>
+  <desc id="desc">Three columns distinguish the binding February 2026 IT Rules amendment, official explanatory material, and the reported future AI governance consultation paper.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:var(--color-text,#172b3a)} .label{font-size:32px;font-weight:700}.body{font-size:30px}.date{font-size:30px;fill:var(--color-muted,#526574)} .card{fill:var(--color-surface,#fff);stroke:var(--color-border,#b8c7d1);stroke-width:2}.law{stroke:#13795b}.guide{stroke:#3266a8}.expect{stroke:#a55d0b}
+  </style>
+  <rect class="card law" x="24" y="24" width="270" height="370" rx="18"/>
+  <rect class="card guide" x="315" y="24" width="270" height="370" rx="18"/>
+  <rect class="card expect" x="606" y="24" width="270" height="370" rx="18"/>
+  <text class="label" x="46" y="72">In force</text>
+  <text class="date" x="46" y="106">20 Feb</text>
+  <text class="body" x="46" y="154"><tspan x="46">G.S.R. 120(E)</tspan><tspan x="46" dy="36">IT Rules</tspan><tspan x="46" dy="36">Gazette sets</tspan><tspan x="46" dy="36">duties +</tspan><tspan x="46" dy="36">exceptions</tspan></text>
+  <text class="label" x="337" y="72">Explains</text>
+  <text class="date" x="337" y="106">FAQ / PIB</text>
+  <text class="body" x="337" y="154"><tspan x="337">Explain</tspan><tspan x="337" dy="36">the rules</tspan><tspan x="337" dy="36">not the</tspan><tspan x="337" dy="36">Gazette</tspan><tspan x="337" dy="36">text</tspan></text>
+  <text class="label" x="628" y="72">Expected</text>
+  <text class="date" x="628" y="106">Oct 2026</text>
+  <text class="body" x="628" y="154"><tspan x="628">Paper</tspan><tspan x="628" dy="36">expected</tspan><tspan x="628" dy="36">not</tspan><tspan x="628" dy="36">located</tspan><tspan x="628" dy="36">in check</tspan></text>
+</svg>

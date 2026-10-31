@@ -90,6 +90,9 @@ function renderRestrictedSignupDocument(): string {
 app.use((request, response, next) => {
   response.locals.isPreviewHost = getRequestHost(request) === 'global-ai-media.replit.app';
   if (response.locals.isPreviewHost) setRobotsTag(response, 'noindex, nofollow');
+  if (new URL(request.originalUrl, SITE_URL).pathname.startsWith('/staging/')) {
+    setRobotsTag(response, 'noindex, nofollow');
+  }
   response.setHeader(
     'X-GAN-Source-Revision',
     process.env.GAN_BUILD_SOURCE_REVISION ?? 'unavailable',

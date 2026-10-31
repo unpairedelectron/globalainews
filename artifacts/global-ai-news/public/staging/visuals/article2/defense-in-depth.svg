@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">Containment layers for model training</title>
+  <desc id="desc">High-level containment layers include network boundaries, execution isolation, least-privilege resource access, monitoring and automatic stopping, and red-team testing. The diagram is conceptual and does not certify OpenAI's implementation.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.head{font-size:23px;font-weight:700}.body{font-size:20px;fill:#526574}.card{fill:#fffdf7;stroke:#b8c7d1;stroke-width:2}.bar1{fill:#e5edf3}.bar2{fill:#e5efe9}.bar3{fill:#f3e9dd}.bar4{fill:#ebe7f1}.bar5{fill:#f0e8e3}
+  </style>
+  <text class="title" x="38" y="48">A boundary needs more than one control</text>
+  <rect class="card bar1" x="32" y="78" width="836" height="68" rx="12"/>
+  <text class="head" x="60" y="108">1 · Network boundary</text><text class="body" x="400" y="108">Restrict external and internal paths</text>
+  <rect class="card bar2" x="32" y="158" width="836" height="68" rx="12"/>
+  <text class="head" x="60" y="188">2 · Execution isolation</text><text class="body" x="400" y="188">Limit effects across runs</text>
+  <rect class="card bar3" x="32" y="238" width="836" height="68" rx="12"/>
+  <text class="head" x="60" y="268">3 · Least privilege</text><text class="body" x="400" y="268">Bound tools, resources and access</text>
+  <rect class="card bar4" x="32" y="318" width="836" height="68" rx="12"/>
+  <text class="head" x="60" y="348">4 · Monitoring &amp; stops</text><text class="body" x="400" y="348">Detect and respond to activity</text>
+  <rect class="card bar5" x="32" y="398" width="836" height="68" rx="12"/>
+  <text class="head" x="60" y="428">5 · Red-team testing</text><text class="body" x="400" y="428">Probe control boundaries</text>
+  <text class="body" x="38" y="502">Conceptual layers from OpenAI and NIST/CISA guidance; no audit claim.</text>
+</svg>

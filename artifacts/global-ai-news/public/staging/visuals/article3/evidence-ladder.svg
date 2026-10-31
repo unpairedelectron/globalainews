@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" role="img" aria-labelledby="title desc">
+  <title id="title">Evidence ladder for the capex comparison</title>
+  <desc id="desc">Official annual guidance and call statements sit alongside quarterly actuals and secondary transcript reporting; Amazon's approximately 220 billion dollar cash-CapEx estimate is confirmed in its official Q3 release. The figures remain unreconciled.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.head{font-size:24px;font-weight:700}.body{font-size:21px;fill:#526574}.card{fill:#fffdf7;stroke:#b8c7d1;stroke-width:2}.primary{stroke:#287b63}.secondary{stroke:#a87947}.aggregate{stroke:#9e5a57}
+  </style>
+  <text class="title" x="38" y="48">Evidence strength and use</text>
+  <rect class="card primary" x="32" y="76" width="836" height="82" rx="13"/>
+  <text class="head" x="58" y="111">Official annual guidance or call statement</text>
+  <text class="body" x="58" y="141">Attribute the number; preserve the period and definition.</text>
+  <rect class="card primary" x="32" y="174" width="836" height="82" rx="13"/>
+  <text class="head" x="58" y="209">Official quarterly result</text>
+  <text class="body" x="58" y="239">Useful actual, not an annual forecast or AI-only allocation.</text>
+  <rect class="card secondary" x="32" y="272" width="836" height="82" rx="13"/>
+  <text class="head" x="58" y="307">Official company release</text>
+  <text class="body" x="58" y="337">Amazon ~$220B cash CapEx; basis still differs.</text>
+  <rect class="card aggregate" x="32" y="370" width="836" height="82" rx="13"/>
+  <text class="head" x="58" y="405">Combined $700–745B framing</text>
+  <text class="body" x="58" y="435">Not used: bases differ; no common AI-only allocation.</text>
+  <text class="body" x="38" y="485">No company-confirmed four-way AI CapEx total in this record.</text>
+</svg>

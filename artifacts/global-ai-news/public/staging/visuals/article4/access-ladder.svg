@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" role="img" aria-labelledby="title desc">
+  <title id="title">Gemini 4 Carbon staged access ladder</title>
+  <desc id="desc">Google's announcement says selected cyber defenders first, additional trusted partners through Fairwind next, then developers, businesses and consumers through product surfaces without a public date.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.heading{font-size:31px;font-weight:700}.label{font-size:27px;font-weight:700}.body{font-size:24px;fill:#526574}.box{fill:#fffdf7;stroke:#b8c7d1;stroke-width:2}.first{stroke:#287b63}.later{stroke:#477da8}.future{stroke:#a87947}.arrow{stroke:#285b7a;stroke-width:4;fill:none}
+  </style>
+  <text class="heading" x="40" y="48">Carbon access sequence announced 28 October</text>
+  <rect class="box first" x="40" y="78" width="820" height="100" rx="16"/>
+  <text class="label" x="74" y="119">1 · Selected cyber defenders</text>
+  <text class="body" x="74" y="151">Google said access would begin the announcement week.</text>
+  <path class="arrow" d="M450 178v28m-12-12 12 12 12-12"/>
+  <rect class="box later" x="40" y="207" width="820" height="100" rx="16"/>
+  <text class="label" x="74" y="248">2 · Additional trusted partners</text>
+  <text class="body" x="74" y="280">Gradual expansion through Fairwind; no dated schedule.</text>
+  <path class="arrow" d="M450 307v28m-12-12 12 12 12-12"/>
+  <rect class="box future" x="40" y="336" width="820" height="112" rx="16"/>
+  <text class="label" x="74" y="378">3 · Developers, businesses and consumers</text>
+  <text class="body" x="74" y="411">Product access “as soon as possible”; no public date.</text>
+  <text class="body" x="40" y="482">Carbon-specific criteria were not public.</text>
+</svg>
