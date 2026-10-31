@@ -1,0 +1,33 @@
+{
+  "title": "Anthropic S-1: Who Owns It—and Who Controls the Board?",
+  "description": "Anthropic’s S-1 separates public economic rights from founder voting power and Trust board control. We explain the proposed classes and reported loss.",
+  "canonical": "https://www.globalainews.in/article/anthropic-s1-governance-who-controls/",
+  "published": null,
+  "updated": "2026-10-31",
+  "author": "Editorial Desk",
+  "format": "Report",
+  "reviewer": "Aman Mishra",
+  "topic": "Policy & Markets",
+  "status": "private-draft",
+  "schemaTypes": ["NewsArticle", "FAQPage", "BreadcrumbList"],
+  "socialImages": [
+    {
+      "width": 1200,
+      "height": 630,
+      "webp": "../social/article1/1200x630.webp",
+      "avif": "../social/article1/1200x630.avif"
+    },
+    {
+      "width": 1200,
+      "height": 675,
+      "webp": "../social/article1/1200x675.webp",
+      "avif": "../social/article1/1200x675.avif"
+    },
+    {
+      "width": 1200,
+      "height": 1200,
+      "webp": "../social/article1/1200x1200.webp",
+      "avif": "../social/article1/1200x1200.avif"
+    }
+  ]
+}

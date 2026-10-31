@@ -1,0 +1,52 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NewsArticle",
+      "@id": "https://www.globalainews.in/article/hyperscaler-capex-2026-reconciled/#article",
+      "mainEntityOfPage": "https://www.globalainews.in/article/hyperscaler-capex-2026-reconciled/",
+      "headline": "Four capex outlooks are not one AI spending total",
+      "description": "Meta, Alphabet, Microsoft and Amazon report different capital-spending figures. We explain the mismatched periods, lease bases and AI-only gaps.",
+      "dateModified": "2026-10-31",
+      "author": {"@type": "Organization", "name": "Editorial Desk"},
+      "reviewedBy": {"@type": "Person", "name": "Aman Mishra"},
+      "image": [
+        "https://www.globalainews.in/draft-assets/hyperscaler-capex-2026-reconciled/1200x630.webp",
+        "https://www.globalainews.in/draft-assets/hyperscaler-capex-2026-reconciled/1200x675.webp",
+        "https://www.globalainews.in/draft-assets/hyperscaler-capex-2026-reconciled/1200x1200.webp"
+      ],
+      "citation": [
+        "https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Third-Quarter-2026-Results/default.aspx",
+        "https://abc.xyz/investor/events/event-details/2026/2026-Q3-Earnings-Call-2026-Ujou16CTw9/default.aspx",
+        "https://www.microsoft.com/en-us/Investor/events/fy-2027/earnings-fy-2027-q1",
+        "https://www.aboutamazon.com/news/company-news/amazon-earnings-q3-2026-report",
+        "https://ir.aboutamazon.com/events/event-details/2026/Q3-2026-Amazoncom-Inc-Earnings-Conference-Call/default.aspx",
+        "https://www.cnbc.com/2026/10/29/amazon-amzn-q3-earnings-report-2026.html",
+        "https://www.fool.com/earnings/call-transcripts/2026/10/30/amazon-amzn-q3-2026-earnings-call-transcript",
+        "https://stockanalysis.com/stocks/amzn/transcripts/720308-q3-2026/"
+      ],
+      "isAccessibleForFree": true,
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.globalainews.in/article/hyperscaler-capex-2026-reconciled/#faq",
+      "mainEntity": [
+        {"@type": "Question", "name": "How much will the four companies spend on AI in 2026?", "acceptedAnswer": {"@type": "Answer", "text": "The checked sources do not provide a consistent AI-only total. Meta, Alphabet and Microsoft report broad capital-spending guidance on different bases. Amazon’s official Q3 release confirms about $220 billion in 2026 cash CapEx, most for AWS. But that does not align the four bases or identify AI-only spending. The article therefore does not add the figures or label a sum as AI spending."}},
+        {"@type": "Question", "name": "Why is Meta’s $135–145 billion range not directly comparable with Microsoft’s estimate?", "acceptedAnswer": {"@type": "Answer", "text": "Meta says its 2026 range includes principal payments on finance leases. Microsoft’s roughly $170 billion figure is an estimate for calendar 2026, while its fiscal Q1 CapEx was $45.2 billion including $7.4 billion in finance leases. The annual periods and reporting details differ, and the sources do not establish a fully normalized basis."}},
+        {"@type": "Question", "name": "What does Alphabet’s $195–205 billion guidance include?", "acceptedAnswer": {"@type": "Answer", "text": "Alphabet’s Q3 call maintained a 2026 capital-expenditure range of $195–205 billion and reported $51.4 billion in Q3, with most spending directed to technical infrastructure. That company description is broader than an AI-only allocation. The available sources do not support relabeling the full range as AI spending."}},
+        {"@type": "Question", "name": "Is Amazon’s approximately $220 billion figure confirmed?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Amazon’s official Q3 release says it expects approximately $220 billion in 2026 cash capital expenditures, with most going to AWS. That confirms Amazon’s own estimate. It does not make the figure directly comparable with the other companies’ accounting bases or turn the amount into an AI-only allocation, so the article still excludes a combined total."}},
+        {"@type": "Question", "name": "Why not report the combined $700–745 billion estimate?", "acceptedAnswer": {"@type": "Answer", "text": "The sum mixes different periods, accounting bases and investment categories. Amazon’s official release confirms its cash-CapEx estimate, but that does not normalize it to the other companies’ figures. The sum also combines broad capital spending, not company-reported AI-only investment. Reporting the aggregate as a verified AI total would imply a consistent definition that the checked sources do not provide."}}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.globalainews.in/article/hyperscaler-capex-2026-reconciled/#breadcrumb",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.globalainews.in/"},
+        {"@type": "ListItem", "position": 2, "name": "Reports", "item": "https://www.globalainews.in/reports/"},
+        {"@type": "ListItem", "position": 3, "name": "Hyperscaler CapEx reconciliation", "item": "https://www.globalainews.in/article/hyperscaler-capex-2026-reconciled/"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#f4f1e8"/>
+  <path d="M0 0h18v675H0z" fill="#477da8"/>
+  <text x="72" y="88" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="2" fill="#477da8">GLOBAL AI NEWS  /  INFRASTRUCTURE &amp; MARKETS</text>
+  <text x="72" y="200" font-family="Arial,sans-serif" font-size="58" font-weight="700" fill="#172b3a">Four capex</text>
+  <text x="72" y="272" font-family="Arial,sans-serif" font-size="58" font-weight="700" fill="#172b3a">outlooks, not</text>
+  <text x="72" y="344" font-family="Arial,sans-serif" font-size="58" font-weight="700" fill="#172b3a">one AI total</text>
+  <text x="72" y="410" font-family="Arial,sans-serif" font-size="23" fill="#526574">Periods, lease bases and categories differ</text>
+  <text x="72" y="455" font-family="Arial,sans-serif" font-size="22" fill="#526574">Amazon’s ~$220B is official cash CapEx</text>
+  <rect x="748" y="115" width="390" height="420" rx="22" fill="#fffdf7" stroke="#cbd5dc" stroke-width="3"/>
+  <text x="782" y="161" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#526574">2026 COMPANY FIGURES</text>
+  <text x="786" y="215" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#172b3a">Meta</text><text x="1015" y="215" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#477da8">$135–145B</text>
+  <text x="786" y="278" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#172b3a">Alphabet</text><text x="1015" y="278" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#477da8">$195–205B</text>
+  <text x="786" y="341" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#172b3a">Microsoft</text><text x="1015" y="341" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#477da8">~$170B</text>
+  <text x="786" y="404" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#172b3a">Amazon</text><text x="1015" y="404" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#a87947">~$220B</text>
+  <text x="786" y="450" font-family="Arial,sans-serif" font-size="19" fill="#526574">Cash CapEx · official release</text>
+  <text x="72" y="620" font-family="Arial,sans-serif" font-size="20" fill="#526574">Broad capital spending is not an AI-only measure.</text>
+</svg>

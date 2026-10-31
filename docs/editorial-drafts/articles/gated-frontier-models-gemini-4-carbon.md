@@ -175,7 +175,7 @@ No. Google says its external cybersecurity evaluations were run without guardrai
 The Fairwind page checked for this draft describes controls for Gemini 4 Argon, including phishing-resistant MFA, background checks and restrictions on which teams may use the model. The Carbon announcement refers to staged Fairwind access but does not state that every Argon-specific condition already applies to Carbon. Wait for Carbon-specific terms before assuming they are identical.
 
 ### Is the 59 Artificial Analysis score a cybersecurity score?
-No. Artificial Analysis calls it an Intelligence Index v5 score, a broader capability measure. It is separate from SEC-bench Pro, ExploitGym and CWE-bench. It provides an external evaluation reference, but it cannot validate or replace the specialized cybersecurity results.
+No. Artificial Analysis calls it an Intelligence Index v5 score, a broader capability measure. It is separate from SEC-bench Pro, ExploitGym and CWE-bench. It provides an external evaluation reference, but it cannot validate or replace the specialized cybersecurity results for those separate tasks.
 
 ## Sources
 

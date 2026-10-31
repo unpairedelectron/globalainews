@@ -1,0 +1,52 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NewsArticle",
+      "@id": "https://www.globalainews.in/article/indiaai-10000-gpu-tender-explained/#article",
+      "mainEntityOfPage": "https://www.globalainews.in/article/indiaai-10000-gpu-tender-explained/",
+      "headline": "C-DAC’s 10,000-unit AI compute tender is a first stage, not a deployment count",
+      "description": "C-DAC seeks AI compute providers in two stages. The 10,000-unit figure is a tender requirement, not deployed capacity or a completed purchase.",
+      "dateModified": "2026-10-31",
+      "author": {"@type": "Organization", "name": "Editorial Desk"},
+      "reviewedBy": {"@type": "Person", "name": "Aman Mishra"},
+      "image": [
+        "https://www.globalainews.in/draft-assets/indiaai-10000-gpu-tender-explained/1200x630.webp",
+        "https://www.globalainews.in/draft-assets/indiaai-10000-gpu-tender-explained/1200x675.webp",
+        "https://www.globalainews.in/draft-assets/indiaai-10000-gpu-tender-explained/1200x1200.webp"
+      ],
+      "citation": [
+        "https://cdac.in/index.aspx?id=tenders_ASP-RFE",
+        "https://www.cdac.in/index.aspx?id=tenders_Date-change-corrigendum_13.11.2026",
+        "https://eprocure.gov.in/eprocure/app?component=%24DirectLink_10&page=FrontEndTenderDetails&service=direct&sp=S%2BIdfKJWM8eaSytNrGF1SYA%3D%3D",
+        "https://compute.indiaai.gov.in/login",
+        "https://cdac.in/index.aspx?id=tenders_Date_Change_Corrigendum",
+        "https://compute.indiaai.gov.in/eligibilitycriteria",
+        "https://compute.indiaai.gov.in/indiaaipricecalculator",
+        "https://www.medianama.com/2026/10/223-meity-ai-compute-providers-gpus-indiaai-mission"
+      ],
+      "isAccessibleForFree": true,
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.globalainews.in/article/indiaai-10000-gpu-tender-explained/#faq",
+      "mainEntity": [
+        {"@type": "Question", "name": "Is C-DAC buying 10,000 GPUs?", "acceptedAnswer": {"@type": "Answer", "text": "The RFE seeks services using up to 10,000 AI compute units, and defines a unit as a hardware device that can include GPUs, accelerators, TPUs and similar equipment. It is an empanelment followed by Stage-2 procurement, not proof that 10,000 GPUs have been purchased or deployed. C-DAC may also scale capacity above 10,000 based on demand."}},
+        {"@type": "Question", "name": "What is the difference between Stage 1 and Stage 2?", "acceptedAnswer": {"@type": "Answer", "text": "Stage 1 is technical qualification and empanelment. The RFE says it does not seek service-level requirements or financial bids at that stage. Stage 2 is procurement of AI compute services through GeM from empanelled providers, when C-DAC will determine the engagement model, quantities and award strategy. Passing Stage 1 does not guarantee work."}},
+        {"@type": "Question", "name": "When are bids due and when will they open?", "acceptedAnswer": {"@type": "Answer", "text": "The 27 October 2026 C-DAC corrigendum changes the dates in the original RFE. Bid submission now ends on 13 November 2026 at 3:30 p.m. IST, and bid opening is scheduled for 14 November at 4 p.m. IST. This report uses the amended dates and does not repeat the superseded 29–30 October timetable."}},
+        {"@type": "Question", "name": "Does the tender promise five years of service for 10,000 units?", "acceptedAnswer": {"@type": "Answer", "text": "The RFE describes AI compute services for five years and an initial requirement of up to 10,000 AI compute units, with potential demand-based expansion. Those terms do not amount to a confirmed five-year award for every unit. Provider selection, quantities, start dates and final service terms depend on Stage-2 procurement and later agreements."}},
+        {"@type": "Question", "name": "Is 10,000 the maximum capacity?", "acceptedAnswer": {"@type": "Answer", "text": "No. The RFE describes an initial requirement of up to 10,000 units but also says C-DAC may scale total capacity beyond 10,000 during the empanelment validity according to demand. That is permission to expand, not a forecast or guarantee that the final capacity will exceed the initial request."}}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.globalainews.in/article/indiaai-10000-gpu-tender-explained/#breadcrumb",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.globalainews.in/"},
+        {"@type": "ListItem", "position": 2, "name": "Reports", "item": "https://www.globalainews.in/reports/"},
+        {"@type": "ListItem", "position": 3, "name": "C-DAC AI compute tender", "item": "https://www.globalainews.in/article/indiaai-10000-gpu-tender-explained/"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f4f1e8"/>
+  <path d="M0 0h18v630H0z" fill="#477da8"/>
+  <text x="72" y="82" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="2" fill="#477da8">GLOBAL AI NEWS  /  MODELS &amp; POLICY</text>
+  <text x="72" y="205" font-family="Arial,sans-serif" font-size="64" font-weight="700" fill="#172b3a">Gemini 4 Carbon:</text>
+  <text x="72" y="284" font-family="Arial,sans-serif" font-size="64" font-weight="700" fill="#172b3a">who can test it?</text>
+  <text x="72" y="350" font-family="Arial,sans-serif" font-size="27" fill="#526574">Scores differ by benchmark,</text>
+  <text x="72" y="388" font-family="Arial,sans-serif" font-size="27" fill="#526574">method and evaluator</text>
+  <text x="72" y="450" font-family="Arial,sans-serif" font-size="22" fill="#526574">Google announced staged access · 28 October 2026</text>
+  <rect x="748" y="110" width="390" height="400" rx="22" fill="#fffdf7" stroke="#cbd5dc" stroke-width="3"/>
+  <text x="785" y="158" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#526574">BENCHMARK PROVENANCE</text>
+  <rect x="785" y="184" width="316" height="82" rx="12" fill="#e5edf3"/>
+  <text x="808" y="217" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#172b3a">SEC-bench Pro</text>
+  <text x="808" y="247" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#477da8">88.2% · Google</text>
+  <rect x="785" y="278" width="316" height="82" rx="12" fill="#e5edf3"/>
+  <text x="808" y="311" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#172b3a">ExploitGym</text>
+  <text x="808" y="341" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#477da8">54.8% · Google</text>
+  <rect x="785" y="372" width="316" height="82" rx="12" fill="#e5efe9"/>
+  <text x="808" y="405" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#172b3a">CWE-bench v1</text>
+  <text x="808" y="435" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#287b63">71.0% · Collinear AI</text>
+  <text x="72" y="575" font-family="Arial,sans-serif" font-size="20" fill="#526574">Different tests and evaluators · not one comparable score</text>
+</svg>

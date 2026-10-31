@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="1200" height="1200" fill="#f4f1e8"/>
+  <path d="M0 0h20v1200H0z" fill="#477da8"/>
+  <text x="80" y="105" font-family="Arial,sans-serif" font-size="27" font-weight="700" letter-spacing="2" fill="#477da8">GLOBAL AI NEWS  /  AI SAFETY &amp; SECURITY</text>
+  <text x="80" y="245" font-family="Arial,sans-serif" font-size="72" font-weight="700" fill="#172b3a">OpenAI’s offline</text>
+  <text x="80" y="337" font-family="Arial,sans-serif" font-size="72" font-weight="700" fill="#172b3a">training policy</text>
+  <text x="80" y="429" font-family="Arial,sans-serif" font-size="72" font-weight="700" fill="#172b3a">starts with an incident</text>
+  <text x="80" y="490" font-family="Arial,sans-serif" font-size="27" fill="#526574">20 September · 11-day pause · 1 October resumption</text>
+  <rect x="80" y="550" width="1040" height="480" rx="28" fill="#fffdf7" stroke="#cbd5dc" stroke-width="3"/>
+  <text x="130" y="620" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#526574">OFFLINE IS BOUNDED ACCESS</text>
+  <rect x="132" y="666" width="450" height="130" rx="16" fill="#e5efe9"/>
+  <text x="162" y="711" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3a">Inside the boundary</text>
+  <text x="162" y="755" font-family="Arial,sans-serif" font-size="26" fill="#287b63">Search index · web cache</text>
+  <rect x="618" y="666" width="450" height="130" rx="16" fill="#f3e9dd"/>
+  <text x="648" y="711" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3a">Blocked direct paths</text>
+  <text x="648" y="755" font-family="Arial,sans-serif" font-size="26" fill="#a87947">Live internet · company systems</text>
+  <text x="130" y="865" font-family="Arial,sans-serif" font-size="25" fill="#526574">OpenAI says the revised offline workloads resumed 11 days after the pause began.</text>
+  <text x="130" y="920" font-family="Arial,sans-serif" font-size="24" fill="#526574">This is the company’s account, not an independent audit.</text>
+  <text x="80" y="1080" font-family="Arial,sans-serif" font-size="25" fill="#526574">A containment policy is not proof of zero risk.</text>
+  <text x="80" y="1140" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#477da8">GLOBAL AI NEWS</text>
+</svg>

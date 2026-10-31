@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
+  <title id="title">Anthropic proposed share-class rights</title>
+  <desc id="desc">The October 2026 S-1 describes Class A as the public economic share, Class T as the Trust's board-selection share, Class F as a founder voting share with 50.1 percent general shareholder voting power, and Class E as a limited-vote employee share.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.head{font-size:25px;font-weight:700}.body{font-size:22px;fill:#526574}.card{fill:#fffdf7;stroke:#b8c7d1;stroke-width:2}.a{stroke:#477da8}.t{stroke:#287b63}.f{stroke:#a87947}.e{stroke:#7b6c9a}
+  </style>
+  <text class="title" x="38" y="46">Proposed share classes: money and control</text>
+  <rect class="card a" x="30" y="72" width="405" height="205" rx="16"/>
+  <text class="head" x="58" y="112">Class A · Public offering</text>
+  <text class="body" x="58" y="151"><tspan x="58">Economic rights: yes</tspan><tspan x="58" dy="31">Ordinary shareholder votes</tspan><tspan x="58" dy="31">Does not elect Class T directors</tspan></text>
+  <rect class="card t" x="465" y="72" width="405" height="205" rx="16"/>
+  <text class="head" x="493" y="112">Class T · LTBT</text>
+  <text class="body" x="493" y="151"><tspan x="493">Economic rights: none</tspan><tspan x="493" dy="31">Elects/removes Class T directors</tspan><tspan x="493" dy="31">Together: board majority</tspan></text>
+  <rect class="card f" x="30" y="302" width="405" height="205" rx="16"/>
+  <text class="head" x="58" y="342">Class F · Founder LLC</text>
+  <text class="body" x="58" y="381"><tspan x="58">Economic rights: none</tspan><tspan x="58" dy="31">One share; 50.1% of general</tspan><tspan x="58" dy="31">shareholder voting power</tspan></text>
+  <rect class="card e" x="465" y="302" width="405" height="205" rx="16"/>
+  <text class="head" x="493" y="342">Class E · Employees</text>
+  <text class="body" x="493" y="381"><tspan x="493">Economic rights: none</tspan><tspan x="493" dy="31">Limited voting on specified</tspan><tspan x="493" dy="31">matters, as described in S-1</tspan></text>
+  <text class="body" x="38" y="545">Summary of proposed IPO terms; offering has not closed.</text>
+</svg>

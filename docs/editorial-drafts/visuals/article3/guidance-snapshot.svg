@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
+  <title id="title">2026 capital-spending figures and source status</title>
+  <desc id="desc">Meta guidance is 135 to 145 billion dollars including lease principal; Alphabet guidance is 195 to 205 billion; Microsoft estimates about 170 billion for calendar 2026; Amazon's approximately 220 billion in cash CapEx is confirmed by its official Q3 release.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.name{font-size:25px;font-weight:700}.value{font-size:24px;font-weight:700}.note{font-size:21px;fill:#526574}.card{fill:#fffdf7;stroke:#b8c7d1;stroke-width:2}.verified{stroke:#287b63}.reported{stroke:#a87947}
+  </style>
+  <text class="title" x="38" y="48">Company figures · not a common AI total</text>
+  <rect class="card verified" x="32" y="74" width="836" height="96" rx="14"/>
+  <text class="name" x="60" y="112">Meta</text><text class="value" x="270" y="112">$135–145B</text>
+  <text class="note" x="60" y="148">2026 · includes principal payments on finance leases</text>
+  <rect class="card verified" x="32" y="184" width="836" height="96" rx="14"/>
+  <text class="name" x="60" y="222">Alphabet</text><text class="value" x="270" y="222">$195–205B</text>
+  <text class="note" x="60" y="258">2026 guidance · Q3 CapEx $51.4B, mostly technical infrastructure</text>
+  <rect class="card verified" x="32" y="294" width="836" height="96" rx="14"/>
+  <text class="name" x="60" y="332">Microsoft</text><text class="value" x="270" y="332">about $170B</text>
+  <text class="note" x="60" y="368">calendar 2026 · Q1 actual $45.2B including $7.4B leases</text>
+  <rect class="card reported" x="32" y="404" width="836" height="96" rx="14"/>
+  <text class="name" x="60" y="442">Amazon</text><text class="value" x="270" y="442">about $220B</text>
+  <text class="note" x="60" y="478">cash CapEx · official release; basis not normalized</text>
+  <text class="note" x="38" y="540">Different periods, accounting bases and investment categories.</text>
+</svg>

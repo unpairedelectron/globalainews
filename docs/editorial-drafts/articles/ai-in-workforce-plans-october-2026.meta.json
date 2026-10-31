@@ -1,0 +1,18 @@
+{
+  "title": "Workforce Plans Do Not Prove AI Caused the Cuts",
+  "description": "Microsoft announced voluntary exits; the Dutch government set a multi-year FTE target. Neither official source attributes job losses to AI.",
+  "canonical": "https://www.globalainews.in/article/ai-in-workforce-plans-october-2026/",
+  "published": null,
+  "updated": "2026-10-31",
+  "author": "Editorial Desk",
+  "format": "Report",
+  "reviewer": "Aman Mishra",
+  "topic": "Work & Society",
+  "status": "private-draft",
+  "schemaTypes": ["NewsArticle", "FAQPage", "BreadcrumbList"],
+  "socialImages": [
+    {"width": 1200, "height": 630, "webp": "../social/article9/1200x630.webp", "avif": "../social/article9/1200x630.avif"},
+    {"width": 1200, "height": 675, "webp": "../social/article9/1200x675.webp", "avif": "../social/article9/1200x675.avif"},
+    {"width": 1200, "height": 1200, "webp": "../social/article9/1200x1200.webp", "avif": "../social/article9/1200x1200.avif"}
+  ]
+}

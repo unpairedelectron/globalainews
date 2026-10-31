@@ -1,0 +1,52 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NewsArticle",
+      "@id": "https://www.globalainews.in/article/ai-in-workforce-plans-october-2026/#article",
+      "mainEntityOfPage": "https://www.globalainews.in/article/ai-in-workforce-plans-october-2026/",
+      "headline": "Two workforce announcements, and why neither proves AI caused the cuts",
+      "description": "Microsoft announced voluntary exits; the Dutch government set a multi-year FTE target. Neither official source attributes job losses to AI.",
+      "dateModified": "2026-10-31",
+      "author": {"@type": "Organization", "name": "Editorial Desk"},
+      "reviewedBy": {"@type": "Person", "name": "Aman Mishra"},
+      "image": [
+        "https://www.globalainews.in/draft-assets/ai-in-workforce-plans-october-2026/1200x630.webp",
+        "https://www.globalainews.in/draft-assets/ai-in-workforce-plans-october-2026/1200x675.webp",
+        "https://www.globalainews.in/draft-assets/ai-in-workforce-plans-october-2026/1200x1200.webp"
+      ],
+      "citation": [
+        "https://blogs.microsoft.com/blog/2026/10/26/introducing-a-voluntary-exit-offer/",
+        "https://www.rijksoverheid.nl/actueel/nieuws/2026/10/26/kabinet-werkt-aan-slagvaardige-overheid-eenvoudiger-slimmer-en-kleiner",
+        "https://www.cbc.ca/lite/story/9.7396520",
+        "https://apnews.com/article/microsoft-buyout-ai-layoff-xbox-c5a639f53615be198db1799adf6837e1",
+        "https://www.nytimes.com/2026/10/26/technology/microsoft-buyouts-ai-spending.html",
+        "https://www.bloomberg.com/news/articles/2026-10-26/dutch-government-plans-to-cut-25-000-jobs-in-ai-led-overhaul",
+        "https://www.ilo.org/publications/generative-ai-and-jobs-refined-global-index-occupational-exposure",
+        "https://www.oecd.org/en/publications/oecd-employment-outlook-2023_08785bba-en.html"
+      ],
+      "isAccessibleForFree": true,
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.globalainews.in/article/ai-in-workforce-plans-october-2026/#faq",
+      "mainEntity": [
+        {"@type":"Question","name":"Did Microsoft announce 60,000 layoffs?","acceptedAnswer":{"@type":"Answer","text":"No. Microsoft announced a voluntary exit offer for eligible employees in participating organizations. Reuters, in a report carried by CBC, described about 60,000 employees as potentially covered; that is an eligibility estimate, not a count of people who accepted or left. The company’s official post does not report completed departures or an eventual net headcount change."}},
+        {"@type":"Question","name":"Is the Dutch government cutting 25,000 jobs because of AI?","acceptedAnswer":{"@type":"Answer","text":"The government statement does not say that. It describes an estimated 25,000-FTE central-government reduction over several years to support savings targets, and separately says AI productivity goals and plans will be set in Q1 2027. The official announcement does not establish AI as the cause of the staffing target."}},
+        {"@type":"Question","name":"What does FTE mean in the Dutch target?","acceptedAnswer":{"@type":"Answer","text":"FTE means full-time equivalent, a measure of workload or staffing capacity expressed as full-time positions. It is not automatically a count of individual employees, immediate dismissals or completed departures. The Dutch government describes an estimated target over several years; implementation details and realized workforce changes require later evidence."}},
+        {"@type":"Question","name":"Does AI exposure research prove that these reductions are AI-caused?","acceptedAnswer":{"@type":"Answer","text":"No. Studies of task or occupational exposure describe where AI may affect work. They do not establish whether Microsoft’s offer or the Dutch staffing target was caused by AI. That requires evidence about the particular decision, adoption, workforce outcomes and the employer’s stated reasons or a credible causal analysis."}},
+        {"@type":"Question","name":"What evidence would confirm an AI-caused workforce reduction?","acceptedAnswer":{"@type":"Answer","text":"A clear employer or government statement linking a defined reduction to AI would help, but a causal claim should also identify the affected roles, period and number, and distinguish AI from other factors such as budgets or restructuring. An offer, target, AI investment or exposure estimate alone cannot establish a completed AI-caused job loss."}}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.globalainews.in/article/ai-in-workforce-plans-october-2026/#breadcrumb",
+      "itemListElement": [
+        {"@type":"ListItem","position":1,"name":"Home","item":"https://www.globalainews.in/"},
+        {"@type":"ListItem","position":2,"name":"Reports","item":"https://www.globalainews.in/reports/"},
+        {"@type":"ListItem","position":3,"name":"Workforce announcements","item":"https://www.globalainews.in/article/ai-in-workforce-plans-october-2026/"}
+      ]
+    }
+  ]
+}

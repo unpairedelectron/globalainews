@@ -76,7 +76,7 @@
           "name": "Is the 59 Artificial Analysis score a cybersecurity score?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Artificial Analysis calls it an Intelligence Index v5 score, a broader capability measure. It is separate from SEC-bench Pro, ExploitGym and CWE-bench. It provides an external evaluation reference, but it cannot validate or replace the specialized cybersecurity results."
+            "text": "No. Artificial Analysis calls it an Intelligence Index v5 score, a broader capability measure. It is separate from SEC-bench Pro, ExploitGym and CWE-bench. It provides an external evaluation reference, but it cannot validate or replace the specialized cybersecurity results for those separate tasks."
           }
         }
       ]

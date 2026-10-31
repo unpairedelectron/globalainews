@@ -1,0 +1,108 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NewsArticle",
+      "@id": "https://www.globalainews.in/article/anthropic-s1-governance-who-controls/#article",
+      "mainEntityOfPage": "https://www.globalainews.in/article/anthropic-s1-governance-who-controls/",
+      "headline": "Anthropic’s S-1 separates ownership from board control",
+      "description": "Anthropic’s S-1 separates public economic rights from founder voting power and Trust board control. We explain the proposed classes and reported loss.",
+      "dateModified": "2026-10-31",
+      "author": {
+        "@type": "Organization",
+        "name": "Editorial Desk"
+      },
+      "reviewedBy": {
+        "@type": "Person",
+        "name": "Aman Mishra"
+      },
+      "image": [
+        "https://www.globalainews.in/draft-assets/anthropic-s1-governance-who-controls/1200x630.webp",
+        "https://www.globalainews.in/draft-assets/anthropic-s1-governance-who-controls/1200x675.webp",
+        "https://www.globalainews.in/draft-assets/anthropic-s1-governance-who-controls/1200x1200.webp"
+      ],
+      "citation": [
+        "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
+        "https://www.anthropic.com/news/s1-sec",
+        "https://www.sec.gov/Archives/edgar/data/2130357/000162827926000861/filename1.htm",
+        "https://www.anthropic.com/news/the-long-term-benefit-trust",
+        "https://delcode.delaware.gov/title8/c001/sc15/",
+        "https://www.sec.gov/files/forms-1.pdf",
+        "https://www.cnbc.com/2026/10/26/anthropic-ipo-founder-voting-control.html",
+        "https://fortune.com/2026/10/26/anthropics-s-1"
+      ],
+      "isAccessibleForFree": true,
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.globalainews.in/article/anthropic-s1-governance-who-controls/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Who controls Anthropic under the proposed S-1 structure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The filing describes separate powers. The Long-Term Benefit Trust would generally elect and remove the Class T directors, who together would be a majority of the authorized board. The founders’ LLC would hold one Class F share carrying 50.1% of voting power on matters submitted to shareholders generally. The S-1 does not reduce control to a single owner percentage."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do Anthropic’s founders own 50.1% of the company?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The S-1 says one Class F share held by the Founder LLC would carry 50.1% of total voting power on matters submitted to shareholders generally. It also says Class F has no economic rights. That is a voting-power figure, not a statement that the founders own 50.1% of Anthropic’s economic value."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Anthropic already publicly traded?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Anthropic filed a registration statement for a proposed initial public offering and said it intended to list Class A shares on Nasdaq under ANT. The company announcement said the share count and price range had not been set. A filing and intended ticker are not the same as an IPO closing or a public market listing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is the reported net loss much larger than the operating loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The S-1 reports a $693 million operating loss and an $80.7 billion net loss for H1 2026. It includes a $72.4 billion fair-value change in convertible notes, derivative liabilities and SAFEs, primarily driven by an increase in the fair value of convertible promissory notes as enterprise valuation increased. A fair-value change is not the same as cash operating expense."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does public-benefit corporation status mean Anthropic can ignore shareholder returns?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Delaware law requires a PBC’s directors to balance stockholders’ pecuniary interests, the interests of people materially affected by the corporation’s conduct and the public benefit identified in the certificate. The statute does not make the company a charity or say that one of those considerations automatically overrides every other one."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.globalainews.in/article/anthropic-s1-governance-who-controls/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.globalainews.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Reports",
+          "item": "https://www.globalainews.in/reports/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Anthropic S-1 governance",
+          "item": "https://www.globalainews.in/article/anthropic-s1-governance-who-controls/"
+        }
+      ]
+    }
+  ]
+}

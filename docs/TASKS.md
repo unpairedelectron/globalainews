@@ -4,16 +4,16 @@ Scope: create verified, unpublished editorial drafts and private supporting asse
 
 ## Phase A — private article packages, in requested order
 
-- [ ] Article 6 — fact log, full explainer, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
-- [ ] Article 5 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
-- [ ] Article 4 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
-- [ ] Article 1 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
-- [ ] Article 3 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
-- [ ] Article 2 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
-- [ ] Article 7 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
-- [ ] Article 8 — fact log, full explainer, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
-- [ ] Article 9 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
-- [ ] Article 10 — fact log, full explainer/report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
+- [x] Article 6 — fact log, full explainer, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
+- [x] Article 5 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
+- [x] Article 4 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
+- [x] Article 1 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
+- [x] Article 3 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
+- [x] Article 2 — fact log, full report, four accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
+- [x] Article 7 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
+- [x] Article 8 — fact log, full explainer, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
+- [x] Article 9 — fact log, full report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
+- [x] Article 10 — fact log, full explainer/report, three accessible original visuals, social-card variants, metadata/schema, internal-link plan, and private gate report.
 
 ## Phase B — private cross-article QA
 
