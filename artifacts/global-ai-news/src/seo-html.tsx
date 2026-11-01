@@ -7,6 +7,7 @@ import { SeoPrerender } from './seo-prerender';
 import { getEditorialImagePath } from './editorial-images';
 import { STATIC_PRERENDER_ROUTES } from './static-prerender-routes';
 import {
+  STATIC_PRERENDER_CLARITY_BOOTSTRAP,
   STATIC_PRERENDER_THEME_BOOTSTRAP,
   STATIC_PRERENDER_VITALS_BOOTSTRAP,
 } from './static-prerender-bootstrap';
@@ -129,7 +130,7 @@ export function renderSeoRouteHtml(
       .replace(/<link\b(?=[^>]*\brel=["']modulepreload["'])[^>]*>\s*/gi, '')
       .replace(/<script\b(?=[^>]*\btype=["']module["'])[^>]*>[\s\S]*?<\/script>\s*/gi, '')
       .replace('</head>', `${STATIC_PRERENDER_THEME_BOOTSTRAP}\n  </head>`)
-      .replace('</body>', `${STATIC_PRERENDER_VITALS_BOOTSTRAP}\n  </body>`);
+      .replace('</body>', `${STATIC_PRERENDER_VITALS_BOOTSTRAP}\n  ${STATIC_PRERENDER_CLARITY_BOOTSTRAP}\n  </body>`);
   }
   for (const pattern of existingHeadMetadata) html = html.replace(pattern, '');
 

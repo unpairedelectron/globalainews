@@ -57,7 +57,7 @@ Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
 ### A. Authenticated release tooling
 
 - [x] A1. Inspect editor API/CMS schemas and generate `/release/manifest.json` with ten scheduled articles, dated briefs from existing fact logs, sourced Signals, topic/glossary links, and date-gated sitemap/RSS flags.
-- [ ] A2. Build an editor-only `/admin/release-import` page using existing Clerk editor authorization; upload, dry-run by default, explicit Apply, idempotency, audit log, and last-apply rollback.
+- [ ] A2. **Blocked:** build an editor-only `/admin/release-import` page using existing Clerk editor authorization; upload, dry-run by default, explicit Apply, idempotency, audit log, and last-apply rollback. The current API cannot preserve authored story structure and citation metadata.
 - [x] A3. Check whether the platform can mint a scoped `RELEASE_API_TOKEN`; implement `release:apply` only if supported, otherwise document the omission.
 - [x] A4. Add mocked-auth unit/integration coverage, including unauthenticated 401 and assertions that production has no bypass, test header, or debug-auth flag.
 - [x] A5. Validate the exact manifest schema and capture a full staging dry-run using test fixtures in `docs/PROGRESS.md`.
@@ -67,8 +67,8 @@ Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
 
 - [x] B1. Record exact failing Lighthouse audits and causes in `docs/lighthouse-findings.md`.
 - [x] B2. Defer Clarity and other existing third-party analytics until first interaction or four seconds after load, whichever comes first; respect consent where required and preserve collection.
-- [ ] B3. Fix remaining performance, accessibility, best-practices, cache, font, image, CSS/JS, and console findings without lowering targets.
-- [ ] B4. Re-run mobile/desktop Lighthouse for home, Brief, Reports, each topic hub, About, Methodology, Corrections, and ten staged articles; meet unchanged targets or document vendor-only residuals and owner options.
+- [ ] B3. Reduce remaining mobile load cost without lowering targets. Research contrast, Clarity loading, and responsive editorial images were addressed; Home, Brief, and AI topic mobile Performance remain below 95, and supplemental mobile scores need a comparable proxy recheck.
+- [x] B4. Re-run mobile/desktop Lighthouse for home, Brief, Reports, each topic hub, About, Methodology (`/code-of-ethics/`), Corrections, and ten staged articles; record the 36-run matrix and supplemental route coverage in `docs/lighthouse-release.md`.
 - [x] B5. Keep Reports and India Watch noindex until they are substantive index pages; include `OWNER: flip to index when ready` in the release card.
 
 ### C. Disclosure wording
@@ -79,6 +79,6 @@ Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
 
 ### D. Final verification
 
-- [ ] D1. Re-run pre-publish, cross-article, link, and accessibility checks on all ten articles; fix regressions.
-- [ ] D2. Re-run `global-ai-news-smoke` and schedule simulations; verify pre-date exclusion from public pages, sitemaps, and RSS.
-- [ ] D3. Update `docs/RELEASE-RUNBOOK.md` and `docs/PROGRESS.md`.
+- [x] D1. Re-run pre-publish, cross-article, link, and accessibility checks on all ten articles; fix regressions.
+- [x] D2. Re-run `global-ai-news-smoke` and schedule simulations; verify pre-date exclusion from public pages, sitemaps, and RSS. No live queue writes were made.
+- [x] D3. Update `docs/RELEASE-RUNBOOK.md`, `docs/PROGRESS.md`, and the Lighthouse reports.

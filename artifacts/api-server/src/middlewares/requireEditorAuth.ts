@@ -65,6 +65,6 @@ export function createRequireEditorAuth(options: {
 
 export const requireEditorAuth = createRequireEditorAuth({
   allowedEmail: configuredEditorEmail,
-  getUserId: (req) => getAuth(req)?.userId,
+  getUserId: (req) => getAuth(req)?.userId ?? undefined,
   getUser: async (userId) => clerkClient.users.getUser(userId),
 });

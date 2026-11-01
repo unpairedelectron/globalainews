@@ -1,12 +1,33 @@
 # Lighthouse release audit — 1 November 2026
 
-## Method
+## Latest score matrix
 
-Audited 14 routes in mobile and desktop configurations (28 runs) with Lighthouse 13.6.0 and Chromium 152. The app was built for production and served locally behind a test proxy that forwards `/api` requests to the running API artifact. Mobile used Lighthouse's default simulated mobile profile; desktop used the desktop preset. Categories: Performance, Accessibility, Best Practices, and SEO. Scores are out of 100; Web Vitals are milliseconds except CLS.
+The latest complete matrix contains 18 routes × 2 devices (36 runs), using Lighthouse 13.6.0 and Chromium 152 against a production build with API proxying. Mobile used Lighthouse's simulated mobile profile; desktop used its desktop preset. Scores are out of 100.
 
-The ten staging routes were re-audited after fixing long citation URLs that caused horizontal overflow at narrow widths. Staging article routes intentionally send `noindex,nofollow`; their lower SEO scores are expected. `/reports/` and `/topic/india/` currently send `noindex,follow`; this existing indexability policy was recorded, not changed.
+| Route | Desktop P/A/BP/SEO | Mobile P/A/BP/SEO |
+|---|---:|---:|
+| `/` | 99/100/100/100 | 91/100/100/100 |
+| `/brief/` | 99/100/100/100 | 94/100/100/100 |
+| `/reports/` | 100/100/100/66 | 100/100/100/66 |
+| `/research/` | 100/96/100/66 | 93/96/100/66 |
+| `/about-us/` | 100/100/100/100 | 100/100/100/100 |
+| `/corrections/` | 100/100/100/100 | 100/100/100/100 |
+| `/topic/ai/` | 100/100/100/66 | 94/100/100/66 |
+| `/topic/india/` | 100/100/100/69 | 100/100/100/69 |
+| Ten `/staging/article/.../` routes | 100/100/100/69 each | 100/100/100/69 each |
 
-## Results
+The separate Methodology route is `/code-of-ethics/`. It was missing from the 36-run matrix, so it received a supplemental Lighthouse run below. Research also received a focused recheck after its contrast correction.
+
+| Supplemental route | Device | Perf | A11y | Best practices | SEO | LCP ms | TBT ms |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `/research/` | mobile | 71 | 100 | 100 | 66 | 3606 | 795 |
+| `/research/` | desktop | 99 | 100 | 100 | 66 | 864 | 70 |
+| `/code-of-ethics/` | mobile | 72 | 100 | 100 | 100 | 3549 | 777 |
+| `/code-of-ethics/` | desktop | 99 | 100 | 100 | 100 | 846 | 58 |
+
+These supplemental mobile performance scores vary substantially from the complete matrix and are not substituted into it; the focused run used a temporary local static/API proxy. The accessibility checks are consistent: Research now scores 100 after the contrast fix.
+
+## Historical 28-run results
 
 | Route | Device | Perf | A11y | Best practices | SEO | LCP ms | FCP ms | TBT ms | CLS |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -39,7 +60,7 @@ The ten staging routes were re-audited after fixing long citation URLs that caus
 | /topic/india/ | desktop | 99 | 100 | 77 | 69 | 920 | 257 | 0 | 0.002 |
 | /topic/india/ | mobile | 90 | 100 | 77 | 69 | 3633 | 916 | 17 | 0.001 |
 
-## Findings and disposition
+## Historical findings and disposition
 
 - All 10 noindex staging articles scored 100 for Performance, Accessibility, and Best Practices on desktop and mobile. Mobile LCP ranged from 1072 to 1236 ms; TBT was at most 57 ms and CLS was 0.000. SEO score 69 is expected for noindex previews.
 - The four audited public routes scored 100 for Accessibility. Public Best Practices scores were 77; Lighthouse reported third-party-cookie and DevTools inspector findings associated with Microsoft Clarity. Analytics collection was not removed or altered.
