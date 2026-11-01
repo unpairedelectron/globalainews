@@ -112,3 +112,38 @@ Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
 - [ ] C2. Re-run smoke, root typecheck, and all schedule simulations; verify future content stays absent from public surfaces.
 - [ ] C3. Preserve commercial input `NO` and Reports/India Watch noindex.
 - [ ] C4. Update `docs/PROGRESS.md` and the runbook after verification.
+
+## Owner-ordered strict release continuation
+
+Current scope: A4 through C4. Keep repo-defined article structure and citations; database stores publish state only. Do not publish, deploy, or change production schema.
+
+### Group 1 — Derived-surface gating
+
+- [ ] A4. Gate topic hubs, Reports, Daily Brief links, Signals links, sitemap with real `lastmod`, 2-day news sitemap, RSS, and per-topic RSS on published state and elapsed publish time. Test empty/scheduled exclusion and post-promotion inclusion for all ten articles.
+- [ ] A5. Gate Briefs, Signals, topic entries, and glossary links consistently; preserve structured code-native data. Add one dated Brief per publish day with that day's article and 2–3 verified fact-log items. Run the A4 leak test.
+
+### Group 2 — Admin and scheduler
+
+- [ ] A6. Build Clerk-protected `/admin/release` for publish-state-only manifest import, dry-run by default, explicit idempotent Apply, per-article Publish now/Pause/Roll back, and audit history. Test unauthenticated protection and mocked-auth flows.
+- [ ] A7. Finish the restart-safe scheduler; promote only due rows with conditional updates, audit, cache/sitemap/RSS refresh. Test all ten slots with a fake clock.
+
+### Group 3 — Verification and owner handoff
+
+- [ ] A8. Run and record auth/no-bypass checks, ten-article staging/public HTML round trips, fake-clock before/after/Pause checks across all surfaces, JSON-LD/sitemap/RSS validation, and link audit.
+- [ ] A9. Generate the state-only `/release/manifest.json`; write the five-step `docs/OWNER-RELEASE-CARD.md`; update `docs/RELEASE-RUNBOOK.md` for early publish, pause, rollback, corrections, and Article 6/7 update triggers.
+
+### Group 4 — Mobile performance (never blocks Groups 1–3)
+
+- [ ] B1. Document one Lighthouse harness: same version/preset, simulated Slow 4G and 4× CPU, median of five, local production-like build and deployed URL.
+- [ ] B2. Measure Home, Brief, Reports, India Watch, AI topic hub, About, Methodology, Corrections, Research, and all ten articles.
+- [ ] B3. For each route below 95, record LCP element, TBT, JS bytes, hydration cost, and long tasks; fix the top causes without lowering targets.
+- [ ] B4. Limit each route to three fix cycles; record residual causes and continue.
+- [ ] B5. Report whether each route meets LCP ≤2.5s, INP ≤200ms, CLS ≤0.1.
+- [ ] B6. Re-verify Research on the standard harness.
+
+### Group 5 — Final checks
+
+- [ ] C1. Re-run pre-publish, cross-article consistency, link, and accessibility checks on all ten articles.
+- [ ] C2. Re-run smoke, root typecheck, and schedule simulation; confirm future content is absent from every public surface.
+- [ ] C3. Confirm disclosure input `NO`, Reports/India Watch `noindex`, reviewer lines, and empty corrections logs.
+- [ ] C4. Update `docs/PROGRESS.md` and the runbook after verification.
