@@ -8,6 +8,7 @@ import {
 } from "express";
 import { requireEditorAuth } from "../middlewares/requireEditorAuth";
 import { shouldSeedDefaultSchedule } from "../editorial/release-seeding";
+import { onPublicationStateChanged } from "../editorial/publication-state";
 import {
   db,
   editorialAutomationRunsTable,
@@ -126,6 +127,8 @@ function isValidProfileReviewDate(value: string): boolean {
 function invalidatePublicNewsroomContentCache(): void {
   publicNewsroomContentCache = undefined;
 }
+
+onPublicationStateChanged(invalidatePublicNewsroomContentCache);
 
 type ReleaseInput = {
   slug: string;

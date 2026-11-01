@@ -14,6 +14,7 @@ const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 let stateSnapshot: EditorialPublishState[] | undefined;
 let refreshInFlight: Promise<EditorialPublishState[]> | undefined;
 let scheduler: NodeJS.Timeout | undefined;
+const publicationStateChangeListeners = new Set<() => void>();
 
 const titleBySlug = new Map<string, string>(
   articleRegistry.map((entry) => [entry.slug, entry.title]),
@@ -23,11 +24,21 @@ export function isKnownArticleSlug(slug: string): boolean {
   return titleBySlug.has(slug);
 }
 
+export function onPublicationStateChanged(listener: () => void): () => void {
+  publicationStateChangeListeners.add(listener);
+  return () => publicationStateChangeListeners.delete(listener);
+}
+
+export function notifyPublicationStateChanged(): void {
+  for (const listener of publicationStateChangeListeners) listener();
+}
+
 export async function refreshPublicationStateSnapshot(
   now = new Date(),
 ): Promise<EditorialPublishState[]> {
   if (refreshInFlight) return refreshInFlight;
   refreshInFlight = (async () => {
+    const startedAt = Date.now();
     const due = await db
       .select()
       .from(editorialPublishStatesTable)
@@ -37,6 +48,7 @@ export async function refreshPublicationStateSnapshot(
       ))
       .orderBy(asc(editorialPublishStatesTable.publishAt));
 
+    let publishedCount = 0;
     if (due.length) {
       await db.transaction(async (tx) => {
         for (const row of due) {
@@ -50,6 +62,7 @@ export async function refreshPublicationStateSnapshot(
             ))
             .returning();
           if (!updated) continue;
+          publishedCount += 1;
           await tx.insert(editorialReleaseHistoryTable).values({
             releaseSlug: row.slug,
             releaseTitle: titleBySlug.get(row.slug) ?? row.slug,
@@ -68,6 +81,14 @@ export async function refreshPublicationStateSnapshot(
     const rows = await db.select().from(editorialPublishStatesTable)
       .orderBy(asc(editorialPublishStatesTable.publishAt), asc(editorialPublishStatesTable.slug));
     stateSnapshot = rows;
+    if (publishedCount > 0) notifyPublicationStateChanged();
+    logger.info({
+      event: "publication_state_job_completed",
+      checkedCount: due.length,
+      publishedCount,
+      snapshotRowCount: rows.length,
+      elapsedMs: Date.now() - startedAt,
+    }, "Publication-state refresh completed");
     return rows;
   })().finally(() => {
     refreshInFlight = undefined;
