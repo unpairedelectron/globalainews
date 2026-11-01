@@ -360,6 +360,67 @@ export const GetPublicationsStateResponse = zod.object({
 
 
 /**
+ * @summary Get the state-only release manifest
+ */
+export const GetPublicationStateManifestResponse = zod.object({
+  "states": zod.array(zod.object({
+  "slug": zod.string(),
+  "publishAt": zod.coerce.date(),
+  "status": zod.enum(['staged', 'scheduled', 'published', 'paused'])
+}))
+})
+
+
+/**
+ * @summary Dry-run or apply the state-only release manifest
+ */
+
+export const importPublicationStateManifestBodyApplyDefault = false;
+
+export const ImportPublicationStateManifestBody = zod.object({
+  "states": zod.array(zod.object({
+  "slug": zod.string(),
+  "publishAt": zod.coerce.date(),
+  "status": zod.enum(['staged', 'scheduled', 'published', 'paused'])
+})).min(1),
+  "apply": zod.boolean().default(importPublicationStateManifestBodyApplyDefault).describe('Defaults to dry-run. Set true only after reviewing the preview.')
+})
+
+export const ImportPublicationStateManifestResponse = zod.object({
+  "dryRun": zod.boolean(),
+  "applied": zod.boolean(),
+  "changes": zod.array(zod.object({
+  "slug": zod.string(),
+  "disposition": zod.enum(['create', 'update', 'unchanged']),
+  "previousStatus": zod.string().nullable(),
+  "nextStatus": zod.string()
+}))
+})
+
+
+/**
+ * @summary Publish, pause, or roll back one article's publication state
+ */
+export const ActOnPublicationStateParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const ActOnPublicationStateBody = zod.object({
+  "action": zod.enum(['publish-now', 'pause', 'rollback'])
+})
+
+export const ActOnPublicationStateResponse = zod.object({
+  "action": zod.enum(['publish-now', 'pause', 'rollback']),
+  "changed": zod.boolean(),
+  "state": zod.union([zod.object({
+  "slug": zod.string(),
+  "publishAt": zod.coerce.date(),
+  "status": zod.enum(['staged', 'scheduled', 'published', 'paused'])
+}),zod.null()])
+})
+
+
+/**
  * Returns the build-safe title and description manifest generated from the same maintained source as newsroom content.
  * @summary Get metadata for published newsroom routes
  */

@@ -25,6 +25,7 @@ const TopicPage = lazy(() => import('./pages/public').then((module) => ({ defaul
 const EntityPage = lazy(() => import('./pages/public').then((module) => ({ default: module.EntityPage })));
 const TimelinePage = lazy(() => import('./pages/public').then((module) => ({ default: module.TimelinePage })));
 const EditorialInputPage = lazy(() => import('./pages/public').then((module) => ({ default: module.EditorialInputPage })));
+const ReleaseAdminPage = lazy(() => import('./pages/release-admin').then((module) => ({ default: module.ReleaseAdminPage })));
 const ReportsIndexPage = lazy(() => import('./pages/reports-index').then((module) => ({ default: module.ReportsIndexPage })));
 const ComparisonReportPage = lazy(() => import('./pages/comparison-report').then((module) => ({ default: module.ComparisonReportPage })));
 const GlucoSmartPrivacyPage = lazy(() => import('./pages/glucosmart-privacy').then((module) => ({ default: module.GlucoSmartPrivacyPage })));
@@ -55,6 +56,7 @@ function AppRoutes() {
   const [location] = useLocation();
   const pathname = location.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
   const needsClerk = pathname === '/insights'
+    || pathname === '/admin/release'
     || /^\/sign-in(?:\/|$)/.test(pathname)
     || /^\/sign-up(?:\/|$)/.test(pathname);
   const routes = <Switch>
@@ -81,6 +83,7 @@ function AppRoutes() {
     <Route path="/topic/ai"><TopicPage kind="ai" /></Route>
     <Route path="/topic/india"><TopicPage kind="india" /></Route>
     <Route path="/insights" component={ClerkInsightsPage} />
+    <Route path="/admin/release" component={ReleaseAdminPage} />
     <Route path="/company/:slug"><EntityPage kind="company" /></Route>
     <Route path="/lab/:slug"><EntityPage kind="lab" /></Route>
     <Route path="/model/:slug"><EntityPage kind="model" /></Route>

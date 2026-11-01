@@ -66,6 +66,120 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/publication-state/manifest:
+    get:
+      operationId: getPublicationStateManifest
+      tags: [newsroom]
+      summary: Get the state-only release manifest
+      security:
+        - clerkSession: []
+      responses:
+        "200":
+          description: State-only manifest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicationStateSnapshot"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Editor access denied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/publication-state/import:
+    post:
+      operationId: importPublicationStateManifest
+      tags: [newsroom]
+      summary: Dry-run or apply the state-only release manifest
+      security:
+        - clerkSession: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublicationStateImportInput"
+      responses:
+        "200":
+          description: Dry-run or idempotent import result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicationStateImportResult"
+        "400":
+          description: Invalid or incomplete manifest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Editor access denied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/publication-state/{slug}/actions:
+    post:
+      operationId: actOnPublicationState
+      tags: [newsroom]
+      summary: Publish, pause, or roll back one article's publication state
+      security:
+        - clerkSession: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublicationStateActionInput"
+      responses:
+        "200":
+          description: Publication state action result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicationStateActionResult"
+        "400":
+          description: Invalid action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Editor sign-in required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Editor access denied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Publication state not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /newsroom/metadata:
     get:
       operationId: getNewsroomMetadata
@@ -1700,6 +1814,70 @@ components:
           items:
             $ref: "#/components/schemas/PublicationStateEntry"
       required: [states]
+      additionalProperties: false
+    PublicationStateImportInput:
+      type: object
+      properties:
+        states:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/PublicationStateEntry"
+        apply:
+          type: boolean
+          default: false
+          description: Defaults to dry-run. Set true only after reviewing the preview.
+      required: [states]
+      additionalProperties: false
+    PublicationStateImportChange:
+      type: object
+      properties:
+        slug:
+          type: string
+        disposition:
+          type: string
+          enum: [create, update, unchanged]
+        previousStatus:
+          type: ["string", "null"]
+        nextStatus:
+          type: string
+      required: [slug, disposition, previousStatus, nextStatus]
+      additionalProperties: false
+    PublicationStateImportResult:
+      type: object
+      properties:
+        dryRun:
+          type: boolean
+        applied:
+          type: boolean
+        changes:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicationStateImportChange"
+      required: [dryRun, applied, changes]
+      additionalProperties: false
+    PublicationStateAction:
+      type: string
+      enum: [publish-now, pause, rollback]
+    PublicationStateActionInput:
+      type: object
+      properties:
+        action:
+          $ref: "#/components/schemas/PublicationStateAction"
+      required: [action]
+      additionalProperties: false
+    PublicationStateActionResult:
+      type: object
+      properties:
+        action:
+          $ref: "#/components/schemas/PublicationStateAction"
+        changed:
+          type: boolean
+        state:
+          anyOf:
+            - $ref: "#/components/schemas/PublicationStateEntry"
+            - type: "null"
+      required: [action, changed, state]
       additionalProperties: false
     EditorialCadence:
       type: string

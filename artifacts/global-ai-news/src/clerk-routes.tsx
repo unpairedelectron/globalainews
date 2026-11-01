@@ -63,9 +63,14 @@ function getClerkAppearance(theme: Theme) {
 }
 
 export function SignInPage() {
+  const [location] = useLocation();
   const rootRef = useRef<HTMLDivElement>(null);
   const [validationError, setValidationError] = useState('');
   const [recoveryOpen, setRecoveryOpen] = useState(false);
+  const requestedRedirect = new URLSearchParams(location.split('?')[1] ?? '').get('redirect_url');
+  const signInRedirect = requestedRedirect === '/admin/release'
+    ? `${basePath}/admin/release`
+    : `${basePath}/insights`;
 
   useEffect(() => {
     const root = rootRef.current;
@@ -107,8 +112,8 @@ export function SignInPage() {
             routing="path"
             path={`${basePath}/sign-in`}
             signUpUrl={`${basePath}/sign-up`}
-            forceRedirectUrl={`${basePath}/insights`}
-            fallbackRedirectUrl={`${basePath}/insights`}
+            forceRedirectUrl={signInRedirect}
+            fallbackRedirectUrl={signInRedirect}
           />
           <button
             type="button"

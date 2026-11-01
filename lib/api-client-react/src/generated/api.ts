@@ -40,6 +40,10 @@ import type {
   ProfileReviewDate,
   ProfileReviewQueue,
   ProfileReviewUpdate,
+  PublicationStateActionInput,
+  PublicationStateActionResult,
+  PublicationStateImportInput,
+  PublicationStateImportResult,
   PublicationStateSnapshot
 } from './api.schemas';
 
@@ -303,6 +307,260 @@ export function useGetPublicationsState<TData = Awaited<ReturnType<typeof getPub
 
 
 
+
+export const getGetPublicationStateManifestUrl = () => {
+
+
+
+
+  return `/api/newsroom/publication-state/manifest`
+}
+
+/**
+ * @summary Get the state-only release manifest
+ */
+export const getPublicationStateManifest = async ( options?: Parameters<typeof customFetch>[1]): Promise<PublicationStateSnapshot> => {
+
+  return customFetch<PublicationStateSnapshot>(getGetPublicationStateManifestUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPublicationStateManifestQueryKey = () => {
+    return [
+    `/api/newsroom/publication-state/manifest`
+    ] as const;
+    }
+
+
+export const getGetPublicationStateManifestQueryOptions = <TData = Awaited<ReturnType<typeof getPublicationStateManifest>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationStateManifest>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicationStateManifestQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicationStateManifest>>> = ({ signal }) => getPublicationStateManifest({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicationStateManifest>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPublicationStateManifestQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicationStateManifest>>>
+export type GetPublicationStateManifestQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Get the state-only release manifest
+ */
+
+export function useGetPublicationStateManifest<TData = Awaited<ReturnType<typeof getPublicationStateManifest>>, TError = ErrorType<ErrorResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationStateManifest>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPublicationStateManifestQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getImportPublicationStateManifestUrl = () => {
+
+
+
+
+  return `/api/newsroom/publication-state/import`
+}
+
+/**
+ * @summary Dry-run or apply the state-only release manifest
+ */
+export const importPublicationStateManifest = async (publicationStateImportInput: PublicationStateImportInput, options?: Parameters<typeof customFetch>[1]): Promise<PublicationStateImportResult> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<PublicationStateImportResult>(getImportPublicationStateManifestUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(publicationStateImportInput)
+  }
+);}
+
+
+
+
+
+export const getImportPublicationStateManifestMutationKey = () => ['importPublicationStateManifest'] as const;
+
+export const getImportPublicationStateManifestMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof importPublicationStateManifest>>, TError,ImportPublicationStateManifestMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof importPublicationStateManifest>>, TError,ImportPublicationStateManifestMutationVariables, TContext> => {
+
+const mutationKey = getImportPublicationStateManifestMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof importPublicationStateManifest>>, ImportPublicationStateManifestMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  importPublicationStateManifest(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ImportPublicationStateManifestMutationResult = NonNullable<Awaited<ReturnType<typeof importPublicationStateManifest>>>
+    export type ImportPublicationStateManifestMutationBody = BodyType<PublicationStateImportInput>
+    export type ImportPublicationStateManifestMutationError = ErrorType<ErrorResponse>
+    export type ImportPublicationStateManifestMutationVariables = {data: BodyType<PublicationStateImportInput>}
+
+    /**
+ * @summary Dry-run or apply the state-only release manifest
+ */
+export const useImportPublicationStateManifest = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof importPublicationStateManifest>>, TError,ImportPublicationStateManifestMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof importPublicationStateManifest>>,
+        TError,
+        ImportPublicationStateManifestMutationVariables,
+        TContext
+      > => {
+      return useMutation(getImportPublicationStateManifestMutationOptions(options));
+    }
+
+export const getActOnPublicationStateUrl = (slug: string,) => {
+
+
+
+
+  return `/api/newsroom/publication-state/${slug}/actions`
+}
+
+/**
+ * @summary Publish, pause, or roll back one article's publication state
+ */
+export const actOnPublicationState = async (slug: string,
+    publicationStateActionInput: PublicationStateActionInput, options?: Parameters<typeof customFetch>[1]): Promise<PublicationStateActionResult> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<PublicationStateActionResult>(getActOnPublicationStateUrl(slug),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(publicationStateActionInput)
+  }
+);}
+
+
+
+
+
+export const getActOnPublicationStateMutationKey = () => ['actOnPublicationState'] as const;
+
+export const getActOnPublicationStateMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof actOnPublicationState>>, TError,ActOnPublicationStateMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof actOnPublicationState>>, TError,ActOnPublicationStateMutationVariables, TContext> => {
+
+const mutationKey = getActOnPublicationStateMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof actOnPublicationState>>, ActOnPublicationStateMutationVariables> = (props) => {
+          const {slug,data} = props ?? {};
+
+          return  actOnPublicationState(slug,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ActOnPublicationStateMutationResult = NonNullable<Awaited<ReturnType<typeof actOnPublicationState>>>
+    export type ActOnPublicationStateMutationBody = BodyType<PublicationStateActionInput>
+    export type ActOnPublicationStateMutationError = ErrorType<ErrorResponse>
+    export type ActOnPublicationStateMutationVariables = {slug: string;data: BodyType<PublicationStateActionInput>}
+
+    /**
+ * @summary Publish, pause, or roll back one article's publication state
+ */
+export const useActOnPublicationState = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof actOnPublicationState>>, TError,ActOnPublicationStateMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof actOnPublicationState>>,
+        TError,
+        ActOnPublicationStateMutationVariables,
+        TContext
+      > => {
+      return useMutation(getActOnPublicationStateMutationOptions(options));
+    }
 
 export const getGetNewsroomMetadataUrl = () => {
 

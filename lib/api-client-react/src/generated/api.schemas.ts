@@ -880,6 +880,55 @@ export interface PublicationStateSnapshot {
   states: PublicationStateEntry[];
 }
 
+export interface PublicationStateImportInput {
+  /** @minItems 1 */
+  states: PublicationStateEntry[];
+  /** Defaults to dry-run. Set true only after reviewing the preview. */
+  apply?: boolean;
+}
+
+export type PublicationStateImportChangeDisposition = typeof PublicationStateImportChangeDisposition[keyof typeof PublicationStateImportChangeDisposition];
+
+
+export const PublicationStateImportChangeDisposition = {
+  create: 'create',
+  update: 'update',
+  unchanged: 'unchanged',
+} as const;
+
+export interface PublicationStateImportChange {
+  slug: string;
+  disposition: PublicationStateImportChangeDisposition;
+  /** @nullable */
+  previousStatus: string | null;
+  nextStatus: string;
+}
+
+export interface PublicationStateImportResult {
+  dryRun: boolean;
+  applied: boolean;
+  changes: PublicationStateImportChange[];
+}
+
+export type PublicationStateAction = typeof PublicationStateAction[keyof typeof PublicationStateAction];
+
+
+export const PublicationStateAction = {
+  'publish-now': 'publish-now',
+  pause: 'pause',
+  rollback: 'rollback',
+} as const;
+
+export interface PublicationStateActionInput {
+  action: PublicationStateAction;
+}
+
+export interface PublicationStateActionResult {
+  action: PublicationStateAction;
+  changed: boolean;
+  state: PublicationStateEntry | null;
+}
+
 export type EditorialCadence = typeof EditorialCadence[keyof typeof EditorialCadence];
 
 
