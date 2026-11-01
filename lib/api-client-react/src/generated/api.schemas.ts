@@ -860,6 +860,26 @@ export const EditorialReleaseStatus = {
   canceled: 'canceled',
 } as const;
 
+export type PublicationState = typeof PublicationState[keyof typeof PublicationState];
+
+
+export const PublicationState = {
+  staged: 'staged',
+  scheduled: 'scheduled',
+  published: 'published',
+  paused: 'paused',
+} as const;
+
+export interface PublicationStateEntry {
+  slug: string;
+  publishAt: string;
+  status: PublicationState;
+}
+
+export interface PublicationStateSnapshot {
+  states: PublicationStateEntry[];
+}
+
 export type EditorialCadence = typeof EditorialCadence[keyof typeof EditorialCadence];
 
 
