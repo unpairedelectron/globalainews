@@ -7,6 +7,7 @@ import {
 } from "@workspace/db";
 import { articleRegistry } from "./article-registry.generated";
 import { logger } from "../lib/logger";
+import { getVisibleRegistryArticles } from "./publication-registry-visibility";
 
 const SCHEDULER_ACTOR = "system:scheduler";
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
@@ -22,6 +23,11 @@ const titleBySlug = new Map<string, string>(
 
 export function isKnownArticleSlug(slug: string): boolean {
   return titleBySlug.has(slug);
+}
+
+export async function getPublishedArticleRegistry(now = new Date()) {
+  const states = await getPublicationStateSnapshot();
+  return getVisibleRegistryArticles(articleRegistry, states, now);
 }
 
 export function onPublicationStateChanged(listener: () => void): () => void {

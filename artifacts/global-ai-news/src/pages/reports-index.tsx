@@ -1,7 +1,7 @@
 import { ArrowUpRight, BookOpenCheck } from 'lucide-react';
 import { Link } from '@/components/canonical-link';
 import { Footer, Header, SectionLabel, SeoHead } from '@/components/site';
-import { useNewsroomSnapshot } from '@/newsroom';
+import { useNewsroomSnapshot, usePublishedRegistryArticles } from '@/newsroom';
 import { formatEditorialDate } from '@/editorial-date';
 import { getStoryAuthorIdentity, getStoryReadTime } from '@/content';
 
@@ -9,6 +9,7 @@ const container = 'editorial-page mx-auto max-w-[1440px] px-5 md:px-10';
 
 export function ReportsIndexPage() {
   const snapshot = useNewsroomSnapshot();
+  const publishedRegistryArticles = usePublishedRegistryArticles();
   const reports = snapshot.stories
     .filter((story) => story.contentType === 'Report')
     .sort((a, b) => b.date.localeCompare(a.date));
@@ -147,6 +148,15 @@ export function ReportsIndexPage() {
             )}
           </div>
         </section>
+        {publishedRegistryArticles.length > 0 && <section data-testid="registry-published-releases" className="border-t border-foreground/15 py-10">
+          <SectionLabel aside={`${publishedRegistryArticles.length} live`}>Recently published release articles</SectionLabel>
+          <div className="mt-4 border-t border-foreground/15">
+            {publishedRegistryArticles.map((article) => <Link key={article.slug} href={`/article/${article.slug}`} className="grid gap-2 border-b border-foreground/15 py-4 hover:text-primary sm:grid-cols-[1fr_auto]">
+              <span><span className="block font-serif text-xl">{article.title}</span><span className="mt-1 block text-xs leading-5 text-muted-foreground">{article.description}</span></span>
+              <time dateTime={article.publishAt} className="font-mono text-[10px] text-muted-foreground">{formatEditorialDate(article.publishAt)}</time>
+            </Link>)}
+          </div>
+        </section>}
         <section data-testid="reports-research-data" className="grid gap-10 border-t border-foreground/15 py-12 md:grid-cols-2">
           <div><SectionLabel aside={`${researchRecords.length} published`}>Research register</SectionLabel>
             {researchRecords.length ? <div className="border-t border-foreground/15">{researchRecords.map((record) => <Link key={record.slug} href={`/research/${record.slug}`} className="block border-b border-foreground/15 py-4 hover:text-primary"><span className="eyebrow text-primary">Research · {record.status} · {record.provenance.replaceAll('-', ' ')}</span><span className="mt-2 block font-serif text-xl">{record.title}</span><span className="mt-2 block text-xs leading-5 text-muted-foreground">Scope: {record.researchQuestion}</span><span className="mt-2 block text-xs leading-5 text-muted-foreground">Method: {record.methodology}</span><span className="mt-2 block text-xs text-muted-foreground">{record.sourceSlugs.length} source records · Published {formatEditorialDate(record.date)} · Updated {formatEditorialDate(record.updatedAt)}</span></Link>)}</div> : <p className="border-t border-foreground/15 py-4 text-sm text-muted-foreground">No published research records are connected yet.</p>}

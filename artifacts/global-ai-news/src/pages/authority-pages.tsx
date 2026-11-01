@@ -2,7 +2,7 @@ import { ArrowUpRight, BookOpenText, Database, ShieldCheck } from 'lucide-react'
 import type { ReactNode } from 'react';
 import { Link } from '@/components/canonical-link';
 import { Footer, Header, SectionLabel, SeoHead } from '@/components/site';
-import { useNewsroomSnapshot } from '@/newsroom';
+import { useNewsroomSnapshot, usePublishedRegistryArticles } from '@/newsroom';
 import { formatEditorialDate } from '@/editorial-date';
 import { getStoryAuthorIdentity, uniqueStoriesByCanonicalSlug } from '@/content';
 import { getResearchSeoTitle } from '@/seo-metadata';
@@ -248,17 +248,25 @@ export function SourceRecordPage() {
 
 export function TopicsIndexPage() {
   const snapshot = useNewsroomSnapshot();
+  const publishedRegistryArticles = usePublishedRegistryArticles();
   const topics = snapshot.topics
     .filter((topic) => topic.indexable)
     .map((topic) => ({
       topic,
+      registryArticles: publishedRegistryArticles.filter((article) =>
+        topic.slug === 'india' ? /india/i.test(article.topic) : topic.slug === 'ai' && !/india/i.test(article.topic),
+      ),
       stories: uniqueStoriesByCanonicalSlug(topic.storySlugs.flatMap((slug) => {
         const story = snapshot.stories.find((item) => item.slug === slug);
         return story ? [story] : [];
       })),
     }))
-    .filter(({ stories }) => stories.length > 0)
-    .sort((left, right) => right.stories.length - left.stories.length || left.topic.label.localeCompare(right.topic.label));
+    .filter(({ stories, registryArticles }) => stories.length > 0 || registryArticles.length > 0)
+    .sort((left, right) => right.stories.length + right.registryArticles.length - left.stories.length - left.registryArticles.length || left.topic.label.localeCompare(right.topic.label));
+  const registryTopicGroups = [
+    { slug: 'ai', label: 'AI', route: '/topic/ai', articles: publishedRegistryArticles.filter((article) => !/india/i.test(article.topic)) },
+    { slug: 'india', label: 'India', route: '/topic/india', articles: publishedRegistryArticles.filter((article) => /india/i.test(article.topic)) },
+  ].filter((group) => group.articles.length > 0);
 
   return <>{shell({ children: <>
     <SeoHead
@@ -273,7 +281,7 @@ export function TopicsIndexPage() {
         dek="Each topic groups published reporting with the research, entities, sources and events that explain what changed."
       />
       <section data-testid="topics-index" className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 md:grid-cols-2">
-        {topics.length ? topics.map(({ topic, stories }, index) => {
+        {topics.length ? topics.map(({ topic, stories, registryArticles }, index) => {
           const reports = topic.reportSlugs.flatMap((slug) => {
             const story = snapshot.stories.find((item) => item.slug === slug && item.contentType === 'Report');
             return story ? [story] : [];
@@ -281,7 +289,7 @@ export function TopicsIndexPage() {
           return <article key={topic.slug} data-testid={`topic-card-${topic.slug}`} className="bg-background p-6 md:p-8">
             <div className="flex items-start justify-between gap-5">
               <p className="eyebrow text-primary">Connected topic · {String(index + 1).padStart(2, '0')}</p>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{stories.length} {stories.length === 1 ? 'story' : 'stories'}</span>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{stories.length + registryArticles.length} {stories.length + registryArticles.length === 1 ? 'story' : 'stories'}</span>
             </div>
             <Link href={topic.route} className="mt-5 block font-serif text-4xl leading-none hover:text-primary">{topic.label}<ArrowUpRight aria-hidden="true" size={18} className="ml-2 inline" /></Link>
             <p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">{topic.description}</p>
@@ -300,6 +308,10 @@ export function TopicsIndexPage() {
               <p className="eyebrow text-primary">Featured report</p>
               {reports.map((report) => <Link key={report.slug} href={`/article/${report.slug}`} className="mt-2 block text-sm hover:text-primary">{report.title}<ArrowUpRight aria-hidden="true" size={13} className="ml-1 inline" /></Link>)}
             </div>}
+            {registryArticles.length > 0 && <div className="mt-5 border-t border-foreground/10 pt-4">
+              <p className="eyebrow text-primary">Published release articles</p>
+              {registryArticles.map((article) => <Link key={article.slug} href={`/article/${article.slug}`} className="mt-2 block text-sm hover:text-primary">{article.title}<ArrowUpRight aria-hidden="true" size={13} className="ml-1 inline" /></Link>)}
+            </div>}
           </article>;
         }) : <div data-testid="topics-index-empty" className="bg-background p-8 md:col-span-2">
           <p className="eyebrow text-primary">No indexable topic records</p>
@@ -307,6 +319,12 @@ export function TopicsIndexPage() {
           <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">Unpublished and empty topic records are kept out of this public index.</p>
         </div>}
       </section>
+      {registryTopicGroups.length > 0 && <section data-testid="registry-topic-groups" className="grid gap-8 border-b border-foreground/15 py-8 md:grid-cols-2">
+        {registryTopicGroups.map((group) => <div key={group.slug} className="border-t border-foreground/15 pt-5">
+          <Link href={group.route} className="font-serif text-3xl hover:text-primary">{group.label} release topic</Link>
+          <div className="mt-3">{group.articles.map((article) => <Link key={article.slug} href={`/article/${article.slug}`} className="block border-t border-foreground/10 py-3 text-sm hover:text-primary">{article.title}</Link>)}</div>
+        </div>)}
+      </section>}
       <p className="max-w-2xl py-8 text-xs leading-5 text-muted-foreground">Only topics with published reporting are listed. Counts reflect the current newsroom snapshot; they are not estimates of the wider field.</p>
     </main>
   </> })}</>;

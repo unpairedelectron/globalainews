@@ -119,7 +119,7 @@ Current scope: A4 through C4. Keep repo-defined article structure and citations;
 
 ### Group 1 — Derived-surface gating
 
-- [ ] A4. Gate topic hubs, Reports, Daily Brief links, Signals links, sitemap with real `lastmod`, 2-day news sitemap, RSS, and per-topic RSS on published state and elapsed publish time. Test empty/scheduled exclusion and post-promotion inclusion for all ten articles.
+- [x] A4. Gate topic hubs, Reports, Daily Brief links, Signals links, sitemap with real `lastmod`, 2-day news sitemap, RSS, and per-topic RSS on published state and elapsed publish time. Test empty/scheduled exclusion and post-promotion inclusion for all ten articles.
 - [ ] A5. Gate Briefs, Signals, topic entries, and glossary links consistently; preserve structured code-native data. Add one dated Brief per publish day with that day's article and 2–3 verified fact-log items. Run the A4 leak test.
 
 ### Group 2 — Admin and scheduler

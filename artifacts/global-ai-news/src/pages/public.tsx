@@ -6,7 +6,7 @@ import { authors, canonicalStorySlug, entities, findEntity, findStory, findTimel
 import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryImage, StoryRow, TimelineList } from '@/components/site';
 import { StoryBody, StoryCitedText, StorySourceList } from '@/components/story-content';
 import { AuthorDirectory } from '@/components/author-directory';
-import { useNewsroomSnapshot } from '@/newsroom';
+import { useNewsroomSnapshot, usePublishedRegistryArticles } from '@/newsroom';
 import { formatEditorialDate, getLatestStory, isWithinLatestWindow } from '@/editorial-date';
 import { getEditorialPageCopy } from '@/editorial-pages';
 import {
@@ -113,11 +113,12 @@ export function HomePage() {
 export function BriefPage() {
   const [location] = useLocation();
   const snapshot = useNewsroomSnapshot();
+  const publishedRegistryArticles = usePublishedRegistryArticles();
   const briefStories = useMemo(() => uniqueStoriesByCanonicalSlug(snapshot.stories), [snapshot.stories]);
   const latestStory = getLatestStory(briefStories);
   const query = new URLSearchParams(location.split('?')[1] ?? '').get('q') ?? '';
   const results = useMemo(() => query ? briefStories.filter((story) => `${story.title} ${getPublicStoryDek(story) ?? ''} ${story.category}`.toLowerCase().includes(query.toLowerCase())) : briefStories, [query, briefStories]);
-  return <Shell><SeoHead title="The Daily Brief — Global AI News" description="A three-minute editorial briefing on what changed across the AI economy." path="/brief" /><main className={`${container} max-w-[1180px]`}><section className="border-b border-foreground/20 py-14 md:py-20"><p data-testid="brief-edition-metadata" className="eyebrow text-primary">{latestStory ? <>Latest edition · <time dateTime={latestStory.date}>{formatEditorialDate(latestStory.date)}</time> · {briefStories.length} {briefStories.length === 1 ? 'story' : 'stories'}</> : 'No published edition'}</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">The Daily<br /><em className="text-primary">Brief.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A three-minute read on the decisions, releases and quiet shifts changing the AI industry.</p></section>{query && <section data-clarity-mask="true" className="border-b border-foreground/15 py-6"><p className="eyebrow text-primary">Search results for “{query}”</p>{results.length === 0 && <p className="mt-3 text-sm text-muted-foreground">No result yet. Try an entity, desk or story title.</p>}</section>}<section className="grid gap-12 py-12 md:grid-cols-[1fr_280px]"><article>{results.map((story, index) => <div id={`brief-${index}`} key={story.slug}><StoryRow slug={story.slug} rank={index + 1} /></div>)}</article><aside className="md:border-l md:border-foreground/15 md:pl-7"><SectionLabel>{query ? 'Matching stories' : 'In this edition'}</SectionLabel><div className="grid gap-3 text-sm">{results.slice(0, 5).map((story, index) => <a href={`#brief-${index}`} key={story.slug} className="border-b border-foreground/15 pb-3 hover:text-primary">{String(index + 1).padStart(2, '0')} / {story.title}</a>)}</div><div className="mt-10 border-t border-foreground/15 pt-5"><p className="eyebrow text-muted-foreground">Editor’s note</p><p className="mt-3 text-sm leading-6">We separate reported fact, analysis and synthesis so you can move quickly without losing the thread.</p></div></aside></section><Newsletter compact /></main></Shell>;
+  return <Shell><SeoHead title="The Daily Brief — Global AI News" description="A three-minute editorial briefing on what changed across the AI economy." path="/brief" /><main className={`${container} max-w-[1180px]`}><section className="border-b border-foreground/20 py-14 md:py-20"><p data-testid="brief-edition-metadata" className="eyebrow text-primary">{latestStory ? <>Latest edition · <time dateTime={latestStory.date}>{formatEditorialDate(latestStory.date)}</time> · {briefStories.length} {briefStories.length === 1 ? 'story' : 'stories'}</> : 'No published edition'}</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">The Daily<br /><em className="text-primary">Brief.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A three-minute read on the decisions, releases and quiet shifts changing the AI industry.</p></section>{query && <section data-clarity-mask="true" className="border-b border-foreground/15 py-6"><p className="eyebrow text-primary">Search results for “{query}”</p>{results.length === 0 && <p className="mt-3 text-sm text-muted-foreground">No result yet. Try an entity, desk or story title.</p>}</section>}<section className="grid gap-12 py-12 md:grid-cols-[1fr_280px]"><article>{results.map((story, index) => <div id={`brief-${index}`} key={story.slug}><StoryRow slug={story.slug} rank={index + 1} /></div>)}{publishedRegistryArticles.map((article, index) => <Link key={article.slug} href={`/article/${article.slug}`} className="grid gap-2 border-t border-foreground/15 py-5 hover:text-primary sm:grid-cols-[1fr_auto]"><span><span className="eyebrow text-primary">Published release article</span><span className="mt-2 block font-serif text-2xl">{article.title}</span><span className="mt-2 block text-sm leading-6 text-muted-foreground">{article.description}</span></span><time dateTime={article.publishAt} className="font-mono text-[10px] text-muted-foreground">{formatEditorialDate(article.publishAt)}</time></Link>)}</article><aside className="md:border-l md:border-foreground/15 md:pl-7"><SectionLabel>{query ? 'Matching stories' : 'In this edition'}</SectionLabel><div className="grid gap-3 text-sm">{results.slice(0, 5).map((story, index) => <a href={`#brief-${index}`} key={story.slug} className="border-b border-foreground/15 pb-3 hover:text-primary">{String(index + 1).padStart(2, '0')} / {story.title}</a>)}</div><div className="mt-10 border-t border-foreground/15 pt-5"><p className="eyebrow text-muted-foreground">Editor’s note</p><p className="mt-3 text-sm leading-6">We separate reported fact, analysis and synthesis so you can move quickly without losing the thread.</p></div></aside></section><Newsletter compact /></main></Shell>;
 }
 
 export function SearchPage() {
@@ -231,11 +232,13 @@ export function EditorialInputPage({ title, path }: { title: string; path: strin
 
 export function SignalsPage() {
   const snapshot = useNewsroomSnapshot();
+  const publishedRegistryArticles = usePublishedRegistryArticles();
   const [topic, setTopic] = useState('All signals');
   const topics = ['All signals', 'Models', 'Infrastructure', 'Research', 'Policy', 'India', 'Applications'];
   const visible = snapshot.signals.filter((signal) => topic === 'All signals' || signal.topic.toLowerCase() === topic.toLowerCase());
   return <Shell><SeoHead title="Signals on file — Global AI News" description="Dated editorial summaries linked to published reporting; not a live market feed or measurement series." path="/signals" /><main className={container}>
     <section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Dated editorial records</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">Signals<br /><em className="text-primary">on file.</em></h1><p className="mt-7 max-w-2xl text-lg leading-7 text-muted-foreground">These summaries are not live market measurements, current forecasts or continuously updated indices. Each card shows its maintained date and links to related reporting so you can inspect the source record.</p></section>
+    {publishedRegistryArticles.length > 0 && <section data-testid="signals-published-release-links" className="border-b border-foreground/15 py-8"><SectionLabel>Published release links</SectionLabel><div className="mt-3 grid gap-x-8 sm:grid-cols-2">{publishedRegistryArticles.map((article) => <Link key={article.slug} href={`/article/${article.slug}`} className="border-t border-foreground/15 py-4 text-sm hover:text-primary">{article.title}<span className="mt-1 block text-xs leading-5 text-muted-foreground">{article.description}</span></Link>)}</div></section>}
     <div className="flex flex-wrap gap-2 border-b border-foreground/15 py-5">{topics.map((item) => <button data-testid={`button-signal-filter-${item.toLowerCase().replace(/\s/g, '-')}`} type="button" key={item} onClick={() => setTopic(item)} aria-pressed={topic === item} className={`min-h-11 border px-3 font-mono text-[10px] uppercase tracking-widest ${topic === item ? 'border-primary bg-primary text-primary-foreground' : 'border-foreground/20 hover:border-primary'}`}>{item}</button>)}</div>
     {visible.length ? <section className="grid gap-px border-x border-foreground/15 bg-foreground/15 md:grid-cols-2 lg:grid-cols-3">{visible.map((signal) => {
       const relatedStories = signal.stories.map((slug) => snapshot.stories.find((story) => story.slug === canonicalStorySlug(slug))).filter((story): story is Story => Boolean(story));
@@ -603,7 +606,28 @@ export function TimelinePage() {
 
 export function TopicPage({ kind }: { kind: 'ai' | 'india' }) {
   const snapshot = useNewsroomSnapshot();
-  const topic = snapshot.topics.find((record) => record.slug === kind);
+  const publishedRegistryArticles = usePublishedRegistryArticles();
+  const topicRegistryArticles = publishedRegistryArticles.filter((article) =>
+    kind === 'india' ? /india/i.test(article.topic) : !/india/i.test(article.topic),
+  );
+  const topicRecord = snapshot.topics.find((record) => record.slug === kind);
+  const topic = topicRecord ?? (topicRegistryArticles.length > 0 ? {
+    slug: kind,
+    label: kind === 'india' ? 'India' : 'AI',
+    route: `/topic/${kind}`,
+    description: kind === 'india'
+      ? 'AI policy, compute infrastructure and research connected to India.'
+      : 'Model capability, deployment economics and practical AI workflows.',
+    indexable: true,
+    importantDevelopments: [],
+    storySlugs: [],
+    entitySlugs: [],
+    sourceSlugs: [],
+    researchSlugs: [],
+    dataProductSlugs: [],
+    reportSlugs: [],
+    timelineSlugs: [],
+  } : undefined);
   const snapshotStories = uniqueStoriesByCanonicalSlug(snapshot.stories);
   const list = uniqueStoriesByCanonicalSlug((topic?.storySlugs ?? []).flatMap((slug) => {
     const story = snapshotStories.find((candidate) => canonicalStorySlug(candidate.slug) === canonicalStorySlug(slug));
@@ -617,7 +641,7 @@ export function TopicPage({ kind }: { kind: 'ai' | 'india' }) {
   const topicEvents = (topic?.timelineSlugs ?? []).flatMap((slug) => { const event = snapshot.timelineEvents.find((item) => item.slug === slug); return event ? [{ href: `/timeline/${slug}`, label: event.title, date: event.date }] : []; });
   return <Shell><SeoHead title={`${topic?.label ?? (kind === 'ai' ? 'Artificial intelligence' : 'India Watch')} — Global AI News`} description={topic?.description ?? 'A focused Global AI News desk.'} path={`/topic/${kind}`} /><main className={container}><section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Connected topic · {topic?.label ?? kind}</p><h1 className="mt-6 font-serif text-7xl leading-[.84] md:text-[9rem]">{kind === 'ai' ? <>Artificial<br /><em className="text-primary">intelligence.</em></> : <>India<br /><em className="text-primary">Watch.</em></>}</h1><p className="mt-7 max-w-2xl text-lg leading-7 text-muted-foreground">{topic?.description ?? 'This topic record is not available in the current newsroom snapshot.'}</p><p className="mt-5 eyebrow text-muted-foreground">{topic?.indexable ? 'Published topic record' : 'Topic record · not currently indexable'}</p></section>
     {topic ? <><section className="grid gap-10 py-12 md:grid-cols-[.55fr_1.45fr]"><div><SectionLabel aside={`${list.length} stories`}>Important developments</SectionLabel><p className="text-sm leading-6 text-muted-foreground">This hub follows the newsroom’s maintained relationships between reporting, research, sources and events.</p></div><div className="border-t border-foreground/15">{topic.importantDevelopments.map((development, index) => <p key={`${index}-${development}`} className="grid grid-cols-[2.5rem_1fr] gap-3 border-b border-foreground/15 py-4 text-sm"><span className="font-mono text-xs text-primary">{String(index + 1).padStart(2, '0')}</span><span>{development}</span></p>)}</div></section>
-      <section className="grid gap-12 border-y border-foreground/15 py-12 md:grid-cols-[1fr_300px]"><div><SectionLabel>Reporting</SectionLabel>{list.length ? list.map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} />) : <p className="border-t border-foreground/15 py-5 text-sm text-muted-foreground">No stories are linked to this topic in the current snapshot.</p>}</div>
+      <section className="grid gap-12 border-y border-foreground/15 py-12 md:grid-cols-[1fr_300px]"><div><SectionLabel aside={`${list.length + topicRegistryArticles.length} stories`}>Reporting</SectionLabel>{list.map((story, index) => <StoryRow key={story.slug} slug={story.slug} rank={index + 1} />)}{topicRegistryArticles.map((article, index) => <Link key={article.slug} href={`/article/${article.slug}`} className="grid gap-2 border-t border-foreground/15 py-5 hover:text-primary sm:grid-cols-[1fr_auto]"><span><span className="eyebrow text-primary">Published release · {article.topic}</span><span className="mt-2 block font-serif text-2xl leading-tight">{article.title}</span><span className="mt-2 block text-sm leading-6 text-muted-foreground">{article.description}</span></span><span className="font-mono text-[10px] text-muted-foreground">{formatEditorialDate(article.publishAt)}</span></Link>)}{list.length + topicRegistryArticles.length === 0 && <p className="border-t border-foreground/15 py-5 text-sm text-muted-foreground">No stories are linked to this topic in the current snapshot.</p>}</div>
         <aside className="space-y-8">
           {topicResearch.length > 0 && <div><SectionLabel>Research</SectionLabel>{topicResearch.map((item) => <Link href={item.href} key={item.href} className="block border-b border-foreground/15 py-3 text-sm hover:text-primary">{item.label}</Link>)}</div>}
           {topicData.length > 0 && <div><SectionLabel>Data products</SectionLabel>{topicData.map((item) => <Link href={item.href} key={item.href} className="block border-b border-foreground/15 py-3 text-sm hover:text-primary">{item.label}</Link>)}</div>}

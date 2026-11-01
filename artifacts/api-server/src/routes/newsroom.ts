@@ -8,7 +8,10 @@ import {
 } from "express";
 import { requireEditorAuth } from "../middlewares/requireEditorAuth";
 import { shouldSeedDefaultSchedule } from "../editorial/release-seeding";
-import { onPublicationStateChanged } from "../editorial/publication-state";
+import {
+  getPublishedArticleRegistry,
+  onPublicationStateChanged,
+} from "../editorial/publication-state";
 import {
   db,
   editorialAutomationRunsTable,
@@ -631,7 +634,10 @@ export async function serveNewsroomSitemap(
     const routes = metadataManifest.routes.filter(
       (metadata) => metadata.indexable !== false && isSitemapRouteInGroup(metadata.path, group),
     );
-    const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${routes
+    const registryArticles = group === "all" || group === "articles"
+      ? await getPublishedArticleRegistry(newsroomPublicationNow())
+      : [];
+    const routeEntries = routes
       .map((metadata) => {
         const lastmod = metadata.lastmod
           ? `<lastmod>${escapeXml(metadata.lastmod)}</lastmod>`
@@ -640,8 +646,11 @@ export async function serveNewsroomSitemap(
           ? `<image:image><image:loc>${escapeXml(`${SITE_URL}${metadata.imagePath}`)}</image:loc><image:title>${escapeXml(metadata.title)}</image:title></image:image>`
           : "";
         return `  <url><loc>${escapeXml(getCanonicalUrl(metadata.path))}</loc>${lastmod}${image}</url>`;
-      })
-      .join("\n")}\n</urlset>`;
+      });
+    const registryEntries = registryArticles.map((article) =>
+      `  <url><loc>${escapeXml(getCanonicalUrl(`/article/${article.slug}`))}</loc><lastmod>${escapeXml(article.lastmod.toISOString())}</lastmod></url>`,
+    );
+    const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${[...routeEntries, ...registryEntries].join("\n")}\n</urlset>`;
     sendSitemapBody(req, res, body);
   } catch (error) {
     req.log.error({ err: error }, "Newsroom sitemap failed");
@@ -662,7 +671,10 @@ router.get("/newsroom/news-sitemap.xml", async (req, res): Promise<void> => {
     const recentStories = (await getPublishedStoriesFromSnapshot())
       .filter((story) => Date.parse(`${story.date}T00:00:00Z`) >= recentCutoff)
       .map((story) => `  <url><loc>${escapeXml(getCanonicalUrl(`/article/${story.slug}`))}</loc><news:news><news:publication><news:name>Global AI News</news:name><news:language>en</news:language></news:publication><news:publication_date>${escapeXml(`${story.date}T00:00:00Z`)}</news:publication_date><news:title>${escapeXml(story.title)}</news:title></news:news></url>`);
-    const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n${recentStories.join("\n")}\n</urlset>`;
+    const registryStories = (await getPublishedArticleRegistry(newsroomPublicationNow()))
+      .filter((story) => story.publishAt.getTime() >= recentCutoff)
+      .map((story) => `  <url><loc>${escapeXml(getCanonicalUrl(`/article/${story.slug}`))}</loc><news:news><news:publication><news:name>Global AI News</news:name><news:language>en</news:language></news:publication><news:publication_date>${escapeXml(story.publishAt.toISOString())}</news:publication_date><news:title>${escapeXml(story.title)}</news:title></news:news></url>`);
+    const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n${[...recentStories, ...registryStories].join("\n")}\n</urlset>`;
     sendSitemapBody(req, res, body);
   } catch (error) {
     req.log.error({ err: error }, "News sitemap failed");
@@ -670,18 +682,29 @@ router.get("/newsroom/news-sitemap.xml", async (req, res): Promise<void> => {
   }
 });
 
-function renderRssFeed(title: string, feedUrl: string, stories: Story[]): string {
+type PublicRegistryArticle = Awaited<ReturnType<typeof getPublishedArticleRegistry>>[number];
+
+function renderRssFeed(
+  title: string,
+  feedUrl: string,
+  stories: Story[],
+  registryArticles: PublicRegistryArticle[] = [],
+): string {
   const items = stories.map((story) => {
     const url = escapeXml(getCanonicalUrl(`/article/${story.slug}`));
     return `    <item><title>${escapeXml(story.title)}</title><link>${url}</link><guid>${url}</guid><pubDate>${new Date(`${story.date}T07:30:00Z`).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`;
-  });
+  }).concat(registryArticles.map((story) => {
+    const url = escapeXml(getCanonicalUrl(`/article/${story.slug}`));
+    return `    <item><title>${escapeXml(story.title)}</title><link>${url}</link><guid>${url}</guid><pubDate>${story.publishAt.toUTCString()}</pubDate><description>${escapeXml(story.description)}</description></item>`;
+  }));
   return `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>${escapeXml(title)}</title><link>${escapeXml(feedUrl)}</link><description>Evidence-led reporting, research and context from Global AI News.</description><language>en-IN</language>\n${items.join("\n")}\n</channel></rss>`;
 }
 
 export async function serveNewsroomFeed(_req: Request, res: ExpressResponse): Promise<void> {
   try {
     const publishedStories = await getPublishedStoriesFromSnapshot();
-    const body = renderRssFeed("Global AI News", `${SITE_URL}/`, publishedStories);
+    const registryArticles = await getPublishedArticleRegistry(newsroomPublicationNow());
+    const body = renderRssFeed("Global AI News", `${SITE_URL}/`, publishedStories, registryArticles);
     res
       .type("application/rss+xml")
       .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")
@@ -695,6 +718,7 @@ router.get("/newsroom/feed.xml", serveNewsroomFeed);
 router.get("/newsroom/feed.json", async (_req, res): Promise<void> => {
   try {
     const stories = await getPublishedStoriesFromSnapshot();
+    const registryArticles = await getPublishedArticleRegistry(newsroomPublicationNow());
     res
       .type("application/feed+json")
       .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")
@@ -705,17 +729,28 @@ router.get("/newsroom/feed.json", async (_req, res): Promise<void> => {
         feed_url: `${SITE_URL}/feed.json`,
         description: "Evidence-led reporting, research and context from Global AI News.",
         language: "en-IN",
-        items: stories.map((story) => ({
-          id: getCanonicalUrl(`/article/${story.slug}`),
-          url: getCanonicalUrl(`/article/${story.slug}`),
-          title: story.title,
-          content_text: story.dek,
-          summary: story.dek,
-          date_published: new Date(`${story.date}T07:30:00Z`).toISOString(),
-          ...(getPublicDateModified(story)
-            ? { date_modified: new Date(`${getPublicDateModified(story)}T07:30:00Z`).toISOString() }
-            : {}),
-        })),
+        items: [
+          ...stories.map((story) => ({
+            id: getCanonicalUrl(`/article/${story.slug}`),
+            url: getCanonicalUrl(`/article/${story.slug}`),
+            title: story.title,
+            content_text: story.dek,
+            summary: story.dek,
+            date_published: new Date(`${story.date}T07:30:00Z`).toISOString(),
+            ...(getPublicDateModified(story)
+              ? { date_modified: new Date(`${getPublicDateModified(story)}T07:30:00Z`).toISOString() }
+              : {}),
+          })),
+          ...registryArticles.map((story) => ({
+            id: getCanonicalUrl(`/article/${story.slug}`),
+            url: getCanonicalUrl(`/article/${story.slug}`),
+            title: story.title,
+            content_text: story.description,
+            summary: story.description,
+            date_published: story.publishAt.toISOString(),
+            date_modified: story.lastmod.toISOString(),
+          })),
+        ],
       });
   } catch (error) {
     _req.log.error({ err: error }, "Newsroom JSON feed failed");
@@ -733,7 +768,11 @@ router.get("/newsroom/topic/:slug/feed.xml", async (req, res): Promise<void> => 
     const topicStories = topic.storySlugs
       .map((slug) => publishedStories.find((story) => story.slug === slug))
       .filter((story): story is Story => Boolean(story));
-    const body = renderRssFeed(topic.label, getCanonicalUrl(topic.route), topicStories);
+    const registryArticles = (await getPublishedArticleRegistry(newsroomPublicationNow()))
+      .filter((story) => topic.slug === "india"
+        ? /india/i.test(story.topic)
+        : topic.slug === "ai" && !/india/i.test(story.topic));
+    const body = renderRssFeed(topic.label, getCanonicalUrl(topic.route), topicStories, registryArticles);
     res
       .type("application/rss+xml")
       .set("Cache-Control", "public, max-age=60, s-maxage=60, stale-while-revalidate=300")

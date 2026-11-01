@@ -1,4 +1,5 @@
 import { createContext, useContext, type ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   getGetNewsroomContentQueryKey,
   useGetNewsroomContent,
@@ -7,8 +8,11 @@ import {
   hydrateContent,
   type NewsroomContentSnapshot,
 } from '@/content';
+import { getVisibleReleaseArticles, type PublicPublicationState } from '@/publication-state';
 
 const snapshotContext = createContext<NewsroomContentSnapshot | null>(null);
+type PublicRegistryArticle = ReturnType<typeof getVisibleReleaseArticles>[number];
+const releaseArticlesContext = createContext<PublicRegistryArticle[]>([]);
 const NEWSROOM_CONTENT_STALE_TIME_MS = 10 * 60_000;
 
 function StatusPanel({ title, detail, retry }: { title: string; detail: string; retry?: () => void }) {
@@ -32,6 +36,18 @@ function StatusPanel({ title, detail, retry }: { title: string; detail: string; 
 }
 
 export function NewsroomProvider({ children }: { children: ReactNode }) {
+  const publicationStateQuery = useQuery({
+    queryKey: ['newsroom', 'publication-state'],
+    queryFn: async () => {
+      const response = await fetch('/api/newsroom/publication-state', { headers: { Accept: 'application/json' } });
+      if (!response.ok) throw new Error(`Publication state request failed (${response.status}).`);
+      return response.json() as Promise<{ states: Array<{ slug: string; publishAt: string; status: string }> }>;
+    },
+    staleTime: 60_000,
+    refetchInterval: 5 * 60_000,
+    refetchOnWindowFocus: true,
+    retry: 2,
+  });
   const query = useGetNewsroomContent({
     query: {
       queryKey: getGetNewsroomContentQueryKey(),
@@ -78,10 +94,15 @@ export function NewsroomProvider({ children }: { children: ReactNode }) {
   }
 
   hydrateContent(snapshot);
+  const publishedRegistryArticles = getVisibleReleaseArticles(
+    (publicationStateQuery.data?.states ?? []) as PublicPublicationState[],
+  );
 
   return (
     <snapshotContext.Provider value={snapshot}>
-      {children}
+      <releaseArticlesContext.Provider value={publishedRegistryArticles}>
+        {children}
+      </releaseArticlesContext.Provider>
     </snapshotContext.Provider>
   );
 }
@@ -92,4 +113,8 @@ export function useNewsroomSnapshot(): NewsroomContentSnapshot {
     throw new Error('useNewsroomSnapshot must be used inside NewsroomProvider');
   }
   return snapshot;
+}
+
+export function usePublishedRegistryArticles(): PublicRegistryArticle[] {
+  return useContext(releaseArticlesContext);
 }
