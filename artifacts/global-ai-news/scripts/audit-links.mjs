@@ -177,9 +177,13 @@ function checkInternalUrl(rawUrl, linkSource, expectedCanonical = false) {
 }
 
 for (const record of routeRecords) {
+  const canonicalRoute = record.route.startsWith('/staging/article/') ||
+    record.route === '/staging/glossary'
+    ? record.route.replace(/^\/staging/, '')
+    : record.route;
   const expectedCanonical = record.route.startsWith('/amp/')
     ? canonicalForPath(record.route.replace(/^\/amp(?=\/)/, ''))
-    : canonicalForPath(record.route);
+    : canonicalForPath(canonicalRoute);
   const canonicalIssue = record.canonical === expectedCanonical
     ? ''
     : `Canonical mismatch; expected ${expectedCanonical}.`;

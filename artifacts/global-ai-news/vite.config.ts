@@ -931,7 +931,7 @@ function stagingPreviewPlugin() {
         const requestUrl = request.url ?? '/';
         const pathname = new URL(requestUrl, 'http://localhost').pathname;
         const cleanPath = pathname.replace(/\/+$/, '') || '/';
-        if (cleanPath !== '/staging/articles' && !cleanPath.startsWith('/staging/article/')) {
+        if (!cleanPath.startsWith('/staging/')) {
           next();
           return;
         }
@@ -942,9 +942,35 @@ function stagingPreviewPlugin() {
           return;
         }
 
+        const assetMatch = cleanPath.match(
+          /^\/staging\/(social|visuals)\/(article\d+)\/([a-z0-9-]+\.(?:avif|webp|svg))$/,
+        );
+        if (assetMatch) {
+          const assetPath = path.join(stagingRoot, assetMatch[1], assetMatch[2], assetMatch[3]);
+          if (!existsSync(assetPath)) {
+            response.statusCode = 404;
+            response.setHeader('X-Robots-Tag', 'noindex, nofollow');
+            response.end();
+            return;
+          }
+          const contentType = {
+            '.avif': 'image/avif',
+            '.svg': 'image/svg+xml',
+            '.webp': 'image/webp',
+          }[path.extname(assetPath)];
+          response.statusCode = 200;
+          response.setHeader('Cache-Control', 'no-store');
+          response.setHeader('X-Robots-Tag', 'noindex, nofollow');
+          response.setHeader('Content-Type', contentType);
+          response.end(request.method === 'HEAD' ? undefined : readFileSync(assetPath));
+          return;
+        }
+
         const match = cleanPath.match(/^\/staging\/article\/([a-z0-9-]+)$/);
         const filePath = cleanPath === '/staging/articles'
           ? path.join(stagingRoot, 'articles', 'index.html')
+          : cleanPath === '/staging/glossary'
+            ? path.join(stagingRoot, 'glossary', 'index.html')
           : match
             ? path.join(stagingRoot, 'article', match[1], 'index.html')
             : undefined;

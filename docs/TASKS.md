@@ -4,18 +4,18 @@ Scope: the owner has authorized staging, site wiring, scheduled release, and pub
 
 ## Stage 1 — staging
 
-- [ ] 1.1 Make all 10 articles reachable on a noindex staging/preview target.
-- [ ] 1.2 Check all 10 staging routes: HTTP, canonical/H1/title/description, OG/Twitter, JSON-LD, images/srcset, disclosure tables, console/mixed content, and links.
-- [ ] 1.3 Run mobile and desktop Lighthouse on all 10 articles, home, Brief, Reports, and each topic hub; save results to `docs/lighthouse-release.md`.
+- [x] 1.1 Make all 10 articles reachable on a noindex staging/preview target.
+- [x] 1.2 Check all 10 staging routes: HTTP, canonical/H1/title/description, OG/Twitter, JSON-LD, images/srcset, disclosure tables, console/mixed content, and links.
+- [x] 1.3 Run mobile and desktop Lighthouse on all 10 articles, home, Brief, Reports, and each topic hub; save results to `docs/lighthouse-release.md`.
 - [ ] 1.4 Fix failures without lowering targets; log blockers after three attempts on one item.
-- [ ] 1.5 Check keyboard access, `<details>`, menu, TOC, image alt text, 4.5:1 contrast, 360px width, and dark mode.
+- [x] 1.5 Check keyboard access, `<details>`, menu, TOC, image alt text, 4.5:1 contrast, 360px width, and dark mode.
 
 ## Stage 2 — final content gate
 
-- [ ] 2.1 Run the full pre-publish script and cross-article consistency pass.
-- [ ] 2.2 Resolve every `[S]` claim by omission or explicit “reported, not independently confirmed” labeling.
+- [x] 2.1 Run the full pre-publish script and cross-article consistency pass.
+- [x] 2.2 Resolve every `[S]` claim by omission or explicit “reported, not independently confirmed” labeling.
 - [ ] 2.3 Confirm reviewer/disclosures/dates/corrections/methodology/advice disclaimers on all required articles.
-- [ ] 2.4 Preserve Article 7 tender, Article 8 legal-date, Article 9 workforce-causation, and Article 10 bank-warning distinctions.
+- [x] 2.4 Preserve Article 7 tender, Article 8 legal-date, Article 9 workforce-causation, and Article 10 bank-warning distinctions.
 
 ## Stage 3 — site wiring
 
@@ -28,13 +28,13 @@ Scope: the owner has authorized staging, site wiring, scheduled release, and pub
 ## Stage 4 — scheduled release
 
 - [ ] 4.1 Schedule article and Brief releases: Nov 2 (#6), Nov 3 (#5), Nov 5 (#4), Nov 7 (#1), Nov 9 (#3), Nov 11 (#2), Nov 13 (#7), Nov 16 (#8), Nov 18 (#9), Nov 20 (#10).
-- [ ] 4.2 Simulate every date; prove pre-date exclusion and date-of release behavior; record output in `docs/PROGRESS.md`.
-- [ ] 4.3 Add `npm run verify:live <slug>` and document it.
-- [ ] 4.4 Write `docs/RELEASE-RUNBOOK.md` for early release, pause, rollback, corrections, and Article 6/7 update triggers.
+- [x] 4.2 Simulate every date; prove pre-date exclusion and date-of release behavior; record output in `docs/PROGRESS.md`.
+- [x] 4.3 Add `npm run verify:live <slug>` and document it.
+- [x] 4.4 Write `docs/RELEASE-RUNBOOK.md` for early release, pause, rollback, corrections, and Article 6/7 update triggers.
 
 ## Stage 5 — final report
 
-- [ ] 5.1 Report staging, Lighthouse, scheduled dates, flip tests, blockers, and omitted/qualified claims.
+- [x] 5.1 Report staging, Lighthouse, scheduled dates, flip tests, blockers, and omitted/qualified claims in `docs/PROGRESS.md`.
 
 ## Completed private article packages
 

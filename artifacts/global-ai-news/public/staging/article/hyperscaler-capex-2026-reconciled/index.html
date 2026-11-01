@@ -2,6 +2,7 @@
 <html lang="en-IN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta name="robots" content="noindex,nofollow"><meta name="googlebot" content="noindex,nofollow">
 <title>Hyperscaler CapEx: Why 2026 Figures Don’t Add Cleanly — Global AI News</title><meta name="description" content="Meta, Alphabet, Microsoft and Amazon report different capital-spending figures. We explain the mismatched periods, lease bases and AI-only gaps.">
 <link rel="canonical" href="https://www.globalainews.in/article/hyperscaler-capex-2026-reconciled/">
@@ -16,7 +17,7 @@
 :root{color-scheme:light dark;--paper:#f7f6f2;--ink:#17232b;--muted:#52616b;--blue:#1555a6;--rule:#d8d5cc;--surface:#fffefa}
 @media(prefers-color-scheme:dark){:root{--paper:#111820;--ink:#edf2f4;--muted:#b7c2ca;--blue:#8fbcff;--rule:#394650;--surface:#18232b}}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.72 system-ui,sans-serif}
-a{color:var(--blue);text-decoration-thickness:.08em;text-underline-offset:.18em}a:focus-visible,summary:focus-visible,.table-scroll:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+a{color:var(--blue);text-decoration-thickness:.08em;text-underline-offset:.18em;overflow-wrap:anywhere;word-break:break-word}a:focus-visible,summary:focus-visible,.table-scroll:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .skip{position:absolute;left:-10000px;top:auto}.skip:focus{left:1rem;top:1rem;z-index:5;background:var(--surface);padding:.75rem}
 header,main,footer{width:min(100% - 2rem,1060px);margin-inline:auto}header{padding:1.25rem 0;border-bottom:1px solid var(--rule);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase}
 main{padding:2rem 0 4rem}article{max-width:820px;margin-inline:auto}h1,h2,h3{font-family:Georgia,serif;line-height:1.08;letter-spacing:-.025em}h1{font-size:clamp(2.5rem,7vw,5.3rem);margin:.7em 0 .45em}h2{margin-top:2em;font-size:clamp(1.8rem,4vw,2.8rem)}h3{font-size:1.45rem}
@@ -39,7 +40,7 @@ table{border-collapse:collapse;width:100%;min-width:42rem;background:var(--surfa
 <p>The latest company disclosures do not support one verified four-company “AI capex” figure for 2026. Meta’s $135–145 billion guidance includes principal payments on finance leases. Alphabet’s $195–205 billion outlook is a company capital-expenditure forecast, with $51.4 billion reported for Q3 and most spending tied to technical infrastructure. Microsoft’s roughly $170 billion estimate is for calendar 2026, while its fiscal Q1 reported $45.2 billion of CapEx, including $7.4 billion in finance leases. Amazon’s 29 October Q3 release confirms approximately $220 billion in 2026 cash capital expenditures, with the majority expected to go to AWS. These figures still differ in period, accounting basis and category. None is an audited measure of AI-only investment. A combined $700–745 billion headline should therefore be withheld until the underlying rows are reconciled.</p>
 <p>The more useful question is not “How large is the total?” but “What does each company mean by capital spending, for which period, and for what kind of infrastructure?” Company filings and calls answer parts of that question. They do not supply a consistent four-company table of AI-only cash outlays.</p>
 <h2>What each company has actually said</h2>
-<img src="../visuals/article3/guidance-snapshot.svg" alt="Company-reported 2026 capital-spending figures: Meta 135 to 145 billion dollars including finance-lease principal, Alphabet 195 to 205 billion, Microsoft about 170 billion for calendar 2026, and Amazon approximately 220 billion in cash CapEx confirmed by its official Q3 release." />
+<img src="/staging/visuals/article3/guidance-snapshot.svg" alt="Company-reported 2026 capital-spending figures: Meta 135 to 145 billion dollars including finance-lease principal, Alphabet 195 to 205 billion, Microsoft about 170 billion for calendar 2026, and Amazon approximately 220 billion in cash CapEx confirmed by its official Q3 release." />
 <details><summary>View data</summary>
 <div class="table-scroll" role="region" aria-label="Scrollable article data table" tabindex="0"><table>
 <thead>
@@ -84,7 +85,7 @@ table{border-collapse:collapse;width:100%;min-width:42rem;background:var(--surfa
 <p>Microsoft’s FY2027 Q1 call gives an estimate of approximately $170 billion for calendar 2026. The company also reports $45.2 billion of CapEx in the quarter ended 30 September, including $7.4 billion in finance leases. Its explanation for the calendar estimate points to third-party capacity deliveries delayed into the second half. That is a timing explanation, not a claim that the annual estimate fell because of lease accounting. [3]</p>
 <p>Amazon’s official 29 October Q3 release says the company continues to expect approximately $220 billion in 2026 cash capital expenditures, the majority for AWS, and expects to spend meaningfully more in 2027. This verifies the annual estimate from a primary company source; third-party call transcripts also carry similar wording. The figure is still a cash-CapEx measure, so it is not automatically comparable with Meta’s lease-inclusive range or the other companies’ capital-expenditure presentations. [4–8]</p>
 <h2>Why the numbers do not add cleanly</h2>
-<img src="../visuals/article3/reconciliation-steps.svg" alt="Four checks required before comparing capital-expenditure guidance: align the calendar period, lease treatment, cash versus accrual basis and investment categories." />
+<img src="/staging/visuals/article3/reconciliation-steps.svg" alt="Four checks required before comparing capital-expenditure guidance: align the calendar period, lease treatment, cash versus accrual basis and investment categories." />
 <details><summary>View data</summary>
 <div class="table-scroll" role="region" aria-label="Scrollable article data table" tabindex="0"><table>
 <thead>
@@ -118,7 +119,7 @@ table{border-collapse:collapse;width:100%;min-width:42rem;background:var(--surfa
 <p><strong>CapEx versus cash CapEx:</strong> Amazon’s official release calls its $220 billion figure “cash capital expenditures.” That primary wording resolves the source question, but not the comparison question: cash CapEx should not be treated as interchangeable with another company’s reported capital-expenditure guidance without checking the underlying definition. The estimate can be reported as Amazon’s guidance while still being excluded from a normalized four-company total. [4–8]</p>
 <p><strong>AI spending versus infrastructure:</strong> The company figures are not a common measure of investment solely in AI. Meta’s range covers capital spending, not a disclosed AI-only bucket. Alphabet describes most Q3 spending as technical infrastructure, which can support several services and workloads. Microsoft and Amazon discuss cloud and data-center capacity alongside AI demand, but those broad categories do not isolate an AI-only amount. A label such as “AI CapEx” would require a company-provided allocation or a carefully disclosed estimate; the current figures do not provide one. [1–4]</p>
 <h2>The difference between guidance and a market estimate</h2>
-<img src="../visuals/article3/evidence-ladder.svg" alt="Evidence ladder separating official company guidance, company quarterly results, secondary transcript reporting and analyst aggregation; only comparable verified company figures can support a total." />
+<img src="/staging/visuals/article3/evidence-ladder.svg" alt="Evidence ladder separating official company guidance, company quarterly results, secondary transcript reporting and analyst aggregation; only comparable verified company figures can support a total." />
 <details><summary>View data</summary>
 <div class="table-scroll" role="region" aria-label="Scrollable article data table" tabindex="0"><table>
 <thead>

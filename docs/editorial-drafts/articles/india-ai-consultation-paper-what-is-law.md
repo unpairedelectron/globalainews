@@ -35,7 +35,7 @@ India’s current framework and its next policy step are different things. The I
 
 ### Status map: law, explanation and expectation
 
-<img src="../visuals/article6/status-map.svg" alt="The February 2026 IT Rules amendment is binding and in force; the MeitY FAQ and PIB releases explain it; the broader consultation paper remains an attributed expectation in the sources checked." />
+<img src="../visuals/article6/status-map.svg" width="900" height="420" alt="The February 2026 IT Rules amendment is binding and in force; the MeitY FAQ and PIB releases explain it; the broader consultation paper remains an attributed expectation in the sources checked." />
 
 <details><summary>View data</summary>
 
@@ -48,7 +48,7 @@ India’s current framework and its next policy step are different things. The I
 
 ### Decision path for a media item
 
-<img src="../visuals/article6/decision-path.svg" alt="A five-step check: identify the media type, test the SGI definition, assess conditional exclusions, determine prohibited versus permissible content, then identify the intermediary and exact notice or complaint trigger." />
+<img src="../visuals/article6/decision-path.svg" width="900" height="560" alt="A five-step check: identify the media type, test the SGI definition, assess conditional exclusions, determine prohibited versus permissible content, then identify the intermediary and exact notice or complaint trigger." />
 
 <details><summary>View data</summary>
 
@@ -63,7 +63,7 @@ India’s current framework and its next policy step are different things. The I
 
 ### Two clocks, two triggers
 
-<img src="../visuals/article6/two-clocks.svg" alt="Two separate timelines: three hours for specified action after qualifying government or court intimation; two hours for grievances about listed sensitive content categories." />
+<img src="../visuals/article6/two-clocks.svg" width="900" height="360" alt="Two separate timelines: three hours for specified action after qualifying government or court intimation; two hours for grievances about listed sensitive content categories." />
 
 <details><summary>View data</summary>
 

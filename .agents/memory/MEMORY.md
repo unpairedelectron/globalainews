@@ -38,3 +38,5 @@
 - [First-response content parity](first-response-content-parity.md) — audit thin HTML against the hydrated route before expanding copy or changing indexability.
 - [Editorial draft queue boundary](editorial-draft-queue-boundary.md) — the release queue is not a private draft store; scheduled records can become public automatically.
 - [Editorial commercial disclosure](editorial-commercial-disclosure.md) — the owner confirmed no commercial relationship for the current Anthropic, OpenAI, and Google coverage; recheck for other companies or later work.
+- [Generated staging assets](generated-staging-assets.md) — keep generated previews out of source fingerprints and serve them without deleting live files during rebuilds.
+- [Workspace CLI forwarding](workspace-cli-forwarding.md) — package scripts may receive PNPM's bare `--` separator as an argument; strip it before parsing positional inputs.

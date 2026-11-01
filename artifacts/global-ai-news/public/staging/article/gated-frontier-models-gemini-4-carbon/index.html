@@ -2,6 +2,7 @@
 <html lang="en-IN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta name="robots" content="noindex,nofollow"><meta name="googlebot" content="noindex,nofollow">
 <title>Gemini 4 Carbon: Who Can Test It—and What Scores Show — Global AI News</title><meta name="description" content="Google will gate Gemini 4 Carbon to cyber defenders first. We separate access claims, benchmark methods, independent results and missing safety documents.">
 <link rel="canonical" href="https://www.globalainews.in/article/gated-frontier-models-gemini-4-carbon/">
@@ -16,7 +17,7 @@
 :root{color-scheme:light dark;--paper:#f7f6f2;--ink:#17232b;--muted:#52616b;--blue:#1555a6;--rule:#d8d5cc;--surface:#fffefa}
 @media(prefers-color-scheme:dark){:root{--paper:#111820;--ink:#edf2f4;--muted:#b7c2ca;--blue:#8fbcff;--rule:#394650;--surface:#18232b}}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.72 system-ui,sans-serif}
-a{color:var(--blue);text-decoration-thickness:.08em;text-underline-offset:.18em}a:focus-visible,summary:focus-visible,.table-scroll:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+a{color:var(--blue);text-decoration-thickness:.08em;text-underline-offset:.18em;overflow-wrap:anywhere;word-break:break-word}a:focus-visible,summary:focus-visible,.table-scroll:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .skip{position:absolute;left:-10000px;top:auto}.skip:focus{left:1rem;top:1rem;z-index:5;background:var(--surface);padding:.75rem}
 header,main,footer{width:min(100% - 2rem,1060px);margin-inline:auto}header{padding:1.25rem 0;border-bottom:1px solid var(--rule);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase}
 main{padding:2rem 0 4rem}article{max-width:820px;margin-inline:auto}h1,h2,h3{font-family:Georgia,serif;line-height:1.08;letter-spacing:-.025em}h1{font-size:clamp(2.5rem,7vw,5.3rem);margin:.7em 0 .45em}h2{margin-top:2em;font-size:clamp(1.8rem,4vw,2.8rem)}h3{font-size:1.45rem}
@@ -49,7 +50,7 @@ table{border-collapse:collapse;width:100%;min-width:42rem;background:var(--surfa
 <li>Google’s official Gemini page links an Argon Safety &amp; Security Report; a Carbon evaluation-methodology page is public, but no Carbon-specific model card or safety report was located in official pages checked on 31 October. [2][5][6]</li>
 </ul>
 <h2>A staged access path</h2>
-<img src="../visuals/article4/access-ladder.svg" alt="Google's stated access sequence for Gemini 4 Carbon: a subset of cyber defenders first, then trusted Fairwind partners, then developers, businesses and consumers through product surfaces with no public date." />
+<img src="/staging/visuals/article4/access-ladder.svg" alt="Google's stated access sequence for Gemini 4 Carbon: a subset of cyber defenders first, then trusted Fairwind partners, then developers, businesses and consumers through product surfaces with no public date." />
 <details><summary>View data</summary>
 <div class="table-scroll" role="region" aria-label="Scrollable article data table" tabindex="0"><table>
 <thead>
@@ -83,7 +84,7 @@ table{border-collapse:collapse;width:100%;min-width:42rem;background:var(--surfa
 <p>“Fairwind” also needs careful attribution. Google’s Fairwind page currently says that the program works with more than 650 partners and describes background checks, phishing-resistant multifactor authentication, access controls, and limits on redistribution. But the page describes access to Gemini 4 Argon and its use in internal cybersecurity, incident response or penetration-testing teams. It is evidence about the program’s published Argon terms—not proof that the same exact conditions already govern Carbon. [4]</p>
 <p>The Carbon announcement does not provide a public application checklist, list of selected Carbon partners, or a date for general product access. It says Google is gathering feedback and iterating on guardrails before opening access through its product surfaces. The access ladder therefore has a clear order but incomplete operational detail. [1]</p>
 <h2>The scores are not one leaderboard</h2>
-<img src="../visuals/article4/benchmark-provenance.svg" alt="Four Gemini 4 Carbon figures with source labels: SEC-bench Pro 88.2 and ExploitGym 54.8 are Google-computed, CWE-bench 71.0 comes from a Collinear AI evaluation, and Artificial Analysis Intelligence Index v5 is 59." />
+<img src="/staging/visuals/article4/benchmark-provenance.svg" alt="Four Gemini 4 Carbon figures with source labels: SEC-bench Pro 88.2 and ExploitGym 54.8 are Google-computed, CWE-bench 71.0 comes from a Collinear AI evaluation, and Artificial Analysis Intelligence Index v5 is 59." />
 <details><summary>View data</summary>
 <div class="table-scroll" role="region" aria-label="Scrollable article data table" tabindex="0"><table>
 <thead>
@@ -137,7 +138,7 @@ table{border-collapse:collapse;width:100%;min-width:42rem;background:var(--surfa
 <p>The checklist is a reporting method, not a claim that any single benchmark is useless. Tests can provide valuable evidence. They become misleading when a precise number is detached from its measurement design or treated as a complete account of a system.</p>
 <p>NIST’s Generative AI Profile is a risk-management reference, not a benchmark or an evaluation of Carbon. Its role here is to reinforce that capability measurements sit within a broader process of identifying and managing risks; it cannot validate any of the figures above. [9]</p>
 <h2>Access approaches: related controls, different jobs</h2>
-<img src="../visuals/article4/access-matrix.svg" alt="Comparison matrix separating Carbon's staged product access, Fairwind's documented Argon controls, and OpenAI's offline training environment as different types of control." />
+<img src="/staging/visuals/article4/access-matrix.svg" alt="Comparison matrix separating Carbon's staged product access, Fairwind's documented Argon controls, and OpenAI's offline training environment as different types of control." />
 <details><summary>View data</summary>
 <div class="table-scroll" role="region" aria-label="Scrollable article data table" tabindex="0"><table>
 <thead>
@@ -173,7 +174,7 @@ table{border-collapse:collapse;width:100%;min-width:42rem;background:var(--surfa
 <p>Access restriction and training containment solve different problems. Fairwind controls which organizations and teams can use a model under specified terms. OpenAI’s October account concerns the environment used to train frontier models after an infrastructure misconfiguration; OpenAI said it resumed training offline. Neither type of control proves a model’s benchmark claims, and an offline training setup does not tell a user who can access a released model. [4][7]</p>
 <p>This distinction matters for organizations making a procurement or security decision. Ask separately: who can access the model; what controls apply to that access; what system documentation is public; and who can test the model independently? A vendor may answer one question clearly while leaving another open. The current record answers Carbon’s high-level access order and benchmark methodology more clearly than it answers Carbon-specific partner admission criteria or broad release timing. [1][2][4]</p>
 <h2>A timeline: Argon, then Carbon</h2>
-<img src="../visuals/article4/argon-carbon-timeline.svg" alt="Gemini 4 Argon was announced in mid-October 2026, followed about two weeks later by the 28 October Gemini 4 Carbon announcement; no public Carbon general-availability date was provided." />
+<img src="/staging/visuals/article4/argon-carbon-timeline.svg" alt="Gemini 4 Argon was announced in mid-October 2026, followed about two weeks later by the 28 October Gemini 4 Carbon announcement; no public Carbon general-availability date was provided." />
 <details><summary>View data</summary>
 <div class="table-scroll" role="region" aria-label="Scrollable article data table" tabindex="0"><table>
 <thead>

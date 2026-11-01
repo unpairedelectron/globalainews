@@ -7,7 +7,8 @@
     "prepublish:editorial": "node scripts/editorial-prepublish-check.mjs",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
-    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
+    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
+    "verify:live": "pnpm --filter @workspace/global-ai-news run verify:live"
   },
   "private": true,
   "dependencies": {
