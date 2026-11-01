@@ -159,7 +159,7 @@ The cited launch posts describe vendor products and claims; they are not indepen
 
 ## Methodology note
 
-This draft and its research were AI-assisted. Product descriptions are attributed to the vendor; NIST, Google and OWASP sources provide general security guidance, not independent audits of the products. No bank warning or claim that banks block external agents is included because a supporting primary statement was not located in this research check. Checked 31 October 2026. Global AI News has no commercial relationship with the companies discussed.
+This draft and its research were AI-assisted. Product descriptions are attributed to the vendor; NIST, Google and OWASP sources provide general security guidance, not independent audits of the products. No bank warning or claim that banks block external agents is included because a supporting primary statement was not located in this research check. Checked 31 October 2026. Companies named in this article are subjects of our reporting. See our [editorial standards](/code-of-ethics/) for how we handle conflicts of interest.
 
 ## Corrections log
 

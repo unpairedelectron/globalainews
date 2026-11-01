@@ -18,37 +18,6 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/instrument-serif-regular-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <script data-clarity-bootstrap>
-      (() => {
-        const projectId = 'x8gfztdtd7';
-        const privateRoutes = ['/insights', '/sign-in', '/sign-up', '/account', '/editor', '/admin', '/api', '/glucosmart-privacy'];
-        const eligible = (url) => {
-          const pathname = url.pathname.replace(/\/+$/, '') || '/';
-          return !url.search && !url.hash && !privateRoutes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
-        };
-
-        if (!eligible(window.location)) return;
-        if (document.referrer) {
-          try {
-            if (!eligible(new URL(document.referrer))) return;
-          } catch {
-            return;
-          }
-        }
-        if (window.__globalAiClarityStarted || document.querySelector(`script[data-clarity-project="${projectId}"]`)) return;
-
-        window.__globalAiClarityStarted = true;
-        const clarity = (...args) => (clarity.q ??= []).push(args);
-        clarity.q = [];
-        window.clarity = clarity;
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = `https://www.clarity.ms/tag/${projectId}`;
-        script.dataset.clarityProject = projectId;
-        script.onerror = () => {};
-        document.head.appendChild(script);
-      })();
-    </script>
     <script type="application/ld+json" data-global-ai-ld>{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Global AI News","url":"https://www.globalainews.in/","logo":"https://www.globalainews.in/logo.svg"},{"@type":"WebSite","name":"Global AI News","url":"https://www.globalainews.in/","description":"Stories, signals and context for understanding the AI industry.","potentialAction":{"@type":"SearchAction","target":"https://www.globalainews.in/search/?q={search_term_string}","query-input":"required name=search_term_string"}}]}</script>
   </head>
   <body>

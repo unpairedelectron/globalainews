@@ -157,7 +157,7 @@ The sum mixes different periods, accounting bases and investment categories. It 
 
 ## Methodology note
 
-This draft and its research were AI-assisted. Company guidance is attributed to the dated company release or call transcript. Amazon’s approximately $220 billion cash-CapEx figure is verified from its official Q3 release; its cash basis is kept distinct from the other rows. No combined four-company amount is calculated because periods, accounting bases and investment categories are not normalized. The article does not make market-causation claims or provide investment advice. Global AI News has no commercial relationship with the companies discussed.
+This draft and its research were AI-assisted. Company guidance is attributed to the dated company release or call transcript. Amazon’s approximately $220 billion cash-CapEx figure is verified from its official Q3 release; its cash basis is kept distinct from the other rows. No combined four-company amount is calculated because periods, accounting bases and investment categories are not normalized. The article does not make market-causation claims or provide investment advice. Companies named in this article are subjects of our reporting. See our [editorial standards](/code-of-ethics/) for how we handle conflicts of interest.
 
 ## Corrections log
 

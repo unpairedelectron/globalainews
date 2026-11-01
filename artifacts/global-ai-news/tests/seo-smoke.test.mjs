@@ -2580,12 +2580,19 @@ async function checkThemeRegression() {
 async function startApiServer() {
   if (process.env.SMOKE_API_ORIGIN) return;
 
-  apiProcess = spawn('pnpm', ['--filter', '@workspace/api-server', 'run', 'dev'], {
+  apiProcess = spawn('pnpm', [
+    '--filter',
+    '@workspace/api-server',
+    'exec',
+    'tsx',
+    '--tsconfig',
+    'tsconfig.json',
+    '../global-ai-news/tests/release-history-api.ts',
+  ], {
     cwd: path.resolve(root, '..', '..'),
     env: {
       ...process.env,
       NODE_ENV: 'test',
-      NEWSROOM_TEST_EDITOR_ID: smokeEditorId,
       NEWSROOM_TEST_PUBLICATION_NOW: new Date(Date.now() + 5 * 60_000).toISOString(),
       PORT: '19820',
     },

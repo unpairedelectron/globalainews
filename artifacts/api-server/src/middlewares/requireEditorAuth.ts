@@ -1,7 +1,15 @@
 import { clerkClient, getAuth } from "@clerk/express";
-import type { RequestHandler } from "express";
+import type { Request, RequestHandler } from "express";
 
 const configuredEditorEmail = process.env.NEWSROOM_EDITOR_EMAIL?.trim().toLowerCase();
+type EditorUser = {
+  primaryEmailAddressId: string | null;
+  emailAddresses: Array<{
+    id: string;
+    emailAddress: string;
+    verification: { status: string } | null;
+  }>;
+};
 
 export function hasAllowedVerifiedPrimaryEmail(
   user: {
@@ -24,31 +32,25 @@ export function hasAllowedVerifiedPrimaryEmail(
   );
 }
 
-export const requireEditorAuth: RequestHandler = async (req, res, next) => {
-  const auth = getAuth(req);
-  const configuredTestEditorId =
-    process.env.NODE_ENV === "test" ? process.env.NEWSROOM_TEST_EDITOR_ID : undefined;
-  const testEditorId =
-    configuredTestEditorId &&
-    req.get("x-newsroom-test-editor") === configuredTestEditorId
-      ? configuredTestEditorId
-      : undefined;
-  const userId = testEditorId || auth?.userId;
-
-  if (!userId) {
-    res.status(401).json({ error: "Editor sign-in required to change releases." });
-    return;
-  }
-
-  if (!testEditorId) {
-    if (!configuredEditorEmail) {
+export function createRequireEditorAuth(options: {
+  allowedEmail: string | undefined;
+  getUserId: (req: Request) => string | undefined;
+  getUser: (userId: string) => Promise<EditorUser>;
+}): RequestHandler {
+  const allowedEmail = options.allowedEmail?.trim().toLowerCase();
+  return async (req, res, next) => {
+    const userId = options.getUserId(req);
+    if (!userId) {
+      res.status(401).json({ error: "Editor sign-in required to change releases." });
+      return;
+    }
+    if (!allowedEmail) {
       res.status(503).json({ error: "Editor access is not configured." });
       return;
     }
-
     try {
-      const user = await clerkClient.users.getUser(userId);
-      if (!hasAllowedVerifiedPrimaryEmail(user, configuredEditorEmail)) {
+      const user = await options.getUser(userId);
+      if (!hasAllowedVerifiedPrimaryEmail(user, allowedEmail)) {
         res.status(403).json({ error: "This account is not authorized to edit releases." });
         return;
       }
@@ -56,8 +58,13 @@ export const requireEditorAuth: RequestHandler = async (req, res, next) => {
       res.status(503).json({ error: "Unable to verify editor access right now." });
       return;
     }
-  }
+    res.locals.editorUserId = userId;
+    next();
+  };
+}
 
-  res.locals.editorUserId = userId;
-  next();
-};
+export const requireEditorAuth = createRequireEditorAuth({
+  allowedEmail: configuredEditorEmail,
+  getUserId: (req) => getAuth(req)?.userId,
+  getUser: async (userId) => clerkClient.users.getUser(userId),
+});

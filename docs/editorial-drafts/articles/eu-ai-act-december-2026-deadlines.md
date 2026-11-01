@@ -171,6 +171,10 @@ No corrections recorded. Private draft; not published.
 - [Coding-agent benchmark comparisons](https://www.globalainews.in/reports/coding-agent-benchmarks-compared/)
 - [Global AI News research register](https://www.globalainews.in/research/)
 
+## Disclosure
+
+Companies named in this article are subjects of our reporting. See our [editorial standards](/code-of-ethics/) for how we handle conflicts of interest.
+
 ## Subscribe
 
 Subscribe to Global AI News for source-linked reporting on AI law, policy and implementation.

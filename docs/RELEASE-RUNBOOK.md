@@ -1,5 +1,11 @@
 # November 2026 article release runbook
 
+## CLI apply-token decision
+
+No `release:apply` CLI command is provided. Replit's documented External Access Tokens are scoped to a deployment environment; they do not identify an editor or replace the app's verified-primary-email Clerk authorization. Do not use one as a substitute for an editor session or add a second release-auth path. Use the Clerk-protected newsroom editor instead.
+
+References: [External Access Tokens](https://docs.replit.com/features/deployment-customization/external-access-tokens) and [Secrets](https://docs.replit.com/core-concepts/project-editor/app-setup/secrets).
+
 ## Release window
 
 The ten articles are intended to publish at 07:30 UTC (13:00 Asia/Kolkata). Use the editor release queue and preserve its audit history; do not write release rows directly to the database.

@@ -229,6 +229,10 @@ No corrections recorded. Private draft; not published.
 
 Planned cross-link after the related draft passes QA: Article 10 on delegated access for AI agents. No link is active until that draft exists and is cleared.
 
+## Disclosure
+
+Companies named in this article are subjects of our reporting. See our [editorial standards](/code-of-ethics/) for how we handle conflicts of interest.
+
 ## Subscribe
 
 Subscribe to Global AI News for evidence-led coverage of AI, software and the technology economy.

@@ -10,7 +10,6 @@ import { chromium } from 'playwright-core';
 
 const execFileAsync = promisify(execFile);
 const root = path.resolve(import.meta.dirname, '..', '..', '..');
-const apiDist = path.join(root, 'artifacts', 'api-server', 'dist', 'index.mjs');
 const webDist = path.join(root, 'artifacts', 'global-ai-news', 'dist');
 const webServer = path.join(webDist, 'server', 'server.mjs');
 const fixtureToken = `${process.pid}-${Date.now()}`;
@@ -149,13 +148,20 @@ async function waitForHttp(url, processHandle) {
 async function startApi() {
   const port = await findFreePort();
   apiOrigin = `http://127.0.0.1:${port}`;
-  apiProcess = spawn('node', [apiDist], {
+  apiProcess = spawn('pnpm', [
+    '--filter',
+    '@workspace/api-server',
+    'exec',
+    'tsx',
+    '--tsconfig',
+    'tsconfig.json',
+    '../global-ai-news/tests/release-history-api.ts',
+  ], {
     cwd: root,
     detached: true,
     env: {
       ...process.env,
       NODE_ENV: 'test',
-      NEWSROOM_TEST_EDITOR_ID: actor,
       PORT: String(port),
     },
     stdio: ['ignore', 'ignore', 'inherit'],
@@ -1489,7 +1495,6 @@ async function testRawArticleResponses() {
 }
 
 async function main() {
-  if (!existsSync(apiDist)) throw new Error(`API server build is missing: ${apiDist}`);
   if (!existsSync(webServer)) throw new Error(`Web server build is missing: ${webServer}`);
   if (!existsSync(path.join(webDist, 'public', 'social', 'global-ai-news-default.png'))) {
     throw new Error('Default social image is missing; run build:production first.');

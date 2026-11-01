@@ -14,6 +14,8 @@
     "serve": "node --enable-source-maps dist/server/server.mjs",
     "verify:live": "node scripts/verify-live-article.mjs",
     "audit:links": "node scripts/audit-links.mjs",
+    "release:manifest": "node ../../scripts/build-release-manifest.mjs",
+    "test:release-manifest": "pnpm exec tsx --test tests/release-manifest.test.ts",
     "typecheck": "pnpm --filter @workspace/api-client-react exec tsc --build && tsc -p tsconfig.json --noEmit",
     "test:release-metadata": "node tests/release-metadata.test.mjs",
     "test:ads": "pnpm exec tsx --test tests/ads-activation.test.ts && node tests/ads-config.test.mjs",

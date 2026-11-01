@@ -161,7 +161,7 @@ A clear employer or government statement linking a defined reduction to AI would
 
 ## Methodology note
 
-This draft and its research were AI-assisted. Microsoft and the Dutch government are treated as primary sources for their own programs and targets. Secondary coverage is cited to explain reported figures and framing, not to replace the primary statements. The ILO and OECD sources provide general labor-market context, not a causal assessment of either announcement. Checked 31 October 2026. Global AI News has no commercial relationship with the entities discussed.
+This draft and its research were AI-assisted. Microsoft and the Dutch government are treated as primary sources for their own programs and targets. Secondary coverage is cited to explain reported figures and framing, not to replace the primary statements. The ILO and OECD sources provide general labor-market context, not a causal assessment of either announcement. Checked 31 October 2026. Companies named in this article are subjects of our reporting. See our [editorial standards](/code-of-ethics/) for how we handle conflicts of interest.
 
 ## Corrections log
 

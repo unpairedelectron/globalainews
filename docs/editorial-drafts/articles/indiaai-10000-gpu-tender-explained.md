@@ -168,7 +168,7 @@ No. The RFE describes an initial requirement of up to 10,000 units but also says
 
 ## Methodology note
 
-This draft and its research were AI-assisted. Tender terms are attributed to C-DAC’s RFE and corrigendum; the IndiaAI portal is cited only for the downstream end-user request process. Secondary reporting is not used to establish award, deployment or usage. The 10,000-unit figure is not converted into a GPU inventory or budget. Global AI News has no commercial relationship with the entities discussed.
+This draft and its research were AI-assisted. Tender terms are attributed to C-DAC’s RFE and corrigendum; the IndiaAI portal is cited only for the downstream end-user request process. Secondary reporting is not used to establish award, deployment or usage. The 10,000-unit figure is not converted into a GPU inventory or budget. Companies named in this article are subjects of our reporting. See our [editorial standards](/code-of-ethics/) for how we handle conflicts of interest.
 
 ## Corrections log
 

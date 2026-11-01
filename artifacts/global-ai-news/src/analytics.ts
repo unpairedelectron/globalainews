@@ -61,20 +61,31 @@ export function initializeClarity(
   }
 
   targetWindow.__globalAiClarityStarted = true;
-  const clarity: ClarityQueue = (...args) => {
-    (clarity.q ??= []).push(args);
-  };
-  clarity.q = [];
-  targetWindow.clarity = clarity;
+  const events: Array<keyof WindowEventMap> = ['pointerdown', 'keydown', 'touchstart', 'wheel', 'scroll', 'click'];
+  let timer: number | undefined;
+  const startClarity = () => {
+    for (const event of events) targetWindow.removeEventListener(event, startClarity);
+    if (timer !== undefined) targetWindow.clearTimeout(timer);
+    if (targetDocument.querySelector(CLARITY_SCRIPT_SELECTOR)) return;
 
-  const script = targetDocument.createElement('script');
-  script.async = true;
-  script.src = `https://www.clarity.ms/tag/${CLARITY_PROJECT_ID}`;
-  script.dataset.clarityProject = CLARITY_PROJECT_ID;
-  script.onerror = () => {
-    // A blocked analytics request must not prevent the publication from rendering.
+    const clarity: ClarityQueue = (...args) => {
+      (clarity.q ??= []).push(args);
+    };
+    clarity.q = [];
+    targetWindow.clarity = clarity;
+    const script = targetDocument.createElement('script');
+    script.async = true;
+    script.src = `https://www.clarity.ms/tag/${CLARITY_PROJECT_ID}`;
+    script.dataset.clarityProject = CLARITY_PROJECT_ID;
+    script.onerror = () => {
+      // A blocked analytics request must not prevent the publication from rendering.
+    };
+    targetDocument.head.appendChild(script);
   };
-  targetDocument.head.appendChild(script);
+  for (const event of events) {
+    targetWindow.addEventListener(event, startClarity, { once: true, passive: true });
+  }
+  timer = targetWindow.setTimeout(startClarity, 4000);
   return true;
 }
 

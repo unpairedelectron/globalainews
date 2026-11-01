@@ -99,7 +99,7 @@ export function ResearchIndexPage() {
       <section className="grid gap-10 py-12 md:grid-cols-[.55fr_1.45fr] md:py-16">
         <aside><SectionLabel aside={`${records.length} published`}>The register</SectionLabel><p className="max-w-sm text-sm leading-7 text-muted-foreground">Research is presented as a documented record, not a detached conclusion. Status and dates travel with every entry.</p><div className="mt-8 border-l-2 border-primary/40 pl-4 text-xs leading-6 text-muted-foreground"><p className="eyebrow text-primary">Reading the record</p><p className="mt-2">Each entry distinguishes what the evidence supports from what remains unknown.</p></div></aside>
         <div aria-live="polite">{records.length ? records.map((record, index) => <article key={record.slug} data-testid={`card-research-${record.slug}`} className="grid grid-cols-[2.6rem_1fr] gap-4 border-t border-foreground/15 py-7 sm:grid-cols-[3.5rem_1fr]">
-          <span className="font-serif text-3xl text-primary/65">{String(index + 1).padStart(2, '0')}</span>
+          <span className="font-serif text-3xl text-primary">{String(index + 1).padStart(2, '0')}</span>
           <div><p className="eyebrow text-primary">{record.provenance.replaceAll('-', ' ')} · published {date(record.date)}</p><Link href={`/research/${record.slug}`} className="mt-3 block max-w-3xl font-serif text-3xl leading-[.96] hover:text-primary sm:text-4xl">{record.title}</Link>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{record.researchQuestion}</p><p className="mt-4 text-xs text-muted-foreground">Updated {date(record.updatedAt)} · {record.findings.length} findings · {record.limitations.length} stated limitations</p>
           </div>

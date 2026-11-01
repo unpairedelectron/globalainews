@@ -179,6 +179,10 @@ No corrections recorded. Private draft; not published.
 - [How Global AI News documents its methods](https://www.globalainews.in/research/)
 - [Glossary: synthetic media and SGI](../glossary.md)
 
+## Disclosure
+
+Companies named in this article are subjects of our reporting. See our [editorial standards](/code-of-ethics/) for how we handle conflicts of interest.
+
 ## Subscribe
 
 Subscribe to Global AI News for source-linked reporting on AI policy and the technology economy.

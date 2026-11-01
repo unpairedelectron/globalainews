@@ -35,7 +35,7 @@ export function ResponsiveEditorialImage({
 
   return (
     <picture className="block w-full">
-      {!failed && fetchPriority !== 'high' && <>
+      {!failed && <>
         <source type="image/avif" srcSet={sources.avif} sizes={sizes} />
         <source type="image/webp" srcSet={sources.webp} sizes={sizes} />
       </>}

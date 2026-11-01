@@ -16,6 +16,9 @@ function createClarityEnvironment(
   hash = '',
   referrer = '',
 ) {
+  const listeners = new Map<string, () => void>();
+  let timerCallback: (() => void) | undefined;
+  let timerDelay = 0;
   const scripts: Array<{
     async: boolean;
     src: string;
@@ -25,6 +28,23 @@ function createClarityEnvironment(
   const targetWindow = {
     location: { pathname, search, hash },
     __globalAiClarityStarted: false,
+    addEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+      listeners.set(type, () => {
+        if (typeof listener === 'function') listener(new Event(type));
+        else listener.handleEvent(new Event(type));
+      });
+    },
+    removeEventListener(type: string) {
+      listeners.delete(type);
+    },
+    setTimeout(callback: () => void, delay: number) {
+      timerCallback = callback;
+      timerDelay = delay;
+      return 1;
+    },
+    clearTimeout() {
+      timerCallback = undefined;
+    },
   };
   const targetDocument = {
     referrer,
@@ -52,6 +72,15 @@ function createClarityEnvironment(
     scripts,
     targetWindow: targetWindow as unknown as Window,
     targetDocument: targetDocument as unknown as Document,
+    fireInteraction() {
+      listeners.get('pointerdown')?.();
+    },
+    fireTimeout() {
+      timerCallback?.();
+    },
+    get timerDelay() {
+      return timerDelay;
+    },
   };
 }
 
@@ -72,15 +101,27 @@ test('Clarity is limited to public, query-free URLs and safe referrers', () => {
   ), false);
 });
 
-test('Clarity adds one asynchronous script and a blocked script is harmless', () => {
-  const { scripts, targetWindow, targetDocument } = createClarityEnvironment('/');
+test('Clarity waits for interaction, injects one asynchronous script, and tolerates blocking', () => {
+  const environment = createClarityEnvironment('/');
+  const { scripts, targetWindow, targetDocument, fireInteraction } = environment;
   assert.equal(initializeClarity(targetWindow, targetDocument), true);
   assert.equal(initializeClarity(targetWindow, targetDocument), false);
+  assert.equal(environment.timerDelay, 4000);
+  assert.equal(scripts.length, 0);
+  fireInteraction();
   assert.equal(scripts.length, 1);
   assert.equal(scripts[0].async, true);
   assert.equal(scripts[0].src, 'https://www.clarity.ms/tag/x8gfztdtd7');
   assert.equal(scripts[0].dataset.clarityProject, 'x8gfztdtd7');
   assert.doesNotThrow(() => scripts[0].onerror?.());
+});
+
+test('Clarity starts after four seconds when no interaction occurs', () => {
+  const { scripts, targetWindow, targetDocument, fireTimeout } = createClarityEnvironment('/article/story');
+  assert.equal(initializeClarity(targetWindow, targetDocument), true);
+  assert.equal(scripts.length, 0);
+  fireTimeout();
+  assert.equal(scripts.length, 1);
 });
 
 test('existing event tracking sends conversion data only to platform analytics', () => {

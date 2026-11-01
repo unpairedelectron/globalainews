@@ -48,3 +48,36 @@ Scope: the owner has authorized staging, site wiring, scheduled release, and pub
 - [x] Article 8 — full explainer, fact log, visuals, social variants, metadata/schema.
 - [x] Article 9 — full report, fact log, visuals, social variants, metadata/schema.
 - [x] Article 10 — full explainer/report, fact log, visuals, social variants, metadata/schema.
+
+## Strict finish pass — release tooling, performance, and disclosures
+
+Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
+
+### A. Authenticated release tooling
+
+- [x] A1. Inspect editor API/CMS schemas and generate `/release/manifest.json` with ten scheduled articles, dated briefs from existing fact logs, sourced Signals, topic/glossary links, and date-gated sitemap/RSS flags.
+- [ ] A2. Build an editor-only `/admin/release-import` page using existing Clerk editor authorization; upload, dry-run by default, explicit Apply, idempotency, audit log, and last-apply rollback.
+- [x] A3. Check whether the platform can mint a scoped `RELEASE_API_TOKEN`; implement `release:apply` only if supported, otherwise document the omission.
+- [x] A4. Add mocked-auth unit/integration coverage, including unauthenticated 401 and assertions that production has no bypass, test header, or debug-auth flag.
+- [x] A5. Validate the exact manifest schema and capture a full staging dry-run using test fixtures in `docs/PROGRESS.md`.
+- [x] A6. Write `docs/OWNER-RELEASE-CARD.md` with five or fewer owner steps and the Reports/India Watch indexing reminder.
+
+### B. Homepage and public-page performance
+
+- [x] B1. Record exact failing Lighthouse audits and causes in `docs/lighthouse-findings.md`.
+- [x] B2. Defer Clarity and other existing third-party analytics until first interaction or four seconds after load, whichever comes first; respect consent where required and preserve collection.
+- [ ] B3. Fix remaining performance, accessibility, best-practices, cache, font, image, CSS/JS, and console findings without lowering targets.
+- [ ] B4. Re-run mobile/desktop Lighthouse for home, Brief, Reports, each topic hub, About, Methodology, Corrections, and ten staged articles; meet unchanged targets or document vendor-only residuals and owner options.
+- [x] B5. Keep Reports and India Watch noindex until they are substantive index pages; include `OWNER: flip to index when ready` in the release card.
+
+### C. Disclosure wording
+
+- [x] C1. Apply the all-company no-commercial-relationship statement only if the owner input is YES.
+- [x] C2. With current owner input NO, retain the confirmed statement only on Articles 1, 2, and 4; use the neutral conflict-of-interest line on other company-naming articles.
+- [x] C3. Verify rendered disclosure text, unchanged schema descriptions, and empty corrections log.
+
+### D. Final verification
+
+- [ ] D1. Re-run pre-publish, cross-article, link, and accessibility checks on all ten articles; fix regressions.
+- [ ] D2. Re-run `global-ai-news-smoke` and schedule simulations; verify pre-date exclusion from public pages, sitemaps, and RSS.
+- [ ] D3. Update `docs/RELEASE-RUNBOOK.md` and `docs/PROGRESS.md`.

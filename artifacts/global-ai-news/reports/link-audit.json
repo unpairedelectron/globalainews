@@ -712,6 +712,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/industry/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/industry/",
+    "indexability": "noindex",
+    "linkSource": "/article/ai-models-antibiotic-discovery",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/research/",
     "status": "200",
     "canonical": "https://www.globalainews.in/research/",
@@ -812,6 +820,14 @@
     "status": "200",
     "canonical": "https://www.globalainews.in/signals/",
     "indexability": "indexable",
+    "linkSource": "/article/india-ai-compute-access-2026",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/industry/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/industry/",
+    "indexability": "noindex",
     "linkSource": "/article/india-ai-compute-access-2026",
     "issue": ""
   },
@@ -1096,6 +1112,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/industry/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/industry/",
+    "indexability": "noindex",
+    "linkSource": "/article/quiet-race-watermark-everything-ai-makes",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/research/",
     "status": "200",
     "canonical": "https://www.globalainews.in/research/",
@@ -1224,6 +1248,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/industry/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/industry/",
+    "indexability": "noindex",
+    "linkSource": "/article/reliability-is-the-new-ai-moat",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/research/",
     "status": "200",
     "canonical": "https://www.globalainews.in/research/",
@@ -1336,6 +1368,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/industry/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/industry/",
+    "indexability": "noindex",
+    "linkSource": "/article/small-models-serious-workflows",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/research/",
     "status": "200",
     "canonical": "https://www.globalainews.in/research/",
@@ -1440,6 +1480,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/industry/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/industry/",
+    "indexability": "noindex",
+    "linkSource": "/article/study-finds-word-cues-can-override-game-theory-choices-in-llms",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/research/",
     "status": "200",
     "canonical": "https://www.globalainews.in/research/",
@@ -1540,6 +1588,14 @@
     "status": "200",
     "canonical": "https://www.globalainews.in/signals/",
     "indexability": "indexable",
+    "linkSource": "/article/weekly-deep-dive-cost-of-intelligence",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/industry/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/industry/",
+    "indexability": "noindex",
     "linkSource": "/article/weekly-deep-dive-cost-of-intelligence",
     "issue": ""
   },
@@ -1944,6 +2000,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "indexability": "indexable",
+    "linkSource": "/company/anthropic",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/company/microsoft",
     "status": "200",
     "canonical": "https://www.globalainews.in/company/microsoft/",
@@ -2008,6 +2072,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "indexability": "indexable",
+    "linkSource": "/company/openai",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/company/sarvam-ai",
     "status": "200",
     "canonical": "https://www.globalainews.in/company/sarvam-ai/",
@@ -2035,6 +2107,14 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/company/sarvam-ai",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "indexability": "indexable",
     "linkSource": "/company/sarvam-ai",
     "issue": ""
@@ -2640,6 +2720,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/industry/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/industry/",
+    "indexability": "noindex",
+    "linkSource": "/",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/search/",
     "status": "200",
     "canonical": "https://www.globalainews.in/search/",
@@ -2920,6 +3008,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
+    "indexability": "indexable",
+    "linkSource": "/lab/google-deepmind",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/model/claude-4",
     "status": "200",
     "canonical": "https://www.globalainews.in/model/claude-4/",
@@ -2952,6 +3048,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "indexability": "indexable",
+    "linkSource": "/model/claude-4",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/model/gpt-5",
     "status": "200",
     "canonical": "https://www.globalainews.in/model/gpt-5/",
@@ -2979,6 +3083,14 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/model/gpt-5",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/small-models-serious-workflows/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/small-models-serious-workflows/",
     "indexability": "indexable",
     "linkSource": "/model/gpt-5",
     "issue": ""
@@ -5000,6 +5112,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/ai-models-antibiotic-discovery/",
+    "indexability": "indexable",
+    "linkSource": "/technology/antibiotic-discovery",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/technology/content-credentials",
     "status": "200",
     "canonical": "https://www.globalainews.in/technology/content-credentials/",
@@ -5027,6 +5147,14 @@
     "url": "https://www.globalainews.in/brief/",
     "status": "200",
     "canonical": "https://www.globalainews.in/brief/",
+    "indexability": "indexable",
+    "linkSource": "/technology/content-credentials",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/quiet-race-watermark-everything-ai-makes/",
     "indexability": "indexable",
     "linkSource": "/technology/content-credentials",
     "issue": ""

@@ -8,7 +8,6 @@ import { once } from 'node:events';
 
 const execFileAsync = promisify(execFile);
 const root = path.resolve(import.meta.dirname, '..', '..', '..');
-const apiDist = path.join(root, 'artifacts', 'api-server', 'dist', 'index.mjs');
 const actor = 'task-38-restart-check-editor';
 const slug = `task-38-release-history-${process.pid}-${Date.now()}`;
 const shortSlug = `task-85-short-release-${process.pid}-${Date.now()}`;
@@ -77,13 +76,20 @@ async function waitForHealth() {
 }
 
 async function startApi() {
-  apiProcess = spawn('node', [apiDist], {
+  apiProcess = spawn('pnpm', [
+    '--filter',
+    '@workspace/api-server',
+    'exec',
+    'tsx',
+    '--tsconfig',
+    'tsconfig.json',
+    '../global-ai-news/tests/release-history-api.ts',
+  ], {
     cwd: root,
     detached: true,
     env: {
       ...process.env,
       NODE_ENV: 'test',
-      NEWSROOM_TEST_EDITOR_ID: actor,
       PORT: String(port),
     },
     stdio: ['ignore', 'inherit', 'inherit'],

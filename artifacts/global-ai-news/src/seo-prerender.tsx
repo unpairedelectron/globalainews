@@ -457,7 +457,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
             <div>
               {records.length ? records.map((record, index) => (
                 <article key={record.slug} className="grid grid-cols-[2.6rem_1fr] gap-4 border-t border-foreground/15 py-7">
-                  <span className="font-serif text-3xl text-primary/65">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="font-serif text-3xl text-primary">{String(index + 1).padStart(2, '0')}</span>
                   <div>
                     <p className="eyebrow text-primary">{record.provenance.replaceAll('-', ' ')} · published {formatEditorialDate(record.date)}</p>
                     <h2 className="mt-3 font-serif text-3xl leading-[.96]"><a href={`/research/${record.slug}/`} className="hover:text-primary">{record.title}</a></h2>
