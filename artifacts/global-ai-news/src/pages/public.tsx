@@ -6,7 +6,7 @@ import { authors, canonicalStorySlug, entities, findEntity, findStory, findTimel
 import { EditorialImage, EntityLinks, EvidencePanel, Footer, Header, Newsletter, SectionLabel, SeoHead, StoryImage, StoryRow, TimelineList } from '@/components/site';
 import { StoryBody, StoryCitedText, StorySourceList } from '@/components/story-content';
 import { AuthorDirectory } from '@/components/author-directory';
-import { useNewsroomSnapshot, usePublishedRegistryArticles } from '@/newsroom';
+import { useNewsroomSnapshot, usePublishedRegistryArticles, usePublishedReleaseDiscovery } from '@/newsroom';
 import { formatEditorialDate, getLatestStory, isWithinLatestWindow } from '@/editorial-date';
 import { getEditorialPageCopy } from '@/editorial-pages';
 import {
@@ -113,12 +113,49 @@ export function HomePage() {
 export function BriefPage() {
   const [location] = useLocation();
   const snapshot = useNewsroomSnapshot();
-  const publishedRegistryArticles = usePublishedRegistryArticles();
+  const releaseDiscovery = usePublishedReleaseDiscovery();
   const briefStories = useMemo(() => uniqueStoriesByCanonicalSlug(snapshot.stories), [snapshot.stories]);
+  const datedBriefs = useMemo(
+    () => [...releaseDiscovery.briefs].sort((left, right) => right.publishAt.localeCompare(left.publishAt)),
+    [releaseDiscovery.briefs],
+  );
   const latestStory = getLatestStory(briefStories);
   const query = new URLSearchParams(location.split('?')[1] ?? '').get('q') ?? '';
   const results = useMemo(() => query ? briefStories.filter((story) => `${story.title} ${getPublicStoryDek(story) ?? ''} ${story.category}`.toLowerCase().includes(query.toLowerCase())) : briefStories, [query, briefStories]);
-  return <Shell><SeoHead title="The Daily Brief — Global AI News" description="A three-minute editorial briefing on what changed across the AI economy." path="/brief" /><main className={`${container} max-w-[1180px]`}><section className="border-b border-foreground/20 py-14 md:py-20"><p data-testid="brief-edition-metadata" className="eyebrow text-primary">{latestStory ? <>Latest edition · <time dateTime={latestStory.date}>{formatEditorialDate(latestStory.date)}</time> · {briefStories.length} {briefStories.length === 1 ? 'story' : 'stories'}</> : 'No published edition'}</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">The Daily<br /><em className="text-primary">Brief.</em></h1><p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A three-minute read on the decisions, releases and quiet shifts changing the AI industry.</p></section>{query && <section data-clarity-mask="true" className="border-b border-foreground/15 py-6"><p className="eyebrow text-primary">Search results for “{query}”</p>{results.length === 0 && <p className="mt-3 text-sm text-muted-foreground">No result yet. Try an entity, desk or story title.</p>}</section>}<section className="grid gap-12 py-12 md:grid-cols-[1fr_280px]"><article>{results.map((story, index) => <div id={`brief-${index}`} key={story.slug}><StoryRow slug={story.slug} rank={index + 1} /></div>)}{publishedRegistryArticles.map((article, index) => <Link key={article.slug} href={`/article/${article.slug}`} className="grid gap-2 border-t border-foreground/15 py-5 hover:text-primary sm:grid-cols-[1fr_auto]"><span><span className="eyebrow text-primary">Published release article</span><span className="mt-2 block font-serif text-2xl">{article.title}</span><span className="mt-2 block text-sm leading-6 text-muted-foreground">{article.description}</span></span><time dateTime={article.publishAt} className="font-mono text-[10px] text-muted-foreground">{formatEditorialDate(article.publishAt)}</time></Link>)}</article><aside className="md:border-l md:border-foreground/15 md:pl-7"><SectionLabel>{query ? 'Matching stories' : 'In this edition'}</SectionLabel><div className="grid gap-3 text-sm">{results.slice(0, 5).map((story, index) => <a href={`#brief-${index}`} key={story.slug} className="border-b border-foreground/15 pb-3 hover:text-primary">{String(index + 1).padStart(2, '0')} / {story.title}</a>)}</div><div className="mt-10 border-t border-foreground/15 pt-5"><p className="eyebrow text-muted-foreground">Editor’s note</p><p className="mt-3 text-sm leading-6">We separate reported fact, analysis and synthesis so you can move quickly without losing the thread.</p></div></aside></section><Newsletter compact /></main></Shell>;
+  return <Shell>
+    <SeoHead title="The Daily Brief — Global AI News" description="A three-minute editorial briefing on what changed across the AI economy." path="/brief" />
+    <main className={`${container} max-w-[1180px]`}>
+      <section className="border-b border-foreground/20 py-14 md:py-20">
+        <p data-testid="brief-edition-metadata" className="eyebrow text-primary">
+          {datedBriefs.length
+            ? <>Latest edition · <time dateTime={datedBriefs[0].publishAt}>{formatEditorialDate(datedBriefs[0].publishAt)}</time> · {datedBriefs.length} dated {datedBriefs.length === 1 ? 'brief' : 'briefs'}</>
+            : latestStory ? <>Latest edition · <time dateTime={latestStory.date}>{formatEditorialDate(latestStory.date)}</time> · {briefStories.length} {briefStories.length === 1 ? 'story' : 'stories'}</> : 'No published edition'}
+        </p>
+        <h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">The Daily<br /><em className="text-primary">Brief.</em></h1>
+        <p className="mt-7 max-w-xl text-lg leading-7 text-muted-foreground">A three-minute read on the decisions, releases and quiet shifts changing the AI industry.</p>
+      </section>
+      {query && <section data-clarity-mask="true" className="border-b border-foreground/15 py-6"><p className="eyebrow text-primary">Search results for “{query}”</p>{results.length === 0 && <p className="mt-3 text-sm text-muted-foreground">No result yet. Try an entity, desk or story title.</p>}</section>}
+      <section className="grid gap-12 py-12 md:grid-cols-[1fr_280px]">
+        <article>
+          {datedBriefs.map((brief) => <article key={brief.slug} data-testid={`daily-brief-${brief.slug}`} className="border-t border-foreground/15 py-7">
+            <p className="eyebrow text-primary">Dated Daily Brief · <time dateTime={brief.publishAt}>{formatEditorialDate(brief.publishAt)}</time></p>
+            <h2 className="mt-3 font-serif text-3xl leading-tight">{brief.title}</h2>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">{brief.dek}</p>
+            <div className="prose prose-sm mt-5 max-w-none prose-p:leading-7">{brief.body.split('\n\n').map((paragraph, index) => <p key={`${brief.slug}-${index}`}>{paragraph}</p>)}</div>
+            <Link href={`/article/${brief.articleSlug}`} className="mt-5 inline-flex min-h-11 items-center border-b border-primary/40 text-sm text-primary hover:border-primary">Open the related article <ArrowUpRight size={14} className="ml-2" /></Link>
+          </article>)}
+          {results.map((story, index) => <div id={`brief-${index}`} key={story.slug}><StoryRow slug={story.slug} rank={index + 1} /></div>)}
+        </article>
+        <aside className="md:border-l md:border-foreground/15 md:pl-7">
+          <SectionLabel>{query ? 'Matching stories' : 'In this edition'}</SectionLabel>
+          <div className="grid gap-3 text-sm">{datedBriefs.slice(0, 5).map((brief) => <Link href={`/article/${brief.articleSlug}`} key={brief.slug} className="border-b border-foreground/15 pb-3 hover:text-primary">{formatEditorialDate(brief.publishAt)} / {brief.title}</Link>)}
+            {results.slice(0, 5).map((story, index) => <a href={`#brief-${index}`} key={story.slug} className="border-b border-foreground/15 pb-3 hover:text-primary">{String(index + 1).padStart(2, '0')} / {story.title}</a>)}</div>
+          <div className="mt-10 border-t border-foreground/15 pt-5"><p className="eyebrow text-muted-foreground">Editor’s note</p><p className="mt-3 text-sm leading-6">We separate reported fact, analysis and synthesis so you can move quickly without losing the thread.</p></div>
+        </aside>
+      </section>
+      <Newsletter compact />
+    </main>
+  </Shell>;
 }
 
 export function SearchPage() {
@@ -233,14 +270,25 @@ export function EditorialInputPage({ title, path }: { title: string; path: strin
 export function SignalsPage() {
   const snapshot = useNewsroomSnapshot();
   const publishedRegistryArticles = usePublishedRegistryArticles();
+  const releaseDiscovery = usePublishedReleaseDiscovery();
   const [topic, setTopic] = useState('All signals');
   const topics = ['All signals', 'Models', 'Infrastructure', 'Research', 'Policy', 'India', 'Applications'];
   const visible = snapshot.signals.filter((signal) => topic === 'All signals' || signal.topic.toLowerCase() === topic.toLowerCase());
+  const releaseVisible = releaseDiscovery.signals.filter((signal) => {
+    if (topic === 'All signals') return true;
+    const label = `${signal.topic} ${signal.value}`.toLowerCase();
+    if (topic === 'India') return label.includes('india');
+    if (topic === 'Models') return label.includes('model');
+    if (topic === 'Infrastructure') return label.includes('infrastructure') || label.includes('compute');
+    if (topic === 'Research') return label.includes('research');
+    if (topic === 'Policy') return label.includes('policy') || label.includes('rules');
+    return !/india|model|infrastructure|compute|research|policy|rules/.test(label);
+  });
   return <Shell><SeoHead title="Signals on file — Global AI News" description="Dated editorial summaries linked to published reporting; not a live market feed or measurement series." path="/signals" /><main className={container}>
     <section className="border-b border-foreground/20 py-14 md:py-20"><p className="eyebrow text-primary">Dated editorial records</p><h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">Signals<br /><em className="text-primary">on file.</em></h1><p className="mt-7 max-w-2xl text-lg leading-7 text-muted-foreground">These summaries are not live market measurements, current forecasts or continuously updated indices. Each card shows its maintained date and links to related reporting so you can inspect the source record.</p></section>
     {publishedRegistryArticles.length > 0 && <section data-testid="signals-published-release-links" className="border-b border-foreground/15 py-8"><SectionLabel>Published release links</SectionLabel><div className="mt-3 grid gap-x-8 sm:grid-cols-2">{publishedRegistryArticles.map((article) => <Link key={article.slug} href={`/article/${article.slug}`} className="border-t border-foreground/15 py-4 text-sm hover:text-primary">{article.title}<span className="mt-1 block text-xs leading-5 text-muted-foreground">{article.description}</span></Link>)}</div></section>}
     <div className="flex flex-wrap gap-2 border-b border-foreground/15 py-5">{topics.map((item) => <button data-testid={`button-signal-filter-${item.toLowerCase().replace(/\s/g, '-')}`} type="button" key={item} onClick={() => setTopic(item)} aria-pressed={topic === item} className={`min-h-11 border px-3 font-mono text-[10px] uppercase tracking-widest ${topic === item ? 'border-primary bg-primary text-primary-foreground' : 'border-foreground/20 hover:border-primary'}`}>{item}</button>)}</div>
-    {visible.length ? <section className="grid gap-px border-x border-foreground/15 bg-foreground/15 md:grid-cols-2 lg:grid-cols-3">{visible.map((signal) => {
+     {visible.length ? <section className="grid gap-px border-x border-foreground/15 bg-foreground/15 md:grid-cols-2 lg:grid-cols-3">{visible.map((signal) => {
       const relatedStories = signal.stories.map((slug) => snapshot.stories.find((story) => story.slug === canonicalStorySlug(slug))).filter((story): story is Story => Boolean(story));
        const relatedSources = [...new Set(relatedStories.flatMap((story) => story.sources))]
          .flatMap((slug) => {
@@ -248,8 +296,42 @@ export function SignalsPage() {
            return source ? [source] : [];
          });
        return <article data-testid={`card-signal-${signal.slug}`} key={signal.slug} className="flex flex-col bg-background p-6 md:p-8"><p className="eyebrow text-primary">{signal.topic}</p><h2 className="mt-4 font-serif text-2xl leading-tight">{signal.label}</h2><p className="mt-4 text-sm leading-6 text-muted-foreground">{signal.summary}</p><p className="mt-6 border-t border-foreground/15 pt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Record updated <time dateTime={signal.updated}>{formatEditorialDate(signal.updated)}</time></p><div className="mt-auto pt-5"><p className="eyebrow text-muted-foreground">Related reporting</p>{relatedStories.length ? relatedStories.slice(0, 2).map((story) => <Link key={story.slug} href={`/article/${story.slug}`} className="mt-3 flex min-h-11 items-center justify-between gap-3 border-t border-foreground/10 py-2 text-sm hover:text-primary"><span>{story.title}</span><ArrowUpRight size={14} /></Link>) : <p className="mt-3 text-xs text-muted-foreground">No published story is linked in this snapshot.</p>}<div className="mt-4 border-t border-foreground/10 pt-4"><p className="eyebrow text-muted-foreground">Source records</p>{relatedSources.length ? relatedSources.slice(0, 3).map((source) => <Link key={source.slug} href={`/source/${source.slug}`} className="mt-2 flex min-h-11 items-center justify-between gap-3 text-xs leading-5 hover:text-primary"><span>{source.name}</span><ArrowUpRight size={13} /></Link>) : <p className="mt-2 text-xs text-muted-foreground">No source record is linked through the related reporting.</p>}</div></div></article>;
-    })}</section> : <p className="border-b border-foreground/15 py-10 text-sm text-muted-foreground">No signal records are available for this filter.</p>}
+     })}</section> : releaseVisible.length === 0 ? <p className="border-b border-foreground/15 py-10 text-sm text-muted-foreground">No signal records are available for this filter.</p> : null}
+     {releaseVisible.length > 0 && <section data-testid="published-release-signals" className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 md:grid-cols-2 lg:grid-cols-3">
+       {releaseVisible.map((signal) => <article key={signal.slug} data-testid={`release-signal-${signal.slug}`} className="flex flex-col bg-background p-6 md:p-8">
+         <p className="eyebrow text-primary">{signal.topic} · {signal.evidenceTag} verified</p>
+         <h2 className="mt-4 font-serif text-2xl leading-tight">{signal.label}</h2>
+         <p className="mt-4 text-sm leading-6">{signal.value}</p>
+         <p className="mt-6 border-t border-foreground/15 pt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Recorded <time dateTime={signal.date}>{formatEditorialDate(signal.date)}</time> · Tier {signal.tier} · {signal.confidence} confidence</p>
+         <a href={signal.source} target="_blank" rel="noreferrer" className="mt-4 flex min-h-11 items-center text-xs leading-5 text-primary hover:underline">Source record <ArrowUpRight size={13} className="ml-2" /></a>
+         <Link href={`/article/${signal.articleSlug}`} className="mt-auto flex min-h-11 items-center justify-between gap-3 border-t border-foreground/10 pt-3 text-sm hover:text-primary">Related published article <ArrowUpRight size={14} /></Link>
+       </article>)}
+     </section>}
   </main></Shell>;
+}
+
+export function GlossaryPage() {
+  const releaseDiscovery = usePublishedReleaseDiscovery();
+  const entries = new Map<string, string[]>();
+  for (const link of releaseDiscovery.glossaryLinks) {
+    for (const term of link.terms) entries.set(term, [...(entries.get(term) ?? []), link.articleSlug]);
+  }
+  return <Shell>
+    <SeoHead title="Editorial glossary — Global AI News" description="Terms linked to published Global AI News reporting." path="/glossary" />
+    <main className={`${container} max-w-[1180px]`}>
+      <section className="border-b border-foreground/20 py-14 md:py-20">
+        <p className="eyebrow text-primary">Published reporting references</p>
+        <h1 className="mt-6 max-w-4xl font-serif text-7xl leading-[.84] md:text-[9rem]">Editorial<br /><em className="text-primary">glossary.</em></h1>
+        <p className="mt-7 max-w-2xl text-lg leading-7 text-muted-foreground">Terms appear here only when their linked article is published. Open the reporting for the term’s context and definition.</p>
+      </section>
+      {entries.size ? <section className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 md:grid-cols-2">
+        {[...entries].sort(([a], [b]) => a.localeCompare(b)).map(([term, slugs]) => <article key={term} className="bg-background p-6 md:p-8">
+          <h2 className="font-serif text-3xl">{term}</h2>
+          <div className="mt-4">{[...new Set(slugs)].map((slug) => <Link key={slug} href={`/article/${slug}`} className="flex min-h-11 items-center justify-between gap-3 border-t border-foreground/10 py-2 text-sm hover:text-primary">Read related coverage <ArrowUpRight size={14} /></Link>)}</div>
+        </article>)}
+      </section> : <p className="border-b border-foreground/15 py-10 text-sm text-muted-foreground">No glossary entries are available until a linked article is published.</p>}
+    </main>
+  </Shell>;
 }
 
 export function ResearchPage({ essay = false }: { essay?: boolean }) {
@@ -434,6 +516,7 @@ export function ArticlePage() {
   const [saved, setSaved] = useState(false);
   const [shared, setShared] = useState(false);
   const snapshot = useNewsroomSnapshot();
+  const releaseDiscovery = usePublishedReleaseDiscovery();
   const story = snapshot.stories.find((candidate) => candidate.slug === slug);
   if (!story) return <NotFound />;
   const author = getStoryAuthorIdentity(story, snapshot.authors);
@@ -442,6 +525,9 @@ export function ArticlePage() {
   const sectionLabel = story.contentType === 'Report' ? 'Reports' : 'Research';
   const researchRecords = snapshot.researchRecords.filter((record) => record.status === 'published' && (record.storySlug === story.slug || record.relatedStorySlugs.includes(story.slug)));
   const dataProducts = snapshot.dataProducts.filter((product) => product.status === 'published' && product.storySlugs.includes(story.slug));
+  const glossaryTerms = releaseDiscovery.glossaryLinks
+    .filter((entry) => entry.articleSlug === story.slug)
+    .flatMap((entry) => entry.terms);
   return <Shell>
     <SeoHead article title={`${story.title} — Global AI News`} description={story.dek} path={`/article/${story.slug}`} />
     <main className={`${container} max-w-[1180px]`}>
@@ -481,6 +567,11 @@ export function ArticlePage() {
           <StoryBody story={story} sources={snapshot.sources} />
           <section className="not-prose mt-10 border-t border-foreground/15 pt-6"><p className="eyebrow text-primary">What changes</p><p className="mt-3 text-lg leading-8"><StoryCitedText text={story.whatChanges} story={story} sources={snapshot.sources} /></p></section>
           {story.sources.length > 0 && <StorySourceList story={story} sources={snapshot.sources} />}
+          {glossaryTerms.length > 0 && <section className="not-prose mt-10 border-t border-foreground/15 pt-6" data-testid="published-article-glossary-links">
+            <p className="eyebrow text-primary">Glossary references</p>
+            <p className="mt-3 text-sm leading-6">{[...new Set(glossaryTerms)].join(' · ')}</p>
+            <Link href="/glossary" className="mt-4 inline-flex min-h-11 items-center gap-2 border-b border-primary/40 text-sm text-primary hover:border-primary">Open the editorial glossary <ArrowUpRight size={14} /></Link>
+          </section>}
         </article>
         <aside className="space-y-10"><EvidencePanel storySlug={story.slug} /><section><SectionLabel>Related entities</SectionLabel><EntityLinks slugs={story.entities} /></section><section><SectionLabel>Timeline</SectionLabel><TimelineList slugs={story.timeline} /></section><section><SectionLabel>Source records</SectionLabel><div className="grid gap-3">{story.sources.map((sourceSlug) => { const source = snapshot.sources.find((item) => item.slug === sourceSlug); return source ? <Link key={sourceSlug} href={`/source/${sourceSlug}`} className="border-b border-foreground/15 pb-3 text-sm hover:text-primary">{source.name}<span className="mt-1 block text-xs text-muted-foreground">{source.publisher} · citation detail</span></Link> : null; })}</div></section></aside>
        </div>

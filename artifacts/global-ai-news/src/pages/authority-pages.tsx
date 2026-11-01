@@ -2,7 +2,7 @@ import { ArrowUpRight, BookOpenText, Database, ShieldCheck } from 'lucide-react'
 import type { ReactNode } from 'react';
 import { Link } from '@/components/canonical-link';
 import { Footer, Header, SectionLabel, SeoHead } from '@/components/site';
-import { useNewsroomSnapshot, usePublishedRegistryArticles } from '@/newsroom';
+import { useNewsroomSnapshot, usePublishedRegistryArticles, usePublishedReleaseDiscovery } from '@/newsroom';
 import { formatEditorialDate } from '@/editorial-date';
 import { getStoryAuthorIdentity, uniqueStoriesByCanonicalSlug } from '@/content';
 import { getResearchSeoTitle } from '@/seo-metadata';
@@ -249,6 +249,7 @@ export function SourceRecordPage() {
 export function TopicsIndexPage() {
   const snapshot = useNewsroomSnapshot();
   const publishedRegistryArticles = usePublishedRegistryArticles();
+  const releaseDiscovery = usePublishedReleaseDiscovery();
   const topics = snapshot.topics
     .filter((topic) => topic.indexable)
     .map((topic) => ({
@@ -267,6 +268,15 @@ export function TopicsIndexPage() {
     { slug: 'ai', label: 'AI', route: '/topic/ai', articles: publishedRegistryArticles.filter((article) => !/india/i.test(article.topic)) },
     { slug: 'india', label: 'India', route: '/topic/india', articles: publishedRegistryArticles.filter((article) => /india/i.test(article.topic)) },
   ].filter((group) => group.articles.length > 0);
+  const publishedArticleBySlug = new Map<string, (typeof publishedRegistryArticles)[number]>(
+    publishedRegistryArticles.map((article) => [article.slug, article]),
+  );
+  const releaseTopicEntries = releaseDiscovery.topics
+    .map((topic) => ({ topic, articles: topic.storySlugs.flatMap((slug) => {
+      const article = publishedArticleBySlug.get(slug);
+      return article ? [article] : [];
+    }) }))
+    .filter(({ articles }) => articles.length > 0);
 
   return <>{shell({ children: <>
     <SeoHead
@@ -324,6 +334,14 @@ export function TopicsIndexPage() {
           <Link href={group.route} className="font-serif text-3xl hover:text-primary">{group.label} release topic</Link>
           <div className="mt-3">{group.articles.map((article) => <Link key={article.slug} href={`/article/${article.slug}`} className="block border-t border-foreground/10 py-3 text-sm hover:text-primary">{article.title}</Link>)}</div>
         </div>)}
+      </section>}
+      {releaseTopicEntries.length > 0 && <section data-testid="published-release-topic-entries" className="grid gap-px border-x border-b border-foreground/15 bg-foreground/15 md:grid-cols-2">
+        {releaseTopicEntries.map(({ topic, articles }) => <article key={topic.slug} className="bg-background p-6 md:p-8">
+          <p className="eyebrow text-primary">Published release topic · {articles.length} {articles.length === 1 ? 'story' : 'stories'}</p>
+          <h2 className="mt-4 font-serif text-3xl">{topic.label}</h2>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">{topic.description}</p>
+          {articles.map((article) => <Link key={article.slug} href={`/article/${article.slug}`} className="mt-4 block border-t border-foreground/10 pt-3 text-sm hover:text-primary">{article.title}<ArrowUpRight aria-hidden="true" size={13} className="ml-1 inline" /></Link>)}
+        </article>)}
       </section>}
       <p className="max-w-2xl py-8 text-xs leading-5 text-muted-foreground">Only topics with published reporting are listed. Counts reflect the current newsroom snapshot; they are not estimates of the wider field.</p>
     </main>

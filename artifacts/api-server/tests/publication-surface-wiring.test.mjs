@@ -22,3 +22,13 @@ test("Reports, Brief, Signals, topic hubs and topic index use the fail-closed pu
   assert.match(publicPages, /export function TopicPage[\s\S]*?usePublishedRegistryArticles/);
   assert.match(authorityPages, /export function TopicsIndexPage[\s\S]*?usePublishedRegistryArticles/);
 });
+
+test("Briefs, Signals, topic entries and glossary render only server-filtered release discovery", () => {
+  assert.match(publicPages, /export function BriefPage[\s\S]*?usePublishedReleaseDiscovery/);
+  assert.match(publicPages, /export function SignalsPage[\s\S]*?usePublishedReleaseDiscovery/);
+  assert.match(publicPages, /export function GlossaryPage[\s\S]*?usePublishedReleaseDiscovery/);
+  assert.match(authorityPages, /export function TopicsIndexPage[\s\S]*?usePublishedReleaseDiscovery/);
+  assert.match(publicPages, /data-testid="published-release-signals"/);
+  assert.match(publicPages, /data-testid="published-article-glossary-links"/);
+  assert.match(authorityPages, /data-testid="published-release-topic-entries"/);
+});

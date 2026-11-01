@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "export NODE_ENV=\"${NODE_ENV:-development}\" && export NEWSROOM_ALLOW_DEFAULT_SCHEDULE_SEED=\"${NEWSROOM_ALLOW_DEFAULT_SCHEDULE_SEED:-true}\" && pnpm run build && pnpm run start",
-    "prebuild": "node ../../scripts/build-article-registry.mjs",
+    "prebuild": "node ../../scripts/build-article-registry.mjs && node ../../scripts/build-release-manifest.mjs && node ../../scripts/build-release-discovery.mjs",
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -14,6 +14,7 @@
     "test:public-newsroom-cache": "node --experimental-strip-types --test tests/public-newsroom-cache.test.ts",
     "test:publication-registry": "node --experimental-strip-types --test tests/publication-registry-visibility.test.ts",
     "test:publication-surfaces": "node --test tests/publication-surface-wiring.test.mjs",
+    "test:release-discovery": "node --experimental-strip-types --test tests/release-discovery-visibility.test.ts",
     "test:gzip": "node --experimental-strip-types --test tests/gzip-response.test.mjs",
     "test:security": "node --test tests/braces-depth-security.test.mjs tests/clerk-proxy.test.mjs tests/editor-auth.test.mjs",
     "replay:automation": "pnpm run build && node ./dist/editorial/replay-command.mjs"

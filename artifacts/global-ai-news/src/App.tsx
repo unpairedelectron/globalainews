@@ -13,6 +13,7 @@ const HomePage = lazy(() => import('./pages/public').then((module) => ({ default
 const BriefPage = lazy(() => import('./pages/public').then((module) => ({ default: module.BriefPage })));
 const SearchPage = lazy(() => import('./pages/public').then((module) => ({ default: module.SearchPage })));
 const SignalsPage = lazy(() => import('./pages/public').then((module) => ({ default: module.SignalsPage })));
+const GlossaryPage = lazy(() => import('./pages/public').then((module) => ({ default: module.GlossaryPage })));
 const ResearchPage = lazy(() => import('./pages/public').then((module) => ({ default: module.ResearchPage })));
 const IndustryPage = lazy(() => import('./pages/public').then((module) => ({ default: module.IndustryPage })));
 const FocusIndexPage = lazy(() => import('./pages/public').then((module) => ({ default: module.FocusIndexPage })));
@@ -63,6 +64,7 @@ function AppRoutes() {
     <Route path="/brief" component={BriefPage} />
     <Route path="/search" component={SearchPage} />
     <Route path="/signals" component={SignalsPage} />
+    <Route path="/glossary" component={GlossaryPage} />
     <Route path="/research"><ResearchIndexPage /></Route>
     <Route path="/research/:slug" component={ResearchRecordPage} />
     <Route path="/data"><DataIndexPage /></Route>

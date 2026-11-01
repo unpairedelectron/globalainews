@@ -13,6 +13,14 @@ import { getVisibleReleaseArticles, type PublicPublicationState } from '@/public
 const snapshotContext = createContext<NewsroomContentSnapshot | null>(null);
 type PublicRegistryArticle = ReturnType<typeof getVisibleReleaseArticles>[number];
 const releaseArticlesContext = createContext<PublicRegistryArticle[]>([]);
+export type PublishedReleaseDiscovery = {
+  briefs: Array<{ slug: string; articleSlug: string; publishAt: string; title: string; dek: string; body: string }>;
+  signals: Array<{ slug: string; articleSlug: string; publishAt: string; label: string; value: string; date: string; source: string; tier: number; confidence: string; evidenceTag: string; topic: string }>;
+  topics: Array<{ slug: string; label: string; route: string; description: string; storySlugs: string[]; indexable: boolean }>;
+  glossaryLinks: Array<{ articleSlug: string; publishAt: string; route: string; terms: string[] }>;
+};
+const emptyReleaseDiscovery: PublishedReleaseDiscovery = { briefs: [], signals: [], topics: [], glossaryLinks: [] };
+const releaseDiscoveryContext = createContext(emptyReleaseDiscovery);
 const NEWSROOM_CONTENT_STALE_TIME_MS = 10 * 60_000;
 
 function StatusPanel({ title, detail, retry }: { title: string; detail: string; retry?: () => void }) {
@@ -42,6 +50,18 @@ export function NewsroomProvider({ children }: { children: ReactNode }) {
       const response = await fetch('/api/newsroom/publication-state', { headers: { Accept: 'application/json' } });
       if (!response.ok) throw new Error(`Publication state request failed (${response.status}).`);
       return response.json() as Promise<{ states: Array<{ slug: string; publishAt: string; status: string }> }>;
+    },
+    staleTime: 60_000,
+    refetchInterval: 5 * 60_000,
+    refetchOnWindowFocus: true,
+    retry: 2,
+  });
+  const releaseDiscoveryQuery = useQuery({
+    queryKey: ['newsroom', 'release-discovery'],
+    queryFn: async () => {
+      const response = await fetch('/api/newsroom/release-discovery', { headers: { Accept: 'application/json' } });
+      if (!response.ok) throw new Error(`Release discovery request failed (${response.status}).`);
+      return response.json() as Promise<PublishedReleaseDiscovery>;
     },
     staleTime: 60_000,
     refetchInterval: 5 * 60_000,
@@ -101,7 +121,9 @@ export function NewsroomProvider({ children }: { children: ReactNode }) {
   return (
     <snapshotContext.Provider value={snapshot}>
       <releaseArticlesContext.Provider value={publishedRegistryArticles}>
-        {children}
+        <releaseDiscoveryContext.Provider value={releaseDiscoveryQuery.data ?? emptyReleaseDiscovery}>
+          {children}
+        </releaseDiscoveryContext.Provider>
       </releaseArticlesContext.Provider>
     </snapshotContext.Provider>
   );
@@ -117,4 +139,8 @@ export function useNewsroomSnapshot(): NewsroomContentSnapshot {
 
 export function usePublishedRegistryArticles(): PublicRegistryArticle[] {
   return useContext(releaseArticlesContext);
+}
+
+export function usePublishedReleaseDiscovery(): PublishedReleaseDiscovery {
+  return useContext(releaseDiscoveryContext);
 }
