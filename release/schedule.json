@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "time": "07:30:00Z",
+  "entries": [
+    { "slug": "india-ai-consultation-paper-what-is-law", "scheduleSlot": 6, "publishAt": "2026-11-02T07:30:00Z" },
+    { "slug": "github-octoverse-2026-agents-pull-requests", "scheduleSlot": 5, "publishAt": "2026-11-03T07:30:00Z" },
+    { "slug": "gated-frontier-models-gemini-4-carbon", "scheduleSlot": 4, "publishAt": "2026-11-05T07:30:00Z" },
+    { "slug": "anthropic-s1-governance-who-controls", "scheduleSlot": 1, "publishAt": "2026-11-07T07:30:00Z" },
+    { "slug": "hyperscaler-capex-2026-reconciled", "scheduleSlot": 3, "publishAt": "2026-11-09T07:30:00Z" },
+    { "slug": "openai-containment-incident-offline-training", "scheduleSlot": 2, "publishAt": "2026-11-11T07:30:00Z" },
+    { "slug": "indiaai-10000-gpu-tender-explained", "scheduleSlot": 7, "publishAt": "2026-11-13T07:30:00Z" },
+    { "slug": "eu-ai-act-december-2026-deadlines", "scheduleSlot": 8, "publishAt": "2026-11-16T07:30:00Z" },
+    { "slug": "ai-in-workforce-plans-october-2026", "scheduleSlot": 9, "publishAt": "2026-11-18T07:30:00Z" },
+    { "slug": "ai-agents-delegated-access-banks-passwords", "scheduleSlot": 10, "publishAt": "2026-11-20T07:30:00Z" }
+  ]
+}

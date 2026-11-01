@@ -82,3 +82,33 @@ Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
 - [x] D1. Re-run pre-publish, cross-article, link, and accessibility checks on all ten articles; fix regressions.
 - [x] D2. Re-run `global-ai-news-smoke` and schedule simulations; verify pre-date exclusion from public pages, sitemaps, and RSS. No live queue writes were made.
 - [x] D3. Update `docs/RELEASE-RUNBOOK.md`, `docs/PROGRESS.md`, and the Lighthouse reports.
+
+## Strict continuation — code-native release state and mobile performance
+
+### A. Release without flattening content (A2)
+
+- [x] A1. Build `release/article-registry.json` from the ten private draft metadata files and one source-controlled schedule, including slug, title, description, topic, schedule slot, UTC `publishAt`, and scheduled status. Staging builds consume the same registry.
+- [ ] A2. Add an additive publish-state table containing slug, `publishAt`, status, `updatedAt`, and `updatedBy`; document the reversible rollback.
+- [ ] A3. Gate `/article/<slug>/` on published state and elapsed publish time: pre-publication returns a true 404; published pages preserve staging content and allowed canonical/robots/banner differences. Staging remains noindex.
+- [ ] A4. Gate topic hubs, Reports, Briefs, Signals, sitemap index/children, news sitemap, RSS, and topic RSS on published state only.
+- [ ] A5. Keep Briefs, Signals, topic entries, and glossary data structured in the repo and gate them through publish state unless an existing CMS round-trip proves safe.
+- [ ] A6. Add Clerk editor-only `/admin/release` with state-only manifest dry run, explicit idempotent Apply, per-item Publish now/Pause/Roll back, and durable audit history.
+- [ ] A7. Add a logged, restart-safe five-minute server-side job that publishes due rows and refreshes public snapshots/caches.
+- [ ] A8. Verify auth, production no-bypass source, ten-article staging/public HTML round trips, every-slot pre/post date simulation and Pause, JSON-LD, sitemap/RSS validity, and link integrity.
+- [ ] A9. Regenerate the publish-state manifest and update the owner card/runbook for the new admin flow.
+
+### B. Mobile performance (never blocks A)
+
+- [ ] B1. Establish one Lighthouse 13.6.0 harness: simulated Slow 4G and 4× CPU, median of five runs, production-like local and deployed URL; document it in `docs/lighthouse-method.md`.
+- [ ] B2. Cover Home, Brief, Reports, India Watch, AI topic, About, Methodology, Corrections, Research, and all ten staged articles in `docs/lighthouse-final.md`.
+- [ ] B3. For each mobile route below 95, record LCP element, TBT, JS bytes, hydration cost, and long tasks; fix the top route-specific causes without lowering targets.
+- [ ] B4. Retest after each fix cycle, at most three cycles per route; document residual causes and continue.
+- [ ] B5. Verify/report LCP ≤2.5s, INP ≤200ms, and CLS ≤0.1 on every route.
+- [ ] B6. Recheck Research with the standard harness; the prior focused run was non-comparable.
+
+### C. Final verification
+
+- [ ] C1. Re-run pre-publish, cross-article consistency, link, and accessibility checks on all ten articles.
+- [ ] C2. Re-run smoke, root typecheck, and all schedule simulations; verify future content stays absent from public surfaces.
+- [ ] C3. Preserve commercial input `NO` and Reports/India Watch noindex.
+- [ ] C4. Update `docs/PROGRESS.md` and the runbook after verification.

@@ -5,3 +5,4 @@
 - 2026-10-31 — Replit requires the owner to initiate publishing from the Publishing surface; prepare and validate the release-ready app but do not trigger deployment from the agent.
 - Omit claims that lack primary-source support or label them as attributed reporting; do not turn vendor statements into independently verified results.
 - Preserve the corrected C-DAC dates, separate the Dutch FTE target from its later AI productivity plan, and keep EU AI Act dates attached to their exact obligations and system categories.
+- 2026-11-01 — Release publication uses code-native, repo-defined article pages; the database stores publish state only. Do not route the prepared articles through the plain-text CMS converter.

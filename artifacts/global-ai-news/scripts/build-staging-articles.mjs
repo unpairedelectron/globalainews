@@ -6,20 +6,10 @@ import MarkdownIt from 'markdown-it';
 const workspaceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../');
 const artifactRoot = path.resolve(workspaceRoot, 'artifacts/global-ai-news');
 const draftsRoot = path.resolve(workspaceRoot, 'docs/editorial-drafts');
+const registryPath = path.join(workspaceRoot, 'release/article-registry.json');
 const outputRoot = path.join(artifactRoot, 'public/staging');
 const markdown = new MarkdownIt({ html: true, linkify: true, typographer: false });
-const releases = [
-  ['india-ai-consultation-paper-what-is-law', 'india-ai-consultation-paper-what-is-law', 6, '2026-11-02'],
-  ['github-octoverse-2026-agents-pull-requests', 'github-octoverse-2026-agents-pull-requests', 5, '2026-11-03'],
-  ['gated-frontier-models-gemini-4-carbon', 'gated-frontier-models-gemini-4-carbon', 4, '2026-11-05'],
-  ['anthropic-s1-governance-who-controls', 'anthropic-s1-governance-who-controls', 1, '2026-11-07'],
-  ['hyperscaler-capex-2026-reconciled', 'hyperscaler-capex-2026-reconciled', 3, '2026-11-09'],
-  ['openai-containment-incident-offline-training', 'openai-containment-incident-offline-training', 2, '2026-11-11'],
-  ['indiaai-10000-gpu-tender-explained', 'indiaai-10000-gpu-tender-explained', 7, '2026-11-13'],
-  ['eu-ai-act-december-2026-deadlines', 'eu-ai-act-december-2026-deadlines', 8, '2026-11-16'],
-  ['ai-in-workforce-plans-october-2026', 'ai-in-workforce-plans-october-2026', 9, '2026-11-18'],
-  ['ai-agents-delegated-access-banks-passwords', 'ai-agents-delegated-access-banks-passwords', 10, '2026-11-20'],
-];
+const releases = JSON.parse(readFileSync(registryPath, 'utf8')).entries;
 const escapeHtml = (value) => String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 const dateLabel = (value) => new Intl.DateTimeFormat('en-IN', {
   dateStyle: 'long',
@@ -64,7 +54,9 @@ markdown.renderer.rules.table_close = () => '</table></div>\n';
 mkdirSync(outputRoot, { recursive: true });
 
 const cards = [];
-for (const [slug, filename, number, publishDate] of releases) {
+for (const { slug, scheduleSlot: number, publishAt } of releases) {
+  const filename = slug;
+  const publishDate = publishAt.slice(0, 10);
   const articlePath = path.join(draftsRoot, 'articles', `${filename}.md`);
   const metaPath = path.join(draftsRoot, 'articles', `${filename}.meta.json`);
   const schemaPath = path.join(draftsRoot, 'articles', `${filename}.schema.json`);

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "release/schedule.json and private-draft metadata",
+  "entries": [
+    {
+      "slug": "india-ai-consultation-paper-what-is-law",
+      "title": "India AI Rules: What Is Law and What Is Expected?",
+      "description": "India’s 2026 IT Rules cover specified synthetic media. Here is what is in force, how the takedown clocks differ, and what remains only an expectation.",
+      "topic": "India Watch",
+      "scheduleSlot": 6,
+      "publishAt": "2026-11-02T07:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "slug": "github-octoverse-2026-agents-pull-requests",
+      "title": "GitHub Octoverse 2026: Agents Start 40% of PRs",
+      "description": "GitHub says agents started over 40% of September PRs. What the signal measures, misses, and how teams can track review outcomes.",
+      "topic": "Developer & Workforce",
+      "scheduleSlot": 5,
+      "publishAt": "2026-11-03T07:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "slug": "gated-frontier-models-gemini-4-carbon",
+      "title": "Gemini 4 Carbon: Who Can Test It—and What Scores Show",
+      "description": "Google will gate Gemini 4 Carbon to cyber defenders first. We separate access claims, benchmark methods, independent results and missing safety documents.",
+      "topic": "Models & Policy",
+      "scheduleSlot": 4,
+      "publishAt": "2026-11-05T07:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "slug": "anthropic-s1-governance-who-controls",
+      "title": "Anthropic S-1: Who Owns It—and Who Controls the Board?",
+      "description": "Anthropic’s S-1 separates public economic rights from founder voting power and Trust board control. We explain the proposed classes and reported loss.",
+      "topic": "Policy & Markets",
+      "scheduleSlot": 1,
+      "publishAt": "2026-11-07T07:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "slug": "hyperscaler-capex-2026-reconciled",
+      "title": "Hyperscaler CapEx: Why 2026 Figures Don’t Add Cleanly",
+      "description": "Meta, Alphabet, Microsoft and Amazon report different capital-spending figures. We explain the mismatched periods, lease bases and AI-only gaps.",
+      "topic": "Infrastructure & Markets",
+      "scheduleSlot": 3,
+      "publishAt": "2026-11-09T07:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "slug": "openai-containment-incident-offline-training",
+      "title": "OpenAI’s Offline Training Policy Starts With an Incident",
+      "description": "OpenAI says a DNS error enabled limited internet access during training. We explain the timeline, offline controls and what remains unconfirmed.",
+      "topic": "AI Safety & Security",
+      "scheduleSlot": 2,
+      "publishAt": "2026-11-11T07:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "slug": "indiaai-10000-gpu-tender-explained",
+      "title": "C-DAC’s 10,000-Unit Tender: Not a Deployment Count",
+      "description": "C-DAC seeks AI compute providers in two stages. The 10,000-unit figure is a tender requirement, not deployed capacity or a completed purchase.",
+      "topic": "India Watch / Infrastructure",
+      "scheduleSlot": 7,
+      "publishAt": "2026-11-13T07:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "slug": "eu-ai-act-december-2026-deadlines",
+      "title": "EU AI Act Deadlines Are Not One Deadline",
+      "description": "A practical guide to the AI Act's separate 2026, 2027 and 2028 dates, including Article 50 transitions and high-risk system categories.",
+      "topic": "Policy & Compliance",
+      "scheduleSlot": 8,
+      "publishAt": "2026-11-16T07:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "slug": "ai-in-workforce-plans-october-2026",
+      "title": "Workforce Plans Do Not Prove AI Caused the Cuts",
+      "description": "Microsoft announced voluntary exits; the Dutch government set a multi-year FTE target. Neither official source attributes job losses to AI.",
+      "topic": "Work & Society",
+      "scheduleSlot": 9,
+      "publishAt": "2026-11-18T07:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "slug": "ai-agents-delegated-access-banks-passwords",
+      "title": "AI Agents Need Access, Not Your Password",
+      "description": "Credential brokers, separate identities and local AI each address different boundaries—not every security risk in an agent workflow.",
+      "topic": "Agents & Security",
+      "scheduleSlot": 10,
+      "publishAt": "2026-11-20T07:30:00Z",
+      "status": "scheduled"
+    }
+  ]
+}
