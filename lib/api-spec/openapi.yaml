@@ -47,6 +47,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /newsroom/publication-state:
+    get:
+      operationId: getPublicationsState
+      tags: [newsroom]
+      summary: Get publication-state rows
+      description: Returns publish-state metadata without editorial article bodies.
+      responses:
+        "200":
+          description: Publication state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicationStateSnapshot"
+        "503":
+          description: Publication state temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /newsroom/metadata:
     get:
       operationId: getNewsroomMetadata
@@ -1658,6 +1677,30 @@ components:
     EditorialReleaseStatus:
       type: string
       enum: [draft, scheduled, published, unpublished, archived, canceled]
+    PublicationState:
+      type: string
+      enum: [staged, scheduled, published, paused]
+    PublicationStateEntry:
+      type: object
+      properties:
+        slug:
+          type: string
+        publishAt:
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/PublicationState"
+      required: [slug, publishAt, status]
+      additionalProperties: false
+    PublicationStateSnapshot:
+      type: object
+      properties:
+        states:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicationStateEntry"
+      required: [states]
+      additionalProperties: false
     EditorialCadence:
       type: string
       enum: [daily, weekly]

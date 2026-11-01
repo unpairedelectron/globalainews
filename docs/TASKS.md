@@ -89,7 +89,7 @@ Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
 
 - [x] A1. Build `release/article-registry.json` from the ten private draft metadata files and one source-controlled schedule, including slug, title, description, topic, schedule slot, UTC `publishAt`, and scheduled status. Staging builds consume the same registry.
 - [x] A2. Add an additive publish-state table containing slug, `publishAt`, status, `updatedAt`, and `updatedBy`; document the reversible rollback.
-- [ ] A3. Gate `/article/<slug>/` on published state and elapsed publish time: pre-publication returns a true 404; published pages preserve staging content and allowed canonical/robots/banner differences. Staging remains noindex.
+- [x] A3. Gate `/article/<slug>/` on published state and elapsed publish time: pre-publication returns a true 404; published pages preserve staging content and allowed canonical/robots/banner differences. Staging remains noindex.
 - [ ] A4. Gate topic hubs, Reports, Briefs, Signals, sitemap index/children, news sitemap, RSS, and topic RSS on published state only.
 - [ ] A5. Keep Briefs, Signals, topic entries, and glossary data structured in the repo and gate them through publish state unless an existing CMS round-trip proves safe.
 - [ ] A6. Add Clerk editor-only `/admin/release` with state-only manifest dry run, explicit idempotent Apply, per-item Publish now/Pause/Roll back, and durable audit history.

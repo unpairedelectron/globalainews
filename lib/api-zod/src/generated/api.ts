@@ -347,6 +347,19 @@ export const GetNewsroomContentResponse = zod.object({
 
 
 /**
+ * Returns publish-state metadata without editorial article bodies.
+ * @summary Get publication-state rows
+ */
+export const GetPublicationsStateResponse = zod.object({
+  "states": zod.array(zod.object({
+  "slug": zod.string(),
+  "publishAt": zod.coerce.date(),
+  "status": zod.enum(['staged', 'scheduled', 'published', 'paused'])
+}))
+})
+
+
+/**
  * Returns the build-safe title and description manifest generated from the same maintained source as newsroom content.
  * @summary Get metadata for published newsroom routes
  */

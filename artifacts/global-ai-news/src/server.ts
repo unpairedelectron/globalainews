@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url';
 import express, { type Request, type Response } from 'express';
 
 import { renderAmpArticleDocument } from './amp-html';
+import { articleRegistry } from './article-registry.generated';
+import { isArticlePublishable, makePublishedArticleHtml } from './server/code-native-publication';
 import {
   ARTICLE_NOT_FOUND_HTML,
   fetchNewsroomContentSnapshot,
@@ -297,6 +299,73 @@ app.use((request, response, next) => {
   response.once('close', () => {
     if (!response.writableFinished) logCompletion('article_render_connection_closed');
   });
+
+  if (articleRegistry.some((entry) => entry.slug === articlePath.slug)) {
+    void (async () => {
+      const apiOrigin = process.env.NEWSROOM_API_ORIGIN;
+      if (!apiOrigin) throw new Error('Newsroom API origin is not configured.');
+      const stateResponse = await fetch(
+        new URL('/api/newsroom/publication-state', apiOrigin),
+        { signal: AbortSignal.timeout(5_000) },
+      );
+      if (!stateResponse.ok) throw new Error('Publication state is unavailable.');
+      const payload: unknown = await stateResponse.json();
+      if (
+        typeof payload !== 'object' ||
+        payload === null ||
+        !('states' in payload) ||
+        !Array.isArray(payload.states)
+      ) {
+        throw new Error('Publication state response is invalid.');
+      }
+      const state = payload.states.find((candidate: unknown) =>
+        typeof candidate === 'object' &&
+        candidate !== null &&
+        'slug' in candidate &&
+        candidate.slug === articlePath.slug,
+      ) as { status?: unknown; publishAt?: unknown } | undefined;
+      if (!isArticlePublishable(state)) {
+        routeStatus = 404;
+        response.status(404);
+        response.setHeader('Cache-Control', 'no-store');
+        response.setHeader('Content-Type', 'text/html; charset=utf-8');
+        setRobotsTag(response);
+        response.send(request.method === 'HEAD' ? undefined : ARTICLE_NOT_FOUND_HTML);
+        return;
+      }
+
+      const stagedPath = path.resolve(
+        publicDirectory,
+        'staging',
+        'article',
+        articlePath.slug!,
+        'index.html',
+      );
+      const stagingRoot = path.resolve(publicDirectory, 'staging', 'article');
+      if (!stagedPath.startsWith(`${stagingRoot}${path.sep}`)) {
+        throw new Error('Staging article path is invalid.');
+      }
+      const html = makePublishedArticleHtml(readFileSync(stagedPath, 'utf8'));
+      routeStatus = 200;
+      response.status(200);
+      response.setHeader('Content-Type', 'text/html; charset=utf-8');
+      response.setHeader('Cache-Control', 'no-store');
+      response.setHeader('X-Robots-Tag', 'index, follow');
+      response.send(request.method === 'HEAD' ? undefined : html);
+    })().catch(() => {
+      routeStatus = 503;
+      response.status(503);
+      response.setHeader('Cache-Control', 'no-store');
+      response.setHeader('Content-Type', 'text/html; charset=utf-8');
+      setRobotsTag(response);
+      response.send(
+        request.method === 'HEAD'
+          ? undefined
+          : '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><title>Article temporarily unavailable</title></head><body><main><h1>Article temporarily unavailable</h1></main></body></html>',
+      );
+    });
+    return;
+  }
 
   if (hasPrerenderedArticleHtml(pathname, publicDirectory)) {
     next();

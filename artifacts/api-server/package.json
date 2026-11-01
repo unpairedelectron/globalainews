@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "export NODE_ENV=\"${NODE_ENV:-development}\" && export NEWSROOM_ALLOW_DEFAULT_SCHEDULE_SEED=\"${NEWSROOM_ALLOW_DEFAULT_SCHEDULE_SEED:-true}\" && pnpm run build && pnpm run start",
+    "prebuild": "node ../../scripts/build-article-registry.mjs",
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",

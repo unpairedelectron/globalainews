@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { startEditorialAutomation } from "./editorial/automation";
+import { startPublicationStateScheduler } from "./editorial/publication-state";
 
 const rawPort = process.env["PORT"];
 
@@ -23,5 +24,6 @@ app.listen(port, (err) => {
   }
 
   startEditorialAutomation();
+  startPublicationStateScheduler();
   logger.info({ port }, "Server listening");
 });

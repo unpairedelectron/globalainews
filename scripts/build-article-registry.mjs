@@ -55,3 +55,11 @@ writeFileSync(
   path.join(root, "release/article-registry.json"),
   `${JSON.stringify(registry, null, 2)}\n`,
 );
+writeFileSync(
+  path.join(root, "artifacts/api-server/src/editorial/article-registry.generated.ts"),
+  `export const articleRegistry = ${JSON.stringify(registry.entries, null, 2)} as const;\n`,
+);
+writeFileSync(
+  path.join(root, "artifacts/global-ai-news/src/article-registry.generated.ts"),
+  `export const articleRegistry = ${JSON.stringify(registry.entries, null, 2)} as const;\n`,
+);

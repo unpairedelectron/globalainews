@@ -39,7 +39,8 @@ import type {
   NewsroomMetadata,
   ProfileReviewDate,
   ProfileReviewQueue,
-  ProfileReviewUpdate
+  ProfileReviewUpdate,
+  PublicationStateSnapshot
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -213,6 +214,84 @@ export function useGetNewsroomContent<TData = Awaited<ReturnType<typeof getNewsr
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetNewsroomContentQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetPublicationsStateUrl = () => {
+
+
+
+
+  return `/api/newsroom/publication-state`
+}
+
+/**
+ * Returns publish-state metadata without editorial article bodies.
+ * @summary Get publication-state rows
+ */
+export const getPublicationsState = async ( options?: Parameters<typeof customFetch>[1]): Promise<PublicationStateSnapshot> => {
+
+  return customFetch<PublicationStateSnapshot>(getGetPublicationsStateUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPublicationsStateQueryKey = () => {
+    return [
+    `/api/newsroom/publication-state`
+    ] as const;
+    }
+
+
+export const getGetPublicationsStateQueryOptions = <TData = Awaited<ReturnType<typeof getPublicationsState>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationsState>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicationsStateQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicationsState>>> = ({ signal }) => getPublicationsState({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicationsState>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPublicationsStateQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicationsState>>>
+export type GetPublicationsStateQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Get publication-state rows
+ */
+
+export function useGetPublicationsState<TData = Awaited<ReturnType<typeof getPublicationsState>>, TError = ErrorType<ErrorResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationsState>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPublicationsStateQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
