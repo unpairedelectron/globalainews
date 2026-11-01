@@ -38,3 +38,9 @@ For mobile LCP failures, record the exact LCP element URL and its Resource Timin
 **Why:** The newsroom fixture repeatedly showed the hero transfer finishing well before its final LCP paint, and changing image formats did not resolve the gap.
 
 **How to apply:** Keep the existing no-regression threshold intact and use paired paint/resource timings to direct the next trace.
+
+Production Lighthouse previews that are served locally need a same-origin `/api` proxy to the workspace API, and that proxy must stream raw HTTP responses without transparently decompressing them. Browser route checks should wait for each route's real heading, with normalization logic defined inside the browser callback.
+
+**Why:** Direct Vite access misses Replit's path routing, a remote API hop can distort paint timing, and Node `fetch` decompresses responses before the browser's bandwidth simulation. Route-specific readiness also avoids treating a loading fallback as a finished page.
+
+**How to apply:** Build the production output, proxy `/api` to the local API service, preserve content encoding and length headers, and assert the expected route heading before keyboard checks.

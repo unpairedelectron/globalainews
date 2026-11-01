@@ -9,6 +9,7 @@ Scope: the owner has authorized staging, site wiring, scheduled release, and pub
 - [x] 1.3 Run mobile and desktop Lighthouse on all 10 articles, home, Brief, Reports, and each topic hub; save results to `docs/lighthouse-release.md`.
 - [ ] 1.4 Fix failures without lowering targets; log blockers after three attempts on one item.
 - [x] 1.5 Check keyboard access, `<details>`, menu, TOC, image alt text, 4.5:1 contrast, 360px width, and dark mode.
+- [x] 1.6 Add `pnpm --filter @workspace/global-ai-news run audit:preview` as a repeatable regression gate for every generated staging article and the home, Brief, Reports, and India topic routes. It reports 360px dark-mode layout, WCAG accessibility, keyboard, and mobile/desktop Lighthouse results per route.
 
 ## Stage 2 — final content gate
 

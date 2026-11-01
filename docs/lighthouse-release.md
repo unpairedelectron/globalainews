@@ -52,3 +52,11 @@ The ten staging routes were re-audited after fixing long citation URLs that caus
 ## Verification
 
 The 10-route static preview, metadata, schema, disclosure and image checks passed. The live route verifier was tested against an isolated fixture for an indexable response and a noindex rejection. No production release record was created during this audit.
+
+## Repeatable preview regression gate
+
+Run `pnpm --filter @workspace/global-ai-news run audit:preview`. The command builds the production app, starts an isolated production server on a free local port, discovers every generated noindex staging article route, and checks those pages plus `/`, `/brief/`, `/reports/`, and `/topic/india/`. Its temporary proxy forwards `/api` to the workspace API at `http://127.0.0.1:8080` by default while preserving production response compression. The temporary servers are stopped after the report. Set `PREVIEW_AUDIT_URL` to audit an already-running production-built preview instead; set `PREVIEW_AUDIT_API_URL` or `NEWSROOM_API_ORIGIN` to override the API origin.
+
+Every route is checked at 360px with dark color preference for document overflow, WCAG-tagged axe serious/critical violations, first-Tab visible focus, and Enter-operated disclosures where present. Lighthouse runs mobile and desktop on every route and reports Performance, Accessibility, and Best Practices scores with the route and device.
+
+The fixed failure limits are mobile Performance 80, desktop Performance 95, Accessibility 95 on both devices, and Best Practices 70 on both devices. The latest production run passed 95 of 98 checks; its three failures were desktop Performance on `/` (75, LCP 4,377 ms), `/brief/` (78, LCP 4,027 ms), and `/topic/india/` (79, LCP 3,635 ms). All staging-article desktop scores and all mobile scores passed; all routes passed the Accessibility and Best Practices limits. The gate remains red for those three desktop routes, with limits unchanged. Public Best Practices is 77 because of known third-party-cookie/DevTools findings. SEO is reported in the existing release audit but is not a failure threshold here because noindex preview and section routes intentionally score lower. The command does not accept threshold overrides.
