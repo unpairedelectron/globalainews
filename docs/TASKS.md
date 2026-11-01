@@ -88,7 +88,7 @@ Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
 ### A. Release without flattening content (A2)
 
 - [x] A1. Build `release/article-registry.json` from the ten private draft metadata files and one source-controlled schedule, including slug, title, description, topic, schedule slot, UTC `publishAt`, and scheduled status. Staging builds consume the same registry.
-- [ ] A2. Add an additive publish-state table containing slug, `publishAt`, status, `updatedAt`, and `updatedBy`; document the reversible rollback.
+- [x] A2. Add an additive publish-state table containing slug, `publishAt`, status, `updatedAt`, and `updatedBy`; document the reversible rollback.
 - [ ] A3. Gate `/article/<slug>/` on published state and elapsed publish time: pre-publication returns a true 404; published pages preserve staging content and allowed canonical/robots/banner differences. Staging remains noindex.
 - [ ] A4. Gate topic hubs, Reports, Briefs, Signals, sitemap index/children, news sitemap, RSS, and topic RSS on published state only.
 - [ ] A5. Keep Briefs, Signals, topic entries, and glossary data structured in the repo and gate them through publish state unless an existing CMS round-trip proves safe.

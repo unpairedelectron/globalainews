@@ -6,3 +6,4 @@
 - Omit claims that lack primary-source support or label them as attributed reporting; do not turn vendor statements into independently verified results.
 - Preserve the corrected C-DAC dates, separate the Dutch FTE target from its later AI productivity plan, and keep EU AI Act dates attached to their exact obligations and system categories.
 - 2026-11-01 — Release publication uses code-native, repo-defined article pages; the database stores publish state only. Do not route the prepared articles through the plain-text CMS converter.
+- 2026-11-01 — Publish-state schema changes are additive; production schema changes are only applied through Replit's Publish review. The rollback preserves state by reverting code first and leaves table removal to an explicitly approved schema diff.
