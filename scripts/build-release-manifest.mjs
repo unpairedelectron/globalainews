@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const draftDir = path.join(root, 'docs/editorial-drafts/articles');
 const factDir = path.join(root, 'docs/fact-logs');
-const output = path.join(root, 'release/manifest.json');
+const output = path.join(root, 'release/editorial-manifest.json');
 const dates = [
   [6, 'india-ai-consultation-paper-what-is-law', '2026-11-02'],
   [5, 'github-octoverse-2026-agents-pull-requests', '2026-11-03'],

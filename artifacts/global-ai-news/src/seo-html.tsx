@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { getPublicDateModified, getStoryAuthorIdentity, uniqueStoriesByCanonicalSlug, type NewsroomContentSnapshot } from './content';
 import { getCanonicalUrl, getStructuredData, SITE_URL, type SeoMetadata } from './seo-metadata';
 import { SeoPrerender } from './seo-prerender';
-import { getEditorialImagePath } from './editorial-images';
+import { getEditorialImageSources } from './editorial-images';
 import { STATIC_PRERENDER_ROUTES } from './static-prerender-routes';
 import {
   STATIC_PRERENDER_CLARITY_BOOTSTRAP,
@@ -68,6 +68,7 @@ export function renderSeoRouteHtml(
   route: string,
   metadata: SeoMetadata,
   contentSnapshot: NewsroomContentSnapshot,
+  routeModulePreloadHrefs?: readonly string[],
 ): string {
   const canonical = getCanonicalUrl(metadata.path);
   const articleSlug = metadata.article
@@ -113,9 +114,21 @@ export function renderSeoRouteHtml(
   const leadStory = route === '/'
     ? uniqueStoriesByCanonicalSlug(contentSnapshot.stories)[0]
     : articleStory;
+  const leadImageSources = leadStory
+    ? getEditorialImageSources(leadStory.slug)
+    : undefined;
+  const leadImageSizes = route === '/'
+    ? '(min-width: 1440px) 760px, (min-width: 1024px) 58vw, calc(100vw - 40px)'
+    : '(min-width: 768px) 600px, calc(100vw - 40px)';
+  const leadImageHref = leadImageSources?.avif.split(',')[0]?.trim().split(/\s+/)[0];
   const priorityImagePreload = leadStory
-    ? `<link rel="preload" as="image" type="image/jpeg" href="${escapeHtml(getEditorialImagePath(leadStory.slug))}" fetchpriority="high" />`
+    && leadImageHref
+    && leadImageSources
+    ? `<link rel="preload" as="image" type="image/avif" href="${escapeHtml(leadImageHref)}" imagesrcset="${escapeHtml(leadImageSources.avif)}" imagesizes="${escapeHtml(leadImageSizes)}" fetchpriority="high" />`
     : '';
+  const routeModulePreloads = routeModulePreloadHrefs
+    ?.map((href) => `<link rel="modulepreload" href="${escapeHtml(href)}" />`)
+    .join('') ?? '';
 
   const existingHeadMetadata = [
     /<title>[\s\S]*?<\/title>\s*/gi,
@@ -142,6 +155,7 @@ export function renderSeoRouteHtml(
   );
   const headMetadata = `    <title>${title}</title>
     ${priorityImagePreload}
+    ${routeModulePreloads}
     <meta name="description" content="${description}" />
     ${metadata.indexable === false ? '<meta name="robots" content="noindex,follow" />' : metadata.article ? '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />' : ''}
     <link rel="canonical" href="${canonicalUrl}" />

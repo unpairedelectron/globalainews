@@ -8,7 +8,7 @@ References: [External Access Tokens](https://docs.replit.com/features/deployment
 
 ## Release window
 
-The ten articles are intended to publish at 07:30 UTC (13:00 Asia/Kolkata). Use the editor release queue and preserve its audit history; do not write release rows directly to the database.
+The ten articles are intended to publish at 07:30 UTC (13:00 Asia/Kolkata). Use `/admin/release` and preserve its audit history; do not write release rows directly to the database. `release/manifest.json` is state-only: each row contains only `slug`, `publishAt`, and `status`. Article and Brief copy remains repository-authored; Brief visibility follows its article's state.
 
 | Date (UTC) | Article | Slug |
 |---|---:|---|
@@ -27,20 +27,20 @@ The ten articles are intended to publish at 07:30 UTC (13:00 Asia/Kolkata). Use 
 
 1. Confirm the article remains approved, its sources still support the claims, and its editorial disclosure and update date are current.
 2. Confirm the corresponding Daily Brief uses the article and only verified fact-log items.
-3. Verify the editor queue shows the intended UTC release time and the saved change appears in release history.
+3. Upload the state-only manifest, run a dry run, and verify the editor shows the intended UTC release time. Apply only after explicit owner approval; confirm the change appears in release history.
 4. Keep the public canonical article URL unchanged; staging URLs are for QA only.
 
 ## Move a release earlier or pause it
 
-- **Early release:** an authorized editor reschedules the release to the approved earlier UTC time. Recheck the content gate first, then run the live verification command after publication.
-- **Temporary pause:** reschedule the release to a later, explicitly approved UTC time. Do not use Cancel for a temporary hold; canceled rows are not restored through the current editor controls.
-- **Permanent cancellation:** use the editor's Cancel action only after the owner approves it. The API records cancellation in release history; do not delete rows directly.
+- **Early release:** after owner approval and a fresh content/source check, use **Publish now** in `/admin/release`. Run the live verification command and confirm the public surfaces update.
+- **Temporary pause:** use **Pause** in `/admin/release`. Confirm the article, Brief, topic, sitemap, and feeds are no longer presented as live. To resume, restore an approved scheduled state through the state-only manifest and verify the due time before applying.
+- **Rollback:** use **Roll back** in `/admin/release` to restore the previous audited publication state. Confirm the resulting article response and sitemap/feed visibility. Do not edit publication rows directly.
 
 ## Rollback and corrections
 
-- **Before publication:** reschedule or cancel as above, then confirm the queue and history show the change.
-- **After publication:** preserve the canonical URL. For a factual correction, edit the release through the editor so the correction is audited and the article's modification date updates. Do not silently replace a file or remove citations.
-- **Urgent legal or safety issue:** the owner decides whether to cancel/unpublish. Record the reason and action in release history, then verify the article, sitemap, and feeds no longer present it as live. If the editor controls cannot restore a canceled item, create a separately reviewed replacement rather than editing the database.
+- **Before publication:** pause or adjust the approved schedule through the state-only admin flow, then confirm the manifest and history show the change.
+- **After publication:** preserve the canonical URL. Make factual corrections in the repository-authored article and source record; retain citations, update the editorial modification date, and rerun content/SEO checks. Use the admin page only for publication state.
+- **Urgent legal or safety issue:** the owner decides whether to pause or roll back. Record the action in release history, then verify the article, sitemap, and feeds no longer present it as live. Do not delete rows or rewrite article content through the state manifest.
 - After any correction, run `pnpm --filter @workspace/global-ai-news run verify:live -- <slug>` and check the release history entry.
 
 ## Article-specific update triggers
@@ -60,4 +60,10 @@ The check uses the approved canonical route in the article metadata and requires
 
 ## Current readiness note
 
-The staging previews are not release records. Creating or changing queue entries requires an authenticated editor session. Do not treat this runbook or a passing staging check as proof that a release is scheduled.
+The staging previews are not release records. The generated state manifest is not itself a database change; creating or changing publication state requires an authenticated editor action. No state rows were applied as part of this work.
+
+## Verification status — 2026-11-02
+
+The final local verification passed the smoke suite, root typecheck, ten-slot fake-clock scheduler tests, state-only publication manifest checks, release-manifest dry-run/idempotency checks, and the built-route link audit. The schedule remains 07:30 UTC / 13:00 IST on the dates above. Future or unpublished articles remain absent from public article routes.
+
+The owner-confirmed commercial input remains `NO`; Reports and India Watch remain `noindex`. This verification did not publish or deploy content, write publication-state rows, change production schema, or alter analytics collection. Lighthouse results retain a documented performance gap on seven of ten retested route/device pairs; see [`lighthouse-final.md`](./lighthouse-final.md). This note records QA status and is not authorization to publish.

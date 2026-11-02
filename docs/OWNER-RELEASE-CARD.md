@@ -1,9 +1,9 @@
 # Owner release card
 
-**Status: not ready to apply.** The authenticated import page and safe full-story API contract (A2) are still pending. The manifest and fixture dry-run are not live queue records.
+**Status: prepared, not applied.** The Clerk-protected admin page and state-only manifest are ready for an owner-approved release. This work did not apply any state or publish an article.
 
-1. Wait until A2 is complete; do not write the manifest through the current plain-text release endpoint.
-2. Sign in through the existing Clerk editor account; do not use a token or test-auth bypass.
-3. Upload `release/manifest.json`, run the no-write dry-run, and inspect every article, Brief, source, date, and disclosure before applying.
-4. Apply only from the editor page; verify the durable release-history entries and confirm the last-apply rollback is available.
-5. **OWNER: flip to index when ready.** Keep Reports and India Watch `noindex,follow` until both are substantive index pages and the owner approves indexing.
+1. Confirm the article, sources, disclosure, and scheduled UTC time against `docs/RELEASE-RUNBOOK.md`.
+2. Sign in with the verified Clerk editor account and open `/admin/release`.
+3. Upload `release/manifest.json`; confirm it contains only the ten article slugs, status, and `publishAt` values. It contains no article or Brief copy.
+4. Run the dry run and review every change. Apply only after owner approval; then confirm release history and rollback are available.
+5. After an article goes live, run `verify:live` and submit/inspect the sitemap. **OWNER: flip to index when ready.** Keep Reports and India Watch `noindex,follow` until substantive and approved.

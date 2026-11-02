@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "export NODE_ENV=\"${NODE_ENV:-development}\" && export NEWSROOM_ALLOW_DEFAULT_SCHEDULE_SEED=\"${NEWSROOM_ALLOW_DEFAULT_SCHEDULE_SEED:-true}\" && pnpm run build && pnpm run start",
-    "prebuild": "node ../../scripts/build-article-registry.mjs && node ../../scripts/build-release-manifest.mjs && node ../../scripts/build-release-discovery.mjs",
+    "prebuild": "node ../../scripts/build-article-registry.mjs && node ../../scripts/build-publication-state-manifest.mjs && node ../../scripts/build-release-manifest.mjs && node ../../scripts/build-release-discovery.mjs",
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",

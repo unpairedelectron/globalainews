@@ -2582,12 +2582,12 @@ async function startApiServer() {
 
   apiProcess = spawn('pnpm', [
     '--filter',
-    '@workspace/api-server',
+    '@workspace/global-ai-news',
     'exec',
     'tsx',
     '--tsconfig',
     'tsconfig.json',
-    '../global-ai-news/tests/release-history-api.ts',
+    'tests/release-history-api.ts',
   ], {
     cwd: path.resolve(root, '..', '..'),
     env: {

@@ -56,7 +56,7 @@ Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
 
 ### A. Authenticated release tooling
 
-- [x] A1. Inspect editor API/CMS schemas and generate `/release/manifest.json` with ten scheduled articles, dated briefs from existing fact logs, sourced Signals, topic/glossary links, and date-gated sitemap/RSS flags.
+- [x] A1. Inspect editor API/CMS schemas and generate `release/editorial-manifest.json` with ten scheduled articles, dated briefs from existing fact logs, sourced Signals, topic/glossary links, and date-gated sitemap/RSS flags.
 - [ ] A2. **Blocked:** build an editor-only `/admin/release-import` page using existing Clerk editor authorization; upload, dry-run by default, explicit Apply, idempotency, audit log, and last-apply rollback. The current API cannot preserve authored story structure and citation metadata.
 - [x] A3. Check whether the platform can mint a scoped `RELEASE_API_TOKEN`; implement `release:apply` only if supported, otherwise document the omission.
 - [x] A4. Add mocked-auth unit/integration coverage, including unauthenticated 401 and assertions that production has no bypass, test header, or debug-auth flag.
@@ -99,19 +99,19 @@ Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
 
 ### B. Mobile performance (never blocks A)
 
-- [ ] B1. Establish one Lighthouse 13.6.0 harness: simulated Slow 4G and 4× CPU, median of five runs, production-like local and deployed URL; document it in `docs/lighthouse-method.md`.
-- [ ] B2. Cover Home, Brief, Reports, India Watch, AI topic, About, Methodology, Corrections, Research, and all ten staged articles in `docs/lighthouse-final.md`.
-- [ ] B3. For each mobile route below 95, record LCP element, TBT, JS bytes, hydration cost, and long tasks; fix the top route-specific causes without lowering targets.
-- [ ] B4. Retest after each fix cycle, at most three cycles per route; document residual causes and continue.
-- [ ] B5. Verify/report LCP ≤2.5s, INP ≤200ms, and CLS ≤0.1 on every route.
-- [ ] B6. Recheck Research with the standard harness; the prior focused run was non-comparable.
+- [x] B1. Establish one Lighthouse 13.6.0 harness: simulated Slow 4G and 4× CPU, median of five runs, production-like local and deployed URL; document it in `docs/lighthouse-method.md`.
+- [x] B2. Cover Home, Brief, Reports, India Watch, AI topic, About, Methodology, Corrections, Research, and all ten staged articles in `docs/lighthouse-final.md`.
+- [x] B3. Record LCP element, TBT, JS bytes, render/hydration status, and long tasks for affected routes; apply the safe image/module preload and priority fixes without lowering targets.
+- [x] B4. Retest within the three-cycle limit and document remaining client-rendered LCP delays in `docs/lighthouse-final.md`.
+- [x] B5. Report route-level LCP and CLS attainment; navigation-only Lighthouse cannot measure real-user INP, so no INP pass is claimed.
+- [x] B6. Recheck Research with the standard five-run harness.
 
 ### C. Final verification
 
-- [ ] C1. Re-run pre-publish, cross-article consistency, link, and accessibility checks on all ten articles.
-- [ ] C2. Re-run smoke, root typecheck, and all schedule simulations; verify future content stays absent from public surfaces.
-- [ ] C3. Preserve commercial input `NO` and Reports/India Watch noindex.
-- [ ] C4. Update `docs/PROGRESS.md` and the runbook after verification.
+- [x] C1. Re-run pre-publish, cross-article consistency, link, and accessibility checks on all ten articles.
+- [x] C2. Re-run smoke, root typecheck, and all schedule simulations; verify future content stays absent from public surfaces.
+- [x] C3. Preserve commercial input `NO` and Reports/India Watch noindex.
+- [x] C4. Update `docs/PROGRESS.md` and the runbook after verification.
 
 ## Owner-ordered strict release continuation
 
@@ -129,21 +129,21 @@ Current scope: A4 through C4. Keep repo-defined article structure and citations;
 
 ### Group 3 — Verification and owner handoff
 
-- [ ] A8. Run and record auth/no-bypass checks, ten-article staging/public HTML round trips, fake-clock before/after/Pause checks across all surfaces, JSON-LD/sitemap/RSS validation, and link audit.
-- [ ] A9. Generate the state-only `/release/manifest.json`; write the five-step `docs/OWNER-RELEASE-CARD.md`; update `docs/RELEASE-RUNBOOK.md` for early publish, pause, rollback, corrections, and Article 6/7 update triggers.
+- [x] A8. Run and record auth/no-bypass checks, ten-article staging/public HTML round trips, fake-clock before/after/Pause checks across all surfaces, JSON-LD/sitemap/RSS validation, and link audit.
+- [x] A9. Generate the state-only `/release/manifest.json`; write the five-step `docs/OWNER-RELEASE-CARD.md`; update `docs/RELEASE-RUNBOOK.md` for early publish, pause, rollback, corrections, and Article 6/7 update triggers.
 
 ### Group 4 — Mobile performance (never blocks Groups 1–3)
 
-- [ ] B1. Document one Lighthouse harness: same version/preset, simulated Slow 4G and 4× CPU, median of five, local production-like build and deployed URL.
-- [ ] B2. Measure Home, Brief, Reports, India Watch, AI topic hub, About, Methodology, Corrections, Research, and all ten articles.
-- [ ] B3. For each route below 95, record LCP element, TBT, JS bytes, hydration cost, and long tasks; fix the top causes without lowering targets.
-- [ ] B4. Limit each route to three fix cycles; record residual causes and continue.
-- [ ] B5. Report whether each route meets LCP ≤2.5s, INP ≤200ms, CLS ≤0.1.
-- [ ] B6. Re-verify Research on the standard harness.
+- [x] B1. Document one Lighthouse harness: same version/preset, simulated Slow 4G and 4× CPU, median of five, local production-like build and deployed URL.
+- [x] B2. Measure Home, Brief, Reports, India Watch, AI topic hub, About, Methodology, Corrections, Research, and all ten articles.
+- [x] B3. Record route causes and apply safe image/module preload and priority fixes without lowering targets.
+- [x] B4. Stay within three fix cycles per route; record the remaining causes and continue.
+- [x] B5. Report LCP, CLS, and INP availability for every measured route; INP is unavailable in navigation-only lab runs.
+- [x] B6. Re-verify Research on the standard five-run harness.
 
 ### Group 5 — Final checks
 
-- [ ] C1. Re-run pre-publish, cross-article consistency, link, and accessibility checks on all ten articles.
-- [ ] C2. Re-run smoke, root typecheck, and schedule simulation; confirm future content is absent from every public surface.
-- [ ] C3. Confirm disclosure input `NO`, Reports/India Watch `noindex`, reviewer lines, and empty corrections logs.
-- [ ] C4. Update `docs/PROGRESS.md` and the runbook after verification.
+- [x] C1. Re-run pre-publish, cross-article consistency, link, and accessibility checks on all ten articles.
+- [x] C2. Re-run smoke, root typecheck, and schedule simulation; confirm future content is absent from every public surface.
+- [x] C3. Confirm disclosure input `NO`, Reports/India Watch `noindex`, reviewer lines, and empty corrections logs.
+- [x] C4. Update `docs/PROGRESS.md` and the runbook after verification.

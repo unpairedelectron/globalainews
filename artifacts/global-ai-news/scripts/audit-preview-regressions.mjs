@@ -16,10 +16,33 @@ const artifactRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
 const stagingArticlesRoot = path.join(artifactRoot, 'public/staging/article');
 const serverEntrypoint = path.join(artifactRoot, 'dist/server/server.mjs');
 let baseUrl = (process.env.PREVIEW_AUDIT_URL ?? '').replace(/\/+$/, '');
+const externalAudit = Boolean(baseUrl);
 let productionServer;
 let previewProxyServer;
 const chromiumPath = process.env.CHROMIUM_BIN ?? '/repl/tools/bin/chromium';
 const publicRoutes = ['/', '/brief/', '/reports/', '/topic/india/'];
+const additionalLighthouseRoutes = [
+  '/topic/ai/',
+  '/about-us/',
+  '/code-of-ethics/',
+  '/corrections/',
+  '/research/',
+];
+const lighthouseRuns = Number(process.env.LIGHTHOUSE_RUNS ?? 1);
+if (!Number.isInteger(lighthouseRuns) || lighthouseRuns < 1 || lighthouseRuns > 9 || lighthouseRuns % 2 === 0) {
+  throw new Error('LIGHTHOUSE_RUNS must be an odd integer from 1 to 9.');
+}
+const lighthouseDevices = (process.env.LIGHTHOUSE_DEVICES ?? 'mobile,desktop')
+  .split(',')
+  .map((device) => device.trim())
+  .filter(Boolean);
+if (lighthouseDevices.some((device) => !['mobile', 'desktop'].includes(device))) {
+  throw new Error('LIGHTHOUSE_DEVICES accepts mobile, desktop, or both.');
+}
+const requestedLighthouseRoutes = (process.env.LIGHTHOUSE_ROUTES ?? '')
+  .split(',')
+  .map((route) => route.trim())
+  .filter(Boolean);
 const expectedPublicHeadings = new Map([
   ['/', 'Know what changed.'],
   ['/brief/', 'The Daily Brief.'],
@@ -30,7 +53,7 @@ const hydratedPublicRoutes = new Set(['/', '/brief/', '/topic/india/']);
 const normalizeHeading = (heading) => heading.replace(/\s+/g, '').toLowerCase();
 const lighthouseCategories = ['performance', 'accessibility', 'best-practices'];
 const lighthouseMinimums = {
-  mobile: { performance: 80, accessibility: 95, 'best-practices': 70 },
+  mobile: { performance: 95, accessibility: 95, 'best-practices': 70 },
   desktop: { performance: 95, accessibility: 95, 'best-practices': 70 },
 };
 const failures = [];
@@ -41,6 +64,34 @@ const { launch: launchChrome } = lighthouseRequire('chrome-launcher');
 function record(route, check, passed, detail) {
   results.push({ route, check, status: passed ? 'PASS' : 'FAIL', detail });
   if (!passed) failures.push(`${route} [${check}]: ${detail}`);
+}
+
+function median(values) {
+  const ordered = [...values].sort((left, right) => left - right);
+  return ordered[Math.floor(ordered.length / 2)];
+}
+
+function findNodeSelector(value, depth = 0, seen = new Set()) {
+  if (!value || typeof value !== 'object' || depth > 8 || seen.has(value)) return undefined;
+  seen.add(value);
+  if (typeof value.selector === 'string' && value.selector) return value.selector;
+  const children = Array.isArray(value) ? value.slice(0, 12) : Object.values(value);
+  for (const child of children) {
+    const selector = findNodeSelector(child, depth + 1, seen);
+    if (selector) return selector;
+  }
+  return undefined;
+}
+
+function getLcpBreakdown(details) {
+  const table = details?.items?.find((item) =>
+    Array.isArray(item?.items) && item.items.some((row) => row?.subpart && row?.duration !== undefined),
+  );
+  if (!table) return 'not reported';
+  return table.items
+    .filter((row) => row?.subpart && row?.duration !== undefined)
+    .map((row) => `${row.subpart}=${Math.round(Number(row.duration))}ms`)
+    .join(',');
 }
 
 function getApiOrigin() {
@@ -333,50 +384,81 @@ async function auditLighthouseRoutes(routes) {
   });
   try {
     for (const route of routes) {
-      for (const device of ['mobile', 'desktop']) {
+      for (const device of lighthouseDevices) {
         try {
           const url = new URL(route, `${baseUrl}/`).toString();
-          const result = await lighthouse(url, {
-            port: chrome.port,
-            logLevel: 'error',
-            output: 'json',
-            onlyCategories: lighthouseCategories,
-            formFactor: device,
-            screenEmulation: device === 'mobile'
-              ? { mobile: true, width: 360, height: 800, deviceScaleFactor: 1, disabled: false }
-              : { mobile: false, width: 1350, height: 940, deviceScaleFactor: 1, disabled: true },
-          });
-          assert.ok(result?.lhr, `${route} ${device}: Lighthouse returned no report`);
-          const categories = result.lhr.categories;
+          const reports = [];
+          for (let run = 1; run <= lighthouseRuns; run += 1) {
+            const result = await lighthouse(url, {
+              port: chrome.port,
+              logLevel: 'error',
+              output: 'json',
+              onlyCategories: lighthouseCategories,
+              formFactor: device,
+              throttlingMethod: 'simulate',
+              throttling: {
+                rttMs: 150,
+                throughputKbps: 1600,
+                requestLatencyMs: 150,
+                downloadThroughputKbps: 1600,
+                uploadThroughputKbps: 750,
+                cpuSlowdownMultiplier: 4,
+              },
+              screenEmulation: device === 'mobile'
+                ? { mobile: true, width: 360, height: 800, deviceScaleFactor: 1, disabled: false }
+                : { mobile: false, width: 1350, height: 940, deviceScaleFactor: 1, disabled: true },
+            });
+            assert.ok(result?.lhr, `${route} ${device} run ${run}: Lighthouse returned no report`);
+            reports.push(result.lhr);
+          }
+          const medianRun = [...reports].sort(
+            (left, right) =>
+              left.categories.performance.score - right.categories.performance.score,
+          )[Math.floor(reports.length / 2)];
+          const categories = medianRun.categories;
           const scores = Object.fromEntries(lighthouseCategories.map((category) => [
             category,
-            Math.round((categories[category]?.score ?? 0) * 100),
+            median(reports.map((report) => Math.round((report.categories[category]?.score ?? 0) * 100))),
           ]));
           const limits = lighthouseMinimums[device];
           const webVitals = {
-            fcp: Math.round(result.lhr.audits['first-contentful-paint']?.numericValue ?? 0),
-            lcp: Math.round(result.lhr.audits['largest-contentful-paint']?.numericValue ?? 0),
-            tbt: Math.round(result.lhr.audits['total-blocking-time']?.numericValue ?? 0),
-            cls: Number((result.lhr.audits['cumulative-layout-shift']?.numericValue ?? 0).toFixed(3)),
-            speedIndex: Math.round(result.lhr.audits['speed-index']?.numericValue ?? 0),
+            fcp: median(reports.map((report) => Math.round(report.audits['first-contentful-paint']?.numericValue ?? 0))),
+            lcp: median(reports.map((report) => Math.round(report.audits['largest-contentful-paint']?.numericValue ?? 0))),
+            tbt: median(reports.map((report) => Math.round(report.audits['total-blocking-time']?.numericValue ?? 0))),
+            cls: Number(median(reports.map((report) => Number((report.audits['cumulative-layout-shift']?.numericValue ?? 0).toFixed(3)))).toFixed(3)),
+            speedIndex: median(reports.map((report) => Math.round(report.audits['speed-index']?.numericValue ?? 0))),
           };
+          const resourceRows = medianRun.audits['resource-summary']?.details?.items ?? [];
+          const jsTransferBytes = resourceRows
+            .filter((item) => String(item.resourceType ?? '').toLowerCase() === 'script')
+            .reduce((total, item) => total + Number(item.transferSize ?? 0), 0);
+          const longTaskRows = medianRun.audits['long-tasks']?.details?.items ?? [];
+          const longTaskMs = Math.round(longTaskRows.reduce((total, item) => total + Number(item.duration ?? 0), 0));
+          const lcpSelector = findNodeSelector([
+            medianRun.audits['lcp-breakdown-insight']?.details,
+            medianRun.audits['lcp-discovery-insight']?.details,
+            medianRun.audits['largest-contentful-paint-element']?.details,
+          ]) ?? 'not reported';
+          const lcpBreakdown = getLcpBreakdown(medianRun.audits['lcp-breakdown-insight']?.details);
+          const jsBootupMs = Math.round(medianRun.audits['bootup-time']?.numericValue ?? 0);
+          const renderMode = ['/about-us/', '/reports/'].includes(route) ? 'static HTML' : 'client createRoot';
           const regressions = lighthouseCategories
             .filter((category) => scores[category] < limits[category])
             .map((category) => `${category} ${scores[category]} < ${limits[category]}`);
           const failedPerformanceAudits = regressions.some((regression) => regression.startsWith('performance '))
             ? categories.performance.auditRefs
-              .filter((audit) => audit.weight > 0 && result.lhr.audits[audit.id]?.score !== null && result.lhr.audits[audit.id]?.score < 1)
+              .filter((audit) => audit.weight > 0 && medianRun.audits[audit.id]?.score !== null && medianRun.audits[audit.id]?.score < 1)
               .sort((left, right) => right.weight - left.weight)
               .slice(0, 4)
               .map((audit) => {
-                const failedAudit = result.lhr.audits[audit.id];
+                const failedAudit = medianRun.audits[audit.id];
                 return failedAudit?.displayValue
                   ? `${failedAudit.title} (${failedAudit.displayValue})`
                   : failedAudit?.title;
               })
               .filter(Boolean)
             : [];
-          const timingDetails = `FCP=${webVitals.fcp}ms LCP=${webVitals.lcp}ms TBT=${webVitals.tbt}ms CLS=${webVitals.cls} SI=${webVitals.speedIndex}ms`;
+          const timingDetails = `median of ${reports.length}: FCP=${webVitals.fcp}ms LCP=${webVitals.lcp}ms TBT=${webVitals.tbt}ms CLS=${webVitals.cls} SI=${webVitals.speedIndex}ms; LCP element=${lcpSelector}; LCP phases=${lcpBreakdown}; JS=${jsTransferBytes}B bootup=${jsBootupMs}ms; long tasks=${longTaskRows.length}/${longTaskMs}ms; hydration=n/a (no React SSR hydration); render=${renderMode}`;
           record(
             route,
             `Lighthouse ${device}`,
@@ -419,10 +501,21 @@ async function main() {
       throw new Error(`No generated staging articles found under ${stagingArticlesRoot}. Run build:staging first.`);
     }
     const routes = [...previewRoutes, ...publicRoutes];
-    await checkRoutesReachable(routes);
-    console.log(`Auditing ${previewRoutes.length} staging articles and ${publicRoutes.length} public routes at ${baseUrl}.`);
-    await auditBrowserRoutes(routes);
-    await auditLighthouseRoutes(routes);
+    const lighthouseRoutes = [...routes, ...additionalLighthouseRoutes];
+    const targetRoutes = externalAudit
+      ? lighthouseRoutes.filter((route) => !route.startsWith('/staging/article/'))
+      : lighthouseRoutes;
+    const unknownRoutes = requestedLighthouseRoutes.filter((route) => !targetRoutes.includes(route));
+    if (unknownRoutes.length) {
+      throw new Error(`Unknown Lighthouse route filter: ${unknownRoutes.join(', ')}`);
+    }
+    const selectedLighthouseRoutes = requestedLighthouseRoutes.length
+      ? targetRoutes.filter((route) => requestedLighthouseRoutes.includes(route))
+      : targetRoutes;
+    await checkRoutesReachable(selectedLighthouseRoutes);
+    console.log(`Auditing ${selectedLighthouseRoutes.length} routes (${lighthouseRuns} runs each; ${lighthouseDevices.join(', ')}) at ${baseUrl}.`);
+    await auditBrowserRoutes(externalAudit ? publicRoutes : routes);
+    await auditLighthouseRoutes(selectedLighthouseRoutes);
     printReport();
     if (failures.length) process.exitCode = 1;
   } finally {

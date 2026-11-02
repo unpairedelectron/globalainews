@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const manifest = JSON.parse(fs.readFileSync(path.join(root, "release/manifest.json"), "utf8"));
+const manifest = JSON.parse(fs.readFileSync(path.join(root, "release/editorial-manifest.json"), "utf8"));
 const output = path.join(root, "artifacts/api-server/src/editorial/release-discovery.generated.ts");
 const topicByArticle = new Map(manifest.topics.flatMap((topic) =>
   topic.storySlugs.map((slug) => [slug, topic.label]),

@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import { CreateNewsroomReleaseBody } from '../../../lib/api-zod/src/index.ts';
 
 const manifest = JSON.parse(
-  await readFile(new URL('../../../release/manifest.json', import.meta.url), 'utf8'),
+  await readFile(new URL('../../../release/editorial-manifest.json', import.meta.url), 'utf8'),
 );
 const schedule = [
   ['india-ai-consultation-paper-what-is-law', '2026-11-02T07:30:00.000Z'],

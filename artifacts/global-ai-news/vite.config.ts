@@ -25,6 +25,7 @@ import {
   renderArticleHtml,
 } from './src/server/article-html';
 import { renderSeoRouteHtml } from './src/seo-html';
+import { STATIC_PRERENDER_ROUTES } from './src/static-prerender-routes';
 import {
   layoutPreviewTitle,
   previewTitleColor,
@@ -704,6 +705,7 @@ function withRouteMetadata(
   baseHtml: string,
   route: string,
   metadataManifest: SeoMetadataManifest,
+  routeModulePreloadHrefs?: readonly string[],
 ): string {
   const metadata = metadataManifest.routes.find((candidate) => candidate.path === route) ??
     getSeoMetadata(route, metadataManifest.stories);
@@ -711,7 +713,7 @@ function withRouteMetadata(
   if (!contentSnapshot) {
     throw new Error('Cannot prerender publication routes without the API newsroom content snapshot.');
   }
-  return renderSeoRouteHtml(baseHtml, route, metadata, contentSnapshot);
+  return renderSeoRouteHtml(baseHtml, route, metadata, contentSnapshot, routeModulePreloadHrefs);
 }
 
 function routeMetadataPlugin() {
@@ -719,7 +721,7 @@ function routeMetadataPlugin() {
   return {
     name: 'global-ai-news-route-metadata',
     apply: 'build' as const,
-    async writeBundle() {
+    async writeBundle(_options, bundle) {
       const outputDir = buildOutputDir(projectRoot);
       const metadataManifest = await loadBuildMetadataManifest(projectRoot);
       const contentSnapshot = metadataManifest.contentSnapshot;
@@ -750,6 +752,18 @@ function routeMetadataPlugin() {
         JSON.stringify(searchIndex),
       );
       const baseHtml = readFileSync(path.join(outputDir, 'index.html'), 'utf8');
+      const emittedChunks = Object.values(bundle).filter((item) => item.type === 'chunk');
+      const findChunkForModule = (moduleSuffix: string) => emittedChunks.find((chunk) =>
+        Object.keys(chunk.modules).some((moduleId) =>
+          moduleId.replaceAll('\\', '/').endsWith(moduleSuffix),
+        ),
+      );
+      const publicPagesChunk = findChunkForModule('/src/pages/public.tsx');
+      const authorityPagesChunk = findChunkForModule('/src/pages/authority-pages.tsx');
+      const appChunk = findChunkForModule('/src/App.tsx');
+      const assetBasePath = basePath
+        ? (basePath.endsWith('/') ? basePath : `${basePath}/`)
+        : '/';
       const serverOutputDir = path.resolve(outputDir, '..', 'server');
       mkdirSync(serverOutputDir, { recursive: true });
       writeFileSync(path.join(serverOutputDir, 'index.template.html'), baseHtml);
@@ -766,10 +780,20 @@ function routeMetadataPlugin() {
       );
       for (const route of routePathsFromPublishedContent(metadataManifest)) {
         const routeDirectory = route === '/' ? outputDir : path.join(outputDir, route.replace(/^\/|\/$/g, ''));
+        const pageChunk = ['/', '/brief', '/topic/ai', '/topic/india'].includes(route)
+          ? publicPagesChunk
+          : route === '/research'
+            ? authorityPagesChunk
+            : undefined;
+        const routeChunks = STATIC_PRERENDER_ROUTES.has(route)
+          ? []
+          : [appChunk, pageChunk].filter((chunk): chunk is NonNullable<typeof chunk> => Boolean(chunk));
+        const routeModulePreloadHrefs = [...new Set(routeChunks)]
+          .map((chunk) => `${assetBasePath}${chunk.fileName}`);
         mkdirSync(routeDirectory, { recursive: true });
         writeFileSync(
           path.join(routeDirectory, 'index.html'),
-          withRouteMetadata(baseHtml, route, metadataManifest),
+          withRouteMetadata(baseHtml, route, metadataManifest, routeModulePreloadHrefs),
         );
       }
     },

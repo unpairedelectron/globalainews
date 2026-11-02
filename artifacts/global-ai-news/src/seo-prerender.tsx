@@ -43,7 +43,8 @@ function StoryList({
             <ResponsiveEditorialImage
               slug={story.slug}
               alt={story.imageTreatment.alt}
-              loading="lazy"
+              loading={index === 0 && idPrefix === 'brief' ? 'eager' : 'lazy'}
+              fetchPriority={index === 0 && idPrefix === 'brief' ? 'high' : undefined}
               className="aspect-[1.91/1] h-full w-full object-cover"
               sizes="(min-width: 768px) 220px, calc(100vw - 40px)"
             />
@@ -926,7 +927,7 @@ export function SeoPrerender({ route, metadata, snapshot }: SeoPrerenderProps) {
                 </div>
               </div>
               {lead ? <article className="flex flex-col justify-center border-l border-foreground/20 py-4 pl-6 md:pl-9">
-                <ResponsiveEditorialImage slug={lead.slug} alt={lead.imageTreatment.alt} fetchPriority="high" className="mb-5 aspect-[16/9] w-full object-cover" sizes="(min-width: 1440px) 760px, (min-width: 1024px) 58vw, calc(100vw - 40px)" />
+                <ResponsiveEditorialImage slug={lead.slug} alt={lead.imageTreatment.alt} loading="eager" fetchPriority="high" className="mb-5 aspect-[16/9] w-full object-cover" sizes="(min-width: 1440px) 760px, (min-width: 1024px) 58vw, calc(100vw - 40px)" />
                 <p className="eyebrow text-primary">{lead.contentType ?? getReaderFacingContentType(lead.classification)} · {lead.category}</p>
                 <a href={`/article/${lead.slug}/`} className="group block">
                   <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-[.95] transition-colors group-hover:text-primary md:text-6xl">{lead.title}</h2>

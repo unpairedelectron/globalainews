@@ -144,7 +144,7 @@ export function BriefPage() {
             <div className="prose prose-sm mt-5 max-w-none prose-p:leading-7">{brief.body.split('\n\n').map((paragraph, index) => <p key={`${brief.slug}-${index}`}>{paragraph}</p>)}</div>
             <Link href={`/article/${brief.articleSlug}`} className="mt-5 inline-flex min-h-11 items-center border-b border-primary/40 text-sm text-primary hover:border-primary">Open the related article <ArrowUpRight size={14} className="ml-2" /></Link>
           </article>)}
-          {results.map((story, index) => <div id={`brief-${index}`} key={story.slug}><StoryRow slug={story.slug} rank={index + 1} /></div>)}
+          {results.map((story, index) => <div id={`brief-${index}`} key={story.slug}><StoryRow slug={story.slug} rank={index + 1} priorityImage={index === 0} /></div>)}
         </article>
         <aside className="md:border-l md:border-foreground/15 md:pl-7">
           <SectionLabel>{query ? 'Matching stories' : 'In this edition'}</SectionLabel>
