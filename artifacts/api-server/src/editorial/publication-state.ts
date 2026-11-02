@@ -8,6 +8,7 @@ import {
 import { articleRegistry } from "./article-registry.generated";
 import { logger } from "../lib/logger";
 import { getVisibleRegistryArticles } from "./publication-registry-visibility";
+import { getDueScheduledPublications } from "./publication-scheduler-policy";
 
 const SCHEDULER_ACTOR = "system:scheduler";
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
@@ -45,7 +46,7 @@ export async function refreshPublicationStateSnapshot(
   if (refreshInFlight) return refreshInFlight;
   refreshInFlight = (async () => {
     const startedAt = Date.now();
-    const due = await db
+    const dueCandidates = await db
       .select()
       .from(editorialPublishStatesTable)
       .where(and(
@@ -53,6 +54,7 @@ export async function refreshPublicationStateSnapshot(
         lte(editorialPublishStatesTable.publishAt, now),
       ))
       .orderBy(asc(editorialPublishStatesTable.publishAt));
+    const due = getDueScheduledPublications(dueCandidates, now);
 
     let publishedCount = 0;
     if (due.length) {

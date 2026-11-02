@@ -125,7 +125,7 @@ Current scope: A4 through C4. Keep repo-defined article structure and citations;
 ### Group 2 — Admin and scheduler
 
 - [x] A6. Build Clerk-protected `/admin/release` for publish-state-only manifest import, dry-run by default, explicit idempotent Apply, per-article Publish now/Pause/Roll back, and audit history. Test unauthenticated protection and mocked-auth flows.
-- [ ] A7. Finish the restart-safe scheduler; promote only due rows with conditional updates, audit, cache/sitemap/RSS refresh. Test all ten slots with a fake clock.
+- [x] A7. Finish the restart-safe scheduler; promote only due rows with conditional updates, audit, cache/sitemap/RSS refresh. Test all ten slots with a fake clock.
 
 ### Group 3 — Verification and owner handoff
 

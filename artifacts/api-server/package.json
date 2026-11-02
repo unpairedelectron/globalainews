@@ -16,6 +16,7 @@
     "test:publication-surfaces": "node --test tests/publication-surface-wiring.test.mjs",
     "test:release-discovery": "node --experimental-strip-types --test tests/release-discovery-visibility.test.ts",
     "test:publication-admin": "node --experimental-strip-types --test tests/publication-admin-logic.test.ts && node --test tests/publication-admin-wiring.test.mjs",
+    "test:publication-scheduler": "node --experimental-strip-types --test tests/publication-state-scheduler.test.ts && node --test tests/publication-state-scheduler-wiring.test.mjs",
     "test:gzip": "node --experimental-strip-types --test tests/gzip-response.test.mjs",
     "test:security": "node --test tests/braces-depth-security.test.mjs tests/clerk-proxy.test.mjs tests/editor-auth.test.mjs",
     "replay:automation": "pnpm run build && node ./dist/editorial/replay-command.mjs"
