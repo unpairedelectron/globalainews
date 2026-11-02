@@ -15,6 +15,23 @@ import {
 
 const container = 'editorial-page mx-auto max-w-[1440px] px-5 md:px-10';
 
+function formatAuditSummary(summary: string): string {
+  try {
+    const value = JSON.parse(summary) as {
+      source?: string;
+      operation?: string;
+      previous?: { status?: string; publishAt?: string } | null;
+      current?: { status?: string; publishAt?: string } | null;
+    };
+    if (value.source !== 'publish-state-admin') return summary;
+    const describe = (state: { status?: string; publishAt?: string } | null | undefined) =>
+      state ? `${state.status ?? 'unknown'} at ${state.publishAt ?? 'unknown time'}` : 'no prior state';
+    return `${value.operation ?? 'state change'}: ${describe(value.previous)} → ${describe(value.current)}`;
+  } catch {
+    return summary;
+  }
+}
+
 export function ReleaseAdminPage() {
   const { isLoaded, isSignedIn } = useAuth();
   const { signOut } = useClerk();
@@ -44,6 +61,14 @@ export function ReleaseAdminPage() {
     setManifestText(await file.text());
     setPreview(null);
     setMessage(`Loaded ${file.name}. Review the state-only JSON, then run a dry run.`);
+  }
+
+  async function reloadManifest() {
+    const result = await manifestQuery.refetch();
+    if (!result.data) return;
+    setManifestText(JSON.stringify(result.data, null, 2));
+    setPreview(null);
+    setMessage('Loaded the current state-only manifest from the server.');
   }
 
   async function runDryRun() {
@@ -97,7 +122,7 @@ export function ReleaseAdminPage() {
   }
 
   return <>
-    <SeoHead title="Release administration — Global AI News" description="Authenticated publication-state controls for editors." path="/admin/release" />
+    <SeoHead title="Release administration — Global AI News" description="Authenticated publication-state controls for editors." path="/admin/release" indexable={false} />
     <Header />
     <main className={`${container} min-h-[70vh] py-10 md:py-16`}>
       <p className="eyebrow text-primary">Global AI News · editor-only</p>
@@ -120,7 +145,7 @@ export function ReleaseAdminPage() {
               <p className="mt-2 text-sm leading-6 text-muted-foreground">Dry-run is the default. The server accepts exactly the ten known slugs, scheduled UTC dates and statuses; no story content or citations are accepted.</p>
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <label className="inline-flex min-h-11 cursor-pointer items-center gap-2 border border-foreground/20 px-4 text-sm hover:border-primary"><FileUp size={15} /> Load JSON file<input type="file" accept="application/json,.json" className="sr-only" onChange={(event) => void readManifestFile(event.currentTarget.files?.[0])} /></label>
-                <button type="button" onClick={() => void manifestQuery.refetch()} className="inline-flex min-h-11 items-center gap-2 border border-foreground/20 px-4 text-sm hover:border-primary"><RefreshCw size={14} /> Load current manifest</button>
+                <button type="button" onClick={() => void reloadManifest()} className="inline-flex min-h-11 items-center gap-2 border border-foreground/20 px-4 text-sm hover:border-primary"><RefreshCw size={14} /> Load current manifest</button>
               </div>
               <textarea aria-label="State-only release manifest JSON" spellCheck={false} value={manifestText} onChange={(event) => { setManifestText(event.target.value); setPreview(null); }} className="mt-4 min-h-72 w-full border border-foreground/20 bg-background p-4 font-mono text-xs leading-5" />
               <div className="mt-3 flex flex-wrap gap-3">
@@ -151,7 +176,7 @@ export function ReleaseAdminPage() {
             {historyQuery.isLoading ? <p className="py-6 text-sm text-muted-foreground">Loading audit history…</p> : <div className="mt-3 divide-y divide-foreground/15 border-y border-foreground/15">
               {(historyQuery.data ?? []).map((entry) => <article key={entry.id} className="grid gap-2 py-4 md:grid-cols-[180px_1fr_auto]">
                 <div><p className="eyebrow text-primary">{entry.action}</p><time className="mt-1 block font-mono text-[10px] text-muted-foreground" dateTime={entry.createdAt}>{new Date(entry.createdAt).toLocaleString()}</time></div>
-                <div><p className="text-sm leading-6">{entry.summary}</p><p className="mt-1 text-xs text-muted-foreground">{entry.releaseTitle}</p></div>
+                <div><p className="text-sm leading-6">{formatAuditSummary(entry.summary)}</p><p className="mt-1 text-xs text-muted-foreground">{entry.releaseTitle}</p></div>
                 <p className="font-mono text-[10px] text-muted-foreground md:text-right">By {entry.actor}</p>
               </article>)}
               {historyQuery.data?.length === 0 && <p className="py-6 text-sm text-muted-foreground">No release-state changes have been recorded.</p>}

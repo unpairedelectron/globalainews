@@ -22,4 +22,6 @@ test("admin page is Clerk-wrapped, dry-run-first, and exposes explicit state act
   assert.match(adminPage, /Apply changes/);
   assert.match(adminPage, /Publish now[\s\S]*Pause[\s\S]*Roll back/);
   assert.match(adminPage, /useGetNewsroomReleaseHistory/);
+  assert.match(adminPage, /indexable=\{false\}/);
+  assert.match(adminPage, /formatAuditSummary/);
 });
