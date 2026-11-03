@@ -4,7 +4,7 @@
 
 **Byline:** Editorial Desk · **Reviewer:** Aman Mishra  
 **Publication status:** Private draft; not published or scheduled  
-**Prepared:** 31 October 2026 · **Updated:** 31 October 2026  
+**Prepared:** 31 October 2026 · **Updated:** 4 November 2026
 **Topic:** Developer & Workforce · **Reading time:** 8 minutes
 
 ## The bottom line

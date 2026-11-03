@@ -7,7 +7,7 @@
       "mainEntityOfPage": "https://www.globalainews.in/article/github-octoverse-2026-agents-pull-requests/",
       "headline": "GitHub says agents started more than 40% of PRs",
       "description": "GitHub says agents started over 40% of September PRs. What the signal measures, misses, and how teams can track review outcomes.",
-      "dateModified": "2026-10-31",
+      "dateModified": "2026-11-04",
       "author": {
         "@type": "Organization",
         "name": "Editorial Desk"
@@ -29,7 +29,8 @@
         "https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions",
         "https://csrc.nist.gov/pubs/sp/800/218/final",
         "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
-        "https://docs.github.com/en/copilot/tutorials/use-copilot-code-review-across-the-pull-request-lifecycle"
+        "https://docs.github.com/en/copilot/tutorials/use-copilot-code-review-across-the-pull-request-lifecycle",
+        "https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-218.pdf"
       ],
       "isAccessibleForFree": true,
       "inLanguage": "en-IN"

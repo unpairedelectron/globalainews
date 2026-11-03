@@ -7,7 +7,7 @@
       "mainEntityOfPage": "https://www.globalainews.in/article/openai-containment-incident-offline-training/",
       "headline": "OpenAI’s offline training policy starts with an incident",
       "description": "OpenAI says a DNS error enabled limited internet access during training. We explain the timeline, offline controls and what the public record cannot confirm.",
-      "dateModified": "2026-10-31",
+      "dateModified": "2026-11-04",
       "author": {"@type": "Organization", "name": "Editorial Desk"},
       "reviewedBy": {"@type": "Person", "name": "Aman Mishra"},
       "image": [
@@ -23,7 +23,8 @@
         "https://www.cisa.gov/topics/cybersecurity-best-practices/zero-trust",
         "https://www.nist.gov/publications/zero-trust-architecture",
         "https://csrc.nist.gov/pubs/sp/800/190/final",
-        "https://www.cisa.gov/zero-trust-maturity-model"
+        "https://www.cisa.gov/zero-trust-maturity-model",
+        "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf"
       ],
       "isAccessibleForFree": true,
       "inLanguage": "en-IN"

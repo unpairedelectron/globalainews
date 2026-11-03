@@ -1,6 +1,6 @@
-# Current-source review — 3 November 2026
+# Current-source review — 3–4 November 2026
 
-This is a follow-up to the ten claim-level fact logs prepared on 31 October. Existing claims and source URLs were retained. The review rechecked time-sensitive primary records, spot-checked primary-source support for central claims, and audited all Tier 2 bibliography entries. It did not independently reopen every primary URL.
+This is a follow-up to the ten claim-level fact logs prepared on 31 October. Existing claims and source URLs were retained. The review rechecked time-sensitive primary records, audited all 14 Tier 2 bibliography entries and checked all 67 unique Tier 1 bibliography URLs, while confirming claim-bearing body text rather than relying on titles or retrieval status alone.
 
 ## Results
 
@@ -18,7 +18,7 @@ This is a follow-up to the ten claim-level fact logs prepared on 31 October. Exi
 ## Scope and release state
 
 - The staging regression test confirms all ten pages remain noindex, private editorial metadata and repeated template sections stay out of reader-facing previews, citation links resolve to the matching numbered bibliography entry, and article visuals/tables remain present.
-- The Anthropic fact log now adds Amendment No. 1 as a primary source; the other fact logs retain their original claim-level source notes.
+- The Anthropic fact log adds Amendment No. 1 as a primary source. The GitHub and OpenAI logs now include official NIST PDF mirrors for inaccessible landing pages; the IndiaAI tender-value claim was rechecked against the accessible C-DAC RFE page.
 - All 14 Tier 2 bibliography links were checked. Thirteen article bodies were retrievable; the New York Times URL returned 403, but search results exposed the article’s 60,000-employee claim, also independently reported by AP and Reuters/CBC. No checked secondary contradicted the logged claims; existing URLs were retained.
 - On 4 November, all 67 unique Tier 1 bibliography URLs were checked. Two NIST publication landing pages returned only an anti-frame shell, so official direct-PDF citations were added without removing the original URLs. The eProcurement record link returned 500, but the accessible C-DAC RFE page contained the matching tender ID and the same tender-value fields; that claim remains independently supported.
-- No publication schedule, release record, production data, or public article route was changed. All ten remain private drafts.
+- No publication schedule or date, published record, production data/schema/analytics, or public article route was changed. The generated input manifest was refreshed to match the private-draft source updates; all ten remain private drafts.
