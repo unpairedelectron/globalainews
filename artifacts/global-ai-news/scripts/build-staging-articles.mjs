@@ -96,12 +96,55 @@ for (const { slug, scheduleSlot: number, publishAt } of releases) {
   const description = metadata.description;
   const canonical = metadata.canonical;
   const image = new URL(`/staging/social/article${number}/1200x630.webp`, canonical).toString();
-  const body = markdown.render(
-    source
-      .replace(/^\uFEFF/, '')
-      .replace(/(["'])\.\.\/visuals\/(article\d+\/)/g, '$1/staging/visuals/$2')
-      .replaceAll('(../glossary.md)', '(/staging/glossary/)'),
+  const readerSource = source
+    .replace(/^\uFEFF/, '')
+    // Keep private editorial metadata in the draft file, not the reader-facing preview.
+    .replace(/\n\*\*Byline:\*\*[\s\S]*?(?=\n## The bottom line)/, '\n')
+    // These repeated template sections add no article-specific reader value.
+    .replace(/\n## Corrections log\n[\s\S]*?(?=\n## |$)/, '\n')
+    .replace(/\n## Related coverage\n[\s\S]*?(?=\n## |$)/, '\n')
+    .replace(/\n## Subscribe\n[\s\S]*?(?=\n## |$)/, '\n')
+    .replace(/(["'])\.\.\/visuals\/(article\d+\/)/g, '$1/staging/visuals/$2')
+    .replaceAll('(../glossary.md)', '(/staging/glossary/)');
+  const [articleCopy, sourceList = ''] = readerSource.split('\n## Sources\n');
+  const sourceNumbers = [...sourceList.matchAll(/^(\d+)\.\s/gm)]
+    .map((match) => Number(match[1]));
+  const linkedArticleCopy = articleCopy.replace(
+    /\[(\d+)(?:[–-](\d+))?\]/g,
+    (_match, firstText, lastText) => {
+      const first = Number(firstText);
+      const last = Number(lastText ?? firstText);
+      const linkedNumbers = Array.from(
+        { length: Math.min(last - first + 1, 10) },
+        (_, index) => first + index,
+      );
+      const links = linkedNumbers
+        .map((number) => `<a href="#source-${number}">${number}</a>`)
+        .join('–');
+      return `<sup class="citation" aria-label="Source${last > first ? 's' : ''} ${first}${last > first ? ` to ${last}` : ''}">[${links}]</sup>`;
+    },
   );
+  let body = markdown.render(`${linkedArticleCopy}\n## Sources\n${sourceList}`)
+    .replace(/<h2>Sources<\/h2>/, '<h2 id="sources">Sources</h2>');
+  const sourceSectionStart = body.indexOf('<h2 id="sources">');
+  const nextSectionStart = body.indexOf('<h2', sourceSectionStart + 1);
+  if (sourceSectionStart >= 0 && sourceNumbers.length > 0) {
+    const sourceSectionEnd = nextSectionStart >= 0 ? nextSectionStart : body.length;
+    let referenceIndex = 0;
+    const sourceSection = body
+      .slice(sourceSectionStart, sourceSectionEnd)
+      .replace(/<li>/g, () => {
+        const number = sourceNumbers[referenceIndex++];
+        if (number === undefined) {
+          throw new Error(`${filename}: rendered source list has more entries than its numbered references.`);
+        }
+        return `<li id="source-${number}" value="${number}">`;
+      });
+    if (referenceIndex !== sourceNumbers.length) {
+      throw new Error(`${filename}: rendered source list does not match its numbered references.`);
+    }
+    body = `${body.slice(0, sourceSectionStart)}${sourceSection}${body.slice(sourceSectionEnd)}`;
+  }
   const schemaMarkup = JSON.stringify(schema).replaceAll('<', '\\u003c');
   const html = `<!doctype html>
 <html lang="en-IN">
@@ -126,7 +169,7 @@ a{color:var(--blue);text-decoration-thickness:.08em;text-underline-offset:.18em;
 .skip{position:absolute;left:-10000px;top:auto}.skip:focus{left:1rem;top:1rem;z-index:5;background:var(--surface);padding:.75rem}
 header,main,footer{width:min(100% - 2rem,1060px);margin-inline:auto}header{padding:1.25rem 0;border-bottom:1px solid var(--rule);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase}
 main{padding:2rem 0 4rem}article{max-width:820px;margin-inline:auto}h1,h2,h3{font-family:Georgia,serif;line-height:1.08;letter-spacing:-.025em}h1{font-size:clamp(2.5rem,7vw,5.3rem);margin:.7em 0 .45em}h2{margin-top:2em;font-size:clamp(1.8rem,4vw,2.8rem)}h3{font-size:1.45rem}
-img{display:block;max-width:100%;height:auto}picture{display:block;margin:1.5rem auto}p,li{max-width:78ch}blockquote{margin:1.5rem 0;padding:1rem 1.25rem;border-left:3px solid var(--blue);background:var(--surface)}
+img{display:block;max-width:100%;height:auto}picture{display:block;margin:1.5rem auto}p,li{max-width:78ch}.citation{font-size:.78em;white-space:nowrap}.citation a{padding-inline:.08em;text-decoration:none}blockquote{margin:1.5rem 0;padding:1rem 1.25rem;border-left:3px solid var(--blue);background:var(--surface)}
 table{border-collapse:collapse;width:100%;min-width:42rem;background:var(--surface);font-size:.9rem}th,td{border:1px solid var(--rule);padding:.7rem;text-align:left;vertical-align:top}th{font-weight:700;background:color-mix(in srgb,var(--blue) 10%,var(--surface))}
 .table-scroll{overflow:auto;max-width:100%;margin:1.25rem 0}details{border:1px solid var(--rule);padding:.7rem 1rem;margin:1rem 0;background:var(--surface)}summary{cursor:pointer;min-height:2.75rem;display:flex;align-items:center;font-weight:700}
 .staging{background:#f0c75e;color:#17232b;padding:.2rem .5rem;font-weight:700}.schedule{color:var(--muted);font-size:.85rem}footer{border-top:1px solid var(--rule);padding:1.5rem 0 3rem;color:var(--muted);font-size:.8rem}

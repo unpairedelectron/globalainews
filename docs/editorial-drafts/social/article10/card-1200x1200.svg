@@ -10,5 +10,5 @@
 <text x="112" y="630" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#18374b">Credential broker</text><text x="112" y="672" font-family="Arial,sans-serif" font-size="21" fill="#526574">Mediates sign-in</text>
 <text x="112" y="755" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#18374b">Separate identity</text><text x="112" y="797" font-family="Arial,sans-serif" font-size="21" fill="#526574">Makes the acting account visible</text>
 <text x="112" y="880" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#18374b">Local inference</text><text x="112" y="922" font-family="Arial,sans-serif" font-size="21" fill="#526574">Changes model location, not all permissions</text>
-<text x="72" y="1080" font-family="Arial,sans-serif" font-size="20" fill="#526574">Review identity, scope, audit and revocation · Private draft</text>
+<text x="72" y="1080" font-family="Arial,sans-serif" font-size="20" fill="#526574">Review identity, scope, audit and revocation</text>
 </svg>

@@ -9,5 +9,5 @@
 <text x="105" y="457" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#18374b">Identity</text><text x="105" y="490" font-family="Arial,sans-serif" font-size="18" fill="#526574">Who acts?</text>
 <text x="430" y="457" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#18374b">Scope</text><text x="430" y="490" font-family="Arial,sans-serif" font-size="18" fill="#526574">What can it do?</text>
 <text x="760" y="457" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#18374b">Revocation</text><text x="760" y="490" font-family="Arial,sans-serif" font-size="18" fill="#526574">Can access stop?</text>
-<text x="72" y="585" font-family="Arial,sans-serif" font-size="18" fill="#526574">Product claims are not independent security audits · Private draft</text>
+<text x="72" y="585" font-family="Arial,sans-serif" font-size="18" fill="#526574">Product claims are not independent security audits</text>
 </svg>
