@@ -18,6 +18,7 @@
     "release:manifest": "node ../../scripts/build-publication-state-manifest.mjs",
     "release:editorial-manifest": "node ../../scripts/build-release-manifest.mjs",
     "test:article-registry": "node --test tests/article-registry.test.mjs",
+    "test:staging-articles": "node --test tests/staging-articles.test.mjs",
     "test:release-manifest": "pnpm run release:editorial-manifest && pnpm exec tsx --test tests/release-manifest.test.ts",
     "test:publication-state-manifest": "pnpm run release:manifest && pnpm exec tsx --test tests/publication-state-manifest.test.ts",
     "typecheck": "pnpm --filter @workspace/api-client-react exec tsc --build && tsc -p tsconfig.json --noEmit",
@@ -40,7 +41,7 @@
     "test:visual": "node --test --test-name-pattern=\"light and dark themes stay readable across key public and newsroom routes\" tests/seo-smoke.test.mjs",
     "update:visual-baselines": "UPDATE_VISUAL_BASELINES=1 pnpm run test:visual",
     "test:publication-safety": "pnpm exec tsx --test tests/publication-safety.test.ts",
-    "test:smoke": "pnpm --filter @workspace/api-server run build && pnpm --filter @workspace/api-server run test:public-newsroom-cache && pnpm --filter @workspace/api-server run test:comparison-reviews && pnpm run test:publication-safety && pnpm --filter @workspace/api-server run test:security && pnpm --filter @workspace/api-server run test:gzip && pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:analytics-privacy && pnpm run test:content-quality && pnpm run test:research-report && pnpm run test:authority-registry && pnpm run test:seo-date-stability && pnpm run build:production && pnpm run test:web-health && pnpm run test:ads && pnpm run test:publication-fixture && pnpm run test:article-first-response && pnpm run test:code-native-publication && pnpm run test:article-snapshot-resilience && pnpm run test:operational-alerts && pnpm run audit:links && node --test tests/seo-smoke.test.mjs"
+    "test:smoke": "pnpm --filter @workspace/api-server run build && pnpm --filter @workspace/api-server run test:public-newsroom-cache && pnpm --filter @workspace/api-server run test:comparison-reviews && pnpm run test:publication-safety && pnpm --filter @workspace/api-server run test:security && pnpm --filter @workspace/api-server run test:gzip && pnpm run test:release-metadata && pnpm run test:release-history && pnpm run test:theme && pnpm run test:analytics-privacy && pnpm run test:content-quality && pnpm run test:staging-articles && pnpm run test:research-report && pnpm run test:authority-registry && pnpm run test:seo-date-stability && pnpm run build:production && pnpm run test:web-health && pnpm run test:ads && pnpm run test:publication-fixture && pnpm run test:article-first-response && pnpm run test:code-native-publication && pnpm run test:article-snapshot-resilience && pnpm run test:operational-alerts && pnpm run audit:links && node --test tests/seo-smoke.test.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
