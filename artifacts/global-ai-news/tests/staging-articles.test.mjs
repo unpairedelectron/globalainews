@@ -30,7 +30,7 @@ test('staging previews preserve citation targets and hide private editorial meta
       .map(([, id]) => id);
 
     assert.match(html, /name="robots" content="noindex,nofollow"/, `${slug} must remain noindex`);
-    assert.doesNotMatch(html, /Private draft|Publication status:|<h2[^>]*>Corrections log<\/h2>/i, `${slug} leaks draft metadata`);
+    assert.doesNotMatch(html, /Private draft|Publication status:|<strong>(Byline|Reviewer):<\/strong>|<h2[^>]*>Corrections log<\/h2>/i, `${slug} leaks draft metadata`);
     assert.doesNotMatch(html, /<h2[^>]*>(Related coverage|Subscribe)<\/h2>/i, `${slug} repeats a generic template section`);
     assert.ok(sourceEntries.length >= 8, `${slug} should retain its numbered bibliography`);
     assert.ok(citationTargets.length > 0, `${slug} should retain inline citations`);

@@ -7,7 +7,7 @@
       "mainEntityOfPage": "https://www.globalainews.in/article/anthropic-s1-governance-who-controls/",
       "headline": "Anthropic’s S-1 separates ownership from board control",
       "description": "Anthropic’s S-1 separates public economic rights from founder voting power and Trust board control. We explain the proposed classes and reported loss.",
-      "dateModified": "2026-10-31",
+      "dateModified": "2026-11-03",
       "author": {
         "@type": "Organization",
         "name": "Editorial Desk"
@@ -29,7 +29,8 @@
         "https://delcode.delaware.gov/title8/c001/sc15/",
         "https://www.sec.gov/files/forms-1.pdf",
         "https://www.cnbc.com/2026/10/26/anthropic-ipo-founder-voting-control.html",
-        "https://fortune.com/2026/10/26/anthropics-s-1"
+        "https://fortune.com/2026/10/26/anthropics-s-1",
+        "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm"
       ],
       "isAccessibleForFree": true,
       "inLanguage": "en-IN"
@@ -40,10 +41,10 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Who controls Anthropic under the proposed S-1 structure?",
+          "name": "Who controls Anthropic under the proposed S-1/A structure?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The filing describes separate powers. The Long-Term Benefit Trust would generally elect and remove the Class T directors, who together would be a majority of the authorized board. The founders’ LLC would hold one Class F share carrying 50.1% of voting power on matters submitted to shareholders generally. The S-1 does not reduce control to a single owner percentage."
+            "text": "The 2 November S-1/A retains separate proposed powers. The Long-Term Benefit Trust would generally elect and remove the Class T directors, who together would be a majority of the authorized board. The founders’ LLC would hold one Class F share carrying 50.1% of voting power on matters submitted to shareholders generally. The filing does not reduce control to a single owner percentage."
           }
         },
         {
@@ -51,7 +52,7 @@
           "name": "Do Anthropic’s founders own 50.1% of the company?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The S-1 says one Class F share held by the Founder LLC would carry 50.1% of total voting power on matters submitted to shareholders generally. It also says Class F has no economic rights. That is a voting-power figure, not a statement that the founders own 50.1% of Anthropic’s economic value."
+            "text": "The latest S-1/A retains the proposal that one Class F share held by the Founder LLC would carry 50.1% of total voting power on matters submitted to shareholders generally. It also retains the proposal that Class F has no economic rights. That is a voting-power figure, not a statement that the founders own 50.1% of Anthropic’s economic value."
           }
         },
         {

@@ -17,6 +17,7 @@ Prepared 31 October 2026. `[V]` marks a claim checked against a primary source a
 | Most of the fair-value change was attributed to increased fair value of convertible promissory notes as enterprise valuation increased. | [V] | SEC [1], Tier 1 | Keep issuer attribution; do not infer cash proceeds or offering valuation. |
 | Top five customers represented about 25% of revenue for the nine months ended 30 September 2026. | [V] | SEC [1], Tier 1 | Never label this H1 concentration. |
 | The 2023 LTBT post described a phase-in tied to time and funding milestones, with the Trust to elect a majority within four years, plus an investor-elected seat. | [V] | Anthropic [4], Tier 1 | Historical context only; the October 2026 S-1 is the source for proposed IPO terms. |
+| Amendment No. 1 to the S-1 was filed on 2 November; it retains the proposed Class T board-majority and Class F 50.1% general-vote terms and adds financial statements through 30 September. | [V] | SEC [9], Tier 1 | The 26 October H1 figures remain historical; label their six-month period and do not present them as the latest financial totals. |
 | Delaware PBC directors balance stockholder pecuniary interests, materially affected stakeholders and the stated public benefit. | [V] | Delaware Code [5], Tier 1 | Do not describe PBC status as nonprofit status or an automatic public-benefit override. |
 | No commercial relationship with Anthropic. | [V] | Owner-confirmed editorial disclosure | Recheck if scope changes to other companies or a later assignment. |
 | Article is AI-assisted. | [V] | Editorial process | Disclosure included in methodology note. |
@@ -31,3 +32,4 @@ Prepared 31 October 2026. `[V]` marks a claim checked against a primary source a
 6. SEC, *Form S-1, Registration Statement under the Securities Act of 1933*, Tier 1: https://www.sec.gov/files/forms-1.pdf
 7. CNBC, *Anthropic’s IPO puts power in the hands of founders, giving everyday shareholders little voice*, 26 October 2026, Tier 2: https://www.cnbc.com/2026/10/26/anthropic-ipo-founder-voting-control.html
 8. Fortune, *Anthropic’s S-1*, 26 October 2026, Tier 2: https://fortune.com/2026/10/26/anthropics-s-1
+9. SEC, *Anthropic, PBC — Amendment No. 1 to Form S-1*, filed 2 November 2026, Tier 1: https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm

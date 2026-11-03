@@ -5,7 +5,7 @@
   <text x="72" y="198" font-family="Arial,sans-serif" font-size="61" font-weight="700" fill="#172b3a">Anthropic’s S-1</text>
   <text x="72" y="274" font-family="Arial,sans-serif" font-size="55" font-weight="700" fill="#172b3a">separates money</text>
   <text x="72" y="340" font-family="Arial,sans-serif" font-size="55" font-weight="700" fill="#172b3a">from board power</text>
-  <text x="72" y="416" font-family="Arial,sans-serif" font-size="23" fill="#526574">Proposed IPO terms · filing dated 26 October 2026</text>
+  <text x="72" y="416" font-family="Arial,sans-serif" font-size="23" fill="#526574">Latest amendment · filed 2 November 2026</text>
   <rect x="760" y="118" width="380" height="410" rx="22" fill="#fffdf7" stroke="#cbd5dc" stroke-width="3"/>
   <text x="795" y="164" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#526574">THREE DISTINCT RIGHTS</text>
   <rect x="795" y="190" width="310" height="80" rx="12" fill="#e5edf3"/>
@@ -17,5 +17,5 @@
   <rect x="795" y="376" width="310" height="80" rx="12" fill="#f3e9dd"/>
   <text x="818" y="410" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#172b3a">Class F · founders</text>
   <text x="818" y="440" font-family="Arial,sans-serif" font-size="21" fill="#a87947">50.1% general vote</text>
-  <text x="72" y="616" font-family="Arial,sans-serif" font-size="20" fill="#526574">The offering has not closed; terms are proposed in the S-1.</text>
+  <text x="72" y="616" font-family="Arial,sans-serif" font-size="20" fill="#526574">The amended filing still describes proposed IPO terms.</text>
 </svg>
