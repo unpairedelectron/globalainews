@@ -26,3 +26,4 @@ Prepared 31 October 2026. `[V]` marks a fact checked in a primary source; `[S]` 
 6. NIST, *Zero Trust Architecture*, SP 800-207, Tier 1: https://www.nist.gov/publications/zero-trust-architecture
 7. NIST, *Application Container Security Guide*, SP 800-190, Tier 1: https://csrc.nist.gov/pubs/sp/800/190/final
 8. CISA, *Zero Trust Maturity Model*, accessed 31 October 2026, Tier 1: https://www.cisa.gov/zero-trust-maturity-model
+9. NIST, *Application Container Security Guide*, official PDF of SP 800-190, Tier 1: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf

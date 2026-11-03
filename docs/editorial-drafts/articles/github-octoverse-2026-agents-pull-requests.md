@@ -133,7 +133,7 @@ If agents increase the rate at which draft changes appear, teams need to know wh
 
 Start with a baseline rather than borrowing GitHub’s percentage. Define the unit—a pull request, commit, generated line or accepted suggestion—then state the detection method, period and denominator. Separate agent-started changes from human-authored changes that received AI assistance. Track review latency, time to merge, review comments, test failures, post-merge defects and reversions as distinct measures. Do not collapse them into one productivity score.
 
-Teams can also make review more consistent without treating the model as a special contributor that receives less scrutiny. GitHub documents ways to require human approvals on protected branches and describes human review and testing as necessary for agent-generated changes. NIST’s secure software and AI risk frameworks provide broader process references; they do not validate this Octoverse metric or prove that a particular workflow improves outcomes. [2][3][4][5][6][7]
+Teams can also make review more consistent without treating the model as a special contributor that receives less scrutiny. GitHub documents ways to require human approvals on protected branches and describes human review and testing as necessary for agent-generated changes. NIST’s secure software and AI risk frameworks provide broader process references; they do not validate this Octoverse metric or prove that a particular workflow improves outcomes. [2][3][4][5][6][7][10]
 
 ### A worked example for a repository
 
@@ -211,6 +211,7 @@ The cited GitHub guidance recommends human review and testing before agent-gener
 **Tier 2 — reporting**
 
 9. GitGuardian, *GitHub Octoverse 2026: AI Agents, Citizen Developers, and the New Security Reality*, October 2026. https://blog.gitguardian.com/github-octoverse-2026/
+10. NIST, *Secure Software Development Framework (SSDF) Version 1.1*, official PDF of SP 800-218. https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-218.pdf
 
 ## Methodology note
 

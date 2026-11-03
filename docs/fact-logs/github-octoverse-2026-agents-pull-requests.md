@@ -14,7 +14,7 @@ Prepared 31 October 2026. `[V]` marks a claim checked in a primary source and co
 | GitHub does not provide a public/private split in the report passages checked. | [S] | GitHub [1], Tier 1 | Narrowly phrased as a limit in the checked report, not proof no split exists elsewhere. |
 | GitHub recommends human review/testing for generated code and supports required review controls. | [V] | GitHub Docs [2][3][4][8], Tier 1 | Product documentation; describes available controls, not measured effectiveness. |
 | Untrusted pull-request content can create security risks when privileged Actions workflows are configured unsafely. | [V] | GitHub Docs [5], Tier 1 | General Actions security guidance, not a finding about the Octoverse PR sample. |
-| SSDF and NIST AI RMF are process frameworks, not evidence that a specific workflow improves outcomes. | [V] | NIST [6][7], Tier 1 | Used as process references only. |
+| SSDF and NIST AI RMF are process frameworks, not evidence that a specific workflow improves outcomes. | [V] | NIST [6][7][10], Tier 1 | Used as process references only. The official PDF for SP 800-218 is available at [10] because the NIST publication page may return an anti-frame shell. |
 | Worked example: 64/80 and 96/120 each equal 80%. | [V] | Editorial calculation | Hypothetical illustration; arithmetic checked and labelled as such. |
 | Article is AI-assisted. | [V] | Editorial process | Disclosure included in the draft methodology note. |
 
@@ -29,3 +29,4 @@ Prepared 31 October 2026. `[V]` marks a claim checked in a primary source and co
 7. NIST, *Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile*, July 2024, Tier 1: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf
 8. GitHub Docs, *Use GitHub Copilot code review across the pull request lifecycle*, accessed 31 October 2026, Tier 1: https://docs.github.com/en/copilot/tutorials/use-copilot-code-review-across-the-pull-request-lifecycle
 9. GitGuardian, *GitHub Octoverse 2026: AI Agents, Citizen Developers, and the New Security Reality*, October 2026, Tier 2: https://blog.gitguardian.com/github-octoverse-2026/
+10. NIST, *Secure Software Development Framework (SSDF) Version 1.1*, official PDF of SP 800-218, Tier 1: https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-218.pdf

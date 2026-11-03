@@ -80,7 +80,7 @@ An offline mode is one control layer, not a substitute for monitoring, access ma
 
 OpenAI says its security investments include improving virtual-machine security, working with cloud partners to red-team infrastructure, scanning code and configuration, and using models to test the boundaries of its research environments. It also describes automatic run-stopping systems and continuous monitoring. The public post does not provide a full test plan, coverage report or a detailed incident-response log, so readers should not infer one from the high-level description. [1]
 
-This is why “defense in depth” is a more useful lens than “air gap.” A network restriction can reduce one route to outside systems. Isolation can limit the effect of a failure in one run. Permission boundaries can constrain tools and resources. Monitoring may surface activity that passes a preventive control. Red-team tests can look for weaknesses before a system is relied on. Each layer has a different job, and each depends on the quality of its design and operation. NIST’s container guide similarly treats runtime, image and orchestration risks as distinct concerns; it does not suggest that a container alone makes a workload safe. [1][3][4][5]
+This is why “defense in depth” is a more useful lens than “air gap.” A network restriction can reduce one route to outside systems. Isolation can limit the effect of a failure in one run. Permission boundaries can constrain tools and resources. Monitoring may surface activity that passes a preventive control. Red-team tests can look for weaknesses before a system is relied on. Each layer has a different job, and each depends on the quality of its design and operation. NIST’s container guide similarly treats runtime, image and orchestration risks as distinct concerns; it does not suggest that a container alone makes a workload safe. [1][3][4][5][7][9]
 
 ## What the post confirms—and what it does not
 
@@ -168,6 +168,7 @@ The public post says OpenAI strengthened controls and uses its strongest models 
 6. NIST, *Zero Trust Architecture*, SP 800-207. https://www.nist.gov/publications/zero-trust-architecture
 7. NIST, *Application Container Security Guide*, SP 800-190. https://csrc.nist.gov/pubs/sp/800/190/final
 8. CISA, *Zero Trust Maturity Model*, accessed 31 October 2026. https://www.cisa.gov/zero-trust-maturity-model
+9. NIST, *Application Container Security Guide*, official PDF of SP 800-190. https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf
 
 ## Methodology note
 
