@@ -23,7 +23,7 @@ Read `site/CONTENT-GUIDE.md` and `PIPELINE.md` before writing.
 
 ## Step 0: Set up
 1. `add_repo` `unpairedelectron/globalainews` with push access, clone it, `cd` into it.
-   **Run once per day:** if `git ls-remote origin "refs/heads/newsroom/$(date -u +%F)"` returns a branch, or `ops/newsroom-log.md` on `main` already has an entry for today's date, another run already happened today. Stop immediately and report "already ran today".
+   **Run once per day:** if `git ls-remote origin "refs/heads/newsroom/$(date -u +%F)"` returns a branch, or `ops/newsroom-log.md` on `main` already contains the exact heading `## YYYY-MM-DD newsroom run` for today's date, another run already happened today. (Other entries dated today, such as setup notes, don't count.) Stop immediately and report "already ran today".
 2. Read `ops/autonomy.json`, the last 10 entries of `ops/newsroom-log.md`, `ops/topics.md`, `site/CONTENT-GUIDE.md`.
 3. `git checkout -b newsroom/$(date -u +%F) origin/main`; `cd site && npm ci`.
 4. List published and scheduled articles: the front matter `date` of every file in `site/src/content/articles/`.
@@ -73,7 +73,7 @@ Do **one** of these per run, rotating:
 
 ## Step 6: Ship
 1. Write social copy for each new article to `ops/social/<slug>.md`: a WhatsApp Channel post (≤ 60 words plus link), an X post (≤ 270 chars), a LinkedIn post (≤ 120 words, leading with the most surprising fact) and a Telegram post. Use the article URL `https://www.globalainews.in/article/<slug>/`.
-2. Append today's entry to `ops/newsroom-log.md`: health result, article (title, slug, date, number of sources), maintenance done, anything skipped and why.
+2. Append today's entry to `ops/newsroom-log.md` under the heading `## YYYY-MM-DD newsroom run` (exactly this format; the run-once check depends on it): health result, article (title, slug, date, number of sources), maintenance done, anything skipped and why.
 3. Commit, push the branch, and open a pull request into `main` with the verification table and gate results in the body.
 4. **If `mode` is `auto` and every gate passed:** merge it. **If `mode` is `review`:** stop; the owner merges.
 5. **Content changes (articles, images, ops files):** nothing else to do. Within about 10 minutes the live server pulls `main`, re-runs the gates and publishes. Poll `https://www.globalainews.in/build-info.json` every 60 s (up to 20 min) until `contentSync.sha` equals the merge commit, then re-run `verify-deploy.sh`. An article dated in the future won't appear until its time, which is expected.
