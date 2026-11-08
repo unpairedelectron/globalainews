@@ -3,6 +3,8 @@
 // - apex -> www canonical host redirect
 // - trailing-slash normalisation, real 404 status, gzip, cache headers
 // - scheduled publishing: rebuilds itself when an article's publish time passes
+// - content sync: pulls new articles from GitHub main and publishes them
+// - /build-info.json: build time and content-sync status
 // Run: PORT=3000 node server.mjs
 import http from 'node:http';
 import fs from 'node:fs';
@@ -98,6 +100,10 @@ const server = http.createServer((req, res) => {
   const host = (req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim().split(':')[0];
 
   if (url.pathname === '/healthz') { res.writeHead(200, { 'Content-Type': 'text/plain' }); return res.end('ok'); }
+  if (url.pathname === '/build-info.json') {
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' });
+    return res.end(JSON.stringify({ buildTime: new Date(buildTime() || 0).toISOString(), contentSync: syncStatus }));
+  }
 
   // Canonical host (apex -> www). HTTPS is enforced by the hosting proxy.
   if (host === 'globalainews.in') {
@@ -180,31 +186,88 @@ async function pingIndexNow(urls) {
   }
 }
 
+// Builds into dist-next, runs every gate, and swaps it in only if all pass.
+async function rebuild(reason) {
+  const next = path.join(SITE_DIR, 'dist-next');
+  const old = path.join(SITE_DIR, 'dist-old');
+  console.log(`[publish] ${reason}; rebuilding`);
+  fs.rmSync(next, { recursive: true, force: true });
+  const env = { ASTRO_OUT_DIR: 'dist-next', ASTRO_TELEMETRY_DISABLED: '1' };
+  const ok = (await run(process.execPath, ['scripts/lint-articles.mjs'], env))
+    && (await run(process.execPath, [astroBin(SITE_DIR), 'build'], env))
+    && (await run(process.execPath, ['scripts/check-build.mjs'], env));
+  if (!ok) {
+    fs.rmSync(next, { recursive: true, force: true });
+    console.error('[publish] gates failed; keeping the current build');
+    return false;
+  }
+  const before = sitemapUrls(ROOT);
+  fs.rmSync(old, { recursive: true, force: true });
+  fs.renameSync(ROOT, old);
+  fs.renameSync(next, ROOT);
+  fs.rmSync(old, { recursive: true, force: true });
+  gzCache.clear();
+  console.log('[publish] new build is live');
+  pingIndexNow(sitemapUrls(ROOT).filter((u) => !before.includes(u)));
+  return true;
+}
+
 async function maybeRebuild() {
   if (building || process.env.AUTO_PUBLISH === 'false') return;
   if (!scheduledDue(buildTime())) return;
   building = true;
-  const next = path.join(SITE_DIR, 'dist-next');
-  const old = path.join(SITE_DIR, 'dist-old');
+  try { await rebuild('scheduled article due'); }
+  catch (err) { console.error('[publish] error', err); }
+  finally { building = false; }
+}
+
+// ---------------------------------------------------------------- content sync
+// Every 10 minutes, check GitHub `main`. If articles or article images changed,
+// pull them, rebuild with every gate, and go live; on any failure, restore the
+// previous content and keep serving the current build. Code is never pulled.
+// Disable with CONTENT_SYNC=false.
+const SHA_FILE = path.join(SITE_DIR, '.content-sha');
+let lastSha = (() => { try { return fs.readFileSync(SHA_FILE, 'utf8').trim(); } catch { return ''; } })();
+let failedSha = '';
+let syncStatus = { lastCheck: null, sha: lastSha || null, result: 'not run' };
+
+function sameAsCurrent(files) {
+  let count = 0;
+  for (const [rel, data] of files) {
+    count++;
+    try { if (!fs.readFileSync(path.join(SITE_DIR, rel)).equals(data)) return false; } catch { return false; }
+  }
+  const walk = (d) => fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }).reduce((n, e) => n + (e.isDirectory() ? walk(path.join(d, e.name)) : 1), 0) : 0;
+  return count === walk(path.join(SITE_DIR, 'src/content/articles')) + walk(path.join(SITE_DIR, 'public/images/articles'));
+}
+
+async function syncContent() {
+  if (building || process.env.CONTENT_SYNC === 'false') return;
+  building = true;
+  syncStatus.lastCheck = new Date().toISOString();
   try {
-    console.log('[auto-publish] scheduled article due; rebuilding');
-    fs.rmSync(next, { recursive: true, force: true });
-    const env = { ASTRO_OUT_DIR: 'dist-next', ASTRO_TELEMETRY_DISABLED: '1' };
-    const astro = astroBin(SITE_DIR);
-    if ((await run(process.execPath, [astro, 'build'], env)) && (await run(process.execPath, ['scripts/check-build.mjs'], env))) {
-      fs.rmSync(old, { recursive: true, force: true });
-      fs.renameSync(ROOT, old);
-      const before = sitemapUrls(ROOT);
-      fs.renameSync(next, ROOT);
-      fs.rmSync(old, { recursive: true, force: true });
-      gzCache.clear();
-      console.log('[auto-publish] new build is live');
-      pingIndexNow(sitemapUrls(ROOT).filter((u) => !before.includes(u)));
+    const { latestSha, fetchContent, applyContent } = await import('./scripts/content-sync.mjs');
+    const sha = await latestSha();
+    if (sha === lastSha || sha === failedSha) { syncStatus.result = sha === failedSha ? `skipped ${sha.slice(0, 7)} (failed gates earlier)` : 'up to date'; return; }
+    const files = await fetchContent(sha);
+    if (sameAsCurrent(files)) {
+      lastSha = sha; fs.writeFileSync(SHA_FILE, sha);
+      syncStatus = { ...syncStatus, sha, result: 'content unchanged' };
+      return;
+    }
+    const tx = applyContent(SITE_DIR, files);
+    if (await rebuild(`content update from GitHub ${sha.slice(0, 7)}`)) {
+      tx.commit();
+      lastSha = sha; fs.writeFileSync(SHA_FILE, sha);
+      syncStatus = { ...syncStatus, sha, result: `published ${sha.slice(0, 7)}` };
     } else {
-      console.error('[auto-publish] rebuild failed; keeping the current build');
+      tx.restore();
+      failedSha = sha;
+      syncStatus.result = `gates failed for ${sha.slice(0, 7)}; previous content restored`;
     }
   } catch (err) {
-    console.error('[auto-publish] error', err);
+    syncStatus.result = `error: ${err.message}`;
+    console.error('[content-sync]', err.message);
   } finally {
     building = false;
   }
@@ -212,5 +275,7 @@ async function maybeRebuild() {
 
 setTimeout(maybeRebuild, 5_000);
 setInterval(maybeRebuild, 5 * 60_000).unref();
+setTimeout(syncContent, 20_000);
+setInterval(syncContent, 10 * 60_000).unref();
 
 server.listen(PORT, '0.0.0.0', () => console.log(`Global AI News serving ${ROOT} on :${PORT}`));
