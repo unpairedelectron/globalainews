@@ -10,7 +10,7 @@
     "check": "node scripts/check-build.mjs"
   },
   "dependencies": {
-    "@astrojs/rss": "4.0.12",
-    "astro": "5.18.2"
+    "@astrojs/rss": "4.0.19",
+    "astro": "7.4.7"
   }
 }
