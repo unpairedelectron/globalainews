@@ -1,0 +1,43 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE } from '../site.config';
+---
+<Page title="Editorial policy and corrections" heading="Editorial policy" description={`How ${SITE.name} sources, verifies, writes and corrects its reporting, and how we use AI tools.`} path="/editorial-policy/" updated="8 November 2026">
+  <p>This policy explains the standards every {SITE.name} article is held to. If you think we have fallen short of it, please <a href="/contact-us/">tell us</a>.</p>
+
+  <h2 id="sourcing">1. Sourcing</h2>
+  <ul>
+    <li>We work from primary sources wherever they exist: legislation and official journals, regulatory and securities filings, government releases, tender documents, peer-reviewed papers and preprints, and companies’ own announcements and documentation.</li>
+    <li>Every article ends with a numbered list of sources, and claims in the text are linked to them.</li>
+    <li>We prefer two independent sources for any significant claim. When only one exists, we say so.</li>
+    <li>We clearly label preprints as not peer-reviewed, and company benchmarks or performance claims as company-reported.</li>
+  </ul>
+
+  <h2 id="accuracy">2. Accuracy and context</h2>
+  <ul>
+    <li>Numbers are reported with their period, unit and basis (for example, calendar vs fiscal year, or “compute units” vs “GPUs”).</li>
+    <li>We distinguish what is in force from what is proposed, announced or expected.</li>
+    <li>Headlines must be supported by the article. We aim to make headlines specific and useful, never misleading.</li>
+    <li>Dates in an article reflect when it was published and, if later, when it was last substantively updated.</li>
+  </ul>
+
+  <h2 id="ai-use">3. How we use AI tools</h2>
+  <p>We use AI tools to help with research, summarising long documents and drafting. AI output is never published as-is: every article is checked against the cited sources before publication, and an article’s methodology note says when research or drafting was AI-assisted. We do not use AI to invent quotes, sources, people or images presented as real.</p>
+
+  <h2 id="images">4. Images</h2>
+  <p>Most images on {SITE.name} are illustrations or original charts, not documentary photographs. Charts are built from the data in the article, which is available in a “View data” table beside each chart.</p>
+
+  <h2 id="independence">5. Independence and conflicts of interest</h2>
+  <ul>
+    <li>We do not accept payment for coverage, and we do not publish sponsored content or paid links.</li>
+    <li>Advertising is served by Google AdSense. Advertisers do not see articles before publication and have no say in coverage.</li>
+    <li>If we ever have a financial or personal relationship with a company we cover, we will disclose it in the article.</li>
+  </ul>
+
+  <h2 id="corrections">6. Corrections</h2>
+  <p>We correct errors of fact promptly and openly. When we correct an article, we fix the text and add a note at the end explaining what was changed and when. Minor fixes to spelling or formatting are made without a note. Updates that add new information are marked with an updated date.</p>
+  <p>To report an error, email <a href={`mailto:${SITE.publisher.email}?subject=Correction`}>{SITE.publisher.email}</a> with the article link and the specific claim. We review every request.</p>
+
+  <h2 id="feedback">7. Feedback</h2>
+  <p>We welcome feedback from readers and from the people and organisations we write about. Use our <a href="/contact-us/">contact page</a>.</p>
+</Page>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
+  <title id="title">Review path for an agent-started pull request</title>
+  <desc id="desc">A proposed change passes through automated tests and security checks, human review of the diff and evidence, required approvals, and branch protection before merge.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.node{fill:#fff;stroke:#9fb0bc;stroke-width:2}.label{font-size:27px;font-weight:700}.sub{font-size:23px;fill:#526574}.line{stroke:#285b7a;stroke-width:4}.num{fill:#dce9f2;stroke:#285b7a;stroke-width:2}
+  </style>
+  <text class="label" x="220" y="44">Review path · no automatic merge implied</text>
+  <rect class="node" x="205" y="70" width="520" height="72" rx="14"/><circle class="num" cx="165" cy="106" r="25"/><text class="label" x="157" y="115">1</text>
+  <text class="label" x="235" y="100">Agent proposes a change</text><text class="sub" x="235" y="128">Task, branch, files and diff</text>
+  <path class="line" d="M465 142v24"/>
+  <rect class="node" x="205" y="166" width="520" height="72" rx="14"/><circle class="num" cx="165" cy="202" r="25"/><text class="label" x="157" y="211">2</text>
+  <text class="label" x="235" y="196">Automated checks run</text><text class="sub" x="235" y="224">Tests, scans, workflow permissions</text>
+  <path class="line" d="M465 238v24"/>
+  <rect class="node" x="205" y="262" width="520" height="72" rx="14"/><circle class="num" cx="165" cy="298" r="25"/><text class="label" x="157" y="307">3</text>
+  <text class="label" x="235" y="292">Human reviews the diff</text><text class="sub" x="235" y="320">Scope, behavior, dependencies</text>
+  <path class="line" d="M465 334v24"/>
+  <rect class="node" x="205" y="358" width="520" height="72" rx="14"/><circle class="num" cx="165" cy="394" r="25"/><text class="label" x="157" y="403">4</text>
+  <text class="label" x="235" y="388">Required approvals are met</text><text class="sub" x="235" y="416">Owners and branch rules apply</text>
+  <path class="line" d="M465 430v24"/>
+  <rect class="node" x="205" y="454" width="520" height="72" rx="14"/><circle class="num" cx="165" cy="490" r="25"/><text class="label" x="157" y="499">5</text>
+  <text class="label" x="235" y="484">Merge after policy checks</text><text class="sub" x="235" y="512">CI status and repository rules</text>
+</svg>

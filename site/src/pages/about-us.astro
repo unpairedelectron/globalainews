@@ -1,0 +1,34 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE, CATEGORIES } from '../site.config';
+import { getArticles } from '../lib/articles';
+const count = (await getArticles()).length;
+const jsonLd = [{ '@type': 'AboutPage', name: `About ${SITE.name}`, url: `${SITE.url}/about-us/`, about: { '@id': `${SITE.url}/#organization` } }];
+---
+<Page title="About us" heading={`About ${SITE.name}`} description={`${SITE.name} is an independent publication that explains AI news with every claim linked to its source. Who we are, what we cover and how we work.`} path="/about-us/" jsonLd={jsonLd}>
+  <p class="dek">{SITE.tagline}</p>
+
+  <p>{SITE.name} is an independent online publication about artificial intelligence. We cover the stories that change what people can build, buy, regulate or worry about: new AI models, laws and deadlines, chips and data centres, company filings, jobs, and India’s growing AI ecosystem.</p>
+
+  <p>AI news moves fast and is full of big numbers that rarely mean what the headline suggests. A “10,000-GPU tender” is not 10,000 GPUs switched on. A benchmark score published by a company is not an independent test. “AI-led job cuts” may be a voluntary exit scheme. Our job is to separate what an announcement actually says from what people assume it says—and to show you the source so you can check it yourself.</p>
+
+  <h2>What we publish</h2>
+  <ul>
+    <li><strong>Explainers</strong> on major AI announcements, filings and policy changes, written to answer the questions readers actually search for.</li>
+    <li><strong>Analysis</strong> that puts numbers in context—what is measured, over which period and by whom.</li>
+    <li><strong>Guides and comparisons</strong> of AI tools and models, built from vendor documentation and reviewed on a fixed schedule.</li>
+  </ul>
+  <p>We currently cover: {Object.values(CATEGORIES).map((c, i, arr) => <><a href={c.path}>{c.name}</a>{i < arr.length - 1 ? ', ' : '.'}</>)} We have published {count} in-depth stories so far.</p>
+
+  <h2>How we work</h2>
+  <p>Every article starts from primary sources—regulatory texts, court and securities filings, official government releases, research papers and company announcements—and lists them at the end. When we rely on a company’s own claim, we say so. When something is not yet confirmed, we say that too. Our full approach, including how we use AI tools in research and how we handle corrections, is set out in our <a href="/editorial-policy/">editorial policy</a>.</p>
+
+  <h2>Independence</h2>
+  <p>{SITE.name} is funded by display advertising. Advertisers have no influence over what we cover or what we write, and we do not publish paid or sponsored articles. Companies we write about are subjects of our reporting, not clients.</p>
+
+  <h2>Who runs {SITE.name}</h2>
+  <p>{SITE.name} is published by {SITE.publisher.name} from {SITE.publisher.location}. Articles carry the byline of the {SITE.desk}; where an editor has reviewed a piece against its sources, the article names them.</p>
+
+  <h2>Get in touch</h2>
+  <p>Story tips, corrections and feedback are welcome. See our <a href="/contact-us/">contact page</a>.</p>
+</Page>

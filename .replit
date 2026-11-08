@@ -26,7 +26,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "pnpm --filter @workspace/global-ai-news run test:smoke"
+args = "cd site && npm ci --no-audit --no-fund && npm run build"
 
 [workflows.workflow.metadata]
 isValidation = true

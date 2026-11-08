@@ -1,0 +1,35 @@
+name: Site build and SEO checks
+
+on:
+  push:
+    paths: ['site/**', '.github/workflows/site.yml']
+  pull_request:
+    paths: ['site/**', '.github/workflows/site.yml']
+  schedule:
+    # 07:45 UTC daily, just after the 07:30 UTC scheduled publish time.
+    - cron: '45 7 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build
+      # Optional: if the site is hosted on Cloudflare Pages, add a deploy hook
+      # URL as the CF_PAGES_DEPLOY_HOOK secret so scheduled articles go live
+      # automatically each day.
+      - name: Trigger daily redeploy
+        if: github.event_name == 'schedule' && env.HOOK != ''
+        env:
+          HOOK: ${{ secrets.CF_PAGES_DEPLOY_HOOK }}
+        run: curl -fsS -X POST "$HOOK"

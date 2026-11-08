@@ -1,0 +1,19 @@
+---
+import { articlePath, category, formatDate, readingTime, type Article } from '../lib/articles';
+
+interface Props { article: Article; image?: boolean; eager?: boolean }
+const { article, image = true, eager = false } = Astro.props;
+const href = articlePath(article);
+const cat = category(article);
+---
+<article class="card">
+  {image && article.data.image && (
+    <a href={href} tabindex="-1" aria-hidden="true">
+      <img class="card-img" src={article.data.image} alt="" width="640" height="360" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+    </a>
+  )}
+  <a class="kicker" href={cat.path}>{cat.name}</a>
+  <h3><a href={href}>{article.data.title}</a></h3>
+  <p>{article.data.description}</p>
+  <p class="meta"><time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time> · {readingTime(article)} min read</p>
+</article>

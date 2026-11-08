@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleList from '../components/ArticleList.astro';
+import { SITE } from '../site.config';
+import { getArticles } from '../lib/articles';
+const all = await getArticles();
+---
+<Base title={`Latest AI News and Analysis | ${SITE.name}`} description="Every Global AI News story, newest first: AI models, policy, India, chips and infrastructure, safety and the business of AI." path="/latest/">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Latest stories</h1>
+      <p>Every story we have published, newest first. Each one links to the filings, papers and official documents behind it.</p>
+    </header>
+    <ArticleList articles={all} />
+  </div>
+</Base>

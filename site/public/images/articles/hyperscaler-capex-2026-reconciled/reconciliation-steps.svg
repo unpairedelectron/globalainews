@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" role="img" aria-labelledby="title desc">
+  <title id="title">Four checks before comparing capital expenditure</title>
+  <desc id="desc">The company figures require checks for reporting period, finance-lease treatment, cash versus accounting CapEx and whether spending is AI-only or broader infrastructure.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.number{font-size:30px;font-weight:700;fill:#477da8}.head{font-size:25px;font-weight:700}.body{font-size:22px;fill:#526574}.card{fill:#fffdf7;stroke:#b8c7d1;stroke-width:2}
+  </style>
+  <text class="title" x="38" y="48">Four checks before adding the figures</text>
+  <rect class="card" x="32" y="78" width="400" height="160" rx="16"/>
+  <text class="number" x="58" y="124">01</text><text class="head" x="112" y="124">Align the period</text>
+  <text class="body" x="58" y="170"><tspan x="58">Calendar year, fiscal year and</tspan><tspan x="58" dy="30">quarterly actuals differ.</tspan></text>
+  <rect class="card" x="468" y="78" width="400" height="160" rx="16"/>
+  <text class="number" x="494" y="124">02</text><text class="head" x="548" y="124">Match lease basis</text>
+  <text class="body" x="494" y="170"><tspan x="494">Meta includes lease principal;</tspan><tspan x="494" dy="30">Microsoft reports leases in Q1.</tspan></text>
+  <rect class="card" x="32" y="262" width="400" height="160" rx="16"/>
+  <text class="number" x="58" y="308">03</text><text class="head" x="112" y="308">Cash or CapEx?</text>
+  <text class="body" x="58" y="354"><tspan x="58">The measures need not share</tspan><tspan x="58" dy="30">the same accounting definition.</tspan></text>
+  <rect class="card" x="468" y="262" width="400" height="160" rx="16"/>
+  <text class="number" x="494" y="308">04</text><text class="head" x="548" y="308">AI-only or broader?</text>
+  <text class="body" x="494" y="354"><tspan x="494">Infrastructure may serve more</tspan><tspan x="494" dy="30">than AI workloads.</tspan></text>
+  <text class="body" x="38" y="472">Until these match, a precise total can mislead.</text>
+</svg>

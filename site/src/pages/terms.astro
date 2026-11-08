@@ -1,0 +1,39 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE } from '../site.config';
+const mail = SITE.publisher.email;
+---
+<Page title="Terms of use" description={`The terms that apply when you use ${SITE.name}, including copyright, permitted use and limitations.`} path="/terms/" updated="8 November 2026">
+  <p>By using {SITE.url.replace('https://', '')} (“the site”), operated by {SITE.publisher.name}, {SITE.publisher.location}, you agree to these terms. If you do not agree, please do not use the site.</p>
+
+  <h2>1. Our content</h2>
+  <p>Articles, charts, illustrations and design on the site are owned by {SITE.name} unless stated otherwise, and are protected by copyright. Third-party trademarks and quoted material belong to their owners.</p>
+
+  <h2>2. What you may do</h2>
+  <ul>
+    <li>Read, share links to and print articles for personal, non-commercial use.</li>
+    <li>Quote short extracts with clear attribution to {SITE.name} and a link to the original article.</li>
+  </ul>
+  <h2>3. What you may not do</h2>
+  <ul>
+    <li>Republish whole articles or substantial parts of them without written permission.</li>
+    <li>Scrape the site in bulk or use it in a way that harms its availability.</li>
+    <li>Present our content as your own or remove attribution.</li>
+  </ul>
+  <p>For permission requests, email <a href={`mailto:${mail}`}>{mail}</a>.</p>
+
+  <h2>4. No professional advice</h2>
+  <p>Our articles are for general information. They are not legal, financial, investment, security or other professional advice. Please read our <a href="/disclaimer/">disclaimer</a>.</p>
+
+  <h2>5. External links and advertising</h2>
+  <p>The site links to third-party websites and shows third-party advertising. We are not responsible for the content, products or practices of those third parties.</p>
+
+  <h2>6. Availability and liability</h2>
+  <p>We work to keep information accurate and the site available, but we provide the site “as is” without warranties of any kind. To the extent permitted by law, we are not liable for losses arising from your use of, or reliance on, the site.</p>
+
+  <h2>7. Changes</h2>
+  <p>We may update these terms. The “last updated” date shows the current version.</p>
+
+  <h2>8. Governing law</h2>
+  <p>These terms are governed by the laws of India, and the courts of Pune, Maharashtra have jurisdiction, without affecting any mandatory consumer rights you have where you live.</p>
+</Page>
