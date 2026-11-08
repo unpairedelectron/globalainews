@@ -1,6 +1,6 @@
 # Lighthouse release audit — 1 November 2026
 
-## Latest score matrix
+## Latest complete score matrix
 
 The latest complete matrix contains 18 routes × 2 devices (36 runs), using Lighthouse 13.6.0 and Chromium 152 against a production build with API proxying. Mobile used Lighthouse's simulated mobile profile; desktop used its desktop preset. Scores are out of 100.
 
@@ -15,6 +15,21 @@ The latest complete matrix contains 18 routes × 2 devices (36 runs), using Ligh
 | `/topic/ai/` | 100/100/100/66 | 94/100/100/66 |
 | `/topic/india/` | 100/100/100/69 | 100/100/100/69 |
 | Ten `/staging/article/.../` routes | 100/100/100/69 each | 100/100/100/69 each |
+
+## Focused target-route retest — 8 November 2026
+
+The three target routes were audited at both device sizes with three Lighthouse runs each. The final regression audit then passed all 76 selected route checks with zero failures; the fixed limits were unchanged at Performance 95, Accessibility 95, and Best Practices 70 on both devices.
+
+| Route | Device | Performance | Accessibility | Best practices | Median LCP | LCP element |
+|---|---|---:|---:|---:|---:|---|
+| `/` | mobile | 96 | 100 | 100 | 2,787 ms | text candidate; selector not reported |
+| `/` | desktop | 98 | 100 | 100 | 928 ms | text candidate; selector not reported |
+| `/brief/` | mobile | 97 | 100 | 100 | 2,632 ms | text candidate; selector not reported |
+| `/brief/` | desktop | 98 | 100 | 100 | 927 ms | text candidate; selector not reported |
+| `/topic/india/` | mobile | 100 | 100 | 100 | 920 ms | text candidate; selector not reported |
+| `/topic/india/` | desktop | 98 | 100 | 100 | 922 ms | text candidate; selector not reported |
+
+No target-route Lighthouse failure remains. The audit output now records the LCP selector, paint phases, candidate resource, and request start/end timings for fonts, scripts, stylesheets, and newsroom API calls when a failure occurs. On `/topic/india/`, the direct response remains server-rendered; client-side navigation still uses the interactive topic page.
 
 The separate Methodology route is `/code-of-ethics/`. It was missing from the 36-run matrix, so it received a supplemental Lighthouse run below. Research also received a focused recheck after its contrast correction.
 
@@ -80,4 +95,6 @@ Run `pnpm --filter @workspace/global-ai-news run audit:preview`. The command bui
 
 Every route is checked at 360px with dark color preference for document overflow, WCAG-tagged axe serious/critical violations, first-Tab visible focus, and Enter-operated disclosures where present. Lighthouse runs mobile and desktop on every route and reports Performance, Accessibility, and Best Practices scores with the route and device.
 
-The fixed failure limits are mobile Performance 80, desktop Performance 95, Accessibility 95 on both devices, and Best Practices 70 on both devices. The latest production run passed 95 of 98 checks; its three failures were desktop Performance on `/` (75, LCP 4,377 ms), `/brief/` (78, LCP 4,027 ms), and `/topic/india/` (79, LCP 3,635 ms). All staging-article desktop scores and all mobile scores passed; all routes passed the Accessibility and Best Practices limits. The gate remains red for those three desktop routes, with limits unchanged. Public Best Practices is 77 because of known third-party-cookie/DevTools findings. SEO is reported in the existing release audit but is not a failure threshold here because noindex preview and section routes intentionally score lower. The command does not accept threshold overrides.
+The browser audit also reports failed image, stylesheet, and script requests for each route, including HTTP 4xx/5xx responses and network failures. Uncaught page errors are reported with their route. Any such asset failure or uncaught page error fails the audit.
+
+The fixed failure limits are Performance 95, Accessibility 95, and Best Practices 70 on both mobile and desktop. The 1 November full production run passed 95 of 98 checks; its three failures were desktop Performance on `/` (75, LCP 4,377 ms), `/brief/` (78, LCP 4,027 ms), and `/topic/india/` (79, LCP 3,635 ms). See the focused retest below for the latest scores on those routes. Public Best Practices is 77 because of known third-party-cookie/DevTools findings. SEO is reported in the existing release audit but is not a failure threshold here because noindex preview and section routes intentionally score lower. The command does not accept threshold overrides.

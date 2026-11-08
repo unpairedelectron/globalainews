@@ -23,6 +23,7 @@ const prerenderPublicNoindexRoutes = new Set([
   '/terms',
   '/authors',
   '/reports',
+  '/topic/india',
   '/topics',
   '/research',
   '/data',

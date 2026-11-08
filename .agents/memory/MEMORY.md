@@ -40,3 +40,4 @@
 - [Editorial commercial disclosure](editorial-commercial-disclosure.md) — the owner confirmed no commercial relationship for the current Anthropic, OpenAI, and Google coverage; recheck for other companies or later work.
 - [Generated staging assets](generated-staging-assets.md) — keep generated previews out of source fingerprints and serve them without deleting live files during rebuilds.
 - [Workspace CLI forwarding](workspace-cli-forwarding.md) — package scripts may receive PNPM's bare `--` separator as an argument; strip it before parsing positional inputs.
+- [Astro preview startup](astro-preview-startup.md) — artifact workflows run from the artifact directory, and Astro may need `--ignore-lock` to stay attached under Replit.

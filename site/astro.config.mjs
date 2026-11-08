@@ -13,6 +13,11 @@ export default defineConfig({
   outDir: process.env.ASTRO_OUT_DIR || './dist',
   trailingSlash: 'always',
   build: { format: 'directory' },
+  vite: {
+    server: {
+      allowedHosts: ['.sisko.replit.dev'],
+    },
+  },
   redirects: staticRedirects,
   compressHTML: true,
   markdown: {
