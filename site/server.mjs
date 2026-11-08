@@ -11,6 +11,7 @@ import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { redirects, prefixRedirects } from './redirects.mjs';
+import { astroBin } from './scripts/astro-bin.mjs';
 
 const SITE_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(SITE_DIR, 'dist');
@@ -189,7 +190,7 @@ async function maybeRebuild() {
     console.log('[auto-publish] scheduled article due; rebuilding');
     fs.rmSync(next, { recursive: true, force: true });
     const env = { ASTRO_OUT_DIR: 'dist-next', ASTRO_TELEMETRY_DISABLED: '1' };
-    const astro = path.join(SITE_DIR, 'node_modules', 'astro', 'astro.js');
+    const astro = astroBin(SITE_DIR);
     if ((await run(process.execPath, [astro, 'build'], env)) && (await run(process.execPath, ['scripts/check-build.mjs'], env))) {
       fs.rmSync(old, { recursive: true, force: true });
       fs.renameSync(ROOT, old);
