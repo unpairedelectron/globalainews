@@ -23,6 +23,7 @@ Read `site/CONTENT-GUIDE.md` and `PIPELINE.md` before writing.
 
 ## Step 0: Set up
 1. `add_repo` `unpairedelectron/globalainews` with push access, clone it, `cd` into it.
+   **Run once per day:** if `git ls-remote origin "refs/heads/newsroom/$(date -u +%F)"` returns a branch, or `ops/newsroom-log.md` on `main` already has an entry for today's date, another run already happened today. Stop immediately and report "already ran today".
 2. Read `ops/autonomy.json`, the last 10 entries of `ops/newsroom-log.md`, `ops/topics.md`, `site/CONTENT-GUIDE.md`.
 3. `git checkout -b newsroom/$(date -u +%F) origin/main`; `cd site && npm ci`.
 4. List published and scheduled articles: the front matter `date` of every file in `site/src/content/articles/`.
