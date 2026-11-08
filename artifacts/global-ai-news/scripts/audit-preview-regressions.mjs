@@ -66,6 +66,21 @@ function record(route, check, passed, detail) {
   if (!passed) failures.push(`${route} [${check}]: ${detail}`);
 }
 
+function getRequestLabel(url) {
+  try {
+    const parsed = new URL(url);
+    return `${parsed.origin}${parsed.pathname}`;
+  } catch {
+    return url;
+  }
+}
+
+function formatFailures(items) {
+  const shown = items.slice(0, 8).join('; ');
+  const omitted = items.length - Math.min(items.length, 8);
+  return `${items.length} failed: ${shown}${omitted ? `; and ${omitted} more` : ''}`;
+}
+
 function median(values) {
   const ordered = [...values].sort((left, right) => left - right);
   return ordered[Math.floor(ordered.length / 2)];
@@ -255,7 +270,7 @@ async function checkRoutesReachable(routes) {
   }
 }
 
-async function auditBrowserRoutes(routes) {
+async function auditBrowserRoutes(routes, resourceOnlyRoutes = []) {
   const browser = await chromium.launch({
     executablePath: chromiumPath,
     headless: true,
@@ -269,11 +284,39 @@ async function auditBrowserRoutes(routes) {
       reducedMotion: 'reduce',
     });
 
-    for (const route of routes) {
+    const browserCheckRoutes = new Set(routes);
+    const auditedRoutes = [...new Set([...routes, ...resourceOnlyRoutes])];
+    for (const route of auditedRoutes) {
       const page = await context.newPage();
       page.setDefaultTimeout(10_000);
+      const runBrowserChecks = browserCheckRoutes.has(route);
+      const failedAssets = new Map([
+        ['image', new Set()],
+        ['stylesheet', new Set()],
+        ['script', new Set()],
+      ]);
+      const pageErrors = [];
+      const trackFailedAsset = (request, reason) => {
+        const type = request.resourceType();
+        if (!failedAssets.has(type)) return;
+        failedAssets.get(type).add(`${getRequestLabel(request.url())} (${reason})`);
+      };
+      page.on('requestfailed', (request) => {
+        trackFailedAsset(request, request.failure()?.errorText ?? 'request failed');
+      });
+      page.on('response', (response) => {
+        if (response.status() < 400) return;
+        trackFailedAsset(
+          response.request(),
+          `HTTP ${response.status()}${response.statusText() ? ` ${response.statusText()}` : ''}`,
+        );
+      });
+      page.on('pageerror', (error) => {
+        pageErrors.push(error.message || String(error));
+      });
       try {
         await page.goto(new URL(route, `${baseUrl}/`).toString(), { waitUntil: 'domcontentloaded' });
+        if (!runBrowserChecks) continue;
         const expectedHeading = expectedPublicHeadings.get(route);
         await page.waitForFunction(
           ({ expected, requiresHydration }) => {
@@ -388,6 +431,23 @@ async function auditBrowserRoutes(routes) {
       } catch (error) {
         record(route, 'browser checks', false, error.message);
       } finally {
+        for (const type of ['image', 'stylesheet', 'script']) {
+          const issues = [...failedAssets.get(type)];
+          record(
+            route,
+            `failed ${type} requests`,
+            issues.length === 0,
+            issues.length ? formatFailures(issues) : '0 failed requests',
+          );
+        }
+        record(
+          route,
+          'uncaught browser errors',
+          pageErrors.length === 0,
+          pageErrors.length
+            ? formatFailures(pageErrors.map((message) => message.replace(/\s+/g, ' ').slice(0, 400)))
+            : '0 uncaught page errors',
+        );
         await page.close();
       }
     }
@@ -537,7 +597,7 @@ async function main() {
       : targetRoutes;
     await checkRoutesReachable(selectedLighthouseRoutes);
     console.log(`Auditing ${selectedLighthouseRoutes.length} routes (${lighthouseRuns} runs each; ${lighthouseDevices.join(', ')}) at ${baseUrl}.`);
-    await auditBrowserRoutes(externalAudit ? publicRoutes : routes);
+    await auditBrowserRoutes(externalAudit ? publicRoutes : routes, additionalLighthouseRoutes);
     await auditLighthouseRoutes(selectedLighthouseRoutes);
     printReport();
     if (failures.length) process.exitCode = 1;

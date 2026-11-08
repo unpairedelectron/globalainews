@@ -95,4 +95,6 @@ Run `pnpm --filter @workspace/global-ai-news run audit:preview`. The command bui
 
 Every route is checked at 360px with dark color preference for document overflow, WCAG-tagged axe serious/critical violations, first-Tab visible focus, and Enter-operated disclosures where present. Lighthouse runs mobile and desktop on every route and reports Performance, Accessibility, and Best Practices scores with the route and device.
 
+The browser audit also reports failed image, stylesheet, and script requests for each route, including HTTP 4xx/5xx responses and network failures. Uncaught page errors are reported with their route. Any such asset failure or uncaught page error fails the audit.
+
 The fixed failure limits are Performance 95, Accessibility 95, and Best Practices 70 on both mobile and desktop. The 1 November full production run passed 95 of 98 checks; its three failures were desktop Performance on `/` (75, LCP 4,377 ms), `/brief/` (78, LCP 4,027 ms), and `/topic/india/` (79, LCP 3,635 ms). See the focused retest below for the latest scores on those routes. Public Best Practices is 77 because of known third-party-cookie/DevTools findings. SEO is reported in the existing release audit but is not a failure threshold here because noindex preview and section routes intentionally score lower. The command does not accept threshold overrides.
