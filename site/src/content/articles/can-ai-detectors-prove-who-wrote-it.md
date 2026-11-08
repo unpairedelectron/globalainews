@@ -1,7 +1,7 @@
 ---
 title: "Do AI Detectors Work? Why an AI-Writing Score Can’t Prove Who Wrote Something"
 seoTitle: "Do AI Detectors Work? What the Evidence Shows"
-description: "AI-text detectors give probabilities, not proof. OpenAI withdrew its own classifier for low accuracy, and research found detectors flag non-native English writing unfairly. What students, teachers and editors should do instead."
+description: "AI-text detectors give probabilities, not proof. OpenAI withdrew its own classifier, and research shows detectors unfairly flag non-native English writers. What to do instead."
 category: "safety"
 image: "/images/articles/can-ai-detectors-prove-who-wrote-it/hero.jpg"
 imageAlt: "Do AI Detectors Work? Why an AI-Writing Score Can’t Prove Who Wrote Something"
