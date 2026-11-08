@@ -13,7 +13,7 @@ Read `site/CONTENT-GUIDE.md` and `PIPELINE.md` before writing.
 1. **Accuracy over output.** Every factual claim (number, date, name, quote, product capability) must come from a source you actually fetched and read today, and must appear in the numbered Sources list. If you can't verify a claim, delete it. If you can't verify the story, don't publish it; pick an evergreen topic instead.
 2. **Primary sources first.** At least 2 primary sources per article: official company posts or filings, government or legal texts, papers. Never build a story on a single blog, aggregator, newsletter or social post. Model names, release dates and benchmark numbers must come from the company's own page or a paper.
 3. **Never invent** quotes, people, sources, URLs, statistics or images of real events. Never add a named reviewer or author.
-4. **Volume limits** from `ops/autonomy.json`: at most `maxNewArticlesPerDay` new articles per run and `maxNewArticlesPerWeek` per rolling 7 days. Quality beats quantity: Google penalises scaled low-value content.
+4. **Volume limits** from `ops/autonomy.json`: at most `maxNewArticlesPerDay` new articles per run, and at most `maxNewArticlesPerWeek` articles whose **publish dates** fall in any 7-day window (count the scheduled queue too). Quality beats quantity: Google penalises scaled low-value content.
 5. **Never change**: legal or trust pages (`privacy`, `terms`, `about-us`, `contact-us`, `editorial-policy`, `disclaimer`), `site.config.ts` publisher, ads or analytics settings, `redirects.mjs` (except adding a redirect for a URL you rename), `artifact.toml`, `.replit`, or `ops/autonomy.json`. Never delete an article; correct it instead.
 6. **Git safety:** work on a branch `newsroom/YYYY-MM-DD`. Never force-push, rewrite history, or push directly to `main` except through a merged pull request.
 7. **If `paused` is true** in `ops/autonomy.json`: do steps 0–1 (health) only, log, and stop.
@@ -23,7 +23,7 @@ Read `site/CONTENT-GUIDE.md` and `PIPELINE.md` before writing.
 
 ## Step 0: Set up
 1. `add_repo` `unpairedelectron/globalainews` with push access, clone it, `cd` into it.
-   **Run once per day:** if `git ls-remote origin "refs/heads/newsroom/$(date -u +%F)"` returns a branch, or `ops/newsroom-log.md` on `main` already has an entry for today's date, another run already happened today. Stop immediately and report "already ran today".
+   **Run once per day:** if `git ls-remote origin "refs/heads/newsroom/$(date -u +%F)"` returns a branch, or `ops/newsroom-log.md` on `main` already contains the exact heading `## YYYY-MM-DD newsroom run` for today's date, another run already happened today. (Other entries dated today, such as setup notes, don't count.) Stop immediately and report "already ran today".
 2. Read `ops/autonomy.json`, the last 10 entries of `ops/newsroom-log.md`, `ops/topics.md`, `site/CONTENT-GUIDE.md`.
 3. `git checkout -b newsroom/$(date -u +%F) origin/main`; `cd site && npm ci`.
 4. List published and scheduled articles: the front matter `date` of every file in `site/src/content/articles/`.
@@ -68,12 +68,12 @@ Skip to Step 5 if the volume limits are reached or `paused` is true.
 Do **one** of these per run, rotating:
 - **Corrections:** if any source behind a live article has changed materially (deadline moved, figure revised), update the article, set `updated:`, and add a `## Update` note at the end saying what changed and when.
 - **Refresh a guide** (`type: "guide"`) older than 30 days: re-check vendor docs, update facts, set `updated:`.
-- **Link health:** check the outbound source links of the 3 oldest articles; replace dead links with an archived or official equivalent.
+- **Link health:** check the outbound source links of the 3 oldest articles; replace dead links with an archived or official equivalent. A connection refused by this environment's network policy is *inconclusive*, not dead; only act on real 404/410 responses.
 - **Backlog upkeep:** mark published topics `[x]` in `ops/topics.md` and add 3 new well-sourced ideas.
 
 ## Step 6: Ship
 1. Write social copy for each new article to `ops/social/<slug>.md`: a WhatsApp Channel post (≤ 60 words plus link), an X post (≤ 270 chars), a LinkedIn post (≤ 120 words, leading with the most surprising fact) and a Telegram post. Use the article URL `https://www.globalainews.in/article/<slug>/`.
-2. Append today's entry to `ops/newsroom-log.md`: health result, article (title, slug, date, number of sources), maintenance done, anything skipped and why.
+2. Append today's entry to `ops/newsroom-log.md` under the heading `## YYYY-MM-DD newsroom run` (exactly this format; the run-once check depends on it): health result, article (title, slug, date, number of sources), maintenance done, anything skipped and why.
 3. Commit, push the branch, and open a pull request into `main` with the verification table and gate results in the body.
 4. **If `mode` is `auto` and every gate passed:** merge it. **If `mode` is `review`:** stop; the owner merges.
 5. **Content changes (articles, images, ops files):** nothing else to do. Within about 10 minutes the live server pulls `main`, re-runs the gates and publishes. Poll `https://www.globalainews.in/build-info.json` every 60 s (up to 20 min) until `contentSync.sha` equals the merge commit, then re-run `verify-deploy.sh`. An article dated in the future won't appear until its time, which is expected.
