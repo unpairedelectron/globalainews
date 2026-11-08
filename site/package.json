@@ -5,10 +5,11 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/check-build.mjs",
+    "build": "node scripts/lint-articles.mjs && astro build && node scripts/check-build.mjs",
     "preview": "astro preview",
     "check": "node scripts/check-build.mjs",
-    "test:schedule": "node scripts/test-schedule.mjs"
+    "test:schedule": "node scripts/test-schedule.mjs",
+    "lint": "node scripts/lint-articles.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "4.0.19",
