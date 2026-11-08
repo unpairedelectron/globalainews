@@ -94,6 +94,26 @@ function getLcpBreakdown(details) {
     .join(',');
 }
 
+function getLcpResourceTiming(report, lcpResourceUrl) {
+  const requests = report.audits['network-requests']?.details?.items ?? [];
+  const relevantRequests = requests.filter((request) => {
+    const url = String(request.url ?? '');
+    const type = String(request.resourceType ?? '').toLowerCase();
+    return url === lcpResourceUrl
+      || type === 'font'
+      || type === 'script'
+      || type === 'stylesheet'
+      || /\/api\/newsroom\/(?:content|release-discovery|publication-state)(?:[?#]|$)/.test(url);
+  });
+  const timings = relevantRequests.map((request) => {
+    const url = new URL(request.url, report.finalDisplayedUrl).pathname;
+    const start = Number.isFinite(request.networkRequestTime) ? `${Math.round(request.networkRequestTime)}ms` : 'n/a';
+    const end = Number.isFinite(request.networkEndTime) ? `${Math.round(request.networkEndTime)}ms` : 'n/a';
+    return `${url} start=${start} end=${end} transfer=${Number(request.transferSize ?? 0)}B`;
+  });
+  return `LCP resource=${lcpResourceUrl ?? 'none (text candidate)'}; Resource Timing=${timings.length ? timings.join('|') : 'no matching requests'}`;
+}
+
 function getApiOrigin() {
   return process.env.PREVIEW_AUDIT_API_URL
     ?? process.env.NEWSROOM_API_ORIGIN
@@ -439,6 +459,9 @@ async function auditLighthouseRoutes(routes) {
             medianRun.audits['lcp-discovery-insight']?.details,
             medianRun.audits['largest-contentful-paint-element']?.details,
           ]) ?? 'not reported';
+          const lcpElement = medianRun.audits['largest-contentful-paint-element']?.details?.items?.[0];
+          const lcpResourceUrl = typeof lcpElement?.url === 'string' ? lcpElement.url : undefined;
+          const lcpResourceTiming = getLcpResourceTiming(medianRun, lcpResourceUrl);
           const lcpBreakdown = getLcpBreakdown(medianRun.audits['lcp-breakdown-insight']?.details);
           const jsBootupMs = Math.round(medianRun.audits['bootup-time']?.numericValue ?? 0);
           const renderMode = ['/about-us/', '/reports/'].includes(route) ? 'static HTML' : 'client createRoot';
@@ -458,7 +481,7 @@ async function auditLighthouseRoutes(routes) {
               })
               .filter(Boolean)
             : [];
-          const timingDetails = `median of ${reports.length}: FCP=${webVitals.fcp}ms LCP=${webVitals.lcp}ms TBT=${webVitals.tbt}ms CLS=${webVitals.cls} SI=${webVitals.speedIndex}ms; LCP element=${lcpSelector}; LCP phases=${lcpBreakdown}; JS=${jsTransferBytes}B bootup=${jsBootupMs}ms; long tasks=${longTaskRows.length}/${longTaskMs}ms; hydration=n/a (no React SSR hydration); render=${renderMode}`;
+          const timingDetails = `median of ${reports.length}: FCP=${webVitals.fcp}ms LCP=${webVitals.lcp}ms TBT=${webVitals.tbt}ms CLS=${webVitals.cls} SI=${webVitals.speedIndex}ms; LCP element=${lcpSelector}; LCP phases=${lcpBreakdown}; ${lcpResourceTiming}; JS=${jsTransferBytes}B bootup=${jsBootupMs}ms; long tasks=${longTaskRows.length}/${longTaskMs}ms; hydration=n/a (no React SSR hydration); render=${renderMode}`;
           record(
             route,
             `Lighthouse ${device}`,

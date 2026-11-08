@@ -39,6 +39,12 @@ For mobile LCP failures, record the exact LCP element URL and its Resource Timin
 
 **How to apply:** Keep the existing no-regression threshold intact and use paired paint/resource timings to direct the next trace.
 
+For text LCP candidates, include the element selector and relevant font, script, and stylesheet timings. An early font response does not rule out a late client-rendered candidate.
+
+**Why:** A text heading can become the late LCP candidate after the client replaces useful server HTML, even when the font itself arrived early.
+
+**How to apply:** Compare first-response markup and client rendering before changing font delivery or shrinking the headline; preserve the fixed Lighthouse thresholds.
+
 Production Lighthouse previews that are served locally need a same-origin `/api` proxy to the workspace API, and that proxy must stream raw HTTP responses without transparently decompressing them. Browser route checks should wait for each route's real heading, with normalization logic defined inside the browser callback.
 
 **Why:** Direct Vite access misses Replit's path routing, a remote API hop can distort paint timing, and Node `fetch` decompresses responses before the browser's bandwidth simulation. Route-specific readiness also avoids treating a loading fallback as a finished page.
