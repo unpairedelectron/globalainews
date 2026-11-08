@@ -36,6 +36,9 @@ export const ADS = {
   },
 };
 
+// IndexNow key (file public/<key>.txt). Lets the server notify Bing and others of new URLs.
+export const INDEXNOW_KEY = '2abb0c77dfd1018d907f3426f86ce2a9';
+
 // Optional analytics. Leave empty to load nothing.
 export const ANALYTICS = {
   ga4: '', // e.g. 'G-XXXXXXX'

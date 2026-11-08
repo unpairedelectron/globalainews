@@ -6,7 +6,10 @@ export type Article = CollectionEntry<'articles'>;
 // Articles dated in the future are scheduled: they are left out of the
 // build until a rebuild happens on or after their date. Set
 // PUBLISH_SCHEDULED=true to preview everything locally.
-export function isPublished(a: Article, now = new Date()): boolean {
+// BUILD_NOW lets you test what the site will look like at a future time.
+const BUILD_NOW = process.env.BUILD_NOW ? new Date(process.env.BUILD_NOW) : undefined;
+
+export function isPublished(a: Article, now = BUILD_NOW ?? new Date()): boolean {
   if (a.data.draft) return false;
   if (process.env.PUBLISH_SCHEDULED === 'true') return true;
   return a.data.date.getTime() <= now.getTime();
@@ -65,5 +68,6 @@ export function ogImage(a: Article): string {
   // Prefer the dedicated 1200x630 social card when the migration produced one.
   if (img.includes('/hero-1200x675.webp')) return img.replace('hero-1200x675.webp', 'og-1200x630.webp');
   if (img.includes('/hero-1024.webp')) return img.replace('hero-1024.webp', 'og.jpg');
+  if (img.endsWith('/hero.jpg')) return img.replace('hero.jpg', 'og.jpg');
   return img;
 }

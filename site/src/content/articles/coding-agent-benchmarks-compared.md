@@ -3,6 +3,8 @@ title: "AI Coding Agent Benchmarks Compared: How to Read SWE-bench and Friends"
 seoTitle: "AI Coding Agent Benchmarks Compared (2026)"
 description: "A source-led comparison of two coding-agent benchmarks, their task designs, graders and limits."
 category: "guides"
+image: "/images/articles/coding-agent-benchmarks-compared/hero.jpg"
+imageAlt: "AI Coding Agent Benchmarks Compared: How to Read SWE-bench and Friends"
 tags: ["Comparison","Buyer’s guide"]
 date: "2026-10-04"
 takeaways: ["SWE-bench Verified tests selected repository issue resolution; Terminal-Bench tests selected terminal workflows.","Their 500 and 89 task counts do not make the scores directly comparable.","A pass is tied to the specific harness, environment, agent scaffold and budget.","Use local held-out tasks and review code quality, authorization and recovery separately."]

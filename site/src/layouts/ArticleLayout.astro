@@ -2,6 +2,7 @@
 import Base from './Base.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import AdSlot from '../components/AdSlot.astro';
+import Share from '../components/Share.astro';
 import { render } from 'astro:content';
 import { SITE } from '../site.config';
 import {
@@ -81,7 +82,9 @@ const jsonLd = [
         <span>{readingTime(article)} min read</span>
       </div>
 
-      {d.image && (
+      <Share url={absolute(path)} title={d.title} />
+
+      {d.image && !d.image.endsWith('/hero.jpg') && (
         <figure class="hero">
           <img src={d.image} alt={d.imageAlt ?? ''} width="1200" height="675" fetchpriority="high" decoding="async" />
         </figure>
@@ -106,6 +109,8 @@ const jsonLd = [
       </div>
 
       {d.tags.length > 0 && <ul class="tags" aria-label="Topics">{d.tags.map((t) => <li>{t}</li>)}</ul>}
+
+      <Share url={absolute(path)} title={d.title} />
 
       <div class="about-box">
         <img src="/logo.svg" alt="" width="44" height="44" />

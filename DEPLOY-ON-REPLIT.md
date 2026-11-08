@@ -182,20 +182,16 @@ Also run:
 
 ---
 
-## Step 9: Scheduled articles (9–20 November)
+## Step 9: Scheduled articles go live automatically
 
-Six articles are set to appear on **9, 11, 13, 16, 18 and 20 November** (at 07:30 UTC, 1 p.m. IST). Because the site is built ahead of time, each one appears only after a rebuild, so on each of those days after 1 p.m. IST:
+Articles with a future `date` publish themselves: the production server checks every 5 minutes and rebuilds the site when a publish time passes. You don't need to Republish. Afterwards, request indexing for the new article in Search Console → URL Inspection.
 
-1. In Replit, click **Publish → Republish**.
-2. Open https://www.globalainews.in/latest/ and check the new article is at the top.
-3. In Search Console → URL Inspection, request indexing for the new article.
-
----
+Replit autoscale can sleep when there's no traffic. The rebuild then happens a few seconds after the next visitor arrives, so the first visitor may still see the previous version.
 
 ## Adding a new article later
 
 1. Create `site/src/content/articles/<your-slug>.md` (copy an existing one; see `site/CONTENT-GUIDE.md`).
-2. In the Shell, run `cd site && npm run build` and check for `SEO checks passed.`
+2. In the Shell, run `cd site && npm run build && npm run test:schedule` and check that everything passes.
 3. Commit and push: `git add -A && git commit -m "Add article: <title>" && git push origin main`
 4. **Publish → Republish.**
 

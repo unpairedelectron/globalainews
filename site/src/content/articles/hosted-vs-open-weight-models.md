@@ -3,6 +3,8 @@ title: "Hosted API vs Open-Weight Models: How to Choose in 2026"
 seoTitle: "Hosted API vs Open-Weight Models: How to Choose"
 description: "Compare provider-hosted Gemini access with documented Gemma and Mistral open-weight deployment options."
 category: "guides"
+image: "/images/articles/hosted-vs-open-weight-models/hero.jpg"
+imageAlt: "Hosted API vs Open-Weight Models: How to Choose in 2026"
 tags: ["Comparison","Buyer’s guide"]
 date: "2026-10-06"
 takeaways: ["Hosted APIs and open weights distribute control and operating responsibilities differently.","Model-card context and parameter counts are not equivalent hardware or quality measurements.","Check the exact endpoint terms and the full application data path.","Compare cost per accepted task, including operations, utilization, review and recovery."]

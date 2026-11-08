@@ -3,6 +3,8 @@ title: "IndiaAI Compute vs Commercial Cloud GPUs: Access, Pricing and Trade-offs
 seoTitle: "IndiaAI Compute vs Commercial Cloud GPUs"
 description: "Compare IndiaAI Compute Portal access with commercial cloud on eligibility, allocation, billing and capacity evidence."
 category: "guides"
+image: "/images/articles/indiaai-vs-commercial-cloud/hero.jpg"
+imageAlt: "IndiaAI Compute vs Commercial Cloud GPUs: Access, Pricing and Trade-offs"
 tags: ["Comparison","Buyer’s guide"]
 date: "2026-10-04"
 takeaways: ["IndiaAI is an eligibility- and application-based programme; EC2 On-Demand is a commercial billing model.","Allocation records do not establish live or schedulable capacity.","Available sources do not support a like-for-like price or service-level winner.","Compare the same accelerator, region, term, support and utilization before budgeting."]
