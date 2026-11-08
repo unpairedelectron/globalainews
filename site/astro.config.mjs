@@ -12,6 +12,11 @@ export default defineConfig({
   site: 'https://www.globalainews.in',
   trailingSlash: 'always',
   build: { format: 'directory' },
+  vite: {
+    server: {
+      allowedHosts: ['.sisko.replit.dev'],
+    },
+  },
   redirects: staticRedirects,
   compressHTML: true,
   markdown: {
