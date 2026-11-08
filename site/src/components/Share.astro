@@ -1,0 +1,19 @@
+---
+// Plain share links (no third-party scripts, no tracking pixels).
+interface Props { url: string; title: string }
+const { url, title } = Astro.props;
+const u = encodeURIComponent(url);
+const t = encodeURIComponent(title);
+const links = [
+  { name: 'WhatsApp', href: `https://wa.me/?text=${t}%20${u}` },
+  { name: 'X', href: `https://x.com/intent/post?text=${t}&url=${u}` },
+  { name: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${u}` },
+  { name: 'Telegram', href: `https://t.me/share/url?url=${u}&text=${t}` },
+  { name: 'Reddit', href: `https://www.reddit.com/submit?url=${u}&title=${t}` },
+  { name: 'Email', href: `mailto:?subject=${t}&body=${u}` },
+];
+---
+<nav class="share" aria-label="Share this article">
+  <span>Share</span>
+  {links.map((l) => <a href={l.href} target="_blank" rel="noopener nofollow">{l.name}</a>)}
+</nav>

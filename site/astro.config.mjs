@@ -10,6 +10,7 @@ const staticRedirects = Object.fromEntries(
 
 export default defineConfig({
   site: 'https://www.globalainews.in',
+  outDir: process.env.ASTRO_OUT_DIR || './dist',
   trailingSlash: 'always',
   build: { format: 'directory' },
   redirects: staticRedirects,

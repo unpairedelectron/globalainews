@@ -1,0 +1,13 @@
+{
+  "name": "Global AI News",
+  "short_name": "Global AI News",
+  "description": "AI news, explained with the sources.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbfaf7",
+  "theme_color": "#1f4fd1",
+  "icons": [
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/logo-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
