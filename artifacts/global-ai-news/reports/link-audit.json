@@ -4856,6 +4856,14 @@
     "issue": ""
   },
   {
+    "url": "https://www.globalainews.in/staging/article/github-octoverse-2026-agents-pull-requests/#source-10",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/github-octoverse-2026-agents-pull-requests/",
+    "indexability": "noindex",
+    "linkSource": "/staging/article/github-octoverse-2026-agents-pull-requests",
+    "issue": ""
+  },
+  {
     "url": "https://www.globalainews.in/code-of-ethics/",
     "status": "200",
     "canonical": "https://www.globalainews.in/code-of-ethics/",
@@ -5225,6 +5233,14 @@
   },
   {
     "url": "https://www.globalainews.in/staging/article/openai-containment-incident-offline-training/#source-8",
+    "status": "200",
+    "canonical": "https://www.globalainews.in/article/openai-containment-incident-offline-training/",
+    "indexability": "noindex",
+    "linkSource": "/staging/article/openai-containment-incident-offline-training",
+    "issue": ""
+  },
+  {
+    "url": "https://www.globalainews.in/staging/article/openai-containment-incident-offline-training/#source-9",
     "status": "200",
     "canonical": "https://www.globalainews.in/article/openai-containment-incident-offline-training/",
     "indexability": "noindex",

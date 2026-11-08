@@ -52,3 +52,4 @@ Thumbs.db
 /artifacts/global-ai-news/public/social/articles/*.png
 /artifacts/global-ai-news/public/social/*.png
 /artifacts/global-ai-news/public/staging/
+/artifacts/global-ai-news/reports/published-evidence-link-audit.json
