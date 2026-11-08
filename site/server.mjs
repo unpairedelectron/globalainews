@@ -2,15 +2,18 @@
 // - 301 redirects for every old URL (see redirects.mjs)
 // - apex -> www canonical host redirect
 // - trailing-slash normalisation, real 404 status, gzip, cache headers
+// - scheduled publishing: rebuilds itself when an article's publish time passes
 // Run: PORT=3000 node server.mjs
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
+import { spawn } from 'node:child_process';
 import { redirects, prefixRedirects } from './redirects.mjs';
 
-const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'dist');
+const SITE_DIR = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.join(SITE_DIR, 'dist');
 const PORT = Number(process.env.PORT || 3000);
 const CANONICAL_HOST = process.env.CANONICAL_HOST || 'www.globalainews.in';
 
@@ -21,6 +24,7 @@ const TYPES = {
   '.xml': 'application/xml; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
@@ -121,5 +125,91 @@ const server = http.createServer((req, res) => {
   if (file) return send(req, res, file);
   send(req, res, path.join(ROOT, '404.html'), 404);
 });
+
+// ---------------------------------------------------------------- scheduled publishing
+// Articles with a future `date` are left out of the build. When one of those
+// times passes, rebuild into dist-next and swap it in, so scheduled articles go
+// live without a manual Republish. Disable with AUTO_PUBLISH=false.
+const ARTICLES_DIR = path.join(SITE_DIR, 'src', 'content', 'articles');
+let building = false;
+
+function buildTime() {
+  try { return Date.parse(fs.readFileSync(path.join(ROOT, '.build-time'), 'utf8').trim()) || 0; } catch { return 0; }
+}
+
+function scheduledDue(since, now = Date.now()) {
+  let due = false;
+  for (const f of fs.readdirSync(ARTICLES_DIR)) {
+    if (!f.endsWith('.md')) continue;
+    const head = fs.readFileSync(path.join(ARTICLES_DIR, f), 'utf8').slice(0, 2000);
+    const m = head.match(/^date:\s*"?([^"\n]+)"?\s*$/m);
+    const t = m ? Date.parse(m[1]) : NaN;
+    if (t > since && t <= now) due = true;
+  }
+  return due;
+}
+
+function run(cmd, args, env) {
+  return new Promise((resolve) => {
+    const p = spawn(cmd, args, { cwd: SITE_DIR, env: { ...process.env, ...env }, stdio: 'inherit' });
+    p.on('close', (code) => resolve(code === 0));
+    p.on('error', () => resolve(false));
+  });
+}
+
+function sitemapUrls(dir) {
+  try { return [...fs.readFileSync(path.join(dir, 'sitemap.xml'), 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]); } catch { return []; }
+}
+
+// Tell IndexNow-enabled search engines (Bing, Yandex, Seznam, Naver...) about new URLs.
+async function pingIndexNow(urls) {
+  if (!urls.length || process.env.INDEXNOW === 'false') return;
+  const key = fs.readdirSync(ROOT).find((f) => /^[0-9a-f]{32}\.txt$/.test(f))?.slice(0, 32);
+  if (!key) return;
+  urls = [...urls, `https://${CANONICAL_HOST}/`, `https://${CANONICAL_HOST}/latest/`];
+  try {
+    const r = await fetch('https://api.indexnow.org/indexnow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ host: CANONICAL_HOST, key, keyLocation: `https://${CANONICAL_HOST}/${key}.txt`, urlList: urls }),
+    });
+    console.log(`[indexnow] submitted ${urls.length} URL(s): HTTP ${r.status}`);
+  } catch (err) {
+    console.error('[indexnow] failed', err.message);
+  }
+}
+
+async function maybeRebuild() {
+  if (building || process.env.AUTO_PUBLISH === 'false') return;
+  if (!scheduledDue(buildTime())) return;
+  building = true;
+  const next = path.join(SITE_DIR, 'dist-next');
+  const old = path.join(SITE_DIR, 'dist-old');
+  try {
+    console.log('[auto-publish] scheduled article due; rebuilding');
+    fs.rmSync(next, { recursive: true, force: true });
+    const env = { ASTRO_OUT_DIR: 'dist-next', ASTRO_TELEMETRY_DISABLED: '1' };
+    const astro = path.join(SITE_DIR, 'node_modules', 'astro', 'astro.js');
+    if ((await run(process.execPath, [astro, 'build'], env)) && (await run(process.execPath, ['scripts/check-build.mjs'], env))) {
+      fs.rmSync(old, { recursive: true, force: true });
+      fs.renameSync(ROOT, old);
+      const before = sitemapUrls(ROOT);
+      fs.renameSync(next, ROOT);
+      fs.rmSync(old, { recursive: true, force: true });
+      gzCache.clear();
+      console.log('[auto-publish] new build is live');
+      pingIndexNow(sitemapUrls(ROOT).filter((u) => !before.includes(u)));
+    } else {
+      console.error('[auto-publish] rebuild failed; keeping the current build');
+    }
+  } catch (err) {
+    console.error('[auto-publish] error', err);
+  } finally {
+    building = false;
+  }
+}
+
+setTimeout(maybeRebuild, 5_000);
+setInterval(maybeRebuild, 5 * 60_000).unref();
 
 server.listen(PORT, '0.0.0.0', () => console.log(`Global AI News serving ${ROOT} on :${PORT}`));

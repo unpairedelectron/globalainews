@@ -5,7 +5,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { redirects, prefixRedirects } from '../redirects.mjs';
 
-const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'dist');
+const SITE_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+const ROOT = path.resolve(SITE_DIR, process.env.ASTRO_OUT_DIR || 'dist');
 const SITE = 'https://www.globalainews.in';
 
 // ---- Cloudflare Pages / Netlify config
@@ -89,4 +90,6 @@ console.log(`\nChecked ${pages} pages.`);
 for (const w of warnings) console.log(`  warn  ${w}`);
 for (const e of errors) console.log(`  ERROR ${e}`);
 if (errors.length) { console.error(`\n${errors.length} error(s).`); process.exit(1); }
+// Build timestamp: the server uses it to know when scheduled articles need a rebuild.
+fs.writeFileSync(path.join(ROOT, '.build-time'), new Date().toISOString());
 console.log('SEO checks passed.');

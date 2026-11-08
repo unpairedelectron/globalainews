@@ -3,6 +3,8 @@ title: "AI Content Provenance Tools Compared: C2PA, SynthID and Watermarks"
 seoTitle: "AI Provenance Tools Compared: C2PA, SynthID"
 description: "Compare provenance credentials, watermarks and image classifiers by the evidence each can establish."
 category: "guides"
+image: "/images/articles/provenance-controls-compared/hero.jpg"
+imageAlt: "AI Content Provenance Tools Compared: C2PA, SynthID and Watermarks"
 tags: ["Comparison","Buyer’s guide"]
 date: "2026-10-05"
 takeaways: ["C2PA, watermarks and classifiers inspect distinct signals; there is no shared winner in this evidence set.","A credential or watermark does not establish that an image depicts a true event.","A detector score needs a version, threshold, representative validation and human review.","Preserve the original file and explain disagreement between controls instead of hiding it."]

@@ -25,6 +25,7 @@ jobs:
           cache-dependency-path: site/package-lock.json
       - run: npm ci --no-audit --no-fund
       - run: npm run build
+      - run: npm run test:schedule
       # Optional: if the site is hosted on Cloudflare Pages, add a deploy hook
       # URL as the CF_PAGES_DEPLOY_HOOK secret so scheduled articles go live
       # automatically each day.

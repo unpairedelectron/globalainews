@@ -13,7 +13,8 @@ PORT=3000 node server.mjs   # serve ./dist in production
 ```
 
 - **Add an article:** create `src/content/articles/<slug>.md` (see [CONTENT-GUIDE.md](./CONTENT-GUIDE.md)), put images in `public/images/articles/<slug>/`, run `npm run build`, commit, and publish.
-- **Schedule an article:** give it a future `date`. It stays hidden until the site is rebuilt after that time. Preview everything with `PUBLISH_SCHEDULED=true npm run dev`.
+- **Schedule an article:** give it a future `date`. The production server checks every 5 minutes and rebuilds itself when a scheduled time passes, so it goes live automatically, with no Republish needed. Preview everything with `PUBLISH_SCHEDULED=true npm run dev`.
+- **Before pushing scheduled articles, run `npm run test:schedule`.** It builds the site as it will look at every upcoming publish time. This catches, for example, an article that links to another article that isn't live yet (that would block its auto-publish).
 - **Fix a mistake:** edit the Markdown, set `updated:` to today, and add a note at the end under a `## Correction` heading.
 - **Site settings** (name, contact email, AdSense ID, ad slot IDs, analytics, sections) are in `src/site.config.ts`.
 - **Old URLs** are redirected (301) through `redirects.mjs`. Add a line there whenever you rename or remove an article.
@@ -32,6 +33,6 @@ PORT=3000 node server.mjs   # serve ./dist in production
 
 ## Hosting
 
-**Replit (current):** the web artifact in `artifacts/global-ai-news/.replit-artifact/artifact.toml` builds this folder and runs `node site/server.mjs`. Publish from Replit as usual. The server issues real 301 redirects for old URLs, sends apex `globalainews.in` to `www`, gzips responses, sets cache headers and returns real 404s. Scheduled articles appear after the next Publish on or after their date.
+**Replit (current):** the web artifact in `artifacts/global-ai-news/.replit-artifact/artifact.toml` builds this folder and runs `node site/server.mjs`. Publish from Replit as usual. The server issues real 301 redirects for old URLs, sends apex `globalainews.in` to `www`, gzips responses, sets cache headers and returns real 404s. Scheduled articles go live automatically (the server rebuilds itself when a publish time passes; set `AUTO_PUBLISH=false` to disable).
 
 **Cloudflare Pages (recommended, free, faster):** connect the GitHub repo, set the root directory to `site`, the build command to `npm run build` and the output directory to `dist`. `_redirects` and `_headers` are generated automatically. To make scheduled articles go live on their own, create a deploy hook in Cloudflare and save it as the `CF_PAGES_DEPLOY_HOOK` secret in GitHub; `.github/workflows/site.yml` calls it every day at 07:45 UTC.

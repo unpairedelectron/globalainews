@@ -70,7 +70,9 @@ The 2026 drafts were accurate but over-hedged. Readers and Google both reward cl
 ## 5. Internal linking
 
 - Link to 2–4 related Global AI News articles in the body where they genuinely help, using descriptive anchor text (“our guide to EU AI Act deadlines”, not “click here”).
-- The layout already adds category links, breadcrumbs and “Read next”.
+- Only link to articles that are already live on (or before) your article’s publish date. `npm run test:schedule` will catch mistakes.
+- The layout already adds category links, breadcrumbs, share buttons and “Read next”.
+- No hero image? Run `node scripts/make-cards.mjs` to generate a branded hero and social card.
 
 ## 6. Images
 
@@ -88,4 +90,5 @@ The 2026 drafts were accurate but over-hedged. Readers and Google both reward cl
 - [ ] FAQ with 4–6 questions
 - [ ] Sources list complete; links work
 - [ ] 2–4 internal links
-- [ ] `npm run build` passes
+- [ ] No links to articles that aren't published yet
+- [ ] `npm run build` and `npm run test:schedule` pass
