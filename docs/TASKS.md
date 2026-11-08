@@ -83,6 +83,12 @@ Owner input: `OWNER_CONFIRMED_NO_COMMERCIAL_RELATIONSHIP_ALL = NO`.
 - [x] D2. Re-run `global-ai-news-smoke` and schedule simulations; verify pre-date exclusion from public pages, sitemaps, and RSS. No live queue writes were made.
 - [x] D3. Update `docs/RELEASE-RUNBOOK.md`, `docs/PROGRESS.md`, and the Lighthouse reports.
 
+## Published evidence-link monitoring
+
+- [x] Check citations referenced by the public newsroom API snapshot once per day in production, starting one minute after server startup.
+- [x] Classify network, rate-limit, and server failures separately from repeated HTTP 404/410 removals.
+- [x] Alert on confirmed removals with public article routes, source details, and the last-check timestamp; keep the full latest report at `artifacts/global-ai-news/reports/published-evidence-link-audit.json`.
+- [x] Keep article publication state and copy read-only. Run `pnpm --filter @workspace/global-ai-news run audit:published-evidence` for a manual check; configure `OPS_ALERT_WEBHOOK_URL` to deliver editor notifications. Without the webhook, findings are written to application logs and the latest report file.
 ## Strict continuation — code-native release state and mobile performance
 
 ### A. Release without flattening content (A2)

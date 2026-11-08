@@ -109,6 +109,29 @@ test('health probe alerts on unhealthy API responses without forwarding response
   assert.match(deliveries[0].body, /health-check|api_health_degraded/);
 });
 
+test('persistent citation alerts include public route, source and last-checked details', async () => {
+  const { alerts, deliveries } = createHarness();
+  await alerts.recordPublishedCitationRemovals([{
+    routes: ['/article/published-story/'],
+    sourceName: 'Public evidence record',
+    sourceUrl: 'https://publisher.example.test/article',
+    lastChecked: '2026-11-08T12:00:00.000Z',
+    httpStatus: 410,
+  }]);
+
+  const payload = JSON.parse(deliveries[0].body);
+  assert.equal(payload.alert.event, 'published_citation_removals');
+  assert.deepEqual(payload.alert.citations[0], {
+    routes: ['/article/published-story/'],
+    sourceName: 'Public evidence record',
+    sourceUrl: 'https://publisher.example.test/article',
+    lastChecked: '2026-11-08T12:00:00.000Z',
+    httpStatus: 410,
+  });
+  assert.match(payload.text, /published-story/);
+  assert.match(payload.text, /last checked 2026-11-08T12:00:00.000Z/);
+});
+
 test('temporary webhook failures retry with bounded backoff and sanitized logs', async () => {
   let calls = 0;
   const { alerts, deliveries, logs, backoffDelays } = createHarness(undefined, {

@@ -1,12 +1,19 @@
 export type OperationalAlert = {
   service: 'global-ai-news';
-  event: 'api_health_degraded' | 'article_render_failures';
+  event: 'api_health_degraded' | 'article_render_failures' | 'published_citation_removals';
   summary: string;
   route: string;
   requestId: string;
   occurredAt: string;
   consecutiveFailures?: number;
   failuresInWindow?: number;
+  citations?: Array<{
+    routes: string[];
+    sourceName: string;
+    sourceUrl: string;
+    lastChecked: string;
+    httpStatus: number | null;
+  }>;
 };
 
 type AlertOptions = {
@@ -95,6 +102,25 @@ export class OperationalAlertManager {
     });
   }
 
+  async recordPublishedCitationRemovals(
+    citations: NonNullable<OperationalAlert['citations']>,
+  ): Promise<void> {
+    if (citations.length === 0) return;
+    const firstRoute = citations[0].routes[0] ?? '/unknown';
+    await this.alertOncePerCooldown({
+      service: 'global-ai-news',
+      event: 'published_citation_removals',
+      summary: `${citations.length} published source link(s) returned persistent 404/410 responses.`,
+      route: safeRoute(firstRoute),
+      requestId: crypto.randomUUID(),
+      occurredAt: new Date(this.now()).toISOString(),
+      citations: citations.slice(0, 40).map((citation) => ({
+        ...citation,
+        routes: citation.routes.map(safeRoute),
+      })),
+    });
+  }
+
   private async alertOncePerCooldown(alert: OperationalAlert): Promise<void> {
     const now = this.now();
     const lastAlert = this.lastAlertAt.get(alert.event) ?? 0;
@@ -114,7 +140,12 @@ export class OperationalAlertManager {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        text: `${alert.summary} Route: ${alert.route}. Reference: ${alert.requestId}.`,
+        text: [
+          `${alert.summary} Route: ${alert.route}. Reference: ${alert.requestId}.`,
+          ...(alert.citations ?? []).map((citation) =>
+            `${citation.routes.join(', ')} — ${citation.sourceName}: ${citation.sourceUrl} (last checked ${citation.lastChecked})`,
+          ),
+        ].join('\n'),
         alert,
       }),
     };

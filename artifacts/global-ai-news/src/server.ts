@@ -21,6 +21,10 @@ import { getSeoMetadata, SITE_URL } from './seo-metadata';
 import { renderSeoRouteHtml } from './seo-html';
 import { gzipResponseMiddleware } from './server/gzipResponseMiddleware';
 import { checkNewsroomApiHealth, OperationalAlertManager } from './server/operational-alerts';
+import {
+  startPublishedEvidenceAuditScheduler,
+  type EvidenceLinkFinding,
+} from './server/published-evidence-audit';
 
 const serverDirectory = path.dirname(fileURLToPath(import.meta.url));
 const distributionDirectory = path.resolve(serverDirectory, '..');
@@ -570,6 +574,20 @@ app.listen(port, '0.0.0.0', () => {
     healthCheck();
     const healthCheckTimer = setInterval(healthCheck, 30_000);
     healthCheckTimer.unref();
+    startPublishedEvidenceAuditScheduler({
+      notify: (findings: EvidenceLinkFinding[]) =>
+        operationalAlerts.recordPublishedCitationRemovals(
+          findings.flatMap((finding) =>
+            finding.sources.map((source) => ({
+              routes: finding.routes,
+              sourceName: source.name,
+              sourceUrl: finding.url,
+              lastChecked: finding.lastChecked,
+              httpStatus: finding.httpStatus,
+            })),
+          ),
+        ),
+    });
   }
   const requestId = randomUUID();
   const startedAt = performance.now();
