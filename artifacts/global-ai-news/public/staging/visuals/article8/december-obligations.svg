@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">Two different AI Act rules share a December date</title>
+  <desc id="desc">Side-by-side comparison of specified new Article 5 provisions and the Article 50 paragraph 2 transition, including the latter's pre-2 August market cutoff.</desc>
+  <style>text{font-family:Arial,sans-serif;fill:#18374b}.title{font-size:32px;font-weight:700}.sub{font-size:20px;fill:#526574}.head{font-size:23px;font-weight:700}.body{font-size:18px;fill:#526574}.tag{font-size:16px;font-weight:700}</style>
+  <rect width="1200" height="650" fill="#f6f4ee"/>
+  <text class="title" x="48" y="58">One date, two different legal changes</text>
+  <text class="sub" x="48" y="94">2 December 2026 does not mean every AI Act duty is deferred.</text>
+  <rect x="55" y="140" width="515" height="360" rx="22" fill="#e4eef2" stroke="#8eaebb" stroke-width="2"/>
+  <text class="tag" x="85" y="184">ARTICLE 5</text>
+  <text class="head" x="85" y="225">Specified added prohibitions</text>
+  <text class="body" x="85" y="270">Points (ba) and (bb), plus</text><text class="body" x="85" y="300">paragraphs (1a) and (1b),</text><text class="body" x="85" y="330">apply from this date.</text>
+  <rect x="85" y="385" width="445" height="76" rx="14" fill="#fff" stroke="#bed0d8"/>
+  <text class="body" x="108" y="418">Scope and exceptions remain</text><text class="body" x="108" y="444">specific to the amended text.</text>
+  <rect x="630" y="140" width="515" height="360" rx="22" fill="#f2e9dc" stroke="#c7a679" stroke-width="2"/>
+  <text class="tag" x="660" y="184">ARTICLE 50(2)</text>
+  <text class="head" x="660" y="225">A narrow transition</text>
+  <text class="body" x="660" y="270">Providers of relevant systems</text><text class="body" x="660" y="300">already on the market before</text><text class="body" x="660" y="330">2 August 2026 get until this date.</text>
+  <rect x="660" y="385" width="445" height="76" rx="14" fill="#fff" stroke="#d5c1a3"/>
+  <text class="body" x="683" y="418">Applies to marking and</text><text class="body" x="683" y="444">detectability under paragraph 2.</text>
+  <text class="body" x="55" y="555">Other Article 50 obligations are not covered by this transition.</text>
+  <text class="body" x="55" y="590">Source: amended Article 113, Articles 5 and 50.</text>
+</svg>
