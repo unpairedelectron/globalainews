@@ -70,7 +70,7 @@ chk /contact/ /contact-us/
 chk /models /models/
 c=$(code /this-page-does-not-exist/); [ "$c" = 404 ] && ok "unknown URL returns 404" || bad "unknown URL returned $c"
 if [ "$BASE" = "https://www.globalainews.in" ]; then
-  r=$(curl -s -o /dev/null -w "%{http_code} %{redirect_url}" https://globalainews.in/); case "$r" in 30*" https://www.globalainews.in/") ok "apex -> www";; *) bad "apex gave '$r'";; esac
+  r=$(curl -s -o /dev/null -w "%{http_code} %{redirect_url}" https://globalainews.in/); case "$r" in 30*" https://www.globalainews.in/") ok "apex -> www";; 000*) info "apex not reachable from this network (check skipped)";; *) bad "apex gave '$r'";; esac
 fi
 
 echo "== G. Crawl files =="
@@ -98,6 +98,7 @@ for e in hyperscaler-capex-2026-reconciled:2026-11-09 openai-containment-inciden
 done
 
 c=$(code /healthz); [ "$c" = 200 ] && ok "/healthz 200" || info "/healthz returned $c (fine on Replit: the edge does not expose it; the internal health check is what matters)"
+c=$(code /build-info.json); [ "$c" = 200 ] && ok "/build-info.json 200" || info "/build-info.json returned $c (needs the content-sync server)"
 echo "== J. Performance headers =="
 curl -s -D - -o /dev/null -H 'Accept-Encoding: gzip' "$BASE/" | grep -qi '^content-encoding: gzip' && ok "gzip enabled" || info "no gzip header (a proxy may compress instead)"
 

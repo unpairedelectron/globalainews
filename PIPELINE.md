@@ -17,6 +17,11 @@ The owner is only asked when:
 - the build or verification fails in a way Claude can't fix,
 - or an editorial decision is needed (publisher identity, a named reviewer, what to publish).
 
-Scheduled articles need no release: the production server rebuilds itself when a publish time passes.
+**Articles need no release at all.** The production server:
+- pulls `site/src/content/articles/` and `site/public/images/articles/` from GitHub `main` every 10 minutes, runs the editorial lint, build and SEO checks, and swaps the new version in only if every gate passes (otherwise it restores the previous content and keeps serving);
+- rebuilds itself when a scheduled article's publish time passes;
+- reports its state at `/build-info.json`.
+
+Steps 3–4 above (Replit sync and publish) are needed only for **code** changes.
 
 **Rollback:** each sync leaves a `backup-before-sync` branch in Replit. To return to the previous live version, merge a revert commit on GitHub and run the pipeline again.
