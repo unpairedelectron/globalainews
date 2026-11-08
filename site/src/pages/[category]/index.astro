@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import ArticleList from '../../components/ArticleList.astro';
+import { SITE, CATEGORIES, type CategoryKey } from '../../site.config';
+import { getArticles, absolute } from '../../lib/articles';
+
+export async function getStaticPaths() {
+  return (Object.keys(CATEGORIES) as CategoryKey[])
+    .filter((k) => k !== 'guides')
+    .map((key) => ({ params: { category: CATEGORIES[key].path.replaceAll('/', '') }, props: { key } }));
+}
+const { key } = Astro.props as { key: CategoryKey };
+const cat = CATEGORIES[key];
+const items = (await getArticles()).filter((a) => a.data.category === key);
+const [first, ...rest] = items;
+const jsonLd = [{
+  '@type': 'CollectionPage', name: cat.title, url: absolute(cat.path), description: cat.description,
+  isPartOf: { '@id': `${SITE.url}/#website` },
+}];
+---
+<Base title={`${cat.title} | ${SITE.name}`} description={cat.description} path={cat.path} jsonLd={jsonLd}>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>{cat.name}</h1>
+      <p>{cat.description}</p>
+    </header>
+    {first && <div class="section"><div class="grid grid-3"><ArticleCard article={first} eager /></div></div>}
+    {rest.length > 0 && <ArticleList articles={rest} showCategory={false} />}
+    {items.length === 0 && <p>New stories in this section are on the way. Meanwhile, see the <a href="/latest/">latest stories</a>.</p>}
+  </div>
+</Base>

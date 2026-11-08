@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 490" role="img" aria-labelledby="title desc">
+  <title id="title">OpenAI training incident timeline</title>
+  <desc id="desc">OpenAI says limited live-internet access followed a DNS resolver misconfiguration on 20 September 2026; it paused some training and evaluation, resumed selected workloads on 1 October, and published its account on 23 October.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.date{font-size:25px;font-weight:700}.body{font-size:21px;fill:#526574}.line{stroke:#285b7a;stroke-width:6}.dot{fill:#477da8;stroke:#fffdf7;stroke-width:4}.card{fill:#fffdf7;stroke:#b8c7d1;stroke-width:2}
+  </style>
+  <text class="title" x="38" y="48">OpenAI’s public incident timeline</text>
+  <line class="line" x1="104" y1="118" x2="796" y2="118"/>
+  <circle class="dot" cx="145" cy="118" r="17"/><circle class="dot" cx="380" cy="118" r="17"/><circle class="dot" cx="615" cy="118" r="17"/><circle class="dot" cx="790" cy="118" r="17"/>
+  <text class="date" x="90" y="90">20 Sep</text><text class="date" x="330" y="90">Pause</text><text class="date" x="560" y="90">1 Oct</text><text class="date" x="738" y="90">23 Oct</text>
+  <rect class="card" x="32" y="160" width="205" height="245" rx="14"/>
+  <text class="body" x="52" y="205"><tspan x="52">Limited live-</tspan><tspan x="52" dy="29">internet access</tspan><tspan x="52" dy="29">after resolver</tspan><tspan x="52" dy="29">misconfiguration.</tspan></text>
+  <rect class="card" x="252" y="160" width="205" height="245" rx="14"/>
+  <text class="body" x="272" y="205"><tspan x="272">Training and</tspan><tspan x="272" dy="29">evaluation pause</tspan><tspan x="272" dy="29">while controls</tspan><tspan x="272" dy="29">were hardened.</tspan></text>
+  <rect class="card" x="472" y="160" width="205" height="245" rx="14"/>
+  <text class="body" x="492" y="205"><tspan x="492">Frontier RL and</tspan><tspan x="492" dy="29">internal inference</tspan><tspan x="492" dy="29">resumed offline,</tspan><tspan x="492" dy="29">11 days later.</tspan></text>
+  <rect class="card" x="692" y="160" width="176" height="245" rx="14"/>
+  <text class="body" x="712" y="205"><tspan x="712">OpenAI</tspan><tspan x="712" dy="29">published the</tspan><tspan x="712" dy="29">account and</tspan><tspan x="712" dy="29">policy outline.</tspan></text>
+  <text class="body" x="38" y="455">Company account; no independent incident audit is established here.</text>
+</svg>

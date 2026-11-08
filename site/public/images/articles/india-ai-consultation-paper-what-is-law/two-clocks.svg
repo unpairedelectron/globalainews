@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" role="img" aria-labelledby="title desc">
+  <title id="title">Two separate response clocks</title>
+  <desc id="desc">The three-hour route follows specified government or court intimation; the separate two-hour route applies to complaints in listed sensitive categories. These are not universal timers for all AI content.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:var(--color-text,#172b3a)}.panel{fill:var(--color-surface,#fff);stroke:var(--color-border,#a8bac7);stroke-width:2}.h{font-size:32px;font-weight:700}.p{font-size:30px}.small{font-size:30px;fill:var(--color-muted,#526574)}.line{stroke:#285b7a;stroke-width:8;stroke-linecap:round}
+  </style>
+  <rect class="panel" x="25" y="25" width="410" height="270" rx="18"/>
+  <rect class="panel" x="465" y="25" width="410" height="270" rx="18"/>
+  <text class="h" x="55" y="72">3-hour route</text>
+  <text class="p" x="55" y="116"><tspan x="55">Specified</tspan><tspan x="55" dy="40">government notice</tspan><tspan x="55" dy="40">or court order</tspan></text>
+  <line class="line" x1="62" y1="230" x2="385" y2="230"/>
+  <circle cx="62" cy="230" r="13" fill="#13795b"/><circle cx="385" cy="230" r="13" fill="#13795b"/>
+  <text class="small" x="55" y="270">Defined trigger</text>
+  <text class="h" x="495" y="72">2-hour route</text>
+  <text class="p" x="495" y="116"><tspan x="495">Separate complaint</tspan><tspan x="495" dy="40">for listed sensitive</tspan><tspan x="495" dy="40">content categories</tspan></text>
+  <line class="line" x1="502" y1="230" x2="825" y2="230"/>
+  <circle cx="502" cy="230" r="13" fill="#3266a8"/><circle cx="825" cy="230" r="13" fill="#3266a8"/>
+  <text class="small" x="495" y="270">Not every user report</text>
+</svg>

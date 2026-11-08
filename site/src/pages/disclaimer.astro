@@ -1,0 +1,15 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE } from '../site.config';
+---
+<Page title="Disclaimer" description={`${SITE.name} publishes general information about artificial intelligence. It is not legal, financial or professional advice.`} path="/disclaimer/" updated="8 November 2026">
+  <p>{SITE.name} publishes news, analysis and guides about artificial intelligence for general information.</p>
+  <h2>Not professional advice</h2>
+  <p>Nothing on this site is legal, regulatory-compliance, financial, investment, tax, medical or security advice. Articles about laws such as the EU AI Act or India’s IT Rules explain dates and obligations in general terms; they cannot tell you how the law applies to a specific product or organisation. Articles about company filings or spending are not recommendations to buy or sell any security. Consult a qualified professional before acting.</p>
+  <h2>Company claims</h2>
+  <p>When we report a company’s description of its products, benchmarks or results, those are the company’s claims unless we state that they were independently verified.</p>
+  <h2>Accuracy</h2>
+  <p>We check articles against their sources, and correct errors under our <a href="/editorial-policy/#corrections">corrections policy</a>. Facts change: product features, prices, deadlines and availability may have changed since publication. Check the dates on each article and the linked sources.</p>
+  <h2>Advertising</h2>
+  <p>Ads on this site are served by Google AdSense. An ad appearing on the site is not an endorsement.</p>
+</Page>

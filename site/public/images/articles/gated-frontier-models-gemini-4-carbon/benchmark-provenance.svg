@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
+  <title id="title">Gemini 4 Carbon benchmark figures and provenance</title>
+  <desc id="desc">Google reports three cybersecurity figures with different evaluators: SEC-bench Pro 88.2 percent self-computed by Google, ExploitGym 54.8 percent self-computed by Google, CWE-bench 71 percent from a public leaderboard evaluated by Collinear AI, plus an Artificial Analysis Intelligence Index score of 59.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.name{font-size:27px;font-weight:700}.value{font-size:27px;font-weight:700}.source{font-size:23px;fill:#526574}.row{fill:#fffdf7;stroke:#bac7cf;stroke-width:2}.vendor{fill:#477da8}.external{fill:#287b63}.general{fill:#a87947}
+  </style>
+  <text class="title" x="38" y="48">Four results · four provenance labels</text>
+  <rect class="row" x="32" y="74" width="836" height="96" rx="12"/>
+  <text class="name" x="60" y="112">SEC-bench Pro</text><text class="value" x="615" y="112">88.2%</text>
+  <text class="source" x="60" y="148">Google self-computed · cybersecurity benchmark</text><rect class="vendor" x="60" y="155" width="520" height="7" rx="3"/>
+  <rect class="row" x="32" y="183" width="836" height="96" rx="12"/>
+  <text class="name" x="60" y="221">ExploitGym</text><text class="value" x="615" y="221">54.8%</text>
+  <text class="source" x="60" y="257">Google self-computed · cybersecurity benchmark</text><rect class="vendor" x="60" y="264" width="323" height="7" rx="3"/>
+  <rect class="row" x="32" y="292" width="836" height="96" rx="12"/>
+  <text class="name" x="60" y="330">CWE-bench v1</text><text class="value" x="615" y="330">71.0%</text>
+  <text class="source" x="60" y="366">Public leaderboard · evaluated by Collinear AI</text><rect class="external" x="60" y="373" width="418" height="7" rx="3"/>
+  <rect class="row" x="32" y="401" width="836" height="96" rx="12"/>
+  <text class="name" x="60" y="439">Artificial Analysis Index v5</text><text class="value" x="615" y="439">59 pts</text>
+  <text class="source" x="60" y="475">Independent general-capability index, not a security test</text><rect class="general" x="60" y="482" width="354" height="7" rx="3"/>
+  <text class="source" x="38" y="540">Different tasks and scales: do not compare as a single leaderboard.</text>
+</svg>

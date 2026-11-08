@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 530" role="img" aria-labelledby="title desc">
+  <title id="title">Anthropic proposed governance control flow</title>
+  <desc id="desc">The Trust's Class T share generally selects a majority of board directors; the founders' Class F share carries 50.1 percent of shareholder voting power on general matters; public Class A shares provide economic rights.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.head{font-size:25px;font-weight:700}.body{font-size:22px;fill:#526574}.box{fill:#fffdf7;stroke:#b8c7d1;stroke-width:2}.trust{stroke:#287b63}.founders{stroke:#a87947}.public{stroke:#477da8}.arrow{stroke:#285b7a;stroke-width:4;fill:none}
+  </style>
+  <text class="title" x="38" y="48">Three routes, not one control percentage</text>
+  <rect class="box trust" x="40" y="84" width="340" height="112" rx="16"/>
+  <text class="head" x="66" y="125">LTBT · Class T</text>
+  <text class="body" x="66" y="162">Trust-held board-election share</text>
+  <path class="arrow" d="M380 140h116m-14-12 14 12-14 12"/>
+  <rect class="box trust" x="510" y="84" width="350" height="112" rx="16"/>
+  <text class="head" x="536" y="125">Board majority</text>
+  <text class="body" x="536" y="162">Class T directors, if offering closes</text>
+  <rect class="box founders" x="40" y="232" width="340" height="112" rx="16"/>
+  <text class="head" x="66" y="273">Founder LLC · Class F</text>
+  <text class="body" x="66" y="310">One share; no economic rights</text>
+  <path class="arrow" d="M380 288h116m-14-12 14 12-14 12"/>
+  <rect class="box founders" x="510" y="232" width="350" height="112" rx="16"/>
+  <text class="head" x="536" y="273">50.1% voting power</text>
+  <text class="body" x="536" y="310">General shareholder matters</text>
+  <rect class="box public" x="40" y="384" width="820" height="100" rx="16"/>
+  <text class="head" x="68" y="425">Public Class A</text>
+  <text class="body" x="68" y="459">Economic rights; not Class T director elections.</text>
+  <text class="body" x="38" y="516">S-1 describes a proposed post-offering structure, not a completed IPO.</text>
+</svg>

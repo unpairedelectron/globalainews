@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 490" role="img" aria-labelledby="title desc">
+  <title id="title">Anthropic Long-Term Benefit Trust document timeline</title>
+  <desc id="desc">Anthropic's 2023 Trust explanation described a phased transition to a board majority. A July 2026 draft registration statement and October S-1 provide historical context; the November 2026 S-1/A retains proposed IPO terms.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#172b3a}.title{font-size:30px;font-weight:700}.date{font-size:25px;font-weight:700}.body{font-size:22px;fill:#526574}.line{stroke:#285b7a;stroke-width:6}.point{fill:#287b63;stroke:#fffdf7;stroke-width:4}.card{fill:#fffdf7;stroke:#b8c7d1;stroke-width:2}
+  </style>
+  <text class="title" x="40" y="48">The documents describe different stages</text>
+  <line class="line" x1="100" y1="118" x2="800" y2="118"/>
+  <circle class="point" cx="160" cy="118" r="17"/><circle class="point" cx="450" cy="118" r="17"/><circle class="point" cx="740" cy="118" r="17"/>
+  <text class="date" x="85" y="91">2023</text><text class="date" x="375" y="91">Jul 2026</text><text class="date" x="630" y="91">Oct–Nov 2026</text>
+  <rect class="card" x="32" y="160" width="260" height="245" rx="15"/>
+  <text class="date" x="54" y="202">LTBT post</text>
+  <text class="body" x="54" y="245"><tspan x="54">Phase-in tied to</tspan><tspan x="54" dy="30">time and funding;</tspan><tspan x="54" dy="30">majority within</tspan><tspan x="54" dy="30">four years.</tspan></text>
+  <rect class="card" x="320" y="160" width="260" height="245" rx="15"/>
+  <text class="date" x="342" y="202">Draft S-1</text>
+  <text class="body" x="342" y="245"><tspan x="342">Earlier registration</tspan><tspan x="342" dy="30">statement provides</tspan><tspan x="342" dy="30">historical filing</tspan><tspan x="342" dy="30">context.</tspan></text>
+  <rect class="card" x="608" y="160" width="260" height="245" rx="15"/>
+  <text class="date" x="630" y="202">S-1/A</text>
+  <text class="body" x="630" y="245"><tspan x="630">2 Nov filing retains</tspan><tspan x="630" dy="30">Class T board majority</tspan><tspan x="630" dy="30">and Class F vote terms.</tspan></text>
+  <text class="body" x="40" y="455">Use the latest S-1/A for proposed IPO terms.</text>
+</svg>

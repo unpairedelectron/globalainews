@@ -1,0 +1,175 @@
+---
+import '../styles/global.css';
+import { SITE, ADS, ANALYTICS, CATEGORIES, NAV } from '../site.config';
+
+interface Props {
+  title: string; // full <title>
+  description: string;
+  path: string; // canonical path, e.g. /article/foo/
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  ads?: boolean;
+  jsonLd?: object[];
+  published?: Date;
+  modified?: Date;
+  section?: string;
+  tags?: string[];
+}
+
+const {
+  title,
+  description,
+  path,
+  image = '/og-default.png',
+  imageAlt = SITE.name,
+  type = 'website',
+  noindex = false,
+  ads = true,
+  jsonLd = [],
+  published,
+  modified,
+  section,
+  tags = [],
+} = Astro.props;
+
+const canonical = new URL(path, SITE.url).toString();
+const imageUrl = new URL(image, SITE.url).toString();
+const current = Astro.url.pathname;
+
+const org = {
+  '@type': 'NewsMediaOrganization',
+  '@id': `${SITE.url}/#organization`,
+  name: SITE.name,
+  url: `${SITE.url}/`,
+  logo: { '@type': 'ImageObject', url: `${SITE.url}/logo-512.png`, width: 512, height: 512 },
+  foundingDate: SITE.founded,
+  publishingPrinciples: `${SITE.url}/editorial-policy/`,
+  correctionsPolicy: `${SITE.url}/editorial-policy/#corrections`,
+  ethicsPolicy: `${SITE.url}/editorial-policy/`,
+  actionableFeedbackPolicy: `${SITE.url}/contact-us/`,
+  contactPoint: { '@type': 'ContactPoint', contactType: 'editorial', email: SITE.publisher.email },
+  ...(SITE.social.sameAs.length ? { sameAs: SITE.social.sameAs } : {}),
+};
+const graph = { '@context': 'https://schema.org', '@graph': [org, ...jsonLd] };
+const loadAds = ads && !noindex;
+---
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+    <meta name="google-adsense-account" content={ADS.client} />
+    <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#101216" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS`} href="/feed.xml" />
+    <link rel="preload" href="/fonts/instrument-serif-regular-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content={imageAlt} />
+    {published && <meta property="article:published_time" content={published.toISOString()} />}
+    {modified && <meta property="article:modified_time" content={modified.toISOString()} />}
+    {section && <meta property="article:section" content={section} />}
+    {tags.map((t) => <meta property="article:tag" content={t} />)}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+
+    {loadAds && (
+      <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS.client}`} crossorigin="anonymous"></script>
+    )}
+    {ANALYTICS.ga4 && !noindex && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS.ga4}`}></script>
+        <script is:inline define:vars={{ id: ANALYTICS.ga4 }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', id);
+        </script>
+      </>
+    )}
+    {ANALYTICS.clarity && !noindex && (
+      <script is:inline define:vars={{ id: ANALYTICS.clarity }}>
+        window.addEventListener('load', function () {
+          setTimeout(function () {
+            (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", id);
+          }, 2500);
+        });
+      </script>
+    )}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap masthead">
+        <a class="brand" href="/" aria-label={`${SITE.name} home`}>
+          <img src="/logo.svg" alt="" width="36" height="36" />
+          <span class="brand-name">{SITE.name}</span>
+        </a>
+        <span class="brand-tag">{SITE.tagline}</span>
+      </div>
+      <nav class="nav" aria-label="Sections">
+        <ul>
+          <li><a href="/latest/" aria-current={current === '/latest/' ? 'page' : undefined}>Latest</a></li>
+          {NAV.map((key) => (
+            <li><a href={CATEGORIES[key].path} aria-current={current === CATEGORIES[key].path ? 'page' : undefined}>{CATEGORIES[key].name}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-grid">
+          <div>
+            <p><strong style="color:var(--ink)">{SITE.name}</strong> — {SITE.tagline} An independent publication based in {SITE.publisher.location}. Every article links to the primary sources behind it.</p>
+            <p><a href="/feed.xml">RSS feed</a></p>
+          </div>
+          <div>
+            <h2>Sections</h2>
+            <ul>
+              {Object.values(CATEGORIES).map((c) => <li><a href={c.path}>{c.name}</a></li>)}
+            </ul>
+          </div>
+          <div>
+            <h2>About</h2>
+            <ul>
+              <li><a href="/about-us/">About us</a></li>
+              <li><a href="/editorial-policy/">Editorial policy</a></li>
+              <li><a href="/editorial-policy/#corrections">Corrections</a></li>
+              <li><a href="/contact-us/">Contact</a></li>
+              <li><a href="/privacy/">Privacy policy</a></li>
+              <li><a href="/terms/">Terms of use</a></li>
+              <li><a href="/disclaimer/">Disclaimer</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="copyright">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

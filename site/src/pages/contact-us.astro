@@ -1,0 +1,21 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE } from '../site.config';
+const mail = SITE.publisher.email;
+const jsonLd = [{ '@type': 'ContactPage', name: `Contact ${SITE.name}`, url: `${SITE.url}/contact-us/` }];
+---
+<Page title="Contact us" description={`How to contact ${SITE.name} with story tips, corrections, feedback or advertising questions.`} path="/contact-us/" jsonLd={jsonLd}>
+  <p>We read every message. The quickest way to reach us is email:</p>
+  <p style="font-size:22px"><a href={`mailto:${mail}`}>{mail}</a></p>
+
+  <h2>What to include</h2>
+  <ul>
+    <li><strong>Corrections:</strong> the article link and the claim you think is wrong, ideally with a source. Put “Correction” in the subject line. See our <a href="/editorial-policy/#corrections">corrections policy</a>.</li>
+    <li><strong>Story tips:</strong> what happened, where the primary document or announcement can be found, and how to reach you.</li>
+    <li><strong>Companies and press offices:</strong> official announcements, filings and documentation are most useful. We do not publish paid or sponsored content.</li>
+    <li><strong>Privacy requests:</strong> see our <a href="/privacy/">privacy policy</a>.</li>
+  </ul>
+
+  <h2>Postal location</h2>
+  <p>{SITE.name}<br />{SITE.publisher.location}</p>
+</Page>
