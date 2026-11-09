@@ -19,7 +19,7 @@ The newsroom picks from here when there's no stronger news story with primary so
 ## India AI (low competition, home market)
 - [ ] IndiaAI Mission explained: budget, GPUs, who can apply. Query: "IndiaAI mission"
 - [ ] How to apply for IndiaAI GPU compute (step by step). Query: "IndiaAI compute portal apply"
-- [ ] Indian LLMs compared: Sarvam, Krutrim, BharatGen and others (from official sources). Query: "Indian LLM"
+- [ ] Indian LLMs compared: Sarvam, Krutrim, BharatGen and others (from official sources). Query: "Indian LLM" (EKA-1 and Dhīr covered in `indiaai-eka-1-dhir-models-explained`; a full comparison is still open)
 - [ ] AIKosh explained: India's AI dataset platform. Query: "AIKosh"
 - [ ] India's deepfake rules: what platforms must do (IT Rules 2026). Query: "India deepfake rules"
 - [ ] India data-centre capacity: operational vs pipeline. Query: "India data centre capacity 2026"
@@ -34,3 +34,8 @@ The newsroom picks from here when there's no stronger news story with primary so
 ## Guides (refresh monthly)
 - [ ] Best free AI tools for students in India (from official pricing pages). Query: "free AI tools for students"
 - [ ] ChatGPT vs Gemini for Indian languages (from official docs). Query: "ChatGPT vs Gemini Hindi"
+
+## Added 2026-11-09 (weekly review)
+- [ ] DEPA for AI Training explained: MeitY's draft "sealed room" handbook for training AI on sensitive data (launched 31 Oct 2026). Primary: MeitY "Data Empowerment And Protection Architecture - Draft for Discussion" PDF on meity.gov.in. Query: "DEPA AI training"
+- [ ] How to run an Indian-language AI model offline on a laptop (Dhīr 2B/5B 4-bit, llama.cpp), from ZenteiQ's model page and AIKosh listing. Query: "run AI model offline laptop"
+- [ ] Google's Vizag AI hub: what is being built, and the power and water questions. Needs Google's own announcement and state government documents before writing. Query: "Google Vizag AI data centre"
