@@ -68,14 +68,26 @@ export async function fetchContent(sha) {
 }
 
 // Replaces the content directories with `files`. Returns a restore() function.
+// The directories are emptied and refilled in place rather than renamed: on
+// Replit deployments they can sit on a different filesystem from their parent,
+// where rename() fails with EXDEV. Backups are copies, so they work across
+// filesystems too.
+function emptyDir(dir) {
+  for (const name of fs.readdirSync(dir)) fs.rmSync(path.join(dir, name), { recursive: true, force: true });
+}
+
 export function applyContent(siteDir, files) {
   const backups = [];
   for (const [, to] of PULL) {
     const dir = path.join(siteDir, to);
     const bak = `${dir.replace(/\/$/, '')}.bak-sync`;
     fs.rmSync(bak, { recursive: true, force: true });
-    if (fs.existsSync(dir)) fs.renameSync(dir, bak);
-    fs.mkdirSync(dir, { recursive: true });
+    if (fs.existsSync(dir)) {
+      fs.cpSync(dir, bak, { recursive: true });
+      emptyDir(dir);
+    } else {
+      fs.mkdirSync(dir, { recursive: true });
+    }
     backups.push([dir, bak]);
   }
   for (const [rel, data] of files) {
@@ -84,7 +96,13 @@ export function applyContent(siteDir, files) {
     fs.writeFileSync(full, data);
   }
   return {
-    restore() { for (const [dir, bak] of backups) { fs.rmSync(dir, { recursive: true, force: true }); if (fs.existsSync(bak)) fs.renameSync(bak, dir); } },
+    restore() {
+      for (const [dir, bak] of backups) {
+        emptyDir(dir);
+        if (fs.existsSync(bak)) fs.cpSync(bak, dir, { recursive: true });
+        fs.rmSync(bak, { recursive: true, force: true });
+      }
+    },
     commit() { for (const [, bak] of backups) fs.rmSync(bak, { recursive: true, force: true }); },
   };
 }
