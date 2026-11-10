@@ -17,6 +17,9 @@ import { astroBin } from './scripts/astro-bin.mjs';
 
 const SITE_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(SITE_DIR, 'dist');
+// The folder being served. Rebuilds switch this to a fresh folder instead of
+// renaming `dist`: on Replit deployments `dist` can't be renamed (EXDEV).
+let root = ROOT;
 const PORT = Number(process.env.PORT || 3000);
 const CANONICAL_HOST = process.env.CANONICAL_HOST || 'www.globalainews.in';
 
@@ -54,8 +57,8 @@ function redirect(res, location, code = 301) {
 
 function resolveFile(pathname) {
   const safe = path.normalize(decodeURIComponent(pathname)).replace(/^(\.\.[/\\])+/, '');
-  const full = path.join(ROOT, safe);
-  if (!full.startsWith(ROOT)) return null;
+  const full = path.join(root, safe);
+  if (!full.startsWith(root)) return null;
   try {
     const stat = fs.statSync(full);
     if (stat.isFile()) return full;
@@ -130,7 +133,7 @@ const server = http.createServer((req, res) => {
 
   const file = resolveFile(pathname);
   if (file) return send(req, res, file);
-  send(req, res, path.join(ROOT, '404.html'), 404);
+  send(req, res, path.join(root, '404.html'), 404);
 });
 
 // ---------------------------------------------------------------- scheduled publishing
@@ -141,7 +144,7 @@ const ARTICLES_DIR = path.join(SITE_DIR, 'src', 'content', 'articles');
 let building = false;
 
 function buildTime() {
-  try { return Date.parse(fs.readFileSync(path.join(ROOT, '.build-time'), 'utf8').trim()) || 0; } catch { return 0; }
+  try { return Date.parse(fs.readFileSync(path.join(root, '.build-time'), 'utf8').trim()) || 0; } catch { return 0; }
 }
 
 function scheduledDue(since, now = Date.now()) {
@@ -171,7 +174,7 @@ function sitemapUrls(dir) {
 // Tell IndexNow-enabled search engines (Bing, Yandex, Seznam, Naver...) about new URLs.
 async function pingIndexNow(urls) {
   if (!urls.length || process.env.INDEXNOW === 'false') return;
-  const key = fs.readdirSync(ROOT).find((f) => /^[0-9a-f]{32}\.txt$/.test(f))?.slice(0, 32);
+  const key = fs.readdirSync(root).find((f) => /^[0-9a-f]{32}\.txt$/.test(f))?.slice(0, 32);
   if (!key) return;
   urls = [...urls, `https://${CANONICAL_HOST}/`, `https://${CANONICAL_HOST}/latest/`];
   try {
@@ -186,13 +189,12 @@ async function pingIndexNow(urls) {
   }
 }
 
-// Builds into dist-next, runs every gate, and swaps it in only if all pass.
+// Builds into a new folder, runs every gate, and serves it only if all pass.
 async function rebuild(reason) {
-  const next = path.join(SITE_DIR, 'dist-next');
-  const old = path.join(SITE_DIR, 'dist-old');
+  const name = `dist-live-${Date.now()}`;
+  const next = path.join(SITE_DIR, name);
   console.log(`[publish] ${reason}; rebuilding`);
-  fs.rmSync(next, { recursive: true, force: true });
-  const env = { ASTRO_OUT_DIR: 'dist-next', ASTRO_TELEMETRY_DISABLED: '1' };
+  const env = { ASTRO_OUT_DIR: name, ASTRO_TELEMETRY_DISABLED: '1' };
   const ok = (await run(process.execPath, ['scripts/lint-articles.mjs'], env))
     && (await run(process.execPath, [astroBin(SITE_DIR), 'build'], env))
     && (await run(process.execPath, ['scripts/check-build.mjs'], env));
@@ -201,14 +203,13 @@ async function rebuild(reason) {
     console.error('[publish] gates failed; keeping the current build');
     return false;
   }
-  const before = sitemapUrls(ROOT);
-  fs.rmSync(old, { recursive: true, force: true });
-  fs.renameSync(ROOT, old);
-  fs.renameSync(next, ROOT);
-  fs.rmSync(old, { recursive: true, force: true });
+  const before = sitemapUrls(root);
+  const previous = root;
+  root = next;
   gzCache.clear();
-  console.log('[publish] new build is live');
-  pingIndexNow(sitemapUrls(ROOT).filter((u) => !before.includes(u)));
+  if (previous !== ROOT) fs.rmSync(previous, { recursive: true, force: true });
+  console.log(`[publish] new build is live from ${name}`);
+  pingIndexNow(sitemapUrls(root).filter((u) => !before.includes(u)));
   return true;
 }
 
@@ -278,4 +279,4 @@ setInterval(maybeRebuild, 5 * 60_000).unref();
 setTimeout(syncContent, 20_000);
 setInterval(syncContent, 10 * 60_000).unref();
 
-server.listen(PORT, '0.0.0.0', () => console.log(`Global AI News serving ${ROOT} on :${PORT}`));
+server.listen(PORT, '0.0.0.0', () => console.log(`Global AI News serving ${root} on :${PORT}`));
