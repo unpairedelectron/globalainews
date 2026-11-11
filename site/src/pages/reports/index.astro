@@ -1,17 +1,16 @@
 ---
 import Base from '../../layouts/Base.astro';
-import ArticleList from '../../components/ArticleList.astro';
+import CategoryHub from '../../components/CategoryHub.astro';
 import { SITE, CATEGORIES } from '../../site.config';
-import { getArticles } from '../../lib/articles';
+import { getArticles, absolute, articlePath } from '../../lib/articles';
 const cat = CATEGORIES.guides;
 const items = (await getArticles()).filter((a) => a.data.category === 'guides');
+const jsonLd = [{
+  '@type': 'CollectionPage', name: cat.title, url: absolute(cat.path), description: cat.description,
+  isPartOf: { '@id': `${SITE.url}/#website` },
+  mainEntity: { '@type': 'ItemList', itemListElement: items.map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: absolute(articlePath(a)), name: a.data.title })) },
+}];
 ---
-<Base title={`${cat.title} | ${SITE.name}`} description={cat.description} path={cat.path}>
-  <div class="wrap">
-    <header class="page-head">
-      <h1>{cat.name}</h1>
-      <p>{cat.description} We do not rank products by answer quality; we compare what each vendor documents, under which plan, and with which limits.</p>
-    </header>
-    <ArticleList articles={items} showCategory={false} />
-  </div>
+<Base title={`${cat.title} | ${SITE.name}`} description={cat.description} path={cat.path} jsonLd={jsonLd}>
+  <div class="wrap"><CategoryHub categoryKey="guides" items={items} /></div>
 </Base>
