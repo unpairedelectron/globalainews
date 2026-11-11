@@ -82,6 +82,8 @@ Do **one** of these per run, rotating:
 If nothing changed today (no article, no fix, no maintenance), skip the pull request and only log.
 
 ## Alerts
+**Also send a push notification** (PushNotification tool, under 200 characters, starting `Global AI News:`) for every new alert, and again if an alert is still open after 24 hours. Say what's broken and the one action needed, for example: `Global AI News: fix merged, needs publish. Open Replit app Global AI Media > Publish > Republish (1 tap).` For a code change waiting on a Replit publish, that exact action is the fix.
+
 Open a GitHub issue in `unpairedelectron/globalainews` titled `Newsroom alert: <short problem>` with: what failed, the exact output, what you tried, and the one action the owner must take. Before opening, check for an existing open alert about the same problem and comment on it instead of duplicating. End issue bodies with the attribution footer.
 
 ## Weekly (Mondays): growth review
