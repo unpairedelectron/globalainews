@@ -1,0 +1,47 @@
+---
+// Range chart of 2026 capex guidance. Single hue; ranges as bands, point
+// estimates as dots; direct labels; hover tooltips; table view.
+import { CAPEX_TRACKER } from '../data/trackers';
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+const rows = [...CAPEX_TRACKER].sort((a, b) => b.max - a.max);
+const W = 640, L = 104, Rt = 560, rowH = compact ? 40 : 48, top = 8, axisMax = 250;
+const H = top + rows.length * rowH + 28;
+const x = (v: number) => L + (v / axisMax) * (Rt - L);
+const ticks = [0, 50, 100, 150, 200, 250];
+const fmt = (r: (typeof rows)[number]) => (r.min === r.max ? `~$${r.max}B` : `$${r.min}–${r.max}B`);
+---
+<figure class="viz" aria-labelledby={compact ? undefined : 'capex-title'}>
+  <h3 id={compact ? undefined : 'capex-title'}>2026 capital-spending guidance, US$ billions</h3>
+  <p class="viz-sub">Each company’s own basis. Bands are ranges, dots are point estimates. Not AI-only, and not additive.</p>
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`2026 capex guidance: ${rows.map((r) => `${r.company} ${fmt(r)}`).join('; ')}`}>
+    {ticks.map((t) => (
+      <g>
+        <line class="v-grid" x1={x(t)} x2={x(t)} y1={top - 4} y2={H - 24} />
+        <text x={x(t)} y={H - 8} text-anchor="middle">{t === 0 ? '0' : `$${t}B`}</text>
+      </g>
+    ))}
+    {rows.map((r, i) => {
+      const cy = top + i * rowH + rowH / 2;
+      return (
+        <g class="v-row" tabindex="0" data-tip={`${r.company}|${fmt(r)} 2026 guidance|${r.basis}|Source: ${r.source.label}`}>
+          <rect class="v-hl" x="0" y={cy - rowH / 2 + 2} width={W} height={rowH - 4} rx="8" />
+          <text class="v-label" x={L - 12} y={cy + 4} text-anchor="end">{r.company}</text>
+          {r.min === r.max
+            ? <circle class="v-point" cx={x(r.max)} cy={cy} r="7" />
+            : <rect class="v-range grow" x={x(r.min)} y={cy - 8} width={x(r.max) - x(r.min)} height="16" rx="4" />}
+          <text x={x(r.max) + 14} y={cy + 4}>{fmt(r)}</text>
+        </g>
+      );
+    })}
+  </svg>
+  {!compact && (
+    <details>
+      <summary>View data</summary>
+      <table>
+        <thead><tr><th>Company</th><th>2026 guidance</th><th>Basis</th></tr></thead>
+        <tbody>{rows.map((r) => <tr><td>{r.company}</td><td>{fmt(r)}</td><td>{r.basis}</td></tr>)}</tbody>
+      </table>
+    </details>
+  )}
+</figure>

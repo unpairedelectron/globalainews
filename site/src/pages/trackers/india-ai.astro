@@ -1,6 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import TrackerTable from '../../components/TrackerTable.astro';
+import IndiaGpuChart from '../../components/IndiaGpuChart.astro';
+import RulesTimeline from '../../components/RulesTimeline.astro';
 import { SITE } from '../../site.config';
 import { INDIA_AI_TRACKER } from '../../data/trackers';
 import { absolute } from '../../lib/articles';
@@ -25,6 +27,8 @@ const jsonLd = [{
       <h1>India AI tracker</h1>
       <p class="dek">India’s AI rules, public compute and home-grown models in one place. Every entry links to the official source, with the date we last checked it.</p>
       <p class="meta">Last checked: {new Date(`${lastChecked}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })} · Maintained by the {SITE.desk} · <a href="/contact-us/">Report an update</a></p>
+      <IndiaGpuChart />
+      <RulesTimeline />
       {INDIA_AI_TRACKER.map((s) => (
         <section>
           <h2>{s.title}</h2>

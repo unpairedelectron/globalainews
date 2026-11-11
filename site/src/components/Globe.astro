@@ -1,0 +1,165 @@
+---
+// Lightweight 3D globe (Canvas 2D, no libraries). Point-lattice sphere with
+// AI hubs and animated great-circle arcs from India. Pauses off-screen,
+// respects reduced motion, drag to rotate.
+---
+<div class="globe-wrap" aria-hidden="true">
+  <canvas id="globe" width="560" height="560"></canvas>
+  <span class="globe-caption">Global AI hubs we cover · drag to explore</span>
+</div>
+
+<script>
+type Hub = { name: string; lat: number; lon: number; home?: boolean; dy?: number };
+const HUBS: Hub[] = [
+  { name: 'Bengaluru', lat: 12.97, lon: 77.59, home: true },
+  { name: 'New Delhi', lat: 28.61, lon: 77.21, home: true },
+  { name: 'San Francisco', lat: 37.77, lon: -122.42 },
+  { name: 'Washington', lat: 38.9, lon: -77.04 },
+  { name: 'London', lat: 51.5, lon: -0.13 },
+  { name: 'Brussels', lat: 50.85, lon: 4.35, dy: 18 },
+  { name: 'Beijing', lat: 39.9, lon: 116.4 },
+  { name: 'Tokyo', lat: 35.68, lon: 139.69 },
+  { name: 'Singapore', lat: 1.35, lon: 103.82 },
+];
+const ARCS: [number, number][] = [[0, 2], [1, 3], [1, 4], [0, 5], [1, 6], [0, 7], [0, 8], [2, 4], [4, 7]];
+
+const canvas = document.getElementById('globe') as HTMLCanvasElement | null;
+if (canvas) {
+  const ctx = canvas.getContext('2d')!;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const css = getComputedStyle(document.documentElement);
+  const col = (v: string, f: string) => (css.getPropertyValue(v).trim() || f);
+  const C = { accent: col('--accent', '#2a78d6'), violet: col('--violet', '#6250d6'), ink: col('--ink', '#0e1726'), muted: col('--muted', '#5a6478'), teal: col('--teal', '#13a06f') };
+  const rgb = (hex: string) => { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const A = rgb(C.accent), V = rgb(C.violet);
+  const rgba = (c: number[], a: number) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+
+  // Fibonacci lattice
+  const N = window.innerWidth < 700 ? 520 : 900;
+  const pts: number[][] = [];
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < N; i++) {
+    const y = 1 - (2 * (i + 0.5)) / N, r = Math.sqrt(1 - y * y), phi = i * golden;
+    pts.push([Math.cos(phi) * r, y, Math.sin(phi) * r]);
+  }
+  const ll = (lat: number, lon: number) => {
+    const la = (lat * Math.PI) / 180, lo = (lon * Math.PI) / 180;
+    return [Math.cos(la) * Math.sin(lo), Math.sin(la), Math.cos(la) * Math.cos(lo)];
+  };
+  const hubVec = HUBS.map((h) => ll(h.lat, h.lon));
+  // Great-circle arc points with altitude lift
+  const arcPts = ARCS.map(([a, b]) => {
+    const p = hubVec[a], q = hubVec[b];
+    const dot = Math.min(1, Math.max(-1, p[0] * q[0] + p[1] * q[1] + p[2] * q[2]));
+    const om = Math.acos(dot), so = Math.sin(om) || 1, out: number[][] = [];
+    for (let i = 0; i <= 48; i++) {
+      const t = i / 48, s1 = Math.sin((1 - t) * om) / so, s2 = Math.sin(t * om) / so, lift = 1 + Math.sin(Math.PI * t) * 0.07 * Math.min(om, 1.6);
+      out.push([(p[0] * s1 + q[0] * s2) * lift, (p[1] * s1 + q[1] * s2) * lift, (p[2] * s1 + q[2] * s2) * lift]);
+    }
+    return out;
+  });
+
+  let rotY = (-78 * Math.PI) / 180, tilt = 0.32, vel = reduce ? 0 : 0.0001;
+  let W = 0, R = 0, cx = 0, cy = 0, running = false, last = 0, t0 = performance.now();
+  const resize = () => {
+    const dpr = Math.min(2, window.devicePixelRatio || 1), size = canvas.clientWidth;
+    canvas.width = size * dpr; canvas.height = size * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    W = size; R = size * 0.4; cx = size / 2; cy = size / 2;
+  };
+  const proj = (v: number[]) => {
+    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    const x = v[0] * cosY + v[2] * sinY, z1 = -v[0] * sinY + v[2] * cosY;
+    const cosX = Math.cos(tilt), sinX = Math.sin(tilt);
+    const y = v[1] * cosX - z1 * sinX, z = v[1] * sinX + z1 * cosX;
+    return [cx + x * R, cy - y * R, z];
+  };
+
+  const draw = (now: number) => {
+    ctx.clearRect(0, 0, W, W);
+    // Graticule (parallels and meridians)
+    ctx.lineWidth = 1;
+    for (let lat = -60; lat <= 60; lat += 30) line(Array.from({ length: 73 }, (_, i) => ll(lat, i * 5)), 0.10);
+    for (let lon = 0; lon < 360; lon += 30) line(Array.from({ length: 37 }, (_, i) => ll(-90 + i * 5, lon)), 0.07);
+    // Lattice dots
+    for (const p of pts) {
+      const [x, y, z] = proj(p);
+      if (z < -0.15) continue;
+      const a = 0.12 + 0.55 * Math.max(0, z);
+      ctx.fillStyle = rgba(z > 0 ? A : V, a);
+      ctx.beginPath(); ctx.arc(x, y, 0.8 + 1.1 * Math.max(0, z), 0, Math.PI * 2); ctx.fill();
+    }
+    // Arcs with travelling pulses
+    const t = (now - t0) / 1000;
+    arcPts.forEach((arc, k) => {
+      const P = arc.map(proj);
+      ctx.lineWidth = 1.4;
+      for (let i = 1; i < P.length; i++) {
+        const z = (P[i][2] + P[i - 1][2]) / 2; if (z < -0.05) continue;
+        ctx.strokeStyle = rgba(V, 0.18 + 0.32 * z);
+        ctx.beginPath(); ctx.moveTo(P[i - 1][0], P[i - 1][1]); ctx.lineTo(P[i][0], P[i][1]); ctx.stroke();
+      }
+      const head = reduce ? 0.6 : ((t * 0.22 + k * 0.17) % 1);
+      const idx = Math.floor(head * (P.length - 1)), H = P[idx];
+      if (H[2] > 0) {
+        const g = ctx.createRadialGradient(H[0], H[1], 0, H[0], H[1], 7);
+        g.addColorStop(0, rgba(A, 0.95)); g.addColorStop(1, rgba(A, 0));
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(H[0], H[1], 7, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+    // Hubs and labels
+    ctx.font = `600 ${W < 420 ? 10.5 : 12}px system-ui, -apple-system, Segoe UI, sans-serif`;
+    HUBS.forEach((h, i) => {
+      const [x, y, z] = proj(hubVec[i]);
+      if (z < 0.05) return;
+      const pulse = reduce ? 0 : (Math.sin(t * 2.2 + i) + 1) / 2;
+      const base = h.home ? A : V;
+      ctx.fillStyle = rgba(base, 0.18 * z); ctx.beginPath(); ctx.arc(x, y, 6 + pulse * 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = rgba(base, 0.95); ctx.beginPath(); ctx.arc(x, y, h.home ? 4 : 3.2, 0, Math.PI * 2); ctx.fill();
+      if (z > 0.35) {
+        ctx.fillStyle = C.ink; ctx.globalAlpha = Math.min(1, (z - 0.35) * 3);
+        ctx.fillText(h.name, x + 8, y - 6 + (h.dy ?? 0)); ctx.globalAlpha = 1;
+      }
+    });
+  };
+  function line(vs: number[][], alpha: number) {
+    let prev: number[] | null = null;
+    for (const v of vs) {
+      const p = proj(v);
+      if (prev && p[2] > 0 && prev[2] > 0) {
+        ctx.strokeStyle = rgba(A, alpha * (0.4 + p[2]));
+        ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(p[0], p[1]); ctx.stroke();
+      }
+      prev = p;
+    }
+  }
+
+  const loop = (now: number) => {
+    if (!running) return;
+    const dt = Math.min(50, now - (last || now)); last = now;
+    rotY += vel * dt; if (!dragging && !reduce) vel += (0.0001 - vel) * 0.03;
+    draw(now);
+    requestAnimationFrame(loop);
+  };
+  const start = () => { if (!running) { running = true; last = 0; requestAnimationFrame(loop); } };
+  const stop = () => { running = false; };
+
+  // Drag to rotate
+  let dragging = false, px = 0, py = 0;
+  canvas.addEventListener('pointerdown', (e) => { dragging = true; px = e.clientX; py = e.clientY; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - px, dy = e.clientY - py; px = e.clientX; py = e.clientY;
+    rotY += dx * 0.006; tilt = Math.max(-0.9, Math.min(0.9, tilt + dy * 0.004)); vel = Math.max(-0.004, Math.min(0.004, dx * 0.00004));
+    if (!running) draw(performance.now());
+  });
+  const end = () => { dragging = false; };
+  canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
+
+  resize(); draw(performance.now());
+  addEventListener('resize', () => { resize(); draw(performance.now()); });
+  if (!reduce) {
+    new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop())).observe(canvas);
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+  }
+}
+</script>

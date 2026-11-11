@@ -2,60 +2,125 @@
 import Base from '../layouts/Base.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import ArticleList from '../components/ArticleList.astro';
+import Globe from '../components/Globe.astro';
+import Emblem from '../components/Emblem.astro';
+import CapexChart from '../components/CapexChart.astro';
 import { SITE, CATEGORIES, type CategoryKey } from '../site.config';
-import { getArticles, articlePath, category, formatDate, formatIST, isoIST, readingTime } from '../lib/articles';
+import { TERMS } from '../glossary';
+import { CAPEX_TRACKER, INDIA_GPU_STAGES } from '../data/trackers';
+import { getArticles, articlePath, category, formatIST, isoIST } from '../lib/articles';
 
 const all = await getArticles();
-const news = all.filter((a) => a.data.type === 'article');
-const briefs = all.filter((a) => a.data.type === 'brief').slice(0, 5);
-const [lead, ...rest] = news;
-const top = rest.slice(0, 6);
-const shown = new Set([lead, ...top].map((a) => a.id));
-const sections: CategoryKey[] = ['india', 'policy', 'models', 'guides'];
+const news = all.filter((a) => a.data.type !== 'brief');
+const briefs = all.filter((a) => a.data.type === 'brief').slice(0, 4);
+const lead = news.find((a) => a.data.type === 'article') ?? news[0];
+const latest = news.filter((a) => a.id !== lead?.id).slice(0, 4);
+const shown = new Set([lead, ...latest].filter(Boolean).map((a) => a!.id));
+const sections: CategoryKey[] = ['india', 'models', 'policy', 'safety'];
+const onboarded = INDIA_GPU_STAGES.find((s) => s.stage === 'Onboarded')!;
+const biggestCapex = [...CAPEX_TRACKER].sort((a, b) => b.max - a.max)[0];
+const terms = ['ai-agent', 'token', 'rag', 'hallucination', 'open-weights', 'mcp', 'context-window', 'deepfake']
+  .map((id) => TERMS.find((t) => t.id === id)).filter(Boolean);
 const jsonLd = [
   { '@type': 'WebSite', '@id': `${SITE.url}/#website`, name: SITE.name, url: `${SITE.url}/`, description: SITE.description, inLanguage: SITE.lang, publisher: { '@id': `${SITE.url}/#organization` } },
 ];
 ---
 <Base title={`${SITE.name} – AI News, Analysis and Explainers`} description={SITE.description} path="/" jsonLd={jsonLd}>
   <div class="wrap">
-    <h1 class="skip">{SITE.name}: AI news, analysis and explainers</h1>
-    {lead && (
-      <section class="lead" aria-label="Top story">
-        <div>
-          <a class="kicker" href={category(lead).path}>{category(lead).name}</a>
-          <h2><a href={articlePath(lead)}>{lead.data.title}</a></h2>
-          <p>{lead.data.description}</p>
-          <p class="meta"><time datetime={lead.data.date.toISOString()}>{formatDate(lead.data.date)}</time> · {readingTime(lead)} min read</p>
+    <section class="hero-home" aria-labelledby="home-h1">
+      <div>
+        <span class="eyebrow">Independent · Source-linked · From India, for the world</span>
+        <h1 id="home-h1">AI news, <em>explained</em> with the sources.</h1>
+        <p class="lede">The biggest stories in artificial intelligence—models, policy, chips, jobs and India’s AI push—decoded in plain English, with every claim linked to the document behind it.</p>
+        <div class="hero-actions">
+          <a class="btn" href={lead ? articlePath(lead) : '/latest/'}>Read today’s top story →</a>
+          <a class="btn ghost" href="/trackers/">Explore the trackers</a>
         </div>
-        {lead.data.image && <a href={articlePath(lead)} tabindex="-1" aria-hidden="true"><img class="card-img" src={lead.data.image} alt="" width="1200" height="675" fetchpriority="high" /></a>}
-      </section>
-    )}
+      </div>
+      <Globe />
+    </section>
+
+    <div class="stats" data-reveal-group>
+      <a class="stat" href="/trackers/india-ai/">
+        <div class="stat-value" data-count={onboarded.value}>{onboarded.value.toLocaleString('en-IN')}</div>
+        <div class="stat-label">GPUs onboarded under the IndiaAI Mission ({onboarded.date})</div>
+      </a>
+      <a class="stat" href="/trackers/ai-capex/">
+        <div class="stat-value" data-count={biggestCapex.max} data-prefix="$" data-suffix="B">${biggestCapex.max}B</div>
+        <div class="stat-label">{biggestCapex.company}’s 2026 capex guidance, the largest in Big Tech</div>
+      </a>
+      <a class="stat" href="/latest/">
+        <div class="stat-value" data-count={news.length}>{news.length}</div>
+        <div class="stat-label">In-depth explainers, every claim sourced</div>
+      </a>
+      <a class="stat" href="/glossary/">
+        <div class="stat-value" data-count={TERMS.length}>{TERMS.length}</div>
+        <div class="stat-label">AI terms decoded in our glossary</div>
+      </a>
+    </div>
+
+    <section class="section" aria-labelledby="latest-h">
+      <div class="section-head"><h2 id="latest-h">Top stories</h2><a href="/latest/">All stories →</a></div>
+      <div class="grid grid-3 bento" data-reveal-group>
+        {lead && <ArticleCard article={lead} eager />}
+        {latest.map((a, i) => <ArticleCard article={a} eager={i < 2} />)}
+      </div>
+    </section>
 
     {briefs.length > 0 && (
-      <section class="section" aria-labelledby="wire-h">
+      <section class="section" aria-labelledby="wire-h" data-reveal>
         <div class="section-head"><h2 id="wire-h">AI news wire</h2><a href="/wire/">All updates →</a></div>
         <ol class="wire">{briefs.map((b) => <li><time datetime={isoIST(b.data.date)}>{formatIST(b.data.date)}</time><h2><a href={articlePath(b)}>{b.data.title}</a></h2></li>)}</ol>
       </section>
     )}
 
-    <section class="section" aria-labelledby="latest-h">
-      <div class="section-head"><h2 id="latest-h">Latest</h2><a href="/latest/">All stories →</a></div>
-      <div class="grid grid-3">{top.map((a, i) => <ArticleCard article={a} eager={i < 3} />)}</div>
-    </section>
-
-    <section class="section" aria-labelledby="gloss-h">
-      <div class="section-head"><h2 id="gloss-h">New to AI? Start with the basics</h2><a href="/glossary/">AI glossary →</a></div>
-      <p style="margin:0;color:var(--muted);max-width:760px">Plain-English definitions of the terms behind the headlines: <a href="/glossary/#ai-agent">AI agent</a>, <a href="/glossary/#token">token</a>, <a href="/glossary/#rag">RAG</a>, <a href="/glossary/#hallucination">hallucination</a>, <a href="/glossary/#open-weights">open weights</a>, <a href="/glossary/#mcp">MCP</a> and more.</p>
+    <section class="section" aria-labelledby="data-h">
+      <div class="panel" data-reveal>
+        <div>
+          <span class="eyebrow">Data desk</span>
+          <h2 id="data-h">The numbers behind the AI boom</h2>
+          <p>How much Big Tech says it will spend, how many GPUs India has actually onboarded, and which AI rules are already law. Every figure links to the filing or government document it comes from.</p>
+          <div class="hero-actions">
+            <a class="btn" href="/trackers/ai-capex/">Big Tech capex tracker →</a>
+            <a class="btn ghost" href="/trackers/india-ai/">India AI tracker</a>
+          </div>
+        </div>
+        <CapexChart compact />
+      </div>
     </section>
 
     {sections.map((key) => {
-      const items = all.filter((a) => a.data.category === key && !shown.has(a.id)).slice(0, 4);
+      const items = all.filter((a) => a.data.category === key && !shown.has(a.id)).slice(0, 3);
       return items.length > 0 && (
-        <section class="section" aria-labelledby={`sec-${key}`}>
-          <div class="section-head"><h2 id={`sec-${key}`}>{CATEGORIES[key].name}</h2><a href={CATEGORIES[key].path}>More →</a></div>
+        <section class="section" aria-labelledby={`sec-${key}`} data-reveal>
+          <div class="section-head">
+            <div style="display:flex;align-items:center;gap:14px">
+              <Emblem kind={key} />
+              <h2 id={`sec-${key}`}>{CATEGORIES[key].name}</h2>
+            </div>
+            <a href={CATEGORIES[key].path}>More →</a>
+          </div>
           <ArticleList articles={items} showCategory={false} />
         </section>
       );
     })}
+
+    <section class="section" aria-labelledby="gloss-h">
+      <div class="panel" data-reveal>
+        <div>
+          <span class="eyebrow">New to AI?</span>
+          <h2 id="gloss-h">Start with the basics</h2>
+          <p>{TERMS.length} AI terms in plain English, from agents and tokens to RAG and open weights, each linked to our full explainer.</p>
+          <a class="btn" href="/glossary/">Open the AI glossary →</a>
+        </div>
+        <div class="chips">
+          {terms.map((t) => <a class="chip" href={`/glossary/#${t!.id}`}>{t!.term}</a>)}
+        </div>
+      </div>
+    </section>
   </div>
 </Base>
+
+<style>
+  .section-head :global(.emblem) { width: 56px; height: 56px; flex: none; }
+</style>
