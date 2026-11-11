@@ -1,0 +1,41 @@
+---
+// IndiaAI GPU figures by stage. One measure (GPUs), one hue, bars anchored at
+// zero, direct labels, tooltips, table view.
+import { INDIA_GPU_STAGES } from '../data/trackers';
+const rows = INDIA_GPU_STAGES;
+const W = 640, L = 132, Rt = 520, rowH = 48, top = 8, axisMax = 50000;
+const H = top + rows.length * rowH + 28;
+const x = (v: number) => L + (v / axisMax) * (Rt - L);
+const ticks = [0, 10000, 20000, 30000, 40000, 50000];
+const n = (v: number) => v.toLocaleString('en-IN');
+---
+<figure class="viz" aria-labelledby="gpu-title">
+  <h3 id="gpu-title">IndiaAI Mission GPUs, by stage</h3>
+  <p class="viz-sub">Each bar is a different stage, reported at a different date. They show progress, not one capacity number.</p>
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={rows.map((r) => `${r.stage}: ${n(r.value)}${r.plus ? '+' : ''} GPUs (${r.date})`).join('; ')}>
+    {ticks.map((t) => (
+      <g>
+        <line class="v-grid" x1={x(t)} x2={x(t)} y1={top - 4} y2={H - 24} />
+        <text x={x(t)} y={H - 8} text-anchor="middle">{t === 0 ? '0' : `${t / 1000}k`}</text>
+      </g>
+    ))}
+    {rows.map((r, i) => {
+      const cy = top + i * rowH + rowH / 2;
+      return (
+        <g class="v-row" tabindex="0" data-tip={`${r.stage} · ${r.date}|${n(r.value)}${r.plus ? '+' : ''} GPUs|${r.note}`}>
+          <rect class="v-hl" x="0" y={cy - rowH / 2 + 2} width={W} height={rowH - 4} rx="8" />
+          <text class="v-label" x={L - 12} y={cy + 4} text-anchor="end">{r.stage}</text>
+          <rect class="v-bar grow" x={L} y={cy - 9} width={x(r.value) - L} height="18" rx="4" />
+          <text x={x(r.value) + 10} y={cy + 4}>{n(r.value)}{r.plus ? '+' : ''} <tspan opacity=".7">({r.date})</tspan></text>
+        </g>
+      );
+    })}
+  </svg>
+  <details>
+    <summary>View data</summary>
+    <table>
+      <thead><tr><th>Stage</th><th>GPUs</th><th>Date</th><th>Source</th></tr></thead>
+      <tbody>{rows.map((r) => <tr><td>{r.stage}</td><td>{n(r.value)}{r.plus ? '+' : ''}</td><td>{r.date}</td><td><a href={r.source} rel="noopener">Official source</a></td></tr>)}</tbody>
+    </table>
+  </details>
+</figure>

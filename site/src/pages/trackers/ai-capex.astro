@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { SITE } from '../../site.config';
+import CapexChart from '../../components/CapexChart.astro';
 import { CAPEX_TRACKER } from '../../data/trackers';
 import { getArticles, articlePath, absolute } from '../../lib/articles';
 const explainer = (await getArticles()).find((a) => a.id === 'hyperscaler-capex-2026-reconciled');
@@ -24,6 +25,8 @@ const jsonLd = [{
       <h1>Big Tech AI capex tracker</h1>
       <p class="dek">What Alphabet, Amazon, Meta and Microsoft say they will spend on capital projects in 2026, on each company’s own basis, with links to the source.</p>
       <p class="meta">Last checked: {fmt(lastChecked)} · Maintained by the {SITE.desk} · <a href="/contact-us/">Report an update</a></p>
+      <CapexChart />
+      <h2>The figures and their basis</h2>
       <div class="prose"><table>
         <thead><tr><th>Company</th><th>2026 guidance</th><th>What the figure includes</th><th>Latest quarter</th><th>Source</th></tr></thead>
         <tbody>{CAPEX_TRACKER.map((r) => (
