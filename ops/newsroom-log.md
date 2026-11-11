@@ -40,3 +40,9 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Maintenance: none beyond the 10 Nov link check above.
 - Social copy: `ops/social/what-is-mcp-model-context-protocol.md`.
 - Alerts: issue #14 updated with the scheduled-publishing fix.
+
+## 2026-11-11 owner update (recorded by the setup session)
+- Done by the owner: Google Search Console sitemaps submitted and indexing requested; Bing Webmaster Tools set up (imported from Search Console).
+- Confirmed: the 10 articles carrying "Reviewed by Aman Mishra" were reviewed by him; keep the byline.
+- Still open for the owner: AdSense European consent message; posting the copy in `ops/social/`; optionally connecting Windsor.ai or Supermetrics for Search Console data.
+- For the Monday review: as of 11 Nov, a `site:globalainews.in` web search returned no pages from the domain. Re-check each week and log when pages start appearing.
