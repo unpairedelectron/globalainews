@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site.config';
+import { TERMS } from '../glossary';
+import { getArticles, articlePath, absolute } from '../lib/articles';
+
+const published = new Map((await getArticles()).map((a) => [a.id, a]));
+const terms = [...TERMS].sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
+const letters = [...new Set(terms.map((t) => t.term[0].toUpperCase()))];
+const jsonLd = [{
+  '@type': 'DefinedTermSet',
+  '@id': `${SITE.url}/glossary/#set`,
+  name: 'AI Glossary',
+  url: `${SITE.url}/glossary/`,
+  hasDefinedTerm: terms.map((t) => ({
+    '@type': 'DefinedTerm',
+    name: t.term,
+    ...(t.aka ? { alternateName: t.aka } : {}),
+    description: t.definition,
+    url: `${SITE.url}/glossary/#${t.id}`,
+    inDefinedTermSet: `${SITE.url}/glossary/#set`,
+  })),
+}, {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'AI Glossary', item: absolute('/glossary/') },
+  ],
+}];
+---
+<Base title={`AI Glossary: ${terms.length} AI Terms Explained Simply`} description={`Plain-English definitions of ${terms.length} AI terms, from agents and tokens to RAG, MCP, hallucination and open weights, with links to our full explainers.`} path="/glossary/" jsonLd={jsonLd}>
+  <div class="wrap">
+    <article class="page glossary">
+      <h1>AI glossary</h1>
+      <p class="dek">{terms.length} AI terms explained in plain English, from agents and tokens to RAG, MCP and open weights. Where we’ve written a full explainer, the term links to it.</p>
+      <nav class="az" aria-label="Jump to letter">{letters.map((l) => <a href={`#letter-${l}`}>{l}</a>)}</nav>
+      <dl>
+        {terms.map((t, i) => {
+          const L = t.term[0].toUpperCase();
+          const first = i === 0 || terms[i - 1].term[0].toUpperCase() !== L;
+          const article = t.slug ? published.get(t.slug) : undefined;
+          return (
+            <>
+              {first && <h2 id={`letter-${L}`} class="az-letter">{L}</h2>}
+              <div class="term" id={t.id}>
+                <dt>{t.term}{t.aka && <span class="aka"> ({t.aka})</span>}</dt>
+                <dd>
+                  {t.definition}
+                  {article && <> <a href={articlePath(article)}>Read our full explainer →</a></>}
+                </dd>
+              </div>
+            </>
+          );
+        })}
+      </dl>
+      <p class="meta">Spotted a definition that could be clearer? <a href="/contact-us/">Tell us</a>.</p>
+    </article>
+  </div>
+</Base>
