@@ -44,5 +44,7 @@ The daily newsroom run appends one entry per day: health result, what was publis
 ## 2026-11-11 owner update (recorded by the setup session)
 - Done by the owner: Google Search Console sitemaps submitted and indexing requested; Bing Webmaster Tools set up (imported from Search Console).
 - Confirmed: the 10 articles carrying "Reviewed by Aman Mishra" were reviewed by him; keep the byline.
-- Still open for the owner: AdSense European consent message; posting the copy in `ops/social/`; optionally connecting Windsor.ai or Supermetrics for Search Console data.
+- Done by the owner (later on 11 Nov): AdSense European consent message turned on.
+- Still open for the owner: posting the copy in `ops/social/`; optionally connecting Windsor.ai or Supermetrics for Search Console data.
+- Checked: ainews-olive.vercel.app (shows a "Global AI News" logo) is not the owner's; its Vercel deployment is disabled (HTTP 402). No action needed; if it reappears copying our articles, report it to Vercel.
 - For the Monday review: as of 11 Nov, a `site:globalainews.in` web search returned no pages from the domain. Re-check each week and log when pages start appearing.
