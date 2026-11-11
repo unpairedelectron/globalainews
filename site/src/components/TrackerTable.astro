@@ -1,0 +1,24 @@
+---
+import type { TrackerRow } from '../data/trackers';
+import { getArticles, articlePath } from '../lib/articles';
+interface Props { rows: TrackerRow[] }
+const published = new Map((await getArticles()).map((a) => [a.id, a]));
+const fmt = (s: string) => new Date(`${s}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+<div class="prose"><table>
+  <thead><tr><th>Item</th><th>Status</th><th>Date</th><th>Details</th><th>Source</th></tr></thead>
+  <tbody>
+    {Astro.props.rows.map((r) => {
+      const a = r.article ? published.get(r.article) : undefined;
+      return (
+        <tr>
+          <td><strong>{r.item}</strong></td>
+          <td>{r.status}</td>
+          <td><time datetime={r.date}>{fmt(r.date)}</time></td>
+          <td>{r.detail}{a && <> <a href={articlePath(a)}>Explainer →</a></>}</td>
+          <td><a href={r.source.url} rel="noopener">{r.source.label}</a><br /><span class="meta">Checked {fmt(r.checked)}</span></td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table></div>

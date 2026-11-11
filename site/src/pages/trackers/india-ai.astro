@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import TrackerTable from '../../components/TrackerTable.astro';
+import { SITE } from '../../site.config';
+import { INDIA_AI_TRACKER } from '../../data/trackers';
+import { absolute } from '../../lib/articles';
+const rows = INDIA_AI_TRACKER.flatMap((s) => s.rows);
+const lastChecked = rows.map((r) => r.checked).sort().at(-1)!;
+const jsonLd = [{
+  '@type': 'Dataset',
+  name: 'India AI Tracker: rules, public compute and foundation models',
+  description: 'Status of India’s AI rules, IndiaAI Mission compute figures and Indian foundation models, each linked to its primary source.',
+  url: absolute('/trackers/india-ai/'),
+  creator: { '@id': `${SITE.url}/#organization` },
+  dateModified: lastChecked,
+  isAccessibleForFree: true,
+  spatialCoverage: 'India',
+  citation: [...new Set(rows.map((r) => r.source.url))],
+}];
+---
+<Base title="India AI Tracker: Rules, GPUs and Indian AI Models" description="Live tracker of India’s AI rules (in force vs draft), IndiaAI Mission GPU and compute figures, and Indian foundation models, with every entry linked to its official source." path="/trackers/india-ai/" jsonLd={jsonLd}>
+  <div class="wrap">
+    <article class="page tracker" style="max-width:1080px">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/trackers/">Trackers</a></li></ol></nav>
+      <h1>India AI tracker</h1>
+      <p class="dek">India’s AI rules, public compute and home-grown models in one place. Every entry links to the official source, with the date we last checked it.</p>
+      <p class="meta">Last checked: {new Date(`${lastChecked}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })} · Maintained by the {SITE.desk} · <a href="/contact-us/">Report an update</a></p>
+      {INDIA_AI_TRACKER.map((s) => (
+        <section>
+          <h2>{s.title}</h2>
+          {s.intro && <p>{s.intro}</p>}
+          <TrackerTable rows={s.rows} />
+        </section>
+      ))}
+      <h2>How to read this tracker</h2>
+      <p>Official AI figures in India describe different stages: a target, GPUs onboarded by providers, shared capacity, and hours used. They are listed separately here and should not be added together. Rules are marked as in force only when notified in the Gazette and past their start date.</p>
+    </article>
+  </div>
+</Base>

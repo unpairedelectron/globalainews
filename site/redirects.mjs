@@ -30,7 +30,6 @@ export const redirects = {
   '/topic/ai/': '/latest/',
   '/topic/india/': '/india/',
   '/industry/': '/business/',
-  '/authors/': '/about-us/',
   '/about/': '/about-us/',
   '/contact/': '/contact-us/',
   '/code-of-ethics/': '/editorial-policy/',

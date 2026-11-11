@@ -7,6 +7,7 @@ export interface CategoryHub {
   intro: string[];
   startHere: string[];
   coverage: string[];
+  tracker?: { label: string; path: string };
 }
 
 export const HUBS: Record<CategoryKey, CategoryHub> = {
@@ -39,6 +40,7 @@ export const HUBS: Record<CategoryKey, CategoryHub> = {
       'India is building its own AI capacity in public: the IndiaAI Mission’s shared GPU programme, home-grown foundation models, rules for synthetic media, and a fast-growing data-centre industry. This section follows that story closely, from the official releases and tender documents rather than the headlines.',
       'Big numbers are common in Indian AI announcements. We explain what each one measures—GPUs installed versus tendered versus allocated, models announced versus downloadable—so readers can tell progress from plans.',
     ],
+    tracker: { label: 'India AI tracker: rules, GPUs and models', path: '/trackers/india-ai/' },
     startHere: ['india-ai-compute-access-2026', 'india-ai-consultation-paper-what-is-law', 'indiaai-10000-gpu-tender-explained', 'indiaai-eka-1-dhir-models-explained'],
     coverage: [
       'Primary sources first: Press Information Bureau releases, MeitY and IndiaAI documents, tender papers and company filings.',
@@ -51,6 +53,7 @@ export const HUBS: Record<CategoryKey, CategoryHub> = {
       'AI runs on chips, data centres and electricity, and the money flowing into them is now one of the largest investment cycles in the world. This section explains the physical economy behind AI: capital spending, compute capacity, energy and water use, and what those constraints mean for prices and products.',
       'We read company filings and energy-agency reports directly, and explain why figures from different companies or agencies often can’t simply be added together.',
     ],
+    tracker: { label: 'Big Tech AI capex tracker', path: '/trackers/ai-capex/' },
     startHere: ['hyperscaler-capex-2026-reconciled', 'weekly-deep-dive-cost-of-intelligence', 'india-ai-compute-access-2026'],
     coverage: [
       'Spending figures come from earnings releases, filings and calls, with the period and accounting basis stated.',

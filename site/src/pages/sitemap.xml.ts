@@ -10,10 +10,13 @@ export async function GET() {
     const a = all.filter((x) => x.data.category === key);
     return a.length ? new Date(Math.max(...a.map((x) => lastModified(x).getTime()))) : newest;
   };
+  const briefCount = all.filter((a) => a.data.type === 'brief').length;
   const urls: { loc: string; lastmod: Date }[] = [
+    ...(briefCount >= 3 ? [{ loc: '/wire/', lastmod: newest }] : []),
     { loc: '/', lastmod: newest },
     { loc: '/latest/', lastmod: newest },
     { loc: '/glossary/', lastmod: new Date('2026-11-11') },
+    ...['/trackers/', '/trackers/india-ai/', '/trackers/ai-capex/', '/authors/', '/authors/aman-mishra/', '/authors/shiv-shakti-mishra/'].map((loc) => ({ loc, lastmod: new Date('2026-11-11') })),
     ...Object.entries(CATEGORIES).map(([key, c]) => ({ loc: c.path, lastmod: latestIn(key) })),
     ...all.map((a) => ({ loc: articlePath(a), lastmod: lastModified(a) })),
     ...['/about-us/', '/editorial-policy/', '/contact-us/', '/privacy/', '/terms/', '/disclaimer/'].map((loc) => ({ loc, lastmod: new Date('2026-11-08') })),

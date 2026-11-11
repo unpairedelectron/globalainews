@@ -1,7 +1,19 @@
 import { SITE } from '../site.config';
 
 export function GET() {
-  const body = `User-agent: *
+  const body = `User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-News
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: *
 Allow: /
 Disallow: /api/
 
