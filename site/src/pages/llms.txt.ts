@@ -19,6 +19,6 @@ export async function GET() {
     for (const a of items) lines.push(`- [${a.data.title}](${absolute(articlePath(a))}): ${a.data.description}`);
     lines.push('');
   }
-  lines.push('## About', '', `- [About us](${absolute('/about-us/')})`, `- [Editorial policy](${absolute('/editorial-policy/')})`, `- [Contact](${absolute('/contact-us/')})`, '');
+  lines.push('## About', '', `- [AI glossary](${absolute('/glossary/')})`, `- [About us](${absolute('/about-us/')})`, `- [Editorial policy](${absolute('/editorial-policy/')})`, `- [Contact](${absolute('/contact-us/')})`, '');
   return new Response(lines.join('\n'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }
