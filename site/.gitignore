@@ -5,3 +5,4 @@ dist-next/
 dist-old/
 dist-schedule-test/
 .content-sha
+dist-live-*/

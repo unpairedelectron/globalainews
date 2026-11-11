@@ -21,7 +21,7 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Note: AIKosh (aikosh.indiaai.gov.in) timed out from this environment, so EKA-1's AIKosh listing could not be checked; the article says so.
 - Maintenance (backlog upkeep): annotated the "Indian LLMs compared" topic; added 3 new topics to `ops/topics.md`.
 - Social copy: `ops/social/indiaai-eka-1-dhir-models-explained.md`.
-- Alerts: none.
+- Alerts: none at merge time. After the merge, the live content sync failed (`EXDEV` renaming the articles folder). Fixed in PR #13 and synced to Replit (`9b395c2`), but the Replit publish was blocked by a session permission check, so issue #14 asks the owner to publish. Until then the 15 Nov article can't reach the server; already-deployed scheduled articles are unaffected.
 
 ### Weekly review (Monday)
 - No Search Console connector is available, so no query/CTR data was reviewed. Trending check via web search surfaced India items (MeitY DEPA for AI Training, IndiaAI EKA-1/Dhīr, Google's Vizag AI hub); 3 topics added to the backlog.
