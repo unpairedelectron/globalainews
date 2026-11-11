@@ -27,3 +27,16 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - No Search Console connector is available, so no query/CTR data was reviewed. Trending check via web search surfaced India items (MeitY DEPA for AI Training, IndiaAI EKA-1/Dhīr, Google's Vizag AI hub); 3 topics added to the backlog.
 - Last 7 days: published 2 Nov (India AI rules), 3 Nov (GitHub Octoverse), 5 Nov (Gemini 4 Carbon), 7 Nov (Anthropic S-1 governance). Fixes: `package-lock.json` now uses the public npm registry (PR #9). Alerts: none.
 - Coming week (already queued): 9 hyperscaler capex, 10 what is an AI agent, 11 OpenAI containment incident, 12 context window vs memory vs RAG, 13 IndiaAI GPU tender, 14 open weights vs open source, 15 EKA-1 and Dhīr. Next free slots: 19 Nov, then 21 Nov onwards.
+
+## 2026-11-10 (interrupted run, recorded 2026-11-11)
+- Health: `verify-deploy.sh` 97 passed, 0 failed, 2 info. `hyperscaler-capex-2026-reconciled` (due 9 Nov) still 404: scheduled rebuilds were failing on Replit with the same EXDEV-class rename error as the content sync.
+- Fix: PR #16 (merged) makes scheduled publishing switch to a fresh build folder instead of renaming `dist`; tested locally with `dist` on its own filesystem (old code failed, new code went live). Needs the Replit publish already requested in #14.
+- Article: the Australian AI-regulator story was dropped because its primary source (minister.industry.gov.au) was unreachable from this environment. The MCP explainer was drafted but the run was interrupted before shipping; it ships in the 2026-11-11 run.
+- Maintenance (link health, articles 4–6 by age): 4 of 5 source links return 200; `iea.org/reports/energy-and-ai/executive-summary` returns 403 (bot blocking, inconclusive, left unchanged).
+
+## 2026-11-11 newsroom run
+- Health: `verify-deploy.sh` 97 passed, 0 failed, 2 info. Live server still on old code: content sync reports EXDEV and `hyperscaler-capex-2026-reconciled` (due 9 Nov) and `what-is-an-ai-agent` (due 10 Nov) return 404. Fixes #13 and #16 are merged and await the Replit publish requested in issue #14.
+- Article: **What Is MCP (Model Context Protocol)? A Plain-English Guide for 2026** (`what-is-mcp-model-context-protocol`), scheduled 2026-11-19T07:30:00Z, 8 primary sources (Anthropic launch post; MCP spec, docs, changelog and security guide), all re-fetched and checked on 11 Nov. Volume: every 7-day window up to 19 Nov holds at most 7 articles.
+- Maintenance: none beyond the 10 Nov link check above.
+- Social copy: `ops/social/what-is-mcp-model-context-protocol.md`.
+- Alerts: issue #14 updated with the scheduled-publishing fix.
