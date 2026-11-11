@@ -25,7 +25,6 @@ export const redirects = {
   '/essays/': '/latest/',
   '/topics/': '/latest/',
   '/data/': '/latest/',
-  '/glossary/': '/latest/',
   '/ask/': '/latest/',
   '/search/': '/latest/',
   '/topic/ai/': '/latest/',

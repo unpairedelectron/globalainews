@@ -196,3 +196,12 @@ h1, h2, h3 { line-height: 1.15; letter-spacing: -0.01em; }
 .hub-coverage h2 { font-family: var(--serif); font-weight: 400; font-size: 28px; margin: 0 0 10px; }
 .hub-coverage li { margin: 6px 0; }
 .hub-coverage p { color: var(--muted); font-size: 15px; }
+
+.glossary .az { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 18px; }
+.glossary .az a { display: inline-block; min-width: 32px; text-align: center; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; text-decoration: none; font-weight: 600; background: var(--surface); }
+.glossary dl { margin: 0; }
+.glossary .az-letter { font-family: var(--serif); font-weight: 400; font-size: 30px; margin: 30px 0 6px; border-bottom: 1px solid var(--line); scroll-margin-top: 120px; }
+.glossary .term { padding: 12px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 120px; }
+.glossary dt { font-weight: 700; font-size: 18px; }
+.glossary .aka { font-weight: 400; color: var(--muted); }
+.glossary dd { margin: 4px 0 0; line-height: 1.65; }

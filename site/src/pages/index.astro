@@ -35,6 +35,11 @@ const jsonLd = [
       <div class="grid grid-3">{top.map((a, i) => <ArticleCard article={a} eager={i < 3} />)}</div>
     </section>
 
+    <section class="section" aria-labelledby="gloss-h">
+      <div class="section-head"><h2 id="gloss-h">New to AI? Start with the basics</h2><a href="/glossary/">AI glossary →</a></div>
+      <p style="margin:0;color:var(--muted);max-width:760px">Plain-English definitions of the terms behind the headlines: <a href="/glossary/#ai-agent">AI agent</a>, <a href="/glossary/#token">token</a>, <a href="/glossary/#rag">RAG</a>, <a href="/glossary/#hallucination">hallucination</a>, <a href="/glossary/#open-weights">open weights</a>, <a href="/glossary/#mcp">MCP</a> and more.</p>
+    </section>
+
     {sections.map((key) => {
       const items = all.filter((a) => a.data.category === key && !shown.has(a.id)).slice(0, 4);
       return items.length > 0 && (

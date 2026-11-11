@@ -13,6 +13,7 @@ export async function GET() {
   const urls: { loc: string; lastmod: Date }[] = [
     { loc: '/', lastmod: newest },
     { loc: '/latest/', lastmod: newest },
+    { loc: '/glossary/', lastmod: new Date('2026-11-11') },
     ...Object.entries(CATEGORIES).map(([key, c]) => ({ loc: c.path, lastmod: latestIn(key) })),
     ...all.map((a) => ({ loc: articlePath(a), lastmod: lastModified(a) })),
     ...['/about-us/', '/editorial-policy/', '/contact-us/', '/privacy/', '/terms/', '/disclaimer/'].map((loc) => ({ loc, lastmod: new Date('2026-11-08') })),
