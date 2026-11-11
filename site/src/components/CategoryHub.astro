@@ -1,0 +1,46 @@
+---
+import ArticleCard from './ArticleCard.astro';
+import ArticleList from './ArticleList.astro';
+import { HUBS } from '../category-hubs';
+import { CATEGORIES, type CategoryKey } from '../site.config';
+import type { Article } from '../lib/articles';
+
+interface Props { categoryKey: CategoryKey; items: Article[] }
+const { categoryKey, items } = Astro.props;
+const cat = CATEGORIES[categoryKey];
+const hub = HUBS[categoryKey];
+const bySlug = new Map(items.map((a) => [a.id, a]));
+const picks = hub.startHere.map((s) => bySlug.get(s)).filter((a): a is Article => Boolean(a)).slice(0, 3);
+const pickIds = new Set(picks.map((a) => a.id));
+const rest = items.filter((a) => !pickIds.has(a.id));
+---
+<header class="page-head">
+  <h1>{cat.name}</h1>
+  <p>{cat.description}</p>
+</header>
+
+<section class="hub-intro">
+  {hub.intro.map((p) => <p>{p}</p>)}
+</section>
+
+{picks.length > 0 && (
+  <section class="section" aria-labelledby="start-h">
+    <div class="section-head"><h2 id="start-h">Start here</h2></div>
+    <div class="grid grid-3">{picks.map((a, i) => <ArticleCard article={a} eager={i < 2} />)}</div>
+  </section>
+)}
+
+{rest.length > 0 && (
+  <section class="section" aria-labelledby="all-h">
+    <div class="section-head"><h2 id="all-h">{picks.length ? 'All stories' : 'Latest'}</h2></div>
+    <ArticleList articles={rest} showCategory={false} />
+  </section>
+)}
+
+{items.length === 0 && <p>New stories in this section are on the way. Meanwhile, see the <a href="/latest/">latest stories</a>.</p>}
+
+<section class="hub-coverage" aria-labelledby="how-h">
+  <h2 id="how-h">How we cover {cat.name}</h2>
+  <ul>{hub.coverage.map((c) => <li>{c}</li>)}</ul>
+  <p>Full standards: <a href="/editorial-policy/">editorial policy</a> · Spotted an error? <a href="/contact-us/">Tell us</a>.</p>
+</section>

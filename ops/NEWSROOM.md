@@ -69,6 +69,8 @@ Do **one** of these per run, rotating:
 - **Corrections:** if any source behind a live article has changed materially (deadline moved, figure revised), update the article, set `updated:`, and add a `## Update` note at the end saying what changed and when.
 - **Refresh a guide** (`type: "guide"`) older than 30 days: re-check vendor docs, update facts, set `updated:`.
 - **Link health:** check the outbound source links of the 3 oldest articles; replace dead links with an archived or official equivalent. A connection refused by this environment's network policy is *inconclusive*, not dead; only act on real 404/410 responses.
+- **Upgrade a thin article** (priority until done): `small-models-serious-workflows`, `reliability-is-the-new-ai-moat`, `quiet-race-watermark-everything-ai-makes`, `ai-models-antibiotic-discovery`, `study-finds-word-cues-can-override-game-theory-choices-in-llms` each rely on one or two sources and lack an FAQ. Re-research one per run from primary sources: verify every existing claim, add newer primary sources, add a FAQ (4–6 questions) and internal links, keep the URL and slug, set `updated:`, and add a `## Update` note saying what changed. Mark it done in the log.
+- **Hub picks:** if a newly published article is a better starting point for its section, update `startHere` in `site/src/category-hubs.ts` (a code file, so it needs a Replit publish; batch these changes, at most once a week).
 - **Backlog upkeep:** mark published topics `[x]` in `ops/topics.md` and add 3 new well-sourced ideas.
 
 ## Step 6: Ship
