@@ -5,8 +5,9 @@ import AdSlot from '../components/AdSlot.astro';
 import Share from '../components/Share.astro';
 import { render } from 'astro:content';
 import { SITE } from '../site.config';
+import { PEOPLE, personByName } from '../data/people';
 import {
-  absolute, articlePath, category, formatDate, lastModified, ogImage, readingTime, related, wordCount,
+  absolute, articlePath, category, formatIST, isoIST, lastModified, ogImage, readingTime, related, sourceUrls, wordCount,
   type Article,
 } from '../lib/articles';
 
@@ -20,6 +21,10 @@ const modified = lastModified(article);
 const toc = headings.filter((h) => h.depth === 2 && !/^(Sources|Methodology note|FAQ)$/i.test(h.text));
 const more = related(article, all, 3);
 const isGuide = d.type === 'guide';
+const author = d.author ? PEOPLE[d.author] : undefined;
+const reviewer = personByName(d.reviewer);
+const citations = sourceUrls(article);
+const personLd = (p: NonNullable<typeof author>) => ({ '@type': 'Person', name: p.name, jobTitle: p.jobTitle, url: absolute(`/authors/${p.slug}/`) });
 const baseTitle = d.seoTitle ?? d.title;
 const pageTitle = baseTitle.length + SITE.name.length + 3 <= 65 ? `${baseTitle} | ${SITE.name}` : baseTitle;
 
@@ -31,14 +36,16 @@ const jsonLd = [
     headline: d.title.length > 110 ? (d.seoTitle ?? d.title.slice(0, 110)) : d.title,
     description: d.description,
     image: [absolute(ogImage(article)), ...(d.image ? [absolute(d.image)] : [])],
-    datePublished: d.date.toISOString(),
-    dateModified: modified.toISOString(),
+    datePublished: isoIST(d.date),
+    dateModified: isoIST(modified),
     articleSection: cat.name,
     keywords: d.tags.join(', '),
     wordCount: wordCount(article),
     inLanguage: SITE.lang,
     isAccessibleForFree: true,
-    author: { '@type': 'Organization', name: SITE.desk, url: `${SITE.url}/about-us/` },
+    author: author ? personLd(author) : { '@type': 'Organization', name: SITE.desk, url: `${SITE.url}/about-us/` },
+    ...(reviewer ? { reviewedBy: personLd(reviewer) } : {}),
+    ...(citations.length ? { citation: citations } : {}),
     publisher: { '@id': `${SITE.url}/#organization` },
   },
   {
@@ -75,10 +82,10 @@ const jsonLd = [
       <h1>{d.title}</h1>
       <p class="dek">{d.description}</p>
       <div class="byline">
-        <span>By <strong><a href="/about-us/" style="color:inherit">{SITE.desk}</a></strong></span>
-        {d.reviewer && <span>Reviewed by <strong>{d.reviewer}</strong></span>}
-        <span>Published <time datetime={d.date.toISOString()}>{formatDate(d.date)}</time></span>
-        {modified > d.date && <span>Updated <time datetime={modified.toISOString()}>{formatDate(modified)}</time></span>}
+        <span>By <strong>{author ? <a href={`/authors/${author.slug}/`} style="color:inherit">{author.name}</a> : <a href="/about-us/" style="color:inherit">{SITE.desk}</a>}</strong></span>
+        {reviewer ? <span>Reviewed by <strong><a href={`/authors/${reviewer.slug}/`} style="color:inherit">{reviewer.name}</a></strong>, {reviewer.jobTitle}</span> : d.reviewer && <span>Reviewed by <strong>{d.reviewer}</strong></span>}
+        <span>Published <time datetime={isoIST(d.date)}>{formatIST(d.date)}</time></span>
+        {modified > d.date && <span>Updated <time datetime={isoIST(modified)}>{formatIST(modified)}</time></span>}
         <span>{readingTime(article)} min read</span>
       </div>
 
@@ -111,6 +118,13 @@ const jsonLd = [
       {d.tags.length > 0 && <ul class="tags" aria-label="Topics">{d.tags.map((t) => <li>{t}</li>)}</ul>}
 
       <Share url={absolute(path)} title={d.title} />
+
+      {[author, reviewer].filter((p, i, arr) => p && arr.indexOf(p) === i).map((p) => p && (
+        <div class="about-box person-box">
+          <img src={p.image ?? '/logo.svg'} alt="" width="44" height="44" />
+          <p><strong><a href={`/authors/${p.slug}/`}>{p.name}</a>, {p.jobTitle}{p === reviewer && p !== author ? ' (reviewer)' : ''}.</strong> {p.bio[0]}</p>
+        </div>
+      ))}
 
       <div class="about-box">
         <img src="/logo.svg" alt="" width="44" height="44" />

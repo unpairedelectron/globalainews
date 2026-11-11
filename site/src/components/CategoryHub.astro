@@ -21,6 +21,7 @@ const rest = items.filter((a) => !pickIds.has(a.id));
 
 <section class="hub-intro">
   {hub.intro.map((p) => <p>{p}</p>)}
+  {hub.tracker && <p><strong>Data:</strong> <a href={hub.tracker.path}>{hub.tracker.label} →</a></p>}
 </section>
 
 {picks.length > 0 && (

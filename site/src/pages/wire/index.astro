@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../site.config';
+import { getArticles, articlePath, category, formatIST, isoIST } from '../../lib/articles';
+const briefs = (await getArticles()).filter((a) => a.data.type === 'brief');
+// Keep the page out of the index until there is enough on it to be useful.
+const thin = briefs.length < 3;
+---
+<Base title={`AI News Wire: Short, Sourced AI Updates | ${SITE.name}`.slice(0, 65)} description="Short, source-linked updates on the day’s AI developments: what changed, why it matters, and a link to the primary announcement or filing." path="/wire/" noindex={thin}>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>AI news wire</h1>
+      <p>Short updates on the day’s AI developments. Each one links to the primary announcement, filing or paper, and says what changed and why it matters. For full analysis, see our <a href="/latest/">explainers</a>.</p>
+    </header>
+    {briefs.length === 0 && <p>The wire starts with the next AI development worth reporting. Meanwhile, read the <a href="/latest/">latest stories</a>.</p>}
+    <ol class="wire">
+      {briefs.map((b) => (
+        <li>
+          <time datetime={isoIST(b.data.date)}>{formatIST(b.data.date)}</time>
+          <a class="kicker" href={category(b).path}>{category(b).name}</a>
+          <h2><a href={articlePath(b)}>{b.data.title}</a></h2>
+          <ul>{b.data.takeaways.slice(0, 3).map((t) => <li>{t}</li>)}</ul>
+        </li>
+      ))}
+    </ol>
+  </div>
+</Base>
