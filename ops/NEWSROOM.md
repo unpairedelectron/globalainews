@@ -12,7 +12,7 @@ Read `site/CONTENT-GUIDE.md` and `PIPELINE.md` before writing.
 
 1. **Accuracy over output.** Every factual claim (number, date, name, quote, product capability) must come from a source you actually fetched and read today, and must appear in the numbered Sources list. If you can't verify a claim, delete it. If you can't verify the story, don't publish it; pick an evergreen topic instead.
 2. **Primary sources first.** At least 2 primary sources per article: official company posts or filings, government or legal texts, papers. Never build a story on a single blog, aggregator, newsletter or social post. Model names, release dates and benchmark numbers must come from the company's own page or a paper.
-3. **Never invent** quotes, people, sources, URLs, statistics or images of real events. Never add a named reviewer or author.
+3. **Never invent** quotes, people, sources, URLs, statistics or images of real events. Never add a named reviewer or author, and never add anyone to `site/src/data/people.ts`: only real people who have agreed to it, added by the owner. Articles you write carry the desk byline with no `reviewer:`; only an article a real person actually reviewed may name them.
 4. **Volume limits** from `ops/autonomy.json`: at most `maxNewArticlesPerDay` new articles per run, and at most `maxNewArticlesPerWeek` articles whose **publish dates** fall in any 7-day window (count the scheduled queue too). Quality beats quantity: Google penalises scaled low-value content.
 5. **Never change**: legal or trust pages (`privacy`, `terms`, `about-us`, `contact-us`, `editorial-policy`, `disclaimer`), `site.config.ts` publisher, ads or analytics settings, `redirects.mjs` (except adding a redirect for a URL you rename), `artifact.toml`, `.replit`, or `ops/autonomy.json`. Never delete an article; correct it instead.
 6. **Git safety:** work on a branch `newsroom/YYYY-MM-DD`. Never force-push, rewrite history, or push directly to `main` except through a merged pull request.
@@ -57,7 +57,13 @@ Skip to Step 5 if the volume limits are reached or `paused` is true.
    - 2–4 internal links, **only** to articles already live on or before this article's date.
 3. Generate images: `node scripts/make-cards.mjs` (requires the system Playwright; if unavailable, omit `image` and the default social card is used).
 
-## Step 4: Verify (separate pass; be adversarial)
+## Step 3b: Wire briefs (optional, after the main article)
+For a significant development in the last 24 hours that doesn't need a full explainer, publish a **brief**: `type: "brief"` in front matter, 150–600 words, at least 1 primary source, 3 takeaways phrased as *What changed / Why it matters / What to watch*, and a methodology note disclosing AI assistance. Date it now (it goes live with the next sync). It appears at `/wire/` and in the Google News sitemap. Limits: at most `maxBriefsPerDay` from `ops/autonomy.json`. A brief must meet the same accuracy rules as an article (Step 4). Never write a brief from secondary coverage alone.
+
+## Step 3c: Trackers
+`site/src/data/trackers.ts` powers `/trackers/india-ai/` and `/trackers/ai-capex/`. When an article or brief verifies a new official figure that belongs in a tracker (a rule notified, a tender result, new capex guidance, a model release), add or update that row with its primary source URL and today's date as `checked`. Never add a row from secondary reporting alone. This is a code file, so batch tracker updates and ship them with the weekly code changes (Step 6.6).
+
+ (separate pass; be adversarial)
 1. Re-read the article as a sceptical fact-checker. For **every** sentence containing a number, date, name, product claim or quote, confirm it against the fetched source text. Fix or delete anything that doesn't match exactly.
 2. Check that each Sources URL was actually fetched and supports what it's cited for.
 3. Check the headline and takeaways are fully supported by the body.

@@ -3,10 +3,11 @@ import Base from '../layouts/Base.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import ArticleList from '../components/ArticleList.astro';
 import { SITE, CATEGORIES, type CategoryKey } from '../site.config';
-import { getArticles, articlePath, category, formatDate, readingTime } from '../lib/articles';
+import { getArticles, articlePath, category, formatDate, formatIST, isoIST, readingTime } from '../lib/articles';
 
 const all = await getArticles();
 const news = all.filter((a) => a.data.type === 'article');
+const briefs = all.filter((a) => a.data.type === 'brief').slice(0, 5);
 const [lead, ...rest] = news;
 const top = rest.slice(0, 6);
 const shown = new Set([lead, ...top].map((a) => a.id));
@@ -27,6 +28,13 @@ const jsonLd = [
           <p class="meta"><time datetime={lead.data.date.toISOString()}>{formatDate(lead.data.date)}</time> · {readingTime(lead)} min read</p>
         </div>
         {lead.data.image && <a href={articlePath(lead)} tabindex="-1" aria-hidden="true"><img class="card-img" src={lead.data.image} alt="" width="1200" height="675" fetchpriority="high" /></a>}
+      </section>
+    )}
+
+    {briefs.length > 0 && (
+      <section class="section" aria-labelledby="wire-h">
+        <div class="section-head"><h2 id="wire-h">AI news wire</h2><a href="/wire/">All updates →</a></div>
+        <ol class="wire">{briefs.map((b) => <li><time datetime={isoIST(b.data.date)}>{formatIST(b.data.date)}</time><h2><a href={articlePath(b)}>{b.data.title}</a></h2></li>)}</ol>
       </section>
     )}
 

@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../site.config';
+import { PEOPLE } from '../../data/people';
+const people = Object.values(PEOPLE);
+---
+<Base title={`Our Team: Editors and Publisher | ${SITE.name}`} description={`Who runs ${SITE.name}: the editor who reviews our reporting and the publisher responsible for the site, with their roles and responsibilities.`} path="/authors/">
+  <div class="wrap">
+    <article class="page">
+      <h1>Our team</h1>
+      <p class="dek">{SITE.name} is a small, independent publication. These are the people accountable for what we publish.</p>
+      {people.map((p) => (
+        <section class="person-card">
+          <h2><a href={`/authors/${p.slug}/`}>{p.name}</a></h2>
+          <p class="meta">{p.jobTitle} · {p.location}</p>
+          <p>{p.bio[0]}</p>
+        </section>
+      ))}
+      <h2>How articles are produced</h2>
+      <p>Articles are researched and drafted with AI tools and published under the byline of the {SITE.desk}, following our <a href="/editorial-policy/">editorial policy</a>: primary sources, a separate claim-by-claim verification step and open corrections. When an editor has personally reviewed an article, it names them.</p>
+    </article>
+  </div>
+</Base>

@@ -13,10 +13,12 @@ const articles = defineCollection({
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),
     reviewer: z.string().optional(),
+    // Slug of a real person in src/data/people.ts who wrote the article.
+    author: z.string().optional(),
     image: z.string().optional(),
     imageAlt: z.string().optional(),
     takeaways: z.array(z.string()).min(2).max(6),
-    type: z.enum(['article', 'guide']).default('article'),
+    type: z.enum(['article', 'guide', 'brief']).default('article'),
     draft: z.boolean().default(false),
   }),
 });

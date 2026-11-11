@@ -23,7 +23,29 @@ export async function getArticles(): Promise<Article[]> {
 }
 
 export function articlePath(a: Article): string {
-  return a.data.type === 'guide' ? `/reports/${a.id}/` : `/article/${a.id}/`;
+  if (a.data.type === 'guide') return `/reports/${a.id}/`;
+  if (a.data.type === 'brief') return `/wire/${a.id}/`;
+  return `/article/${a.id}/`;
+}
+
+// India Standard Time display, e.g. "11 November 2026, 13:00 IST".
+export function formatIST(d: Date): string {
+  // Date-only entries (stored as midnight UTC) have no meaningful time.
+  if (d.getUTCHours() === 0 && d.getUTCMinutes() === 0) return formatDate(d);
+  const s = d.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' });
+  return `${s.replace(' at ', ', ')} IST`;
+}
+
+// ISO 8601 with the +05:30 offset, e.g. 2026-11-11T13:00:00+05:30.
+export function isoIST(d: Date): string {
+  const t = new Date(d.getTime() + 330 * 60_000).toISOString().slice(0, 19);
+  return `${t}+05:30`;
+}
+
+// Source URLs from an article's "## Sources" section (for JSON-LD citation).
+export function sourceUrls(a: Article): string[] {
+  const block = (a.body ?? '').split(/^## Sources/m)[1]?.split(/^## /m)[0] ?? '';
+  return [...new Set([...block.matchAll(/https?:\/\/[^\s)>\]]+/g)].map((m) => m[0].replace(/[.,;]+$/, '')))];
 }
 
 export function absolute(path: string): string {

@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { SITE, ADS, ANALYTICS, CATEGORIES, NAV } from '../site.config';
+import { getArticles } from '../lib/articles';
 
 interface Props {
   title: string; // full <title>
@@ -54,6 +55,7 @@ const org = {
 };
 const graph = { '@context': 'https://schema.org', '@graph': [org, ...jsonLd] };
 const loadAds = ads && !noindex;
+const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
 ---
 <!doctype html>
 <html lang={SITE.lang}>
@@ -132,6 +134,7 @@ const loadAds = ads && !noindex;
       <nav class="nav" aria-label="Sections">
         <ul>
           <li><a href="/latest/" aria-current={current === '/latest/' ? 'page' : undefined}>Latest</a></li>
+          {hasWire && <li><a href="/wire/" aria-current={current === '/wire/' ? 'page' : undefined}>Wire</a></li>}
           {NAV.map((key) => (
             <li><a href={CATEGORIES[key].path} aria-current={current === CATEGORIES[key].path ? 'page' : undefined}>{CATEGORIES[key].name}</a></li>
           ))}
@@ -155,12 +158,14 @@ const loadAds = ads && !noindex;
             <ul>
               {Object.values(CATEGORIES).map((c) => <li><a href={c.path}>{c.name}</a></li>)}
               <li><a href="/glossary/">AI glossary</a></li>
+              <li><a href="/trackers/">Trackers</a></li>
             </ul>
           </div>
           <div>
             <h2>About</h2>
             <ul>
               <li><a href="/about-us/">About us</a></li>
+              <li><a href="/authors/">Our team</a></li>
               <li><a href="/editorial-policy/">Editorial policy</a></li>
               <li><a href="/editorial-policy/#corrections">Corrections</a></li>
               <li><a href="/contact-us/">Contact</a></li>
