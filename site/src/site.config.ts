@@ -33,9 +33,11 @@ export const ADS = {
   // AdSense (Ads -> By ad unit) and paste its numeric data-ad-slot ID here.
   // While a value is empty, that placement renders nothing.
   units: {
-    inArticle: '', // "In-article" unit: inside article text, between sections
-    display: '',   // "Display" unit, responsive: end of article, homepage, lists
-    rail: '',      // "Display" unit, vertical: desktop right rail beside articles
+    mid: '1369592419',  // "GAN In-Article" (In-article): between sections inside articles
+    end: '1113775614',  // "Article Footer" (Display): end of article, before Read next
+    rail: '4147133064', // "Article Sidebar" (Display): desktop sticky right rail, 300x600
+    home: '3739938958', // "Homepage Bottom" (Display): homepage between sections
+    list: '7649161359', // "GAN Feed In-Content" (Display): inside Latest / section lists
   },
 };
 

@@ -9,7 +9,7 @@ import { ADS } from '../site.config';
 type Place = 'mid' | 'mid2' | 'end' | 'rail' | 'home' | 'list';
 interface Props { place: Place }
 const { place } = Astro.props;
-const unit = place === 'rail' ? ADS.units.rail : place === 'mid' || place === 'mid2' ? ADS.units.inArticle : ADS.units.display;
+const unit = ADS.units[place === 'mid2' ? 'mid' : place];
 const active = /^\d+$/.test(unit);
 const inArticle = place === 'mid' || place === 'mid2';
 ---
