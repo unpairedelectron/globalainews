@@ -4,6 +4,7 @@ import ArticleCard from '../components/ArticleCard.astro';
 import AdSlot from '../components/AdSlot.astro';
 import Share from '../components/Share.astro';
 import ListenButton from '../components/ListenButton.astro';
+import Newsletter from '../components/Newsletter.astro';
 import { render } from 'astro:content';
 import { SITE } from '../site.config';
 import { PEOPLE, personByName } from '../data/people';
@@ -73,6 +74,13 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
   <div class="wrap">
+    <div class="article-shell">
+    {toc.length >= 4 && (
+      <nav class="toc-float" aria-label="In this article">
+        <p class="eyebrow">In this article</p>
+        <ol>{toc.map((h) => <li><a href={`#${h.slug}`} data-toc={h.slug}>{h.text}</a></li>)}</ol>
+      </nav>
+    )}
     <article class="article">
       <nav class="crumbs" aria-label="Breadcrumb">
         <ol>
@@ -135,8 +143,11 @@ const jsonLd = [
         <p><strong>{SITE.desk}</strong> explains AI news using primary sources: filings, official documents, papers and company announcements. Claims made by companies are attributed to them. Spotted an error? <a href="/contact-us/">Tell us</a> — we correct mistakes openly under our <a href="/editorial-policy/">editorial policy</a>.</p>
       </div>
 
+      <Newsletter />
+
       <AdSlot slot="afterArticle" />
     </article>
+    </div>
 
     {more.length > 0 && (
       <section class="related" aria-labelledby="related-h">
