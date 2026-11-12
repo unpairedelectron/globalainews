@@ -1,0 +1,37 @@
+---
+// Three-way theme switch: auto (device) -> light -> dark. Choice is saved per
+// reader in localStorage; the head script in Base.astro applies it before paint.
+---
+<button class="theme-btn" type="button" data-theme-toggle aria-label="Colour theme: automatic" title="Colour theme: automatic">
+  <svg class="t-auto" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>
+  <svg class="t-light" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  <svg class="t-dark" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+</button>
+
+<style is:global>
+  .theme-btn { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--surface); color: var(--muted); cursor: pointer; transition: border-color .2s, color .2s, transform .3s var(--ease); }
+  .theme-btn:hover { border-color: var(--accent); color: var(--accent); transform: rotate(-15deg); }
+  .theme-btn svg { display: none; grid-area: 1 / 1; }
+  :root:not([data-theme]) .theme-btn .t-auto,
+  :root[data-theme='light'] .theme-btn .t-light,
+  :root[data-theme='dark'] .theme-btn .t-dark { display: block; }
+</style>
+
+<script>
+const order = ['auto', 'light', 'dark'] as const;
+const label: Record<string, string> = { auto: 'automatic', light: 'light', dark: 'dark' };
+const root = document.documentElement;
+const current = () => (root.dataset.theme as 'light' | 'dark' | undefined) ?? 'auto';
+function apply(mode: (typeof order)[number]) {
+  if (mode === 'auto') delete root.dataset.theme; else root.dataset.theme = mode;
+  try { mode === 'auto' ? localStorage.removeItem('gan-theme') : localStorage.setItem('gan-theme', mode); } catch {}
+  document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((b) => {
+    b.setAttribute('aria-label', `Colour theme: ${label[mode]}`); b.title = `Colour theme: ${label[mode]}`;
+  });
+  window.dispatchEvent(new Event('themechange'));
+}
+document.querySelectorAll('[data-theme-toggle]').forEach((b) => b.addEventListener('click', () => {
+  apply(order[(order.indexOf(current()) + 1) % order.length]);
+}));
+apply(current());
+</script>

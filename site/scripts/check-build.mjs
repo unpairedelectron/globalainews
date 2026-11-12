@@ -27,6 +27,8 @@ fs.writeFileSync(path.join(ROOT, '_headers'), `/*
   Cache-Control: public, max-age=2592000
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
+/sw.js
+  Cache-Control: no-cache
 `);
 
 // ---- SEO checks

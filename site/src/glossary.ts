@@ -53,3 +53,28 @@ export const TERMS: Term[] = [
   { term: 'Watermarking', id: 'watermarking', definition: 'Embedding a hidden, detectable signal in AI-generated text, images or audio at the moment it is created. It only works when the AI provider adds it, and heavy editing can weaken it.', slug: 'can-ai-detectors-prove-who-wrote-it' },
   { term: 'Zero-shot and few-shot', id: 'zero-shot', definition: 'Asking a model to do a task with no examples (zero-shot) or with a handful of examples in the prompt (few-shot). A few good examples often improve results without any retraining.' },
 ];
+
+// Phrases that identify a term in running text (used for "Key terms in this
+// article"). Derived from the term name, its abbreviation and alternate name.
+export function termPatterns(t: Term): RegExp[] {
+  const names = new Set<string>();
+  const base = t.term.replace(/\s*\(([^)]+)\)/, (_m, abbr) => { names.add(abbr); return ''; }).trim();
+  for (const part of base.split(/\s+and\s+/)) names.add(part.trim());
+  if (t.aka) names.add(t.aka);
+  return [...names].filter((n) => n.length > 1).map((n) => {
+    const esc = n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const isAcronym = /^[A-Z0-9]{2,6}$/.test(n);
+    return new RegExp(`(^|[^\\p{L}\\p{N}])${esc}${isAcronym ? '' : 's?'}(?=[^\\p{L}\\p{N}]|$)`, isAcronym ? 'u' : 'iu');
+  });
+}
+
+export function termsInText(text: string, exclude?: string, max = 6): Term[] {
+  const found: [number, Term][] = [];
+  for (const t of TERMS) {
+    if (exclude && t.slug === exclude) continue;
+    let first = Infinity;
+    for (const re of termPatterns(t)) { const m = re.exec(text); if (m && m.index < first) first = m.index; }
+    if (first < Infinity) found.push([first, t]);
+  }
+  return found.sort((a, b) => a[0] - b[0]).slice(0, max).map(([, t]) => t);
+}

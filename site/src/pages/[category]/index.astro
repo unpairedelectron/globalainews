@@ -18,6 +18,6 @@ const jsonLd = [{
   mainEntity: { '@type': 'ItemList', itemListElement: items.slice(0, 20).map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: absolute(articlePath(a)), name: a.data.title })) },
 }];
 ---
-<Base title={`${cat.title} | ${SITE.name}`} description={cat.description} path={cat.path} jsonLd={jsonLd}>
+<Base title={`${cat.title} | ${SITE.name}`} description={cat.description} path={cat.path} jsonLd={jsonLd} feed={{ title: `${SITE.name}: ${cat.name}`, href: `${cat.path}feed.xml` }}>
   <div class="wrap"><CategoryHub categoryKey={key} items={items} /></div>
 </Base>

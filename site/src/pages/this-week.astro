@@ -1,0 +1,41 @@
+---
+// Auto-generated weekly round-up: everything published in the last 7 days,
+// grouped by day. Rebuilt whenever content publishes.
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site.config';
+import { getArticles, articlePath, category, readingTime } from '../lib/articles';
+
+const now = process.env.BUILD_NOW ? new Date(process.env.BUILD_NOW) : new Date();
+const since = now.getTime() - 7 * 24 * 3600 * 1000;
+const items = (await getArticles()).filter((a) => a.data.date.getTime() >= since);
+const dayKey = (d: Date) => d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Asia/Kolkata' });
+const days = new Map<string, typeof items>();
+for (const a of items) { const k = dayKey(a.data.date); days.set(k, [...(days.get(k) ?? []), a]); }
+const range = `${new Date(since).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' })} – ${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })}`;
+const thin = items.length < 3;
+---
+<Base title={`This Week in AI, Explained | ${SITE.name}`} description="Every Global AI News story and update from the past seven days in one place, grouped by day, with the key takeaway from each." path="/this-week/" noindex={thin}>
+  <div class="wrap">
+    <header class="page-head">
+      <span class="eyebrow">{range}</span>
+      <h1>This week in AI</h1>
+      <p>Everything we published in the last seven days, with the one thing to know from each story.</p>
+    </header>
+    {items.length === 0 && <p>Nothing new in the last seven days. See the <a href="/latest/">latest stories</a>.</p>}
+    {[...days].map(([day, list]) => (
+      <section class="section" aria-labelledby={`d-${day.replace(/\W+/g, '-')}`} data-reveal>
+        <div class="section-head"><h2 id={`d-${day.replace(/\W+/g, '-')}`}>{day}</h2></div>
+        <ul class="list">
+          {list.map((a) => (
+            <li>
+              <a class="kicker" href={category(a).path}>{category(a).name}{a.data.type === 'brief' ? ' · Wire' : ''}</a>
+              <h3><a href={articlePath(a)}>{a.data.title}</a></h3>
+              <p><strong>The one thing to know:</strong> {a.data.takeaways[0]}</p>
+              <p class="meta">{readingTime(a)} min read</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</Base>
