@@ -1,6 +1,7 @@
 ---
 import ArticleCard from './ArticleCard.astro';
 import ArticleList from './ArticleList.astro';
+import Emblem from './Emblem.astro';
 import { HUBS } from '../category-hubs';
 import { CATEGORIES, type CategoryKey } from '../site.config';
 import type { Article } from '../lib/articles';
@@ -14,9 +15,13 @@ const picks = hub.startHere.map((s) => bySlug.get(s)).filter((a): a is Article =
 const pickIds = new Set(picks.map((a) => a.id));
 const rest = items.filter((a) => !pickIds.has(a.id));
 ---
-<header class="page-head">
-  <h1>{cat.name}</h1>
-  <p>{cat.description}</p>
+<header class="page-head hub-head">
+  <div>
+    <span class="eyebrow">Section</span>
+    <h1>{cat.name}</h1>
+    <p>{cat.description}</p>
+  </div>
+  <Emblem kind={categoryKey} />
 </header>
 
 <section class="hub-intro">
@@ -27,7 +32,7 @@ const rest = items.filter((a) => !pickIds.has(a.id));
 {picks.length > 0 && (
   <section class="section" aria-labelledby="start-h">
     <div class="section-head"><h2 id="start-h">Start here</h2></div>
-    <div class="grid grid-3">{picks.map((a, i) => <ArticleCard article={a} eager={i < 2} />)}</div>
+    <div class="grid grid-3" data-reveal-group>{picks.map((a, i) => <ArticleCard article={a} eager={i < 2} />)}</div>
   </section>
 )}
 
@@ -40,7 +45,7 @@ const rest = items.filter((a) => !pickIds.has(a.id));
 
 {items.length === 0 && <p>New stories in this section are on the way. Meanwhile, see the <a href="/latest/">latest stories</a>.</p>}
 
-<section class="hub-coverage" aria-labelledby="how-h">
+<section class="hub-coverage" aria-labelledby="how-h" data-reveal>
   <h2 id="how-h">How we cover {cat.name}</h2>
   <ul>{hub.coverage.map((c) => <li>{c}</li>)}</ul>
   <p>Full standards: <a href="/editorial-policy/">editorial policy</a> · Spotted an error? <a href="/contact-us/">Tell us</a>.</p>

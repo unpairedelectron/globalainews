@@ -1,0 +1,20 @@
+---
+// Timeline of India AI tracker events with status badges (text + colour).
+import { INDIA_AI_TRACKER } from '../data/trackers';
+const rows = INDIA_AI_TRACKER.flatMap((s) => s.rows).sort((a, b) => a.date.localeCompare(b.date));
+const fmt = (s: string) => new Date(`${s}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const tone = (s = '') => (/in force|approved|released|downloadable/i.test(s) ? 'ok' : /announced|bidding|draft|early/i.test(s) ? 'wait' : '');
+---
+<figure class="viz">
+  <h3>India AI timeline</h3>
+  <p class="viz-sub">Rules, compute milestones and model releases, oldest first.</p>
+  <ol class="timeline">
+    {rows.map((r) => (
+      <li class={tone(r.status) === 'ok' ? 'done' : ''}>
+        <time datetime={r.date}>{fmt(r.date)}</time>
+        <strong>{r.item}{r.status && <span class={`badge ${tone(r.status)}`}>{r.status}</span>}</strong>
+        <span class="meta"><a href={r.source.url} rel="noopener">{r.source.label}</a></span>
+      </li>
+    ))}
+  </ol>
+</figure>

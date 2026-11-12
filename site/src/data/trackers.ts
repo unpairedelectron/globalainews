@@ -116,6 +116,8 @@ export const INDIA_AI_TRACKER: TrackerSection[] = [
 
 export interface CapexRow {
   company: string;
+  min: number; // billions of US dollars
+  max: number;
   guidance: string;
   basis: string;
   latestQuarter: string;
@@ -126,6 +128,8 @@ export interface CapexRow {
 export const CAPEX_TRACKER: CapexRow[] = [
   {
     company: 'Alphabet',
+    min: 195,
+    max: 205,
     guidance: '$195–205 billion',
     basis: 'Capital expenditures; most spending on technical infrastructure (not an AI-only figure)',
     latestQuarter: 'Q3 2026: $51.4 billion',
@@ -134,6 +138,8 @@ export const CAPEX_TRACKER: CapexRow[] = [
   },
   {
     company: 'Amazon',
+    min: 220,
+    max: 220,
     guidance: '~$220 billion',
     basis: 'Cash capital expenditures; majority for AWS',
     latestQuarter: 'Not used here',
@@ -142,6 +148,8 @@ export const CAPEX_TRACKER: CapexRow[] = [
   },
   {
     company: 'Meta',
+    min: 135,
+    max: 145,
     guidance: '$135–145 billion',
     basis: 'Capital expenditures including principal payments on finance leases',
     latestQuarter: 'Q3 2026: $34.91 billion (same basis)',
@@ -150,10 +158,19 @@ export const CAPEX_TRACKER: CapexRow[] = [
   },
   {
     company: 'Microsoft',
+    min: 170,
+    max: 170,
     guidance: '~$170 billion (calendar 2026 estimate)',
     basis: 'Capital expenditures; fiscal year ends in June, so calendar and fiscal figures differ',
     latestQuarter: 'Quarter to 30 Sep 2026: $45.2 billion, incl. $7.4 billion finance leases',
     source: { label: 'Microsoft FY2027 Q1 earnings call, 28 Oct 2026', url: 'https://www.microsoft.com/en-us/Investor/events/fy-2027/earnings-fy-2027-q1' },
     checked: '2026-10-31',
   },
+];
+
+// IndiaAI GPU figures by stage (same unit: GPUs). Different stages, not additive.
+export const INDIA_GPU_STAGES = [
+  { stage: 'Original target', value: 10000, plus: true, date: 'Mar 2024', source: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2012355', note: 'Common compute target when the IndiaAI Mission was approved' },
+  { stage: 'Onboarded', value: 38231, plus: false, date: 'Mar 2026', source: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2245063', note: 'GPUs onboarded from 14 providers, per the government' },
+  { stage: 'Shared capacity', value: 45000, plus: true, date: 'Jun 2026', source: 'https://www.pib.gov.in/FactsheetDetails.aspx?Id=150860&lang=1&reg=48', note: 'Shared capacity as of June 2026, per the August factsheet' },
 ];

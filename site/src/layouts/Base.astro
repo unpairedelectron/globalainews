@@ -67,8 +67,9 @@ const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
     <meta name="google-adsense-account" content={ADS.client} />
-    <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#101216" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f8fc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d1220" media="(prefers-color-scheme: dark)" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -122,6 +123,7 @@ const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
     )}
   </head>
   <body>
+    <div class="progress" aria-hidden="true"></div>
     <a class="skip" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="wrap masthead">
@@ -178,5 +180,6 @@ const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
         <p class="copyright">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
       </div>
     </footer>
+    <script>import '../scripts/motion.ts';</script>
   </body>
 </html>
