@@ -1,14 +1,25 @@
 ---
-// Manual AdSense unit. Renders nothing until a numeric slot ID is set in
-// site.config.ts, so no empty boxes or layout shift appear before then.
+// Strategic ad placements. Rules that protect reading:
+// - never above the headline, inside takeaways/charts/tables, or next to
+//   share/listen buttons (accidental clicks are against AdSense policy);
+// - space is reserved before the ad loads, so text never jumps (CLS 0);
+// - ads load only when the reader scrolls near them (lazy, better viewability);
+// - a placement renders nothing until its unit ID is set in site.config.ts.
 import { ADS } from '../site.config';
-interface Props { slot: keyof typeof ADS.slots }
-const id = ADS.slots[Astro.props.slot];
+type Place = 'mid' | 'mid2' | 'end' | 'rail' | 'home' | 'list';
+interface Props { place: Place }
+const { place } = Astro.props;
+const unit = ADS.units[place === 'mid2' ? 'mid' : place];
+const active = /^\d+$/.test(unit);
+const inArticle = place === 'mid' || place === 'mid2';
 ---
-{/^\d+$/.test(id) && (
-  <aside class="ad" aria-label="Advertisement">
+{active && (
+  <aside class={`ad ad-${place}`} aria-label="Advertisement" data-ad-place={place}>
     <p class="ad-label">Advertisement</p>
-    <ins class="adsbygoogle" style="display:block" data-ad-client={ADS.client} data-ad-slot={id} data-ad-format="auto" data-full-width-responsive="true"></ins>
-    <script is:inline>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+    {inArticle
+      ? <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-client={ADS.client} data-ad-slot={unit} data-ad-layout="in-article" data-ad-format="fluid"></ins>
+      : place === 'rail'
+        ? <ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client={ADS.client} data-ad-slot={unit}></ins>
+        : <ins class="adsbygoogle" style="display:block" data-ad-client={ADS.client} data-ad-slot={unit} data-ad-format="auto" data-full-width-responsive="true"></ins>}
   </aside>
 )}

@@ -124,11 +124,11 @@ const jsonLd = [
         </details>
       )}
 
-      <AdSlot slot="inArticle" />
-
       <div class="prose">
         <Content />
       </div>
+      <AdSlot place="mid" />
+      <AdSlot place="mid2" />
 
       {keyTerms.length >= 2 && (
         <aside class="key-terms" aria-labelledby="kt-h">
@@ -155,8 +155,9 @@ const jsonLd = [
 
       <Newsletter />
 
-      <AdSlot slot="afterArticle" />
+      <AdSlot place="end" />
     </article>
+    <div class="rail"><AdSlot place="rail" /></div>
     </div>
 
     {more.length > 0 && (
