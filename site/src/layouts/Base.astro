@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { SITE, ADS, ANALYTICS, CATEGORIES, NAV } from '../site.config';
 import { getArticles } from '../lib/articles';
+import SearchPalette from '../components/SearchPalette.astro';
 
 interface Props {
   title: string; // full <title>
@@ -131,7 +132,10 @@ const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
           <img src="/logo.svg" alt="" width="36" height="36" />
           <span class="brand-name">{SITE.name}</span>
         </a>
-        <span class="brand-tag">{SITE.tagline}</span>
+        <div class="masthead-right">
+          <span class="brand-tag">{SITE.tagline}</span>
+          <SearchPalette />
+        </div>
       </div>
       <nav class="nav" aria-label="Sections">
         <ul>
