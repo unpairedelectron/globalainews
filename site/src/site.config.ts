@@ -28,11 +28,16 @@ export const SITE = {
 export const ADS = {
   // Google AdSense publisher ID (also in public/ads.txt).
   client: 'ca-pub-3766621537317806',
-  // Auto ads are configured in the AdSense dashboard. Optional manual
-  // in-article units: paste numeric slot IDs from AdSense to enable them.
-  slots: {
-    inArticle: '',
-    afterArticle: '',
+  // Manual ad units, placed where they don't interrupt reading (see
+  // src/components/AdSlot.astro for the placement rules). Create each unit in
+  // AdSense (Ads -> By ad unit) and paste its numeric data-ad-slot ID here.
+  // While a value is empty, that placement renders nothing.
+  units: {
+    mid: '1369592419',  // "GAN In-Article" (In-article): between sections inside articles
+    end: '1113775614',  // "Article Footer" (Display): end of article, before Read next
+    rail: '4147133064', // "Article Sidebar" (Display): desktop sticky right rail, 300x600
+    home: '3739938958', // "Homepage Bottom" (Display): homepage between sections
+    list: '7649161359', // "GAN Feed In-Content" (Display): inside Latest / section lists
   },
 };
 

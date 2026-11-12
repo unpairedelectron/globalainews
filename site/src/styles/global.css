@@ -315,8 +315,19 @@ h1, h2, h3 { line-height: 1.12; letter-spacing: -0.012em; }
 .about-box strong { color: var(--ink); }
 .person-box a { font-weight: 700; }
 
-.ad { margin: 28px 0; min-height: 100px; }
-.ad-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+/* Ads: clearly labelled, space reserved before load (no layout shift). */
+.ad { margin: 34px 0; padding: 10px 0 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); text-align: center; min-height: 280px; }
+.ad-label { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; text-align: left; }
+.ad-home, .ad-list { min-height: 250px; }
+.ad-mid, .ad-mid2 { display: none; }
+.prose .ad-mid, .prose .ad-mid2 { display: block; }
+.ad-li { list-style: none; padding: 0 !important; border-bottom: 0 !important; }
+.ad-li:hover { background: none !important; }
+.rail { display: none; }
+@media (min-width: 1280px) {
+  .rail { display: block; grid-column: 3; grid-row: 1; padding-top: 36px; }
+  .rail .ad { position: sticky; top: 130px; margin: 0; min-height: 630px; width: 300px; border: 0; padding: 0; }
+}
 
 .related { padding: 28px 0 8px; }
 .related h2 { font-family: var(--serif); font-weight: 400; font-size: 32px; margin: 0 0 18px; }

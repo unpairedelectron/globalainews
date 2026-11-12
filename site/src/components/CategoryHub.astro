@@ -2,6 +2,7 @@
 import ArticleCard from './ArticleCard.astro';
 import ArticleList from './ArticleList.astro';
 import Emblem from './Emblem.astro';
+import AdSlot from './AdSlot.astro';
 import { HUBS } from '../category-hubs';
 import { CATEGORIES, type CategoryKey } from '../site.config';
 import type { Article } from '../lib/articles';
@@ -35,6 +36,8 @@ const rest = items.filter((a) => !pickIds.has(a.id));
     <div class="grid grid-3" data-reveal-group>{picks.map((a, i) => <ArticleCard article={a} eager={i < 2} />)}</div>
   </section>
 )}
+
+{picks.length > 0 && rest.length > 0 && <AdSlot place="list" />}
 
 {rest.length > 0 && (
   <section class="section" aria-labelledby="all-h">

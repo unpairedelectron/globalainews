@@ -191,5 +191,6 @@ const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
       </div>
     </footer>
     <script>import '../scripts/motion.ts';</script>
+    {loadAds && Object.values(ADS.units).some((u) => /^\d+$/.test(u)) && <script>import '../scripts/ads.ts';</script>}
   </body>
 </html>
