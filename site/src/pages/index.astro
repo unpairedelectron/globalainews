@@ -6,6 +6,7 @@ import Globe from '../components/Globe.astro';
 import Emblem from '../components/Emblem.astro';
 import CapexChart from '../components/CapexChart.astro';
 import Newsletter from '../components/Newsletter.astro';
+import AdSlot from '../components/AdSlot.astro';
 import { SITE, CATEGORIES, type CategoryKey } from '../site.config';
 import { TERMS } from '../glossary';
 import { CAPEX_TRACKER, INDIA_GPU_STAGES } from '../data/trackers';
@@ -68,6 +69,8 @@ const jsonLd = [
       </div>
     </section>
 
+    <AdSlot place="home" />
+
     {briefs.length > 0 && (
       <section class="section" aria-labelledby="wire-h" data-reveal>
         <div class="section-head"><h2 id="wire-h">AI news wire</h2><a href="/wire/">All updates →</a></div>
@@ -105,6 +108,8 @@ const jsonLd = [
         </section>
       );
     })}
+
+    <AdSlot place="home" />
 
     <Newsletter />
 
