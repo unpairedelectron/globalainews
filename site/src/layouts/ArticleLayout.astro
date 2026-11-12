@@ -129,7 +129,7 @@ const jsonLd = [
 
       {d.tags.length > 0 && <ul class="tags" aria-label="Topics">{d.tags.map((t) => <li>{t}</li>)}</ul>}
 
-      <Share url={absolute(path)} title={d.title} />
+      <Share url={absolute(path)} title={d.title} label="Share this article (end of article)" />
 
       {[author, reviewer].filter((p, i, arr) => p && arr.indexOf(p) === i).map((p) => p && (
         <div class="about-box person-box">

@@ -23,7 +23,7 @@
   --muted: #5a6478;
   --line: #e2e7f0;
   --line-2: #d3dae6;
-  --accent: #2a78d6;      /* brand blue (also chart series 1) */
+  --accent: #226bc4;      /* brand blue for text/UI; >= 4.5:1 on all light surfaces */
   --accent-ink: #ffffff;
   --accent-soft: #e8f1fd;
   --violet: #6250d6;
@@ -224,9 +224,9 @@ h1, h2, h3 { line-height: 1.12; letter-spacing: -0.012em; }
 .list li { position: relative; padding: 18px 16px; margin: 0 -16px; border-bottom: 1px solid var(--line); border-radius: var(--radius-sm); transition: background .2s; }
 .list li:hover { background: var(--glass); }
 .list li:last-child { border-bottom: 0; }
-.list h3 { font-family: var(--serif); font-weight: 400; font-size: 24px; margin: 4px 0 6px; }
-.list h3 a { color: var(--ink); text-decoration: none; }
-.list h3 a:hover { color: var(--accent); }
+.list :is(h2, h3) { font-family: var(--serif); font-weight: 400; font-size: 24px; margin: 4px 0 6px; letter-spacing: -0.01em; }
+.list :is(h2, h3) a { color: var(--ink); text-decoration: none; }
+.list :is(h2, h3) a:hover { color: var(--accent); }
 .list p { margin: 0 0 6px; color: var(--muted); }
 
 /* ---------- Page heads & section hubs ---------- */

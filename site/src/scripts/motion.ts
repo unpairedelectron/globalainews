@@ -56,7 +56,7 @@ function tooltips() {
   if (!targets.length) return;
   const tip = document.createElement('div');
   tip.className = 'viz-tip';
-  tip.setAttribute('role', 'tooltip');
+  tip.setAttribute('aria-hidden', 'true'); // same data is in each chart's aria-label and table
   document.body.appendChild(tip);
   const show = (el: Element, x: number, y: number) => {
     const [title, ...rest] = (el.getAttribute('data-tip') ?? '').split('|');
@@ -150,3 +150,8 @@ progress();
 citations();
 tocSpy();
 tooltips();
+
+// Offline reading: register the service worker after the page has loaded.
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
