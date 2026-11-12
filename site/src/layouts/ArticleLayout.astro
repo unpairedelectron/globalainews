@@ -3,6 +3,7 @@ import Base from './Base.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import AdSlot from '../components/AdSlot.astro';
 import Share from '../components/Share.astro';
+import ListenButton from '../components/ListenButton.astro';
 import { render } from 'astro:content';
 import { SITE } from '../site.config';
 import { PEOPLE, personByName } from '../data/people';
@@ -89,7 +90,10 @@ const jsonLd = [
         <span>{readingTime(article)} min read</span>
       </div>
 
-      <Share url={absolute(path)} title={d.title} />
+      <div class="article-tools">
+        <ListenButton />
+        <Share url={absolute(path)} title={d.title} />
+      </div>
 
       {d.image && !d.image.endsWith('/hero.jpg') && (
         <figure class="hero">
