@@ -71,6 +71,7 @@ function resolveFile(pathname) {
 }
 
 function cacheControl(file) {
+  if (file.endsWith(`${path.sep}sw.js`)) return 'no-cache';
   if (file.includes(`${path.sep}_astro${path.sep}`)) return 'public, max-age=31536000, immutable';
   if (/\.(woff2|webp|avif|png|jpe?g|svg|ico)$/.test(file)) return 'public, max-age=2592000';
   if (/\.xml$/.test(file)) return 'public, max-age=900';

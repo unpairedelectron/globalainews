@@ -1,7 +1,7 @@
 ---
 // Plain share links (no third-party scripts, no tracking pixels).
-interface Props { url: string; title: string }
-const { url, title } = Astro.props;
+interface Props { url: string; title: string; label?: string }
+const { url, title, label = 'Share this article' } = Astro.props;
 const u = encodeURIComponent(url);
 const t = encodeURIComponent(title);
 const links = [
@@ -13,7 +13,7 @@ const links = [
   { name: 'Email', href: `mailto:?subject=${t}&body=${u}` },
 ];
 ---
-<nav class="share" aria-label="Share this article">
+<nav class="share" aria-label={label}>
   <span>Share</span>
   {links.map((l) => <a href={l.href} target="_blank" rel="noopener nofollow">{l.name}</a>)}
 </nav>

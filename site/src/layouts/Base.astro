@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { SITE, ADS, ANALYTICS, CATEGORIES, NAV } from '../site.config';
 import { getArticles } from '../lib/articles';
 import SearchPalette from '../components/SearchPalette.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 interface Props {
   title: string; // full <title>
@@ -18,6 +19,7 @@ interface Props {
   modified?: Date;
   section?: string;
   tags?: string[];
+  feed?: { title: string; href: string };
 }
 
 const {
@@ -34,6 +36,7 @@ const {
   modified,
   section,
   tags = [],
+  feed,
 } = Astro.props;
 
 const canonical = new URL(path, SITE.url).toString();
@@ -70,12 +73,13 @@ const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
     <meta name="google-adsense-account" content={ADS.client} />
     <meta name="theme-color" content="#f6f8fc" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0d1220" media="(prefers-color-scheme: dark)" />
-    <script is:inline>document.documentElement.classList.add('js')</script>
+    <script is:inline>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('gan-theme');if(t==='light'||t==='dark')d.dataset.theme=t;}catch(e){}})()</script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS`} href="/feed.xml" />
+    {feed && <link rel="alternate" type="application/rss+xml" title={feed.title} href={feed.href} />}
     <link rel="preload" href="/fonts/instrument-serif-regular-latin.woff2" as="font" type="font/woff2" crossorigin />
 
     <meta property="og:site_name" content={SITE.name} />
@@ -135,6 +139,7 @@ const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
         <div class="masthead-right">
           <span class="brand-tag">{SITE.tagline}</span>
           <SearchPalette />
+          <ThemeToggle />
         </div>
       </div>
       <nav class="nav" aria-label="Sections">
@@ -163,6 +168,7 @@ const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
             <h2>Sections</h2>
             <ul>
               {Object.values(CATEGORIES).map((c) => <li><a href={c.path}>{c.name}</a></li>)}
+              <li><a href="/this-week/">This week in AI</a></li>
               <li><a href="/glossary/">AI glossary</a></li>
               <li><a href="/trackers/">Trackers</a></li>
             </ul>

@@ -1,0 +1,23 @@
+---
+// Newsletter call-to-action. Renders nothing until NEWSLETTER.url is set.
+import { NEWSLETTER, SITE } from '../site.config';
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+---
+{NEWSLETTER.url && (
+  <aside class={`newsletter-cta${compact ? ' compact' : ''}`} aria-labelledby="nl-h">
+    <div>
+      <span class="eyebrow">Free newsletter</span>
+      <h2 id="nl-h">The week in AI, explained in five minutes</h2>
+      <p>The stories that mattered, what they actually mean, and the sources behind them. Sent {NEWSLETTER.cadence}. Unsubscribe any time.</p>
+    </div>
+    <a class="btn" href={NEWSLETTER.url} target="_blank" rel="noopener">Subscribe to {SITE.name} →</a>
+  </aside>
+)}
+
+<style is:global>
+  .newsletter-cta { display: grid; gap: 16px; align-items: center; margin: 32px 0; padding: 24px 26px; border-radius: 18px; border: 1px solid var(--line); background: linear-gradient(135deg, var(--accent-soft), var(--surface) 70%); box-shadow: var(--shadow-1); }
+  @media (min-width: 760px) { .newsletter-cta:not(.compact) { grid-template-columns: 1fr auto; } }
+  .newsletter-cta h2 { font-family: var(--serif); font-weight: 400; font-size: 30px; margin: 4px 0 6px; }
+  .newsletter-cta p { margin: 0; color: var(--muted); }
+</style>

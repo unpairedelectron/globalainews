@@ -17,6 +17,9 @@ PORT=3000 node server.mjs   # serve ./dist in production
 - **Before pushing scheduled articles, run `npm run test:schedule`.** It builds the site as it will look at every upcoming publish time. This catches, for example, an article that links to another article that isn't live yet (that would block its auto-publish).
 - **Fix a mistake:** edit the Markdown, set `updated:` to today, and add a note at the end under a `## Correction` heading.
 - **Site settings** (name, contact email, AdSense ID, ad slot IDs, analytics, sections) are in `src/site.config.ts`.
+- **Newsletter:** set `NEWSLETTER.url` in `src/site.config.ts` to a free Substack or Beehiiv signup page; the signup block then appears on the homepage and every article. Empty = hidden.
+- **People:** real editors and authors live in `src/data/people.ts` (bio, photo `image`, profile links `sameAs`). Only add real people who agreed to be listed.
+- **Reader features:** search palette (Ctrl/⌘+K, index at `/search.json`), Light/Dark/Auto theme switch, Listen (browser text-to-speech), clickable `[n]` citations with source previews, and a floating table of contents on wide screens. All build themselves from the content; nothing to maintain.
 - **Old URLs** are redirected (301) through `redirects.mjs`. Add a line there whenever you rename or remove an article.
 
 ## What the build produces

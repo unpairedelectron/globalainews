@@ -27,11 +27,14 @@ const canvas = document.getElementById('globe') as HTMLCanvasElement | null;
 if (canvas) {
   const ctx = canvas.getContext('2d')!;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const css = getComputedStyle(document.documentElement);
-  const col = (v: string, f: string) => (css.getPropertyValue(v).trim() || f);
-  const C = { accent: col('--accent', '#2a78d6'), violet: col('--violet', '#6250d6'), ink: col('--ink', '#0e1726'), muted: col('--muted', '#5a6478'), teal: col('--teal', '#13a06f') };
+  const col = (v: string, f: string) => (getComputedStyle(document.documentElement).getPropertyValue(v).trim() || f);
+  let C = { accent: '', violet: '', ink: '' };
+  const readColors = () => { C = { accent: col('--accent', '#2a78d6'), violet: col('--violet', '#6250d6'), ink: col('--ink', '#0e1726') }; A = rgb(C.accent); V = rgb(C.violet); };
   const rgb = (hex: string) => { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
-  const A = rgb(C.accent), V = rgb(C.violet);
+  let A: number[] = [], V: number[] = [];
+  readColors();
+  addEventListener('themechange', () => { readColors(); draw(performance.now()); });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { readColors(); draw(performance.now()); });
   const rgba = (c: number[], a: number) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
   // Fibonacci lattice
