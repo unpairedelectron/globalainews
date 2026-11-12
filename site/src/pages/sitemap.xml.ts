@@ -13,6 +13,7 @@ export async function GET() {
   const briefCount = all.filter((a) => a.data.type === 'brief').length;
   const urls: { loc: string; lastmod: Date }[] = [
     ...(briefCount >= 3 ? [{ loc: '/wire/', lastmod: newest }] : []),
+    ...(all.filter((a) => a.data.date.getTime() >= Date.now() - 7 * 864e5).length >= 3 ? [{ loc: '/this-week/', lastmod: newest }] : []),
     { loc: '/', lastmod: newest },
     { loc: '/latest/', lastmod: newest },
     { loc: '/glossary/', lastmod: new Date('2026-11-11') },

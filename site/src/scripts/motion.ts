@@ -144,7 +144,21 @@ function tocSpy() {
   update();
 }
 
+function freshBadges() {
+  const now = Date.now();
+  document.querySelectorAll<HTMLTimeElement>('time[data-fresh]').forEach((t) => {
+    const age = now - Date.parse(t.dateTime);
+    if (age >= 0 && age < 48 * 3600 * 1000) {
+      const b = document.createElement('span');
+      b.className = 'new-badge';
+      b.textContent = 'New';
+      t.parentElement?.prepend(b);
+    }
+  });
+}
+
 reveal();
+freshBadges();
 countUp();
 progress();
 citations();

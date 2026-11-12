@@ -2,6 +2,9 @@
 // IndiaAI GPU figures by stage. One measure (GPUs), one hue, bars anchored at
 // zero, direct labels, tooltips, table view.
 import { INDIA_GPU_STAGES } from '../data/trackers';
+interface Props { level?: 2 | 3 }
+const { level = 3 } = Astro.props;
+const Title = `h${level}`;
 const rows = INDIA_GPU_STAGES;
 const W = 640, L = 132, Rt = 520, rowH = 48, top = 8, axisMax = 50000;
 const H = top + rows.length * rowH + 28;
@@ -10,7 +13,7 @@ const ticks = [0, 10000, 20000, 30000, 40000, 50000];
 const n = (v: number) => v.toLocaleString('en-IN');
 ---
 <figure class="viz" aria-labelledby="gpu-title">
-  <h3 id="gpu-title">IndiaAI Mission GPUs, by stage</h3>
+  <Title id="gpu-title">IndiaAI Mission GPUs, by stage</Title>
   <p class="viz-sub">Each bar is a different stage, reported at a different date. They show progress, not one capacity number.</p>
   <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={rows.map((r) => `${r.stage}: ${n(r.value)}${r.plus ? '+' : ''} GPUs (${r.date})`).join('; ')}>
     {ticks.map((t) => (

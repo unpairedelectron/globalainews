@@ -8,6 +8,7 @@ import Newsletter from '../components/Newsletter.astro';
 import { render } from 'astro:content';
 import { SITE } from '../site.config';
 import { PEOPLE, personByName } from '../data/people';
+import { termsInText } from '../glossary';
 import {
   absolute, articlePath, category, formatIST, isoIST, lastModified, ogImage, readingTime, related, sourceUrls, wordCount,
   type Article,
@@ -26,6 +27,8 @@ const isGuide = d.type === 'guide';
 const author = d.author ? PEOPLE[d.author] : undefined;
 const reviewer = personByName(d.reviewer);
 const citations = sourceUrls(article);
+const bodyText = (article.body ?? '').split(/^## Sources/m)[0];
+const keyTerms = termsInText(bodyText, article.id);
 const personLd = (p: NonNullable<typeof author>) => ({ '@type': 'Person', name: p.name, jobTitle: p.jobTitle, url: absolute(`/authors/${p.slug}/`) });
 const baseTitle = d.seoTitle ?? d.title;
 const pageTitle = baseTitle.length + SITE.name.length + 3 <= 65 ? `${baseTitle} | ${SITE.name}` : baseTitle;
@@ -126,6 +129,13 @@ const jsonLd = [
       <div class="prose">
         <Content />
       </div>
+
+      {keyTerms.length >= 2 && (
+        <aside class="key-terms" aria-labelledby="kt-h">
+          <h2 id="kt-h">Key terms in this article</h2>
+          <ul class="chips">{keyTerms.map((t) => <li><a class="chip" href={`/glossary/#${t.id}`} title={t.definition}>{t.term}</a></li>)}</ul>
+        </aside>
+      )}
 
       {d.tags.length > 0 && <ul class="tags" aria-label="Topics">{d.tags.map((t) => <li>{t}</li>)}</ul>}
 

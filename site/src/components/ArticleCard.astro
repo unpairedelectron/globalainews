@@ -15,5 +15,5 @@ const cat = category(article);
   <a class="kicker" href={cat.path}>{cat.name}</a>
   <h3><a href={href}>{article.data.title}</a></h3>
   <p>{article.data.description}</p>
-  <p class="meta"><time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time> · {readingTime(article)} min read</p>
+  <p class="meta"><time data-fresh datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time> · {readingTime(article)} min read</p>
 </article>

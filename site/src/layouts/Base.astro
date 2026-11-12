@@ -19,6 +19,7 @@ interface Props {
   modified?: Date;
   section?: string;
   tags?: string[];
+  feed?: { title: string; href: string };
 }
 
 const {
@@ -35,6 +36,7 @@ const {
   modified,
   section,
   tags = [],
+  feed,
 } = Astro.props;
 
 const canonical = new URL(path, SITE.url).toString();
@@ -77,6 +79,7 @@ const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS`} href="/feed.xml" />
+    {feed && <link rel="alternate" type="application/rss+xml" title={feed.title} href={feed.href} />}
     <link rel="preload" href="/fonts/instrument-serif-regular-latin.woff2" as="font" type="font/woff2" crossorigin />
 
     <meta property="og:site_name" content={SITE.name} />
@@ -165,6 +168,7 @@ const hasWire = (await getArticles()).some((a) => a.data.type === 'brief');
             <h2>Sections</h2>
             <ul>
               {Object.values(CATEGORIES).map((c) => <li><a href={c.path}>{c.name}</a></li>)}
+              <li><a href="/this-week/">This week in AI</a></li>
               <li><a href="/glossary/">AI glossary</a></li>
               <li><a href="/trackers/">Trackers</a></li>
             </ul>

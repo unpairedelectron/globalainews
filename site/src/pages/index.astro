@@ -61,7 +61,7 @@ const jsonLd = [
     </div>
 
     <section class="section" aria-labelledby="latest-h">
-      <div class="section-head"><h2 id="latest-h">Top stories</h2><a href="/latest/">All stories →</a></div>
+      <div class="section-head"><h2 id="latest-h">Top stories</h2><a href="/this-week/">This week in AI →</a></div>
       <div class="grid grid-3 bento" data-reveal-group>
         {lead && <ArticleCard article={lead} eager />}
         {latest.map((a, i) => <ArticleCard article={a} eager={i < 2} />)}

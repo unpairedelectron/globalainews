@@ -11,7 +11,7 @@ const H = `h${level}`;
       {showCategory && <a class="kicker" href={category(a).path}>{category(a).name}</a>}
       <H><a href={articlePath(a)}>{a.data.title}</a></H>
       <p>{a.data.description}</p>
-      <p class="meta"><time datetime={a.data.date.toISOString()}>{formatDate(a.data.date)}</time> · {readingTime(a)} min read</p>
+      <p class="meta"><time data-fresh datetime={a.data.date.toISOString()}>{formatDate(a.data.date)}</time> · {readingTime(a)} min read</p>
     </li>
   ))}
 </ul>
