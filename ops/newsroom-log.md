@@ -48,3 +48,10 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Still open for the owner: posting the copy in `ops/social/`; optionally connecting Windsor.ai or Supermetrics for Search Console data.
 - Checked: ainews-olive.vercel.app (shows a "Global AI News" logo) is not the owner's; its Vercel deployment is disabled (HTTP 402). No action needed; if it reappears copying our articles, report it to Vercel.
 - For the Monday review: as of 11 Nov, a `site:globalainews.in` web search returned no pages from the domain. Re-check each week and log when pages start appearing.
+
+## 2026-11-12 newsroom run
+- Health: owner published on Replit; both fixes (#13, #16) are live. `build-info.json` `buildTime` 2026-11-12T03:17Z, `contentSync` "up to date" at `8762ac5` (= `origin/main`). The 9, 10 and 11 Nov articles now return 200. Alert #14 resolved.
+- Article: **AlphaProof Code Explained: How Google DeepMind’s AI Proved Signal’s Encryption Code Secure, and What It Didn’t Prove** (`alphaproof-code-signal-formal-verification-explained`), scheduled 2026-11-21T07:30:00Z, 3 primary sources (DeepMind post, DeepMind technical paper, Signal blog). DeepMind’s page summary says “three million” lines while the post body and paper say about 6.5 million; the article uses the paper and notes the difference.
+- Maintenance (thin-article upgrade 1 of 5): `small-models-serious-workflows` rewritten from 4 primary sources (Mistral model card, launch post, Hugging Face card and file listings); added hardware minimums, weight sizes, features, FAQ and internal links; `updated: 2026-11-12` and an `## Update` note. Done.
+- Social copy: `ops/social/alphaproof-code-signal-formal-verification-explained.md`.
+- Alerts: none new.
