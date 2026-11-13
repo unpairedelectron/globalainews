@@ -1,67 +1,118 @@
 ---
 title: "AI Agents Are Getting Better at OSWorld, but Reliability Is Still the Real Test"
 seoTitle: "AI Agents on OSWorld: Why Reliability Is the Real Test"
-description: "Stanford’s 2026 AI Index puts computer-task performance at 66.3%—a sharp gain, but still below its reported human baseline."
+description: "AI agents went from about 12% to 66.3% on OSWorld’s real computer tasks, near the 72% human level. Why that still isn’t workplace reliability, and how to test agents yourself."
 category: "models"
 tags: ["AI agents","Benchmarks","OSWorld"]
 date: "2026-09-21"
-updated: "2026-10-05"
+updated: "2026-11-13"
 image: "/images/articles/reliability-is-the-new-ai-moat/hero-1024.webp"
 imageAlt: "An abstract computer-task benchmark score beside its human comparison"
-takeaways: ["OSWorld accuracy rose from about 12% to 66.3%. [@stanford-ai-index-2026]","The report’s human baseline is 72.35%. [@stanford-ai-index-2026]","Benchmark results do not establish success rates for a specific workplace workflow."]
+takeaways:
+  - "On OSWorld, a test of 369 real computer tasks, the best AI agent’s success rate rose from about 12% to 66.3%, according to Stanford’s 2026 AI Index."
+  - "That is within about 6 percentage points of the 72.35% human baseline, but it still means roughly one failed attempt in three."
+  - "A single success rate hides consistency. On τ-bench, GPT-4o succeeded on under 50% of tasks and on fewer than 25% of retail tasks across eight repeated tries."
+  - "Before trusting an agent with real work, test it on your own tasks several times, and track errors, recoveries and human interventions, not just completions."
 ---
 ## The bottom line
 
-OSWorld agent accuracy reached 66.3%, but remained below the reported 72.35% human baseline; the score is not a production reliability estimate. [1] A large benchmark gain can coexist with frequent misses, so buyers still need task-level evaluation and safe recovery paths.
+**AI agents have become dramatically better at using a computer, but not yet reliable enough to leave alone.** On OSWorld, a benchmark of 369 real computer tasks, the best agent’s success rate rose from roughly 12% to 66.3%, within about 6 points of the 72.35% human baseline, according to Stanford’s 2026 AI Index. [1]
 
-## A benchmark moved, but the comparison has a scope
+That is real progress. But 66.3% still means about one failed attempt in three, and the Index itself says agents “still fail roughly one in three attempts on structured benchmarks”. [1] A single success rate also says nothing about whether an agent succeeds *consistently* on the same task, which is what a business needs. Research that measures consistency directly finds it much lower than one-try scores suggest. [3]
 
-Stanford HAI’s 2026 AI Index reports OSWorld task accuracy rising from about 12% to 66.3% across the evaluation period. OSWorld tests agents on computer tasks in operating-system environments, so the result captures a specific kind of tool-using capability rather than general knowledge or conversational fluency. The climb is important evidence of progress on this benchmark, but it is not a measure of end-to-end customer work. [1]
+## Key facts at a glance
 
-The same report gives a 72.35% human baseline. That leaves a 6.05 percentage-point gap between the reported agent result and the benchmark’s human comparison. The figures should stay attached to OSWorld’s task set, scoring rule and observation period: they do not show that a production agent succeeds on 66.3% of every task a business might assign. [1]
+| | |
+|---|---|
+| What OSWorld tests | 369 tasks across real desktop and web apps, file operations and multi-app workflows, on Ubuntu, Windows and macOS [1][2] |
+| Best agent at launch (April 2024) | 12.24% success [2] |
+| Human performance | 72.36% in the original paper; 72.35% in the AI Index chart [1][2] |
+| Best agent in 2025 | 66.3% (Claude Opus 4.5), per the AI Index, using Epoch AI data [1] |
+| Remaining gap | About 6 percentage points [1] |
+| Human speed | Computer science students solved tasks with a median time of about two minutes [1] |
 
-## The remaining gap is operational
+## What OSWorld measures
 
-At 66.3%, roughly one in three measured attempts still did not meet the benchmark’s success criterion. That is a plain-language restatement of the score, not a separate failure-rate study. The distinction matters: a remaining miss can be costly even while aggregate performance improves, especially when an error affects a customer, employee or public service. [1]
+OSWorld puts an agent in front of a real operating system and asks it to complete an open-ended task: editing a spreadsheet, changing a setting, moving data between applications. Each task has its own starting setup and an evaluation script that checks the end result. [2]
 
-An aggregate percentage also hides the task mix. A benchmark can combine operations with different difficulty, prerequisites and costs of error. Buyers therefore need task definitions and results, not only a headline score. The published percentage indicates progress under the test protocol; it cannot establish whether one particular organisation should delegate work without review. That judgement requires a local evaluation on representative tasks.
+When the benchmark launched in April 2024, the best model succeeded on 12.24% of tasks, while people managed 72.36%. The authors said the models struggled mainly with “GUI grounding and operational knowledge”, that is, finding the right thing on screen and knowing how software works. [2]
 
-## Computer use is not a workplace guarantee
+The AI Index describes how quickly that changed. Models had historically reached “only 1%–12% success”, but by 2025 Claude Opus 4.5 led with 66.3%. That makes OSWorld one of the benchmarks where the gap between models and humans “has closed the fastest”. [1] Anthropic, which makes Claude, called Opus 4.5 “the best model in the world for coding, agents, and computer use” when it launched it in November 2025. [4]
 
-OSWorld is useful because an agent must interact with software rather than merely predict the next word. That makes it a more demanding proxy for action than a text-only question-and-answer test. Still, a benchmark environment cannot reproduce every company interface, identity system, policy restriction, shifting record format, outage, private-data boundary or exception path. Those differences can change both the chance of success and the impact of a mistake. [1]
+## Why 66% isn’t the same as “reliable”
 
-The result is best read as a capability indicator: agents can complete more of the tested computer tasks than earlier versions. It does not certify safe autonomy, reliable record changes or the ability to work in an untested application. A team that treats it as a production probability is changing the question from “How did the system score here?” to “Will it work for us?” The benchmark does not answer the second question.
+**One in three still fails.** At 66.3%, roughly a third of benchmark attempts miss. For a draft email that is tolerable. For a payment, a customer record or a system setting it is not. [1]
+
+**One try isn’t consistency.** A success rate usually counts whether the agent got each task right once. τ-bench, a 2024 benchmark of agents serving simulated customers with real tools and company policies, introduced a stricter metric, **pass^k**: the chance an agent succeeds on the same task in *all* of *k* tries. [3]
+
+The results were sobering. State-of-the-art function-calling agents, including GPT-4o, succeeded on under 50% of tasks, and pass^8 in the retail domain was under 25%. In plain terms, they rarely got the same job right eight times in a row. [3] The authors concluded that agents need to “act consistently and follow rules reliably”. [3]
+
+**Benchmarks are cleaner than workplaces.** OSWorld’s tasks are realistic, but a test environment can’t reproduce every company login, permission rule, odd record format or outage. Those are exactly where a deployed agent can go wrong.
 
 ## Reliability includes recovery
 
-Reliability in a deployed workflow includes more than finishing the first attempt. A system must recognize missing context, show when a tool call failed, avoid acting beyond the user’s permission and recover without duplicating a change. These are operational requirements inferred from deployment design, not outcomes measured by the OSWorld score. Keeping that boundary clear prevents a benchmark gain from standing in for an unreported service record.
+In real work, reliability means more than finishing a task on the first try. A dependable agent also needs to:
 
-A local test should follow a task from request to confirmed outcome. Record completion, correctness, elapsed time, human intervention, retries, tool errors, reversals and the severity of a wrong action. Each denominator matters: completion without error cost can reward unsafe behavior, while intervention without quality can penalise a system that correctly asks for help. [1]
+- notice when it lacks information, and ask instead of guessing;
+- report when a tool call fails, rather than carrying on;
+- stay inside the permissions it was given;
+- undo or avoid duplicate changes when it retries.
 
-## Human comparisons need context
+None of these shows up in a headline success rate. They are why the safest deployments keep a person in the loop for anything consequential. See our explainer on [what an AI agent is](/article/what-is-an-ai-agent/) for how agents plan and act.
 
-The human baseline provides useful context, but it is not a universal limit or proof that people and agents faced identical working conditions. The AI Index reports a benchmark comparison, not a controlled audit of staff productivity in a workplace. A careful reading keeps the score, benchmark and date together, then asks whether a local team can reproduce representative tasks using the same success criteria. [1]
+## How to test an agent before you trust it
 
-Prompts, models, browser state, authentication and network conditions can affect a result. A buyer should record the agent version, tool configuration, permitted actions and evaluation date, then rerun the same tasks after updates. This turns a public benchmark into a reference point rather than a substitute for monitoring. It also makes declines visible before a tool is trusted with a higher-consequence action.
+1. **Use your own tasks.** Pick 20–50 representative tasks from the real workflow, including awkward edge cases.
+2. **Run each one several times.** Follow τ-bench’s logic and count a task as passed only if the agent succeeds on every run. [3]
+3. **Score more than completion.** Track correctness, time taken, retries, tool errors, human interventions and how serious each mistake was.
+4. **Separate reversible from irreversible actions.** Let the agent do low-risk tasks alone. Require approval for payments, deletions and messages to customers.
+5. **Re-test after every update.** Record the model version, tools and permissions, and re-run the same set when any of them changes.
 
-## Make the score useful to buyers
+For comparisons of agent scores on coding tasks specifically, see our guide to [coding-agent benchmarks](/reports/coding-agent-benchmarks-compared/).
 
-Benchmark announcements become more useful when publishers disclose per-task performance, run counts, uncertainty and how often a person had to recover a task. They should separate “task completed” from “task completed correctly,” and explain whether retries count as successes. These are measurement recommendations; the AI Index headline figure does not provide all of those workflow-level details. [1]
+## What this means for…
 
-Teams should also set different thresholds for reversible and consequential actions. A draft that needs editing, a file moved to the wrong folder and an unauthorised customer-record change are not equivalent failures. Risk-based review makes the score operational: it clarifies which tasks can be delegated, which need confirmation and which should remain outside the agent’s authority.
+**Businesses, including in India.** Computer-use agents can now handle many routine back-office steps. But the evidence supports supervised use, not autonomy, for anything touching money, customers or records.
 
-The public number cannot choose those thresholds for a buyer. It can help teams decide what to test first, and it can provide a consistent reference when new systems are evaluated. The next evidence should come from task-level results in the environment where people will actually use the agent, with failure categories that distinguish model errors from tools, permissions and missing context.
+**Developers.** Report pass^k-style consistency, not just best-of-one scores, when you evaluate an agent for a client. [3]
 
-The defensible conclusion is narrow but meaningful: OSWorld agent accuracy reached 66.3%, up from about 12%, and remained below the reported 72.35% human baseline. The trend shows rapid improvement on structured computer tasks; roughly one in three attempts still missed the benchmark target. Test agents in the actual workflow rather than treating the benchmark as proof that general workplace reliability has arrived. [1]
+**Everyone else.** When an AI product boasts a benchmark score, ask two questions: on how many tries, and how often did a person have to step in?
 
-## What to do with this
+## FAQ
 
-Teams should test representative tasks locally and report completion, correctness, intervention and recovery separately.
+### What is OSWorld?
+
+A benchmark of 369 computer tasks in real operating systems, including Ubuntu, Windows and macOS. Each one is checked by a script that inspects the final result. [2]
+
+### How good are AI agents at using computers in 2026?
+
+The best agent reached 66.3% on OSWorld in 2025, up from roughly 12%, against a human baseline of about 72%, according to Stanford’s AI Index. [1]
+
+### Are AI agents better than humans at computer tasks now?
+
+Not on OSWorld. Humans still score about 6 percentage points higher, and solve tasks with a median time of about two minutes. [1]
+
+### What is pass^k?
+
+A reliability metric from τ-bench. It is the probability that an agent succeeds on the same task in all of *k* attempts, rather than at least once. [3]
+
+### Can I let an AI agent work unsupervised?
+
+For low-risk, reversible tasks, perhaps, after testing on your own workflow. For anything consequential, current evidence supports keeping a person in the loop. [1][3]
 
 ## Sources
 
-1. Stanford Institute for Human-Centered AI, *AI Index Report 2026*. https://hai.stanford.edu/ai-index/2026-ai-index-report
+**Primary**
+
+1. Stanford Institute for Human-Centered AI, *AI Index Report 2026* (chapter 2.6, AI agents; OSWorld data from Epoch AI). https://hai.stanford.edu/ai-index/2026-ai-index-report
+2. Xie et al., *OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments*, arXiv:2404.07972, April 2024 (revised May 2024). https://arxiv.org/abs/2404.07972
+3. Yao et al., *τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains*, arXiv:2406.12045, June 2024. https://arxiv.org/abs/2406.12045
+4. Anthropic, *Introducing Claude Opus 4.5*, 24 November 2025. https://www.anthropic.com/news/claude-opus-4-5
 
 ## Methodology note
 
-This article was first published in September–October 2026 and has been updated with a new headline and summary. Claims are attributed to the sources listed above. See our [editorial policy](/editorial-policy/) for how we source, review and correct our reporting.
+This article was first published in September 2026 and substantially updated on 13 November 2026. Research and drafting were AI-assisted, and every figure was checked against the sources above on 13 November 2026, including the full AI Index report. See our [editorial policy](/editorial-policy/).
+
+## Update
+
+**13 November 2026:** We rewrote this article from the full AI Index report, the original OSWorld paper and the τ-bench paper, in addition to the AI Index summary. New: which model holds the 66.3% score, how the benchmark works, the 2024 starting point, the human time baseline, the pass^k consistency metric, a testing checklist and an FAQ. The original OSWorld paper gives the human baseline as 72.36%; the AI Index chart gives 72.35%.
