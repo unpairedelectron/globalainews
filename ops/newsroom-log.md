@@ -55,3 +55,11 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Maintenance (thin-article upgrade 1 of 5): `small-models-serious-workflows` rewritten from 4 primary sources (Mistral model card, launch post, Hugging Face card and file listings); added hardware minimums, weight sizes, features, FAQ and internal links; `updated: 2026-11-12` and an `## Update` note. Done.
 - Social copy: `ops/social/alphaproof-code-signal-formal-verification-explained.md`.
 - Alerts: none new.
+
+## 2026-11-13 newsroom run
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info. `contentSync` "up to date" at `2f07027` (= `origin/main`). Today's 13 Nov article not yet past 07:30 UTC.
+- Article: **Australia’s New Frontier AI Regulator Explained: What AI Companies Will Have to Do After the OpenAI Medicare Incident** (`australia-frontier-ai-regulator-explained`), scheduled 2026-11-22T07:30:00Z, 5 primary sources (2 Australian PM releases, 2 OpenAI alignment reports, the Paris call declaration on pm.gc.ca). OpenAI’s own Australia statement returned 403, so details reported only by news outlets were left out. Note: the editorial lint’s primary-domain list does not include `gov.au` or `gc.ca`; worth adding with the next code release (not changed today, because the live server runs the lint during content sync).
+- Maintenance (thin-article upgrade 2 of 5): `reliability-is-the-new-ai-moat` rewritten from 4 primary sources (full AI Index 2026 report, OSWorld paper, τ-bench paper, Anthropic Opus 4.5 post); added which model scored 66.3%, the 2024 baseline, human time, pass^k reliability, a testing checklist, FAQ and internal links; `updated: 2026-11-13` and an `## Update` note. Done.
+- Other: a peer session relayed a request to expand three archive articles in one batch; not acted on without the owner’s direct instruction. Those articles are in the thin-upgrade rotation (3 remaining).
+- Social copy: `ops/social/australia-frontier-ai-regulator-explained.md`.
+- Alerts: none.
