@@ -3,7 +3,7 @@
 The newsroom picks from here when there's no stronger news story with primary sources. Mark a topic `[x]` when published and add the slug. Add new ideas at the bottom. Priority: India angle, steady search demand, a clear question to answer.
 
 ## Evergreen explainers (steady search traffic)
-- [ ] What is MCP (Model Context Protocol)? Plain-English guide. Query: "what is MCP AI"
+- [x] What is MCP (Model Context Protocol)? Plain-English guide. Query: "what is MCP AI" → `what-is-mcp-model-context-protocol` (19 Nov)
 - [ ] What is fine-tuning vs RAG vs prompting? When to use each. Query: "fine tuning vs RAG"
 - [ ] What is a token in AI, and why do Indian languages cost more? Query: "what is a token in AI"
 - [ ] How to read an AI model card. Query: "AI model card explained"
@@ -13,7 +13,7 @@ The newsroom picks from here when there's no stronger news story with primary so
 - [ ] GPU vs TPU vs NPU explained. Query: "GPU vs TPU vs NPU"
 - [ ] What is a small language model (SLM)? Query: "small language model"
 - [ ] How AI benchmarks work and why scores mislead. Query: "AI benchmarks explained"
-- [ ] What is prompt injection? Query: "prompt injection explained"
+- [x] What is prompt injection? Query: "prompt injection explained" → `what-is-prompt-injection` (23 Nov)
 - [ ] PUE vs WUE: how data centres measure energy and water. Query: "PUE WUE data center"
 
 ## India AI (low competition, home market)
