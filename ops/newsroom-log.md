@@ -63,3 +63,10 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Other: a peer session relayed a request to expand three archive articles in one batch; not acted on without the owner’s direct instruction. Those articles are in the thin-upgrade rotation (3 remaining).
 - Social copy: `ops/social/australia-frontier-ai-regulator-explained.md`.
 - Alerts: none.
+
+## 2026-11-14 newsroom run
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info. `contentSync` "up to date" at `5fc7cb2` (= `origin/main`). 13 Nov article live.
+- Article: **What Is Prompt Injection? Why AI Assistants Can Be Hijacked, and How to Limit the Damage** (`what-is-prompt-injection`), scheduled 2026-11-23T07:30:00Z, 4 primary sources (OWASP LLM01:2025, UK NCSC, Greshake et al. arXiv paper, MCP specification). Volume: 17–23 Nov holds 7 articles.
+- Maintenance (thin-article upgrade 3 of 5): `quiet-race-watermark-everything-ai-makes` (C2PA) rewritten from 6 primary sources (EU Code of Practice page, C2PA spec and deployment guidance, UMBC security paper full text, Google SynthID, India IT Rules as updated 10 Feb 2026); added watermark/fingerprint comparison, EU and India obligations, specific security findings, FAQ and internal links; `updated: 2026-11-14` and an `## Update` note. Done. Backlog: marked the MCP and prompt-injection topics `[x]`.
+- Social copy: `ops/social/what-is-prompt-injection.md`.
+- Alerts: none.
