@@ -36,6 +36,6 @@ The newsroom picks from here when there's no stronger news story with primary so
 - [ ] ChatGPT vs Gemini for Indian languages (from official docs). Query: "ChatGPT vs Gemini Hindi"
 
 ## Added 2026-11-09 (weekly review)
-- [ ] DEPA for AI Training explained: MeitY's draft "sealed room" handbook for training AI on sensitive data (launched 31 Oct 2026). Primary: MeitY "Data Empowerment And Protection Architecture - Draft for Discussion" PDF on meity.gov.in. Query: "DEPA AI training"
+- [x] DEPA for AI Training explained: MeitY's draft "sealed room" handbook for training AI on sensitive data (launched 31 Oct 2026). Primary: MeitY "Data Empowerment And Protection Architecture - Draft for Discussion" PDF on meity.gov.in. Query: "DEPA AI training" → `depa-ai-training-explained` (24 Nov)
 - [ ] How to run an Indian-language AI model offline on a laptop (Dhīr 2B/5B 4-bit, llama.cpp), from ZenteiQ's model page and AIKosh listing. Query: "run AI model offline laptop"
 - [ ] Google's Vizag AI hub: what is being built, and the power and water questions. Needs Google's own announcement and state government documents before writing. Query: "Google Vizag AI data centre"

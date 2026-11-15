@@ -70,3 +70,10 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Maintenance (thin-article upgrade 3 of 5): `quiet-race-watermark-everything-ai-makes` (C2PA) rewritten from 6 primary sources (EU Code of Practice page, C2PA spec and deployment guidance, UMBC security paper full text, Google SynthID, India IT Rules as updated 10 Feb 2026); added watermark/fingerprint comparison, EU and India obligations, specific security findings, FAQ and internal links; `updated: 2026-11-14` and an `## Update` note. Done. Backlog: marked the MCP and prompt-injection topics `[x]`.
 - Social copy: `ops/social/what-is-prompt-injection.md`.
 - Alerts: none.
+
+## 2026-11-15 newsroom run
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info. `contentSync` "up to date" at `1a0c900` (= `origin/main`). 14 Nov article live.
+- Article: **DEPA for AI Training Explained: India’s Plan to Let AI Learn From Hospital and Bank Data Without Handing It Over** (`depa-ai-training-explained`), scheduled 2026-11-24T07:30:00Z, India category, 3 primary sources (PIB release 31 Oct 2026, the full MeitY handbook PDF, the DPDP Act 2023 text). Volume: 18–24 Nov holds 7 articles.
+- Maintenance (thin-article upgrade 4 of 5): `study-finds-word-cues-can-override-game-theory-choices-in-llms` now cites preprint v4 (17 Oct 2026; abstract unchanged from v3), adds authors, game-theory background, Akata et al. on repeated games, logit-lens and activation-steering context, the multi-agent contagion finding, FAQ and internal link; `updated: 2026-11-15` and an `## Update` note. Done. Backlog: DEPA topic marked `[x]`.
+- Social copy: `ops/social/depa-ai-training-explained.md`.
+- Alerts: none.
