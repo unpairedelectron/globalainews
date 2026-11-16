@@ -77,3 +77,17 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Maintenance (thin-article upgrade 4 of 5): `study-finds-word-cues-can-override-game-theory-choices-in-llms` now cites preprint v4 (17 Oct 2026; abstract unchanged from v3), adds authors, game-theory background, Akata et al. on repeated games, logit-lens and activation-steering context, the multi-agent contagion finding, FAQ and internal link; `updated: 2026-11-15` and an `## Update` note. Done. Backlog: DEPA topic marked `[x]`.
 - Social copy: `ops/social/depa-ai-training-explained.md`.
 - Alerts: none.
+
+## 2026-11-16 newsroom run
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info. `contentSync` "up to date" at `2e051ad` (= `origin/main`). 15 Nov article live.
+- Article: **What Is a Token in AI, and Why Do Indian Languages Cost More to Process?** (`what-is-a-token-indian-languages-cost-more`), scheduled 2026-11-25T07:30:00Z, 5 sources (3 primary: Hugging Face tokenizer docs, Petrov et al. arXiv:2305.15425, Mistral model card; plus ZenteiQ and Soket pages). Volume: 19–25 Nov holds 7 articles.
+- Maintenance (backlog upkeep): marked the token topic `[x]`; added 3 new well-sourced topics.
+- **Thin-article upgrade 5 of 5 not done.** The rewrite of `ai-models-antibiotic-discovery` was stopped mid-write by a safety classifier; the file was restored to its published state (`git checkout`), verified intact, and left unchanged. Do not retry this rewrite. The other 4 upgrades are complete. If this article still needs work, the owner should decide what to do with it.
+- Alerts: none.
+
+### Weekly review (Monday)
+- No Search Console connector, so no query/CTR data. The search tool available here does not apply `site:` filters, so indexing status is **inconclusive** again this week, not evidence of non-indexing. Owner can check Search Console directly.
+- Re-checked the `ainews-olive.vercel.app` look-alike: still HTTP 402, deployment disabled. No action.
+- Last 7 days: published 10–16 Nov (capex, AI agent, OpenAI containment, context window, IndiaAI tender, open weights, EKA-1/Dhīr). Scheduled: 19 Nov MCP, 21 Nov AlphaProof Code, 22 Nov Australia regulator, 23 Nov prompt injection, 24 Nov DEPA, 25 Nov tokens. Upgrades: Mistral Small 4, OSWorld, C2PA, word-cues. Alerts: #14 (resolved).
+- Hosting: owner is considering moving off Replit. Cloudflare Pages recommended over Vercel (Vercel's free Hobby plan excludes commercial use); no database needed since the site is static. Awaiting the owner's go-ahead before any migration work.
+- Coming week: next free slot 26 Nov; weekly mix needs an India piece and a news explainer.
