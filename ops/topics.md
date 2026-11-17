@@ -3,17 +3,17 @@
 The newsroom picks from here when there's no stronger news story with primary sources. Mark a topic `[x]` when published and add the slug. Add new ideas at the bottom. Priority: India angle, steady search demand, a clear question to answer.
 
 ## Evergreen explainers (steady search traffic)
-- [ ] What is MCP (Model Context Protocol)? Plain-English guide. Query: "what is MCP AI"
+- [x] What is MCP (Model Context Protocol)? Plain-English guide. Query: "what is MCP AI" → `what-is-mcp-model-context-protocol` (19 Nov)
 - [ ] What is fine-tuning vs RAG vs prompting? When to use each. Query: "fine tuning vs RAG"
-- [ ] What is a token in AI, and why do Indian languages cost more? Query: "what is a token in AI"
-- [ ] How to read an AI model card. Query: "AI model card explained"
+- [x] What is a token in AI, and why do Indian languages cost more? Query: "what is a token in AI" → `what-is-a-token-indian-languages-cost-more` (25 Nov)
+- [x] How to read an AI model card. Query: "AI model card explained" → `how-to-read-an-ai-model-card` (26 Nov)
 - [ ] What is an AI hallucination, and how to reduce it. Query: "AI hallucination meaning"
 - [ ] What is multimodal AI? Query: "multimodal AI explained"
 - [ ] What is AI watermarking (SynthID, C2PA)? Query: "AI watermark explained"
 - [ ] GPU vs TPU vs NPU explained. Query: "GPU vs TPU vs NPU"
 - [ ] What is a small language model (SLM)? Query: "small language model"
 - [ ] How AI benchmarks work and why scores mislead. Query: "AI benchmarks explained"
-- [ ] What is prompt injection? Query: "prompt injection explained"
+- [x] What is prompt injection? Query: "prompt injection explained" → `what-is-prompt-injection` (23 Nov)
 - [ ] PUE vs WUE: how data centres measure energy and water. Query: "PUE WUE data center"
 
 ## India AI (low competition, home market)
@@ -36,6 +36,11 @@ The newsroom picks from here when there's no stronger news story with primary so
 - [ ] ChatGPT vs Gemini for Indian languages (from official docs). Query: "ChatGPT vs Gemini Hindi"
 
 ## Added 2026-11-09 (weekly review)
-- [ ] DEPA for AI Training explained: MeitY's draft "sealed room" handbook for training AI on sensitive data (launched 31 Oct 2026). Primary: MeitY "Data Empowerment And Protection Architecture - Draft for Discussion" PDF on meity.gov.in. Query: "DEPA AI training"
+- [x] DEPA for AI Training explained: MeitY's draft "sealed room" handbook for training AI on sensitive data (launched 31 Oct 2026). Primary: MeitY "Data Empowerment And Protection Architecture - Draft for Discussion" PDF on meity.gov.in. Query: "DEPA AI training" → `depa-ai-training-explained` (24 Nov)
 - [ ] How to run an Indian-language AI model offline on a laptop (Dhīr 2B/5B 4-bit, llama.cpp), from ZenteiQ's model page and AIKosh listing. Query: "run AI model offline laptop"
 - [ ] Google's Vizag AI hub: what is being built, and the power and water questions. Needs Google's own announcement and state government documents before writing. Query: "Google Vizag AI data centre"
+
+## Added 2026-11-16 (weekly review)
+- [ ] AI agent permissions in practice: what "least privilege" means for an assistant with tool access. Primary: OWASP LLM01, MCP spec, NCSC guidance. Query: "AI agent permissions"
+- [ ] Context windows compared: how much Hindi or Tamil text actually fits. Needs our own token-count measurements plus official context-length specs. Query: "context window Indian languages"
+- [ ] WHO bacterial priority pathogens list explained: what the 2024 update changed and where AI drug discovery fits. Primary: WHO BPPL 2024, WHO AMR fact sheet. Query: "WHO priority pathogens list"

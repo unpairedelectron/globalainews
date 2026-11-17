@@ -12,7 +12,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
-import { redirects, prefixRedirects } from './redirects.mjs';
+import { redirects, prefixRedirects, gonePatterns } from './redirects.mjs';
 import { astroBin } from './scripts/astro-bin.mjs';
 
 const SITE_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -126,6 +126,9 @@ const server = http.createServer((req, res) => {
       return redirect(res, to + rest);
     }
   }
+
+  // Old auto-generated pages removed for good: 410 Gone.
+  if (gonePatterns.some((re) => re.test(pathname))) return send(req, res, path.join(root, '404.html'), 410);
 
   // Add the trailing slash for page routes (not files).
   if (!pathname.endsWith('/') && !path.extname(pathname)) {

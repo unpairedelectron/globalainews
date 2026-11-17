@@ -41,7 +41,20 @@ export const redirects = {
   '/admin/release/': '/',
   '/rss.xml': '/feed.xml',
   '/rss/': '/feed.xml',
+
+  // Old root-level guides still listed in Search Console.
+  '/chatgpt-vs-claude-vs-gemini-2026/': '/reports/ai-assistants-compared/',
+  '/midjourney-vs-dalle-vs-stable-diffusion-2026/': '/reports/ai-image-tools-compared/',
+  '/generative-ai-adoption-statistics/': '/trackers/',
+  '/ai-industry-statistics-2026/': '/trackers/',
 };
+
+// URLs from the old site whose content was removed for good (the auto-generated
+// /article/<uuid>/<slug> news pages). They answer 410 Gone so Google drops them
+// quickly instead of re-crawling them as low-quality pages.
+export const gonePatterns = [
+  /^\/article\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(\/|$)/i,
+];
 
 // Prefix rules: /amp/article/<slug>/ -> /article/<slug>/
 export const prefixRedirects = [['/amp/article/', '/article/']];
