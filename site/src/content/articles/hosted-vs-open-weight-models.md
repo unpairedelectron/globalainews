@@ -7,20 +7,21 @@ image: "/images/articles/hosted-vs-open-weight-models/hero.jpg"
 imageAlt: "Hosted API vs Open-Weight Models: How to Choose in 2026"
 tags: ["Comparison","Buyer’s guide"]
 date: "2026-10-06"
+updated: "2026-11-17"
 takeaways: ["Hosted APIs and open weights distribute control and operating responsibilities differently.","Model-card context and parameter counts are not equivalent hardware or quality measurements.","Check the exact endpoint terms and the full application data path.","Compare cost per accepted task, including operations, utilization, review and recovery."]
 type: "guide"
 ---
 Hosted APIs and downloadable model weights shift control and operational work in different ways. This guide compares published access, terms and deployment responsibilities for Gemini 3.8 Flash, Gemma 4 and Mistral Small 4; it does not claim a model-quality winner.
 
-> Criteria: access route, published specifications, service or license terms, hardware responsibility and data boundary. Sources captured 4–6 October 2026; verify current terms before deployment.
+> Criteria: access route, published specifications, service or license terms, hardware responsibility and data boundary. Sources re-checked 17 November 2026; verify current terms before deployment.
 
 ## At a glance
 
 | Product | What the vendor documents | Limitation | Source |
 |---|---|---|---|
-| **Gemini 3.8 Flash API** | Provider-operated API; captured model card documents text, image, audio and video input and a context window up to one million tokens. | API terms vary by service tier; the capture does not establish a customer-managed model-weight deployment or independent quality result. | [Gemini 3.8 Flash model card](https://deepmind.google/models/model-cards/gemini-3-8-flash) (Published 2026-09-02; captured 2026-10-04) |
-| **Gemma 4** | Google documents model variants, context options, quantization and deployment guidance for downloadable weights. | Hardware fit and output quality depend on the exact artifact, runtime and workload; the overview is not an independent benchmark. | [Gemma 4 model overview](https://ai.google.dev/gemma/docs/core) (Captured 2026-10-04; page date not stated in the capture) |
-| **Mistral Small 4** | Mistral’s model card lists open weights under Apache 2.0, 119B total parameters, 6.5B active parameters and a 256K context window. | Active parameters are not a storage or memory estimate; no independent hardware-fit or performance test is provided by the card. | [Mistral Small 4 model card](https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03) (Published 2026-03-16; captured 2026-10-04) |
+| **Gemini 3.8 Flash API** | Provider-operated API. The model card documents text, image, audio and video input with a token context window of up to 1M, and a knowledge cutoff of March 2026. | API terms vary by service tier; the card does not establish a customer-managed model-weight deployment or an independent quality result. | [Gemini 3.8 Flash model card](https://deepmind.google/models/model-cards/gemini-3-8-flash) (Published 2026-09-02; re-checked 2026-11-17) |
+| **Gemma 4** | Downloadable weights in four architectures: 2B and 4B small models for edge and browser use, a 31B dense model, a 12B encoder-free unified model and a 26B mixture-of-experts model. Small models have a 128K context window; medium models support 256K. | Hardware fit and output quality depend on the exact artifact, quantization, runtime and workload; the overview is not an independent benchmark. | [Gemma 4 model overview](https://ai.google.dev/gemma/docs/core) (Re-checked 2026-11-17; page date not stated) |
+| **Mistral Small 4** | Mistral’s model card lists open weights under Apache 2.0, 119B total parameters, 6.5B active parameters, a 256K context window and pricing of $0.15 per million input tokens and $0.60 per million output tokens. | Active parameters are not a storage or memory estimate; no independent hardware-fit or performance test is provided by the card. | [Mistral Small 4 model card](https://docs.mistral.ai/models/model-cards/mistral-small-4-0-26-03) (Published 2026-03-16; re-checked 2026-11-17) |
 
 ## The control boundary is the first decision
 
@@ -58,4 +59,8 @@ The model records do not establish India-specific latency, local availability, l
 
 ## How we review this guide
 
-Sources last reviewed on 2026-10-06. Review cadence: monthly. Product features, plans and regional availability change often—check the linked vendor documentation before making a decision. See our [editorial policy](/editorial-policy/).
+Sources last reviewed on 2026-11-17. Review cadence: monthly. Product features, plans and regional availability change often—check the linked vendor documentation before making a decision. See our [editorial policy](/editorial-policy/).
+
+## Update
+
+**17 November 2026:** All three vendor sources were re-checked and remain live. The Gemma 4 row now lists the published architectures (2B and 4B small, 31B dense, 12B unified, 26B mixture-of-experts) and context windows (128K small, 256K medium), which the earlier capture described only in general terms. The Gemini row adds the documented March 2026 knowledge cutoff, and the Mistral row adds the card's per-token pricing. No previously stated fact changed.
