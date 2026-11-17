@@ -91,3 +91,12 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Last 7 days: published 10–16 Nov (capex, AI agent, OpenAI containment, context window, IndiaAI tender, open weights, EKA-1/Dhīr). Scheduled: 19 Nov MCP, 21 Nov AlphaProof Code, 22 Nov Australia regulator, 23 Nov prompt injection, 24 Nov DEPA, 25 Nov tokens. Upgrades: Mistral Small 4, OSWorld, C2PA, word-cues. Alerts: #14 (resolved).
 - Hosting: owner is considering moving off Replit. Cloudflare Pages recommended over Vercel (Vercel's free Hobby plan excludes commercial use); no database needed since the site is static. Awaiting the owner's go-ahead before any migration work.
 - Coming week: next free slot 26 Nov; weekly mix needs an India piece and a news explainer.
+
+## 2026-11-17 newsroom run
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info. `contentSync` "up to date" at `313d2de` (= `origin/main`). 16 Nov article live.
+- Article: **How to Read an AI Model Card: The Eight Things Worth Checking Before You Use a Model** (`how-to-read-an-ai-model-card`), scheduled 2026-11-26T07:30:00Z, 5 primary sources (Mitchell et al. arXiv:1810.03993, Hugging Face model-card docs ×2, Mistral and ZenteiQ cards as worked examples). Volume: 20–26 Nov holds 7 articles.
+- Topic choice: no fresh news story had reachable primary sources today (the OpenAI research page is 403 from this environment; the Qwen4-Max and Tencent items were aggregator-only; no MeitY/PIB release this week), so per Step 2 the run took the top evergreen topic instead. Backlog topic marked `[x]`.
+- Maintenance (refresh a guide >30 days): `hosted-vs-open-weight-models` (2026-10-06). All three vendor sources re-checked and live. Gemma 4 row now lists the published architectures (2B/4B small, 31B dense, 12B unified, 26B MoE) and context windows (128K/256K); Gemini row adds the March 2026 knowledge cutoff; Mistral row adds per-token pricing. No previously stated fact changed. `updated: 2026-11-17`, review date bumped, `## Update` note added.
+- Social copy: `ops/social/how-to-read-an-ai-model-card.md`.
+- Still open for the owner: (1) `ai-models-antibiotic-discovery` remains the one un-upgraded thin article — the 16 Nov rewrite attempt was halted by a safety classifier and will not be retried; (2) the Cloudflare migration proposal awaits a go-ahead.
+- Alerts: none.

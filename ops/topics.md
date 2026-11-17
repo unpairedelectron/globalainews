@@ -6,7 +6,7 @@ The newsroom picks from here when there's no stronger news story with primary so
 - [x] What is MCP (Model Context Protocol)? Plain-English guide. Query: "what is MCP AI" → `what-is-mcp-model-context-protocol` (19 Nov)
 - [ ] What is fine-tuning vs RAG vs prompting? When to use each. Query: "fine tuning vs RAG"
 - [x] What is a token in AI, and why do Indian languages cost more? Query: "what is a token in AI" → `what-is-a-token-indian-languages-cost-more` (25 Nov)
-- [ ] How to read an AI model card. Query: "AI model card explained"
+- [x] How to read an AI model card. Query: "AI model card explained" → `how-to-read-an-ai-model-card` (26 Nov)
 - [ ] What is an AI hallucination, and how to reduce it. Query: "AI hallucination meaning"
 - [ ] What is multimodal AI? Query: "multimodal AI explained"
 - [ ] What is AI watermarking (SynthID, C2PA)? Query: "AI watermark explained"
