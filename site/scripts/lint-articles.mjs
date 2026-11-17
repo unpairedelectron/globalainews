@@ -13,7 +13,7 @@ const LINT_FROM = Date.parse('2026-11-09T00:00:00Z');
 const PRIMARY = [
   'openai.com', 'blog.google', 'deepmind.google', 'ai.google.dev', 'anthropic.com', 'arxiv.org', 'mistral.ai',
   'ai.meta.com', 'llama.com', 'github.blog', 'huggingface.co', 'microsoft.com', 'nvidia.com', 'pib.gov.in',
-  'meity.gov.in', 'indiaai.gov.in', 'gov.in', 'nic.in', 'europa.eu', 'sec.gov', 'nist.gov', 'gov.uk', 'whitehouse.gov',
+  'meity.gov.in', 'indiaai.gov.in', 'gov.in', 'nic.in', 'europa.eu', 'sec.gov', 'nist.gov', 'gov.uk', 'gov.au', 'gc.ca', 'canada.ca', 'whitehouse.gov',
   'nature.com', 'science.org', 'acm.org', 'ieee.org', 'doi.org', 'opensource.org', 'apache.org', 'owasp.org',
   'modelcontextprotocol.io', 'allenai.org', 'abc.xyz', 'atmeta.com', 'aboutamazon.com', 'apple.com', 'amazon.science', 'iea.org', 'oecd.org', 'un.org', 'who.int', 'c2pa.org',
 ];
