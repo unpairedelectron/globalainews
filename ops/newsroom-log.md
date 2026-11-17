@@ -70,3 +70,33 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Maintenance (thin-article upgrade 3 of 5): `quiet-race-watermark-everything-ai-makes` (C2PA) rewritten from 6 primary sources (EU Code of Practice page, C2PA spec and deployment guidance, UMBC security paper full text, Google SynthID, India IT Rules as updated 10 Feb 2026); added watermark/fingerprint comparison, EU and India obligations, specific security findings, FAQ and internal links; `updated: 2026-11-14` and an `## Update` note. Done. Backlog: marked the MCP and prompt-injection topics `[x]`.
 - Social copy: `ops/social/what-is-prompt-injection.md`.
 - Alerts: none.
+
+## 2026-11-15 newsroom run
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info. `contentSync` "up to date" at `1a0c900` (= `origin/main`). 14 Nov article live.
+- Article: **DEPA for AI Training Explained: India’s Plan to Let AI Learn From Hospital and Bank Data Without Handing It Over** (`depa-ai-training-explained`), scheduled 2026-11-24T07:30:00Z, India category, 3 primary sources (PIB release 31 Oct 2026, the full MeitY handbook PDF, the DPDP Act 2023 text). Volume: 18–24 Nov holds 7 articles.
+- Maintenance (thin-article upgrade 4 of 5): `study-finds-word-cues-can-override-game-theory-choices-in-llms` now cites preprint v4 (17 Oct 2026; abstract unchanged from v3), adds authors, game-theory background, Akata et al. on repeated games, logit-lens and activation-steering context, the multi-agent contagion finding, FAQ and internal link; `updated: 2026-11-15` and an `## Update` note. Done. Backlog: DEPA topic marked `[x]`.
+- Social copy: `ops/social/depa-ai-training-explained.md`.
+- Alerts: none.
+
+## 2026-11-16 newsroom run
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info. `contentSync` "up to date" at `2e051ad` (= `origin/main`). 15 Nov article live.
+- Article: **What Is a Token in AI, and Why Do Indian Languages Cost More to Process?** (`what-is-a-token-indian-languages-cost-more`), scheduled 2026-11-25T07:30:00Z, 5 sources (3 primary: Hugging Face tokenizer docs, Petrov et al. arXiv:2305.15425, Mistral model card; plus ZenteiQ and Soket pages). Volume: 19–25 Nov holds 7 articles.
+- Maintenance (backlog upkeep): marked the token topic `[x]`; added 3 new well-sourced topics.
+- **Thin-article upgrade 5 of 5 not done.** The rewrite of `ai-models-antibiotic-discovery` was stopped mid-write by a safety classifier; the file was restored to its published state (`git checkout`), verified intact, and left unchanged. Do not retry this rewrite. The other 4 upgrades are complete. If this article still needs work, the owner should decide what to do with it.
+- Alerts: none.
+
+### Weekly review (Monday)
+- No Search Console connector, so no query/CTR data. The search tool available here does not apply `site:` filters, so indexing status is **inconclusive** again this week, not evidence of non-indexing. Owner can check Search Console directly.
+- Re-checked the `ainews-olive.vercel.app` look-alike: still HTTP 402, deployment disabled. No action.
+- Last 7 days: published 10–16 Nov (capex, AI agent, OpenAI containment, context window, IndiaAI tender, open weights, EKA-1/Dhīr). Scheduled: 19 Nov MCP, 21 Nov AlphaProof Code, 22 Nov Australia regulator, 23 Nov prompt injection, 24 Nov DEPA, 25 Nov tokens. Upgrades: Mistral Small 4, OSWorld, C2PA, word-cues. Alerts: #14 (resolved).
+- Hosting: owner is considering moving off Replit. Cloudflare Pages recommended over Vercel (Vercel's free Hobby plan excludes commercial use); no database needed since the site is static. Awaiting the owner's go-ahead before any migration work.
+- Coming week: next free slot 26 Nov; weekly mix needs an India piece and a news explainer.
+
+## 2026-11-17 newsroom run
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info. `contentSync` "up to date" at `313d2de` (= `origin/main`). 16 Nov article live.
+- Article: **How to Read an AI Model Card: The Eight Things Worth Checking Before You Use a Model** (`how-to-read-an-ai-model-card`), scheduled 2026-11-26T07:30:00Z, 5 primary sources (Mitchell et al. arXiv:1810.03993, Hugging Face model-card docs ×2, Mistral and ZenteiQ cards as worked examples). Volume: 20–26 Nov holds 7 articles.
+- Topic choice: no fresh news story had reachable primary sources today (the OpenAI research page is 403 from this environment; the Qwen4-Max and Tencent items were aggregator-only; no MeitY/PIB release this week), so per Step 2 the run took the top evergreen topic instead. Backlog topic marked `[x]`.
+- Maintenance (refresh a guide >30 days): `hosted-vs-open-weight-models` (2026-10-06). All three vendor sources re-checked and live. Gemma 4 row now lists the published architectures (2B/4B small, 31B dense, 12B unified, 26B MoE) and context windows (128K/256K); Gemini row adds the March 2026 knowledge cutoff; Mistral row adds per-token pricing. No previously stated fact changed. `updated: 2026-11-17`, review date bumped, `## Update` note added.
+- Social copy: `ops/social/how-to-read-an-ai-model-card.md`.
+- Still open for the owner: (1) `ai-models-antibiotic-discovery` remains the one un-upgraded thin article — the 16 Nov rewrite attempt was halted by a safety classifier and will not be retried; (2) the Cloudflare migration proposal awaits a go-ahead.
+- Alerts: none.
