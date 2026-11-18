@@ -100,3 +100,12 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Social copy: `ops/social/how-to-read-an-ai-model-card.md`.
 - Still open for the owner: (1) `ai-models-antibiotic-discovery` remains the one un-upgraded thin article — the 16 Nov rewrite attempt was halted by a safety classifier and will not be retried; (2) the Cloudflare migration proposal awaits a go-ahead.
 - Alerts: none.
+
+## 2026-11-18 newsroom run
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info. `contentSync` "up to date" at `139ee20` (= `origin/main`). 17 Nov article live. Noted: the lint's primary-domain gap flagged on 13 Nov was fixed on `main` (`42b17e1` added gov.au, gc.ca, canada.ca).
+- Article: **Microsoft Built Its New Production Model on Google's Gemma, and Will License Its Own Weights. Why That Matters** (`microsoft-mai-licensed-weights-gemma-base`), scheduled 2026-11-27T07:30:00Z, business category, 4 primary sources (Microsoft Ignite keynote blog, Microsoft Book of News, Gemma 4 overview, Gemma Terms of Use). Volume: 21–27 Nov holds 7 articles.
+- Topic selection: the US remote-compute export-control rule was rejected because it is still only scheduled for Federal Register publication (19 Nov), so no final text exists to verify; Federal Register also directs automated clients to its API, which returned no matching published document. NVIDIA Nemotron for Science was a viable alternative but rests almost entirely on vendor-reported figures.
+- Maintenance (link health, articles 7–9 by age): 27 source links checked across `weekly-deep-dive-cost-of-intelligence`, `india-ai-compute-access-2026` and `coding-agent-benchmarks-compared`. One real defect found and fixed: the IndiaAI Compute Portal link used the `www.` hostname, which fails TLS certificate validation for any client; repointed to `https://compute.indiaai.gov.in/` (verified 200). `updated: 2026-11-18` and an `## Update` note added. The 403s (IEA, IEEFA, CBRE) are bot blocking and the one earlier 000 (empanelled-gpus.pdf) returned 200 on retry — both inconclusive per the runbook, left unchanged.
+- Social copy: `ops/social/microsoft-mai-licensed-weights-gemma-base.md`.
+- Still open for the owner: `ai-models-antibiotic-discovery` (un-upgraded thin article; rewrite halted 16 Nov, not retried) and the Cloudflare migration proposal.
+- Alerts: none.

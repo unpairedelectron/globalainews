@@ -5,7 +5,7 @@ description: "Official releases show a larger shared GPU pool and millions of re
 category: "india"
 tags: ["IndiaAI","GPUs","Compute"]
 date: "2026-10-03"
-updated: "2026-10-12"
+updated: "2026-11-18"
 image: "/images/articles/india-ai-compute-access-2026/hero-1024.webp"
 imageAlt: "Editorial illustration of shared compute links connecting research teams to data-centre capacity across India"
 takeaways: ["Targets, empanelled-plus-additional totals, onboarded totals, installation reports, shared capacity and reported access are distinct stages. PIB’s July “nearly 38,000 onboarded” statement does not reconcile with 45,000+ shared GPUs as of June. [@indiaai-cabinet-approval-2024] [@pib-common-compute-34000-2025] [@ettech-indiaai-installed-2025] [@pib-compute-onboarded-2026] [@pib-onboarded-nearly-38000-2026] [@pib-capacity-and-use-factsheet-2026] [@ettech-indiaai-recalibration-2026]","IndiaAI’s dated portal rows show project-level GPU allocations, not proof that hardware was installed, a user started, or a GPU remains reserved or schedulable. [@indiaai-compute-allocation-register-2026]","The August 2026 factsheet reports 237 projects and 93.18 lakh GPU-hours accessed/covering; it does not define the hours as reserved or metered consumption. [@pib-capacity-and-use-factsheet-2026] [@indiaai-compute-portal]","India’s operational data-centre estate is roughly 1.5–1.6 GW in recent government and market snapshots. That is an all-workload facility measure, not IndiaAI GPU capacity. [@pib-data-centre-capacity-2026] [@cbre-india-data-centre-market-2025] [@hbl-knight-frank-data-centre-pipeline-2026]","National power adequacy does not establish that a particular site has a timely grid connection, enough firm power, or a low-impact cooling plan. [@sansad-power-data-centres-2026] [@ceew-data-centre-footprint] [@ieefa-india-data-centre-power]","Government-reported model, dataset and prototype counts show programme activity; the reviewed records do not independently evaluate model quality or public-service outcomes. [@pib-ai-models-datasets-2026] [@pib-capacity-and-use-factsheet-2026]"]
@@ -147,7 +147,7 @@ The next credible update should replace a headline GPU total with a dated, machi
 5. Press Information Bureau, Government of India, *Semiconductor and AI Revolution*, 2026-08-13. https://www.pib.gov.in/FactsheetDetails.aspx?Id=150860&lang=1&reg=48
 6. ETtech, The Economic Times, *IndiaAI Mission likely to rewire after GPU glitch*, 2026-10-01. https://m.economictimes.com/tech/technology/indiaai-mission-likely-to-rewire-after-gpu-glitch/amp_articleshow/134600368.cms
 7. IndiaAI Compute Portal, *IndiaAI Compute Portal: provider and accelerator-category table*. https://compute.indiaai.gov.in/files/empanelled-gpus.pdf
-8. IndiaAI Compute Portal, *IndiaAI Compute Portal*. https://www.compute.indiaai.gov.in/
+8. IndiaAI Compute Portal, *IndiaAI Compute Portal*. https://compute.indiaai.gov.in/
 9. IndiaAI Compute Portal, *IndiaAI Compute Portal: eligibility criteria*. https://compute.indiaai.gov.in/eligibilitycriteria
 10. Press Information Bureau, Government of India, *Cabinet approves the IndiaAI Mission*, 2024-03-07. https://pib.gov.in/PressReleasePage.aspx?PRID=2012355
 11. Press Information Bureau, Government of India, *With robust and high-end common computing facility in place, India all set to launch its own AI model*, 2025-01-30. https://www.pib.gov.in/PressReleasePage.aspx?PRID=2097709
@@ -166,3 +166,7 @@ The next credible update should replace a headline GPU total with a dated, machi
 ## Methodology note
 
 This article was first published in September–October 2026 and has been updated with a new headline and summary. Claims are attributed to the sources listed above. See our [editorial policy](/editorial-policy/) for how we source, review and correct our reporting.
+
+## Update
+
+**18 November 2026:** Link-health check. The IndiaAI Compute Portal source link used the `www.` hostname, which fails its TLS certificate check and so did not open for readers; it now points to the same official portal at `https://compute.indiaai.gov.in/`, which resolves correctly. No other source link needed changing and no claim in the article was affected.
