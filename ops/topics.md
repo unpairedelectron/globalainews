@@ -9,7 +9,7 @@ The newsroom picks from here when there's no stronger news story with primary so
 - [x] How to read an AI model card. Query: "AI model card explained" → `how-to-read-an-ai-model-card` (26 Nov)
 - [ ] What is an AI hallucination, and how to reduce it. Query: "AI hallucination meaning"
 - [ ] What is multimodal AI? Query: "multimodal AI explained"
-- [ ] What is AI watermarking (SynthID, C2PA)? Query: "AI watermark explained"
+- [x] What is AI watermarking (SynthID, C2PA)? Query: "AI watermark explained" → covered by the expanded `quiet-race-watermark-everything-ai-makes` (14 Nov), which now includes SynthID, C2PA, and the EU and India labelling rules
 - [ ] GPU vs TPU vs NPU explained. Query: "GPU vs TPU vs NPU"
 - [ ] What is a small language model (SLM)? Query: "small language model"
 - [ ] How AI benchmarks work and why scores mislead. Query: "AI benchmarks explained"
@@ -44,3 +44,8 @@ The newsroom picks from here when there's no stronger news story with primary so
 - [ ] AI agent permissions in practice: what "least privilege" means for an assistant with tool access. Primary: OWASP LLM01, MCP spec, NCSC guidance. Query: "AI agent permissions"
 - [ ] Context windows compared: how much Hindi or Tamil text actually fits. Needs our own token-count measurements plus official context-length specs. Query: "context window Indian languages"
 - [ ] WHO bacterial priority pathogens list explained: what the 2024 update changed and where AI drug discovery fits. Primary: WHO BPPL 2024, WHO AMR fact sheet. Query: "WHO priority pathogens list"
+
+## Added 2026-11-19 (backlog upkeep)
+- [ ] AI for science, explained: what an open model plus a domain dataset actually changes in a lab. Primary: NVIDIA Nemotron for Science release, Hugging Face model and dataset cards, plus at least one independent lab write-up. Query: "AI for scientific discovery"
+- [ ] US export controls on remote compute access: what they mean for Indian startups renting foreign GPUs. **Blocked until the rule is published** — scheduled for the Federal Register on 19 Nov 2026; verify via the Federal Register API before writing. Query: "AI compute export controls India"
+- [ ] OpenMDW and the new model licences: how they differ from Apache 2.0 and from Gemma's terms. Primary: openmdw.ai licence text, Apache 2.0, Gemma Terms of Use. Query: "OpenMDW licence"
