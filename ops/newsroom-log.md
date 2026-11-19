@@ -109,3 +109,12 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Social copy: `ops/social/microsoft-mai-licensed-weights-gemma-base.md`.
 - Still open for the owner: `ai-models-antibiotic-discovery` (un-upgraded thin article; rewrite halted 16 Nov, not retried) and the Cloudflare migration proposal.
 - Alerts: none.
+
+## 2026-11-19 newsroom run
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info. `contentSync` "up to date" at `bc8ead5` (= `origin/main`). 18 Nov article live; today's MCP article still 404 at run time, correct because its 07:30 UTC slot had not passed.
+- Article: **NVIDIA's Nemotron for Science Explained: Open Models Aimed at Chemistry Labs, and What the Results Actually Show** (`nvidia-nemotron-for-science-explained`), scheduled 2026-11-28T07:30:00Z, research category, 3 primary sources (NVIDIA press release, Hugging Face model card, Hugging Face dataset). All four reported accuracy figures are attributed to the organisations that produced them; only KTH's 81% had independent verification (by GROMACS), and the article says so.
+- Topic selection: the US remote-compute export-control rule is still not verifiable — today's Federal Register issue had not published at run time (around 13:45 UTC), and the API returned no matching document. Added to the backlog as blocked.
+- Maintenance (backlog upkeep): marked the AI-watermarking topic `[x]` (covered by the expanded C2PA article); added 3 new topics, one of them flagged blocked pending publication.
+- Social copy: `ops/social/nvidia-nemotron-for-science-explained.md`.
+- Still open for the owner: `ai-models-antibiotic-discovery` (thin, rewrite halted 16 Nov, not retried) and the Cloudflare migration proposal.
+- Alerts: none.
