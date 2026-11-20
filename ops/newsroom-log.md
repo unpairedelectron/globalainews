@@ -118,3 +118,16 @@ The daily newsroom run appends one entry per day: health result, what was publis
 - Social copy: `ops/social/nvidia-nemotron-for-science-explained.md`.
 - Still open for the owner: `ai-models-antibiotic-discovery` (thin, rewrite halted 16 Nov, not retried) and the Cloudflare migration proposal.
 - Alerts: none.
+
+## 2026-11-20 newsroom run
+
+- Health: `verify-deploy.sh` 98 passed, 0 failed, 1 info (the `/healthz` 404, expected on Replit). `build-info.json` `contentSync.sha` = `e7455e5` = `origin/main`, result "up to date". Nothing to self-heal.
+- Article (scheduled 2026-11-29): *US Export Controls Now Follow the Customer, Not the Country: What That Means for Indian Compute* (`us-remote-compute-export-controls-india`, policy, 2,380 words, 6 sources, 5 of them official texts). Unblocks the backlog topic that was waiting on publication.
+- Wire brief (live today, 04:45 UTC): *US Export Rule Now Covers Remote Access to AI Chips, and It Took Effect Immediately* (`bis-remote-access-rule-published`, 588 words, 4 sources). First brief on the site. Written because the rule published 19 Nov and took effect the same day, and the first free article slot was 29 Nov — ten days is too long for a rule with a 90-day compliance clock.
+- Volume: 23–29 Nov holds 7 articles by publish date, at the limit and not over. The brief is counted against `maxBriefsPerDay` (1 of 3 used), not against the weekly article limit, on the reading that Step 3b gives briefs their own cap and is explicitly "optional, after the main article". Flagged in the pull request so the owner can overrule.
+- Sourcing: the rule's full official text was read from govinfo (91 FR 74970, 22,043 words), not from secondary coverage. India's Country Group status was parsed directly from the eCFR table for Supplement No. 1 to Part 740 — India is in A:5 and absent from Country Group D, which is what makes the "India is not named" claim safe to publish.
+- Maintenance (tooling correction): `site/scripts/lint-articles.mjs` had no official US federal publisher on its `PRIMARY` allowlist, so `federalregister.gov`, `govinfo.gov`, `ecfr.gov` and `bis.gov` counted as non-primary. Added those four plus `congress.gov` and `uspto.gov`. **This is a code change and does not reach production until a Replit publish**, so both of today's pieces were written to pass the *deployed* (old) allowlist as well — verified by running the git-HEAD copy of the lint against them. A warning about this local/production divergence was added to `ops/NEWSROOM.md` above Step 3b so future runs don't ship an article that passes locally and fails the live gate.
+- Backlog: export-controls topic marked `[x]` with both slugs; 3 new topics added.
+- Not done: the link-health rotation (articles 10–12 by age) was skipped in favour of the lint correction above, which was the higher-value maintenance item today.
+- Noted, not acted on: `compute.indiaai.gov.in` serves a "Technical / Staging Environment" banner, though its own "Visit Live Website" button points back to itself. The link we use is the correct official hostname and returns 200, so it was left unchanged, but its figures were not cited.
+- Gates: `npm ci`, `npm run build` (editorial lint, astro build, SEO checks) and `npm run test:schedule` all passed, including the 2026-11-20T04:46 and 2026-11-29T07:31 build points.

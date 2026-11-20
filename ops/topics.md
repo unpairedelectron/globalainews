@@ -47,5 +47,10 @@ The newsroom picks from here when there's no stronger news story with primary so
 
 ## Added 2026-11-19 (backlog upkeep)
 - [ ] AI for science, explained: what an open model plus a domain dataset actually changes in a lab. Primary: NVIDIA Nemotron for Science release, Hugging Face model and dataset cards, plus at least one independent lab write-up. Query: "AI for scientific discovery"
-- [ ] US export controls on remote compute access: what they mean for Indian startups renting foreign GPUs. **Blocked until the rule is published** — scheduled for the Federal Register on 19 Nov 2026; verify via the Federal Register API before writing. Query: "AI compute export controls India"
+- [x] US export controls on remote compute access: what they mean for Indian startups renting foreign GPUs. Unblocked — the interim final rule published at 91 FR 74970 on 19 Nov 2026 → `us-remote-compute-export-controls-india` (29 Nov), plus the wire brief `bis-remote-access-rule-published` (20 Nov). Query: "AI compute export controls India"
 - [ ] OpenMDW and the new model licences: how they differ from Apache 2.0 and from Gemma's terms. Primary: openmdw.ai licence text, Apache 2.0, Gemma Terms of Use. Query: "OpenMDW licence"
+
+## Added 2026-11-20 (backlog upkeep)
+- [ ] What counts as a "controlled" AI chip: TPP, aggregate TPP and why vendor spec sheets mislead. Primary: 15 CFR 774 ECCN 3A090 Technical Notes, vendor datasheets (dense vs sparsity figures). Query: "total processing performance export control"
+- [ ] Country Groups explained: how the EAR sorts the world, and where India actually sits. Primary: eCFR Supplement No. 1 to Part 740. Query: "EAR country groups India"
+- [ ] Know-your-customer for AI compute: what diligence a data centre is now expected to perform. Primary: 15 CFR 732 supplement no. 3, 15 CFR 744.24 Note 3. Query: "data centre KYC export controls"
