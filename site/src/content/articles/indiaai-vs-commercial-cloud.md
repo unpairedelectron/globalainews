@@ -7,6 +7,7 @@ image: "/images/articles/indiaai-vs-commercial-cloud/hero.jpg"
 imageAlt: "IndiaAI Compute vs Commercial Cloud GPUs: Access, Pricing and Trade-offs"
 tags: ["Comparison","Buyer’s guide"]
 date: "2026-10-04"
+updated: "2026-11-21"
 takeaways: ["IndiaAI is an eligibility- and application-based programme; EC2 On-Demand is a commercial billing model.","Allocation records do not establish live or schedulable capacity.","Available sources do not support a like-for-like price or service-level winner.","Compare the same accelerator, region, term, support and utilization before budgeting."]
 type: "guide"
 ---
@@ -18,7 +19,7 @@ A subsidized shared-compute programme and commercial on-demand cloud are differe
 
 | Product | What the vendor documents | Limitation | Source |
 |---|---|---|---|
-| **IndiaAI Compute Portal** | A national programme portal for eligible researchers, students, startups, MSMEs and other users to apply for AI compute and related cloud services. | Eligibility, review, subsidy and allocation terms require live confirmation; portal allocation rows are not a census of currently schedulable capacity. | [IndiaAI Compute Portal](https://www.compute.indiaai.gov.in/) (Captured 2026-10-03; portal page has no publication date in the capture) |
+| **IndiaAI Compute Portal** | A national programme portal for eligible researchers, students, startups, MSMEs and other users to apply for AI compute and related cloud services. | Eligibility, review, subsidy and allocation terms require live confirmation; portal allocation rows are not a census of currently schedulable capacity. | [IndiaAI Compute Portal](https://compute.indiaai.gov.in/) (Captured 2026-10-03; portal page has no publication date in the capture) |
 | **IndiaAI allocation register** | The public hub displays dated project-level allocation rows with accelerator type, provider, project duration and related fields. | Visible records do not prove installation, active use, remaining capacity or present availability to another applicant. | [IndiaAI Compute Capacity: GPU Compute Allocation](https://indiaai.gov.in/hub/indiaai-compute-capacity) (Live capture 2026-10-04; page as-of date not stated) |
 | **Amazon EC2 On-Demand** | AWS documents pay-as-you-go instance billing by the second, a 60-second minimum, and no long-term commitment for On-Demand instances. | This general EC2 page does not establish AI accelerator availability in India, matching hardware, guaranteed capacity or an equivalent IndiaAI price. | [Purchasing On-Demand EC2 instances](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-on-demand-instances.html) (Captured 2026-10-04; page date not stated) |
 
@@ -59,3 +60,7 @@ IndiaAI’s application and allocation process is specifically situated in India
 ## How we review this guide
 
 Sources last reviewed on 2026-10-04. Review cadence: monthly. Product features, plans and regional availability change often—check the linked vendor documentation before making a decision. See our [editorial policy](/editorial-policy/).
+
+## Update
+
+**21 November 2026.** The IndiaAI Compute Portal link was pointing at the `www.compute.indiaai.gov.in` hostname, which fails TLS certificate validation for any client and so could not be opened. It now points to `https://compute.indiaai.gov.in/`, which resolves correctly (verified 21 November 2026). This is the same defect we corrected in a different article on 18 November; no other link in this guide changed, and no statement of fact was altered. Note that the portal currently displays a "Technical / Staging Environment" banner, although its own "Visit Live Website" button points back to the same address, so figures shown there should not be treated as final.
