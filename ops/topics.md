@@ -4,7 +4,7 @@ The newsroom picks from here when there's no stronger news story with primary so
 
 ## Evergreen explainers (steady search traffic)
 - [x] What is MCP (Model Context Protocol)? Plain-English guide. Query: "what is MCP AI" → `what-is-mcp-model-context-protocol` (19 Nov)
-- [ ] What is fine-tuning vs RAG vs prompting? When to use each. Query: "fine tuning vs RAG"
+- [x] What is fine-tuning vs RAG vs prompting? When to use each. Query: "fine tuning vs RAG" -> `fine-tuning-vs-rag-vs-prompting` (1 Dec), which also carries the news that OpenAI's self-serve fine-tuning closes to all customers on 6 Jan 2027
 - [x] What is a token in AI, and why do Indian languages cost more? Query: "what is a token in AI" → `what-is-a-token-indian-languages-cost-more` (25 Nov)
 - [x] How to read an AI model card. Query: "AI model card explained" → `how-to-read-an-ai-model-card` (26 Nov)
 - [ ] What is an AI hallucination, and how to reduce it. Query: "AI hallucination meaning"
@@ -54,3 +54,8 @@ The newsroom picks from here when there's no stronger news story with primary so
 - [ ] What counts as a "controlled" AI chip: TPP, aggregate TPP and why vendor spec sheets mislead. Primary: 15 CFR 774 ECCN 3A090 Technical Notes, vendor datasheets (dense vs sparsity figures). Query: "total processing performance export control"
 - [ ] Country Groups explained: how the EAR sorts the world, and where India actually sits. Primary: eCFR Supplement No. 1 to Part 740. Query: "EAR country groups India"
 - [ ] Know-your-customer for AI compute: what diligence a data centre is now expected to perform. Primary: 15 CFR 732 supplement no. 3, 15 CFR 744.24 Note 3. Query: "data centre KYC export controls"
+
+## Added 2026-11-22 (backlog upkeep)
+- [ ] RAG in practice: chunking, embeddings and how to evaluate retrieval rather than the model. Primary: Lewis et al. arXiv:2005.11401, Hugging Face docs. Query: "RAG chunking strategy"
+- [ ] Evaluating a model without a vendor dashboard: what to do when hosted evals go away. Primary: OpenAI deprecations page (evals dashboard read-only from 30 Nov 2026), Promptfoo docs. Query: "LLM evaluation without OpenAI evals"
+- [ ] LoRA settings explained: what rank and alpha actually change, and sensible starting values. Primary: Hu et al. arXiv:2106.09685, Hugging Face PEFT method docs. Query: "LoRA rank alpha explained"
