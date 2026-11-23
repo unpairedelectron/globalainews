@@ -59,3 +59,9 @@ The newsroom picks from here when there's no stronger news story with primary so
 - [ ] RAG in practice: chunking, embeddings and how to evaluate retrieval rather than the model. Primary: Lewis et al. arXiv:2005.11401, Hugging Face docs. Query: "RAG chunking strategy"
 - [ ] Evaluating a model without a vendor dashboard: what to do when hosted evals go away. Primary: OpenAI deprecations page (evals dashboard read-only from 30 Nov 2026), Promptfoo docs. Query: "LLM evaluation without OpenAI evals"
 - [ ] LoRA settings explained: what rank and alpha actually change, and sensible starting values. Primary: Hu et al. arXiv:2106.09685, Hugging Face PEFT method docs. Query: "LoRA rank alpha explained"
+
+## Added 2026-11-23 (weekly growth review)
+Search Console is still not connected (neither Windsor.ai nor Supermetrics is installed), so these come from the runbook's fallback: a web check of what readers are searching for around our topics. The recurring demand is practical "run it yourself" questions — local models, RAM limits, and quantisation naming.
+- [ ] How to run an open-weight model on your own machine: what actually fits in 16GB, 32GB and 64GB. Primary: model cards' stated hardware requirements (Hugging Face), llama.cpp documentation. Query: "run AI model locally laptop RAM"
+- [ ] GGUF and quantisation explained: what IQ4_NL, Q8_0 and 4-bit really mean for quality and memory. Primary: ggml/llama.cpp GGUF documentation, Hugging Face quantisation docs. Query: "GGUF quantization explained"
+- [ ] Why community quantisations out-download official checkpoints, and when to prefer the original weights. Primary: Hugging Face repository metadata, MLX and llama.cpp documentation. Query: "GGUF vs original weights quality"
