@@ -7,6 +7,7 @@ image: "/images/articles/coding-agent-benchmarks-compared/hero.jpg"
 imageAlt: "AI Coding Agent Benchmarks Compared: How to Read SWE-bench and Friends"
 tags: ["Comparison","Buyer’s guide"]
 date: "2026-10-04"
+updated: "2026-11-25"
 takeaways: ["SWE-bench Verified tests selected repository issue resolution; Terminal-Bench tests selected terminal workflows.","Their 500 and 89 task counts do not make the scores directly comparable.","A pass is tied to the specific harness, environment, agent scaffold and budget.","Use local held-out tasks and review code quality, authorization and recovery separately."]
 type: "guide"
 ---
@@ -26,6 +27,8 @@ A software issue resolved in a repository and a longer command-line task are dif
 SWE-bench Verified starts from a software issue linked to an existing repository. The agent must inspect the code and produce a change intended to resolve that issue, after which the benchmark harness checks whether the patch satisfies the associated tests. Its Verified subset contains 500 instances that human annotators reviewed for clarity, test quality and solvability. This curation is useful evidence about the dataset design, but it does not transform the set into a random sample of bug reports or a complete measure of software engineering.
 
 Terminal-Bench takes a broader command-line framing. Its paper describes 89 curated tasks, each packaged with instructions, a container image, tests and a human-written solution. A task may require a sequence of environment operations rather than a single repository patch. The benchmark therefore asks how an agent performs in selected terminal-based work under the specified environment. The paper itself notes remaining sources of variation, including hardware and external-service behavior, so packaging helps repeatability without making every run perfectly deterministic.
+
+The paper also states its own headroom: it reports that "frontier models and agents score less than 65%" on Terminal-Bench 2.0, alongside an error analysis identifying areas for improvement. ([Terminal-Bench paper abstract](https://arxiv.org/abs/2601.11868)) That matters when reading any single vendor's figure: a benchmark the authors designed to leave substantial headroom will separate systems differently from one near saturation.
 
 ## Validation is shaped by the grader
 
@@ -59,4 +62,15 @@ For Indian software teams, the comparison supports a method rather than a countr
 
 ## How we review this guide
 
-Sources last reviewed on 2026-10-04. Review cadence: quarterly. Product features, plans and regional availability change often—check the linked vendor documentation before making a decision. See our [editorial policy](/editorial-policy/).
+Sources last reviewed on 2026-11-25. Review cadence: quarterly. Product features, plans and regional availability change often—check the linked vendor documentation before making a decision. See our [editorial policy](/editorial-policy/).
+
+## Sources
+
+**Primary**
+
+1. SWE-bench, *SWE-bench Verified* (methodology page), accessed 25 November 2026. https://swebench.com/verified.html
+2. Merrill, Shaw, Carlini et al., *Terminal-Bench: Benchmarking Agents on Hard, Realistic Tasks in Command Line Interfaces*, arXiv:2601.11868 (v1, submitted 17 January 2026), accessed 25 November 2026. https://arxiv.org/abs/2601.11868
+
+## Update
+
+**25 November 2026.** Both sources were re-checked in full and **no stated fact changed**. SWE-bench Verified still describes a human-filtered subset of 500 instances created in collaboration with OpenAI, and the Terminal-Bench paper still describes 89 curated tasks and remains at version 1 with no later revision. Added the paper's own headline difficulty result (frontier models and agents scoring under 65%), which this guide had not carried, and added a numbered Sources section. The review date was moved forward; the quarterly cadence is unchanged.
