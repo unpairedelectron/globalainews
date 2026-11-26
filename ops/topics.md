@@ -65,3 +65,9 @@ Search Console is still not connected (neither Windsor.ai nor Supermetrics is in
 - [ ] How to run an open-weight model on your own machine: what actually fits in 16GB, 32GB and 64GB. Primary: model cards' stated hardware requirements (Hugging Face), llama.cpp documentation. Query: "run AI model locally laptop RAM"
 - [ ] GGUF and quantisation explained: what IQ4_NL, Q8_0 and 4-bit really mean for quality and memory. Primary: ggml/llama.cpp GGUF documentation, Hugging Face quantisation docs. Query: "GGUF quantization explained"
 - [ ] Why community quantisations out-download official checkpoints, and when to prefer the original weights. Primary: Hugging Face repository metadata, MLX and llama.cpp documentation. Query: "GGUF vs original weights quality"
+
+## Added 2026-11-26 (backlog upkeep)
+Drawn from today's primary reading of the vendor cyber-access programmes.
+- [ ] Zero data retention vs safeguards: what Enterprise Frontier Safeguards is trying to reconcile, and why gated cyber access currently requires data retention. Primary: Anthropic CVP page and EFS material. Query: "zero data retention AI enterprise"
+- [ ] Free security scanning for open-source maintainers: what Anthropic's OSS Scanner and OpenAI's Patch the Planet actually offer, and whether Indian maintainers can use them. Primary: anthropic.com Cyber Mission, openai.com Daybreak. Query: "free AI security scan open source"
+- [ ] How cyber capability is measured: CyScenarioBench and the problem of benchmarking offensive capability safely. Primary: Anthropic CVP results, plus any published CyScenarioBench methodology. Query: "CyScenarioBench AI cyber benchmark"
