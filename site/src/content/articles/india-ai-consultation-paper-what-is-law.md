@@ -6,6 +6,7 @@ category: "india"
 tags: ["India","MeitY","IT Rules","Deepfakes"]
 takeaways: ["The IT (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2026 were notified on 10 February and came into force on 20 February.","They add due-diligence duties for intermediaries on specified synthetic audio, visual and audiovisual content, with different takedown clocks.","A broader AI governance consultation paper has been announced. As of our 31 October check it was not on official sources, and a consultation paper would not be binding law."]
 date: "2026-11-02T07:30:00Z"
+updated: "2026-11-27"
 reviewer: "Aman Mishra"
 image: "/images/articles/india-ai-consultation-paper-what-is-law/hero-1200x675.webp"
 imageAlt: "India’s AI Rules Explained: What Is Already Law, and What Is Still Only Expected"
@@ -173,3 +174,9 @@ Research and drafting for this article were AI-assisted; the text was reviewed a
 ## Disclosure
 
 Companies named in this article are subjects of our reporting. See our [editorial standards](/editorial-policy/) for how we handle conflicts of interest.
+
+## Update
+
+**27 November 2026.** The broader AI-governance consultation paper described in the 8 October reporting still could not be found as a published document when we re-checked today, almost seven weeks after the "within about a month" statement. Two searches, one restricted to `meity.gov.in`, `pib.gov.in` and other government domains, returned no official published paper.
+
+One limit on that check, stated plainly: MeitY's own website renders its document listings with JavaScript and returns almost no readable text to an automated request, so we could not read its index directly. This is therefore an absence of found evidence, not confirmation that no paper exists. Nothing in the article above changed; the notified rules it describes remain the operative law, and the consultation paper remains in the "still only expected" column.
