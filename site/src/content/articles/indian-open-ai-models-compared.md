@@ -30,20 +30,20 @@ This piece maps what each organisation publishes, what its licence permits, and 
 |---|---|---|---|---|
 | AI4Bharat | IIT Madras initiative; Nilekani Centre since 2022 [6] | MIT | IndicTrans2 (translation) | 351,585 [1] |
 | Krutrim AI Labs | Ola Krutrim | Krutrim Community Licence v1.0 (not OSI-approved) [3][5] | Vyakyarth (embeddings) | 238,754 [1] |
-| Sarvam AI | Selected under the IndiaAI Mission | Apache-2.0; GPL-3.0 for sarvam-translate | sarvam-translate | 71,205 [1] |
+| Sarvam AI | IndiaAI Mission Innovation Centre pillar; ₹246.72 crore [13] | Apache-2.0; GPL-3.0 for sarvam-translate | sarvam-translate | 71,205 [1] |
 | BharatGen | NM-ICPS / DST, led by IIT Bombay; ₹1,293 crore of government support [7] | Apache-2.0 | Param2-17B-A2.4B-Thinking | 3,841 [1] |
 
 ## The four organisations
 
-**AI4Bharat** is the oldest and, by usage, the most successful. It was set up as an IIT Madras initiative to build open-source language AI for Indian languages; in July 2022 IIT Madras launched the Nilekani Centre at AI4Bharat, supported by "Rohini and Nandan Nilekani with a generous grant of Rs. 36 crore through Nilekani Philanthropies". [6] Its Hugging Face organisation carries 146 models and 93 datasets. [1] It publishes no general-purpose chatbot — only the infrastructure underneath one: translation, speech recognition, text-to-speech and encoders.
+**AI4Bharat** is the oldest and, by usage, the most successful: an IIT Madras initiative building open-source language AI for Indian languages. In July 2022 IIT Madras launched the Nilekani Centre at AI4Bharat, supported by a "grant of Rs. 36 crore through Nilekani Philanthropies". [6] Its Hugging Face organisation carries 146 models and 93 datasets. [1] It publishes no chatbot — only the infrastructure underneath one: translation, speech recognition, text-to-speech and encoders.
 
-**Sarvam AI** is the commercial startup selected under the IndiaAI Mission to build a sovereign model. It publishes the largest Indian open-weight LLMs we found: `sarvam-105b` at 106,031,767,424 parameters and `sarvam-30b` at 32,152,650,368, both Apache-2.0, both created 3 March 2026. [1]
+**Sarvam AI** is the commercial startup building a sovereign model under the IndiaAI Mission — "one of the 12 organisations selected under the Innovation Centre pillar", with support of "₹ 246.72 crore", per a February 2026 government release. [13] It publishes the largest Indian open-weight LLMs we found: `sarvam-105b` at 106,031,767,424 parameters and `sarvam-30b` at 32,152,650,368, both Apache-2.0, both created 3 March 2026. [1]
 
-**BharatGen** is the government-funded academic consortium. It is "supported under NM-ICPS" and "led by IIT Bombay with a consortium of academic institutions", spanning "text, speech and vision-language technologies", with Param-2 at "17 billion parameters" supporting "all 22 Scheduled Indian languages". [8] A December 2024 answer in the Lok Sabha named the consortium members: "IIT Bombay, IIIT Hyderabad, IIT Mandi, IIT Kanpur, IIT Hyderabad, IIM Indore, and IIT Madras". [9] In November 2025 the government put the support figure at "₹1,293 Crore". [7]
+**BharatGen** is the government-funded academic consortium: "supported under NM-ICPS" and "led by IIT Bombay", spanning "text, speech and vision-language technologies", with Param-2 at "17 billion parameters" supporting "all 22 Scheduled Indian languages". [8] A December 2024 Lok Sabha answer named the members as "IIT Bombay, IIIT Hyderabad, IIT Mandi, IIT Kanpur, IIT Hyderabad, IIM Indore, and IIT Madras". [9] In November 2025 the government put the support at "₹1,293 Crore". [7]
 
-Its catalogue shows that structure: alongside Param-2 sit domain models named `AyurParam`, `AgriParam`, `FinanceParam` and `LegalParam`, plus `Shrutam-2` (speech-to-text) and `sooktam2` (text-to-speech). Their download counts — 337, 142, 102 and 81 respectively — mark them as research outputs. [1]
+Its catalogue shows that structure: alongside Param-2 sit domain models `AyurParam`, `AgriParam`, `FinanceParam` and `LegalParam`, plus `Shrutam-2` (speech-to-text) and `sooktam2` (text-to-speech). Download counts of 337, 142, 102 and 81 mark them as research outputs. [1]
 
-**Krutrim AI Labs** is Ola's AI arm. It publishes `Krutrim-2-instruct`, the vision-language `Chitrarth`, and `Vyakyarth`, "A Multilingual Sentence Embedding Model for Indic Languages". [4]
+**Krutrim AI Labs** is Ola's AI arm, publishing `Krutrim-2-instruct`, the vision-language `Chitrarth`, and `Vyakyarth`, "A Multilingual Sentence Embedding Model for Indic Languages". [4]
 
 ## What people actually download
 
@@ -61,9 +61,9 @@ This is the finding that reframes everything else. For each organisation, the si
 | `sarvamai/sarvam-105b` | **Chat / general LLM** | 3,245 |
 | `krutrim-ai-labs/Krutrim-2-instruct` | **Chat / general LLM** | 293 |
 
-All figures from Hugging Face model metadata, 28 November 2026. [1]
+Hugging Face metadata, 28 November 2026. [1]
 
-The gap is roughly a hundredfold. The models pulled into real systems do jobs a frontier model does badly or expensively: translating into Odia, transcribing Telugu speech, embedding Indic text for search. Those competing head-on with GPT-class assistants are downloaded in the low thousands.
+The gap is roughly a hundredfold. The models pulled into real systems do jobs a frontier model does badly or expensively: translating into Odia, transcribing Telugu speech, embedding Indic text for search. Those competing head-on with GPT-class assistants sit in the low thousands.
 
 That is not a verdict on quality. It says where an Indian open model currently has an advantage, and it matches the demand we described in [why Indian languages cost more per token](/article/what-is-a-token-indian-languages-cost-more/).
 
@@ -79,7 +79,7 @@ Here the detail matters, because it is binding.
 
 - **Commercial use requires a separate agreement.** "Commercial Use is permitted only through a separate commercial license agreement with Krutrim, which Krutrim may grant to you in its sole discretion."
 - **But "Commercial Use" is defined by scale.** It means use "intended for commercial advantage or monetary compensation where more than 1 million monthly active users of the Licensee use the Software." So the commercial-use clause, read literally, bites above a million MAU.
-- **The grant itself is narrower than that implies.** Section 2 grants rights to "Use the Software for permitted purposes as outlined in this license, including research, academic, and personal projects", and to "Modify the Software for research and personal use". Whether ordinary small-scale commercial use is affirmatively licensed is genuinely unclear on the face of the text. We are not going to resolve that for you; if you are deploying it, have a lawyer read it.
+- **The grant itself is narrower than that implies.** Section 2 grants rights to "Use the Software for permitted purposes... including research, academic, and personal projects", and to "Modify the Software for research and personal use". Whether ordinary small-scale commercial use is affirmatively licensed is genuinely unclear on the face of the text. We will not resolve that for you; if you are deploying it, have a lawyer read it.
 - **A non-compete clause applies at any scale.** "The Software may not be used, directly or indirectly, by any person or any entity to develop, market, sell, or otherwise support products or services that compete with Krutrim's core offerings." That covers "both internal development activities and any derivative works".
 - **No sub-licensing, and no patent grant.** "Sub-licensing is strictly prohibited." And: "This license does not grant any express or implied patent rights."
 - **Audit rights and Indian governing law.** Krutrim "reserves the right to request proof of compliance", which "may include... usage logs"; disputes go to arbitration in Bangalore.
@@ -97,7 +97,7 @@ A detail that breaks automated pipelines. Hugging Face reports a `gated` status 
 
 Hugging Face's documentation explains what gating means: "users must submit an access request to access the model files, which shares their Hugging Face information (username and email address) with the model authors unless the authors opted out of collecting it". With automatic approval — the `auto` setting — "any user can access your model once they've shared their personal information with you". [10]
 
-So `auto` is not a wait; it is a form. But an anonymous `git clone` or unauthenticated CI job still gets HTTP 401, and your contact details go to the authors. India's two most-downloaded models are both in this group.
+So `auto` is not a wait; it is a form. But an anonymous `git clone` or unauthenticated CI job still gets HTTP 401, and your contact details go to the authors. India's two most-downloaded models are in this group.
 
 ## What the benchmark evidence can and cannot settle
 
@@ -118,13 +118,13 @@ In other words, a low score may mean a weaker model or merely that nobody ran th
 - **Translating or transcribing Indian languages?** Start with AI4Bharat: MIT licence, deepest catalogue, heaviest real-world use. Budget for the gating step.
 - **Need a general-purpose Indian LLM on clean commercial terms?** Sarvam's `sarvam-30b` and `sarvam-105b` are Apache-2.0 and ungated. Check `sarvam-translate` separately — it is GPL-3.0.
 - **Building a product on embeddings?** Check the licence before the benchmark. Vyakyarth's terms are not permissive.
-- **Working in Ayurveda, agriculture, finance or law?** BharatGen's domain models exist and nothing comparable does. Treat them as research artefacts: counts in the low hundreds mean few people have hit the bugs yet.
+- **Working in Ayurveda, agriculture, finance or law?** BharatGen's domain models exist and nothing comparable does. Treat them as research artefacts: counts in the low hundreds mean few people have hit the bugs.
 
 On where to run any of this, see [IndiaAI compute against commercial cloud](/reports/indiaai-vs-commercial-cloud/); on when to fine-tune rather than prompt, [fine-tuning versus RAG versus prompting](/article/fine-tuning-vs-rag-vs-prompting/).
 
 ## What we don't know yet
 
-- **The download window.** Hugging Face's documentation describes how downloads are counted but, on the page we read, does not state the period the headline number covers. We therefore present these as the platform's reported counts, not as monthly usage.
+- **The download window.** Hugging Face documents how downloads are counted but, on the page we read, not the period the headline number covers. We present these as the platform's reported counts, not monthly usage.
 - **Who the downloaders are.** The documentation is explicit that every GET and HEAD request counts, that all files in a GGUF repository count, and that deduplicating users or excluding CI/CD traffic requires Publisher Analytics. [12] A heavily automated repository looks busier than a human-popular one.
 - **Whether Krutrim's licence has since been revised.** We read version 1.0 as published on 28 November 2026.
 - **Independent Indic benchmark results.** The arXiv assessment's central point is that these are missing or uneven. [11]
@@ -171,7 +171,8 @@ No. It is a noisy usage signal: it counts automated and CI/CD traffic, does not 
 10. Hugging Face, *Gated models* (Hub documentation). Accessed 28 November 2026. https://huggingface.co/docs/hub/models-gated
 11. Agarwal and Jain, *Benchmark-Based Comparative Assessment of Publicly Benchmarked Indian Foundation Models: A Capability and Evaluation-Maturity Framework*, arXiv:2608.11891. Accessed 28 November 2026. https://arxiv.org/abs/2608.11891
 12. Hugging Face, *Models Download Stats* (Hub documentation). Accessed 28 November 2026. https://huggingface.co/docs/hub/models-download-stats
+13. Press Information Bureau, *Sarvam AI: Powering a Made-in-India AI Revolution*, 21 February 2026. Accessed 28 November 2026. https://www.pib.gov.in/PressReleasePage.aspx?PRID=2231169
 
 ## Methodology note
 
-Research and drafting for this comparison were AI-assisted, and every figure was read from Hugging Face's model API and cards on 28 November 2026 rather than from any aggregator or press summary. Licence characterisations come from the licence texts and the cards' front-matter fields; the Krutrim clauses are quoted from LICENSE.md in the `Krutrim-2-instruct` repository. Where that licence's own definitions leave small-scale commercial use ambiguous, we say so rather than resolving it — this is not legal advice. Download counts are the platform's reported repository counts, presented with the caveats Hugging Face documents, including that the page we read does not state the period covered; they are not a like-for-like usage comparison. Funding figures and consortium membership are quoted from the Press Information Bureau releases cited, using the ₹1,293 crore figure from the November 2025 release in preference to lower figures reported elsewhere. We benchmarked no model ourselves. See our [editorial policy](/editorial-policy/).
+Research and drafting for this comparison were AI-assisted, and every figure was read from Hugging Face's model API and cards on 28 November 2026 rather than from any aggregator or press summary. Licence characterisations come from the licence texts and the cards' front-matter fields; the Krutrim clauses are quoted from LICENSE.md in the `Krutrim-2-instruct` repository. Where that licence's own definitions leave small-scale commercial use ambiguous, we say so rather than resolving it — this is not legal advice. Download counts are the platform's reported repository counts, presented with the caveats Hugging Face documents, including that the page we read does not state the period covered; they are not a like-for-like usage comparison. Funding figures, consortium membership and the IndiaAI Mission selection are quoted from the Press Information Bureau releases cited, using the ₹1,293 crore figure from the November 2025 release in preference to lower figures reported elsewhere. We benchmarked no model ourselves. See our [editorial policy](/editorial-policy/).
