@@ -19,7 +19,7 @@ The newsroom picks from here when there's no stronger news story with primary so
 ## India AI (low competition, home market)
 - [ ] IndiaAI Mission explained: budget, GPUs, who can apply. Query: "IndiaAI mission"
 - [ ] How to apply for IndiaAI GPU compute (step by step). Query: "IndiaAI compute portal apply"
-- [ ] Indian LLMs compared: Sarvam, Krutrim, BharatGen and others (from official sources). Query: "Indian LLM" (EKA-1 and Dhīr covered in `indiaai-eka-1-dhir-models-explained`; a full comparison is still open)
+- [x] Indian LLMs compared: Sarvam, Krutrim, BharatGen and others (from official sources). Query: "Indian LLM" → `indian-open-ai-models-compared` (7 Dec), built on Hugging Face API metadata, licence texts and PIB releases; the spine is that the most-downloaded Indian models are translation/speech/embeddings rather than chat, and that the licences diverge (MIT, Apache-2.0, GPL-3.0 and a non-OSI custom licence)
 - [ ] AIKosh explained: India's AI dataset platform. Query: "AIKosh"
 - [ ] India's deepfake rules: what platforms must do (IT Rules 2026). Query: "India deepfake rules"
 - [ ] India data-centre capacity: operational vs pipeline. Query: "India data centre capacity 2026"
@@ -71,3 +71,9 @@ Drawn from today's primary reading of the vendor cyber-access programmes.
 - [ ] Zero data retention vs safeguards: what Enterprise Frontier Safeguards is trying to reconcile, and why gated cyber access currently requires data retention. Primary: Anthropic CVP page and EFS material. Query: "zero data retention AI enterprise"
 - [ ] Free security scanning for open-source maintainers: what Anthropic's OSS Scanner and OpenAI's Patch the Planet actually offer, and whether Indian maintainers can use them. Primary: anthropic.com Cyber Mission, openai.com Daybreak. Query: "free AI security scan open source"
 - [ ] How cyber capability is measured: CyScenarioBench and the problem of benchmarking offensive capability safely. Primary: Anthropic CVP results, plus any published CyScenarioBench methodology. Query: "CyScenarioBench AI cyber benchmark"
+
+## Added 2026-11-28 (backlog upkeep)
+Drawn from today's primary reading of Indian model cards, licence texts and the C2PA 2.5 specification.
+- [ ] "Open weights" is not "open source": how to read a custom model licence before you ship. Primary: Krutrim Community License Agreement v1.0, Llama and Gemma terms, OSI Open Source Definition and the OSAID. Query: "open weights vs open source licence"
+- [ ] Content Credentials for model weights: what C2PA 2.5's SafeTensors and ONNX binding actually enables. Primary: C2PA Technical Specification 2.5 (Appendix F, embedding and binding sections). Query: "C2PA safetensors model provenance"
+- [ ] Gated models on Hugging Face: what access requests mean for CI/CD and for the data you hand over. Primary: Hugging Face Hub docs on gated models and download stats. Query: "hugging face gated model access request"
